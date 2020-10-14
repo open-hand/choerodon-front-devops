@@ -78,6 +78,7 @@ const PipelineManage = observer(() => {
 
   async function handleRefresh() {
     setHasModify(false, false);
+    mainStore.setTreeDataPage(1);
     await treeDs.query();
     const { id } = getMainData;
     const { parentId } = getSelectedMenu;

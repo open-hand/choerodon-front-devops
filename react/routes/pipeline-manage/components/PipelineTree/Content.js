@@ -6,9 +6,9 @@ import { runInAction } from 'mobx';
 import { Icon, TextField, Tree } from 'choerodon-ui/pro';
 import { Collapse } from 'choerodon-ui';
 import toUpper from 'lodash/toUpper';
+import ScrollContext from 'react-infinite-scroll-component';
 import { usePipelineManageStore } from '../../stores';
 import TreeItem from './TreeItem';
-import ScrollArea from '../../../../components/scroll-area';
 
 import './index.less';
 
@@ -97,6 +97,14 @@ const TreeMenu = observer(() => {
     mainStore.setExpandedKeys(keys);
   }
 
+  const loadMoreTreeData = async () => {
+    const page = mainStore.getTreeDataPage;
+    const pageSize = mainStore.getTreeDataPageSize;
+    mainStore.setTreeDataPage(page + 1);
+    mainStore.setTreeDataPageSize(pageSize * (page + 1));
+    treeDs.query();
+  };
+
   return (
     <nav style={bounds} className={`${prefixCls}-sidebar`}>
       <TextField
@@ -108,9 +116,13 @@ const TreeMenu = observer(() => {
         value={mainStore.getSearchValue}
         onChange={handleSearch}
       />
-      <ScrollArea
-        vertical
-        // className="c7ncd-menu-scroll"
+      <ScrollContext
+        className={`${prefixCls}-sidebar-scroll`}
+        dataLength={treeDs.length}
+        next={loadMoreTreeData}
+        hasMore={mainStore.getTreeDataHasMore}
+        loader={null}
+        height="100%"
       >
         <Tree
           dataSet={treeDs}
@@ -118,7 +130,7 @@ const TreeMenu = observer(() => {
           onExpand={handleExpanded}
           className={`${prefixCls}-sidebar-tree`}
         />
-      </ScrollArea>
+      </ScrollContext>
     </nav>
   );
 });
