@@ -713,6 +713,9 @@ const deploy = {
   'c7ncd.deploy.add.appService.normal': '添加项目应用服务',
   'c7ncd.deploy.add.appService.share': '添加共享应用服务',
   'c7ncd.deploy.batch.deploy.error': '请完善所选应用服务的部署信息',
+  'c7ncd.deploy.type.manual': '手动',
+  'c7ncd.deploy.type.batch': '批量',
+  'c7ncd.deploy.type.auto': '流水线',
 };
 
 const repository = {

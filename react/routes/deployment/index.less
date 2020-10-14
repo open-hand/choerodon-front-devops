@@ -5,41 +5,68 @@
 
   &-table {
 
+    &-number {
+      color: #000;
+    }
+
     &-mark {
       display: inline-block;
-      width: .16rem;
-      height: .16rem;
-      margin-right: .04rem;
-      line-height: .15rem;
+      margin-right: .06rem;
+      line-height: .18rem;
       text-align: center;
-      border-radius: 50%;
       font-size: .12rem;
+      width: .44rem;
+      height: .20rem;
+      background: #e6f7ff;
+      border-radius: 4px;
+      border: 1px solid #91d5ff;
+      color: #4d90fe;
 
       &-auto {
-        color: #ffb100;
-        border: 1px solid #ffb100;
-      }
-
-      &-manual {
-        color: #4d90fe;
-        border: 1px solid #4d90fe;
-      }
-
-      &-batch {
-        color: #32c6de;
-        border: 1px solid #32c6de;
+        color: #5365ea;
+        background: #f0f5ff;
+        border: 1px solid #adc6ff;
       }
     }
 
-    .@{c7n-pro-prefix}-table-advanced-query-bar {
+    &-user {
+      line-height: .18rem;
+      margin-bottom: .02rem;
 
-      .@{c7n-pro-prefix}-select-wrapper {
-        max-width: 2.6rem;
-        width: 22%;
+      .c7ncd-userinfo-name {
+        color: #000 !important;
       }
     }
-    .@{c7n-pro-prefix}-table-advanced-query-bar-button > .c7n-pro-btn-default {
-      color: #3f51b5;
+
+    &-time {
+      display: flex;
+      line-height: .2rem;
+
+      &-text {
+        margin-right: .06rem;
+      }
+    }
+
+    &-instance {
+      color: #5266d4;
+      cursor: pointer;
+    }
+
+    &-env {
+      margin-left: .06rem;
+      color: #000;
+    }
+
+    &-appService {
+      line-height: .2rem;
+      display: block;
+      color: #000;
+      margin-bottom: .02rem;
+    }
+
+    &-version {
+      line-height: .2rem;
+      display: block;
     }
   }
 
