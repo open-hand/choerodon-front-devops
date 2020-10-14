@@ -1,6 +1,8 @@
 import getTablePostData from '../../../utils/getTablePostData';
 
-export default ((intlPrefix, formatMessage, projectId, envOptions, deployTypeDs, deployResultDs, pipelineOptions) => ({
+export default ((
+  intlPrefix, formatMessage, projectId, envOptions, deployTypeDs, deployResultDs, pipelineOptions,
+) => ({
   autoQuery: true,
   selection: false,
   transport: {
@@ -20,7 +22,6 @@ export default ((intlPrefix, formatMessage, projectId, envOptions, deployTypeDs,
     },
   },
   fields: [
-    { name: 'id', type: 'string' },
     { name: 'deployId', type: 'string', label: formatMessage({ id: `${intlPrefix}.number` }) },
     { name: 'deployType', type: 'string', label: formatMessage({ id: `${intlPrefix}.type` }) },
     { name: 'env', type: 'string', label: formatMessage({ id: `${intlPrefix}.env` }) },
@@ -30,13 +31,23 @@ export default ((intlPrefix, formatMessage, projectId, envOptions, deployTypeDs,
     { name: 'deployCreatedBy', type: 'string' },
     { name: 'pipelineName', type: 'string', label: formatMessage({ id: `${intlPrefix}.pipeline.name` }) },
     { name: 'userName', type: 'string', label: formatMessage({ id: 'executor' }) },
+    { name: 'instanceName', type: 'string', label: formatMessage({ id: `${intlPrefix}.instance` }) },
+    { name: 'appServiceName', type: 'string', label: formatMessage({ id: 'appService' }) },
     { name: 'userImage', type: 'string' },
     { name: 'realName', type: 'string' },
   ],
   queryFields: [
-    { name: 'env', type: 'string', textField: 'name', valueField: 'id', label: formatMessage({ id: `${intlPrefix}.env` }), options: envOptions },
-    { name: 'deployType', type: 'string', textField: 'text', valueField: 'value', label: formatMessage({ id: `${intlPrefix}.type` }), options: deployTypeDs },
-    { name: 'deployStatus', type: 'string', textField: 'text', valueField: 'value', label: formatMessage({ id: `${intlPrefix}.result` }), options: deployResultDs },
-    { name: 'pipelineId', type: 'string', textField: 'name', valueField: 'id', label: formatMessage({ id: `${intlPrefix}.pipeline.name` }), options: pipelineOptions },
+    {
+      name: 'env', type: 'string', textField: 'name', valueField: 'id', label: formatMessage({ id: `${intlPrefix}.env` }), options: envOptions,
+    },
+    {
+      name: 'deployType', type: 'string', textField: 'text', valueField: 'value', label: formatMessage({ id: `${intlPrefix}.type` }), options: deployTypeDs,
+    },
+    {
+      name: 'deployStatus', type: 'string', textField: 'text', valueField: 'value', label: formatMessage({ id: `${intlPrefix}.result` }), options: deployResultDs,
+    },
+    {
+      name: 'pipelineId', type: 'string', textField: 'name', valueField: 'id', label: formatMessage({ id: `${intlPrefix}.pipeline.name` }), options: pipelineOptions,
+    },
   ],
 }));
