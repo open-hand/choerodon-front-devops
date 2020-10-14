@@ -33,7 +33,7 @@ function formatData({ data, expandsKeys }) {
 }
 
 export default ({
-  projectId, mainStore, editBlockStore, handleSelect,
+  projectId, mainStore, editBlockStore, handleSelect, DEFAULT_SIZE,
 }) => ({
   autoCreate: false,
   autoQuery: false,
@@ -42,10 +42,11 @@ export default ({
   idField: 'key',
   parentField: 'parentId',
   expandField: 'expand',
+  paging: true,
   transport: {
-    read: {
-      url: `devops/v1/projects/${projectId}/cicd_pipelines`,
-      method: 'get',
+    read: ({ dataSet }) => ({
+      url: `devops/v1/projects/${projectId}/cicd_pipelines/query?page=${mainStore.getTreeDataPage || 1}&size=${mainStore.getTreeDataPage === 1 ? mainStore.getTreeDataPageSize : DEFAULT_SIZE}`,
+      method: 'post',
       transformResponse(response) {
         try {
           const data = JSONBigint.parse(response);
@@ -54,18 +55,26 @@ export default ({
           }
           const { getExpandedKeys, setExpandedKeys } = mainStore;
           let expandsKeys = getExpandedKeys;
-          const newData = data.content || [];
+          let newData = [...data.content];
+          if (data.number > 0 && dataSet) {
+            newData = [...dataSet.toData(), ...data.content];
+          }
+          mainStore.setTreeDataHasMore(data.totalElements > 0
+            && (data.number + 1) < data.totalPages);
           if (isEmpty(getExpandedKeys) && newData.length) {
             const newKeys = newData[0].id.toString();
             expandsKeys = [newKeys];
             setExpandedKeys(newKeys);
           }
-          return formatData({ data: newData, expandsKeys });
+          return formatData({
+            data: newData,
+            expandsKeys,
+          });
         } catch (e) {
           return response;
         }
       },
-    },
+    }),
     destroy: ({ data: [data] }) => ({
       url: `/devops/v1/projects/${projectId}/cicd_pipelines/${data.id}`,
       method: 'delete',
@@ -81,6 +90,8 @@ export default ({
       record.isSelected = true;
     },
     load: ({ dataSet }) => {
+      // eslint-disable-next-line no-param-reassign
+      dataSet.pageSize = 13;
       function selectFirstRecord() {
         const newRecord = dataSet.records[0];
         if (newRecord) {

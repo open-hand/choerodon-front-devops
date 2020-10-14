@@ -10,6 +10,9 @@ import useEditBlockStore from './useEditBlockStore';
 import useDetailStore from './useDetailStore';
 import TreeDataSet from './TreeDataSet';
 
+const HEIGHT = window.innerHeight || document.documentElement.clientHeight
+  || document.body.clientHeight;
+
 const Store = createContext();
 
 export function usePipelineManageStore() {
@@ -21,6 +24,8 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
     AppState: { currentMenuType: { projectId } },
     children,
   } = props;
+
+  const DEFAULT_SIZE = HEIGHT > 900 ? 20 : 12;
 
   function handleSelect(record, store, editBlockStore, previous) {
     const { getHasModify, setHasModify } = editBlockStore;
@@ -47,11 +52,11 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
     }
   }
 
-  const mainStore = useStore();
+  const mainStore = useStore({ DEFAULT_SIZE });
   const editBlockStore = useEditBlockStore(mainStore);
   const detailStore = useDetailStore(mainStore);
   const treeDs = useMemo(() => new DataSet(TreeDataSet({
-    projectId, mainStore, editBlockStore, handleSelect,
+    projectId, mainStore, editBlockStore, handleSelect, DEFAULT_SIZE,
   })), [projectId]);
 
   useEffect(() => {

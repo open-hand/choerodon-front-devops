@@ -2,7 +2,7 @@ import { useLocalStore } from 'mobx-react-lite';
 import { axios, Choerodon } from '@choerodon/boot';
 import { handlePromptError } from '../../../utils';
 
-export default function useStore() {
+export default function useStore({ DEFAULT_SIZE }) {
   return useLocalStore(() => ({
     navBounds: {},
     setNavBounds(data) {
@@ -44,7 +44,33 @@ export default function useStore() {
       this.pageList = data;
     },
 
-    async changeRecordExecute({ projectId, gitlabProjectId, recordId, type, devopsPipelineRecordRelId }) {
+    treeDataHasMore: false,
+    get getTreeDataHasMore() {
+      return this.treeDataHasMore;
+    },
+    setTreeDataHasMore(flag) {
+      this.treeDataHasMore = flag;
+    },
+
+    treeDataPage: 1,
+    get getTreeDataPage() {
+      return this.treeDataPage;
+    },
+    setTreeDataPage(data) {
+      this.treeDataPage = data;
+    },
+
+    treeDataPageSize: DEFAULT_SIZE,
+    get getTreeDataPageSize() {
+      return this.treeDataPageSize;
+    },
+    setTreeDataPageSize(data) {
+      this.treeDataPageSize = data;
+    },
+
+    async changeRecordExecute({
+      projectId, gitlabProjectId, recordId, type, devopsPipelineRecordRelId,
+    }) {
       try {
         const res = await axios.get(`/devops/v1/projects/${projectId}/cicd_pipelines_record/${type}?gitlab_project_id=${gitlabProjectId}&gitlab_pipeline_id=${recordId}${devopsPipelineRecordRelId ? `&record_rel_id=${devopsPipelineRecordRelId}` : ''}`);
         return handlePromptError(res);
@@ -75,7 +101,9 @@ export default function useStore() {
      * @param stageRecordId
      * @param result
      */
-    auditStage({ projectId, cdRecordId, stageRecordId, result }) {
+    auditStage({
+      projectId, cdRecordId, stageRecordId, result,
+    }) {
       return axios.post(`devops/v1/projects/${projectId}/pipeline_records/${cdRecordId}/stage_records/${stageRecordId}/audit?result=${result}`);
     },
 
@@ -87,7 +115,9 @@ export default function useStore() {
      * @param jobRecordId
      * @param result
      */
-    auditJob({ projectId, cdRecordId, stageRecordId, jobRecordId, result }) {
+    auditJob({
+      projectId, cdRecordId, stageRecordId, jobRecordId, result,
+    }) {
       return axios.post(`/devops/v1/projects/${projectId}/pipeline_records/${cdRecordId}/stage_records/${stageRecordId}/job_records/${jobRecordId}/audit?result=${result}`);
     },
 
