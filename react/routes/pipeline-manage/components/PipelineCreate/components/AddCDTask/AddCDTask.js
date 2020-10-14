@@ -748,10 +748,29 @@ export default observer(() => {
         <div className="addcdTask-divided" />,
         <p className="addcdTask-title">执行设置</p>,
         <Form style={{ marginTop: 20 }} columns={2} dataSet={ADDCDTaskDataSet}>
-          <SelectBox name={addCDTaskDataSetMap.whetherBlock}>
-            <Option value>是</Option>
-            <Option value={false}>否</Option>
-          </SelectBox>
+          <div className="addcdTask-whetherBlock" style={{ position: 'relative' }}>
+            <SelectBox name={addCDTaskDataSetMap.whetherBlock}>
+              <Option value>是</Option>
+              <Option value={false}>否</Option>
+            </SelectBox>
+            <Tooltip title={(
+              <>
+                <p>若选择为是，则表示API测试任务在执行的过程中，后续的阶段与任务将不会执行</p>
+                <p>若选择为否，则表示在执行API测试任务的同时，会同步执行接下来的任务或阶段</p>
+              </>
+            )}
+            >
+              <Icon
+                style={{
+                  position: 'absolute',
+                  top: '-18px',
+                  left: '136px',
+                  color: 'rgba(0, 0, 0, 0.36)',
+                }}
+                type="help"
+              />
+            </Tooltip>
+          </div>
         </Form>,
       ],
     };
@@ -983,8 +1002,31 @@ export default observer(() => {
         </div>
         {
           ADDCDTaskDataSet.current.get('type') === addCDTaskDataSetMap.apiTest && [
-            <Select newLine colSpan={1} name={addCDTaskDataSetMap.apiTestMission} />,
-            <Select colSpan={2} name={addCDTaskDataSetMap.relativeMission}>
+            <Select
+              newLine
+              colSpan={1}
+              name={addCDTaskDataSetMap.apiTestMission}
+              addonAfter={<Tips helpText="此处仅能从项目下已有的API测试任务中进行选择" />}
+            />,
+            <Select
+              colSpan={2}
+              name={addCDTaskDataSetMap.relativeMission}
+              addonAfter={(
+                <Tips
+                  helpText={(
+                    <>
+                      <p>
+                        1. 此处为非必选，若不选关联部署任务，则代表，API测试任务在执行前不会做任何判断
+                      </p>
+                      <p>
+                        2. 此处仅支持选择该任务之前的任一部署任务；
+                        选择后，在执行此API测试任务前便会校验：关联的部署任务中对应的新版本是否已部署成功。只有该版本对应的pod状态为可用时，测试任务才会执行
+                      </p>
+                    </>
+                  )}
+                />
+              )}
+            >
               {renderRelatedMission()}
             </Select>,
           ]
