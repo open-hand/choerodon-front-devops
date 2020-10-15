@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { createContext, useContext, useMemo } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';

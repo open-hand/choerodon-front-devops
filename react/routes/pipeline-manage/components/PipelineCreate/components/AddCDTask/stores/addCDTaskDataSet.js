@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import uuidV1 from 'uuid/v1';
 import { axios } from '@choerodon/boot';
 import forEach from 'lodash/forEach';
@@ -564,12 +565,9 @@ export default (
         }
         return {
           method: 'post',
-          url: `/devops/v1/projects/${projectId}/users/list_users?page=0&size=20`,
+          url: `/devops/v1/projects/${projectId}/users/app_services/${PipelineCreateFormDataSet.current.get('appServiceId')}?page=0&size=20`,
           data: {
-            param: [],
-            searchParam: {
-              realName: params.realName || '',
-            },
+            userName: params.realName || '',
             ids: cdAuditIds || [],
           },
           transformResponse: (res) => {
