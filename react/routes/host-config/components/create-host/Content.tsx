@@ -91,7 +91,7 @@ const CreateHost: React.FC<any> = observer((): any => {
     <div className={`${prefixCls}`}>
       <Form dataSet={formDs} className={`${prefixCls}-form`}>
         {HAS_BASE_PRO && <SelectBox name="type" disabled={!!hostId} />}
-        <TextField name="name" />
+        <TextField name="name" style={{ marginTop: '-10px' }} />
         <TextField name="hostIp" />
         <TextField name="sshPort" />
         <Tips
@@ -100,7 +100,7 @@ const CreateHost: React.FC<any> = observer((): any => {
           showHelp={false}
         />
         <SelectBox name="authType" />
-        <TextField name="username" />
+        <TextField name="username" style={{ marginTop: '-10px' }} />
         {formDs && formDs.current && formDs.current.get('authType') === 'publickey' ? (
           <TextField name="password" />
         ) : <Password name="password" reveal={false} />}
