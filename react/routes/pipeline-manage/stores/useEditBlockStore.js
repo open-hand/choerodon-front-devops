@@ -158,7 +158,7 @@ export default function useStore(mainStore) {
           if (item.sequence === sequence) {
             // eslint-disable-next-line no-param-reassign
             data.sequence = this.dataSource2[index].jobList.length;
-            if (this.dataSource2[index].jobList) {
+            if (this.dataSource2[index]?.jobList.length) {
               this.dataSource2[index].jobList.push(data);
             } else {
               this.dataSource2[index].jobList = [data];

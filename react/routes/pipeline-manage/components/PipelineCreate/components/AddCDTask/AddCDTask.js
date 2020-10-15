@@ -906,7 +906,7 @@ export default observer(() => {
    */
   const renderRelatedMission = () => {
     let lists = [];
-    pipelineStageMainSource.forEach((i, iIndex) => {
+    JSON.parse(JSON.stringify(pipelineStageMainSource)).forEach((i, iIndex) => {
       // 是cd阶段
       if (i.type === 'CD') {
         // 如果遍历列小于当前列 则直接存入joblist
