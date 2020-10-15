@@ -782,7 +782,7 @@ export default observer(() => {
     const pageSize = !e
       ? ADDCDTaskDataSet.current.get('pageSize')
       : ADDCDTaskDataSet.current.get('pageSize') + 20;
-    const url = `/devops/v1/projects/${projectId}/users/list_users?page=0&size=${pageSize ?? 20}`;
+    const url = `/devops/v1/projects/${projectId}/users/app_services/${PipelineCreateFormDataSet.current.get('appServiceId')}?page=0&size=${pageSize || 20}`;
     const cdAuditsUserIds = [];
     jobDetail?.cdAuditUserIds
       && jobDetail.cdAuditUserIds.forEach((obj) => {
@@ -793,10 +793,7 @@ export default observer(() => {
         }
       });
     const res = await axios.post(url, {
-      param: [],
-      searchParam: {
-        realName: realName || '',
-      },
+      userName: realName || '',
       ids: cdAuditsUserIds || [],
     });
     if (res.content.length % 20 === 0 && res.content.length !== 0) {
@@ -1075,6 +1072,20 @@ export default observer(() => {
                 })}
                 onChange={() => {
                   handleClickMore(null);
+                }}
+                maxTagPlaceholder={(omittedValues) => {
+                  const tempArr = omittedValues.map((item) => {
+                    const tempId = typeof item === 'string' ? item : item?.id;
+                    return ADDCDTaskDataSet.getField('cdAuditUserIds').getText(tempId);
+                  });
+                  return (
+                    <Tooltip title={tempArr && tempArr.join('，')}>
+                      <span style={{ width: '31px', display: 'block' }}>
+                        {`+${omittedValues.length}`}
+                        ...
+                      </span>
+                    </Tooltip>
+                  );
                 }}
                 optionRenderer={renderderAuditUsersList}
                 renderer={({ text, value }) => (
