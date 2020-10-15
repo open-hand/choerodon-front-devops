@@ -325,20 +325,21 @@ const DetailItem = (props) => {
     const {
       successCount,
       failCount,
-    } = apiTestTaskRecordVO;
+    } = apiTestTaskRecordVO || {};
+
     return (
       <main>
         <div>
           <span>通过率:</span>
-          <span>{calcValue(successCount, failCount)}</span>
+          <span>{successCount && failCount ? calcValue(successCount, failCount) : '-'}</span>
         </div>
         <div>
           <span>成功数量:</span>
-          <span>{successCount}</span>
+          <span>{successCount || '-'}</span>
         </div>
         <div>
           <span>失败数量:</span>
-          <span>{failCount}</span>
+          <span>{failCount || '-'}</span>
         </div>
       </main>
     );
