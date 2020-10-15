@@ -15,22 +15,21 @@ export default ((
         },
       };
       return ({
-        url: `/devops/v1/projects/${projectId}/deploy_record/page_by_options`,
-        method: 'post',
-        data: postData,
+        url: `/devops/v1/projects/${projectId}/deploy_record/paging`,
+        method: 'get',
       });
     },
   },
   fields: [
     { name: 'deployId', type: 'string', label: formatMessage({ id: `${intlPrefix}.number` }) },
     { name: 'deployType', type: 'string', label: formatMessage({ id: `${intlPrefix}.type` }) },
-    { name: 'env', type: 'string', label: formatMessage({ id: `${intlPrefix}.env` }) },
+    { name: 'envName', type: 'string', label: formatMessage({ id: `${intlPrefix}.env` }) },
     { name: 'deployTime', type: 'dateTime', label: formatMessage({ id: `${intlPrefix}.time` }) },
     { name: 'deployStatus', type: 'string', label: formatMessage({ id: `${intlPrefix}.result` }) },
     { name: 'pipelineTriggerType', type: 'string', label: formatMessage({ id: `${intlPrefix}.pipeline.type` }) },
     { name: 'deployCreatedBy', type: 'string' },
     { name: 'pipelineName', type: 'string', label: formatMessage({ id: `${intlPrefix}.pipeline.name` }) },
-    { name: 'userName', type: 'string', label: formatMessage({ id: 'executor' }) },
+    { name: 'executeUser', label: formatMessage({ id: 'executor' }) },
     { name: 'instanceName', type: 'string', label: formatMessage({ id: `${intlPrefix}.instance` }) },
     { name: 'appServiceName', type: 'string', label: formatMessage({ id: 'appService' }) },
     { name: 'userImage', type: 'string' },
@@ -38,16 +37,16 @@ export default ((
   ],
   queryFields: [
     {
-      name: 'env', type: 'string', textField: 'name', valueField: 'id', label: formatMessage({ id: `${intlPrefix}.env` }), options: envOptions,
+      name: 'env_name', type: 'string', label: formatMessage({ id: `${intlPrefix}.env` }),
     },
     {
-      name: 'deployType', type: 'string', textField: 'text', valueField: 'value', label: formatMessage({ id: `${intlPrefix}.type` }), options: deployTypeDs,
+      name: 'app_service_name', type: 'string', label: formatMessage({ id: 'appService' }),
     },
     {
-      name: 'deployStatus', type: 'string', textField: 'text', valueField: 'value', label: formatMessage({ id: `${intlPrefix}.result` }), options: deployResultDs,
+      name: 'deploy_type', type: 'string', textField: 'text', valueField: 'value', label: formatMessage({ id: `${intlPrefix}.type` }), options: deployTypeDs,
     },
     {
-      name: 'pipelineId', type: 'string', textField: 'name', valueField: 'id', label: formatMessage({ id: `${intlPrefix}.pipeline.name` }), options: pipelineOptions,
+      name: 'deploy_result', type: 'string', textField: 'text', valueField: 'value', label: formatMessage({ id: `${intlPrefix}.result` }), options: deployResultDs,
     },
   ],
 }));

@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useEffect, useMemo } from 'react';
+import React, {
+  createContext, useContext, useEffect, useMemo,
+} from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
@@ -12,7 +14,7 @@ import usePipelineStore from './usePipelineStore';
 import OptionsDataSet from './OptionsDataSet';
 
 const Store = createContext();
-const STATUS = ['success', 'failed', 'deleted', 'pendingcheck', 'stop', 'running'];
+const STATUS = ['success', 'failed', 'operating'];
 
 export function useDeployStore() {
   return useContext(Store);
@@ -45,7 +47,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       selection: 'single',
     }), []);
     const deployResultDs = useMemo(() => new DataSet({
-      data: map(STATUS, item => ({
+      data: map(STATUS, (item) => ({
         text: formatMessage({ id: `${intlPrefix}.status.${item}` }),
         value: item,
       })),
@@ -58,7 +60,12 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
     const envOptionsDs = useMemo(() => new DataSet(OptionsDataSet()), []);
     const pipelineOptionsDs = useMemo(() => new DataSet(OptionsDataSet()), []);
 
-    const listDs = useMemo(() => new DataSet(ListDataSet(intlPrefix, formatMessage, projectId, envOptionsDs, deployTypeDs, deployResultDs, pipelineOptionsDs)), [projectId]);
+    const listDs = useMemo(
+      () => new DataSet(ListDataSet(
+        intlPrefix, formatMessage, projectId, envOptionsDs,
+        deployTypeDs, deployResultDs, pipelineOptionsDs,
+      )), [projectId],
+    );
     const detailDs = useMemo(() => new DataSet(DetailDataSet()), []);
 
     useEffect(() => {
