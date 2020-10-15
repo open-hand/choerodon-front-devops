@@ -42,6 +42,7 @@ const EditItem = (props) => {
     stageType,
     appServiceCode,
     witchColumnJobIndex,
+    columnIndex,
   } = props;
 
   const { name, type } = jobDetail;
@@ -84,6 +85,32 @@ const EditItem = (props) => {
       style: {
         width: '740px',
       },
+      children: stageType === 'CI' ? (
+        <AddTask
+          jobDetail={jobDetail}
+          appServiceId={!edit && appServiceName}
+          appServiceName={!edit && appServiceName}
+          handleOk={handleEditOk}
+          PipelineCreateFormDataSet={edit && PipelineCreateFormDataSet}
+          AppServiceOptionsDs={edit && AppServiceOptionsDs}
+          image={image}
+          columnIndex={columnIndex}
+          witchColumnJobIndex={witchColumnJobIndex}
+        />
+      ) : (
+        <AddCDTask
+          random={Math.random()}
+          jobDetail={jobDetail}
+          pipelineStageMainSource={getStepData2}
+          appServiceId={!edit && appServiceName}
+          appServiceName={!edit && appServiceName}
+          PipelineCreateFormDataSet={edit && PipelineCreateFormDataSet}
+          handleOk={handleEditOk}
+          columnIndex={columnIndex}
+          witchColumnJobIndex={witchColumnJobIndex}
+        />
+      ),
+
       drawer: true,
       okText: '添加',
     });
@@ -103,7 +130,7 @@ const EditItem = (props) => {
     <div className="c7n-piplineManage-edit-column-item">
       <div className="c7n-piplineManage-edit-column-item-header">
         【
-        {jobTask[type]}
+        {Object.prototype.hasOwnProperty.bind(jobTask, type) && jobTask[type]}
         】
         {name}
       </div>
@@ -199,28 +226,30 @@ export default observer((props) => {
     jobList && jobList.length > 0 ? (
       <div className="c7n-piplineManage-edit-column-lists">
         {
-        jobList.slice().map((item, index) => (
-          <EditItem
-            index={index}
-            witchColumnJobIndex={witchColumnJobIndex}
-            sequence={sequence}
-            key={Math.random()}
-            edit={edit}
-            appServiceId={appServiceId}
-            appServiceName={appServiceName}
-            appServiceCode={appServiceCode}
-            AppServiceOptionsDs={edit && AppServiceOptionsDs}
-            PipelineCreateFormDataSet={edit && PipelineCreateFormDataSet}
-            jobDetail={item}
-            image={image}
-            openVariableModal={openVariableModal}
-            stageType={type || 'CI'}
-          />
-        ))
-      }
+          jobList.slice().map((item, index) => (
+            <EditItem
+              index={index}
+              witchColumnJobIndex={witchColumnJobIndex}
+              columnIndex={columnIndex + 1}
+              sequence={sequence}
+              key={Math.random()}
+              edit={edit}
+              appServiceId={appServiceId}
+              appServiceName={appServiceName}
+              appServiceCode={appServiceCode}
+              AppServiceOptionsDs={edit && AppServiceOptionsDs}
+              PipelineCreateFormDataSet={edit && PipelineCreateFormDataSet}
+              jobDetail={item}
+              image={image}
+              openVariableModal={openVariableModal}
+              stageType={type || 'CI'}
+            />
+          ))
+        }
       </div>
     ) : null
   );
+
   const openAddStageModal = ({ optType, curType, firstIf = false }) => {
     const title = optType === 'create' ? '添加阶段' : '修改阶段信息';
     const okText = optType === 'create' ? '添加' : '修改';
@@ -310,7 +339,7 @@ export default observer((props) => {
           appServiceId={appServiceName}
           appServiceName={appServiceName}
           image={image}
-          columnIndex={sequence}
+          columnIndex={columnIndex + 1}
           witchColumnJobIndex={witchColumnJobIndex + 1}
         />
       ) : (
@@ -322,7 +351,7 @@ export default observer((props) => {
           pipelineStageMainSource={getStepData2}
           PipelineCreateFormDataSet={edit && PipelineCreateFormDataSet}
           handleOk={hanleStepCreateOk}
-          columnIndex={sequence}
+          columnIndex={columnIndex + 1}
           witchColumnJobIndex={witchColumnJobIndex + 1}
         />
       ),
