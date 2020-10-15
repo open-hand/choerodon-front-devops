@@ -163,29 +163,26 @@ const Deployment = withRouter(observer((props) => {
     );
   }
 
-  function renderDeployStatus({ value, record }) {
-    if (record.get('deployType') === 'batch') {
-      return;
-    }
-    const newValue = value === 'running' || value === 'operating' ? 'executing' : value;
-    const message = newValue === 'stop' ? 'terminated' : newValue;
-    // eslint-disable-next-line consistent-return
+  function renderDeployStatus({ value }) {
     return (
       <StatusTag
-        colorCode={newValue || ''}
-        name={message ? formatMessage({ id: message }) : 'unKnow'}
+        colorCode={value || ''}
+        name={value ? formatMessage({ id: `${intlPrefix}.status.${value}` }) : 'unKnow'}
         style={statusTagsStyle}
       />
     );
   }
 
   function renderExecutor({ value, record }) {
+    const {
+      realName, loginName, ldap, imageUrl, email,
+    } = value || {};
     return (
       <>
         <UserInfo
-          name={value || ''}
-          id={record.get('userLoginName')}
-          avatar={record.get('userImage')}
+          name={realName || ''}
+          id={ldap ? loginName : email}
+          avatar={imageUrl}
           className={`${prefixCls}-content-table-user`}
         />
         <div className={`${prefixCls}-content-table-time`}>
@@ -212,7 +209,7 @@ const Deployment = withRouter(observer((props) => {
       <>
         <StatusDot
           synchronize
-          connect={record.get('envConnect')}
+          connect={record.get('connect')}
           size="small"
         />
         <span className={`${prefixCls}-content-table-env`}>{value}</span>
@@ -226,7 +223,7 @@ const Deployment = withRouter(observer((props) => {
         <span className={`${prefixCls}-content-table-appService`}>{value || '应用服务名称'}</span>
         <span className={`${prefixCls}-content-table-version`}>
           版本：
-          {record.get('version') || '版本名称'}
+          {record.get('appServiceVersion') || '版本名称'}
         </span>
       </>
     );
@@ -292,9 +289,9 @@ const Deployment = withRouter(observer((props) => {
           />
           <Column name="deployStatus" renderer={renderDeployStatus} />
           <Column name="instanceName" renderer={renderInstance} />
-          <Column name="env" renderer={renderEnv} />
+          <Column name="envName" renderer={renderEnv} />
           <Column name="appServiceName" renderer={renderAppService} />
-          <Column name="userName" renderer={renderExecutor} />
+          <Column name="executeUser" renderer={renderExecutor} />
         </Table>
       </Content>
     </Page>
