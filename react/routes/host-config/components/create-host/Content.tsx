@@ -45,7 +45,7 @@ const CreateHost: React.FC<any> = observer((): any => {
       if (!validate || !record || await record.getField('password').checkValidity() === false) {
         return false;
       }
-      const postData = pick(record.toData(), ['type', 'authType', 'hostIp', 'sshPort', 'username', 'password', 'jmeterPort']);
+      const postData = pick(record.toData(), ['type', 'authType', 'hostIp', 'sshPort', 'username', 'password', 'jmeterPort', 'jmeterPath']);
       modal.update({
         okProps: { disabled: true },
       });
