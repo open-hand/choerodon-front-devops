@@ -242,7 +242,7 @@ const PipelineCreate = observer(() => {
                 newLine
                 colSpan={2}
                 addonAfter={(
-                  <Tips helpText="平台默认的版本命名规则为：${C7N_COMMIT_TIME}-${C7N_BRANCH}，即表示该流水线中生成的版本名称为”时间戳+分支名" />
+                  <Tips helpText='平台默认的版本命名规则为：${C7N_COMMIT_TIME}-${C7N_BRANCH}，即表示该流水线中生成的版本名称为"时间戳+分支名"' />
                            )}
                 name="versionNameRules"
               />
