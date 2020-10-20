@@ -72,7 +72,6 @@ export default ({
         textField: 'text',
         valueField: 'value',
         required: true,
-        options: nodesTypeDs,
       },
     ],
   };

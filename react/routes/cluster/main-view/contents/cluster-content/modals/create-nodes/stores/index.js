@@ -51,20 +51,20 @@ export const StoreProvider = injectIntl(inject('AppState')(
         },
       ],
       selection: 'multiple',
-    }));
+    }), []);
 
     const nodesDs = useMemo(() => new DataSet(NodeDataSet({
       ...props,
       accountDs,
       formatMessage,
       intlPrefix,
-      nodesTypeDs,
     }), [projectId]));
 
     const value = {
       ...props,
       nodesDs,
       intlPrefix,
+      nodesTypeDs,
     };
     return (
       <Store.Provider value={value}>

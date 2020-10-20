@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  TextField, TextArea, Form, Modal, Button, SelectBox, Password, CheckBox,
+  TextField, TextArea, Form, Select, Button, SelectBox, Password, CheckBox,
 } from 'choerodon-ui/pro';
 import map from 'lodash/map';
+import NewTips from '@/components/new-tips';
 import { useFormStore } from './stores';
 import TestConnect from './components/test-connect';
+
+const { Option } = Select;
 
 function CreateNodesForm() {
   const [selectedRecord, setSelectedRecord] = useState(null);
@@ -17,6 +20,7 @@ function CreateNodesForm() {
     formatMessage,
     intlPrefix,
     isEdit,
+    nodesTypeDs,
     prefixCls,
   } = useFormStore();
 
@@ -58,6 +62,18 @@ function CreateNodesForm() {
     }
     return true;
   }
+
+  const renderNodetypeOpts = ({ value, text }) => {
+    if (value === 'etcd') {
+      return (
+        <>
+          <span>{text}</span>
+          <NewTips showHelp helpText="提示" />
+        </>
+      );
+    }
+    return <span>{text}</span>;
+  };
 
   return (
     <div className={`${prefixCls}-nodesCreate`}>
@@ -108,6 +124,7 @@ function CreateNodesForm() {
           添加节点
         </Button>
       </div>
+
       {nodesDs.data.length && selectedRecord ? (
         <div className={`${prefixCls}-nodesCreate-right`}>
           <Form
@@ -125,11 +142,39 @@ function CreateNodesForm() {
             }
           </Form>
           <TestConnect handleTestConnection={handleTestConnection} nodeRecord={selectedRecord} />
+
           <Form
             columns={6}
             record={selectedRecord}
           >
-            <SelectBox name="nodeType" colSpan={6} multiple className={`${prefixCls}-nodesCreate-right-nodeType`} />
+            <SelectBox
+              name="nodeType"
+              colSpan={6}
+              multiple
+              className={`${prefixCls}-nodesCreate-right-nodeType`}
+              optionRenderer={renderNodetypeOpts}
+            >
+              {
+                map(nodesTypeDs && nodesTypeDs.toData(), (item, index) => {
+                  const { value, text } = item;
+                  if (value === 'etcd') {
+                    return (
+                      <Option value={value} key={`${index}-${text}`}>
+                        <div style={{ display: 'inline-flex', alignItems: 'center' }}>
+                          <span style={{ marginRight: '2px' }}>{text}</span>
+                          <NewTips showHelp helpText="提示" />
+                        </div>
+                      </Option>
+                    );
+                  }
+                  return (
+                    <Option value={value} key={`${index}-${text}`}>
+                      <span>{text}</span>
+                    </Option>
+                  );
+                })
+              }
+            </SelectBox>
           </Form>
         </div>
       ) : ''}
