@@ -1,5 +1,11 @@
 import getTablePostData from '../../../utils/getTablePostData';
 
+const mapping = {
+  deployMethod: {
+    value: 'deployMethod',
+  },
+};
+
 export default ((
   intlPrefix, formatMessage, projectId, envOptions, deployTypeDs, deployResultDs, pipelineOptions,
 ) => ({
