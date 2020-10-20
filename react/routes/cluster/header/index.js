@@ -10,10 +10,12 @@ const ClusterHeader = observer(() => {
     prefixCls,
   } = useClusterStore();
 
-  return <div className={`${prefixCls}-header`}>
-    <div className={`${prefixCls}-header-placeholder`} />
-    <Breadcrumb />
-  </div>;
+  return (
+    <div className={`${prefixCls}-header`}>
+      <div className={`${prefixCls}-header-placeholder`} />
+      <Breadcrumb />
+    </div>
+  );
 });
 
 export default ClusterHeader;

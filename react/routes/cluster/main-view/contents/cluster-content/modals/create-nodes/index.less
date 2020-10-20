@@ -1,0 +1,71 @@
+.c7ncd-cluster-nodesCreate {
+  width: 740px;
+  margin-left: -24px;
+  display: flex;
+  height: 401px;
+  overflow: hidden;
+  &-left {
+    width: 240px;
+    flex-shrink: 0;
+    background-color: #f8f8f8;
+    padding: 0 0 8px 0;
+
+    > main {
+      max-height: 3.5rem;
+      overflow: auto;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    &-item {
+      padding: 15px 10px 15px 20px;
+      cursor: pointer;
+      &-selected {
+        background-color: #fff;
+        position: relative;
+        .c7n-pro-input-wrapper {
+          background-color: #fff !important;
+        }
+        &:before {
+          content: '';
+          width: 4px;
+          height: 30px;
+          position: absolute;
+          top: 19px;
+          left: 10px;
+          border-radius: 4px;
+          background-color: #5266d4;
+        }
+      }
+      .c7n-pro-form-float-label .c7n-pro-field-wrapper {
+        margin: 0 !important;
+      }
+      .c7n-pro-input-wrapper {
+        background-color: #f8f8f8;
+      }
+    }
+  }
+  &-right {
+    flex: 1;
+    padding: 11px 20px;
+    &-authType,
+    &-nodeType {
+      > .c7n-pro-select-box {
+        .c7n-pro-radio-wrapper:nth-of-type(2) {
+          margin-left: 72px;
+        }
+        .c7n-pro-checkbox-wrapper:not(:first-of-type) {
+          margin-left: 65px;
+        }
+      }
+    }
+    &-authType {
+      margin-top: 23px;
+      margin-bottom: -13px;
+    }
+    &-nodeType {
+      margin-top: 43px;
+    }
+  }
+}

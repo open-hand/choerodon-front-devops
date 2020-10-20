@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
@@ -7,6 +8,7 @@ import { useClusterStore } from '../../../../stores';
 import { useClusterMainStore } from '../../../stores';
 import { useModalStore } from './stores';
 import CreateCluster from './create-cluster';
+import CreateClusterByHost from './create-clusterByHost';
 import PermissionManage from './permission-manage';
 import Tips from '../../../../../../components/new-tips';
 
@@ -31,7 +33,9 @@ const ClusterModals = observer(() => {
   } = useClusterStore();
   const {
     contentStore,
-    tabs: { NODE_TAB, ASSIGN_TAB, COMPONENT_TAB, MONITOR_TAB },
+    tabs: {
+      NODE_TAB, ASSIGN_TAB, COMPONENT_TAB, MONITOR_TAB,
+    },
     PermissionDs,
     NodeListDs,
     ClusterDetailDs,
@@ -89,6 +93,18 @@ const ClusterModals = observer(() => {
     NonPermissionDs.query();
   }
 
+  function openCreateByHost() {
+    Modal.open({
+      key: Modal.key(),
+      title: formatMessage({ id: `${intlPrefix}.modal.createByHost` }),
+      children: <CreateClusterByHost afterOk={resreshTree} prefixCls={prefixCls} intlPrefix={intlPrefix} formatMessage={formatMessage} mainStore={mainStore} projectId={projectId} />,
+      drawer: true,
+      style: {
+        width: '740px',
+      },
+    });
+  }
+
   function openCreate() {
     Modal.open({
       key: modalKey1,
@@ -126,6 +142,15 @@ const ClusterModals = observer(() => {
   function getButtons() {
     const { getCanCreate } = mainStore;
     return [{
+      name: formatMessage({ id: `${intlPrefix}.modal.createByHost` }),
+      permissions: [],
+      icon: 'playlist_add',
+      handler: openCreateByHost,
+      display: true,
+      group: 1,
+      // disabled: !getCanCreate,
+      // disabledMessage: formatMessage({ id: `${intlPrefix}.modal.create.disabled` }),
+    }, {
       name: formatMessage({ id: `${intlPrefix}.modal.create` }),
       permissions: ['choerodon.code.project.deploy.cluster.cluster-management.ps.create'],
       icon: 'playlist_add',

@@ -1,4 +1,6 @@
-import React, { useRef, useMemo, lazy, Suspense } from 'react';
+import React, {
+  useRef, useMemo, lazy, Suspense,
+} from 'react';
 import { observer } from 'mobx-react-lite';
 import Sidebar from './sidebar';
 import DragBar from '../../../components/drag-bar';
@@ -38,21 +40,25 @@ export default observer(() => {
       : <Loading display />;
   }, [itemType]);
 
-  return (!treeDs.length && treeDs.status === 'ready') ? <div className={`${prefixCls}-wrap`}>
-    <Suspense fallback={<span />}>
-      <EmptyShown />
-    </Suspense>
-  </div> : <div
-    ref={rootRef}
-    className={`${prefixCls}-wrap`}
-  >
-    <DragBar
-      parentRef={rootRef}
-      store={mainStore}
-    />
-    <Sidebar />
-    <div className={`${prefixCls}-main ${prefixCls}-animate`}>
-      {content}
+  return (!treeDs.length && treeDs.status === 'ready') ? (
+    <div className={`${prefixCls}-wrap`}>
+      <Suspense fallback={<span />}>
+        <EmptyShown />
+      </Suspense>
     </div>
-  </div>;
+  ) : (
+    <div
+      ref={rootRef}
+      className={`${prefixCls}-wrap`}
+    >
+      <DragBar
+        parentRef={rootRef}
+        store={mainStore}
+      />
+      <Sidebar />
+      <div className={`${prefixCls}-main ${prefixCls}-animate`}>
+        {content}
+      </div>
+    </div>
+  );
 });
