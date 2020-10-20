@@ -151,6 +151,9 @@ export default function useStore(mainStore) {
         });
       }
     },
+    editStepLists(lists) {
+      this.dataSource2 = [...lists];
+    },
     newJob(sequence, data, edit) {
       this.setHasModify(true, edit);
       if (edit) {
@@ -194,6 +197,9 @@ export default function useStore(mainStore) {
           }
         });
       }
+    },
+    editJobLists(sequence, jobList) {
+      this.dataSource2[sequence].jobList = [...jobList];
     },
     removeStepTask(sequence, key, edit) {
       this.setHasModify(true, edit);
