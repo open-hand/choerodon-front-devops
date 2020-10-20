@@ -1,157 +1,24 @@
-import React, { useEffect, Fragment } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Button } from 'choerodon-ui';
 import {
-  Modal, Form, TextField, Select, SelectBox, Icon,
+  Modal, Icon,
 } from 'choerodon-ui/pro';
+import {
+  Droppable, Draggable, DragDropContext,
+} from 'react-beautiful-dnd';
 import { usePipelineStageEditStore } from '../stageEditBlock/stores';
 import AddTask from '../../../PipelineCreate/components/AddTask';
 import AddCDTask from '../../../PipelineCreate/components/AddCDTask';
 import AddStage from './AddStage';
 import { usePipelineCreateStore } from '../../../PipelineCreate/stores';
 import ViewVariable from '../../../view-variables';
-import StageType from '../stage-type';
+import EditItem from './EditItem';
 
 import './index.less';
 
-const jobTask = {
-  build: '构建',
-  sonar: '代码检查',
-  custom: '自定义',
-  chart: '发布Chart',
-  cdDeploy: '部署',
-  cdHost: '主机部署',
-  cdAudit: '人工卡点',
-  cdApiTest: 'API测试',
-};
 const modalStyle = {
   width: 380,
-};
-
-const EditItem = (props) => {
-  const {
-    index,
-    sequence,
-    edit,
-    jobDetail,
-    PipelineCreateFormDataSet,
-    AppServiceOptionsDs,
-    appServiceName,
-    image,
-    openVariableModal,
-    stageType,
-    appServiceCode,
-    witchColumnJobIndex,
-    columnIndex,
-  } = props;
-
-  const { name, type } = jobDetail;
-
-  const {
-    editBlockStore, stepStore,
-  } = usePipelineStageEditStore();
-
-  const {
-    editJob, removeStepTask, getStepData2,
-  } = editBlockStore || stepStore;
-
-  function handleEditOk(data) {
-    editJob(sequence, index, data, edit);
-  }
-
-  function openEditJobModal() {
-    Modal.open({
-      key: Modal.key(),
-      title: (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span className="c7n-piplineManage-edit-title-text">{`编辑${name}任务`}</span>
-          {
-            stageType === 'CI' && (
-              <div
-                className="c7n-piplineManage-edit-title-text-btn"
-                onClick={() => openVariableModal()}
-                role="none"
-              >
-                <Icon
-                  type="find_in_page-o"
-                  className="c7n-piplineManage-edit-title-btn"
-                />
-                <span>查看流水线变量</span>
-              </div>
-            )
-          }
-        </div>
-      ),
-      style: {
-        width: '740px',
-      },
-      children: stageType === 'CI' ? (
-        <AddTask
-          jobDetail={jobDetail}
-          appServiceId={!edit && appServiceName}
-          appServiceName={!edit && appServiceName}
-          handleOk={handleEditOk}
-          PipelineCreateFormDataSet={edit && PipelineCreateFormDataSet}
-          AppServiceOptionsDs={edit && AppServiceOptionsDs}
-          image={image}
-          columnIndex={columnIndex}
-          witchColumnJobIndex={witchColumnJobIndex}
-        />
-      ) : (
-        <AddCDTask
-          random={Math.random()}
-          jobDetail={jobDetail}
-          pipelineStageMainSource={getStepData2}
-          appServiceId={!edit && appServiceName}
-          appServiceName={!edit && appServiceName}
-          PipelineCreateFormDataSet={edit && PipelineCreateFormDataSet}
-          handleOk={handleEditOk}
-          columnIndex={columnIndex}
-          witchColumnJobIndex={witchColumnJobIndex}
-        />
-      ),
-
-      drawer: true,
-      okText: '添加',
-    });
-  }
-
-  function openDeleteJobModal() {
-    Modal.open({
-      key: Modal.key(),
-      title: `删除${name}任务`,
-      children: '确认删除此任务吗？',
-      okText: '确认',
-      onOk: () => removeStepTask(sequence, index, edit),
-    });
-  }
-
-  return (
-    <div className="c7n-piplineManage-edit-column-item">
-      <div className="c7n-piplineManage-edit-column-item-header">
-        【
-        {Object.prototype.hasOwnProperty.bind(jobTask, type) && jobTask[type]}
-        】
-        {name}
-      </div>
-      <div className="c7n-piplineManage-edit-column-item-btnGroup">
-        <Button
-          className="c7n-piplineManage-edit-column-item-btnGroup-btn"
-          shape="circle"
-          size="small"
-          icon="mode_edit"
-          onClick={openEditJobModal}
-        />
-        <Button
-          className="c7n-piplineManage-edit-column-item-btnGroup-btn"
-          shape="circle"
-          size="small"
-          icon="delete_forever"
-          onClick={openDeleteJobModal}
-        />
-      </div>
-    </div>
-  );
 };
 
 export default observer((props) => {
@@ -166,11 +33,13 @@ export default observer((props) => {
     image,
     type,
     parallel,
-    triggerType: stageTriggerType,
     appServiceCode,
     appServiceType,
     nextStageType,
     stagesSource,
+    innerRef,
+    dragProvided,
+    snapshotinner,
   } = props;
 
   const witchColumnJobIndex = stagesSource && stagesSource[columnIndex]?.jobList.length;
@@ -188,6 +57,7 @@ export default observer((props) => {
     newJob,
     getStepData,
     getStepData2,
+    editJobLists,
   } = editBlockStore || stepStore;
 
   const stageLength = edit ? getStepData2.length : getStepData.length;
@@ -222,31 +92,74 @@ export default observer((props) => {
     addStepDs.reset();
   }
 
+  function swap(arr, from, to) {
+    arr.splice(to, 0, arr.splice(from, 1)[0]);
+    return arr;
+  }
+
+  function onTaskDragEnd(data) {
+    const { source, destination } = data;
+    if (!destination) {
+      return;
+    }
+    const arr = [...swap(jobList, source.index, destination.index)];
+    editJobLists(sequence, arr);
+  }
+
+  const getListStyle = (isDraggingOver) => ({
+    border: isDraggingOver ? '2px dotted #5266d4' : 'none',
+    borderRadius: isDraggingOver ? '3px' : '0',
+    padding: '2px',
+    background: isDraggingOver ? 'rgba(82, 102, 212, 0.1)' : 'none',
+  });
+
   const renderStepTasks = () => (
     jobList && jobList.length > 0 ? (
-      <div className="c7n-piplineManage-edit-column-lists">
-        {
-          jobList.slice().map((item, index) => (
-            <EditItem
-              index={index}
-              witchColumnJobIndex={witchColumnJobIndex}
-              columnIndex={columnIndex + 1}
-              sequence={sequence}
-              key={Math.random()}
-              edit={edit}
-              appServiceId={appServiceId}
-              appServiceName={appServiceName}
-              appServiceCode={appServiceCode}
-              AppServiceOptionsDs={edit && AppServiceOptionsDs}
-              PipelineCreateFormDataSet={edit && PipelineCreateFormDataSet}
-              jobDetail={item}
-              image={image}
-              openVariableModal={openVariableModal}
-              stageType={type || 'CI'}
-            />
-          ))
-        }
-      </div>
+      <DragDropContext onDragEnd={onTaskDragEnd}>
+        <Droppable droppableId={`dropJobs-${sequence}`}>
+          {
+            (provided, snapshot) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                className="c7n-piplineManage-edit-column-lists"
+                style={getListStyle(snapshot.isDraggingOver)}
+              >
+                {
+                  jobList.slice().map((item, index) => (
+                    <Draggable key={`dropJobs-${item.id}`} draggableId={`dropJobs-${item.id}`} index={index}>
+                      {
+                        (dragProvidedByColomn, snapshotinnerByJob) => (
+                          <EditItem
+                            snapshotinner={snapshotinnerByJob}
+                            innerRef={dragProvidedByColomn.innerRef}
+                            dragProvided={dragProvidedByColomn}
+                            index={index}
+                            witchColumnJobIndex={witchColumnJobIndex}
+                            columnIndex={columnIndex + 1}
+                            sequence={sequence}
+                            edit={edit}
+                            appServiceId={appServiceId}
+                            appServiceName={appServiceName}
+                            appServiceCode={appServiceCode}
+                            AppServiceOptionsDs={edit && AppServiceOptionsDs}
+                            PipelineCreateFormDataSet={edit && PipelineCreateFormDataSet}
+                            jobDetail={item}
+                            image={image}
+                            openVariableModal={openVariableModal}
+                            stageType={type || 'CI'}
+                          />
+                        )
+                      }
+                    </Draggable>
+                  ))
+                }
+                {provided.placeholder}
+              </div>
+            )
+          }
+        </Droppable>
+      </DragDropContext>
     ) : null
   );
 
@@ -365,6 +278,15 @@ export default observer((props) => {
 
   const realType = type?.toUpperCase();
 
+  const getItemStyle = (isDragging, draggableStyle) => ({
+    // some basic styles to make the items look a bit nicer
+    userSelect: 'none',
+    // styles we need to apply on draggables
+    ...draggableStyle,
+    cursor: 'all-scroll',
+    background: type === 'CI' ? 'rgba(245, 246, 250, 1)' : 'rgba(245,248,250,1)',
+  });
+
   return [
     columnIndex === 0 && (
     <Button
@@ -378,9 +300,13 @@ export default observer((props) => {
     ),
     <div
       className="c7n-piplineManage-edit-column"
-      style={{
-        background: type === 'CI' ? 'rgba(245, 246, 250, 1)' : 'rgba(245,248,250,1)',
-      }}
+      ref={innerRef}
+      {...dragProvided.draggableProps}
+      {...dragProvided.dragHandleProps}
+      style={getItemStyle(
+        snapshotinner.isDragging,
+        dragProvided.draggableProps.style,
+      )}
     >
       <div className="c7n-piplineManage-edit-column-header">
         <span>{name}</span>
