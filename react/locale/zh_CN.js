@@ -1350,7 +1350,8 @@ const cluster = {
   'c7ncd.cluster.node.type': '类型',
   'c7ncd.cluster.node.cpu': 'CPU分配',
   'c7ncd.cluster.node.memory': '内存分配',
-  'c7ncd.cluster.modal.create': '创建集群',
+  'c7ncd.cluster.modal.create': '连接集群',
+  'c7ncd.cluster.modal.createByHost': '新建集群',
   'c7ncd.cluster.modal.create.disabled': '组织集群数量已达上限，无法创建更多',
   'c7ncd.cluster.modal.edit': '修改集群',
   'c7ncd.cluster.modal.permission': '权限管理',
@@ -1439,6 +1440,9 @@ const cluster = {
   'c7ncd.cluster.env.internal': 'Choerodon平台环境',
   'c7ncd.cluster.env.external': '非Choerodon平台环境',
   'c7ncd.cluster.env.external.tips': '此处仅展示不为空的非Choerodon平台环境',
+  'c7ncd.cluster.nodesCreate.account.password': '用户名与密码',
+  'c7ncd.cluster.nodesCreate.account.token': '用户名与密钥',
+  'c7ncd.cluster.nodesCreate.token': '密钥',
 };
 
 const zhCN = {

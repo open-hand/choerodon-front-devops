@@ -1,4 +1,6 @@
-import React, { Fragment, lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import React, {
+  Fragment, lazy, Suspense, useEffect, useMemo, useState,
+} from 'react';
 import { observer } from 'mobx-react-lite';
 import { Tabs, Spin } from 'choerodon-ui';
 import { axios } from '@choerodon/boot';
@@ -48,18 +50,20 @@ export default observer((props) => {
         return ['disconnect'];
       };
 
-      return <Fragment>
-        <StatusDot
-          getStatus={getStatus}
-        />
-        <span className="c7ncd-page-title-text">{name}</span>
-      </Fragment>;
+      return (
+        <>
+          <StatusDot
+            getStatus={getStatus}
+          />
+          <span className="c7ncd-page-title-text">{name}</span>
+        </>
+      );
     }
     return null;
   }
 
   return (
-    <Fragment>
+    <>
       <Modals />
       <PageTitle content={title()} />
       <Tabs
@@ -88,10 +92,12 @@ export default observer((props) => {
         </TabPane>
         <TabPane
           key={ASSIGN_TAB}
-          tab={<Tips
-            helpText={formatMessage({ id: `${intlPrefix}.permission.tab.tips` })}
-            title={formatMessage({ id: `${intlPrefix}.permission.assign` })}
-          />}
+          tab={(
+            <Tips
+              helpText={formatMessage({ id: `${intlPrefix}.permission.tab.tips` })}
+              title={formatMessage({ id: `${intlPrefix}.permission.assign` })}
+            />
+          )}
         >
           <Suspense fallback={<Spin />}>
             <PermissionList />
@@ -113,7 +119,7 @@ export default observer((props) => {
             <Monitor />
           </Suspense>
         </TabPane>
-
       </Tabs>
-    </Fragment>);
+    </>
+  );
 });
