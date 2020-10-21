@@ -11,6 +11,10 @@ import { Button, Tooltip } from 'choerodon-ui';
 import { FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
+import app from '@/images/app.svg';
+import image from '@/images/image.svg';
+import jar from '@/images/jar.svg';
+import { mapping } from './stores/ListDataSet';
 import { useDeployStore } from './stores';
 import StatusTag from '../../components/status-tag';
 import TimePopover from '../../components/timePopover/TimePopover';
@@ -235,6 +239,55 @@ const Deployment = withRouter(observer((props) => {
     return backPath || '';
   }
 
+  /**
+   * 部署方式和载体的渲染
+   * @param value
+   * @param record
+   */
+  const renderDeployMethod = ({ value, record }) => {
+    const deployMode = record.get('deployMode');
+    const deployPayloadName = record.get('deployPayloadName');
+    return (
+      <span>
+        <StatusTag
+          color={deployMode === 'host' ? 'rgb(142, 187, 252)' : 'rgb(116, 217, 221)'}
+          name={deployMode === 'host' ? '主机' : '环境'}
+          style={statusTagsStyle}
+        />
+        {deployPayloadName}
+      </span>
+    );
+  };
+
+  /**
+   * 部署对象渲染
+   */
+  const renderDeployObejct = ({ value, record }) => {
+    const deployObjectType = record.get('deployObjectType');
+    const deployObjectName = record.get('deployObjectName');
+    const deployObjectVersion = record.get('deployObjectVersion');
+    const iconMap = {
+      app,
+      jar,
+      image,
+    };
+    return [
+      <p className="c7ncd-deploy-content-deployObjectP">
+        <img src={iconMap[deployObjectType]} alt="" />
+        <span className="c7ncd-deploy-content-deployObjectName">
+          {deployObjectName}
+        </span>
+      </p>,
+      <p className="c7ncd-deploy-content-deployObjectP">
+        <span className="c7ncd-deploy-content-deployObjectVersion">
+          版本:
+          {' '}
+          {deployObjectVersion}
+        </span>
+      </p>,
+    ];
+  };
+
   return (
     <Page
       service={['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.default']}
@@ -273,7 +326,7 @@ const Deployment = withRouter(observer((props) => {
           dataSet={listDs}
           // queryBar="advancedBar"
           className={`${prefixCls}-content-table`}
-          queryFieldsLimit={4}
+          // queryFieldsLimit={4}
           rowHeight="auto"
         >
           <Column
@@ -287,10 +340,12 @@ const Deployment = withRouter(observer((props) => {
               />
 )}
           />
+          <Column name={mapping.deployMethod.value} renderer={renderDeployMethod} />
           <Column name="deployStatus" renderer={renderDeployStatus} />
           <Column name="instanceName" renderer={renderInstance} />
-          <Column name="envName" renderer={renderEnv} />
-          <Column name="appServiceName" renderer={renderAppService} />
+          <Column name={mapping.deployObject.value} renderer={renderDeployObejct} />
+          {/* <Column name="envName" renderer={renderEnv} /> */}
+          {/* <Column name="appServiceName" renderer={renderAppService} /> */}
           <Column name="executeUser" renderer={renderExecutor} />
         </Table>
       </Content>

@@ -46,6 +46,15 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       ],
       selection: 'single',
     }), []);
+    const deployModeDs = useMemo(() => new DataSet({
+      data: [{
+        text: '环境部署',
+        value: 'env',
+      }, {
+        text: '主机部署',
+        value: 'host',
+      }],
+    }), []);
     const deployResultDs = useMemo(() => new DataSet({
       data: map(STATUS, (item) => ({
         text: formatMessage({ id: `${intlPrefix}.status.${item}` }),
@@ -63,7 +72,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
     const listDs = useMemo(
       () => new DataSet(ListDataSet(
         intlPrefix, formatMessage, projectId, envOptionsDs,
-        deployTypeDs, deployResultDs, pipelineOptionsDs,
+        deployTypeDs, deployResultDs, pipelineOptionsDs, deployModeDs,
       )), [projectId],
     );
     const detailDs = useMemo(() => new DataSet(DetailDataSet()), []);
