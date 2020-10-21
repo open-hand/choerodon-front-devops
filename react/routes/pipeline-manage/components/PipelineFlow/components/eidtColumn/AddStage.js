@@ -99,18 +99,6 @@ export default observer(
       }
     }
 
-    const renderderAuditUsersList = ({ text, record }) => (text === '加载更多' ? (
-      <a
-        role="none"
-        style={{ display: 'block', width: '100%', height: '100%' }}
-        onClick={handleMore}
-      >
-        {text}
-      </a>
-    ) : (
-      `${text}(${record.get('loginName')})`
-    ));
-
     // eslint-disable-next-line consistent-return
     function hanldeTypeDisabled(record) {
       const isCi = record.get('value') === 'CI'; // opts得value

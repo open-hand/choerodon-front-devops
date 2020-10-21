@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Spin } from 'choerodon-ui';
+import { message } from 'choerodon-ui';
 import {
   Droppable, Draggable, DragDropContext,
 } from 'react-beautiful-dnd';
@@ -113,6 +113,7 @@ export default observer(() => {
     const sourceType = getStepData2[source.index]?.type;
     const destType = getStepData2[destination.index]?.type;
     if (sourceType !== destType) {
+      message.error('CI阶段必须在CD阶段之后');
       return;
     }
     const arr = [...swap(getStepData2, source.index, destination.index)];
