@@ -22,6 +22,7 @@ function CreateNodesForm() {
     isEdit,
     nodesTypeDs,
     prefixCls,
+    modal,
   } = useFormStore();
 
   useEffect(() => {
@@ -75,6 +76,8 @@ function CreateNodesForm() {
     return <span>{text}</span>;
   };
 
+  modal && modal.handleOk(handleSubmit);
+
   return (
     <div className={`${prefixCls}-nodesCreate`}>
       <div className={`${prefixCls}-nodesCreate-left`}>
@@ -83,9 +86,9 @@ function CreateNodesForm() {
             map(nodesDs.data, (nodesRecord, index) => (
               <div
                 className={
-              `${prefixCls}-nodesCreate-left-item 
-              ${nodesRecord?.id === selectedRecord?.id && `${prefixCls}-nodesCreate-left-item-selected`}`
-              }
+                  `${prefixCls}-nodesCreate-left-item 
+                   ${nodesRecord?.id === selectedRecord?.id && `${prefixCls}-nodesCreate-left-item-selected`}`
+                }
                 onClick={() => setSelectedRecord(nodesRecord)}
                 role="none"
               >
@@ -131,12 +134,12 @@ function CreateNodesForm() {
             columns={6}
             record={selectedRecord}
           >
-            <TextField name="domain" colSpan={3} />
-            <TextField name="port" colSpan={3} />
+            <TextField name="hostIp" colSpan={3} />
+            <TextField name="sshPort" colSpan={3} />
             <SelectBox name="authType" colSpan={6} className={`${prefixCls}-nodesCreate-right-authType`} />
             <TextField name="username" colSpan={3} />
             {
-              selectedRecord && selectedRecord.current && selectedRecord.current.get('authType') === 'publickey' ? (
+              selectedRecord && selectedRecord.get('authType') === 'publickey' ? (
                 <TextField name="password" colSpan={3} />
               ) : <Password name="password" reveal={false} colSpan={3} />
             }
@@ -148,9 +151,9 @@ function CreateNodesForm() {
             record={selectedRecord}
           >
             <SelectBox
-              name="nodeType"
+              name="type"
               colSpan={6}
-              multiple
+              multiple={!modal}
               className={`${prefixCls}-nodesCreate-right-nodeType`}
               optionRenderer={renderNodetypeOpts}
             >
@@ -158,6 +161,7 @@ function CreateNodesForm() {
                 map(nodesTypeDs && nodesTypeDs.toData(), (item, index) => {
                   const { value, text } = item;
                   if (value === 'etcd') {
+                    if (modal) return null;
                     return (
                       <Option value={value} key={`${index}-${text}`}>
                         <div style={{ display: 'inline-flex', alignItems: 'center' }}>

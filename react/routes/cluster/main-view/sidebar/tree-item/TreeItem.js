@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { Fragment, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
@@ -15,15 +16,18 @@ function getName(name, search, prefixCls) {
   const currentStr = name.substr(index, search.length);
   const afterStr = name.substr(index + search.length);
 
-  return <span className={`${prefixCls}-tree-text`}>
-    {index > -1 ? <Fragment>
-      {beforeStr}
-      <span className={`${prefixCls}-tree-text-highlight`}>{currentStr}</span>
-      {afterStr}
-    </Fragment> : name}
-  </span>;
+  return (
+    <span className={`${prefixCls}-tree-text`}>
+      {index > -1 ? (
+        <>
+          {beforeStr}
+          <span className={`${prefixCls}-tree-text-highlight`}>{currentStr}</span>
+          {afterStr}
+        </>
+      ) : name}
+    </span>
+  );
 }
-
 
 const TreeItem = observer(({ record, search }) => {
   const {
@@ -41,23 +45,22 @@ const TreeItem = observer(({ record, search }) => {
     return getName(itemName, search, prefixCls);
   }, [record, search]);
 
-
   function getIconItem(type) {
     const iconMappings = {
       [NODE_ITEM]: 'adjust',
     };
     const iconType = iconMappings[type];
-    return <Fragment>
-      <Icon type={iconType} />
-      {name}
-    </Fragment>;
+    return (
+      <>
+        <Icon type={iconType} />
+        {name}
+      </>
+    );
   }
-
 
   function getCluIcon() {
     return <ClusterItem name={name} record={record} intlPrefix={intlPrefix} prefixCls={prefixCls} />;
   }
-
 
   function getItem() {
     const type = record.get('itemType');
@@ -65,10 +68,12 @@ const TreeItem = observer(({ record, search }) => {
     const isGroup = record.get('isGroup');
 
     if (isGroup) {
-      return <Fragment>
-        {isExpand ? <Icon type="folder_open2" /> : <Icon type="folder_open" />}
-        {name}
-      </Fragment>;
+      return (
+        <>
+          {isExpand ? <Icon type="folder_open2" /> : <Icon type="folder_open" />}
+          {name}
+        </>
+      );
     }
 
     let treeItem;
@@ -83,10 +88,10 @@ const TreeItem = observer(({ record, search }) => {
         treeItem = null;
     }
     return (
-      <Fragment>
+      <>
         {treeItem}
         {/* <div className="tree-node-selected" /> */}
-      </Fragment>
+      </>
     );
   }
 
@@ -101,6 +106,5 @@ TreeItem.propTypes = {
 TreeItem.defaultProps = {
   record: {},
 };
-
 
 export default TreeItem;

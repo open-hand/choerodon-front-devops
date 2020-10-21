@@ -1352,6 +1352,7 @@ const cluster = {
   'c7ncd.cluster.node.memory': '内存分配',
   'c7ncd.cluster.modal.create': '连接集群',
   'c7ncd.cluster.modal.createByHost': '新建集群',
+  'c7ncd.cluster.modal.createByNodes': '添加节点',
   'c7ncd.cluster.modal.create.disabled': '组织集群数量已达上限，无法创建更多',
   'c7ncd.cluster.modal.edit': '修改集群',
   'c7ncd.cluster.modal.permission': '权限管理',

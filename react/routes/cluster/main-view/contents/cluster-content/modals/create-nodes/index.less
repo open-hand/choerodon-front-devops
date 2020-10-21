@@ -3,7 +3,6 @@
   margin-left: -24px;
   display: flex;
   height: 401px;
-  overflow: hidden;
   &-left {
     width: 240px;
     flex-shrink: 0;
@@ -52,7 +51,7 @@
     &-authType,
     &-nodeType {
       > .c7n-pro-select-box {
-        .c7n-pro-radio-wrapper:nth-of-type(2) {
+        .c7n-pro-radio-wrapper:not(:first-of-type) {
           margin-left: 72px;
         }
         .c7n-pro-checkbox-wrapper:not(:first-of-type) {

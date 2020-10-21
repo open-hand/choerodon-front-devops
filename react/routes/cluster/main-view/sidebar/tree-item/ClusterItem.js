@@ -1,5 +1,5 @@
-import React, { Fragment, useMemo } from 'react';
-import PropTypes from 'prop-types';
+/* eslint-disable max-len */
+import React, { useMemo } from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Action, Choerodon } from '@choerodon/boot';
 import { Modal, Icon, Spin } from 'choerodon-ui/pro';
@@ -65,9 +65,9 @@ function ClusterItem({
         children: message,
         okText: formatMessage({ id: 'iknow' }),
         footer: ((okBtn, cancelBtn) => (
-          <Fragment>
+          <>
             {okBtn}
-          </Fragment>
+          </>
         )),
       });
     } else {
@@ -84,7 +84,8 @@ function ClusterItem({
             />
           </div>
           <div className={`${prefixCls}-delete-notice`}>
-            <Icon type="error" /><FormattedMessage id="cluster.delDes_2" />
+            <Icon type="error" />
+            <FormattedMessage id="cluster.delDes_2" />
           </div>
         </div>
       );
@@ -93,9 +94,10 @@ function ClusterItem({
         onOk: handleDelete,
         okCancel: true,
         footer: ((okBtn, cancelBtn) => (
-          <Fragment>
-            {okBtn}{cancelBtn}
-          </Fragment>
+          <>
+            {okBtn}
+            {cancelBtn}
+          </>
         )),
         okText: formatMessage({ id: 'cluster.del.confirm' }),
         okProps: { color: 'red' },
@@ -103,6 +105,7 @@ function ClusterItem({
     }
   }
 
+  // eslint-disable-next-line consistent-return
   async function handleDelete() {
     try {
       const res = await mainStore.deleteCluster({ projectId, clusterId: record.get('id') });
@@ -152,10 +155,12 @@ function ClusterItem({
     }
   }
 
-  const getPrefix = useMemo(() => <StatusDot
-    size="small"
-    getStatus={getStatus}
-  />, [record]);
+  const getPrefix = useMemo(() => (
+    <StatusDot
+      size="small"
+      getStatus={getStatus}
+    />
+  ), [record]);
 
   const getSuffix = useMemo(() => {
     const [status] = getStatus();
@@ -182,17 +187,18 @@ function ClusterItem({
   const clearClick = (e) => {
     e.stopPropagation();
   };
-  return <Fragment>
-    {getPrefix}
-    {name}
-    <div onClick={clearClick}>
-      {getSuffix}
-    </div>
-  </Fragment>;
+  return (
+    <>
+      {getPrefix}
+      <span className={`${prefixCls}-clusterNode-type ${prefixCls}-clusterNode-type-created`}>
+        平台
+      </span>
+      {name}
+      <div onClick={clearClick} role="none">
+        {getSuffix}
+      </div>
+    </>
+  );
 }
-
-ClusterItem.propTypes = {
-  name: PropTypes.any,
-};
 
 export default injectIntl(ClusterItem);
