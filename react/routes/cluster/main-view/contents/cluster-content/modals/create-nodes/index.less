@@ -20,6 +20,14 @@
     &-item {
       padding: 15px 10px 15px 20px;
       cursor: pointer;
+      position: relative;
+      &-errorIcon {
+        line-height: 33px;
+        color: #f77a70;
+        position: absolute;
+        right: 9px;
+        top: 16px;
+      }
       &-selected {
         background-color: #fff;
         position: relative;
@@ -27,7 +35,7 @@
           background-color: #fff !important;
         }
         &:before {
-          content: '';
+          content: "";
           width: 4px;
           height: 30px;
           position: absolute;

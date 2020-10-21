@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import {
   TextField, TextArea, Form, Modal, message, Button,
 } from 'choerodon-ui/pro';
-import { forEach } from 'lodash';
+import { forEach, toUpper } from 'lodash';
 import { useFormStore } from './stores';
 import NodesCreate from '../create-nodes';
 import TestConnectFinal from './components/test-connect-final';
@@ -76,41 +76,56 @@ function CreateClusterHostForm() {
 
   // eslint-disable-next-line consistent-return
   async function handleSubmit() {
-    // const result = await formDs.validate();
-    // if (result) {
-    const mainData = formDs.toData()[0];
-    const hasAllNodeTypes = checkHasAllNodeType();
-    // 首先需要校验创建集群时，需至少包含1个master+1个etcd+1个worker类型的节点。
-    if (!hasAllNodeTypes) {
-      message.error('创建集群时，需至少包含1个master+1个etcd+1个worker类型的节点。');
+    try {
+      nodesDs.forEach(async (nodeRecord) => {
+        const res = await nodeRecord.validate();
+        if (!res) {
+          nodeRecord.set('hasError', true);
+        }
+      });
+      const result = await formDs.validate();
+      if (!result) {
+        message.error('请完善集群信息');
+      }
+      if (result) {
+        const mainData = formDs.toData()[0];
+        const hasAllNodeTypes = checkHasAllNodeType();
+        // 首先需要校验创建集群时，需至少包含1个master+1个etcd+1个worker类型的节点。
+        if (!hasAllNodeTypes) {
+          message.error('创建集群时，需至少包含1个master+1个etcd+1个worker类型的节点。');
+          return false;
+        }
+        const isEven = checkNodesEtcdIsEven(mainData?.devopsClusterNodeVOList || []);
+        if (!isEven) {
+          openNoticeEvenModal();
+          return false;
+        }
+        setConnectObj({
+          status: 'operating',
+          configuration: {
+            status: 'success',
+            errorMessage: null,
+          },
+          system: {
+            status: 'success',
+            errorMessage: null,
+          },
+          memory: {
+            status: 'operating',
+            errorMessage: null,
+          },
+          cpu: {
+            status: 'wait',
+            errorMessage: null,
+          },
+        });
+      }
+      // }
       return false;
+    } catch (error) {
+      throw new Error(error);
+      // return false;
     }
-    const isEven = checkNodesEtcdIsEven(mainData?.devopsClusterNodeVOList || []);
-    if (!isEven) {
-      openNoticeEvenModal();
-      return false;
-    }
-    setConnectObj({
-      status: 'operating',
-      configuration: {
-        status: 'success',
-        errorMessage: null,
-      },
-      system: {
-        status: 'success',
-        errorMessage: null,
-      },
-      memory: {
-        status: 'operating',
-        errorMessage: null,
-      },
-      cpu: {
-        status: 'wait',
-        errorMessage: null,
-      },
-    });
-    // await formDs.submit();
-    return false;
     // }
     // try {
     //   if ((await formDs.submit()) !== false) {
@@ -145,6 +160,7 @@ function CreateClusterHostForm() {
         intlPrefix={intlPrefix}
         nodesTypeDs={nodesTypeDs}
         nodesDs={nodesDs}
+        parentModal={modal}
       />
       {connectObj && <TestConnectFinal connectRecord={connectObj} />}
     </div>

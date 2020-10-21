@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  TextField, TextArea, Form, Select, Button, SelectBox, Password, CheckBox,
+  TextField, TextArea, Form, Select, Button, SelectBox, Password, Icon,
 } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import NewTips from '@/components/new-tips';
@@ -23,6 +23,7 @@ function CreateNodesForm() {
     nodesTypeDs,
     prefixCls,
     modal,
+    parentModal,
   } = useFormStore();
 
   useEffect(() => {
@@ -53,9 +54,19 @@ function CreateNodesForm() {
         return false;
       }
       selectedRecord.set('status', 'operating');
+      parentModal && parentModal.update({
+        okProps: {
+          disabled: true,
+        },
+      });
 
       setTimeout(() => {
         selectedRecord.set('status', 'success');
+        parentModal && parentModal.update({
+          okProps: {
+            disabled: false,
+          },
+        });
       }, [2000]);
     } catch (error) {
       selectedRecord.set('status', 'wait');
@@ -93,17 +104,18 @@ function CreateNodesForm() {
                 role="none"
               >
                 <Form
-                  columns={5}
+                  columns={10}
                   record={nodesRecord}
                   key={nodesRecord.id}
                 >
-                  <TextField name="name" colSpan={nodesDs.data.length > 1 ? 4 : 5} />
+                  <TextField name="name" colSpan={nodesDs.data.length > 1 ? 7 : 9} />
                   {
                     nodesDs.data.length > 1 && (
                       <Button
                         funcType="flat"
                         icon="delete"
                         shape="circle"
+                        colSpan={2}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleRemove(nodesRecord, index);
@@ -112,6 +124,14 @@ function CreateNodesForm() {
                     )
                   }
                 </Form>
+                {
+                  nodesRecord.get('hasError') && (
+                  <Icon
+                    type="info"
+                    className={`${prefixCls}-nodesCreate-left-item-errorIcon`}
+                  />
+                  )
+                }
               </div>
             ))
         }

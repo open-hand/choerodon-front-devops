@@ -109,7 +109,7 @@ export default ({
           const source = omit(JSON.parse(value), ['__id', '__status']);
           if (source?.devopsClusterNodeVOList) {
             source.devopsClusterNodeVOList = map(source?.devopsClusterNodeVOList, (item) => {
-              const tempItem = omit(item, ['__id', '__status']);
+              const tempItem = omit(item, ['__id', '__status', 'hasError']);
               tempItem.type = calculateType(tempItem?.type);
               return tempItem;
             });

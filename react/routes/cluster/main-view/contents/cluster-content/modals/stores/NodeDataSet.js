@@ -54,7 +54,7 @@ export default ({
   intlPrefix,
   isModal,
 }) => {
-  function handleUpdate({
+  async function handleUpdate({
     dataSet, record, name, value, oldValue,
   }) {
     if (!isModal && name === 'type') {
@@ -70,6 +70,12 @@ export default ({
     }
     if (name === 'hostIp') {
       ipValidator(dataSet);
+    }
+    if (record.get('hasError')) {
+      const res = await record.validate();
+      if (res) {
+        record.set('hasError', false);
+      }
     }
   }
   return {

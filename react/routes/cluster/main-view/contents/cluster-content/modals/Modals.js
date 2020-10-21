@@ -117,6 +117,9 @@ const ClusterModals = observer(() => {
         width: '740px',
       },
       okText: formatMessage({ id: 'add' }),
+      onCancel: () => {
+        nodesDs.reset();
+      },
     });
   }
 
@@ -140,6 +143,9 @@ const ClusterModals = observer(() => {
         width: '740px',
       },
       okText: formatMessage({ id: 'create' }),
+      onCancel: () => {
+        formDs.reset();
+      },
     });
   }
 
