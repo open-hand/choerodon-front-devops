@@ -198,6 +198,9 @@ const Deployment = withRouter(observer((props) => {
   }
 
   function renderInstance({ value, record }) {
+    if (record.get('deployMode') === 'host') {
+      return '';
+    }
     return (
       <span
         className={`${prefixCls}-content-table-instance`}
@@ -341,7 +344,11 @@ const Deployment = withRouter(observer((props) => {
 )}
           />
           <Column name={mapping.deployMethod.value} renderer={renderDeployMethod} />
-          <Column name="deployStatus" renderer={renderDeployStatus} />
+          <Column
+            name="deployResult"
+            renderer={renderDeployStatus}
+            header="执行结果"
+          />
           <Column name="instanceName" renderer={renderInstance} />
           <Column name={mapping.deployObject.value} renderer={renderDeployObejct} />
           {/* <Column name="envName" renderer={renderEnv} /> */}
