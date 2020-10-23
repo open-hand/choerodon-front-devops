@@ -125,8 +125,8 @@ export default ({
       {
         name: 'password',
         type: 'string',
+        required: true,
         dynamicProps: {
-          required: ({ record }) => record.get('username'),
           label: ({ record }) => formatMessage({ id: record.get('authType') === 'accountPassword' ? 'password' : `${intlPrefix}.nodesCreate.token` }),
         },
       },

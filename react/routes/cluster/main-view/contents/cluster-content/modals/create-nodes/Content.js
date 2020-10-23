@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  TextField, TextArea, Form, Select, Button, SelectBox, Password, Icon,
+  TextField, TextArea, Form, Select, Button, SelectBox, Password, Icon, message,
 } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import NewTips from '@/components/new-tips';
@@ -30,7 +30,19 @@ function CreateNodesForm() {
     nodesDs && nodesDs.data && setSelectedRecord(nodesDs.data[0]);
   }, [nodesDs]);
 
-  function handleSubmit() {
+  async function handleSubmit() {
+    nodesDs.forEach(async (nodeRecord) => {
+      const res = await nodeRecord.validate();
+      if (!res) {
+        nodeRecord.set('hasError', true);
+      }
+    });
+    const result = await nodesDs.validate();
+    if (!result) {
+      message.error('请完善节点信息');
+      return false;
+    }
+    return true;
   }
 
   function handleAddNewNode() {
@@ -56,7 +68,7 @@ function CreateNodesForm() {
       selectedRecord.set('status', 'operating');
       parentModal && parentModal.update({
         okProps: {
-          disabled: true,
+          loading: true,
         },
       });
 
@@ -64,7 +76,7 @@ function CreateNodesForm() {
         selectedRecord.set('status', 'success');
         parentModal && parentModal.update({
           okProps: {
-            disabled: false,
+            loading: false,
           },
         });
       }, [2000]);
@@ -116,6 +128,7 @@ function CreateNodesForm() {
                         icon="delete"
                         shape="circle"
                         colSpan={2}
+                        className={`${prefixCls}-nodesCreate-left-item-selected-btn`}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleRemove(nodesRecord, index);
@@ -186,7 +199,7 @@ function CreateNodesForm() {
                       <Option value={value} key={`${index}-${text}`}>
                         <div style={{ display: 'inline-flex', alignItems: 'center' }}>
                           <span style={{ marginRight: '2px' }}>{text}</span>
-                          <NewTips showHelp helpText="提示" />
+                          <NewTips showHelp helpText="etcd类型的节点建议为单数， 以避免脑裂" />
                         </div>
                       </Option>
                     );

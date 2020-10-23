@@ -1338,6 +1338,10 @@ const pageDetail = {
 
 const cluster = {
   'c7ncd.cluster.node.list': '节点列表',
+  'c7ncd.cluster.node.action.removeNode': '删除节点',
+  'c7ncd.cluster.node.action.removeRole': '移除角色',
+  'c7ncd.cluster.node.modal.removeRole': '移除',
+  'c7ncd.cluster.node.modal.cannotDelete': '无法删除',
   'c7ncd.cluster.permission.assign': '权限分配',
   'c7ncd.cluster.monitor': '集群监控',
   'c7ncd.cluster.component': '组件管理',

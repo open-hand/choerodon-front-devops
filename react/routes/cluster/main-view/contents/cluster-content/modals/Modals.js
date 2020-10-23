@@ -144,6 +144,7 @@ const ClusterModals = observer(() => {
       },
       okText: formatMessage({ id: 'create' }),
       onCancel: () => {
+        nodesDs.reset();
         formDs.reset();
       },
     });
