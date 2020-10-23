@@ -45,7 +45,7 @@ export default ((
     { name: 'deployType', type: 'string', label: formatMessage({ id: `${intlPrefix}.type` }) },
     { name: 'envName', type: 'string', label: formatMessage({ id: `${intlPrefix}.env` }) },
     { name: 'deployTime', type: 'dateTime', label: formatMessage({ id: `${intlPrefix}.time` }) },
-    { name: 'deployStatus', type: 'string', label: '执行结果' },
+    { name: 'deployResult', type: 'string', label: '执行结果' },
     { name: 'pipelineTriggerType', type: 'string', label: formatMessage({ id: `${intlPrefix}.pipeline.type` }) },
     { name: 'deployCreatedBy', type: 'string' },
     { name: 'pipelineName', type: 'string', label: formatMessage({ id: `${intlPrefix}.pipeline.name` }) },
