@@ -32,37 +32,69 @@ function checkoutHasParamName(value, name, record) {
   return true;
 }
 
-function checkoutHasSameIP(value, name, record) {
-  const ds = record.dataSet;
-  const hasRepeatIP = ds.some((tempRecord) => {
-    const headerName = tempRecord.get('hostIp');
-    const recordName = record.get('hostIp');
-    const isEqual = headerName && recordName && headerName === recordName;
-    return tempRecord.id !== record.id && isEqual;
-  });
-  if (hasRepeatIP) {
-    // record.getField('value').set('disabled', true);
-    return '存在重复的节点IP';
-  }
-  // record.getField('value').set('disabled', false);
-  return true;
-}
-
 export default ({
   accountDs,
   formatMessage,
   intlPrefix,
   isModal,
 }) => {
+  async function checkPort(value, name, record) {
+    if (value && record.getPristineValue(name)
+      && String(value) === String(record.getPristineValue(name))
+    ) {
+      return true;
+    }
+    const p = /^([1-9]\d*|0)$/;
+    const data = {
+      typeMsg: '',
+      min: 1,
+      max: 65535,
+      failedMsg: `${intlPrefix}.port.check.failed`,
+    };
+
+    if (value) {
+      if (
+        p.test(value)
+        && parseInt(value, 10) >= data.min
+        && parseInt(value, 10) <= data.max
+      ) {
+        return true;
+      }
+      return formatMessage({ id: data.failedMsg });
+    }
+    return true;
+  }
+
+  function checkoutHasSameIP(value, name, record) {
+    const p = /^((\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.){3}(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])$/;
+    if (value && !p.test(value)) {
+      return formatMessage({ id: 'network.ip.check.failed' });
+    }
+    // return true;
+    const ds = record.dataSet;
+    const hasRepeatIP = ds.some((tempRecord) => {
+      const headerName = tempRecord.get('hostIp');
+      const recordName = record.get('hostIp');
+      const isEqual = headerName && recordName && headerName === recordName;
+      return tempRecord.id !== record.id && isEqual;
+    });
+    if (hasRepeatIP) {
+      // record.getField('value').set('disabled', true);
+      return '存在重复的节点IP';
+    }
+    // record.getField('value').set('disabled', false);
+    return true;
+  }
+
   async function handleUpdate({
     dataSet, record, name, value, oldValue,
   }) {
-    if (!isModal && name === 'type') {
+    if (!isModal && name === 'role') {
       if (value?.includes('etcd') && !value?.includes('master')) {
-        record.set('type', ['etcd', 'worker']);
+        record.set('role', ['etcd', 'worker']);
       }
       if (oldValue?.length === 2 && oldValue?.includes('master') && oldValue?.includes('etcd') && !value?.includes('master')) {
-        record.set('type', ['etcd', 'worker']);
+        record.set('role', ['etcd', 'worker']);
       }
     }
     if (name === 'name') {
@@ -105,6 +137,7 @@ export default ({
         type: 'string',
         label: '端口',
         required: true,
+        validator: checkPort,
       },
       {
         name: 'authType',
@@ -131,7 +164,7 @@ export default ({
         },
       },
       {
-        name: 'type',
+        name: 'role',
         type: 'string',
         label: '节点类型',
         textField: 'text',

@@ -1,7 +1,10 @@
+/* eslint-disable import/no-anonymous-default-export */
 import { handlePromptError } from '../../../../../../../../utils';
 
 let clusterName;
-export default ({ projectId, formatMessage, intlPrefix, modal, isEdit, afterOk, mainStore, clusterId }) => {
+export default ({
+  projectId, formatMessage, intlPrefix, modal, isEdit, afterOk, mainStore, clusterId,
+}) => {
   async function checkClusterName(value) {
     let messageName = true;
     if (value === clusterName && isEdit) {
@@ -76,7 +79,7 @@ export default ({ projectId, formatMessage, intlPrefix, modal, isEdit, afterOk, 
         method: 'get',
       } : undefined,
       create: ({ data: [data] }) => ({
-        url: `/devops/v1/projects/${projectId}/clusters`,
+        url: `/devops/v1/projects/${projectId}/clusters/activate`,
         method: 'post',
         data: JSON.stringify(data),
         transformResponse: ((res) => {
