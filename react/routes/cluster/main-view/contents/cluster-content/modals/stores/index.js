@@ -75,7 +75,7 @@ export const StoreProvider = injectIntl((props) => {
   }), [projectId]));
 
   const formDs = useMemo(() => new DataSet(FormDataSet({
-    mainStore, projectId, formatMessage, intlPrefix, nodesDs,
+    mainStore, projectId, formatMessage, intlPrefix, nodesDs, modalStore,
   })), [projectId]);
 
   useEffect(() => {

@@ -1342,6 +1342,7 @@ const cluster = {
   'c7ncd.cluster.node.action.removeRole': '移除角色',
   'c7ncd.cluster.node.modal.removeRole': '移除',
   'c7ncd.cluster.node.modal.cannotDelete': '无法删除',
+  'c7ncd.cluster.port.check.failed': '端口必须在1-65535之间',
   'c7ncd.cluster.permission.assign': '权限分配',
   'c7ncd.cluster.monitor': '集群监控',
   'c7ncd.cluster.component': '组件管理',

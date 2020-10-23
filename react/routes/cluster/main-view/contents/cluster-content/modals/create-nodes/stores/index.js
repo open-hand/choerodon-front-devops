@@ -5,6 +5,7 @@ import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
 import NodeDataSet from '../../stores/NodeDataSet';
+import useStore from './useStore';
 
 const Store = createContext();
 
@@ -22,9 +23,13 @@ export const StoreProvider = injectIntl(inject('AppState')(
       modal,
     } = props;
 
+    const nodeStore = useStore();
+
     const value = {
       ...props,
+      nodeStore,
       intlPrefix,
+      projectId,
     };
     return (
       <Store.Provider value={value}>

@@ -5,6 +5,7 @@ import {
 } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import NewTips from '@/components/new-tips';
+import { pick } from 'lodash';
 import { useFormStore } from './stores';
 import TestConnect from './components/test-connect';
 
@@ -24,6 +25,8 @@ function CreateNodesForm() {
     prefixCls,
     modal,
     parentModal,
+    nodeStore,
+    projectId,
   } = useFormStore();
 
   useEffect(() => {
@@ -58,32 +61,41 @@ function CreateNodesForm() {
   }
 
   async function handleTestConnection() {
+    const validate = selectedRecord && await selectedRecord.validate();
+    const record = selectedRecord;
+    // 单独再次校验密码是因为：修改时无任何操作，formDs.validate() 返回为true
+    if (!validate || !record || await record.getField('password').checkValidity() === false) {
+      return false;
+    }
+    selectedRecord.set('status', 'operating');
+    parentModal && parentModal.update({
+      okProps: {
+        loading: true,
+      },
+      cancelProps: {
+        disabled: true,
+      },
+    });
+
+    const data = pick(selectedRecord.data, ['sshPort', 'password', 'hostIp', 'username', 'authType']);
+
     try {
-      const validate = selectedRecord && await selectedRecord.validate();
-      const record = selectedRecord;
-      // 单独再次校验密码是因为：修改时无任何操作，formDs.validate() 返回为true
-      if (!validate || !record || await record.getField('password').checkValidity() === false) {
+      const res = await nodeStore.checkNodeConnect(projectId, data);
+      if (res && res.failed) {
         return false;
       }
-      selectedRecord.set('status', 'operating');
-      parentModal && parentModal.update({
-        okProps: {
-          loading: true,
-        },
-      });
-
-      setTimeout(() => {
-        selectedRecord.set('status', 'success');
-        parentModal && parentModal.update({
-          okProps: {
-            loading: false,
-          },
-        });
-      }, [2000]);
+      selectedRecord.set('status', res ? 'success' : 'failed');
     } catch (error) {
       selectedRecord.set('status', 'wait');
-      throw new Error(error);
     }
+    parentModal && parentModal.update({
+      okProps: {
+        loading: false,
+      },
+      cancelProps: {
+        disabled: false,
+      },
+    });
     return true;
   }
 
@@ -184,7 +196,7 @@ function CreateNodesForm() {
             record={selectedRecord}
           >
             <SelectBox
-              name="type"
+              name="role"
               colSpan={6}
               multiple={!modal}
               className={`${prefixCls}-nodesCreate-right-nodeType`}

@@ -4,8 +4,8 @@ import { handlePromptError } from '@/utils';
 
 export default function useStore() {
   return useLocalStore(() => ({
-    checkNodeConnect(projectId, data) {
-      return axios.post(`/devops/v1/projects/${projectId}/nodes/connection_test`, JSON.stringify(data));
+    checkConnect(projectId, data) {
+      return axios.post(`devops/v1/projects/${projectId}/clusters/check_process`, data);
     },
   }));
 }

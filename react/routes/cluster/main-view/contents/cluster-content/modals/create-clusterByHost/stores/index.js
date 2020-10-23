@@ -3,6 +3,8 @@ import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
 
+import useStore from './useStore';
+
 const Store = createContext();
 
 export function useFormStore() {
@@ -19,12 +21,15 @@ export const StoreProvider = injectIntl(inject('AppState')(
       formDs,
     } = props;
 
+    const clusterByHostStore = useStore();
+
     const value = {
       ...props,
       formDs,
       intlPrefix,
       formatMessage,
       projectId,
+      clusterByHostStore,
     };
     return (
       <Store.Provider value={value}>
