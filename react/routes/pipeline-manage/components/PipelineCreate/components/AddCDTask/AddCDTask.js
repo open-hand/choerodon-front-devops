@@ -778,11 +778,14 @@ export default observer(() => {
   };
 
   async function handleClickMore(e, realName) {
+    if (!ADDCDTaskDataSet.current.get('pageSize')) {
+      ADDCDTaskDataSet.current.set('pageSize', 20);
+    }
     e && e.stopPropagation();
     const pageSize = !e
       ? ADDCDTaskDataSet.current.get('pageSize')
       : ADDCDTaskDataSet.current.get('pageSize') + 20;
-    const url = `/devops/v1/projects/${projectId}/users/app_services/${PipelineCreateFormDataSet.current.get('appServiceId')}?page=0&size=${pageSize || 20}`;
+    const url = `/devops/v1/projects/${projectId}/users/app_services/${PipelineCreateFormDataSet.current.get('appServiceId')}?page=0&size=${pageSize}`;
     const cdAuditsUserIds = [];
     jobDetail?.cdAuditUserIds
       && jobDetail.cdAuditUserIds.forEach((obj) => {
@@ -814,10 +817,10 @@ export default observer(() => {
   }
 
   const renderderAuditUsersList = ({ text, record }) => (text === '加载更多' ? (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events
     <a
       style={{ display: 'block', width: '100%', height: '100%' }}
       onClick={handleClickMore}
+      role="none"
     >
       {text}
     </a>
