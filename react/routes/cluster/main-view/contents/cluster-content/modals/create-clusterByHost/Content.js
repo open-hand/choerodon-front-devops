@@ -91,7 +91,7 @@ function CreateClusterHostForm() {
       });
       const result = await formDs.validate();
       if (!result) {
-        message.error('请完善集群信息');
+        message.error('请检查集群信息');
       }
       if (result) {
         const mainData = formDs.toData()[0];
