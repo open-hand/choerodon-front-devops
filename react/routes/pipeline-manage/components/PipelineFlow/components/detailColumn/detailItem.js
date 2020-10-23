@@ -73,7 +73,7 @@ const DetailItem = (props) => {
     sonarScannerType,
     codeCoverage,
     apiTestTaskRecordVO, // api测试任务独有的
-    apiTestTaskRecordId, // api测试任务独有的
+    deployJobName, // api测试任务独有的
   } = props;
 
   const { gitlabProjectId, appServiceId } = getDetailData && getDetailData.ciCdPipelineVO;
@@ -341,6 +341,10 @@ const DetailItem = (props) => {
           <span>失败数量:</span>
           <span>{failCount || '-'}</span>
         </div>
+        <div>
+          <span>关联部署任务:</span>
+          <span>{deployJobName || '-'}</span>
+        </div>
       </main>
     );
   };
@@ -484,6 +488,7 @@ const DetailItem = (props) => {
               funcType="flat"
               shape="circle"
               size="small"
+              disabled={jobStatus === 'created'}
               onClick={goToApiTest}
               icon="find_in_page-o"
               color="primary"
