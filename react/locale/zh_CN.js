@@ -1338,6 +1338,10 @@ const pageDetail = {
 
 const cluster = {
   'c7ncd.cluster.node.list': '节点列表',
+  'c7ncd.cluster.node.action.removeNode': '删除节点',
+  'c7ncd.cluster.node.action.removeRole': '移除角色',
+  'c7ncd.cluster.node.modal.removeRole': '移除',
+  'c7ncd.cluster.node.modal.cannotDelete': '无法删除',
   'c7ncd.cluster.permission.assign': '权限分配',
   'c7ncd.cluster.monitor': '集群监控',
   'c7ncd.cluster.component': '组件管理',
@@ -1352,6 +1356,7 @@ const cluster = {
   'c7ncd.cluster.node.memory': '内存分配',
   'c7ncd.cluster.modal.create': '连接集群',
   'c7ncd.cluster.modal.createByHost': '新建集群',
+  'c7ncd.cluster.modal.createByNodes': '添加节点',
   'c7ncd.cluster.modal.create.disabled': '组织集群数量已达上限，无法创建更多',
   'c7ncd.cluster.modal.edit': '修改集群',
   'c7ncd.cluster.modal.permission': '权限管理',

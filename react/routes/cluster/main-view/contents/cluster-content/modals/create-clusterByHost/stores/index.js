@@ -2,8 +2,6 @@ import React, { createContext, useContext, useMemo } from 'react';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
-import { DataSet } from 'choerodon-ui/pro';
-import FormDataSet from './FormDataSet';
 
 const Store = createContext();
 
@@ -17,14 +15,16 @@ export const StoreProvider = injectIntl(inject('AppState')(
       AppState: { currentMenuType: { id: projectId } },
       children,
       intlPrefix,
+      formatMessage,
+      formDs,
     } = props;
-
-    const formDs = useMemo(() => new DataSet(FormDataSet({ ...props }), [projectId]));
 
     const value = {
       ...props,
       formDs,
       intlPrefix,
+      formatMessage,
+      projectId,
     };
     return (
       <Store.Provider value={value}>

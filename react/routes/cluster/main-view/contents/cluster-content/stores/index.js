@@ -1,4 +1,6 @@
-import React, { createContext, useMemo, useContext, useEffect } from 'react';
+import React, {
+  createContext, useMemo, useContext, useEffect,
+} from 'react';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
@@ -16,7 +18,6 @@ import SummaryDataSet from './SummaryDataSet';
 import EnvDetailDataSet from './EnvDetailDataSet';
 
 const Store = createContext();
-
 
 export function useClusterContentStore() {
   return useContext(Store);
@@ -49,11 +50,15 @@ export const StoreProvider = injectIntl(inject('AppState')(
 
     const record = ClusterDetailDs.current;
     const NodeListDs = useMemo(() => new DataSet(NodeListDataSet({ formatMessage, intlPrefix })), []);
-    const PermissionDs = useMemo(() => new DataSet(PermissionDataSet({ formatMessage, intlPrefix, projectId, id, skipCheckProjectPermission: record && record.get('skipCheckProjectPermission') })), [record]);
+    const PermissionDs = useMemo(() => new DataSet(PermissionDataSet({
+      formatMessage, intlPrefix, projectId, id, skipCheckProjectPermission: record && record.get('skipCheckProjectPermission'),
+    })), [record]);
     const clusterSummaryDs = useMemo(() => new DataSet(SummaryDataSet()), []);
     const envDetailDs = useMemo(() => new DataSet(EnvDetailDataSet()), []);
 
-    const polarisNumDS = useMemo(() => new DataSet(PolarisNumDataSet({ formatMessage, intlPrefix, projectId, id })), [record]);
+    const polarisNumDS = useMemo(() => new DataSet(PolarisNumDataSet({
+      formatMessage, intlPrefix, projectId, id,
+    })), [record]);
 
     const contentStore = useStore(tabs);
     let URL = '';
@@ -144,5 +149,5 @@ export const StoreProvider = injectIntl(inject('AppState')(
         {children}
       </Store.Provider>
     );
-  })
+  }),
 ));

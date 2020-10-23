@@ -14,7 +14,7 @@ export function useClusterStore() {
 
 export const StoreProvider = injectIntl(inject('AppState')(
   (props) => {
-    const { AppState: { currentMenuType: { id } }, children } = props;
+    const { AppState: { currentMenuType: { id } }, children, intl: { formatMessage } } = props;
     const clusterStore = useStore();
     const itemType = useMemo(() => itemTypeMappings, []);
     const treeDs = useMemo(() => new DataSet(TreeDataSet(clusterStore, id)), [id]);
@@ -27,11 +27,12 @@ export const StoreProvider = injectIntl(inject('AppState')(
       clusterStore,
       itemType,
       treeDs,
+      formatMessage,
     };
     return (
       <Store.Provider value={value}>
         {children}
       </Store.Provider>
     );
-  }
+  },
 ));

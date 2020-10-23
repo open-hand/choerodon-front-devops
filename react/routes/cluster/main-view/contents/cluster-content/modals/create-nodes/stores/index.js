@@ -4,7 +4,7 @@ import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
-import NodeDataSet from './NodeDataSet';
+import NodeDataSet from '../../stores/NodeDataSet';
 
 const Store = createContext();
 
@@ -19,52 +19,12 @@ export const StoreProvider = injectIntl(inject('AppState')(
       children,
       intlPrefix,
       formatMessage,
+      modal,
     } = props;
-
-    const accountDs = useMemo(() => new DataSet({
-      data: [
-        {
-          text: formatMessage({ id: `${intlPrefix}.nodesCreate.account.password` }),
-          value: 'accountPassword',
-        },
-        {
-          text: formatMessage({ id: `${intlPrefix}.nodesCreate.account.token` }),
-          value: 'publickey',
-        },
-      ],
-      selection: 'single',
-    }), []);
-
-    const nodesTypeDs = useMemo(() => new DataSet({
-      data: [
-        {
-          text: 'master',
-          value: 'master',
-        },
-        {
-          text: 'etcd',
-          value: 'etcd',
-        },
-        {
-          text: 'worker',
-          value: 'worker',
-        },
-      ],
-      selection: 'multiple',
-    }), []);
-
-    const nodesDs = useMemo(() => new DataSet(NodeDataSet({
-      ...props,
-      accountDs,
-      formatMessage,
-      intlPrefix,
-    }), [projectId]));
 
     const value = {
       ...props,
-      nodesDs,
       intlPrefix,
-      nodesTypeDs,
     };
     return (
       <Store.Provider value={value}>

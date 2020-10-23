@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { useMemo, useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import setTreeMenuSelect from '../../../../utils/setTreeMenuSelect';
@@ -22,13 +23,15 @@ const TreeMenu = observer(() => {
     setTreeMenuSelect(treeDs, clusterStore);
   }, [treeDs.data]);
 
-  return <nav style={bounds} className="c7ncd-cluster-sidebar">
-    <TreeView
-      ds={treeDs}
-      store={clusterStore}
-      nodesRender={nodeRenderer}
-    />
-  </nav>;
+  return (
+    <nav style={bounds} className="c7ncd-cluster-sidebar">
+      <TreeView
+        ds={treeDs}
+        store={clusterStore}
+        nodesRender={nodeRenderer}
+      />
+    </nav>
+  );
 });
 
 export default TreeMenu;

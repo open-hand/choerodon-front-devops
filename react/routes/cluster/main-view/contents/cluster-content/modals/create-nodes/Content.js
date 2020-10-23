@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  TextField, TextArea, Form, Select, Button, SelectBox, Password, CheckBox,
+  TextField, TextArea, Form, Select, Button, SelectBox, Password, Icon, message,
 } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import NewTips from '@/components/new-tips';
@@ -22,13 +22,27 @@ function CreateNodesForm() {
     isEdit,
     nodesTypeDs,
     prefixCls,
+    modal,
+    parentModal,
   } = useFormStore();
 
   useEffect(() => {
     nodesDs && nodesDs.data && setSelectedRecord(nodesDs.data[0]);
   }, [nodesDs]);
 
-  function handleSubmit() {
+  async function handleSubmit() {
+    nodesDs.forEach(async (nodeRecord) => {
+      const res = await nodeRecord.validate();
+      if (!res) {
+        nodeRecord.set('hasError', true);
+      }
+    });
+    const result = await nodesDs.validate();
+    if (!result) {
+      message.error('请完善节点信息');
+      return false;
+    }
+    return true;
   }
 
   function handleAddNewNode() {
@@ -52,9 +66,19 @@ function CreateNodesForm() {
         return false;
       }
       selectedRecord.set('status', 'operating');
+      parentModal && parentModal.update({
+        okProps: {
+          loading: true,
+        },
+      });
 
       setTimeout(() => {
         selectedRecord.set('status', 'success');
+        parentModal && parentModal.update({
+          okProps: {
+            loading: false,
+          },
+        });
       }, [2000]);
     } catch (error) {
       selectedRecord.set('status', 'wait');
@@ -75,6 +99,8 @@ function CreateNodesForm() {
     return <span>{text}</span>;
   };
 
+  modal && modal.handleOk(handleSubmit);
+
   return (
     <div className={`${prefixCls}-nodesCreate`}>
       <div className={`${prefixCls}-nodesCreate-left`}>
@@ -83,24 +109,26 @@ function CreateNodesForm() {
             map(nodesDs.data, (nodesRecord, index) => (
               <div
                 className={
-              `${prefixCls}-nodesCreate-left-item 
-              ${nodesRecord?.id === selectedRecord?.id && `${prefixCls}-nodesCreate-left-item-selected`}`
-              }
+                  `${prefixCls}-nodesCreate-left-item 
+                   ${nodesRecord?.id === selectedRecord?.id && `${prefixCls}-nodesCreate-left-item-selected`}`
+                }
                 onClick={() => setSelectedRecord(nodesRecord)}
                 role="none"
               >
                 <Form
-                  columns={5}
+                  columns={10}
                   record={nodesRecord}
                   key={nodesRecord.id}
                 >
-                  <TextField name="name" colSpan={nodesDs.data.length > 1 ? 4 : 5} />
+                  <TextField name="name" colSpan={nodesDs.data.length > 1 ? 7 : 9} />
                   {
                     nodesDs.data.length > 1 && (
                       <Button
                         funcType="flat"
                         icon="delete"
                         shape="circle"
+                        colSpan={2}
+                        className={`${prefixCls}-nodesCreate-left-item-selected-btn`}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleRemove(nodesRecord, index);
@@ -109,6 +137,14 @@ function CreateNodesForm() {
                     )
                   }
                 </Form>
+                {
+                  nodesRecord.get('hasError') && (
+                  <Icon
+                    type="info"
+                    className={`${prefixCls}-nodesCreate-left-item-errorIcon`}
+                  />
+                  )
+                }
               </div>
             ))
         }
@@ -131,12 +167,12 @@ function CreateNodesForm() {
             columns={6}
             record={selectedRecord}
           >
-            <TextField name="domain" colSpan={3} />
-            <TextField name="port" colSpan={3} />
+            <TextField name="hostIp" colSpan={3} />
+            <TextField name="sshPort" colSpan={3} />
             <SelectBox name="authType" colSpan={6} className={`${prefixCls}-nodesCreate-right-authType`} />
             <TextField name="username" colSpan={3} />
             {
-              selectedRecord && selectedRecord.current && selectedRecord.current.get('authType') === 'publickey' ? (
+              selectedRecord && selectedRecord.get('authType') === 'publickey' ? (
                 <TextField name="password" colSpan={3} />
               ) : <Password name="password" reveal={false} colSpan={3} />
             }
@@ -148,9 +184,9 @@ function CreateNodesForm() {
             record={selectedRecord}
           >
             <SelectBox
-              name="nodeType"
+              name="type"
               colSpan={6}
-              multiple
+              multiple={!modal}
               className={`${prefixCls}-nodesCreate-right-nodeType`}
               optionRenderer={renderNodetypeOpts}
             >
@@ -158,11 +194,12 @@ function CreateNodesForm() {
                 map(nodesTypeDs && nodesTypeDs.toData(), (item, index) => {
                   const { value, text } = item;
                   if (value === 'etcd') {
+                    if (modal) return null;
                     return (
                       <Option value={value} key={`${index}-${text}`}>
                         <div style={{ display: 'inline-flex', alignItems: 'center' }}>
                           <span style={{ marginRight: '2px' }}>{text}</span>
-                          <NewTips showHelp helpText="提示" />
+                          <NewTips showHelp helpText="etcd类型的节点建议为单数， 以避免脑裂" />
                         </div>
                       </Option>
                     );

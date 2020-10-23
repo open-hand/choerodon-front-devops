@@ -9,6 +9,7 @@ import { useClusterMainStore } from '../../../stores';
 import { useModalStore } from './stores';
 import CreateCluster from './create-cluster';
 import CreateClusterByHost from './create-clusterByHost';
+import CreateNodes from './create-nodes';
 import PermissionManage from './permission-manage';
 import Tips from '../../../../../../components/new-tips';
 
@@ -27,6 +28,7 @@ const ClusterModals = observer(() => {
     intl: { formatMessage },
     clusterStore: {
       getSelectedMenu: { id },
+      getSelectedMenu,
     },
     AppState: { currentMenuType: { id: projectId } },
     treeDs,
@@ -46,6 +48,9 @@ const ClusterModals = observer(() => {
   const {
     modalStore,
     NonPermissionDs,
+    formDs,
+    nodesDs,
+    nodesTypeDs,
   } = useModalStore();
 
   function permissionUpdate(data) {
@@ -93,14 +98,54 @@ const ClusterModals = observer(() => {
     NonPermissionDs.query();
   }
 
+  function openCreateByNodes() {
+    Modal.open({
+      key: Modal.key(),
+      title: formatMessage({ id: `${intlPrefix}.modal.createByNodes` }),
+      children: <CreateNodes
+        prefixCls={prefixCls}
+        intlPrefix={intlPrefix}
+        formatMessage={formatMessage}
+        mainStore={mainStore}
+        projectId={projectId}
+        afterOk={resreshTree}
+        nodesTypeDs={nodesTypeDs}
+        nodesDs={nodesDs}
+      />,
+      drawer: true,
+      style: {
+        width: '740px',
+      },
+      okText: formatMessage({ id: 'add' }),
+      onCancel: () => {
+        nodesDs.reset();
+      },
+    });
+  }
+
   function openCreateByHost() {
     Modal.open({
       key: Modal.key(),
       title: formatMessage({ id: `${intlPrefix}.modal.createByHost` }),
-      children: <CreateClusterByHost afterOk={resreshTree} prefixCls={prefixCls} intlPrefix={intlPrefix} formatMessage={formatMessage} mainStore={mainStore} projectId={projectId} />,
+      children: <CreateClusterByHost
+        formDs={formDs}
+        afterOk={resreshTree}
+        prefixCls={prefixCls}
+        intlPrefix={intlPrefix}
+        formatMessage={formatMessage}
+        mainStore={mainStore}
+        projectId={projectId}
+        nodesTypeDs={nodesTypeDs}
+        nodesDs={nodesDs}
+      />,
       drawer: true,
       style: {
         width: '740px',
+      },
+      okText: formatMessage({ id: 'create' }),
+      onCancel: () => {
+        nodesDs.reset();
+        formDs.reset();
       },
     });
   }
@@ -142,19 +187,19 @@ const ClusterModals = observer(() => {
   function getButtons() {
     const { getCanCreate } = mainStore;
     return [{
+      name: formatMessage({ id: `${intlPrefix}.modal.create` }),
+      permissions: ['choerodon.code.project.deploy.cluster.cluster-management.ps.create'],
+      icon: 'link',
+      handler: openCreate,
+      display: true,
+      group: 1,
+      disabled: !getCanCreate,
+      disabledMessage: formatMessage({ id: `${intlPrefix}.modal.create.disabled` }),
+    }, {
       name: formatMessage({ id: `${intlPrefix}.modal.createByHost` }),
       permissions: [],
       icon: 'playlist_add',
       handler: openCreateByHost,
-      display: true,
-      group: 1,
-      // disabled: !getCanCreate,
-      // disabledMessage: formatMessage({ id: `${intlPrefix}.modal.create.disabled` }),
-    }, {
-      name: formatMessage({ id: `${intlPrefix}.modal.create` }),
-      permissions: ['choerodon.code.project.deploy.cluster.cluster-management.ps.create'],
-      icon: 'playlist_add',
-      handler: openCreate,
       display: true,
       group: 1,
       disabled: !getCanCreate,
@@ -166,6 +211,12 @@ const ClusterModals = observer(() => {
       handler: openPermission,
       display: true,
       group: 1,
+    }, {
+      name: formatMessage({ id: `${intlPrefix}.modal.createByNodes` }),
+      icon: 'playlist_add',
+      handler: openCreateByNodes,
+      display: true,
+      group: 2,
     }, {
       name: formatMessage({ id: 'refresh' }),
       icon: 'refresh',

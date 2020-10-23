@@ -2,8 +2,7 @@
   width: 740px;
   margin-left: -24px;
   display: flex;
-  height: 401px;
-  overflow: hidden;
+  height: 435px;
   &-left {
     width: 240px;
     flex-shrink: 0;
@@ -11,7 +10,7 @@
     padding: 0 0 8px 0;
 
     > main {
-      max-height: 3.5rem;
+      max-height: 3.8rem;
       overflow: auto;
       &::-webkit-scrollbar {
         display: none;
@@ -21,6 +20,14 @@
     &-item {
       padding: 15px 10px 15px 20px;
       cursor: pointer;
+      position: relative;
+      &-errorIcon {
+        line-height: 33px;
+        color: #f77a70;
+        position: absolute;
+        right: 9px;
+        top: 16px;
+      }
       &-selected {
         background-color: #fff;
         position: relative;
@@ -28,7 +35,7 @@
           background-color: #fff !important;
         }
         &:before {
-          content: '';
+          content: "";
           width: 4px;
           height: 30px;
           position: absolute;
@@ -36,6 +43,9 @@
           left: 10px;
           border-radius: 4px;
           background-color: #5266d4;
+        }
+        button {
+          color: #5266d4;
         }
       }
       .c7n-pro-form-float-label .c7n-pro-field-wrapper {
@@ -52,7 +62,7 @@
     &-authType,
     &-nodeType {
       > .c7n-pro-select-box {
-        .c7n-pro-radio-wrapper:nth-of-type(2) {
+        .c7n-pro-radio-wrapper:not(:first-of-type) {
           margin-left: 72px;
         }
         .c7n-pro-checkbox-wrapper:not(:first-of-type) {
