@@ -1,7 +1,10 @@
-import React, { createContext, useContext, useEffect, useMemo } from 'react';
+import React, {
+  createContext, useContext, useEffect, useMemo,
+} from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
+import useStore from './useStore';
 import ManualDeployDataSet from './ManualDeployDataSet';
 import OptionsDataSet from '../../../stores/OptionsDataSet';
 import NetworkDataSet from './NetworkDataSet';
@@ -19,7 +22,7 @@ export function useManualDeployStore() {
 export const StoreProvider = injectIntl(inject('AppState')(
   (props) => {
     const {
-      AppState: { currentMenuType: { projectId } },
+      AppState: { currentMenuType: { projectId, organizationId } },
       intl: { formatMessage },
       children,
       intlPrefix,
@@ -27,16 +30,35 @@ export const StoreProvider = injectIntl(inject('AppState')(
       envId,
     } = props;
 
+    const deployUseStore = useStore();
+
     const envOptionsDs = useMemo(() => new DataSet(OptionsDataSet()), []);
     const valueIdOptionsDs = useMemo(() => new DataSet(OptionsDataSet()), []);
     const versionOptionsDs = useMemo(() => new DataSet(OptionsDataSet()), []);
 
-    const pathListDs = useMemo(() => new DataSet(PathListDataSet({ formatMessage, projectId })), [projectId]);
+    const pathListDs = useMemo(() => new DataSet(PathListDataSet({ formatMessage, projectId })),
+      [projectId]);
     const annotationDs = useMemo(() => new DataSet(AnnotationDataSet({ formatMessage })), []);
-    const domainDs = useMemo(() => new DataSet(DomainDataSet({ formatMessage, projectId, pathListDs, annotationDs })), [projectId]);
+    const domainDs = useMemo(() => new DataSet(DomainDataSet({
+      formatMessage, projectId, pathListDs, annotationDs,
+    })), [projectId]);
     const portsDs = useMemo(() => new DataSet(PortDataSet({ formatMessage, pathListDs })), []);
-    const networkDs = useMemo(() => new DataSet(NetworkDataSet({ formatMessage, projectId, portsDs, pathListDs })), []);
-    const manualDeployDs = useMemo(() => new DataSet(ManualDeployDataSet({ intlPrefix, formatMessage, projectId, envOptionsDs, valueIdOptionsDs, versionOptionsDs, deployStore, networkDs, domainDs })), [projectId]);
+    const networkDs = useMemo(() => new DataSet(NetworkDataSet({
+      formatMessage, projectId, portsDs, pathListDs,
+    })), []);
+    const manualDeployDs = useMemo(() => new DataSet(ManualDeployDataSet({
+      intlPrefix,
+      formatMessage,
+      projectId,
+      envOptionsDs,
+      valueIdOptionsDs,
+      versionOptionsDs,
+      deployStore,
+      networkDs,
+      domainDs,
+      organizationId,
+      deployUseStore,
+    })), [projectId]);
 
     useEffect(() => {
       envOptionsDs.transport.read.url = `/devops/v1/projects/${projectId}/envs/list_by_active?active=true`;
@@ -51,6 +73,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       pathListDs,
       domainDs,
       annotationDs,
+      deployUseStore,
     };
     return (
       <Store.Provider value={value}>

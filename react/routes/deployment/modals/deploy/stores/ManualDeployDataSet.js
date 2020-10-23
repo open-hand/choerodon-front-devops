@@ -4,31 +4,32 @@ import map from 'lodash/map';
 import uuidV1 from 'uuid/v1';
 import { axios } from '@choerodon/boot';
 import isEmpty from 'lodash/isEmpty';
+import JSONbig from 'json-bigint';
 
 const mapping = {
   deployWay: {
-    value: 'deployWay',
+    value: 'deployType',
     options: [{
-      value: 'hjbs',
+      value: 'env',
       label: '环境部署',
     }, {
-      value: 'zjbs',
+      value: 'host',
       label: '主机部署',
     }],
   },
   hostName: {
-    value: 'hostName',
+    value: 'hostId',
   },
   ip: {
-    value: 'ip',
+    value: 'hostIp',
   },
   port: {
-    value: 'port',
+    value: 'hostPort',
   },
   deployObject: {
-    value: 'deployObject',
+    value: 'deployObjectType',
     options: [{
-      value: 'docker',
+      value: 'image',
       label: 'Docker镜像',
     }, {
       value: 'jar',
@@ -36,22 +37,22 @@ const mapping = {
     }],
   },
   projectImageRepo: {
-    value: 'projectImageRepo',
+    value: 'repoId',
   },
   image: {
-    value: 'image',
+    value: 'imageId',
   },
   imageVersion: {
-    value: 'imageVersion',
+    value: 'tag',
   },
   containerName: {
     value: 'containerName',
   },
   nexus: {
-    value: 'nexus',
+    value: 'serverName',
   },
   projectProduct: {
-    value: 'projectProduct',
+    value: 'repositoryId',
   },
   groupId: {
     value: 'groupId',
@@ -60,10 +61,10 @@ const mapping = {
     value: 'artifactId',
   },
   jarVersion: {
-    value: 'jarVersion',
+    value: 'version',
   },
   workPath: {
-    value: 'workPath',
+    value: 'workingPath',
   },
 };
 
@@ -99,6 +100,8 @@ export default (({
   deployStore,
   networkDs,
   domainDs,
+  organizationId,
+  deployUseStore,
 }) => {
   function handleCreate({ dataSet, record }) {
     deployStore.loadAppService(projectId, record.get('appServiceSource'));
@@ -170,25 +173,30 @@ export default (({
   }
 
   async function checkName(value, name, record) {
-    const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
-    if (value && pa.test(value)) {
-      if (!record.get('environmentId')) return;
-      try {
-        const res = await axios.get(`/devops/v1/projects/${projectId}/app_service_instances/check_name?instance_name=${value}&env_id=${record.get('environmentId')}`);
-        if ((res && res.failed) || !res) {
+    if (record.get(mapping.deployWay.value)
+      === mapping.deployWay.options[0].value) {
+      const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
+      if (value && pa.test(value)) {
+        if (!record.get('environmentId')) return;
+        try {
+          const res = await axios.get(`/devops/v1/projects/${projectId}/app_service_instances/check_name?instance_name=${value}&env_id=${record.get('environmentId')}`);
+          if ((res && res.failed) || !res) {
+            // eslint-disable-next-line consistent-return
+            return formatMessage({ id: 'checkNameExist' });
+          }
           // eslint-disable-next-line consistent-return
-          return formatMessage({ id: 'checkNameExist' });
+          return true;
+        } catch (err) {
+          // eslint-disable-next-line consistent-return
+          return formatMessage({ id: 'checkNameFailed' });
         }
+      } else {
         // eslint-disable-next-line consistent-return
-        return true;
-      } catch (err) {
-        // eslint-disable-next-line consistent-return
-        return formatMessage({ id: 'checkNameFailed' });
+        return formatMessage({ id: 'checkCodeReg' });
       }
-    } else {
-      // eslint-disable-next-line consistent-return
-      return formatMessage({ id: 'checkCodeReg' });
     }
+    // eslint-disable-next-line consistent-return
+    return true;
   }
 
   return ({
@@ -201,41 +209,77 @@ export default (({
     },
     transport: {
       create: ({ data: [data] }) => {
-        const res = omit(data, ['__id', '__status', 'appServiceSource']);
-        const appServiceId = data.appServiceId.split('**')[0];
-        res.appServiceId = appServiceId;
-        if (data.devopsServiceReqVO[0] && data.devopsServiceReqVO[0].name) {
-          const newPorts = map(data.devopsServiceReqVO[0].ports, ({
-            port, targetPort, nodePort, protocol,
-          }) => ({
-            port: Number(port),
-            targetPort: Number(targetPort),
-            nodePort: nodePort ? Number(nodePort) : null,
-            protocol: data.devopsServiceReqVO[0].type === 'NodePort' ? protocol : null,
-          }));
-          // eslint-disable-next-line no-param-reassign
-          data.devopsServiceReqVO[0].ports = newPorts;
-          // eslint-disable-next-line prefer-destructuring
-          res.devopsServiceReqVO = data.devopsServiceReqVO[0];
-          const { externalIp } = res.devopsServiceReqVO;
-          res.devopsServiceReqVO.externalIp = externalIp && externalIp.length ? externalIp.join(',') : null;
-          res.devopsServiceReqVO.targetInstanceCode = data.instanceName;
-          res.devopsServiceReqVO.envId = data.environmentId;
-        } else {
-          res.devopsServiceReqVO = null;
+        // 如果是环境部署
+        if (data[mapping.deployWay.value] === mapping.deployWay.options[0].value) {
+          const res = omit(data, ['__id', '__status', 'appServiceSource']);
+          const appServiceId = data.appServiceId.split('**')[0];
+          res.appServiceId = appServiceId;
+          if (data.devopsServiceReqVO[0] && data.devopsServiceReqVO[0].name) {
+            const newPorts = map(data.devopsServiceReqVO[0].ports, ({
+              port, targetPort, nodePort, protocol,
+            }) => ({
+              port: Number(port),
+              targetPort: Number(targetPort),
+              nodePort: nodePort ? Number(nodePort) : null,
+              protocol: data.devopsServiceReqVO[0].type === 'NodePort' ? protocol : null,
+            }));
+            // eslint-disable-next-line no-param-reassign
+            data.devopsServiceReqVO[0].ports = newPorts;
+            // eslint-disable-next-line prefer-destructuring
+            res.devopsServiceReqVO = data.devopsServiceReqVO[0];
+            const { externalIp } = res.devopsServiceReqVO;
+            res.devopsServiceReqVO.externalIp = externalIp && externalIp.length ? externalIp.join(',') : null;
+            res.devopsServiceReqVO.targetInstanceCode = data.instanceName;
+            res.devopsServiceReqVO.envId = data.environmentId;
+          } else {
+            res.devopsServiceReqVO = null;
+          }
+          if (data.devopsIngressVO[0] && data.devopsIngressVO[0].name) {
+            // eslint-disable-next-line prefer-destructuring
+            res.devopsIngressVO = data.devopsIngressVO[0];
+            res.devopsIngressVO.envId = data.environmentId;
+            res.devopsIngressVO.appServiceId = appServiceId;
+            formatAnnotation(res.devopsIngressVO, data.devopsIngressVO[0].annotations);
+          } else {
+            res.devopsIngressVO = null;
+          }
+          return ({
+            url: `/devops/v1/projects/${projectId}/app_service_instances`,
+            method: 'post',
+            data: res,
+          });
         }
-        if (data.devopsIngressVO[0] && data.devopsIngressVO[0].name) {
-          // eslint-disable-next-line prefer-destructuring
-          res.devopsIngressVO = data.devopsIngressVO[0];
-          res.devopsIngressVO.envId = data.environmentId;
-          res.devopsIngressVO.appServiceId = appServiceId;
-          formatAnnotation(res.devopsIngressVO, data.devopsIngressVO[0].annotations);
+        // 如果是主机部署
+        const res = {};
+        res.hostConnectionVO = {
+          [mapping.hostName.value]: data[mapping.hostName.value],
+          [mapping.ip.value]: data[mapping.ip.value],
+          [mapping.port.value]: data[mapping.port.value],
+        };
+        const deployObject = data[mapping.deployObject.value];
+        // 如果部署对象是Docker镜像
+        if (deployObject === mapping.deployObject.options[0].value) {
+          res.imageDeploy = {
+            [mapping.projectImageRepo.value]: data[mapping.projectImageRepo.value],
+            [mapping.image.value]: data[mapping.image.value],
+            [mapping.imageVersion.value]: data[mapping.imageVersion.value],
+            [mapping.containerName.value]: data[mapping.containerName.value],
+            value: deployUseStore.getImageYaml,
+          };
         } else {
-          res.devopsIngressVO = null;
+          //  如果部署对象是jar应用
+          res.jarDeploy = {
+            [mapping.nexus.value]: data[mapping.nexus.value],
+            [mapping.projectProduct.value]: data[mapping.projectProduct.value],
+            [mapping.groupId.value]: data[mapping.groupId.value],
+            [mapping.artifactId.value]: data[mapping.artifactId.value],
+            [mapping.jarVersion.value]: data[mapping.jarVersion.value],
+            [mapping.workPath.value]: data[mapping.workPath.value],
+            value: deployUseStore.getJarYaml,
+          };
         }
-
         return ({
-          url: `/devops/v1/projects/${projectId}/app_service_instances`,
+          url: `/devops/v1/projects/${projectId}/deploy/host`,
           method: 'post',
           data: res,
         });
@@ -252,20 +296,47 @@ export default (({
         name: mapping.hostName.value,
         type: 'string',
         label: '主机名称',
+        textField: 'name',
+        valueField: 'id',
+        lookupAxiosConfig: () => ({
+          method: 'post',
+          url: `/devops/v1/projects/${projectId}/hosts/page_by_options`,
+          data: {
+            searchParam: {
+              type: 'deploy',
+            },
+            params: [],
+          },
+          transformResponse: (res) => {
+            let newRes = res;
+            try {
+              newRes = JSONbig.parse(newRes);
+              return newRes;
+            } catch (e) {
+              return newRes;
+            }
+          },
+        }),
       },
       {
         name: mapping.ip.value,
         type: 'string',
         label: 'IP',
-        required: true,
         disabled: true,
+        dynamicProps: {
+          required: ({ record }) => record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[1].value,
+        },
       },
       {
         name: mapping.port.value,
         type: 'string',
         label: '端口',
-        required: true,
         disabled: true,
+        dynamicProps: {
+          required: ({ record }) => record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[1].value,
+        },
       },
       {
         name: mapping.deployObject.value,
@@ -277,19 +348,101 @@ export default (({
         name: mapping.projectImageRepo.value,
         type: 'string',
         label: '项目镜像仓库',
-        required: true,
+        textField: 'repoName',
+        valueField: 'repoId',
+        dynamicProps: {
+          required: ({ record }) => (record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[1].value)
+          && (record.get(mapping.deployObject.value) === mapping.deployObject.options[0].value),
+        },
+        lookupAxiosConfig: () => ({
+          method: 'get',
+          url: `/rdupm/v1/harbor-choerodon-repos/listImageRepo?projectId=${projectId}`,
+          transformResponse: (data) => {
+            let newData = data;
+            try {
+              newData = JSON.parse(newData);
+              return newData;
+            } catch (e) {
+              return newData;
+            }
+          },
+        }),
       },
       {
         name: mapping.image.value,
         type: 'string',
         label: '镜像',
-        required: true,
+        textField: 'imageName',
+        valueField: 'imageId',
+        dynamicProps: {
+          disabled: ({ record }) => !record.get(mapping.projectImageRepo.value),
+          required: ({ record }) => (record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[1].value)
+            && (record.get(mapping.deployObject.value) === mapping.deployObject.options[0].value),
+          lookupAxiosConfig: ({ record }) => ({
+            method: 'get',
+            url:
+              record.get(mapping.projectImageRepo.value)
+              && `rdupm/v1/harbor-choerodon-repos/listHarborImage?repoId=${record.get(
+                mapping.projectImageRepo.value,
+              )}&repoType=${(function () {
+                const { lookup } = record.getField(mapping.projectImageRepo.value);
+                return lookup?.find(
+                  (l) => String(l.repoId) === String(record.get(mapping.projectImageRepo.value))
+                )?.repoType;
+              }())}`,
+            transformResponse: (data) => {
+              let newData = data;
+              try {
+                newData = JSON.parse(newData);
+                return newData;
+              } catch (e) {
+                return newData;
+              }
+            },
+          }),
+        },
       },
       {
         name: mapping.imageVersion.value,
         type: 'string',
         label: '镜像版本',
-        required: true,
+        textField: 'tagName',
+        valueField: 'tagName',
+        dynamicProps: {
+          required: ({ record }) => (record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[1].value)
+            && (record.get(mapping.deployObject.value) === mapping.deployObject.options[0].value),
+          disabled: ({ record }) => !record.get(mapping.image.value),
+          lookupAxiosConfig: ({ record }) => ({
+            method: 'get',
+            url:
+              record.get(mapping.projectImageRepo.value)
+              && record.get(mapping.image.value)
+              && `rdupm/v1/harbor-image-tag/list/${projectId}?page=0&size=10&repoName=${(function () {
+                const projectImageRepo = record.get(mapping.projectImageRepo.value);
+                const projectImageRepoLookup = record.getField(
+                  mapping.projectImageRepo.value,
+                ).lookup;
+                const image = record.get(mapping.image.value);
+                const imageLookup = record.getField(mapping.image.value).lookup;
+                const { repoName } = projectImageRepoLookup
+                  .find((l) => l.repoId === projectImageRepo);
+                const { imageName } = imageLookup.find((l) => l.imageId === image);
+                return `${repoName}/${imageName}`;
+              }())}`,
+            transformResponse: (data) => {
+              let newData = data;
+              try {
+                newData = JSON.parse(newData);
+                return newData;
+              } catch (e) {
+                return newData;
+              }
+            },
+          }),
+        },
       },
       {
         name: mapping.containerName.value,
@@ -297,55 +450,191 @@ export default (({
         label: '容器名称',
         required: true,
         maxLength: 30,
+        dynamicProps: {
+          required: ({ record }) => (record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[1].value)
+            && (record.get(mapping.deployObject.value) === mapping.deployObject.options[0].value),
+        },
       },
       {
         name: mapping.nexus.value,
         type: 'string',
         label: 'Nexus服务',
-        required: true,
+        textField: 'serverName',
+        valueField: 'configId',
+        dynamicProps: {
+          required: ({ record }) => (record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[1].value)
+            && (record.get(mapping.deployObject.value) === mapping.deployObject.options[1].value),
+        },
+        lookupAxiosConfig: () => ({
+          method: 'get',
+          url: `/devops/v1/nexus/choerodon/${organizationId}/project/${projectId}/nexus/server/list`,
+        }),
       },
       {
         name: mapping.projectProduct.value,
         type: 'string',
         label: '项目制品库',
-        required: true,
+        textField: 'neRepositoryName',
+        valueField: 'repositoryId',
+        dynamicProps: {
+          required: ({ record }) => (record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[1].value)
+            && (record.get(mapping.deployObject.value) === mapping.deployObject.options[1].value),
+          disabled: ({ record }) => !record.get(mapping.nexus.value),
+          lookupAxiosConfig: ({ record }) => ({
+            method: 'get',
+            url:
+              record.get(mapping.nexus.value)
+              && `rdupm/v1/nexus-repositorys/choerodon/${organizationId}/project/${projectId}/repo/maven/list?configId=${record.get(
+                mapping.nexus.value,
+              )}`,
+          }),
+        },
       },
       {
         name: mapping.groupId.value,
         type: 'string',
         label: 'groupId',
-        required: true,
+        textField: 'name',
+        valueField: 'value',
+        dynamicProps: {
+          required: ({ record }) => (record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[1].value)
+            && (record.get(mapping.deployObject.value) === mapping.deployObject.options[1].value),
+          disabled: ({ record }) => !record.get(mapping.projectProduct.value),
+          lookupAxiosConfig: ({ record }) => ({
+            method: 'get',
+            url:
+              record.get(mapping.projectProduct.value)
+              && `/rdupm/v1/nexus-repositorys/choerodon/${organizationId}/project/${projectId}/repo/maven/groupId?repositoryId=${record.get(
+                mapping.projectProduct.value,
+              )}`,
+            transformResponse: (data) => {
+              try {
+                const array = JSON.parse(data);
+                return array.map((i) => ({
+                  value: i,
+                  name: i,
+                }));
+              } catch (e) {
+                return data;
+              }
+            },
+          }),
+        },
       },
       {
         name: mapping.artifactId.value,
         type: 'string',
         label: 'artifactId',
-        required: true,
+        textField: 'name',
+        valueField: 'value',
+        dynamicProps: {
+          required: ({ record }) => (record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[1].value)
+            && (record.get(mapping.deployObject.value) === mapping.deployObject.options[1].value),
+          disabled: ({ record }) => !record.get(mapping.groupId.value),
+          lookupAxiosConfig: ({ record }) => ({
+            method: 'get',
+            url:
+              record.get(mapping.projectProduct.value)
+              && `/rdupm/v1/nexus-repositorys/choerodon/${organizationId}/project/${projectId}/repo/maven/artifactId?repositoryId=${record.get(
+                mapping.projectProduct.value,
+              )}`,
+            transformResponse: (data) => {
+              try {
+                const array = JSON.parse(data);
+                return array.map((i) => ({
+                  value: i,
+                  name: i,
+                }));
+              } catch (e) {
+                return data;
+              }
+            },
+          }),
+        },
       },
       {
         name: mapping.jarVersion.value,
         type: 'string',
         label: 'jar包版本',
-        required: true,
+        textField: 'version',
+        valueField: 'version',
+        dynamicProps: {
+          required: ({ record }) => (record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[1].value)
+            && (record.get(mapping.deployObject.value) === mapping.deployObject.options[1].value),
+          disabled: ({ record }) => !record.get(mapping.groupId.value)
+            || !record.get(mapping.artifactId.value),
+          lookupAxiosConfig: ({ record }) => ({
+            method: 'get',
+            url:
+              record.get(mapping.projectProduct.value)
+            && record.get(mapping.groupId.value)
+            && record.get(mapping.artifactId.value)
+                && `/rdupm/v1/nexus-components/${organizationId}/project/${projectId}?page=0&size=10&repositoryId=${record.get(mapping.projectProduct.value)}&repositoryName=${(function () {
+                  const repositoryId = record.get(mapping.projectProduct.value);
+                  const { lookup } = record.getField(mapping.projectProduct.value);
+                  return lookup.find((l) => l.repositoryId === repositoryId).neRepositoryName;
+                }())}&groupId=${record.get(mapping.groupId.value)}&artifactId=${record.get(mapping.artifactId.value)}`,
+          }),
+        },
       },
       {
         name: mapping.workPath.value,
         type: 'string',
         label: '工作目录',
-        required: true,
         defaultValue: '/temp',
+        dynamicProps: {
+          required: ({ record }) => (record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[1].value)
+            && (record.get(mapping.deployObject.value) === mapping.deployObject.options[1].value),
+        },
       },
       {
-        name: 'appServiceId', type: 'string', label: formatMessage({ id: `${intlPrefix}.app` }), required: true,
+        name: 'appServiceId',
+        type: 'string',
+        label: formatMessage({ id: `${intlPrefix}.app` }),
+        dynamicProps: {
+          required: ({ record }) => (record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[0].value),
+        },
       },
       {
-        name: 'appServiceVersionId', type: 'string', textField: 'version', valueField: 'id', label: formatMessage({ id: `${intlPrefix}.app.version` }), required: true,
+        name: 'appServiceVersionId',
+        type: 'string',
+        textField: 'version',
+        valueField: 'id',
+        label: formatMessage({ id: `${intlPrefix}.app.version` }),
+        dynamicProps: {
+          required: ({ record }) => (record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[0].value),
+        },
       },
       {
-        name: 'environmentId', type: 'string', textField: 'name', valueField: 'id', label: formatMessage({ id: 'environment' }), required: true, options: envOptionsDs,
+        name: 'environmentId',
+        type: 'string',
+        textField: 'name',
+        valueField: 'id',
+        label: formatMessage({ id: 'environment' }),
+        dynamicProps: {
+          required: ({ record }) => (record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[0].value),
+        },
+        options: envOptionsDs,
       },
       {
-        name: 'instanceName', type: 'string', label: formatMessage({ id: `${intlPrefix}.instance.name` }), required: true, validator: checkName,
+        name: 'instanceName',
+        type: 'string',
+        label: formatMessage({ id: `${intlPrefix}.instance.name` }),
+        dynamicProps: {
+          required: ({ record }) => (record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[0].value),
+        },
+        validator: checkName,
       },
       {
         name: 'valueId', type: 'string', textField: 'name', valueField: 'id', label: formatMessage({ id: `${intlPrefix}.config` }), options: valueIdOptionsDs,
