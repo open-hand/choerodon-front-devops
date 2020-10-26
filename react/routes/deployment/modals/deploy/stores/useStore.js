@@ -15,7 +15,6 @@ export default function useStore() {
     setImageYaml(value) {
       this.imageYaml = value;
     },
-
     jarYaml: '# java -jar指令\n'
       + '# 不可删除${jar}\n'
       + '# java -jar 后台运行参数会自动添加 不需要在重复添加\n'

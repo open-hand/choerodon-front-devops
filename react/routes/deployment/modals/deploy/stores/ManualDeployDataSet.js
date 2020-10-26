@@ -38,9 +38,12 @@ const mapping = {
   },
   projectImageRepo: {
     value: 'repoId',
+    textField: 'repoName',
+    extraField: 'repoType',
   },
   image: {
     value: 'imageId',
+    textField: 'imageName',
   },
   imageVersion: {
     value: 'tag',
@@ -208,7 +211,7 @@ export default (({
       devopsIngressVO: domainDs,
     },
     transport: {
-      create: ({ data: [data] }) => {
+      create: ({ data: [data], dataSet }) => {
         // 如果是环境部署
         if (data[mapping.deployWay.value] === mapping.deployWay.options[0].value) {
           const res = omit(data, ['__id', '__status', 'appServiceSource']);
@@ -250,18 +253,36 @@ export default (({
           });
         }
         // 如果是主机部署
-        const res = {};
+        const res = {
+          [mapping.deployWay.value]: data[mapping.deployWay.value],
+        };
         res.hostConnectionVO = {
           [mapping.hostName.value]: data[mapping.hostName.value],
           [mapping.ip.value]: data[mapping.ip.value],
           [mapping.port.value]: data[mapping.port.value],
+          hostSource: 'existHost',
         };
         const deployObject = data[mapping.deployObject.value];
         // 如果部署对象是Docker镜像
         if (deployObject === mapping.deployObject.options[0].value) {
           res.imageDeploy = {
             [mapping.projectImageRepo.value]: data[mapping.projectImageRepo.value],
+            [mapping.projectImageRepo.textField]: dataSet
+              .current
+              .getField(mapping.projectImageRepo.value)
+              .lookup
+              .find((l) => l.repoId === data[mapping.projectImageRepo.value]).repoName,
+            [mapping.projectImageRepo.extraField]: dataSet
+              .current
+              .getField(mapping.projectImageRepo.value)
+              .lookup
+              .find((l) => l.repoId === data[mapping.projectImageRepo.value]).repoType,
             [mapping.image.value]: data[mapping.image.value],
+            [mapping.image.textField]: dataSet
+              .current
+              .getField(mapping.image.value)
+              .lookup
+              .find((l) => l.imageId === data[mapping.image.value]).imageName,
             [mapping.imageVersion.value]: data[mapping.imageVersion.value],
             [mapping.containerName.value]: data[mapping.containerName.value],
             value: deployUseStore.getImageYaml,
