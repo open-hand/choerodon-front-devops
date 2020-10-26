@@ -129,19 +129,20 @@ const Deployment = withRouter(observer((props) => {
 
   function deployAfter(instance, type = 'instance') {
     const { history, location: { search } } = props;
-
-    if (!instance) history.push(`/devops/resource${search}`);
-
-    history.push({
-      pathname: '/devops/resource',
-      search,
-      state: {
-        instanceId: instance.id,
-        appServiceId: instance.appServiceId,
-        envId: instance.envId,
-        viewType: type,
-      },
-    });
+    if (instance.config) {
+      history.push(`/devops/deployment-operation${search}`);
+    } else {
+      history.push({
+        pathname: '/devops/resource',
+        search,
+        state: {
+          instanceId: instance.id,
+          appServiceId: instance.appServiceId,
+          envId: instance.envId,
+          viewType: type,
+        },
+      });
+    }
   }
 
   function renderNumber({ record }) {

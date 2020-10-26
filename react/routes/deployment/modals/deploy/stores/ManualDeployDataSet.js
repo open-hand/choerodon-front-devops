@@ -255,6 +255,7 @@ export default (({
         // 如果是主机部署
         const res = {
           [mapping.deployWay.value]: data[mapping.deployWay.value],
+          [mapping.deployObject.value]: data[mapping.deployObject.value],
         };
         res.hostConnectionVO = {
           [mapping.hostName.value]: data[mapping.hostName.value],
