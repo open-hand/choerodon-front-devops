@@ -5,6 +5,7 @@ import uuidV1 from 'uuid/v1';
 import { axios } from '@choerodon/boot';
 import isEmpty from 'lodash/isEmpty';
 import JSONbig from 'json-bigint';
+import { Base64 } from 'js-base64';
 
 const mapping = {
   deployWay: {
@@ -286,7 +287,7 @@ export default (({
               .find((l) => l.imageId === data[mapping.image.value]).imageName,
             [mapping.imageVersion.value]: data[mapping.imageVersion.value],
             [mapping.containerName.value]: data[mapping.containerName.value],
-            value: deployUseStore.getImageYaml,
+            value: Base64.encode(deployUseStore.getImageYaml),
           };
         } else {
           //  如果部署对象是jar应用
@@ -297,7 +298,7 @@ export default (({
             [mapping.artifactId.value]: data[mapping.artifactId.value],
             [mapping.jarVersion.value]: data[mapping.jarVersion.value],
             [mapping.workPath.value]: data[mapping.workPath.value],
-            value: deployUseStore.getJarYaml,
+            value: Base64.encode(deployUseStore.getJarYaml),
           };
         }
         return ({
