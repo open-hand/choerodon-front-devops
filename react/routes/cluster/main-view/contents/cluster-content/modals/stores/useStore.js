@@ -42,5 +42,9 @@ export default function useStore() {
       }
       return JSON.stringify(source);
     },
+    modalErrorMes: null,
+    setModalErrorMes(value) {
+      this.modalErrorMes = value;
+    },
   }));
 }

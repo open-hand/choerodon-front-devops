@@ -143,6 +143,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       clusterId: id,
       clusterSummaryDs,
       envDetailDs,
+      clusterStore,
     };
     return (
       <Store.Provider value={value}>

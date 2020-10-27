@@ -17,7 +17,7 @@ export default ({ formatMessage, intlPrefix }) => ({
       label: formatMessage({ id: `${intlPrefix}.node.status` }),
     },
     {
-      name: 'type',
+      name: 'role',
       type: 'string',
       label: formatMessage({ id: `${intlPrefix}.node.type` }),
     },

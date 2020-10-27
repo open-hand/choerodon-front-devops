@@ -1,17 +1,45 @@
-import React, { useEffect, useState } from 'react';
-import { Form, SelectBox, Select } from 'choerodon-ui/pro';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Spin } from 'choerodon-ui/pro';
+import { axios } from '@choerodon/boot';
 import { observer } from 'mobx-react-lite';
 
-const { Option } = Select;
+const RemoveForm = observer(({
+  nodeName,
+  modal,
+  nodeId,
+  projectId,
+  roleType,
+  contentStore,
+}) => {
+  const [isLoading, setLoading] = useState(true);
 
-const RemoveForm = observer(({ nodeName, modal }) => {
-  const [formData, setFormData] = useState([]);
-  useEffect(() => {
+  const modalProps = useMemo(() => ({
+    okProps: {
+      color: 'red',
+    },
+    cancelProps: {
+      color: 'dark',
+    },
+    footer: (okbtn, cancelbtn) => (
+      <>
+        {cancelbtn}
+        {okbtn}
+      </>
+    ),
+  }), [nodeId, roleType, projectId]);
 
-  }, []);
-
-  function changeData(props) {
-    props && setFormData([...props]);
+  async function loadPermission() {
+    try {
+      const res = await axios.get(contentStore.getDeleteRolePemissionUrl(projectId, nodeId));
+      if (res && res.failed) {
+        return res;
+      }
+      setLoading(false);
+      modal.update(modalProps);
+      return true;
+    } catch (error) {
+      return error;
+    }
   }
 
   function handleSubmit() {
@@ -22,21 +50,19 @@ const RemoveForm = observer(({ nodeName, modal }) => {
     }
   }
 
+  useEffect(() => {
+    loadPermission();
+  }, []);
+
   modal.handleOk(handleSubmit);
+
+  if (isLoading) {
+    return <Spin spinning />;
+  }
 
   return (
     <div>
-      <p>{`确认要移除节点"${nodeName}"的角色吗?`}</p>
-      <Form className="c7ncd-cluster-nodelists-roleRemoveForm">
-        <SelectBox multiple onChange={changeData} value={formData}>
-          <Option value="master">
-            移除master角色
-          </Option>
-          <Option value="etcd">
-            移除etcd角色
-          </Option>
-        </SelectBox>
-      </Form>
+      <p>{`确认要移除节点"${nodeName}"的【${roleType}】角色吗?`}</p>
     </div>
   );
 });

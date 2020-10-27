@@ -111,14 +111,17 @@ const ClusterModals = observer(() => {
         afterOk={resreshTree}
         nodesTypeDs={nodesTypeDs}
         nodesDs={nodesDs}
+        modalStore={modalStore}
       />,
       drawer: true,
+      className: `${prefixCls}-nodesCreate-modal`,
       style: {
         width: '740px',
       },
       okText: formatMessage({ id: 'add' }),
       onCancel: () => {
         nodesDs.reset();
+        modalStore.modalErrorMes && modalStore.setModalErrorMes(null);
       },
     });
   }
@@ -126,6 +129,7 @@ const ClusterModals = observer(() => {
   function openCreateByHost() {
     Modal.open({
       key: Modal.key(),
+      className: `${prefixCls}-createByHost-modal`,
       title: formatMessage({ id: `${intlPrefix}.modal.createByHost` }),
       children: <CreateClusterByHost
         formDs={formDs}
@@ -137,15 +141,18 @@ const ClusterModals = observer(() => {
         projectId={projectId}
         nodesTypeDs={nodesTypeDs}
         nodesDs={nodesDs}
+        modalStore={modalStore}
       />,
       drawer: true,
       style: {
         width: '740px',
       },
+      destroyOnClose: true,
       okText: formatMessage({ id: 'create' }),
       onCancel: () => {
         nodesDs.reset();
         formDs.reset();
+        modalStore.modalErrorMes && modalStore.setModalErrorMes(null);
       },
     });
   }
