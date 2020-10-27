@@ -3,6 +3,33 @@
   margin-left: -24px;
   display: flex;
   height: 435px;
+  &-modal {
+    .c7n-pro-modal-body {
+      position: relative;
+      height: calc(100vh - 1.2rem) !important;
+    }
+    &-errorMes {
+      position: absolute;
+      bottom: 0;
+      left: 10px;
+      font-size: 13px;
+      color: #f44336;
+    }
+  }
+  &-connect {
+    position: relative;
+    &-uncheck {
+      border: 2px solid red;
+      border-radius: 6px;
+    }
+    >span {
+      color: #d50000;
+      font-size: 0.12rem;
+      padding-left: 12px;
+      position: absolute;
+      margin-top: 3px;
+    }
+  }
   &-left {
     width: 240px;
     flex-shrink: 0;

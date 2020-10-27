@@ -64,6 +64,7 @@ export const StoreProvider = injectIntl((props) => {
     accountDs,
     formatMessage,
     intlPrefix,
+    modalStore,
   }), [projectId]));
 
   const addNodesDs = useMemo(() => new DataSet(NodeDataSet({
@@ -71,6 +72,7 @@ export const StoreProvider = injectIntl((props) => {
     accountDs,
     formatMessage,
     intlPrefix,
+    modalStore,
     isModal: true,
   }), [projectId]));
 

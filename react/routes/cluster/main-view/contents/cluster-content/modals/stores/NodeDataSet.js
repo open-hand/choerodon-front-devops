@@ -37,6 +37,7 @@ export default ({
   formatMessage,
   intlPrefix,
   isModal,
+  modalStore,
 }) => {
   async function checkPort(value, name, record) {
     if (value && record.getPristineValue(name)
@@ -89,6 +90,7 @@ export default ({
   async function handleUpdate({
     dataSet, record, name, value, oldValue,
   }) {
+    // 新建的时候是多选框，有这个节点校验规则，但是独立添加node的弹窗就是单选就跳过这个规则
     if (!isModal && name === 'role') {
       if (value?.includes('etcd') && !value?.includes('master')) {
         record.set('role', ['etcd', 'worker']);
@@ -103,11 +105,18 @@ export default ({
     if (name === 'hostIp') {
       ipValidator(dataSet);
     }
+    // 当已经有错误的时候，更新值重新校验并且去除hasError字段以及清空错误消息
     if (record.get('hasError')) {
       const res = await record.validate();
       if (res) {
         record.set('hasError', false);
+        modalStore.setModalErrorMes(null);
       }
+    }
+    // 单独校验当修改了测试连接需要的相关数据的时候会去校验这条record的status，并且重新置为空需要重新进行测试
+    const tempArr = ['hostIp', 'sshPort', 'authType', 'username', 'password'];
+    if (tempArr.includes(name) && record.get('status')) {
+      record.set('status', null);
     }
   }
   return {
@@ -170,6 +179,20 @@ export default ({
         textField: 'text',
         valueField: 'value',
         required: true,
+      },
+      {
+        name: 'status',
+        type: 'string',
+        validator: (value, name, record) => {
+          if (!record.get('status')) {
+            record.set('status', 'wait');
+            return false;
+          }
+          if (record.get('status') !== 'success') {
+            return false;
+          }
+          return true;
+        },
       },
     ],
   };

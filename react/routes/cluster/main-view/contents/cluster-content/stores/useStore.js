@@ -169,5 +169,14 @@ export default function useStore({ NODE_TAB }) {
         return false;
       }
     },
+
+    getDeleteNodePemissionUrl(projectId, nodeId) {
+      return `devops/v1/projects/${projectId}/nodes/${nodeId}/check_enable_delete`;
+    },
+
+    getDeleteRolePemissionUrl(projectId, nodeId) {
+      return `devops/v1/projects/${projectId}/nodes/${nodeId}/check_enable_delete_role`;
+    },
+
   }));
 }

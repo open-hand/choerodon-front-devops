@@ -26,6 +26,7 @@ function CreateClusterHostForm() {
     prefixCls,
     clusterByHostStore,
     projectId,
+    modalStore,
   } = useFormStore();
 
   // if (isEdit) {
@@ -109,12 +110,14 @@ function CreateClusterHostForm() {
   }
 
   async function postMainData() {
+    // 首先让弹窗loading
     modal.update({
       okProps: {
         loading: true,
       },
     });
     try {
+      // 先把数据发给后端
       const res = await formDs.submit();
       if (res) {
         try {
@@ -179,7 +182,8 @@ function CreateClusterHostForm() {
     checkNodeHasError();
     const result = await formDs.validate();
     if (!result) {
-      message.error('请检查集群信息');
+      // message.error('请检查集群信息');
+      modalStore.setModalErrorMes('请检查集群信息');
     }
     if (result) {
       const mainData = formDs.toData()[0];
@@ -195,6 +199,7 @@ function CreateClusterHostForm() {
         openNoticeEvenModal();
         return false;
       }
+      // 之后去把数据发给后端
       postMainData();
     }
     return false;
@@ -203,25 +208,30 @@ function CreateClusterHostForm() {
   modal.handleOk(handleSubmit);
 
   return (
-    <div className={`${prefixCls}-createByHost`}>
-      <Form
-        dataSet={formDs}
-        columns={6}
-      >
-        <TextField name="name" colSpan={2} />
-        <TextField name="code" disabled={isEdit} colSpan={2} />
-        <TextArea name="description" resize="vertical" colSpan={2} />
-      </Form>
-      <NodesCreate
-        prefixCls={prefixCls}
-        formatMessage={formatMessage}
-        intlPrefix={intlPrefix}
-        nodesTypeDs={nodesTypeDs}
-        nodesDs={nodesDs}
-        parentModal={modal}
-      />
-      {connectObj && <TestConnectFinal connectRecord={connectObj} />}
-    </div>
+    <>
+      <div className={`${prefixCls}-createByHost`}>
+        <Form
+          dataSet={formDs}
+          columns={6}
+        >
+          <TextField name="name" colSpan={2} />
+          <TextField name="code" disabled={isEdit} colSpan={2} />
+          <TextArea name="description" resize="vertical" colSpan={2} />
+        </Form>
+        <NodesCreate
+          prefixCls={prefixCls}
+          formatMessage={formatMessage}
+          intlPrefix={intlPrefix}
+          nodesTypeDs={nodesTypeDs}
+          nodesDs={nodesDs}
+          parentModal={modal}
+        />
+        {connectObj && <TestConnectFinal connectRecord={connectObj} />}
+      </div>
+      {
+        modalStore.modalErrorMes && <span className={`${prefixCls}-createByHost-modal-errorMes`}>{modalStore.modalErrorMes}</span>
+      }
+    </>
   );
 }
 

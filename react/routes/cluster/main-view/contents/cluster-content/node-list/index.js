@@ -4,7 +4,8 @@ import { Modal, Table } from 'choerodon-ui/pro';
 import { Tooltip } from 'choerodon-ui';
 import { useClusterContentStore } from '../stores';
 import StatusTags from '../../../../../../components/status-tag';
-import RemoveForm from './RoleRemoveForm';
+import RemoveRoleModal from './RoleRemoveForm';
+import RemoveNodeModal from './NodeRemoveModal';
 
 import './index.less';
 
@@ -14,7 +15,14 @@ const NodeList = () => {
     intlPrefix,
     formatMessage,
     NodeListDs,
+    projectId,
+    contentStore,
+    clusterStore,
   } = useClusterContentStore();
+
+  const {
+    getSelectedMenu,
+  } = clusterStore;
 
   const renderStatusName = ({ record }) => {
     const status = record.get('status');
@@ -47,11 +55,39 @@ const NodeList = () => {
     );
   };
 
-  const renderType = ({ value: type }) => (
-    <Tooltip title={type}>
-      <span>{type}</span>
-    </Tooltip>
-  );
+  const renderType = ({ value: type }) => {
+    let temp;
+    switch (type) {
+      case 7:
+        temp = 'master,worker,etcd';
+        break;
+      case 6:
+        temp = 'master,etcd';
+        break;
+      case 5:
+        temp = 'master,worker';
+        break;
+      case 4:
+        temp = 'master';
+        break;
+      case 3:
+        temp = 'etcd,worker';
+        break;
+      case 2:
+        temp = 'etcd';
+        break;
+      case 1:
+        temp = 'worker';
+        break;
+      default:
+        break;
+    }
+    return (
+      <Tooltip title={temp}>
+        <span>{temp}</span>
+      </Tooltip>
+    );
+  };
 
   const renderTime = ({ value: time }) => (
     <Tooltip title={time}>
@@ -59,47 +95,69 @@ const NodeList = () => {
     </Tooltip>
   );
 
-  const openRemoveRole = (record) => {
+  // 移除角色
+  const openRemoveRole = (record, roleType) => {
     const nodeName = record.get('nodeName');
+    const nodeId = record.get('id');
     Modal.open({
       key: Modal.key(),
-      title: formatMessage({ id: `${intlPrefix}.node.action.removeRole` }),
-      children: <RemoveForm nodeName={nodeName} />,
+      title: formatMessage({ id: `${intlPrefix}.node.action.removeRole.${roleType}` }),
+      children: <RemoveRoleModal
+        nodeName={nodeName}
+        projectId={projectId}
+        nodeId={nodeId}
+        roleType={roleType}
+        contentStore={contentStore}
+      />,
       okText: formatMessage({ id: `${intlPrefix}.node.modal.removeRole` }),
-      okProps: {
-        color: 'red',
-      },
-      cancelProps: {
-        color: 'dark',
-      },
+      footer: (okbtn, cancelbtn) => (
+        <>
+          {cancelbtn}
+        </>
+      ),
     });
   };
 
-  const openRemoveNode = (nodeName, nodeType) => {
+  // 移除节点
+  const handleRemoveNode = (record) => {
+    const nodeName = record.get('nodeName');
+    const nodeId = record.get('id');
     Modal.open({
       key: Modal.key(),
       title: formatMessage({ id: `${intlPrefix}.node.modal.cannotDelete` }),
-      children: `节点“${nodeName}”为集群下唯一的worker节点，无法删除`,
+      children: <RemoveNodeModal
+        nodeId={nodeId}
+        nodeName={nodeName}
+        projectId={projectId}
+        formatMessage={formatMessage}
+        intlPrefix={intlPrefix}
+        contentStore={contentStore}
+      />,
       okCancel: false,
-      okText: formatMessage({ id: 'iknow' }),
+      okText: formatMessage({ id: 'cancel' }),
     });
   };
 
-  const handleRemoveNode = (record, dataSet) => {
-    openRemoveNode(record.get('nodeName'));
-  };
-
   const renderNodeOpts = ({ record, dataSet }) => {
+    const clusterType = record.get('clusterType');
+    if (clusterType === 'imported') {
+      return null;
+    }
     const optsData = [
       {
         service: [],
-        text: formatMessage({ id: `${intlPrefix}.node.action.removeRole` }),
-        action: () => openRemoveRole(record),
+        text: formatMessage({ id: `${intlPrefix}.node.action.removeRole.master` }),
+        action: () => openRemoveRole(record, 'master'),
+      },
+      {
+        service: [],
+        text: formatMessage({ id: `${intlPrefix}.node.action.removeRole.etcd` }),
+        action: () => openRemoveRole(record, 'etcd'),
       },
       {
         service: [],
         text: formatMessage({ id: `${intlPrefix}.node.action.removeNode` }),
-        action: () => handleRemoveNode(record, dataSet),
+        action: () => handleRemoveNode(record),
       },
     ];
     return (
@@ -119,7 +177,7 @@ const NodeList = () => {
       >
         <Column width={150} header={formatMessage({ id: `${intlPrefix}.node.ip` })} renderer={renderStatusName} />
         <Column width={50} renderer={renderNodeOpts} />
-        <Column name="type" minWidth={80} renderer={renderType} />
+        <Column name="role" minWidth={80} renderer={renderType} />
         <Column header={formatMessage({ id: `${intlPrefix}.node.cpu` })} renderer={renderCpu} />
         <Column header={formatMessage({ id: `${intlPrefix}.node.memory` })} renderer={renderMemory} />
         <Column name="createTime" width={150} renderer={renderTime} />
