@@ -13,6 +13,8 @@ import TestConnect from './components/test-connect';
 const { Option } = Select;
 
 function CreateNodesForm() {
+  // const [nodeStore.getSelectedRecord, nodeStore.setSelectedRecord] = useState(null);
+
   const {
     nodesDs,
     // mainStore,
@@ -22,11 +24,11 @@ function CreateNodesForm() {
     isEdit,
     nodesTypeDs,
     prefixCls,
+    modal, // 单独打开这个组件弹窗传进来的modal
     parentModal, // 这个是父组件传过来的modal，此为子组件的时候
     nodeStore,
     projectId,
     modalStore,
-    isSingle,
   } = useFormStore();
 
   // nodeStore.setSelectedRecord设置选中的record用来渲染用
@@ -35,10 +37,23 @@ function CreateNodesForm() {
     nodesDs && nodesDs.data && nodeStore.setSelectedRecord(nodesDs.data[0]);
   }, [nodesDs]);
 
+  async function handleSubmit() {
+    nodesDs.forEach(async (nodeRecord) => {
+      const res = await nodeRecord.validate();
+      if (!res) {
+        nodeRecord.set('hasError', true);
+      }
+    });
+    const result = await nodesDs.validate();
+    if (!result) {
+      modalStore.setModalErrorMes('请完善节点信息');
+      return false;
+    }
+    return true;
+  }
+
   function handleAddNewNode() {
-    const record = nodesDs.create();
-    record.set('name', `节点${nodesDs.length}`);
-    nodeStore.setSelectedRecord(record);
+    nodesDs.create();
   }
 
   function handleRemove(record, index) {
@@ -117,6 +132,7 @@ function CreateNodesForm() {
     map(nodesTypeDs && nodesTypeDs.toData(), (item, index) => {
       const { value, text } = item;
       if (value === 'etcd') {
+        if (modal) return null;
         return (
           <Option value={value} key={`${index}-${text}`}>
             <div style={{ display: 'inline-flex', alignItems: 'center' }}>
@@ -149,6 +165,8 @@ function CreateNodesForm() {
     }
     return <span>{mes}</span>;
   }, [nodeStore.getSelectedRecord]);
+
+  modal && modal.handleOk(handleSubmit);
 
   return (
     <>
@@ -238,27 +256,32 @@ function CreateNodesForm() {
                 renderLinkStatusMes()
               }
             </div>
-            {!isSingle && (
-              <Form
-                columns={6}
-                record={nodeStore.getSelectedRecord}
+            <Form
+              columns={6}
+              record={nodeStore.getSelectedRecord}
+            >
+              <SelectBox
+                name="role"
+                colSpan={6}
+                multiple={!modal}
+                className={`${prefixCls}-nodesCreate-right-nodeType`}
+                optionRenderer={renderNodetypeOpts}
               >
-                <SelectBox
-                  name="role"
-                  colSpan={6}
-                  multiple
-                  className={`${prefixCls}-nodesCreate-right-nodeType`}
-                  optionRenderer={renderNodetypeOpts}
-                >
-                  {
-                    renderRoleOpts()
-                  }
-                </SelectBox>
-              </Form>
-            )}
+                {
+                  renderRoleOpts()
+                }
+              </SelectBox>
+            </Form>
           </div>
         ) : ''}
       </div>
+      {
+        modal && modalStore.modalErrorMes && (
+        <span className={`${prefixCls}-nodesCreate-modal-errorMes`}>
+          {modalStore.modalErrorMes}
+        </span>
+        )
+      }
     </>
   );
 }
