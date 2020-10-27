@@ -10,6 +10,7 @@ import { useClusterContentStore } from '../../stores';
 import { useClusterMainStore } from '../../../../stores';
 import FormDataSet from './createClusterByHostsFormDataSet';
 import NodeDataSet from './NodeDataSet';
+import createSingleNodeDataSet from './createSingleNodeDataSet';
 
 const Store = createContext();
 
@@ -67,14 +68,18 @@ export const StoreProvider = injectIntl((props) => {
     modalStore,
   }), [projectId]));
 
-  const addNodesDs = useMemo(() => new DataSet(NodeDataSet({
+  const nodesBySingleDS = useMemo(() => new DataSet(NodeDataSet({
     ...props,
     accountDs,
     formatMessage,
     intlPrefix,
     modalStore,
-    isModal: true,
+    isSingle: true,
   }), [projectId]));
+
+  const singleNodeFormDs = useMemo(() => new DataSet(createSingleNodeDataSet({
+    mainStore, projectId, formatMessage, intlPrefix, nodesBySingleDS, modalStore,
+  })), [projectId]);
 
   const formDs = useMemo(() => new DataSet(FormDataSet({
     mainStore, projectId, formatMessage, intlPrefix, nodesDs, modalStore,
@@ -92,7 +97,8 @@ export const StoreProvider = injectIntl((props) => {
     formDs,
     nodesTypeDs,
     nodesDs,
-    addNodesDs,
+    singleNodeFormDs,
+    nodesBySingleDS,
   };
   return (
     <Store.Provider value={value}>
