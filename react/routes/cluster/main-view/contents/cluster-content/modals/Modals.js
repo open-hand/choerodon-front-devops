@@ -9,7 +9,7 @@ import { useClusterMainStore } from '../../../stores';
 import { useModalStore } from './stores';
 import CreateCluster from './create-cluster';
 import CreateClusterByHost from './create-clusterByHost';
-import CreateNodes from './create-nodes';
+import CreateNodeSingle from './create-nodes-single';
 import PermissionManage from './permission-manage';
 import Tips from '../../../../../../components/new-tips';
 
@@ -51,6 +51,8 @@ const ClusterModals = observer(() => {
     formDs,
     nodesDs,
     nodesTypeDs,
+    singleNodeFormDs,
+    nodesBySingleDS,
   } = useModalStore();
 
   function permissionUpdate(data) {
@@ -102,7 +104,7 @@ const ClusterModals = observer(() => {
     Modal.open({
       key: Modal.key(),
       title: formatMessage({ id: `${intlPrefix}.modal.createByNodes` }),
-      children: <CreateNodes
+      children: <CreateNodeSingle
         prefixCls={prefixCls}
         intlPrefix={intlPrefix}
         formatMessage={formatMessage}
@@ -110,8 +112,9 @@ const ClusterModals = observer(() => {
         projectId={projectId}
         afterOk={resreshTree}
         nodesTypeDs={nodesTypeDs}
-        nodesDs={nodesDs}
+        nodesBySingleDS={nodesBySingleDS}
         modalStore={modalStore}
+        singleNodeFormDs={singleNodeFormDs}
       />,
       drawer: true,
       className: `${prefixCls}-nodesCreate-modal`,
@@ -120,7 +123,8 @@ const ClusterModals = observer(() => {
       },
       okText: formatMessage({ id: 'add' }),
       onCancel: () => {
-        nodesDs.reset();
+        nodesBySingleDS.reset();
+        singleNodeFormDs.reset();
         modalStore.modalErrorMes && modalStore.setModalErrorMes(null);
       },
     });
