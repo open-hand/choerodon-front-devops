@@ -8,8 +8,7 @@ import { DataSetSelection } from 'choerodon-ui/pro/lib/data-set/enum';
 import FormDataSet from './FormDataSet';
 
 // @ts-ignore
-// const HAS_BASE_PRO = C7NHasModule('@choerodon/base-pro');
-const HAS_BASE_PRO = true;
+const HAS_BASE_PRO = C7NHasModule('@choerodon/base-business');
 
 interface ContextProps {
   prefixCls: string,
