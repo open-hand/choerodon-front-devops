@@ -38,6 +38,8 @@ export default ({
   intlPrefix,
   isModal,
   modalStore,
+  clusterId,
+  projectId,
 }) => {
   async function checkPort(value, name, record) {
     if (value && record.getPristineValue(name)
@@ -125,6 +127,13 @@ export default ({
       update: handleUpdate,
       remove: handleRemove,
     },
+    transport: {
+      create: clusterId ? {
+        url: `devops/v1/projects/${projectId}/nodes?cluster_id=${clusterId}`,
+        method: 'post',
+        transformRequest: (value) => modalStore.handleClusterCreateNodesData(value)[0],
+      } : undefined,
+    },
     fields: [
       {
         name: 'name',
@@ -178,6 +187,7 @@ export default ({
         label: '节点类型',
         textField: 'text',
         valueField: 'value',
+        defaultValue: isModal ? 'worker' : [],
         required: true,
       },
       {

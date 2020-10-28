@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { useLocalStore } from 'mobx-react-lite';
 import { axios } from '@choerodon/boot';
 import { omit, map, forEach } from 'lodash';
@@ -31,14 +32,17 @@ export default function useStore() {
       });
       return num;
     },
+    handleClusterCreateNodesData(data) {
+      return map(data, (item) => {
+        const tempItem = omit(item, ['__id', '__status', 'hasError', 'status']);
+        tempItem.role = this.calculateType(tempItem?.role);
+        return tempItem;
+      });
+    },
     handleClusterByHostsData(value) {
       const source = omit(JSON.parse(value), ['__id', '__status']);
       if (source?.devopsClusterNodeVOList) {
-        source.devopsClusterNodeVOList = map(source?.devopsClusterNodeVOList, (item) => {
-          const tempItem = omit(item, ['__id', '__status', 'hasError', 'status']);
-          tempItem.role = this.calculateType(tempItem?.role);
-          return tempItem;
-        });
+        source.devopsClusterNodeVOList = this.handleClusterCreateNodesData(source?.devopsClusterNodeVOList);
       }
       return JSON.stringify(source);
     },

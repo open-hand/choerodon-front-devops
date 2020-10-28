@@ -51,6 +51,8 @@ const ClusterModals = observer(() => {
     formDs,
     nodesDs,
     nodesTypeDs,
+    addNodesDs,
+    clusterId,
   } = useModalStore();
 
   function permissionUpdate(data) {
@@ -110,8 +112,9 @@ const ClusterModals = observer(() => {
         projectId={projectId}
         afterOk={resreshTree}
         nodesTypeDs={nodesTypeDs}
-        nodesDs={nodesDs}
+        nodesDs={addNodesDs}
         modalStore={modalStore}
+        clusterId={clusterId}
       />,
       drawer: true,
       className: `${prefixCls}-nodesCreate-modal`,
@@ -120,7 +123,7 @@ const ClusterModals = observer(() => {
       },
       okText: formatMessage({ id: 'add' }),
       onCancel: () => {
-        nodesDs.reset();
+        addNodesDs.reset();
         modalStore.modalErrorMes && modalStore.setModalErrorMes(null);
       },
     });
@@ -204,7 +207,7 @@ const ClusterModals = observer(() => {
       disabledMessage: formatMessage({ id: `${intlPrefix}.modal.create.disabled` }),
     }, {
       name: formatMessage({ id: `${intlPrefix}.modal.createByHost` }),
-      permissions: [],
+      permissions: ['choerodon.code.project.deploy.cluster.cluster-management.ps.create'],
       icon: 'playlist_add',
       handler: openCreateByHost,
       display: true,
