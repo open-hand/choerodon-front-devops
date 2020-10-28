@@ -13,7 +13,7 @@ function formatData({ data, expandsKeys }) {
         key,
         parentId: parentId ? parentId.toString() : null,
         status: item.latestExecuteStatus || item.status || (item.ciStatus === 'success' && item.cdStatus ? item.cdStatus : item.ciStatus),
-        expand: expandsKeys.includes(key),
+        expand: expandsKeys.indexOf(key) > -1,
         gitlabProjectId: newGitlabProjectId,
       };
       newData.push(newItem);
@@ -56,20 +56,22 @@ export default ({
           const { getExpandedKeys, setExpandedKeys } = mainStore;
           let expandsKeys = getExpandedKeys;
           let newData = [...data.content];
-          if (data.number > 0 && dataSet) {
-            newData = [...dataSet.toData(), ...data.content];
-          }
-          mainStore.setTreeDataHasMore(data.totalElements > 0
-            && (data.number + 1) < data.totalPages);
           if (isEmpty(getExpandedKeys) && newData.length) {
             const newKeys = newData[0].id.toString();
             expandsKeys = [newKeys];
-            setExpandedKeys(newKeys);
+            setExpandedKeys([newKeys]);
           }
-          return formatData({
-            data: newData,
+          let newFormatData = formatData({
+            data: [...data.content],
             expandsKeys,
           });
+          if (data.number > 0 && dataSet) {
+            newData = [...dataSet.toData(), ...data.content];
+            newFormatData = [...dataSet.toData(), ...newFormatData];
+          }
+          mainStore.setTreeDataHasMore(data.totalElements > 0
+            && (data.number + 1) < data.totalPages);
+          return newFormatData;
         } catch (e) {
           return response;
         }
