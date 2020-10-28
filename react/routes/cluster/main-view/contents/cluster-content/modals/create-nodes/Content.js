@@ -68,7 +68,7 @@ function CreateNodesForm() {
   async function checkConnectValidate() {
     const tempRecord = nodeStore.getSelectedRecord;
     const hasIp = tempRecord && await tempRecord.getField('hostIp').checkValidity();
-    const hasPort = tempRecord && await tempRecord.getField('sshPort').checkValidity();
+    const hasPort = tempRecord && await tempRecord.getField('hostPort').checkValidity();
     const hasAccountType = tempRecord && await tempRecord.getField('authType').checkValidity();
     const hasUsername = tempRecord && await tempRecord.getField('username').checkValidity();
     const hasPassword = tempRecord && await tempRecord.getField('password').checkValidity();
@@ -95,7 +95,7 @@ function CreateNodesForm() {
       },
     });
 
-    const data = pick(tempRecord.data, ['sshPort', 'password', 'hostIp', 'username', 'authType']);
+    const data = pick(tempRecord.data, ['hostPort', 'password', 'hostIp', 'username', 'authType']);
 
     try {
       const res = await nodeStore.checkNodeConnect(projectId, data);
@@ -250,7 +250,7 @@ function CreateNodesForm() {
                 modal && <TextField name="name" colSpan={3} />
               }
               <TextField name="hostIp" colSpan={3} />
-              <TextField name="sshPort" colSpan={3} />
+              <TextField name="hostPort" colSpan={3} />
               <SelectBox
                 name="authType"
                 colSpan={6}

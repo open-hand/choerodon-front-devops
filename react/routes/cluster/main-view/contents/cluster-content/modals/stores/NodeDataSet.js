@@ -116,7 +116,7 @@ export default ({
       }
     }
     // 单独校验当修改了测试连接需要的相关数据的时候会去校验这条record的status，并且重新置为空需要重新进行测试
-    const tempArr = ['hostIp', 'sshPort', 'authType', 'username', 'password'];
+    const tempArr = ['hostIp', 'hostPort', 'authType', 'username', 'password'];
     if (tempArr.includes(name) && record.get('status')) {
       record.set('status', null);
     }
@@ -151,7 +151,7 @@ export default ({
         validator: checkoutHasSameIP,
       },
       {
-        name: 'sshPort',
+        name: 'hostPort',
         type: 'string',
         label: '端口',
         required: true,
