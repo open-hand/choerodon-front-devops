@@ -5,12 +5,12 @@ import './index.less';
 
 const JmeterGuide: React.FC<any> = (): any => {
   const prefixCls = 'c7ncd-host-jmeter-guide';
-  const text = useMemo(() => ('./jmeter-server \n'
-    + '-Djava.rmi.server.hostname=${你的主机ip地址} \n'
-    + '-Dserver.rmi.ssl.disable=true \n'
-    + '-Dserver.rmi.port=1099 \n'
-    + '-Dserver.rmi.localport=1099 \n'
-    + '-Dserver_port=1099. '), []);
+  const text = useMemo(() => ('nohup ./jmeter-server \\ \n'
+    + '-Djava.rmi.server.hostname=${你的主机ip地址} \\ \n'
+    + '-Dserver.rmi.ssl.disable=true \\ \n'
+    + '-Dserver.rmi.port=1099 \\ \n'
+    + '-Dserver.rmi.localport=1099 \\ \n'
+    + '-Dserver_port=1099 & '), []);
   const [isExpand, setExpand] = useState(false);
 
   const handleExpand = () => {
@@ -52,7 +52,11 @@ const JmeterGuide: React.FC<any> = (): any => {
           </span>
         </span>
         <span className={`${prefixCls}-content-failed`}>
-          注意：此处的主机ip地址需和Choerodon猪齿鱼界面中维护的节点IP保持一致。
+          注意：
+          <br />
+          1. 此处的主机ip地址需和Choerodon猪齿鱼界面中维护的节点IP保持一致。
+          <br />
+          2. 准备作为控制机器的主机, 需要将防火墙关闭。
         </span>
       </div>
     </div>

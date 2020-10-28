@@ -10,7 +10,7 @@ import { DataSetSelection } from 'choerodon-ui/pro/lib/data-set/enum';
 import useStore from './useStore';
 
 // @ts-ignore
-const HAS_BASE_PRO = C7NHasModule('@choerodon/base-pro');
+const HAS_BASE_PRO = C7NHasModule('@choerodon/base-business');
 
 interface ContextProps {
   prefixCls: string,
