@@ -59,16 +59,16 @@ const EmptyShown = observer(() => {
     }];
   }
 
-  return <Fragment>
-    <HeaderButtons items={getButtons()} />
-    <EmptyPage
-      access
-      title={formatMessage({ id: 'c7ncd.cluster.empty.title' })}
-      describe={formatMessage({ id: 'c7ncd.cluster.empty.describe' })}
-      btnText={formatMessage({ id: 'c7ncd.cluster.modal.create' })}
-      onClick={openCreate}
-    />
-  </Fragment>;
+  return (
+    <>
+      <HeaderButtons items={getButtons()} />
+      <EmptyPage
+        access
+        title={formatMessage({ id: 'c7ncd.cluster.empty.title' })}
+        describe={formatMessage({ id: 'c7ncd.cluster.empty.describe' })}
+      />
+    </>
+  );
 });
 
 export default EmptyShown;

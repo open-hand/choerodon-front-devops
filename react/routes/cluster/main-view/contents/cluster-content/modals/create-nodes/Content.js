@@ -29,6 +29,7 @@ function CreateNodesForm() {
     nodeStore,
     projectId,
     modalStore,
+    clusterId, // 顶部添加节点的按钮需要这个集群id从而对应到创建这个集群的节点
   } = useFormStore();
 
   // nodeStore.setSelectedRecord设置选中的record用来渲染用
@@ -170,7 +171,11 @@ function CreateNodesForm() {
 
   return (
     <>
-      <div className={`${prefixCls}-nodesCreate`}>
+      <div
+        className={`${prefixCls}-nodesCreate`}
+        style={{ width: `${modal ? '90%' : '100%'}` }}
+      >
+        {!modal && (
         <div className={`${prefixCls}-nodesCreate-left`}>
           <main>
             {
@@ -233,6 +238,7 @@ function CreateNodesForm() {
             添加节点
           </Button>
         </div>
+        )}
 
         {nodesDs.data.length && nodeStore.getSelectedRecord ? (
           <div className={`${prefixCls}-nodesCreate-right`}>
@@ -240,9 +246,17 @@ function CreateNodesForm() {
               columns={6}
               record={nodeStore.getSelectedRecord}
             >
+              {
+                modal && <TextField name="name" colSpan={3} />
+              }
               <TextField name="hostIp" colSpan={3} />
               <TextField name="sshPort" colSpan={3} />
-              <SelectBox name="authType" colSpan={6} className={`${prefixCls}-nodesCreate-right-authType`} />
+              <SelectBox
+                name="authType"
+                colSpan={6}
+                className={`${prefixCls}-nodesCreate-right-authType`}
+                newLine={!!modal}
+              />
               <TextField name="username" colSpan={3} />
               {
               nodeStore.getSelectedRecord && nodeStore.getSelectedRecord.get('authType') === 'publickey' ? (
