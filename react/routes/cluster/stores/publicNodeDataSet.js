@@ -144,10 +144,16 @@ export default ({
         },
       },
       {
-        name: 'hasError',
+        name: 'status',
         type: 'string',
-        defaultValue: 'wait',
-        validator: (value, name, record) => (!['failed', 'wait', 'linkError'].includes(value)),
+        validator: (value, name, record) => {
+          // 当填了公网节点的值的时候就应该去检测这个公网节点测通了没
+          if (hasAllCheckedFields(record)) {
+            return !['failed', 'wait', 'linkError'].includes(value);
+          }
+          // 没填就不用测
+          return true;
+        },
       },
     ],
   };
