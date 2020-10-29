@@ -12,6 +12,8 @@ import TestConnect from './components/test-connect';
 
 const { Option } = Select;
 
+const connectFields = ['hostIp', 'hostPort', 'authType', 'username', 'password'];
+
 function CreateNodesForm() {
   // const [nodeStore.getSelectedRecord, nodeStore.setSelectedRecord] = useState(null);
 
@@ -66,25 +68,33 @@ function CreateNodesForm() {
   }
 
   async function checkConnectValidate() {
-    const tempRecord = nodeStore.getSelectedRecord;
-    const hasIp = tempRecord && await tempRecord.getField('hostIp').checkValidity();
-    const hasPort = tempRecord && await tempRecord.getField('hostPort').checkValidity();
-    const hasAccountType = tempRecord && await tempRecord.getField('authType').checkValidity();
-    const hasUsername = tempRecord && await tempRecord.getField('username').checkValidity();
-    const hasPassword = tempRecord && await tempRecord.getField('password').checkValidity();
+    const hasIp = nodeStore.getSelectedRecord && await nodeStore.getSelectedRecord.getField('hostIp').checkValidity();
+    const hasPort = nodeStore.getSelectedRecord && await nodeStore.getSelectedRecord.getField('hostPort').checkValidity();
+    const hasAccountType = nodeStore.getSelectedRecord && await nodeStore.getSelectedRecord.getField('authType').checkValidity();
+    const hasUsername = nodeStore.getSelectedRecord && await nodeStore.getSelectedRecord.getField('username').checkValidity();
+    const hasPassword = nodeStore.getSelectedRecord && await nodeStore.getSelectedRecord.getField('password').checkValidity();
     return hasIp && hasPort && hasAccountType && hasUsername && hasPassword;
   }
 
+  function setConnectFieldDisabeld() {
+    connectFields.forEach((item) => {
+      nodeStore.getSelectedRecord.getField(item).set('disabled', true);
+    });
+  }
+
+  function setConnectFieldEnabled() {
+    connectFields.forEach((item) => {
+      nodeStore.getSelectedRecord.getField(item).set('disabled', false);
+    });
+  }
+
   async function handleTestConnection() {
-    const tempRecord = nodeStore.getSelectedRecord;
-
     const validate = await checkConnectValidate();
-
     // 单独再次校验密码是因为：修改时无任何操作，formDs.validate() 返回为true
-    if (!validate || !tempRecord || await tempRecord.getField('password').checkValidity() === false) {
+    if (!validate || !nodeStore.getSelectedRecord || await nodeStore.getSelectedRecord.getField('password').checkValidity() === false) {
       return false;
     }
-    tempRecord.set('status', 'operating');
+    nodeStore.getSelectedRecord.set('status', 'operating');
     // 再进行节点的连接测试的时候需要去把父组件传过来的modal给禁用不让他关闭
     parentModal && parentModal.update({
       okProps: {
@@ -95,17 +105,24 @@ function CreateNodesForm() {
       },
     });
 
-    const data = pick(tempRecord.data, ['hostPort', 'password', 'hostIp', 'username', 'authType']);
+    const data = pick(nodeStore.getSelectedRecord.data, ['hostPort', 'password', 'hostIp', 'username', 'authType']);
+
+    // 警用这几个框，在连接的时候不让他改动
+
+    setConnectFieldDisabeld();
 
     try {
       const res = await nodeStore.checkNodeConnect(projectId, data);
       if (res && res.failed) {
         return false;
       }
-      tempRecord.set('status', res ? 'success' : 'failed');
+      nodeStore.getSelectedRecord.set('status', res ? 'success' : 'failed');
     } catch (error) {
-      tempRecord.set('status', 'linkError');
+      nodeStore.getSelectedRecord.set('status', 'linkError');
+      setConnectFieldEnabled();
     }
+    // 若请求失败了，则把框警用取消
+    setConnectFieldEnabled();
     parentModal && parentModal.update({
       okProps: {
         loading: false,
