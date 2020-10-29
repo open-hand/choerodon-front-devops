@@ -10,10 +10,7 @@ export default ({
   accountDs,
   formatMessage,
   intlPrefix,
-  isModal,
-  modalStore,
-  clusterId,
-  projectId,
+  createHostClusterStore,
 }) => {
   function hasAllCheckedFields(record) {
     const hasIp = record.get('hostIp');
@@ -74,13 +71,13 @@ export default ({
   async function handleUpdate({
     dataSet, record, name, value, oldValue,
   }) {
-    if (name) {
+    if (name && value) {
       record.set('type', 'outter');
     }
     if (name === 'hostIp') {
       ipValidator(dataSet);
     }
-    // 当已经有错误的时候，更新值重新校验并且去除hasError字段以及清空错误消息
+    // 当已经有错误的时候，更新值重新校验并且去除hasError字段
     if (record.get('hasError')) {
       const res = await record.validate();
       if (res) {
@@ -145,6 +142,12 @@ export default ({
         dynamicProps: {
           defaultValue: ({ record }) => (hasAllCheckedFields(record) ? 'outter' : null),
         },
+      },
+      {
+        name: 'hasError',
+        type: 'string',
+        defaultValue: 'wait',
+        validator: (value, name, record) => (!['failed', 'wait', 'linkError'].includes(value)),
       },
     ],
   };

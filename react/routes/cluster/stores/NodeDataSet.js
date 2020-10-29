@@ -94,7 +94,7 @@ export default ({
   }) {
     // 新建的时候是多选框，有这个节点校验规则，但是独立添加node的弹窗就是单选就跳过这个规则
     if (!isModal && name === 'role') {
-      if (value?.includes('etcd') && !value?.includes('master')) {
+      if (!oldValue?.length && value?.length === 1 && value[0] === 'etcd') {
         record.set('role', ['etcd', 'worker']);
       }
       if (oldValue?.length === 2 && oldValue?.includes('master') && oldValue?.includes('etcd') && !value?.includes('master')) {

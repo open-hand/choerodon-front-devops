@@ -28,7 +28,7 @@ const PublicNode = observer((props) => {
 
   useEffect(() => {
 
-  });
+  }, []);
 
   async function checkConnectValidate() {
     const hasIp = publicNodeDs.current && await publicNodeDs.current.getField('hostIp').checkValidity();

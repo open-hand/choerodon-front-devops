@@ -30,8 +30,6 @@ function CreateClusterHostForm() {
     formDs,
     nodesDs,
     nodesTypeDs,
-    // mainStore,
-    // afterOk,
     formatMessage,
     intlPrefix,
     isEdit,
@@ -40,6 +38,7 @@ function CreateClusterHostForm() {
     projectId,
     createHostClusterMainStore,
     publicNodeDs,
+    afterOk,
   } = useFormStore();
 
   useEffect(
@@ -154,6 +153,7 @@ function CreateClusterHostForm() {
     });
   }
 
+  // createData是创建cluster的时候后端返回的数据
   async function gok8sCreate(createData) {
     let res;
     try {
@@ -163,6 +163,7 @@ function CreateClusterHostForm() {
         return res;
       }
       modal.close();
+      afterOk();
       return true;
     } catch (error) {
       modalUpDateLoadingFalse();
@@ -170,6 +171,7 @@ function CreateClusterHostForm() {
     }
   }
 
+  // 所有节点检测连通性
   function goTimerConnect(clusterId, createData) {
     timer = setInterval(async () => {
       let nodeStatusRes;
@@ -185,12 +187,16 @@ function CreateClusterHostForm() {
           return false;
         }
         const { status } = nodeStatusRes;
+        // 如果状态成功,
         if (status === 'success') {
           clearInterval(timer);
+          // 就去创建k8s
           gok8sCreate(createData);
         }
+        // 如果失败
         if (status === 'failed') {
           clearInterval(timer);
+          // 清除loading和disabled
           modalUpDateLoadingFalse();
         }
         setConnectObj(nodeStatusRes);
@@ -198,6 +204,7 @@ function CreateClusterHostForm() {
       } catch (error) {
         if (timer) clearInterval(timer);
         setConnectObj(null);
+        // 清除loading和disabled
         modalUpDateLoadingFalse();
         return true;
       }
@@ -217,6 +224,7 @@ function CreateClusterHostForm() {
       if (res) {
         const { clusterId } = res[0];
         modalUpDateLoadingTrue();
+        // 开始检测节点的连通性
         goTimerConnect(clusterId, res[0]);
         return true;
       }
