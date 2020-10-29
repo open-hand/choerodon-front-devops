@@ -7,7 +7,7 @@ import {
 } from 'choerodon-ui/pro/lib';
 import { observer } from 'mobx-react-lite';
 import Tips from '@/components/new-tips';
-import { pick } from 'lodash';
+import { difference, pick, without } from 'lodash';
 
 import TestConnect from '../test-connect';
 
@@ -113,6 +113,16 @@ const PublicNode = observer((props) => {
     return <span>{mes}</span>;
   }, [publicNodeDs.current]);
 
+  function checkHasAllConnectFieldsFilled() {
+    const tempObj = publicNodeDs.toData()[0];
+    const tempArr = ['hostIp', 'hostPort', 'username', 'password', 'authType'];
+    const differArr = without(tempArr, ...Object.keys(tempObj));
+    if (differArr.length === 0) {
+      return true;
+    }
+    return false;
+  }
+
   return (
     <div className={`${prefixCls}-clusterPublicNode`}>
       <div className={`${prefixCls}-clusterPublicNode-header`}>
@@ -145,7 +155,7 @@ const PublicNode = observer((props) => {
               <TextField name="password" colSpan={3} />
             ) : <Password name="password" reveal={false} colSpan={3} />
           }
-          {publicNodeDs && Object.values(publicNodeDs.toData()[0]).length && (
+          {publicNodeDs && checkHasAllConnectFieldsFilled() && (
           <div className={`${prefixCls}-clusterPublicNode-connect ${['wait', 'linkError'].includes(publicNodeDs.current.get('status')) && `${prefixCls}-clusterPublicNode-connect-uncheck`}`}>
             <TestConnect handleTestConnection={handleTestConnection} nodeRecord={publicNodeDs.current} />
             {
