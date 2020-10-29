@@ -32,7 +32,7 @@ export default function useStore() {
       });
     },
     handleClusterCreateNodesOutterData(obj) {
-      const tempObj = omit(obj, ['__id', '__status', 'hasError']);
+      const tempObj = omit(obj, ['__id', '__status', 'hasError', 'status']);
       return tempObj;
     },
     handleClusterByHostsData(value) {
