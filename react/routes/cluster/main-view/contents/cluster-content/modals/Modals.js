@@ -32,7 +32,15 @@ const ClusterModals = observer(() => {
     },
     AppState: { currentMenuType: { id: projectId } },
     treeDs,
+    clusterId,
+    nodesTypeDs,
+    addNodesDs,
+    formDs,
+    nodesDs,
+    publicNodeDs,
+    createHostClusterStore,
   } = useClusterStore();
+
   const {
     contentStore,
     tabs: {
@@ -48,11 +56,6 @@ const ClusterModals = observer(() => {
   const {
     modalStore,
     NonPermissionDs,
-    formDs,
-    nodesDs,
-    nodesTypeDs,
-    addNodesDs,
-    clusterId,
   } = useModalStore();
 
   function permissionUpdate(data) {
@@ -115,6 +118,8 @@ const ClusterModals = observer(() => {
         nodesDs={addNodesDs}
         modalStore={modalStore}
         clusterId={clusterId}
+        createHostClusterMainStore={createHostClusterStore}
+
       />,
       drawer: true,
       className: `${prefixCls}-nodesCreate-modal`,
@@ -124,7 +129,6 @@ const ClusterModals = observer(() => {
       okText: formatMessage({ id: 'add' }),
       onCancel: () => {
         addNodesDs.reset();
-        modalStore.modalErrorMes && modalStore.setModalErrorMes(null);
       },
     });
   }
@@ -140,11 +144,11 @@ const ClusterModals = observer(() => {
         prefixCls={prefixCls}
         intlPrefix={intlPrefix}
         formatMessage={formatMessage}
-        mainStore={mainStore}
         projectId={projectId}
         nodesTypeDs={nodesTypeDs}
         nodesDs={nodesDs}
-        modalStore={modalStore}
+        createHostClusterMainStore={createHostClusterStore}
+        publicNodeDs={publicNodeDs}
       />,
       drawer: true,
       style: {
@@ -155,7 +159,6 @@ const ClusterModals = observer(() => {
       onCancel: () => {
         nodesDs.reset();
         formDs.reset();
-        modalStore.modalErrorMes && modalStore.setModalErrorMes(null);
       },
     });
   }

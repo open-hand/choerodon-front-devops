@@ -37,7 +37,7 @@ export default ({
   formatMessage,
   intlPrefix,
   isModal,
-  modalStore,
+  createHostClusterStore,
   clusterId,
   projectId,
 }) => {
@@ -112,13 +112,7 @@ export default ({
       const res = await record.validate();
       if (res) {
         record.set('hasError', false);
-        modalStore.setModalErrorMes(null);
       }
-    }
-    // 单独校验当修改了测试连接需要的相关数据的时候会去校验这条record的status，并且重新置为空需要重新进行测试
-    const tempArr = ['hostIp', 'hostPort', 'authType', 'username', 'password'];
-    if (tempArr.includes(name) && record.get('status')) {
-      record.set('status', null);
     }
   }
   return {
@@ -131,7 +125,7 @@ export default ({
       create: clusterId ? {
         url: `devops/v1/projects/${projectId}/nodes?cluster_id=${clusterId}`,
         method: 'post',
-        transformRequest: (value) => modalStore.handleClusterCreateNodesData(value)[0],
+        transformRequest: (value) => createHostClusterStore.handleClusterCreateNodesData(value)[0],
       } : undefined,
     },
     fields: [
@@ -191,18 +185,9 @@ export default ({
         required: true,
       },
       {
-        name: 'status',
+        name: 'type',
         type: 'string',
-        validator: (value, name, record) => {
-          if (!record.get('status')) {
-            record.set('status', 'wait');
-            return false;
-          }
-          if (record.get('status') !== 'success') {
-            return false;
-          }
-          return true;
-        },
+        defaultValue: 'inner',
       },
     ],
   };

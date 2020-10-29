@@ -11,8 +11,5 @@ export default function useStore() {
     get getSelectedRecord() {
       return this.selectedRecord;
     },
-    checkNodeConnect(projectId, data) {
-      return axios.post(`/devops/v1/projects/${projectId}/nodes/connection_test`, JSON.stringify(data));
-    },
   }));
 }

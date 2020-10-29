@@ -3,23 +3,12 @@ import React, { useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Button, Icon, Tooltip } from 'choerodon-ui/pro';
 import { Steps } from 'choerodon-ui';
-import { useFormStore } from '../../stores';
 
 import './index.less';
 
-const { Step } = Steps;
-const STATUS = {
-  success: 'finish',
-  failed: 'error',
-  operating: 'process',
-  wait: 'wait',
-};
+const prefixCls = 'c7ncd-cluster';
 
 const TestConnect = observer(({ handleTestConnection, nodeRecord }) => {
-  const {
-    prefixCls,
-  } = useFormStore();
-
   const getContent = () => {
     if (nodeRecord) {
       const status = nodeRecord.get('status') || 'wait';

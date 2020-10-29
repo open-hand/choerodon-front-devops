@@ -6,13 +6,9 @@ import {
 } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import NewTips from '@/components/new-tips';
-import { pick } from 'lodash';
 import { useFormStore } from './stores';
-import TestConnect from './components/test-connect';
 
 const { Option } = Select;
-
-const connectFields = ['hostIp', 'hostPort', 'authType', 'username', 'password'];
 
 function CreateNodesForm() {
   // const [nodeStore.getSelectedRecord, nodeStore.setSelectedRecord] = useState(null);
@@ -30,7 +26,7 @@ function CreateNodesForm() {
     parentModal, // 这个是父组件传过来的modal，此为子组件的时候
     nodeStore,
     projectId,
-    modalStore,
+    createHostClusterMainStore,
     clusterId, // 顶部添加节点的按钮需要这个集群id从而对应到创建这个集群的节点
   } = useFormStore();
 
@@ -49,7 +45,8 @@ function CreateNodesForm() {
     });
     const result = await nodesDs.validate();
     if (!result) {
-      modalStore.setModalErrorMes('请完善节点信息');
+      // createHostClusterMainStore.setModalErrorMes('请完善节点信息');
+      message.error('请完善节点信息');
       return false;
     }
     return true;
@@ -65,73 +62,6 @@ function CreateNodesForm() {
       const tempIndex = index > nodesDs.data.length - 1 ? index - 1 : index;
       nodeStore.setSelectedRecord(nodesDs.data[tempIndex]);
     }
-  }
-
-  async function checkConnectValidate() {
-    const hasIp = nodeStore.getSelectedRecord && await nodeStore.getSelectedRecord.getField('hostIp').checkValidity();
-    const hasPort = nodeStore.getSelectedRecord && await nodeStore.getSelectedRecord.getField('hostPort').checkValidity();
-    const hasAccountType = nodeStore.getSelectedRecord && await nodeStore.getSelectedRecord.getField('authType').checkValidity();
-    const hasUsername = nodeStore.getSelectedRecord && await nodeStore.getSelectedRecord.getField('username').checkValidity();
-    const hasPassword = nodeStore.getSelectedRecord && await nodeStore.getSelectedRecord.getField('password').checkValidity();
-    return hasIp && hasPort && hasAccountType && hasUsername && hasPassword;
-  }
-
-  function setConnectFieldDisabeld() {
-    connectFields.forEach((item) => {
-      nodeStore.getSelectedRecord.getField(item).set('disabled', true);
-    });
-  }
-
-  function setConnectFieldEnabled() {
-    connectFields.forEach((item) => {
-      nodeStore.getSelectedRecord.getField(item).set('disabled', false);
-    });
-  }
-
-  async function handleTestConnection() {
-    const validate = await checkConnectValidate();
-    // 单独再次校验密码是因为：修改时无任何操作，formDs.validate() 返回为true
-    if (!validate || !nodeStore.getSelectedRecord || await nodeStore.getSelectedRecord.getField('password').checkValidity() === false) {
-      return false;
-    }
-    nodeStore.getSelectedRecord.set('status', 'operating');
-    // 再进行节点的连接测试的时候需要去把父组件传过来的modal给禁用不让他关闭
-    parentModal && parentModal.update({
-      okProps: {
-        loading: true,
-      },
-      cancelProps: {
-        disabled: true,
-      },
-    });
-
-    const data = pick(nodeStore.getSelectedRecord.data, ['hostPort', 'password', 'hostIp', 'username', 'authType']);
-
-    // 警用这几个框，在连接的时候不让他改动
-
-    setConnectFieldDisabeld();
-
-    try {
-      const res = await nodeStore.checkNodeConnect(projectId, data);
-      if (res && res.failed) {
-        return false;
-      }
-      nodeStore.getSelectedRecord.set('status', res ? 'success' : 'failed');
-    } catch (error) {
-      nodeStore.getSelectedRecord.set('status', 'linkError');
-      setConnectFieldEnabled();
-    }
-    // 若请求失败了，则把框警用取消
-    setConnectFieldEnabled();
-    parentModal && parentModal.update({
-      okProps: {
-        loading: false,
-      },
-      cancelProps: {
-        disabled: false,
-      },
-    });
-    return true;
   }
 
   const renderNodetypeOpts = useCallback(({ value, text }) => {
@@ -167,22 +97,6 @@ function CreateNodesForm() {
       );
     })
   ), [nodesTypeDs]);
-
-  const renderLinkStatusMes = useCallback(() => {
-    const status = nodeStore.getSelectedRecord && nodeStore.getSelectedRecord.get('status');
-    let mes;
-    switch (status) {
-      case 'wait':
-        mes = '请进行连接检测。';
-        break;
-      case 'linkError':
-        mes = '连接异常，请重新进行连接检测。';
-        break;
-      default:
-        break;
-    }
-    return <span>{mes}</span>;
-  }, [nodeStore.getSelectedRecord]);
 
   modal && modal.handleOk(handleSubmit);
 
@@ -228,16 +142,11 @@ function CreateNodesForm() {
                   }
                 </Form>
                 {
-                  (nodesRecord.get('hasError') || (['failed', 'wait', 'linkError'].includes(nodesRecord.get('status')))) && (
+                  (nodesRecord.get('hasError')) && (
                   <Icon
                     type="info"
                     className={`${prefixCls}-nodesCreate-left-item-errorIcon`}
                   />
-                  )
-                }
-                {
-                  !nodesRecord.get('hasError') && nodesRecord.get('status') === 'operating' && (
-                    <Spin spinning size="small" className={`${prefixCls}-nodesCreate-left-item-errorIcon`} />
                   )
                 }
               </div>
@@ -258,7 +167,10 @@ function CreateNodesForm() {
         )}
 
         {nodesDs.data.length && nodeStore.getSelectedRecord ? (
-          <div className={`${prefixCls}-nodesCreate-right`}>
+          <div
+            className={`${prefixCls}-nodesCreate-right`}
+            style={{ padding: modal ? 0 : '11px 20px' }}
+          >
             <Form
               columns={6}
               record={nodeStore.getSelectedRecord}
@@ -281,12 +193,12 @@ function CreateNodesForm() {
               ) : <Password name="password" reveal={false} colSpan={3} />
             }
             </Form>
-            <div className={`${prefixCls}-nodesCreate-connect ${['wait', 'linkError'].includes(nodeStore.getSelectedRecord.get('status')) && `${prefixCls}-nodesCreate-connect-uncheck`}`}>
+            {/* <div className={`${prefixCls}-nodesCreate-connect ${['wait', 'linkError'].includes(nodeStore.getSelectedRecord.get('status')) && `${prefixCls}-nodesCreate-connect-uncheck`}`}>
               <TestConnect handleTestConnection={handleTestConnection} nodeRecord={nodeStore.getSelectedRecord} />
               {
                 renderLinkStatusMes()
               }
-            </div>
+            </div> */}
             <Form
               columns={6}
               record={nodeStore.getSelectedRecord}
@@ -306,13 +218,6 @@ function CreateNodesForm() {
           </div>
         ) : ''}
       </div>
-      {
-        modal && modalStore.modalErrorMes && (
-        <span className={`${prefixCls}-nodesCreate-modal-errorMes`}>
-          {modalStore.modalErrorMes}
-        </span>
-        )
-      }
     </>
   );
 }
