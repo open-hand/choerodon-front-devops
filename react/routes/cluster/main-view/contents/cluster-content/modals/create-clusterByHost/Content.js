@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  TextField, TextArea, Form, Modal, message, Button,
+  TextField,
+  TextArea,
+  Form,
+  Modal,
+  message,
+  Button,
 } from 'choerodon-ui/pro';
 import { forEach, toUpper } from 'lodash';
 import { useFormStore } from './stores';
@@ -9,6 +14,7 @@ import NodesCreate from '../create-nodes';
 import TestConnectFinal from './components/test-connect-final';
 
 let confirmModal;
+let timer;
 
 function CreateClusterHostForm() {
   const [connectObj, setConnectObj] = useState();
@@ -29,6 +35,13 @@ function CreateClusterHostForm() {
     modalStore,
   } = useFormStore();
 
+  useEffect(
+    () => function () {
+      timer && clearInterval(timer);
+    },
+    [],
+  );
+
   // if (isEdit) {
   //   formDs.query();
   // }
@@ -37,7 +50,8 @@ function CreateClusterHostForm() {
     confirmModal = Modal.open({
       key: Modal.key(),
       title: '注意',
-      children: '您创建的集群中Etcd类型节点为偶数个，Etcd官方建议Etcd集群服务器个数为奇数个（比如1、3、5）以防止脑裂',
+      children:
+        '您创建的集群中Etcd类型节点为偶数个，Etcd官方建议Etcd集群服务器个数为奇数个（比如1、3、5）以防止脑裂',
       cancelProps: {
         color: 'dark',
       },
@@ -45,7 +59,9 @@ function CreateClusterHostForm() {
         <div>
           <Button
             color="dark"
-            onClick={() => { confirmModal.close(); }}
+            onClick={() => {
+              confirmModal.close();
+            }}
           >
             返回修改
           </Button>
@@ -109,69 +125,96 @@ function CreateClusterHostForm() {
     });
   }
 
-  async function postMainData() {
-    // 首先让弹窗loading
+  function modalUpDateLoadingFalse() {
     modal.update({
+      cancelProps: {
+        disabled: false,
+      },
+      okProps: {
+        loading: false,
+      },
+    });
+  }
+
+  function modalUpDateLoadingTrue() {
+    modal.update({
+      cancelProps: {
+        disabled: true,
+      },
       okProps: {
         loading: true,
       },
     });
+  }
+
+  async function gok8sCreate(createData) {
+    let res;
     try {
+      res = await clusterByHostStore.createK8S(projectId, createData);
+      if (res && res.failed) {
+        modalUpDateLoadingFalse();
+        return res;
+      }
+      modal.close();
+      return true;
+    } catch (error) {
+      modalUpDateLoadingFalse();
+      return error;
+    }
+  }
+
+  function goTimerConnect(clusterId, createData) {
+    timer = setInterval(async () => {
+      let nodeStatusRes;
+      try {
+        nodeStatusRes = await clusterByHostStore.checkConnect(
+          projectId,
+          clusterId,
+        );
+        if (nodeStatusRes && nodeStatusRes.failed) {
+          if (timer) clearInterval(timer);
+          setConnectObj(null);
+          modalUpDateLoadingFalse();
+          return false;
+        }
+        const { status } = nodeStatusRes;
+        if (status === 'success') {
+          clearInterval(timer);
+          gok8sCreate(createData);
+        }
+        if (status === 'failed') {
+          clearInterval(timer);
+        }
+        setConnectObj(nodeStatusRes);
+        return true;
+      } catch (error) {
+        if (timer) clearInterval(timer);
+        setConnectObj(null);
+        modalUpDateLoadingFalse();
+        return true;
+      }
+    }, 2000);
+  }
+
+  async function postMainData() {
+    try {
+      // 首先让弹窗loading
+      modalUpDateLoadingTrue();
       // 先把数据发给后端
       const res = await formDs.submit();
+      if (res && res.failed) {
+        modalUpDateLoadingFalse();
+        return res;
+      }
       if (res) {
-        try {
-          modal.update({
-            okProps: {
-              loading: true,
-            },
-            cancelProps: {
-              disabled: true,
-            },
-          });
-          const nodeStatusRes = await clusterByHostStore.checkConnect(projectId, res);
-          if (nodeStatusRes) {
-            setConnectObj({
-              status: 'operating',
-              configuration: {
-                status: 'success',
-                errorMessage: null,
-              },
-              system: {
-                status: 'success',
-                errorMessage: null,
-              },
-              memory: {
-                status: 'operating',
-                errorMessage: null,
-              },
-              cpu: {
-                status: 'wait',
-                errorMessage: null,
-              },
-            });
-          }
-          return true;
-        } catch (error) {
-          setConnectObj(null);
-          modal.update({
-            cancelProps: {
-              disabled: false,
-            },
-            okProps: {
-              loading: false,
-            },
-          });
-          return true;
-        }
+        const { clusterId } = res[0];
+        modalUpDateLoadingTrue();
+        goTimerConnect(clusterId, res[0]);
+        return true;
       }
       return false;
     } catch (error) {
-      modal.update({
-        okProps: {
-          loading: false,
-        },
-      });
+      modalUpDateLoadingFalse();
       return true;
     }
   }
@@ -190,10 +233,14 @@ function CreateClusterHostForm() {
       const hasAllNodeTypes = checkHasAllNodeType();
       // 首先需要校验创建集群时，需至少包含1个master+1个etcd+1个worker类型的节点。
       if (!hasAllNodeTypes) {
-        message.error('创建集群时，需至少包含1个master+1个etcd+1个worker类型的节点。');
+        message.error(
+          '创建集群时，需至少包含1个master+1个etcd+1个worker类型的节点。',
+        );
         return false;
       }
-      const isEven = checkNodesEtcdIsEven(mainData?.devopsClusterNodeVOList || []);
+      const isEven = checkNodesEtcdIsEven(
+        mainData?.devopsClusterNodeVOList || [],
+      );
       // 这个时候检验etcd的节点个数，偶数的话就会弹窗告诉你东西
       if (!isEven) {
         openNoticeEvenModal();
@@ -210,10 +257,7 @@ function CreateClusterHostForm() {
   return (
     <>
       <div className={`${prefixCls}-createByHost`}>
-        <Form
-          dataSet={formDs}
-          columns={6}
-        >
+        <Form dataSet={formDs} columns={6}>
           <TextField name="name" colSpan={2} />
           <TextField name="code" disabled={isEdit} colSpan={2} />
           <TextArea name="description" resize="vertical" colSpan={2} />
@@ -228,9 +272,11 @@ function CreateClusterHostForm() {
         />
         {connectObj && <TestConnectFinal connectRecord={connectObj} />}
       </div>
-      {
-        modalStore.modalErrorMes && <span className={`${prefixCls}-createByHost-modal-errorMes`}>{modalStore.modalErrorMes}</span>
-      }
+      {modalStore.modalErrorMes && (
+        <span className={`${prefixCls}-createByHost-modal-errorMes`}>
+          {modalStore.modalErrorMes}
+        </span>
+      )}
     </>
   );
 }
