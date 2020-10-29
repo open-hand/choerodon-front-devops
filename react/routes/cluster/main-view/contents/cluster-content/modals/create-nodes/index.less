@@ -1,34 +1,11 @@
 .c7ncd-cluster-nodesCreate {
   width: 740px;
-  margin-left: -24px;
   display: flex;
-  height: 435px;
+  height: 316px;
   &-modal {
     .c7n-pro-modal-body {
       position: relative;
       height: calc(100vh - 1.2rem) !important;
-    }
-    &-errorMes {
-      position: absolute;
-      bottom: 0;
-      left: 10px;
-      font-size: 13px;
-      color: #f44336;
-    }
-  }
-  &-connect {
-    position: relative;
-    &-uncheck {
-      width: fit-content;
-      border: 2px solid red;
-      border-radius: 6px;
-    }
-    >span {
-      color: #d50000;
-      font-size: 0.12rem;
-      padding-left: 12px;
-      position: absolute;
-      margin-top: 3px;
     }
   }
   &-left {
@@ -38,7 +15,7 @@
     padding: 0 0 8px 0;
 
     > main {
-      max-height: 3.8rem;
+      max-height: 2.65rem;
       overflow: auto;
       &::-webkit-scrollbar {
         display: none;
@@ -86,7 +63,6 @@
   }
   &-right {
     flex: 1;
-    padding: 11px 20px;
     &-authType,
     &-nodeType {
       > .c7n-pro-select-box {
@@ -103,7 +79,7 @@
       margin-bottom: -13px;
     }
     &-nodeType {
-      margin-top: 43px;
+      margin-top: 20px;
     }
   }
 }

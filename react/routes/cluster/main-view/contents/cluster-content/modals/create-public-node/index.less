@@ -1,0 +1,40 @@
+.c7ncd-cluster-clusterPublicNode {
+  border-top: 0.01rem solid #e0e0e0;
+  margin-bottom: 24px;
+  margin-top: 24px;
+  &-connect {
+    position: relative;
+    &-uncheck {
+      width: fit-content;
+      border: 2px solid red;
+      border-radius: 6px;
+    }
+    >span {
+      color: #d50000;
+      font-size: 0.12rem;
+      padding-left: 12px;
+      position: absolute;
+      margin-top: 3px;
+    }
+  }
+
+  &-header {
+    display: flex;
+    align-items: center;
+    padding: 18px 18px 0 18px;
+    margin-bottom: 5px;
+    > * + * {
+      margin-left: 10px;
+    }
+    margin-bottom: 10px;
+    > span {
+      font-size: 16px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: #000000;
+    }
+  }
+  &-form {
+    padding: 0 24px 24px 24px;
+  }
+}

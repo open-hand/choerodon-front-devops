@@ -8,9 +8,15 @@ import {
   message,
   Button,
 } from 'choerodon-ui/pro';
+import Tips from '@/components/new-tips';
+
 import { forEach, toUpper } from 'lodash';
 import { useFormStore } from './stores';
+
 import NodesCreate from '../create-nodes';
+
+import NodePublicCreate from '../create-public-node';
+
 import TestConnectFinal from './components/test-connect-final';
 
 let confirmModal;
@@ -32,7 +38,8 @@ function CreateClusterHostForm() {
     prefixCls,
     clusterByHostStore,
     projectId,
-    modalStore,
+    createHostClusterMainStore,
+    publicNodeDs,
   } = useFormStore();
 
   useEffect(
@@ -81,8 +88,8 @@ function CreateClusterHostForm() {
   };
 
   function checkHasAllNodeType() {
-    const { devopsClusterNodeVOList } = formDs && formDs.children;
-    const mainData = devopsClusterNodeVOList && devopsClusterNodeVOList.toData();
+    const { devopsClusterInnerNodeVOList } = formDs && formDs.children;
+    const mainData = devopsClusterInnerNodeVOList && devopsClusterInnerNodeVOList.toData();
     const nodeHasObj = {
       master: false,
       etcd: false,
@@ -184,6 +191,7 @@ function CreateClusterHostForm() {
         }
         if (status === 'failed') {
           clearInterval(timer);
+          modalUpDateLoadingFalse();
         }
         setConnectObj(nodeStatusRes);
         return true;
@@ -225,8 +233,8 @@ function CreateClusterHostForm() {
     checkNodeHasError();
     const result = await formDs.validate();
     if (!result) {
-      // message.error('请检查集群信息');
-      modalStore.setModalErrorMes('请检查集群信息');
+      message.error('请检查集群信息');
+      // createHostClusterMainStore.setModalErrorMes('请检查集群信息');
     }
     if (result) {
       const mainData = formDs.toData()[0];
@@ -239,7 +247,7 @@ function CreateClusterHostForm() {
         return false;
       }
       const isEven = checkNodesEtcdIsEven(
-        mainData?.devopsClusterNodeVOList || [],
+        mainData?.devopsClusterInnerNodeVOList || [],
       );
       // 这个时候检验etcd的节点个数，偶数的话就会弹窗告诉你东西
       if (!isEven) {
@@ -257,26 +265,40 @@ function CreateClusterHostForm() {
   return (
     <>
       <div className={`${prefixCls}-createByHost`}>
-        <Form dataSet={formDs} columns={6}>
-          <TextField name="name" colSpan={2} />
-          <TextField name="code" disabled={isEdit} colSpan={2} />
-          <TextArea name="description" resize="vertical" colSpan={2} />
-        </Form>
-        <NodesCreate
+        <div className={`${prefixCls}-createByHost-headerForm`}>
+          <Form dataSet={formDs} columns={6}>
+            <TextField name="name" colSpan={2} />
+            <TextField name="code" disabled={isEdit} colSpan={2} />
+            <TextArea name="description" resize="vertical" colSpan={2} />
+          </Form>
+        </div>
+        <div className={`${prefixCls}-createByHost-section`}>
+          <header>
+            <span>
+              节点配置
+            </span>
+            <Tips />
+          </header>
+          <NodesCreate
+            prefixCls={prefixCls}
+            formatMessage={formatMessage}
+            intlPrefix={intlPrefix}
+            nodesTypeDs={nodesTypeDs}
+            nodesDs={nodesDs}
+            parentModal={modal}
+          />
+        </div>
+        <NodePublicCreate
           prefixCls={prefixCls}
           formatMessage={formatMessage}
           intlPrefix={intlPrefix}
-          nodesTypeDs={nodesTypeDs}
-          nodesDs={nodesDs}
           parentModal={modal}
+          publicNodeDs={publicNodeDs}
+          createHostClusterMainStore={createHostClusterMainStore}
+          projectId={projectId}
         />
         {connectObj && <TestConnectFinal connectRecord={connectObj} />}
       </div>
-      {modalStore.modalErrorMes && (
-        <span className={`${prefixCls}-createByHost-modal-errorMes`}>
-          {modalStore.modalErrorMes}
-        </span>
-      )}
     </>
   );
 }

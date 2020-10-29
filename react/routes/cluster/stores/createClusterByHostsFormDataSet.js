@@ -4,14 +4,15 @@ import { omit, map, forEach } from 'lodash';
 
 let clusterName;
 export default ({
-  projectId, formatMessage, intlPrefix, modal, isEdit, afterOk, mainStore, clusterId, nodesDs, modalStore,
+  projectId, formatMessage, intlPrefix, modal, isEdit, afterOk, clusterId, nodesDs, createHostClusterStore,
+  publicNodeDs,
 }) => {
   async function checkClusterName(value) {
     let messageName = true;
     if (value === clusterName && isEdit) {
       return messageName;
     }
-    await mainStore.checkClusterName({
+    await createHostClusterStore.checkClusterName({
       projectId,
       clusterName: window.encodeURIComponent(value),
     }).then((res) => {
@@ -31,7 +32,7 @@ export default ({
     if (value && !pa.test(value)) {
       messageCode = `编码${formatMessage({ id: `${intlPrefix}.check.failed` })}`;
     } else {
-      await mainStore.checkClusterCode({
+      await createHostClusterStore.checkClusterCode({
         projectId,
         clusterCode: value,
       }).then((res) => {
@@ -85,13 +86,13 @@ export default ({
         url: `/devops/v1/projects/${projectId}/clusters/create`,
         method: 'post',
         data: JSON.stringify(data),
-        transformRequest: (value) => modalStore.handleClusterByHostsData(value),
+        transformRequest: (value) => createHostClusterStore.handleClusterByHostsData(value),
       }),
       update: ({ data: [data] }) => ({
         url: `/devops/v1/projects/${projectId}/clusters/${data.id}?`,
         method: 'put',
         data: JSON.stringify(data),
-        transformRequest: (value) => modalStore.handleClusterByHostsData(value),
+        transformRequest: (value) => createHostClusterStore.handleClusterByHostsData(value),
       }),
     },
     events: {
@@ -100,7 +101,8 @@ export default ({
       },
     },
     children: {
-      devopsClusterNodeVOList: nodesDs,
+      devopsClusterInnerNodeVOList: nodesDs,
+      devopsClusterOutterNodeVO: publicNodeDs,
     },
   };
 };

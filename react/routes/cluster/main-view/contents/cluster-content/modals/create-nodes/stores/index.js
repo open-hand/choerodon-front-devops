@@ -3,8 +3,6 @@ import React, { createContext, useContext, useMemo } from 'react';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
-import { DataSet } from 'choerodon-ui/pro';
-import NodeDataSet from '../../stores/NodeDataSet';
 import useStore from './useStore';
 
 const Store = createContext();

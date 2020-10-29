@@ -18,14 +18,12 @@ export const StoreProvider = injectIntl(inject('AppState')(
       children,
       intlPrefix,
       formatMessage,
-      formDs,
     } = props;
 
     const clusterByHostStore = useStore();
 
     const value = {
       ...props,
-      formDs,
       intlPrefix,
       formatMessage,
       projectId,
