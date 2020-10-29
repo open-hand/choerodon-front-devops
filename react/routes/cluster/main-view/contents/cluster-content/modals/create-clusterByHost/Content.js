@@ -187,6 +187,7 @@ function CreateClusterHostForm() {
           return false;
         }
         const { status } = nodeStatusRes;
+        setConnectObj(nodeStatusRes);
         // 如果状态成功,
         if (status === 'success') {
           clearInterval(timer);
@@ -199,7 +200,6 @@ function CreateClusterHostForm() {
           // 清除loading和disabled
           modalUpDateLoadingFalse();
         }
-        setConnectObj(nodeStatusRes);
         return true;
       } catch (error) {
         if (timer) clearInterval(timer);

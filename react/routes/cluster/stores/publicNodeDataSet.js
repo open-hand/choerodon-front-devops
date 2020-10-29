@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable import/no-anonymous-default-export */
 import { DataSet } from 'choerodon-ui/pro';
+import { difference, without } from 'lodash';
 
 function ipValidator(dataSet) {
   dataSet.forEach((eachRecord) => eachRecord.getField('hostIp').checkValidity());
@@ -12,13 +13,10 @@ export default ({
   intlPrefix,
   createHostClusterStore,
 }) => {
-  function hasAllCheckedFields(record) {
-    const hasIp = record.get('hostIp');
-    const hasPort = record.get('hostPort');
-    const hasAccountType = record.get('authType');
-    const hasUsername = record.get('username');
-    const hasPassword = record.get('password');
-    return hasIp || hasPort || hasAccountType || hasUsername || hasPassword;
+  function hasAllCheckedFields(record, fieldName) {
+    const tempArr = ['hostIp', 'hostPort', 'authType', 'username', 'password'];
+    const omitArr = without(tempArr, fieldName);
+    return omitArr.some((item) => record.get(item));
   }
   async function checkPort(value, name, record) {
     if (value && record.getPristineValue(name)
@@ -77,12 +75,9 @@ export default ({
     if (name === 'hostIp') {
       ipValidator(dataSet);
     }
-    // 当已经有错误的时候，更新值重新校验并且去除hasError字段
-    if (record.get('hasError')) {
-      const res = await record.validate();
-      if (res) {
-        record.set('hasError', false);
-      }
+    const reConnectFields = ['hostIp', 'hostPort', 'authType', 'username', 'password'];
+    if (reConnectFields.includes(name) && value !== oldValue) {
+      record.set('status', null);
     }
   }
   return {
@@ -149,7 +144,17 @@ export default ({
         validator: (value, name, record) => {
           // 当填了公网节点的值的时候就应该去检测这个公网节点测通了没
           if (hasAllCheckedFields(record)) {
-            return !['failed', 'wait', 'linkError'].includes(value);
+            if (!value) {
+              record.set('status', 'wait');
+              return false;
+            }
+            if (value === 'success') {
+              return true;
+            }
+            return false;
+
+            // record.set('status', 'wait');
+            // return false;
           }
           // 没填就不用测
           return true;
