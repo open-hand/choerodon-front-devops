@@ -5,6 +5,7 @@ import HeaderButtons from '../../../../../components/header-buttons';
 import EmptyPage from '../../../../../components/empty-page';
 import { useClusterStore } from '../../../stores';
 import CreateCluster from '../cluster-content/modals/create-cluster';
+import CreateClusterByHost from '../cluster-content/modals/create-clusterByHost';
 import { useClusterMainStore } from '../../stores';
 
 const modalKey1 = Modal.key();
@@ -21,6 +22,11 @@ const EmptyShown = observer(() => {
     AppState: { currentMenuType: { id: projectId } },
     treeDs,
     clusterStore,
+    formDs,
+    nodesTypeDs,
+    nodesDs,
+    createHostClusterStore,
+    publicNodeDs,
   } = useClusterStore();
   const { mainStore } = useClusterMainStore();
   function refreshTree() {
@@ -49,6 +55,36 @@ const EmptyShown = observer(() => {
     });
   }
 
+  function openCreateByHost() {
+    Modal.open({
+      key: Modal.key(),
+      className: `${prefixCls}-createByHost-modal`,
+      title: formatMessage({ id: `${intlPrefix}.modal.createByHost` }),
+      children: <CreateClusterByHost
+        formDs={formDs}
+        afterOk={refreshTree}
+        prefixCls={prefixCls}
+        intlPrefix={intlPrefix}
+        formatMessage={formatMessage}
+        projectId={projectId}
+        nodesTypeDs={nodesTypeDs}
+        nodesDs={nodesDs}
+        createHostClusterMainStore={createHostClusterStore}
+        publicNodeDs={publicNodeDs}
+      />,
+      drawer: true,
+      style: {
+        width: '740px',
+      },
+      destroyOnClose: true,
+      okText: formatMessage({ id: 'create' }),
+      onCancel: () => {
+        nodesDs.reset();
+        formDs.reset();
+      },
+    });
+  }
+
   function getButtons() {
     return [{
       name: formatMessage({ id: `${intlPrefix}.modal.create` }),
@@ -56,6 +92,14 @@ const EmptyShown = observer(() => {
       handler: openCreate,
       display: true,
       group: 1,
+    }, {
+      name: formatMessage({ id: `${intlPrefix}.modal.createByHost` }),
+      permissions: ['choerodon.code.project.deploy.cluster.cluster-management.ps.create'],
+      icon: 'playlist_add',
+      handler: openCreateByHost,
+      display: true,
+      group: 1,
+      disabledMessage: formatMessage({ id: `${intlPrefix}.modal.create.disabled` }),
     }];
   }
 

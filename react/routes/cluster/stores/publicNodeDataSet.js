@@ -74,6 +74,9 @@ export default ({
   async function handleUpdate({
     dataSet, record, name, value, oldValue,
   }) {
+    if (name) {
+      record.set('type', 'outter');
+    }
     if (name === 'hostIp') {
       ipValidator(dataSet);
     }
