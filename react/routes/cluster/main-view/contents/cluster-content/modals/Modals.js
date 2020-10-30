@@ -30,6 +30,7 @@ const ClusterModals = observer(() => {
       getSelectedMenu: { id },
       getSelectedMenu,
     },
+    clusterStore,
     AppState: { currentMenuType: { id: projectId } },
     treeDs,
     clusterId,
