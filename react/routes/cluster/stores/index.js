@@ -19,7 +19,6 @@ export function useClusterStore() {
 }
 
 export const StoreProvider = injectIntl(inject('AppState')(observer(
-
   (props) => {
     const { AppState: { currentMenuType: { id: projectId } }, children, intl: { formatMessage } } = props;
     const clusterStore = useStore();
@@ -27,10 +26,6 @@ export const StoreProvider = injectIntl(inject('AppState')(observer(
     const treeDs = useMemo(() => new DataSet(TreeDataSet(clusterStore, projectId)), [projectId]);
 
     const intlPrefix = 'c7ncd.cluster';
-
-    const {
-      getSelectedMenu: { id: clusterId },
-    } = clusterStore;
 
     const createHostClusterStore = useHostClusterStore();
 
@@ -71,7 +66,6 @@ export const StoreProvider = injectIntl(inject('AppState')(observer(
       accountDs,
       formatMessage,
       intlPrefix,
-      createHostClusterStore,
       projectId,
     }), [projectId]));
 
@@ -97,7 +91,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer(
 
     const formDs = useMemo(() => new DataSet(FormDataSet({
       createHostClusterStore, projectId, formatMessage, intlPrefix, nodesDs, publicNodeDs,
-    })), [projectId]);
+    })), [createHostClusterStore, nodesDs, projectId, publicNodeDs]);
 
     const value = {
       ...props,
