@@ -31,9 +31,16 @@ function ClusterItem({
   const customConfirm = useMemo(() => new CustomConfirm({ formatMessage }), []);
 
   function getStatus() {
-    const connect = record.get('connect');
-    if (connect) {
-      return ['running', 'connect'];
+    const tempStatus = record.get('status');
+    switch (tempStatus) {
+      case 'running':
+        return ['running', 'connect'];
+      case 'failed':
+        return ['failed', 'failed'];
+      case 'operating':
+        return ['operating', 'operating'];
+      default:
+        break;
     }
     return ['disconnect'];
   }
@@ -190,8 +197,8 @@ function ClusterItem({
   return (
     <>
       {getPrefix}
-      <span className={`${prefixCls}-clusterNode-type ${prefixCls}-clusterNode-type-created`}>
-        平台
+      <span className={`${prefixCls}-clusterNode-type ${prefixCls}-clusterNode-type-${record.get('type')}`}>
+        {record.get('type') === 'created' ? '平台' : '导入'}
       </span>
       {name}
       <div onClick={clearClick} role="none">

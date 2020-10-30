@@ -49,7 +49,8 @@ function handleSelect(record, store) {
   const parentId = record.get('parentId');
   const key = record.get('key');
   const name = record.get('name');
-  store.setSelectedMenu({ id, itemType, parentId, key, name });
+  const type = record.get('type');
+  store.setSelectedMenu({ id, itemType, parentId, key, name, type });
 }
 
 export default (store, projectId) => ({
