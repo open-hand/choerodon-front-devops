@@ -20,6 +20,10 @@ const NodeList = () => {
     clusterStore,
   } = useClusterContentStore();
 
+  const refresh = () => {
+    NodeListDs.query();
+  };
+
   const {
     getSelectedMenu,
   } = clusterStore;
@@ -108,6 +112,7 @@ const NodeList = () => {
         nodeId={nodeId}
         roleType={roleType}
         contentStore={contentStore}
+        afterOk={refresh}
       />,
       okText: formatMessage({ id: `${intlPrefix}.node.modal.removeRole` }),
       footer: (okbtn, cancelbtn) => (
@@ -132,6 +137,7 @@ const NodeList = () => {
         formatMessage={formatMessage}
         intlPrefix={intlPrefix}
         contentStore={contentStore}
+        afterOk={refresh}
       />,
       okCancel: false,
       okText: formatMessage({ id: 'cancel' }),

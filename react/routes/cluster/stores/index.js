@@ -3,6 +3,7 @@ import React, { createContext, useMemo, useContext } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
+import { observer } from 'mobx-react-lite';
 import useStore from './useStore';
 import { itemTypeMappings } from './mappings';
 import TreeDataSet from './TreeDataSet';
@@ -17,7 +18,8 @@ export function useClusterStore() {
   return useContext(Store);
 }
 
-export const StoreProvider = injectIntl(inject('AppState')(
+export const StoreProvider = injectIntl(inject('AppState')(observer(
+
   (props) => {
     const { AppState: { currentMenuType: { id: projectId } }, children, intl: { formatMessage } } = props;
     const clusterStore = useStore();
@@ -80,9 +82,9 @@ export const StoreProvider = injectIntl(inject('AppState')(
       intlPrefix,
       createHostClusterStore,
       isModal: true,
-      clusterId,
+      clusterId: clusterStore.getSelectedMenu.id,
       projectId,
-    }), [projectId, clusterId]));
+    }), [projectId, clusterStore.getSelectedMenu.id]));
 
     const publicNodeDs = useMemo(() => new DataSet(publicNodeDataSet({
       ...props,
@@ -120,4 +122,4 @@ export const StoreProvider = injectIntl(inject('AppState')(
       </Store.Provider>
     );
   },
-));
+)));

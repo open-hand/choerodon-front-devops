@@ -1,6 +1,8 @@
+/* eslint-disable max-len */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable import/no-anonymous-default-export */
 import { DataSet } from 'choerodon-ui/pro';
+import { omit } from 'lodash';
 
 function nameValidator(dataSet) {
   dataSet.forEach((eachRecord) => eachRecord.getField('name').checkValidity());
@@ -115,6 +117,7 @@ export default ({
       }
     }
   }
+
   return {
     autoCreate: true,
     events: {
@@ -122,11 +125,15 @@ export default ({
       remove: handleRemove,
     },
     transport: {
-      create: clusterId ? {
+      create: clusterId ? ({ data: [data] }) => ({
         url: `devops/v1/projects/${projectId}/nodes?cluster_id=${clusterId}`,
         method: 'post',
-        transformRequest: (value) => createHostClusterStore.handleClusterCreateNodesData(value)[0],
-      } : undefined,
+        transformRequest: (value) => {
+          const tempObj = value ? value[0] : {};
+          tempObj.role = tempObj.role === 'worker' ? 1 : 4;
+          return JSON.stringify(omit(tempObj, ['__id', '__status', 'hasError', 'status']));
+        },
+      }) : undefined,
     },
     fields: [
       {

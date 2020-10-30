@@ -15,6 +15,7 @@ const NodeRemove = observer(({
   formatMessage,
   intlPrefix,
   contentStore,
+  afterOk,
 }) => {
   const [isLoading, setLoading] = useState(true);
   const [cannotMes, setCannotMes] = useState('');
@@ -92,8 +93,13 @@ const NodeRemove = observer(({
     }
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     try {
+      const res = await contentStore.deleteNode(projectId, nodeId);
+      if (res && res.failed) {
+        return false;
+      }
+      afterOk();
       return true;
     } catch (error) {
       return false;

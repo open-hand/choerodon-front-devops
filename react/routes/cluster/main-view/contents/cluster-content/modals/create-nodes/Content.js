@@ -16,7 +16,7 @@ function CreateNodesForm() {
   const {
     nodesDs,
     // mainStore,
-    // afterOk,
+    afterOk,
     formatMessage,
     intlPrefix,
     isEdit,
@@ -49,7 +49,17 @@ function CreateNodesForm() {
       message.error('请完善节点信息');
       return false;
     }
-    return true;
+    try {
+      const res = await nodesDs.submit();
+      if (res) {
+        modal.close();
+        afterOk();
+        return true;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
   }
 
   function handleAddNewNode() {
