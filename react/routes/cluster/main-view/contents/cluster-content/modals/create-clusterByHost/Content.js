@@ -7,6 +7,7 @@ import {
   Modal,
   message,
   Button,
+  Icon,
 } from 'choerodon-ui/pro';
 import Tips from '@/components/new-tips';
 
@@ -197,6 +198,7 @@ function CreateClusterHostForm() {
         // 如果失败
         if (status === 'failed') {
           clearInterval(timer);
+          message.error('测试节点连通性失败');
           // 清除loading和disabled
           modalUpDateLoadingFalse();
         }
