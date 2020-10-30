@@ -85,6 +85,13 @@ const TestConnect = observer(({ connectRecord }) => {
 
   return (
     <div className={`${subfixCls}-test ${subfixCls}-test${connectRecord && connectRecord.status ? `-${connectRecord.status}` : ''}`}>
+      {
+        connectRecord?.errorMsg && (
+        <Tooltip title={connectRecord?.errorMsg}>
+          <Icon type="info" className={`${subfixCls}-test-finalMes`} />
+        </Tooltip>
+        )
+      }
       {getContent()}
     </div>
   );
