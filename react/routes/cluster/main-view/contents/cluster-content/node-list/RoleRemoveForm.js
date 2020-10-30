@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Spin } from 'choerodon-ui/pro';
-import { axios } from '@choerodon/boot';
+
 import { observer } from 'mobx-react-lite';
 
 const RemoveForm = observer(({
@@ -12,8 +11,6 @@ const RemoveForm = observer(({
   contentStore,
   afterOk,
 }) => {
-  const [isLoading, setLoading] = useState(true);
-
   const modalProps = useMemo(() => ({
     okProps: {
       color: 'red',
@@ -29,20 +26,6 @@ const RemoveForm = observer(({
     ),
   }), [nodeId, roleType, projectId]);
 
-  async function loadPermission() {
-    try {
-      const res = await axios.get(contentStore.getDeleteRolePemissionUrl(projectId, nodeId));
-      if (res && res.failed) {
-        return res;
-      }
-      setLoading(false);
-      modal.update(modalProps);
-      return true;
-    } catch (error) {
-      return error;
-    }
-  }
-
   async function handleSubmit() {
     try {
       const res = await contentStore.removeRole(projectId, nodeId, roleType === 'master' ? 4 : 2);
@@ -57,14 +40,10 @@ const RemoveForm = observer(({
   }
 
   useEffect(() => {
-    loadPermission();
+    modal.update(modalProps);
   }, []);
 
   modal.handleOk(handleSubmit);
-
-  if (isLoading) {
-    return <Spin spinning />;
-  }
 
   return (
     <div>

@@ -816,17 +816,21 @@ export default observer(() => {
     }
   }
 
-  const renderderAuditUsersList = ({ text, record }) => (text === '加载更多' ? (
-    <a
-      style={{ display: 'block', width: '100%', height: '100%' }}
-      onClick={handleClickMore}
-      role="none"
-    >
-      {text}
-    </a>
-  ) : (
-    `${text}(${record.get('loginName')})`
-  ));
+  const renderderAuditUsersList = ({ text, record }) => {
+    const ldap = record.get('ldap');
+    if (text === '加载更多') {
+      return (
+        <a
+          style={{ display: 'block', width: '100%', height: '100%' }}
+          onClick={handleClickMore}
+          role="none"
+        >
+          {text}
+        </a>
+      );
+    }
+    return ldap ? `${text}(${record.get('loginName')})` : `${text}(${record.get('email')})`;
+  };
 
   const getBranchsList = useCallback(async () => {
     const url = `devops/v1/projects/${projectId}/app_service/${PipelineCreateFormDataSet.current.get(

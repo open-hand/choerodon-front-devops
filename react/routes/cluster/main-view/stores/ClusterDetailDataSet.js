@@ -1,4 +1,3 @@
-
 const ClusterDetailDataSet = () => ({
   paging: false,
   dataKey: null,

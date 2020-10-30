@@ -36,6 +36,7 @@ const NodeRemove = observer(({
         cancelProps: {
           color: 'dark',
         },
+        okText: '移除',
         footer: (okbtn, cancelbtn) => (
           <>
             {cancelbtn}

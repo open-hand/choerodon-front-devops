@@ -146,26 +146,32 @@ const NodeList = () => {
 
   const renderNodeOpts = ({ record, dataSet }) => {
     const clusterType = record.get('clusterType');
+    const enableDeleteEtcdRole = record.get('enableDeleteEtcdRole');
+    const enableDeleteMasterRole = record.get('enableDeleteMasterRole');
     if (clusterType === 'imported') {
       return null;
     }
     const optsData = [
       {
         service: [],
-        text: formatMessage({ id: `${intlPrefix}.node.action.removeRole.master` }),
-        action: () => openRemoveRole(record, 'master'),
-      },
-      {
-        service: [],
-        text: formatMessage({ id: `${intlPrefix}.node.action.removeRole.etcd` }),
-        action: () => openRemoveRole(record, 'etcd'),
-      },
-      {
-        service: [],
         text: formatMessage({ id: `${intlPrefix}.node.action.removeNode` }),
         action: () => handleRemoveNode(record),
       },
     ];
+    if (enableDeleteEtcdRole) {
+      optsData.unshift({
+        service: [],
+        text: formatMessage({ id: `${intlPrefix}.node.action.removeRole.etcd` }),
+        action: () => openRemoveRole(record, 'etcd'),
+      });
+    }
+    if (enableDeleteMasterRole) {
+      optsData.unshift({
+        service: [],
+        text: formatMessage({ id: `${intlPrefix}.node.action.removeRole.master` }),
+        action: () => openRemoveRole(record, 'master'),
+      });
+    }
     return (
       <Action placement="bottomRight" data={optsData} />
     );
