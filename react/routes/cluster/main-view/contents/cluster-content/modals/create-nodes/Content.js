@@ -193,12 +193,6 @@ function CreateNodesForm() {
               ) : <Password name="password" reveal={false} colSpan={3} />
             }
             </Form>
-            {/* <div className={`${prefixCls}-nodesCreate-connect ${['wait', 'linkError'].includes(nodeStore.getSelectedRecord.get('status')) && `${prefixCls}-nodesCreate-connect-uncheck`}`}>
-              <TestConnect handleTestConnection={handleTestConnection} nodeRecord={nodeStore.getSelectedRecord} />
-              {
-                renderLinkStatusMes()
-              }
-            </div> */}
             <Form
               columns={6}
               record={nodeStore.getSelectedRecord}

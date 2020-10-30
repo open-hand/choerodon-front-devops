@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import {
-  forEach, omit, map, difference,
+  forEach, omit, map, difference, without,
 } from 'lodash';
 import { axios } from '@choerodon/boot';
 import { useLocalStore } from 'mobx-react-lite';
@@ -34,20 +34,20 @@ export default function useStore() {
       });
     },
     handleClusterCreateNodesOutterData(obj) {
-      const tempArr = ['hostPort', 'hostIp', 'username', 'password', 'authType'];
-      const allKeys = difference(Object.keys(obj), tempArr);
-      if (!allKeys.length) {
-        const tempObj = omit(obj, ['__id', '__status', 'hasError', 'status']);
+      const tempArr = ['hostPort', 'hostIp', 'username', 'password', 'authType', 'type'];
+      const tempObj = omit(obj, ['__id', '__status', 'hasError', 'status']);
+      const allKeys = difference(Object.keys(tempObj), tempArr);
+      if (allKeys.length === 0) {
         return tempObj;
       }
-      return {};
+      return null;
     },
     handleClusterByHostsData(value) {
       const source = omit(JSON.parse(value), ['__id', '__status']);
       const hasInner = source?.devopsClusterInnerNodeVOList?.length;
       const hasOutter = source?.devopsClusterOutterNodeVO?.length;
       source.devopsClusterInnerNodeVOList = hasInner ? this.handleClusterCreateNodesInnerData(source?.devopsClusterInnerNodeVOList) : [];
-      source.devopsClusterOutterNodeVO = hasOutter ? this.handleClusterCreateNodesOutterData(source?.devopsClusterOutterNodeVO[0]) : {};
+      source.devopsClusterOutterNodeVO = hasOutter ? this.handleClusterCreateNodesOutterData(source?.devopsClusterOutterNodeVO[0]) : null;
       return JSON.stringify(source);
     },
 
