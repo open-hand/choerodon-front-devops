@@ -41,12 +41,19 @@ const JmeterGuide: React.FC<any> = (): any => {
           <span className="c7ncd-host-jmeter-guide-content-tag">JMETER_HOME</span>
         </span>
         <span className={`${prefixCls}-content-item`}>
-          4. 进入
+          4. 执行
+          <span className="c7ncd-host-jmeter-guide-content-tag">mkdir /choerodon && chmod 777 -R /choerodon</span>
+          指令在根目录创建
+          <span className="c7ncd-host-jmeter-guide-content-tag">choerodon</span>
+          目录, 这个目录用于执行压力测试时放置相关的文件
+        </span>
+        <span className={`${prefixCls}-content-item`}>
+          5. 进入
           <span className="c7ncd-host-jmeter-guide-content-tag">$JMETER_HOME/bin</span>
           目录
         </span>
         <span className={`${prefixCls}-content-item`}>
-          5. 执行以下命令(注意变量替换):
+          6. 执行以下命令(注意变量替换):
           <span className={`${prefixCls}-content-item-text`}>
             {text}
           </span>
