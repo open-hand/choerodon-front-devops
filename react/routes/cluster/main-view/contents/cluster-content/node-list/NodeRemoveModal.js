@@ -36,7 +36,7 @@ const NodeRemove = observer(({
         cancelProps: {
           color: 'dark',
         },
-        okText: '移除',
+        okText: '删除',
         footer: (okbtn, cancelbtn) => (
           <>
             {cancelbtn}
@@ -87,6 +87,7 @@ const NodeRemove = observer(({
       setLoading(false);
 
       res && modal.update(getModalProps(res));
+      modal.handleOk(handleSubmit);
 
       return true;
     } catch (error) {
@@ -110,8 +111,6 @@ const NodeRemove = observer(({
   useEffect(() => {
     loadPermission();
   }, []);
-
-  modal.handleOk(handleSubmit);
 
   if (isLoading) {
     return <Spin spinning />;
