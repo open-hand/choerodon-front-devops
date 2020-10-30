@@ -10,6 +10,7 @@ const RemoveForm = observer(({
   projectId,
   roleType,
   contentStore,
+  afterOk,
 }) => {
   const [isLoading, setLoading] = useState(true);
 
@@ -42,8 +43,13 @@ const RemoveForm = observer(({
     }
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     try {
+      const res = await contentStore.removeRole(projectId, nodeId, roleType === 'master' ? 4 : 2);
+      if (res && res.failed) {
+        return false;
+      }
+      afterOk();
       return true;
     } catch (error) {
       return false;

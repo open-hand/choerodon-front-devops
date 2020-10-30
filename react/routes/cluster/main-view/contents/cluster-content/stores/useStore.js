@@ -61,16 +61,14 @@ export default function useStore({ NODE_TAB }) {
       return this.polarisLoading;
     },
 
-
     async loadGrafanaUrl(projectId, clusterId) {
       try {
         const res = await axios.get(`/devops/v1/projects/${projectId}/cluster_resource/grafana_url?cluster_id=${clusterId}&type=cluster`);
         if (handlePromptError(res)) {
           this.setGrafanaUrl(res);
           return res;
-        } else {
-          this.setGrafanaUrl(null);
         }
+        this.setGrafanaUrl(null);
       } catch (e) {
         Choerodon.handleResponseError(e);
       }
@@ -176,6 +174,14 @@ export default function useStore({ NODE_TAB }) {
 
     getDeleteRolePemissionUrl(projectId, nodeId) {
       return `devops/v1/projects/${projectId}/nodes/${nodeId}/check_enable_delete_role`;
+    },
+
+    deleteNode(projectId, nodeId) {
+      return `devops/v1/projects/${projectId}/nodes/${nodeId}`;
+    },
+
+    removeRole(projectId, nodeId, role) {
+      return `devops/v1/projects/${projectId}/nodes/${nodeId}/roles/${role}`;
     },
 
   }));
