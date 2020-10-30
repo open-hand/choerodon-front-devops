@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { Permission, Action } from '@choerodon/boot';
-import { Modal, Table } from 'choerodon-ui/pro';
+import { Modal, Table, Icon } from 'choerodon-ui/pro';
 import { Tooltip } from 'choerodon-ui';
 import { useClusterContentStore } from '../stores';
 import StatusTags from '../../../../../../components/status-tag';
@@ -31,6 +31,8 @@ const NodeList = () => {
   const renderStatusName = ({ record }) => {
     const status = record.get('status');
     const nodeName = record.get('nodeName');
+    const operatingStatus = record.get('operatingStatus');
+    const errorMsg = record.get('errorMsg');
     return (
       <>
         <StatusTags name={status} colorCode={status} />
@@ -39,6 +41,20 @@ const NodeList = () => {
             {nodeName}
           </span>
         </Tooltip>
+        {
+          operatingStatus === 'failed'
+          && (
+          <Tooltip title={errorMsg}>
+            <Icon
+              type="info"
+              style={{
+                color: '#F76776 ',
+                marginLeft: '7px',
+              }}
+            />
+          </Tooltip>
+          )
+        }
       </>
     );
   };
