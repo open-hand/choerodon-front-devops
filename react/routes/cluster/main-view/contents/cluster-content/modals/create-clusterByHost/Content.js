@@ -192,8 +192,10 @@ function CreateClusterHostForm() {
         // 如果状态成功,
         if (status === 'success') {
           clearInterval(timer);
+          modal.close();
+          afterOk();
           // 就去创建k8s
-          gok8sCreate(createData);
+          // gok8sCreate(createData);
         }
         // 如果失败
         if (status === 'failed') {
