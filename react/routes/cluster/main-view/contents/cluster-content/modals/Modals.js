@@ -28,7 +28,6 @@ const ClusterModals = observer(() => {
     intl: { formatMessage },
     clusterStore: {
       getSelectedMenu: { id },
-      getSelectedMenu,
     },
     clusterStore,
     AppState: { currentMenuType: { id: projectId } },
@@ -225,7 +224,7 @@ const ClusterModals = observer(() => {
       handler: openPermission,
       display: true,
       group: 1,
-    }, {
+    }, clusterStore.getSelectedMenu.type === 'created' && {
       name: formatMessage({ id: `${intlPrefix}.modal.createByNodes` }),
       icon: 'playlist_add',
       handler: openCreateByNodes,
