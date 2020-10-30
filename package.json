@@ -3,7 +3,7 @@
   "routeName": "devops",
   "description": "",
   "license": "ISC",
-  "version": "0.23.4",
+  "version": "0.23.5",
   "keywords": [],
   "contributors": [
     "choerodon"
@@ -26,7 +26,6 @@
     "@choerodon/master": "0.23.0"
   },
   "dependencies": {
-    "choerodon-ui": "0.8.x",
     "diff-match-patch": "^1.0.4",
     "echarts": "^4.2.1",
     "echarts-for-react": "^2.0.12",
@@ -55,6 +54,7 @@
   "devDependencies": {
     "@choerodon/boot": "0.21.4",
     "@choerodon/master": "^0.23.0",
+    "choerodon-ui": "0.8.x",
     "del": "^4.1.1",
     "eslint-plugin-react-hooks": "^1.7.0",
     "lodash": "latest"
