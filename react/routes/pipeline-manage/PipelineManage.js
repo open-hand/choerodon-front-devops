@@ -109,7 +109,7 @@ const PipelineManage = observer(() => {
 
   function openRecordDetail() {
     const { devopsPipelineRecordRelId } = getSelectedMenu;
-    const { devopsPipelineRecordRelId: detailDevopsPipelineRecordRelId } = getDetailData;
+    const { devopsPipelineRecordRelId: detailDevopsPipelineRecordRelId, viewId } = getDetailData;
     const newDevopsPipelineRecordRelId = devopsPipelineRecordRelId || detailDevopsPipelineRecordRelId;
     Modal.open({
       key: recordDetailKey,
@@ -117,8 +117,8 @@ const PipelineManage = observer(() => {
       title: (
         <span className={`${prefixCls}-detail-modal-title`}>
           流水线记录“
-          <MouserOverWrapper width="100px" text={`#${newDevopsPipelineRecordRelId}`}>
-            <span>{`#${newDevopsPipelineRecordRelId}`}</span>
+          <MouserOverWrapper width="100px" text={`#${viewId}`}>
+            <span>{`#${viewId}`}</span>
           </MouserOverWrapper>
           ”的详情
         </span>
