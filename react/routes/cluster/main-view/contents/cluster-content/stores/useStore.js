@@ -177,11 +177,11 @@ export default function useStore({ NODE_TAB }) {
     },
 
     deleteNode(projectId, nodeId) {
-      return `devops/v1/projects/${projectId}/nodes/${nodeId}`;
+      return axios.delete(`devops/v1/projects/${projectId}/nodes/${nodeId}`);
     },
 
     removeRole(projectId, nodeId, role) {
-      return `devops/v1/projects/${projectId}/nodes/${nodeId}/roles/${role}`;
+      return axios.delete(`devops/v1/projects/${projectId}/nodes/${nodeId}/roles/${role}`);
     },
 
   }));

@@ -43,9 +43,16 @@ export default observer((props) => {
     if (record) {
       const name = record.get('name');
       const getStatus = () => {
-        const connect = record.get('connect');
-        if (connect) {
-          return ['running', 'connect'];
+        const tempStatus = record.get('status');
+        switch (tempStatus) {
+          case 'running':
+            return ['running', 'connect'];
+          case 'failed':
+            return ['failed', 'failed'];
+          case 'operating':
+            return ['operating', 'operating'];
+          default:
+            break;
         }
         return ['disconnect'];
       };
