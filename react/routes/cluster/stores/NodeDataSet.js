@@ -4,6 +4,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 import { DataSet } from 'choerodon-ui/pro';
 import { omit } from 'lodash';
+import { Base64 } from 'js-base64';
 
 function nameValidator(dataSet) {
   dataSet.forEach((eachRecord) => eachRecord.getField('name').checkValidity());
@@ -132,6 +133,9 @@ export default ({
         transformRequest: (value) => {
           const tempObj = value ? value[0] : {};
           tempObj.role = tempObj.role === 'worker' ? 1 : 4;
+          if (tempObj.authType === 'publickey') {
+            tempObj.password = Base64.encode(tempObj.password);
+          }
           return JSON.stringify(omit(tempObj, ['__id', '__status', 'hasError', 'status']));
         },
       }) : undefined,
