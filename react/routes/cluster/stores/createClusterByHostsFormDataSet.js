@@ -88,12 +88,14 @@ export default ({
         data: JSON.stringify(data),
         transformRequest: (value) => createHostClusterStore.handleClusterByHostsData(value),
         transformResponse: (res) => {
-          if (typeof res === 'string') {
+          try {
+            const tempRes = JSON.parse(res);
+            return tempRes;
+          } catch (error) {
             return [{
               clusterString: res,
             }];
           }
-          return { ...res };
         },
       }),
       update: ({ data: [data] }) => ({
