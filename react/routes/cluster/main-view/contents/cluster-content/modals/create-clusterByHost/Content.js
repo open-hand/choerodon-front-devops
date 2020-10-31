@@ -173,13 +173,13 @@ function CreateClusterHostForm() {
   }
 
   // 所有节点检测连通性
-  function goTimerConnect(clusterId, createData) {
+  function goTimerConnect(clusterString) {
     timer = setInterval(async () => {
       let nodeStatusRes;
       try {
         nodeStatusRes = await clusterByHostStore.checkConnect(
           projectId,
-          clusterId,
+          clusterString,
         );
         if (nodeStatusRes && nodeStatusRes.failed) {
           if (timer) clearInterval(timer);
@@ -226,10 +226,9 @@ function CreateClusterHostForm() {
         return res;
       }
       if (res) {
-        const { clusterId } = res[0];
         modalUpDateLoadingTrue();
         // 开始检测节点的连通性
-        goTimerConnect(clusterId, res[0]);
+        goTimerConnect(res);
         return true;
       }
       return false;
