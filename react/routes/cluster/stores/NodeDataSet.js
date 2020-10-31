@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 /* eslint-disable max-len */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable import/no-anonymous-default-export */

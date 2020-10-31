@@ -221,14 +221,14 @@ function CreateClusterHostForm() {
       modalUpDateLoadingTrue();
       // 先把数据发给后端
       const res = await formDs.submit();
-      if (res && res.failed) {
+      if (typeof res === 'object' && res.failed) {
         modalUpDateLoadingFalse();
         return res;
       }
       if (res) {
         modalUpDateLoadingTrue();
         // 开始检测节点的连通性
-        goTimerConnect(res);
+        goTimerConnect(res[0].clusterString);
         return true;
       }
       return false;

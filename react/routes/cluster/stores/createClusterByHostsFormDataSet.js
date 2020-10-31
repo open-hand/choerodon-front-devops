@@ -87,6 +87,14 @@ export default ({
         method: 'post',
         data: JSON.stringify(data),
         transformRequest: (value) => createHostClusterStore.handleClusterByHostsData(value),
+        transformResponse: (res) => {
+          if (typeof res === 'string') {
+            return [{
+              clusterString: res,
+            }];
+          }
+          return { ...res };
+        },
       }),
       update: ({ data: [data] }) => ({
         url: `/devops/v1/projects/${projectId}/clusters/${data.id}?`,
