@@ -4,6 +4,7 @@ import {
 } from 'lodash';
 import { axios } from '@choerodon/boot';
 import { useLocalStore } from 'mobx-react-lite';
+import { Base64 } from 'js-base64';
 
 export default function useStore() {
   return useLocalStore(() => ({
@@ -30,12 +31,20 @@ export default function useStore() {
       return map(data, (item) => {
         const tempItem = omit(item, ['__id', '__status', 'hasError']);
         tempItem.role = this.calculateType(tempItem?.role);
+        // 如果是密匙类型的话需要进行base64加密
+        if (tempItem.authType === 'publickey') {
+          tempItem.password = Base64.encode(tempItem.password);
+        }
         return tempItem;
       });
     },
     handleClusterCreateNodesOutterData(obj) {
       const tempArr = ['hostPort', 'hostIp', 'username', 'password', 'authType', 'type'];
       const tempObj = omit(obj, ['__id', '__status', 'hasError', 'status']);
+      // 如果是密匙类型的话需要进行base64加密
+      if (tempObj.authType === 'publickey') {
+        tempObj.password = Base64.encode(tempObj.password);
+      }
       const allKeys = difference(Object.keys(tempObj), tempArr);
       if (allKeys.length === 0) {
         return tempObj;
