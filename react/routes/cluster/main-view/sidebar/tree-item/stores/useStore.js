@@ -9,5 +9,8 @@ export default function useStore() {
     queryClusterDetail(projectId, clusterId) {
       return axios.get(`devops/v1/projects/${projectId}/clusters/${clusterId}`);
     },
+    retryCluster(projectId, clusterId) {
+      return axios.post(`devops/v1/projects/${projectId}/clusters/retry_create?cluster_id=${clusterId}`);
+    },
   }));
 }

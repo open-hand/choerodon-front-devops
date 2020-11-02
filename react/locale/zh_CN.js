@@ -1384,6 +1384,7 @@ const cluster = {
   'c7ncd.cluster.check.exist': '已存在',
   'c7ncd.cluster.check.error': '校验出错',
   'c7ncd.cluster.action.edit': '修改集群',
+  'c7ncd.cluster.action.retry': '重试',
   'c7ncd.cluster.action.delete': '删除集群',
   'c7ncd.cluster.action.can\'t.delete': '无法删除集群',
   'c7ncd.cluster.action.delete.title': '删除集群“{name}”',
