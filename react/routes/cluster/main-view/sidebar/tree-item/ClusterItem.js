@@ -169,8 +169,51 @@ function ClusterItem({
     />
   ), [record]);
 
+  const deleteFailedItem = async () => {
+    try {
+      const res = await mainStore.deleteCluster({ projectId, clusterId: record.get('id') });
+      if (handlePromptError(res, false)) {
+        freshMenu();
+      } else {
+        return false;
+      }
+      return true;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  const handleClusterRetry = async () => {
+    try {
+      const res = await treeItemStore.retryCluster(projectId, record.get('id'));
+      if (res && res.failed) {
+        return res;
+      }
+      freshMenu();
+      return true;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
   const getSuffix = useMemo(() => {
     const [status] = getStatus();
+    if (status === 'operating') {
+      return null;
+    }
+    if (status === 'failed') {
+      const tempData = [{
+        service: [''],
+        text: formatMessage({ id: `${intlPrefix}.action.retry` }),
+        action: handleClusterRetry,
+      },
+      {
+        service: ['choerodon.code.project.deploy.cluster.cluster-management.ps.delete'],
+        text: formatMessage({ id: `${intlPrefix}.action.delete` }),
+        action: deleteFailedItem,
+      }];
+      return <Action placement="bottomRight" data={tempData} />;
+    }
     const Data = [{
       service: ['choerodon.code.project.deploy.cluster.cluster-management.ps.edit'],
       text: formatMessage({ id: `${intlPrefix}.action.edit` }),
@@ -188,6 +231,7 @@ function ClusterItem({
         action: deleteItem,
       });
     }
+
     return <Action placement="bottomRight" data={Data} />;
   }, [record]);
 
