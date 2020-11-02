@@ -62,9 +62,14 @@ function CreateNodesForm() {
     }
   }
 
-  function handleAddNewNode() {
-    const record = nodesDs.create();
+  async function handleAddNewNode() {
+    const record = await nodesDs.create();
     nodeStore.setSelectedRecord(record);
+    document.querySelector(`#node${record.index}`) && document.querySelector(`#node${record.index}`).scrollIntoView({
+      block: 'start',
+      inline: 'nearest',
+      behavior: 'smooth',
+    });
   }
 
   function handleRemove(record, index) {
@@ -129,6 +134,7 @@ function CreateNodesForm() {
                 }
                 onClick={() => nodeStore.setSelectedRecord(nodesRecord)}
                 role="none"
+                id={`node${index}`}
               >
                 <Form
                   columns={10}
