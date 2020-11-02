@@ -63,7 +63,8 @@ function CreateNodesForm() {
   }
 
   function handleAddNewNode() {
-    nodesDs.create();
+    const record = nodesDs.create();
+    nodeStore.setSelectedRecord(record);
   }
 
   function handleRemove(record, index) {
