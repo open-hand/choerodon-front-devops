@@ -3,11 +3,13 @@ import React, {
   useEffect, useMemo, useState, useCallback,
 } from 'react';
 import {
-  Form, TextField, SelectBox, Password, Button,
+  Form, TextField, SelectBox, Password, Button, TextArea,
 } from 'choerodon-ui/pro/lib';
 import { observer } from 'mobx-react-lite';
 import Tips from '@/components/new-tips';
 import { difference, pick, without } from 'lodash';
+import { Base64 } from 'js-base64';
+import YamlEditor from '@/components/yamlEditor';
 
 import TestConnect from '../test-connect';
 
@@ -76,6 +78,10 @@ const PublicNode = observer((props) => {
     setConnectFieldDisabeld();
 
     const data = pick(publicNodeDs.toData()[0], ['hostPort', 'password', 'hostIp', 'username', 'authType']);
+
+    if (data.authType === 'publickey') {
+      data.password = Base64.encode(data.password);
+    }
 
     try {
       const res = await createHostClusterMainStore.checkNodeConnect(projectId, data);
@@ -151,19 +157,39 @@ const PublicNode = observer((props) => {
           />
           <TextField name="username" colSpan={3} />
           {
-            publicNodeDs.current && publicNodeDs.current.get('authType') === 'publickey' ? (
-              <TextField name="password" colSpan={3} />
-            ) : <Password name="password" reveal={false} colSpan={3} />
+            publicNodeDs.current && publicNodeDs.current.get('authType') !== 'publickey' && <Password name="password" reveal={false} colSpan={3} />
           }
-          {publicNodeDs && checkHasAllConnectFieldsFilled() && (
+        </Form>
+        {
+          publicNodeDs.current.get('authType') && publicNodeDs.current.get('authType') === 'publickey' && (
+            <div className={`${prefixCls}-clusterPublicNode-form-yaml`}>
+              <span>
+                密钥
+              </span>
+              <YamlEditor
+                readOnly={false}
+                newLine
+                // value={publicNodeDs.current.get('password')}
+                onValueChange={(valueYaml) => {
+                  publicNodeDs.current.set('password', valueYaml);
+                }}
+                modeChange={false}
+                showError={false}
+              />
+              <span>
+                请输入密钥。
+              </span>
+            </div>
+          )
+        }
+        {publicNodeDs && checkHasAllConnectFieldsFilled() && (
           <div className={`${prefixCls}-clusterPublicNode-connect ${['wait', 'linkError'].includes(publicNodeDs.current.get('status')) && `${prefixCls}-clusterPublicNode-connect-uncheck`}`}>
             <TestConnect handleTestConnection={handleTestConnection} nodeRecord={publicNodeDs.current} />
             {
               renderLinkStatusMes()
             }
           </div>
-          )}
-        </Form>
+        )}
       </div>
     </div>
   );

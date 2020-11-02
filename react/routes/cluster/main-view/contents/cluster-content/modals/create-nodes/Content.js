@@ -6,6 +6,7 @@ import {
 } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import NewTips from '@/components/new-tips';
+import YamlEditor from '@/components/yamlEditor';
 import { useFormStore } from './stores';
 
 const { Option } = Select;
@@ -205,11 +206,26 @@ function CreateNodesForm() {
               />
               <TextField name="username" colSpan={3} />
               {
-              nodeStore.getSelectedRecord && nodeStore.getSelectedRecord.get('authType') === 'publickey' ? (
-                <TextField name="password" colSpan={3} />
-              ) : <Password name="password" reveal={false} colSpan={3} />
-            }
+                nodeStore.getSelectedRecord && nodeStore.getSelectedRecord.get('authType') !== 'publickey' && <Password name="password" reveal={false} colSpan={3} />
+              }
             </Form>
+            {
+              nodeStore.getSelectedRecord.get('authType') && nodeStore.getSelectedRecord.get('authType') === 'publickey' && (
+              <div className={`${prefixCls}-clusterPublicNode-form-yaml `}>
+                <span>
+                  密钥
+                </span>
+                <YamlEditor
+                  readOnly={false}
+                  newLine
+                  value={nodeStore.getSelectedRecord.get('password')}
+                  onValueChange={(valueYaml) => nodeStore.getSelectedRecord.set('password', valueYaml)}
+                  modeChange={false}
+                  showError={false}
+                />
+              </div>
+              )
+              }
             <Form
               columns={6}
               record={nodeStore.getSelectedRecord}

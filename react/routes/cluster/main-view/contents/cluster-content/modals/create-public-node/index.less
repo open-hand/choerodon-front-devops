@@ -11,7 +11,7 @@
       border: 2px solid red;
       border-radius: 6px;
     }
-    >span {
+    > span {
       color: #d50000;
       font-size: 0.12rem;
       padding-left: 12px;
@@ -38,5 +38,44 @@
   }
   &-form {
     padding: 0 24px;
+    &-yaml {
+      &-error {
+        border: 2px solid #d50000;
+        border-radius: 6px;
+        position: relative;
+        > span {
+          display: block !important;
+          color: #d50000;
+        }
+        > span:nth-of-type(2){
+          position: absolute;
+          margin-top: 2px;
+        }
+      }
+      > .c7ncd-yaml-wrapper {
+        margin-top: 10px;
+      }
+      > span:first-of-type {
+        font-weight: 500;
+        font-size: 0.13rem;
+        color: rgba(0, 0, 0, 0.6);
+      }
+      >span:nth-of-type(2) {
+        display: none;
+        font-weight: 500;
+        font-size: 0.13rem;
+      }
+      > span:first-of-type::after {
+        display: inline-block;
+        width: 0.08rem;
+        margin-left: 0.04rem;
+        color: #d50000;
+        font-family: SimSun, sans-serif;
+        line-height: 1;
+        vertical-align: middle;
+        content: "*";
+      }
+      margin-bottom: 24px;
+    }
   }
 }
