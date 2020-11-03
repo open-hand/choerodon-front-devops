@@ -342,16 +342,34 @@ const Deployment = withRouter(observer((props) => {
                 helpText={formatMessage({ id: `${intlPrefix}.id.tips` })}
                 title={formatMessage({ id: `${intlPrefix}.number` })}
               />
-)}
+            )}
           />
-          <Column name={mapping.deployMethod.value} renderer={renderDeployMethod} />
+          <Column
+            header={(
+              <Tips
+                helpText="部署方式分为：主机部署与环境部署"
+                title="部署方式&载体"
+              />
+            )}
+            name={mapping.deployMethod.value}
+            renderer={renderDeployMethod}
+          />
           <Column
             name="deployResult"
             renderer={renderDeployStatus}
             header="执行结果"
           />
           <Column name="instanceName" renderer={renderInstance} />
-          <Column name={mapping.deployObject.value} renderer={renderDeployObejct} />
+          <Column
+            name={mapping.deployObject.value}
+            renderer={renderDeployObejct}
+            header={(
+              <Tips
+                helpText="部署对象分为：应用服务、jar包与Docker镜像"
+                title="部署对象"
+              />
+          )}
+          />
           {/* <Column name="envName" renderer={renderEnv} /> */}
           {/* <Column name="appServiceName" renderer={renderAppService} /> */}
           <Column name="executeUser" renderer={renderExecutor} />

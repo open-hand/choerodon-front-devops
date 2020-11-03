@@ -14,7 +14,7 @@ export default ({
   createHostClusterStore,
 }) => {
   function hasAllCheckedFields(record, fieldName) {
-    const tempArr = ['hostIp', 'hostPort', 'authType', 'username', 'password'];
+    const tempArr = ['hostIp', 'hostPort', 'username', 'password'];
     const omitArr = without(tempArr, fieldName);
     return omitArr.some((item) => record.get(item));
   }
@@ -113,6 +113,7 @@ export default ({
         dynamicProps: {
           required: ({ record }) => hasAllCheckedFields(record),
         },
+        defaultValue: 'accountPassword',
         options: accountDs,
       },
       {

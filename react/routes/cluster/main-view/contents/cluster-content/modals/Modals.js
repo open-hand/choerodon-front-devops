@@ -133,11 +133,18 @@ const ClusterModals = observer(() => {
     });
   }
 
+  const renderClusterHostTitle = (title, text) => (
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <span style={{ marginRight: '4px' }}>{title}</span>
+      <Tips helpText={text} />
+    </div>
+  );
+
   function openCreateByHost() {
     Modal.open({
       key: Modal.key(),
       className: `${prefixCls}-createByHost-modal`,
-      title: formatMessage({ id: `${intlPrefix}.modal.createByHost` }),
+      title: renderClusterHostTitle(formatMessage({ id: `${intlPrefix}.modal.createByHost` }), '此方式通过维护节点来新建集群'),
       children: <CreateClusterByHost
         formDs={formDs}
         afterOk={resreshTree}
@@ -166,7 +173,7 @@ const ClusterModals = observer(() => {
   function openCreate() {
     Modal.open({
       key: modalKey1,
-      title: formatMessage({ id: `${intlPrefix}.modal.create` }),
+      title: renderClusterHostTitle(formatMessage({ id: `${intlPrefix}.modal.create` }), '用于连接已有的k8s集群'),
       children: <CreateCluster afterOk={resreshTree} prefixCls={prefixCls} intlPrefix={intlPrefix} formatMessage={formatMessage} mainStore={mainStore} projectId={projectId} />,
       drawer: true,
       style: modalStyle,
