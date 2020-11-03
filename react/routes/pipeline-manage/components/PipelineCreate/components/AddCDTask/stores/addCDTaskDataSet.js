@@ -263,7 +263,7 @@ export default (
       },
     },
     {
-      name: 'accountType',
+      name: 'authType',
       type: 'string',
       label: '账号配置',
       defaultValue: 'accountPassword',
