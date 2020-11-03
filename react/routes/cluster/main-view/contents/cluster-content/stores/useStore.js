@@ -168,12 +168,8 @@ export default function useStore({ NODE_TAB }) {
       }
     },
 
-    getDeleteNodePemissionUrl(projectId, nodeId) {
-      return `devops/v1/projects/${projectId}/nodes/${nodeId}/check_enable_delete`;
-    },
-
-    getDeleteRolePemissionUrl(projectId, nodeId) {
-      return `devops/v1/projects/${projectId}/nodes/${nodeId}/check_enable_delete_role`;
+    getDeleteRolePemissionUrl(projectId, nodeId, role) {
+      return axios.get(`devops/v1/projects/${projectId}/nodes/${nodeId}/roles/${role}/check_enable_delete`);
     },
 
     deleteNode(projectId, nodeId) {
