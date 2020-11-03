@@ -138,7 +138,7 @@ const PublicNode = observer((props) => {
           onClick={() => changeExpand(!expand)}
         />
         <span>公网节点配置</span>
-        <Tips helpText="help" />
+        <Tips helpText="若集群节点可以通过公网访问，该配置可以不填。若集群节点处于内网环境时，devops将通过连接公网节点间接对集群节点进行操作，此时须配置公网节点。" />
       </div>
       <div
         className={`${prefixCls}-clusterPublicNode-form`}

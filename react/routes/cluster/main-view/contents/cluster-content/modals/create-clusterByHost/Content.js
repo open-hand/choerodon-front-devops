@@ -288,7 +288,7 @@ function CreateClusterHostForm() {
             <span>
               节点配置
             </span>
-            <Tips />
+            <Tips helpText="集群中须至少含有1个master节点+1个etcd节点+1个worker节点" />
           </header>
           <NodesCreate
             prefixCls={prefixCls}
