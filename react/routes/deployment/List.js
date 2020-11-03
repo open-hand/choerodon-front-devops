@@ -7,7 +7,7 @@ import {
 import {
   Table, Modal, Select, Icon, Tooltip,
 } from 'choerodon-ui/pro';
-import { Button, Tooltip } from 'choerodon-ui';
+import { Button } from 'choerodon-ui';
 import { FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
