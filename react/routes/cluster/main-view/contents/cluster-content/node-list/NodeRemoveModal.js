@@ -16,79 +16,47 @@ const NodeRemove = observer(({
   intlPrefix,
   contentStore,
   afterOk,
+  roleType,
 }) => {
   const [isLoading, setLoading] = useState(true);
-  const [cannotMes, setCannotMes] = useState('');
+  const [message, setMessage] = useState('');
 
-  const getModalProps = useCallback((res) => {
-    const {
-      enableDeleteWorker,
-      enableDeleteEtcd,
-      enableDeleteMaster,
-    } = res;
-    const removable = enableDeleteEtcd && enableDeleteMaster && enableDeleteWorker;
-    if (removable) {
-      return {
-        title: formatMessage({ id: `${intlPrefix}.node.modal.canDelete` }),
-        okProps: {
-          color: 'red',
-        },
-        cancelProps: {
-          color: 'dark',
-        },
-        okText: '删除',
-        footer: (okbtn, cancelbtn) => (
-          <>
-            {cancelbtn}
-            {okbtn}
-          </>
-        ),
-      };
-    }
-    return {
-      title: formatMessage({ id: `${intlPrefix}.node.modal.cannotDelete` }),
-      footer: (okbtn, cancelbtn) => (
-        <>
-          {okbtn}
-        </>
-      ),
-      okText: formatMessage({ id: 'iknow' }),
-    };
-  }, []);
+  const failedProps = {
+    title: '无法删除',
+    onOk: () => modal.close(),
+    okText: formatMessage({ id: 'iknow' }),
+    footer: (okbtn, cancelbtn) => (
+      <>
+        {okbtn}
+      </>
+    ),
+  };
 
-  const handleCannotMes = (res) => {
-    const {
-      enableDeleteWorker,
-      enableDeleteEtcd,
-      enableDeleteMaster,
-    } = res;
-
-    let tempMes;
-
-    if (typeof enableDeleteMaster === 'boolean' && !enableDeleteMaster) {
-      tempMes = '节点“节点名称”为集群下唯一的master节点，无法删除';
-    }
-    if (typeof enableDeleteEtcd === 'boolean' && !enableDeleteEtcd) {
-      tempMes = '节点“节点名称”为集群下唯一的etcd节点，无法删除';
-    }
-    if (typeof enableDeleteWorker === 'boolean' && !enableDeleteWorker) {
-      tempMes = '节点“节点名称”为集群下唯一的worker节点，无法删除';
-    }
-    setCannotMes(tempMes || null);
+  const successProps = {
+    okProps: {
+      color: 'red',
+    },
+    cancelProps: {
+      color: 'dark',
+    },
+    onOk: handleSubmit,
+    footer: (okbtn, cancelbtn) => (
+      <>
+        {cancelbtn}
+        {okbtn}
+      </>
+    ),
   };
 
   async function loadPermission() {
     try {
-      const res = await axios.get(contentStore.getDeleteNodePemissionUrl(projectId, nodeId));
+      const res = await contentStore.getDeleteRolePemissionUrl(projectId, nodeId, 1);
       if (res && res.failed) {
         return res;
       }
-      handleCannotMes(res);
       setLoading(false);
-
-      res && modal.update(getModalProps(res));
-      modal.handleOk(handleSubmit);
-
+      modal.update(res ? successProps : failedProps);
+      setMessage(res ? `确认删除节点${nodeName}吗?` : `节点"${nodeName}为集群下唯一的worker节点，无法删除"`);
       return true;
     } catch (error) {
       return error;
@@ -118,7 +86,7 @@ const NodeRemove = observer(({
 
   return (
     <div>
-      {!cannotMes ? <p>{`确认要删除节点"${nodeName}"吗?`}</p> : <p>{cannotMes}</p>}
+      {message}
     </div>
   );
 });

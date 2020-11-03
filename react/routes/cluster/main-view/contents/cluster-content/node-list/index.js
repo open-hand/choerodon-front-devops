@@ -75,39 +75,11 @@ const NodeList = () => {
     );
   };
 
-  const renderType = ({ value: type }) => {
-    let temp;
-    switch (type) {
-      case 7:
-        temp = 'master,worker,etcd';
-        break;
-      case 6:
-        temp = 'master,etcd';
-        break;
-      case 5:
-        temp = 'master,worker';
-        break;
-      case 4:
-        temp = 'master';
-        break;
-      case 3:
-        temp = 'etcd,worker';
-        break;
-      case 2:
-        temp = 'etcd';
-        break;
-      case 1:
-        temp = 'worker';
-        break;
-      default:
-        break;
-    }
-    return (
-      <Tooltip title={temp}>
-        <span>{temp}</span>
-      </Tooltip>
-    );
-  };
+  const renderType = ({ value: type }) => (
+    <Tooltip title={type}>
+      <span>{type}</span>
+    </Tooltip>
+  );
 
   const renderTime = ({ value: time }) => (
     <Tooltip title={time}>
@@ -129,6 +101,7 @@ const NodeList = () => {
         roleType={roleType}
         contentStore={contentStore}
         afterOk={refresh}
+        formatMessage={formatMessage}
       />,
       okText: formatMessage({ id: `${intlPrefix}.node.modal.removeRole` }),
       footer: (okbtn, cancelbtn) => (
@@ -151,6 +124,7 @@ const NodeList = () => {
         nodeName={nodeName}
         projectId={projectId}
         formatMessage={formatMessage}
+        roleType="worker"
         intlPrefix={intlPrefix}
         contentStore={contentStore}
         afterOk={refresh}
@@ -164,16 +138,18 @@ const NodeList = () => {
     const clusterType = record.get('clusterType');
     const enableDeleteEtcdRole = record.get('enableDeleteEtcdRole');
     const enableDeleteMasterRole = record.get('enableDeleteMasterRole');
-    if (clusterType === 'imported') {
+    const enableDeleteNode = record.get('enableDeleteNode');
+    if (clusterType === 'imported' || getSelectedMenu?.status === 'operating') {
       return null;
     }
-    const optsData = [
-      {
+    const optsData = [];
+    if (enableDeleteNode) {
+      optsData.unshift({
         service: [],
         text: formatMessage({ id: `${intlPrefix}.node.action.removeNode` }),
         action: () => handleRemoveNode(record),
-      },
-    ];
+      });
+    }
     if (enableDeleteEtcdRole) {
       optsData.unshift({
         service: [],
@@ -188,6 +164,7 @@ const NodeList = () => {
         action: () => openRemoveRole(record, 'master'),
       });
     }
+    if (!optsData.length) return null;
     return (
       <Action placement="bottomRight" data={optsData} />
     );
