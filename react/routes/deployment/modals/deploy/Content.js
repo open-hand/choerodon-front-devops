@@ -210,7 +210,7 @@ const DeployModal = injectIntl(observer(({ form }) => {
           name={mapping.hostName.value}
           onChange={handleChangeHostName}
           showHelp="tooltip"
-          help="123"
+          help="您需在此选择一个此项目下”主机配置“中已有的主机作为步骤的载体"
         />
         <div style={{ display: 'flex', alignItems: 'flex-start' }} colSpan={1}>
           <div style={{ width: '70%' }}>
