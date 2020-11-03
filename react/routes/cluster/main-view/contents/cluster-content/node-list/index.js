@@ -24,10 +24,6 @@ const NodeList = () => {
     NodeListDs.query();
   };
 
-  const {
-    getSelectedMenu,
-  } = clusterStore;
-
   const renderStatusName = ({ record }) => {
     const status = record.get('status');
     const nodeName = record.get('nodeName');
@@ -139,7 +135,8 @@ const NodeList = () => {
     const enableDeleteEtcdRole = record.get('enableDeleteEtcdRole');
     const enableDeleteMasterRole = record.get('enableDeleteMasterRole');
     const enableDeleteNode = record.get('enableDeleteNode');
-    if (clusterType === 'imported' || getSelectedMenu?.status === 'operating') {
+    debugger;
+    if (clusterType === 'imported' || clusterStore.getSelectedMenu?.status === 'operating') {
       return null;
     }
     const optsData = [];
