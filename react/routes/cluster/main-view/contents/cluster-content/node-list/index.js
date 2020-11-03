@@ -135,7 +135,6 @@ const NodeList = () => {
     const enableDeleteEtcdRole = record.get('enableDeleteEtcdRole');
     const enableDeleteMasterRole = record.get('enableDeleteMasterRole');
     const enableDeleteNode = record.get('enableDeleteNode');
-    debugger;
     if (clusterType === 'imported' || clusterStore.getSelectedMenu?.status === 'operating') {
       return null;
     }

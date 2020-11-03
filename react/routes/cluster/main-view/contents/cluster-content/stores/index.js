@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, {
   createContext, useMemo, useContext, useEffect,
 } from 'react';
@@ -16,6 +17,7 @@ import PolarisNumDataSet from './PalarisNumDataSet';
 import getTablePostData from '../../../../../../utils/getTablePostData';
 import SummaryDataSet from './SummaryDataSet';
 import EnvDetailDataSet from './EnvDetailDataSet';
+import EnvManageListDs from './EnvManageListDataSet';
 
 const Store = createContext();
 
@@ -27,6 +29,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
   observer((props) => {
     const tabs = useMemo(() => ({
       NODE_TAB: 'node',
+      ENV_TAB: 'env',
       POLARIS_TAB: 'polaris',
       ASSIGN_TAB: 'assign',
       COMPONENT_TAB: 'component',
@@ -50,6 +53,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
 
     const record = ClusterDetailDs.current;
     const NodeListDs = useMemo(() => new DataSet(NodeListDataSet({ formatMessage, intlPrefix })), []);
+    const EnvMgListDs = useMemo(() => new DataSet(EnvManageListDs({ formatMessage, intlPrefix })), []);
     const PermissionDs = useMemo(() => new DataSet(PermissionDataSet({
       formatMessage, intlPrefix, projectId, id, skipCheckProjectPermission: record && record.get('skipCheckProjectPermission'),
     })), [record]);
@@ -68,6 +72,8 @@ export const StoreProvider = injectIntl(inject('AppState')(
         case tabs.NODE_TAB:
           NodeListDs.transport.read.url = `/devops/v1/projects/${projectId}/clusters/page_nodes?cluster_id=${id}`;
           NodeListDs.query();
+          break;
+        case tabs.ENV_TAB:
           break;
         case tabs.ASSIGN_TAB:
           if (!record) {
@@ -144,6 +150,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       clusterSummaryDs,
       envDetailDs,
       clusterStore,
+      EnvMgListDs,
     };
     return (
       <Store.Provider value={value}>
