@@ -177,7 +177,7 @@ const ClusterModals = observer(() => {
       children: <CreateCluster afterOk={resreshTree} prefixCls={prefixCls} intlPrefix={intlPrefix} formatMessage={formatMessage} mainStore={mainStore} projectId={projectId} />,
       drawer: true,
       style: modalStyle,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: `${intlPrefix}.modal.connect` }),
     });
   }
 
