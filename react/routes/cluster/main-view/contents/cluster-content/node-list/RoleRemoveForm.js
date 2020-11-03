@@ -12,6 +12,7 @@ const RemoveForm = observer(({
   contentStore,
   afterOk,
   formatMessage,
+  intlPrefix,
 }) => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
@@ -24,6 +25,9 @@ const RemoveForm = observer(({
       color: 'dark',
     },
     onOk: handleSubmit,
+    okText: formatMessage({ id: 'remove' }),
+    title: formatMessage({ id: `${intlPrefix}.node.action.removeRole` }),
+
     footer: (okbtn, cancelbtn) => (
       <>
         {cancelbtn}
