@@ -1364,6 +1364,8 @@ const cluster = {
   'c7ncd.cluster.modal.create.disabled': '组织集群数量已达上限，无法创建更多',
   'c7ncd.cluster.modal.edit': '修改集群',
   'c7ncd.cluster.modal.permission': '权限管理',
+  'c7ncd.cluster.modal.connect': '连接',
+
   'c7ncd.cluster.name': '集群名称',
   'c7ncd.cluster.code': '集群编码',
   'c7ncd.cluster.dec': '集群描述',

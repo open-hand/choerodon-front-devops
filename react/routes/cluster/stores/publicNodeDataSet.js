@@ -50,19 +50,6 @@ export default ({
     if (value && !p.test(value)) {
       return formatMessage({ id: 'network.ip.check.failed' });
     }
-    // return true;
-    // const ds = record.dataSet;
-    // const hasRepeatIP = ds.some((tempRecord) => {
-    //   const headerName = tempRecord.get('hostIp');
-    //   const recordName = record.get('hostIp');
-    //   const isEqual = headerName && recordName && headerName === recordName;
-    //   return tempRecord.id !== record.id && isEqual;
-    // });
-    // if (hasRepeatIP) {
-    //   // record.getField('value').set('disabled', true);
-    //   return '存在重复的节点IP';
-    // }
-    // record.getField('value').set('disabled', false);
     return true;
   }
 
