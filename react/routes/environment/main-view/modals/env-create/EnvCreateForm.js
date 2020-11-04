@@ -8,45 +8,29 @@ import Tips from '../../../../../components/new-tips';
 
 import './index.less';
 
+function ClusterItem({ text, connect }) {
+  return (
+    <>
+      {text && (
+      <StatusDot
+        active
+        synchronize
+        size="inner"
+        connect={connect}
+      />
+      )}
+      {' '}
+      {text}
+    </>
+  );
+}
+
 export default function EnvCreateForm({ intlPrefix, modal, refresh }) {
   const {
     formDs,
     clusterOptionDs,
     intl: { formatMessage },
   } = useFormStore();
-
-  function getStatus(record) {
-    const tempStatus = record.get('status');
-    switch (tempStatus) {
-      case 'running':
-        return ['running', 'connect'];
-      case 'failed':
-        return ['failed', 'failed'];
-      case 'operating':
-        return ['operating', 'operating'];
-      default:
-        break;
-    }
-    return ['disconnect', 'disconnect'];
-  }
-
-  function ClusterItem({ record }) {
-    const [status, text] = getStatus(record);
-    return (
-      <>
-        {text && (
-        <StatusDot
-          active
-          synchronize
-          size="inner"
-          getStatus={() => getStatus(record)}
-        />
-        )}
-        {' '}
-        {record.get('name')}
-      </>
-    );
-  }
 
   async function handleCreate() {
     try {
@@ -65,13 +49,15 @@ export default function EnvCreateForm({ intlPrefix, modal, refresh }) {
   function clusterRenderer({ record, text }) {
     const current = clusterOptionDs.find((item) => item.get('id') === record.get('clusterId'));
     if (current) {
-      return <ClusterItem record={current} />;
+      const connect = current.get('connect');
+      return <ClusterItem text={text} connect={connect} />;
     }
     return text;
   }
 
   function getClusterOption({ record, text }) {
-    return <ClusterItem record={record} />;
+    const connect = record.get('connect');
+    return <ClusterItem text={text} connect={connect} />;
   }
 
   function getGroupOption({ text }) {
