@@ -4,6 +4,8 @@ import { Action } from '@choerodon/boot';
 import { observer } from 'mobx-react-lite';
 import TimePopover from '@/components/timePopover';
 import { useClusterContentStore } from '../stores';
+import EnvForm from './EnvForm';
+import './index.less';
 
 const { Column } = Table;
 
@@ -13,12 +15,26 @@ const EnvManageLists = observer(() => {
     formatMessage,
     projectId,
     EnvMgListDs,
+    EnvQuotaFormDs,
   } = useClusterContentStore();
 
   const renderTime = ({ text }) => text && <TimePopover content={text} />;
 
   const openQuataModal = () => {
-    // Modal.open;
+    Modal.open({
+      title: formatMessage({ id: `${intlPrefix}.env.manage.resourceQuota.title` }),
+      drawer: true,
+      style: {
+        width: '3.8rem',
+      },
+      className: 'c7ncd-cluster-envQuota-modal',
+      children: <EnvForm
+        EnvQuotaFormDs={EnvQuotaFormDs}
+        projectId={projectId}
+        intlPrefix={intlPrefix}
+      />,
+      okText: formatMessage({ id: 'save' }),
+    });
   };
 
   const renderOpts = () => {
