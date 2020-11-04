@@ -141,21 +141,21 @@ const NodeList = () => {
     const optsData = [];
     // if (enableDeleteNode) {
     //   optsData.unshift({
-    //     service: [],
+    //     service: ['choerodon.code.project.deploy.cluster.cluster-management.ps.deleteNode'],
     //     text: formatMessage({ id: `${intlPrefix}.node.action.removeNode` }),
     //     action: () => handleRemoveNode(record),
     //   });
     // }
     if (enableDeleteEtcdRole) {
       optsData.unshift({
-        service: [],
+        service: ['choerodon.code.project.deploy.cluster.cluster-management.ps.deleteEtcdRole'],
         text: formatMessage({ id: `${intlPrefix}.node.action.removeRole.etcd` }),
         action: () => openRemoveRole(record, 'etcd'),
       });
     }
     if (enableDeleteMasterRole) {
       optsData.unshift({
-        service: [],
+        service: ['choerodon.code.project.deploy.cluster.cluster-management.ps.deleteMasterRole'],
         text: formatMessage({ id: `${intlPrefix}.node.action.removeRole.master` }),
         action: () => openRemoveRole(record, 'master'),
       });

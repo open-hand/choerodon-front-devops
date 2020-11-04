@@ -217,7 +217,7 @@ const ClusterModals = observer(() => {
       disabledMessage: formatMessage({ id: `${intlPrefix}.modal.create.disabled` }),
     }, {
       name: formatMessage({ id: `${intlPrefix}.modal.createByHost` }),
-      permissions: ['choerodon.code.project.deploy.cluster.cluster-management.ps.create'],
+      permissions: ['choerodon.code.project.deploy.cluster.cluster-management.ps.createByHost'],
       icon: 'playlist_add',
       handler: openCreateByHost,
       display: true,
@@ -236,6 +236,7 @@ const ClusterModals = observer(() => {
       icon: 'playlist_add',
       handler: openCreateByNodes,
       display: true,
+      permissions: ['choerodon.code.project.deploy.cluster.cluster-management.ps.createNodes'],
       group: 2,
     }, {
       name: formatMessage({ id: 'refresh' }),

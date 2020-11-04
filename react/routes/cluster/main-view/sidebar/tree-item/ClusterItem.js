@@ -203,7 +203,7 @@ function ClusterItem({
     }
     if (status === 'failed') {
       const tempData = [{
-        service: [''],
+        service: ['choerodon.code.project.deploy.cluster.cluster-management.ps.retryCluster'],
         text: formatMessage({ id: `${intlPrefix}.action.retry` }),
         action: handleClusterRetry,
       },
