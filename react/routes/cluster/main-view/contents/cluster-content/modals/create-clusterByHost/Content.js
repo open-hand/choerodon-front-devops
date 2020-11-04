@@ -154,24 +154,6 @@ function CreateClusterHostForm() {
     });
   }
 
-  // createData是创建cluster的时候后端返回的数据
-  async function gok8sCreate(createData) {
-    let res;
-    try {
-      res = await clusterByHostStore.createK8S(projectId, createData);
-      if (res && res.failed) {
-        modalUpDateLoadingFalse();
-        return res;
-      }
-      modal.close();
-      afterOk();
-      return true;
-    } catch (error) {
-      modalUpDateLoadingFalse();
-      return error;
-    }
-  }
-
   // 所有节点检测连通性
   function goTimerConnect(clusterString) {
     timer = setInterval(async () => {
@@ -194,8 +176,6 @@ function CreateClusterHostForm() {
           clearInterval(timer);
           modal.close();
           afterOk();
-          // 就去创建k8s
-          // gok8sCreate(createData);
         }
         // 如果失败
         if (status === 'failed') {

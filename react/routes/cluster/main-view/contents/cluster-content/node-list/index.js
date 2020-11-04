@@ -139,13 +139,13 @@ const NodeList = () => {
       return null;
     }
     const optsData = [];
-    if (enableDeleteNode) {
-      optsData.unshift({
-        service: [],
-        text: formatMessage({ id: `${intlPrefix}.node.action.removeNode` }),
-        action: () => handleRemoveNode(record),
-      });
-    }
+    // if (enableDeleteNode) {
+    //   optsData.unshift({
+    //     service: [],
+    //     text: formatMessage({ id: `${intlPrefix}.node.action.removeNode` }),
+    //     action: () => handleRemoveNode(record),
+    //   });
+    // }
     if (enableDeleteEtcdRole) {
       optsData.unshift({
         service: [],

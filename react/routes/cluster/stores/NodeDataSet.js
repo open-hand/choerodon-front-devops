@@ -19,23 +19,6 @@ function handleRemove({ dataSet }) {
   ipValidator(dataSet);
 }
 
-// 校验是否有重复的名字
-function checkoutHasParamName(value, name, record) {
-  const ds = record.dataSet;
-  const hasRepeatName = ds.some((tempRecord) => {
-    const headerName = tempRecord.get('name');
-    const recordName = record.get('name');
-    const isEqual = headerName && recordName && headerName === recordName;
-    return tempRecord.id !== record.id && isEqual;
-  });
-  if (hasRepeatName) {
-    // record.getField('value').set('disabled', true);
-    return '存在重复节点名称';
-  }
-  // record.getField('value').set('disabled', false);
-  return true;
-}
-
 export default ({
   accountDs,
   formatMessage,
@@ -45,6 +28,26 @@ export default ({
   clusterId,
   projectId,
 }) => {
+  // 校验是否有重复的名字以及校验是否通过名字限制
+  function checkoutHasParamName(value, name, record) {
+    const p = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/;
+    if (value && !p.test(value)) {
+      return formatMessage({ id: `${intlPrefix}.node.name.failed` });
+    }
+    const ds = record.dataSet;
+    const hasRepeatName = ds.some((tempRecord) => {
+      const headerName = tempRecord.get('name');
+      const recordName = record.get('name');
+      const isEqual = headerName && recordName && headerName === recordName;
+      return tempRecord.id !== record.id && isEqual;
+    });
+    if (hasRepeatName) {
+    // record.getField('value').set('disabled', true);
+      return '存在重复节点名称';
+    }
+    // record.getField('value').set('disabled', false);
+    return true;
+  }
   async function checkPort(value, name, record) {
     if (value && record.getPristineValue(name)
       && String(value) === String(record.getPristineValue(name))

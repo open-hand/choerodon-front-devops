@@ -231,7 +231,7 @@ const ClusterModals = observer(() => {
       handler: openPermission,
       display: true,
       group: 1,
-    }, clusterStore.getSelectedMenu.type === 'created' && {
+    }, clusterStore.getSelectedMenu.type === 'created' && clusterStore.getSelectedMenu.status === 'disconnect' && {
       name: formatMessage({ id: `${intlPrefix}.modal.createByNodes` }),
       icon: 'playlist_add',
       handler: openCreateByNodes,
