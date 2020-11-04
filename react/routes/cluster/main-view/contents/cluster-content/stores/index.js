@@ -18,6 +18,7 @@ import getTablePostData from '../../../../../../utils/getTablePostData';
 import SummaryDataSet from './SummaryDataSet';
 import EnvDetailDataSet from './EnvDetailDataSet';
 import EnvManageListDs from './EnvManageListDataSet';
+import EnvQuotaFormDataSet from './EnvQuotaFormDataSet';
 
 const Store = createContext();
 
@@ -54,6 +55,8 @@ export const StoreProvider = injectIntl(inject('AppState')(
     const record = ClusterDetailDs.current;
     const NodeListDs = useMemo(() => new DataSet(NodeListDataSet({ formatMessage, intlPrefix })), []);
     const EnvMgListDs = useMemo(() => new DataSet(EnvManageListDs({ formatMessage, intlPrefix })), []);
+    const EnvQuotaFormDs = useMemo(() => new DataSet(EnvQuotaFormDataSet({ formatMessage, intlPrefix })), []);
+
     const PermissionDs = useMemo(() => new DataSet(PermissionDataSet({
       formatMessage, intlPrefix, projectId, id, skipCheckProjectPermission: record && record.get('skipCheckProjectPermission'),
     })), [record]);
@@ -74,6 +77,13 @@ export const StoreProvider = injectIntl(inject('AppState')(
           NodeListDs.query();
           break;
         case tabs.ENV_TAB:
+          EnvMgListDs.loadData([{
+            envDetail: 'hellowrold',
+            projects: 'devops',
+            createTime: '',
+            cpu: 'sadsadas',
+            stack: 'sadas',
+          }]);
           break;
         case tabs.ASSIGN_TAB:
           if (!record) {
@@ -151,6 +161,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       envDetailDs,
       clusterStore,
       EnvMgListDs,
+      EnvQuotaFormDs,
     };
     return (
       <Store.Provider value={value}>

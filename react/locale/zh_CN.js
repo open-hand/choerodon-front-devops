@@ -1461,6 +1461,12 @@ const cluster = {
   'c7ncd.cluster.env.manage.cpu': 'CPU配额',
   'c7ncd.cluster.env.manage.stack': '内存配额',
   'c7ncd.cluster.env.manage.resourceQuota': '资源配额',
+  'c7ncd.cluster.env.manage.resourceQuota.title': '资源配额管理',
+  'c7ncd.cluster.env.manage.resourceQuota.enabled': '是否启用资源配额',
+  'c7ncd.cluster.env.manage.resourceQuota.CPULimit': 'CPU限制',
+  'c7ncd.cluster.env.manage.resourceQuota.CPURquest': 'CPU请求',
+  'c7ncd.cluster.env.manage.resourceQuota.memoryLimit': '内存限制',
+  'c7ncd.cluster.env.manage.resourceQuota.memoryRequest': '内存请求',
 };
 
 const zhCN = {
