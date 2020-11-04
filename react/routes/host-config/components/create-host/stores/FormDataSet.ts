@@ -42,6 +42,10 @@ function handleUpdate({ name, record }: { name: string, record: any }) {
   if (name === 'type') {
     setStatus(record);
   }
+
+  if (name === 'authType') {
+    record.get('password') && record.set('password', null);
+  }
 }
 
 export default ({
