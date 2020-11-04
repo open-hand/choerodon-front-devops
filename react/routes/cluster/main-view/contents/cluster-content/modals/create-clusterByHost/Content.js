@@ -174,8 +174,10 @@ function CreateClusterHostForm() {
         // 如果状态成功,
         if (status === 'success') {
           clearInterval(timer);
-          modal.close();
-          afterOk();
+          setTimeout(() => {
+            modal.close();
+            afterOk();
+          }, 2000);
         }
         // 如果失败
         if (status === 'failed') {

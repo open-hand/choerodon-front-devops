@@ -104,8 +104,12 @@ export default ({
       if (!oldValue?.length && value?.length === 1 && value[0] === 'etcd') {
         record.set('role', ['etcd', 'worker']);
       }
-      if (oldValue?.length === 2 && oldValue?.includes('master') && oldValue?.includes('etcd') && !value?.includes('master')) {
-        record.set('role', ['etcd', 'worker']);
+      if (oldValue?.length === 2 && oldValue?.includes('etcd')) {
+        const hasWorker = oldValue?.includes('worker') && !value?.includes('worker');
+        const hasMaster = oldValue?.includes('master') && !value?.includes('master');
+        if (hasWorker || hasMaster) {
+          record.set('role', ['etcd', 'worker']);
+        }
       }
     }
     if (name === 'name') {
