@@ -331,11 +331,11 @@ const DetailItem = (props) => {
       <main>
         <div>
           <span>通过率:</span>
-          <span>{successCount ? calcValue(successCount, failCount) : '-'}</span>
+          <span>{(successCount || successCount === 0) ? calcValue(successCount, failCount) : '-'}</span>
         </div>
         <div>
           <span>成功数量:</span>
-          <span>{successCount || '-'}</span>
+          <span>{successCount === 0 ? '0' : successCount || '-'}</span>
         </div>
         <div>
           <span>失败数量:</span>
