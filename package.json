@@ -21,6 +21,10 @@
     "compile": "choerodon-front-boot compile",
     "clean-install": "rm -rf node_modules && rm package-lock.json && npm i --registry https://nexus.choerodon.com.cn/repository/choerodon-npm && chmod -R u+x node_modules"
   },
+  "resolutions": {
+    "react": "16.14.0",
+    "react-dom": "16.14.0"
+  },
   "dependencies": {
     "diff-match-patch": "^1.0.4",
     "echarts": "^4.2.1",

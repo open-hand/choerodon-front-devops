@@ -17,6 +17,7 @@ const defaultData = [
     type: 'CI',
     parallel: 1,
     triggerType: '',
+    id: '1',
   }, {
     name: '部署',
     sequence: 2,
@@ -24,6 +25,7 @@ const defaultData = [
     type: 'CD',
     parallel: 0,
     triggerType: 'auto',
+    id: '2',
   },
 ];
 
