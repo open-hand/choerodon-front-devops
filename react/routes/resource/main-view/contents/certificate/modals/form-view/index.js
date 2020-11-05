@@ -1,4 +1,5 @@
 /* eslint-disable no-underscore-dangle,react/no-access-state-in-setstate */
+/* eslint-disable */
 import React, { Component, Fragment } from 'react';
 import { observer, inject } from 'mobx-react';
 import { injectIntl, FormattedMessage } from 'react-intl';
@@ -47,6 +48,7 @@ const CERT_TYPE_CHOOSE = 'choose';
 @inject('AppState')
 @observer
 export default class CertificateCreate extends Component {
+  // eslint-disable-next-line react/state-in-constructor
   state = {
     type: CERT_TYPE_REQUEST,
     submitting: false,
@@ -95,6 +97,7 @@ export default class CertificateCreate extends Component {
     }
   }, 600);
 
+  // eslint-disable-next-line react/sort-comp
   handleSubmit = (e) => {
     e.preventDefault();
     const {
@@ -454,6 +457,7 @@ export default class CertificateCreate extends Component {
           confirmLoading={submitting}
           maskClosable={false}
           width={380}
+          className="c7ncd-addcerModal"
         >
           <Content
             className="c7ncd-deployment-ctf-create sidebar-content"
