@@ -104,6 +104,7 @@ const FormView = observer(() => {
     }
 
     setHasValueError(error);
+    setValueErrorMsg('内容不符合规则 (value只能是字符串)');
     return error;
   };
 

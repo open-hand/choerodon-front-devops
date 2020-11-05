@@ -269,7 +269,7 @@ export default (
       defaultValue: 'accountPassword',
     },
     {
-      name: 'userName',
+      name: 'username',
       type: 'string',
       label: '用户名',
       dynamicProps: {
@@ -282,7 +282,7 @@ export default (
       label: '密码',
       dynamicProps: {
         required: ({ record }) => record.get('type') === 'cdHost'
-          && record.get('accountType') === 'accountPassword' && record.get(addCDTaskDataSetMap.hostSource) === addCDTaskDataSetMap.customhost,
+          && record.get('authType') === 'accountPassword' && record.get(addCDTaskDataSetMap.hostSource) === addCDTaskDataSetMap.customhost,
       },
     },
     {
