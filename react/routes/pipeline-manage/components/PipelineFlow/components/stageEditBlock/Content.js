@@ -17,7 +17,6 @@ const defaultData = [
     type: 'CI',
     parallel: 1,
     triggerType: '',
-    id: '1',
   }, {
     name: '部署',
     sequence: 2,
@@ -25,7 +24,6 @@ const defaultData = [
     type: 'CD',
     parallel: 0,
     triggerType: 'auto',
-    id: '2',
   },
 ];
 
@@ -71,7 +69,7 @@ export default observer(() => {
       return dataSource.map((item, index) => {
         const nextStageType = dataSource[index + 1]?.type && dataSource[index + 1]?.type.toUpperCase();
         return (
-          <Draggable key={`dropStages-${item.id}`} draggableId={`dropStages-${item.id}`} index={index}>
+          <Draggable key={`dropStages-${item.sequence}`} draggableId={`dropStages-${item.sequence}`} index={index}>
             {
               (dragProvided, snapshotinner) => (
                 <EditColumn
