@@ -113,7 +113,7 @@ export default observer(() => {
     const sourceType = getStepData2[source.index]?.type;
     const destType = getStepData2[destination.index]?.type;
     if (sourceType !== destType) {
-      message.error('CI阶段必须在CD阶段之后');
+      message.error('CI阶段必须置于CD阶段之前');
       return;
     }
     const arr = [...swap(getStepData2, source.index, destination.index)];
