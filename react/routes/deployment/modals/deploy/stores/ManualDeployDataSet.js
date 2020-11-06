@@ -365,7 +365,7 @@ export default (({
         disabled: true,
         dynamicProps: {
           required: ({ record }) => record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[1].value,
+            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''),
         },
       },
       {
@@ -375,7 +375,7 @@ export default (({
         disabled: true,
         dynamicProps: {
           required: ({ record }) => record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[1].value,
+            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''),
         },
       },
       {
@@ -392,7 +392,7 @@ export default (({
         valueField: 'repoId',
         dynamicProps: {
           required: ({ record }) => (record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[1].value)
+            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''))
           && (record.get(mapping.deployObject.value) === mapping.deployObject.options[0].value),
         },
         lookupAxiosConfig: () => ({
@@ -418,7 +418,7 @@ export default (({
         dynamicProps: {
           disabled: ({ record }) => !record.get(mapping.projectImageRepo.value),
           required: ({ record }) => (record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[1].value)
+            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''))
             && (record.get(mapping.deployObject.value) === mapping.deployObject.options[0].value),
           lookupAxiosConfig: ({ record }) => ({
             method: 'get',
@@ -452,7 +452,7 @@ export default (({
         valueField: 'tagName',
         dynamicProps: {
           required: ({ record }) => (record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[1].value)
+            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''))
             && (record.get(mapping.deployObject.value) === mapping.deployObject.options[0].value),
           disabled: ({ record }) => !record.get(mapping.image.value),
           lookupAxiosConfig: ({ record }) => ({
@@ -492,7 +492,7 @@ export default (({
         maxLength: 30,
         dynamicProps: {
           required: ({ record }) => (record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[1].value)
+            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''))
             && (record.get(mapping.deployObject.value) === mapping.deployObject.options[0].value),
         },
       },
@@ -504,8 +504,8 @@ export default (({
         valueField: 'configId',
         dynamicProps: {
           required: ({ record }) => (record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[1].value)
-            && (record.get(mapping.deployObject.value) === mapping.deployObject.options[1].value),
+            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''))
+            && (record.get(mapping.deployObject.value) === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : '')),
         },
         lookupAxiosConfig: () => ({
           method: 'get',
@@ -520,8 +520,8 @@ export default (({
         valueField: 'repositoryId',
         dynamicProps: {
           required: ({ record }) => (record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[1].value)
-            && (record.get(mapping.deployObject.value) === mapping.deployObject.options[1].value),
+            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''))
+            && (record.get(mapping.deployObject.value) === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : '')),
           disabled: ({ record }) => !record.get(mapping.nexus.value),
           lookupAxiosConfig: ({ record }) => ({
             method: 'get',
@@ -541,8 +541,8 @@ export default (({
         valueField: 'value',
         dynamicProps: {
           required: ({ record }) => (record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[1].value)
-            && (record.get(mapping.deployObject.value) === mapping.deployObject.options[1].value),
+            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''))
+            && (record.get(mapping.deployObject.value) === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : '')),
           disabled: ({ record }) => !record.get(mapping.projectProduct.value),
           lookupAxiosConfig: ({ record }) => ({
             method: 'get',
@@ -573,8 +573,8 @@ export default (({
         valueField: 'value',
         dynamicProps: {
           required: ({ record }) => (record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[1].value)
-            && (record.get(mapping.deployObject.value) === mapping.deployObject.options[1].value),
+            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''))
+            && (record.get(mapping.deployObject.value) === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : '')),
           disabled: ({ record }) => !record.get(mapping.groupId.value),
           lookupAxiosConfig: ({ record }) => ({
             method: 'get',
@@ -605,8 +605,8 @@ export default (({
         valueField: 'version',
         dynamicProps: {
           required: ({ record }) => (record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[1].value)
-            && (record.get(mapping.deployObject.value) === mapping.deployObject.options[1].value),
+            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''))
+            && (record.get(mapping.deployObject.value) === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : '')),
           disabled: ({ record }) => !record.get(mapping.groupId.value)
             || !record.get(mapping.artifactId.value),
           lookupAxiosConfig: ({ record }) => ({
@@ -630,8 +630,8 @@ export default (({
         defaultValue: './',
         dynamicProps: {
           required: ({ record }) => (record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[1].value)
-            && (record.get(mapping.deployObject.value) === mapping.deployObject.options[1].value),
+            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''))
+            && (record.get(mapping.deployObject.value) === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : '')),
         },
       },
       {
