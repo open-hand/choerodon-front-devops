@@ -27,9 +27,10 @@ const HeaderButtons = ({ items, children, showClassName = true }) => {
             <Action
               {...restActionsProps}
               data={data}
-              className="c7ncd-header-btn"
+              className="c7ncd-header-action"
               style={{
                 color: '#3f51b5',
+                padding: 0,
               }}
             />
           );
