@@ -287,8 +287,8 @@ const Deployment = withRouter(observer((props) => {
     };
     return [
       <p className="c7ncd-deploy-content-deployObjectP">
-        <Tooltip title={iconMap[deployObjectType].text}>
-          <img src={iconMap[deployObjectType].img} alt="" />
+        <Tooltip title={iconMap[deployObjectType]?.text}>
+          <img src={iconMap[deployObjectType]?.img} alt="" />
         </Tooltip>
         <span className="c7ncd-deploy-content-deployObjectName">
           {deployObjectName}
