@@ -103,7 +103,7 @@ export default observer((props) => {
       return;
     }
     const arr = [...swap(jobList, source.index, destination.index)];
-    editJobLists(sequence, arr);
+    editJobLists(sequence, type, arr);
   }
 
   const getListStyle = (isDraggingOver) => ({

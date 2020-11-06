@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import React, { Fragment } from 'react';
 import { Icon, Button } from 'choerodon-ui/pro';
 import { Tooltip } from 'choerodon-ui';
@@ -7,7 +8,9 @@ import { useClusterContentStore } from '../../stores';
 
 import './index.less';
 
-export default ({ name, errorMessage, describe, buttonData = [], status, className, progress }) => {
+export default ({
+  name, errorMessage, describe, buttonData = [], status, className, progress,
+}) => {
   const {
     prefixCls,
   } = useClusterMainStore();
@@ -47,7 +50,6 @@ export default ({ name, errorMessage, describe, buttonData = [], status, classNa
     );
   }
 
-
   return (
     <div className={`${prefixCls}-card-wrap ${className}`}>
       <div className={`${prefixCls}-card-wrap-title`}>
@@ -65,7 +67,9 @@ export default ({ name, errorMessage, describe, buttonData = [], status, classNa
         </div>
       </div>
       <div className={`${prefixCls}-card-wrap-footer`}>
-        {map(buttonData, ({ text, onClick, loading, disabled, popoverContent }, index) => (
+        {map(buttonData, ({
+          text, onClick, loading, disabled, popoverContent,
+        }, index) => (
           <Tooltip
             placement="bottom"
             title={popoverContent}
