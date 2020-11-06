@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState, Fragment } from 'react';
 import _ from 'lodash';
 import { withRouter } from 'react-router-dom';
@@ -167,8 +168,8 @@ const PiplelineTable = withRouter(observer((props) => {
    * 跳转到创建页面
    */
   function showCreate() {
-    pipelineCreateStore.loadUser(projectId);
-    pipelineCreateStore.setCreateVisible(true);
+    // pipelineCreateStore.loadUser(projectId);
+    // pipelineCreateStore.setCreateVisible(true);
   }
 
   /** ************* 启用、停用 **************** */
@@ -218,11 +219,11 @@ const PiplelineTable = withRouter(observer((props) => {
         text: formatMessage({ id: 'delete' }),
         action: deletePipeline.bind(this, id, itemName),
       },
-      record: {
-        service: ['choerodon.code.project.deploy.app-deployment.pipeline.ps.record'],
-        text: formatMessage({ id: 'pipeline.all.record' }),
-        action: gotoRecord.bind(this, id, itemName),
-      },
+      // record: {
+      //   service: ['choerodon.code.project.deploy.app-deployment.pipeline.ps.record'],
+      //   text: formatMessage({ id: 'pipeline.all.record' }),
+      //   action: gotoRecord.bind(this, id, itemName),
+      // },
     };
 
     let actionItem = _.keys(action);
@@ -335,6 +336,7 @@ const PiplelineTable = withRouter(observer((props) => {
           <Button
             funcType="flat"
             icon="playlist_add"
+            disabled
             onClick={showCreate}
           >
             <FormattedMessage id="pipeline.header.create" />
