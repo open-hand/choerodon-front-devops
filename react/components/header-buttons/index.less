@@ -1,4 +1,4 @@
-@import '~choerodon-ui/lib/style/themes/default';
+@import "~choerodon-ui/lib/style/themes/default";
 
 .c7ncd-header {
   &-btns {
@@ -6,15 +6,15 @@
     position: absolute;
     top: -1.05rem;
     left: 0;
-    padding-left: .24rem;
+    padding-left: 0.24rem;
     width: 100%;
-    height: .39rem;
+    height: 0.39rem;
     //line-height: .36rem;
-    line-height: .39rem;
+    line-height: 0.39rem;
     overflow: hidden;
 
     .@{c7n-pro-prefix}-btn + .@{c7n-pro-prefix}-btn {
-      margin-left: .2rem;
+      margin-left: 0.2rem;
     }
 
     .@{c7n-pro-prefix}-btn {
@@ -22,16 +22,27 @@
     }
   }
 
+  &-action {
+    color: rgb(63, 81, 181);
+    width: 24px !important;
+    height: 24px !important;
+    text-align: center;
+    padding: 0;
+    > i {
+      margin-right: 0 !important;
+    }
+  }
+
   &-btn {
-    height: .28rem !important;
-    line-height: .21rem !important;
+    height: 0.28rem !important;
+    line-height: 0.21rem !important;
     white-space: nowrap;
     font-weight: 500 !important;
   }
 
   &-split {
-    margin: 0 .2rem !important;
-    height: .2rem !important;
-    background: rgba(0, 0, 0, .2) !important;
+    margin: 0 0.2rem !important;
+    height: 0.2rem !important;
+    background: rgba(0, 0, 0, 0.2) !important;
   }
 }
