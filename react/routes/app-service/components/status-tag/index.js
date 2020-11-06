@@ -5,22 +5,36 @@ import StatusTags from '../../../../components/status-tag';
 
 import './index.less';
 
-const Status = injectIntl(({ intl: { formatMessage }, active, fail, synchro }) => {
+const Status = injectIntl(({
+  intl: { formatMessage }, active, fail, synchro,
+}) => {
   let msg = '';
   let color = '';
-  if (fail) {
-    msg = 'failed';
-    color = '#f44336';
-  } else if (synchro && active) {
-    msg = 'active';
-    color = '#00bfa5';
-  } else if (active) {
-    msg = 'creating';
-    color = '#4d90fe';
+  if (synchro) {
+    if (fail) {
+      msg = 'failed';
+      color = '#f44336';
+    } else if (active) {
+      msg = 'active';
+      color = '#00bfa5';
+    } else {
+      msg = 'stop';
+      color = '#cecece';
+    }
   } else {
-    msg = 'stop';
-    color = '#cecece';
+    msg = 'operating';
+    color = '#4d90fe';
   }
+  // if (fail) {
+
+  // } else if (synchro && active) {
+
+  // } else if (active) {
+  //   msg = 'creating';
+  //   color = '#4d90fe';
+  // } else {
+
+  // }
 
   return (
     <StatusTags
