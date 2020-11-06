@@ -76,6 +76,7 @@ const Deployment = withRouter(observer((props) => {
         refresh={deployAfter}
         intlPrefix={intlPrefix}
         prefixCls={prefixCls}
+        hasHostDeploy
       />,
       afterClose: () => {
         deployStore.setCertificates([]);

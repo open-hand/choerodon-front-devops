@@ -107,7 +107,20 @@ export default (({
   domainDs,
   organizationId,
   deployUseStore,
+  hasHostDeploy,
 }) => {
+  // 如果有该参数 部署方式增加主机部署
+  if (hasHostDeploy) {
+    mapping.deployWay.options.push({
+      value: 'host',
+      label: '主机部署',
+    });
+  } else {
+    mapping.deployWay.options = [{
+      value: 'env',
+      label: '环境部署',
+    }];
+  }
   function handleCreate({ dataSet, record }) {
     deployStore.loadAppService(projectId, record.get('appServiceSource'));
   }
