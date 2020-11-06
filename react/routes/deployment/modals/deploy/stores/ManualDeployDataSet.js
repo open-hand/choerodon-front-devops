@@ -13,10 +13,11 @@ const mapping = {
     options: [{
       value: 'env',
       label: '环境部署',
-    }, {
-      value: 'host',
-      label: '主机部署',
     }],
+    // , {
+    //   value: 'host',
+    //   label: '主机部署',
+    // }],
   },
   hostName: {
     value: 'hostId',
