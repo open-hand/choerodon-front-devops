@@ -10,6 +10,7 @@ import { useMainStore } from '../../stores';
 import CustomForm from '../../contents/custom/modals/form-view';
 import eventStopProp from '../../../../../utils/eventStopProp';
 import openWarnModal from '../../../../../utils/openWarnModal';
+import { useTreeItemStore } from './stores';
 
 const modalKey = Modal.key();
 const modalStyle = {
@@ -29,6 +30,8 @@ function CustomItem({
     AppState: { currentMenuType: { projectId } },
   } = useResourceStore();
   const { customStore } = useMainStore();
+
+  const { treeItemStore } = useTreeItemStore();
 
   function freshTree() {
     treeDs.query();
@@ -65,22 +68,18 @@ function CustomItem({
       okText: formatMessage({ id: 'delete' }),
       okProps: { color: 'red' },
       cancelProps: { color: 'dark' },
-      onOk: () => {
-        axios.delete(`/devops/v1/projects/${projectId}/customize_resource?resource_id=${record.get('id')}`).then(() => {
-          freshTree();
-        });
-      },
+      onOk: handleDelete,
     });
-    // treeDs.transport.destroy = ({ data: [data] }) => (
-    //   {
-    //     url: `/devops/v1/projects/${projectId}/customize_resource?resource_id=${data.id}`,
-    //     method: 'delete',
-    //   }
-    // );
-    // const modalProps = {
+  }
 
-    // };
-    // treeDs.delete(record, modalProps);
+  async function handleDelete() {
+    try {
+      await treeItemStore.deleteCustom(projectId, record.get('id'));
+      freshTree();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   function checkDataExist() {
