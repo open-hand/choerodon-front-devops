@@ -306,7 +306,7 @@ export default (
       name: 'workingPath',
       type: 'string',
       label: '工作目录',
-      defaultValue: '/temp',
+      defaultValue: './',
     },
     {
       name: 'pipelineTask',

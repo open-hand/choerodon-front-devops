@@ -624,7 +624,7 @@ export default (({
         name: mapping.workPath.value,
         type: 'string',
         label: '工作目录',
-        defaultValue: '/temp',
+        defaultValue: './',
         dynamicProps: {
           required: ({ record }) => (record.get(mapping.deployWay.value)
             === mapping.deployWay.options[1].value)

@@ -262,8 +262,20 @@ const DeployModal = injectIntl(observer(({ form }) => {
             <TextField
               name={mapping.workPath.value}
               colSpan={1}
-              showHelp="tooltip"
-              help="123"
+              addonAfter={(
+                <Tips
+                  helpText={(
+                    <>
+                      <p style={{ margin: 0 }}>
+                        默认工作目录，当前工作目录(./)，jar包下载存放目录为：./temp-jar/xxx.jar 日志存放目录为：./temp-log/xxx.log
+                      </p>
+                      <p style={{ margin: 0 }}>
+                        填写工作目录，jar包下载存放目录为：工作目录/temp-jar/xxx.jar 日志存放目录为：工作目录/temp-jar/xxx.log
+                      </p>
+                    </>
+                  )}
+                />
+              )}
             />,
             <YamlEditor
               colSpan={2}
