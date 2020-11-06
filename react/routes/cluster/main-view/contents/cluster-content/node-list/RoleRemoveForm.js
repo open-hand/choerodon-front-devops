@@ -25,7 +25,7 @@ const RemoveForm = observer(({
       color: 'dark',
     },
     onOk: handleSubmit,
-    okText: formatMessage({ id: 'remove' }),
+    okText: '移除',
     title: formatMessage({ id: `${intlPrefix}.node.action.removeRole` }),
 
     footer: (okbtn, cancelbtn) => (

@@ -98,6 +98,7 @@ const NodeList = () => {
         contentStore={contentStore}
         afterOk={refresh}
         formatMessage={formatMessage}
+        intlPrefix={intlPrefix}
       />,
       okText: formatMessage({ id: `${intlPrefix}.node.modal.removeRole` }),
       footer: (okbtn, cancelbtn) => (

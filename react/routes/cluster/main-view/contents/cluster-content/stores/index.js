@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, {
   createContext, useMemo, useContext, useEffect,
 } from 'react';
@@ -34,8 +35,10 @@ export const StoreProvider = injectIntl(inject('AppState')(
     }), []);
     const { intl: { formatMessage }, AppState: { currentMenuType: { id: projectId } }, children } = props;
     const { ClusterDetailDs, mainStore } = useClusterMainStore();
-    const { intlPrefix, clusterStore } = useClusterStore();
+    const { clusterStore } = useClusterStore();
     const { getSelectedMenu: { id } } = clusterStore;
+
+    const intlPrefix = 'c7ncd.cluster';
 
     useEffect(() => {
       clusterStore.setNoHeader(false);
