@@ -31,7 +31,9 @@ export default function useStore(mainStore) {
         if (res) {
           const { id: selectedId } = mainStore.getSelectedMenu;
           if (selectedId === pipelineId) {
-            this.setStepData(res.devopsCiStageVOS.concat(res.devopsCdStageVOS), false);
+            const tempArr = res.devopsCiStageVOS.concat(res.devopsCdStageVOS);
+            this.setStepData(tempArr);
+            this.setViewData(tempArr);
             this.setMainData(res);
           }
           this.setLoading(false);
@@ -43,38 +45,24 @@ export default function useStore(mainStore) {
       return axios.get(`/devops/v1/projects/${projectId}/cicd_pipelines/${pipelineId}`);
     },
     dataSource: [],
-    dataSource2: [],
+    viewData: [],
 
-    hasModify1: false,
-    hasModify2: false,
-
-    getHasModify(edit) {
-      return edit ? this.hasModify2 : this.hasModify1;
+    setViewData(value) {
+      this.viewData = value;
     },
 
-    setHasModify(value, edit) {
-      if (edit) {
-        this.hasModify2 = value;
-      } else {
-        this.hasModify1 = value;
-      }
+    get getViewData() {
+      return this.viewData?.slice();
     },
 
-    setStepData(value, edit) {
-      if (edit) {
-        this.dataSource2 = value;
-      } else {
-        this.dataSource = value;
-      }
+    setStepData(value) {
+      this.dataSource = value;
     },
     get getStepData() {
       return this.dataSource?.slice();
     },
-    get getStepData2() {
-      return this.dataSource2.slice();
-    },
 
-    addNewStep(index, data, edit) {
+    addNewStep(index, data) {
       const { cdAuditUserIds } = data;
       const stepObj = {
         ...data,
@@ -82,122 +70,60 @@ export default function useStore(mainStore) {
         name: data.step,
         jobList: [],
       };
-      this.setHasModify(true, edit);
-      if (edit) {
-        this.dataSource2.splice(index + 1, 0, stepObj);
-        this.dataSource2 = this.dataSource2.map((item, i) => {
-          const newItem = item;
-          newItem.sequence = i;
-          return newItem;
-        });
-      } else {
-        this.dataSource.splice(index + 1, 0, stepObj);
-        this.dataSource = this.dataSource.map((item, i) => {
-          const newItem = item;
-          newItem.sequence = i;
-          return newItem;
-        });
-      }
+      this.dataSource.splice(index + 1, 0, stepObj);
+      this.dataSource = this.dataSource.map((item, i) => {
+        const newItem = item;
+        newItem.sequence = i;
+        return newItem;
+      });
     },
 
-    removeStep(sequence, edit) {
-      this.setHasModify(true, edit);
-      if (edit) {
-        this.dataSource2.forEach((item, index) => {
-          if (item.sequence === sequence) {
-            this.dataSource2.splice(index, 1);
-            return true;
-          }
-          return false;
-        });
-        this.dataSource2 = this.dataSource2.map((item, i) => {
-          const newItem = item;
-          newItem.sequence = i;
-          return newItem;
-        });
-      } else {
-        this.dataSource.forEach((item, index) => {
-          if (item.sequence === sequence) {
-            this.dataSource.splice(index, 1);
-            return true;
-          }
-          return false;
-        });
-        this.dataSource = this.dataSource.map((item, i) => {
-          const newItem = item;
-          newItem.sequence = i;
-          return newItem;
-        });
-      }
+    removeStep(sequence) {
+      this.dataSource.forEach((item, index) => {
+        if (item.sequence === sequence) {
+          this.dataSource.splice(index, 1);
+          return true;
+        }
+        return false;
+      });
+      this.dataSource = this.dataSource.map((item, i) => {
+        const newItem = item;
+        newItem.sequence = i;
+        return newItem;
+      });
     },
-    eidtStep(sequence, newName, curType, edit) {
-      this.setHasModify(true, edit);
-      if (edit) {
-        this.dataSource2.forEach((item, index) => {
-          if (item.sequence === sequence) {
-            this.dataSource2[index].name = newName;
-            this.dataSource2[index].type = curType;
-            return true;
-          }
-          return false;
-        });
-      } else {
-        this.dataSource.forEach((item, index) => {
-          if (item.sequence === sequence) {
-            this.dataSource[index].name = newName;
-            this.dataSource[index].type = curType;
-            return true;
-          }
-          return false;
-        });
-      }
+    eidtStep(sequence, newName, curType) {
+      this.dataSource.forEach((item, index) => {
+        if (item.sequence === sequence) {
+          this.dataSource[index].name = newName;
+          this.dataSource[index].type = curType;
+          return true;
+        }
+        return false;
+      });
     },
     editStepLists(lists) {
-      this.dataSource2 = [...lists];
+      this.dataSource = [...lists];
     },
-    newJob(sequence, data, edit) {
-      this.setHasModify(true, edit);
-      if (edit) {
-        this.dataSource2.forEach((item, index) => {
-          if (item.sequence === sequence) {
-            // eslint-disable-next-line no-param-reassign
-            data.sequence = this.dataSource2[index].jobList.length;
-            if (this.dataSource2[index]?.jobList.length) {
-              this.dataSource2[index].jobList.push(data);
-            } else {
-              this.dataSource2[index].jobList = [data];
-            }
+    newJob(sequence, data) {
+      this.dataSource.forEach((item, index) => {
+        if (item.sequence === sequence) {
+          // eslint-disable-next-line no-param-reassign
+          data.sequence = this.dataSource[index].jobList.length;
+          if (this.dataSource[index]?.jobList.length) {
+            this.dataSource[index].jobList.push(data);
+          } else {
+            this.dataSource[index].jobList = [data];
           }
-        });
-      } else {
-        this.dataSource.forEach((item, index) => {
-          if (item.sequence === sequence) {
-            // eslint-disable-next-line no-param-reassign
-            data.sequence = this.dataSource[index].jobList.length;
-            if (this.dataSource[index].jobList) {
-              this.dataSource[index].jobList.push(data);
-            } else {
-              this.dataSource[index].jobList = [data];
-            }
-          }
-        });
-      }
+        }
+      });
     },
-    editJob(sequence, key, data, edit) {
-      this.setHasModify(true, edit);
-      if (edit) {
-        this.dataSource2.forEach((item, index) => {
-          if (item.sequence === sequence) {
-            this.dataSource2[index].jobList[key] = { ...data };
-          }
-        });
-      } else {
-        this.dataSource.forEach((item, index) => {
-          if (item.sequence === sequence) {
-            this.dataSource[index].jobList[key] = { ...data };
-          }
-        });
-      }
+    editJob(sequence, key, data) {
+      this.dataSource.forEach((item, index) => {
+        if (item.sequence === sequence) {
+          this.dataSource[index].jobList[key] = { ...data };
+        }
+      });
     },
     editJobLists(sequence, type, jobList) {
       if (type === 'CD') {
@@ -206,26 +132,17 @@ export default function useStore(mainStore) {
           item.sequence = index;
           return item;
         });
-        this.dataSource2[sequence].jobList = [...tempArr];
+        this.dataSource[sequence].jobList = [...tempArr];
         return;
       }
-      this.dataSource2[sequence].jobList = [...jobList];
+      this.dataSource[sequence].jobList = [...jobList];
     },
-    removeStepTask(sequence, key, edit) {
-      this.setHasModify(true, edit);
-      if (edit) {
-        this.dataSource2.forEach((item, index) => {
-          if (item.sequence === sequence) {
-            this.dataSource2[index].jobList.splice(key, 1);
-          }
-        });
-      } else {
-        this.dataSource.forEach((item, index) => {
-          if (item.sequence === sequence) {
-            this.dataSource[index].jobList.splice(key, 1);
-          }
-        });
-      }
+    removeStepTask(sequence, key) {
+      this.dataSource.forEach((item, index) => {
+        if (item.sequence === sequence) {
+          this.dataSource[index].jobList.splice(key, 1);
+        }
+      });
     },
   }));
 }

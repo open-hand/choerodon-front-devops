@@ -7,12 +7,12 @@ import {
 import {
   Droppable, Draggable, DragDropContext,
 } from 'react-beautiful-dnd';
-import { usePipelineStageEditStore } from '../stageEditBlock/stores';
-import AddTask from '../../../PipelineCreate/components/AddTask';
-import AddCDTask from '../../../PipelineCreate/components/AddCDTask';
+import { usePipelineStageEditStore } from '../../stores';
+import AddTask from '../../../AddTask';
+import AddCDTask from '../../../AddCDTask';
 import AddStage from './AddStage';
-import { usePipelineCreateStore } from '../../../PipelineCreate/stores';
-import ViewVariable from '../../../view-variables';
+import { usePipelineCreateStore } from '../../../../stores';
+import ViewVariable from '../../../../../view-variables';
 import EditItem from './EditItem';
 
 import './index.less';
@@ -27,7 +27,6 @@ export default observer((props) => {
     sequence,
     name,
     columnIndex,
-    edit,
     appServiceId,
     appServiceName,
     image,
@@ -56,11 +55,10 @@ export default observer((props) => {
     eidtStep,
     newJob,
     getStepData,
-    getStepData2,
     editJobLists,
   } = editBlockStore || stepStore;
 
-  const stageLength = edit ? getStepData2.length : getStepData.length;
+  const stageLength = getStepData.length;
 
   let PipelineCreateFormDataSet;
   let AppServiceOptionsDs;
@@ -75,7 +73,7 @@ export default observer((props) => {
     const res = await addStepDs.validate();
     if (res) {
       // const a = addStepDs.toData()[0];
-      addNewStep(firstIf ? -1 : columnIndex, addStepDs.toData()[0], edit);
+      addNewStep(firstIf ? -1 : columnIndex, addStepDs.toData()[0]);
       addStepDs.reset();
       return true;
     }
@@ -138,12 +136,11 @@ export default observer((props) => {
                             witchColumnJobIndex={witchColumnJobIndex}
                             columnIndex={columnIndex + 1}
                             sequence={sequence}
-                            edit={edit}
                             appServiceId={appServiceId}
                             appServiceName={appServiceName}
                             appServiceCode={appServiceCode}
-                            AppServiceOptionsDs={edit && AppServiceOptionsDs}
-                            PipelineCreateFormDataSet={edit && PipelineCreateFormDataSet}
+                            AppServiceOptionsDs={AppServiceOptionsDs}
+                            PipelineCreateFormDataSet={PipelineCreateFormDataSet}
                             jobDetail={item}
                             image={image}
                             openVariableModal={openVariableModal}
@@ -199,12 +196,12 @@ export default observer((props) => {
       title: `删除${name}阶段`,
       children: '确认删除此阶段吗？',
       key: Modal.key(),
-      onOk: () => removeStep(sequence, edit),
+      onOk: () => removeStep(sequence),
     });
   }
 
   function hanleStepCreateOk(data) {
-    newJob(sequence, data, edit);
+    newJob(sequence, data);
   }
 
   function openVariableModal() {
@@ -246,8 +243,8 @@ export default observer((props) => {
       ),
       children: type === 'CI' ? (
         <AddTask
-          PipelineCreateFormDataSet={edit && PipelineCreateFormDataSet}
-          AppServiceOptionsDs={edit && AppServiceOptionsDs}
+          PipelineCreateFormDataSet={PipelineCreateFormDataSet}
+          AppServiceOptionsDs={AppServiceOptionsDs}
           handleOk={hanleStepCreateOk}
           appServiceId={appServiceName}
           appServiceName={appServiceName}
@@ -261,8 +258,8 @@ export default observer((props) => {
           appServiceId={appServiceName}
           appServiceName={appServiceName}
           appServiceCode={appServiceCode}
-          pipelineStageMainSource={getStepData2}
-          PipelineCreateFormDataSet={edit && PipelineCreateFormDataSet}
+          pipelineStageMainSource={getStepData}
+          PipelineCreateFormDataSet={PipelineCreateFormDataSet}
           handleOk={hanleStepCreateOk}
           columnIndex={columnIndex + 1}
           witchColumnJobIndex={witchColumnJobIndex + 1}
