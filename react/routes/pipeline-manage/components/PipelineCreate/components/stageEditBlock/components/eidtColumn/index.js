@@ -10,7 +10,7 @@ import {
 import { usePipelineStageEditStore } from '../../stores';
 import AddTask from '../../../AddTask';
 import AddCDTask from '../../../AddCDTask';
-import AddStage from './AddStage';
+import AddStage from '../AddStage';
 import { usePipelineCreateStore } from '../../../../stores';
 import ViewVariable from '../../../../../view-variables';
 import EditItem from './EditItem';
