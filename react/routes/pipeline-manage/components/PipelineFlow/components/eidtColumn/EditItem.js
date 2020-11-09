@@ -80,8 +80,8 @@ const EditItem = (props) => {
       children: stageType === 'CI' ? (
         <AddTask
           jobDetail={jobDetail}
-          appServiceId={!edit && appServiceName}
-          appServiceName={!edit && appServiceName}
+          appServiceId={appServiceName}
+          appServiceName={appServiceName}
           handleOk={handleEditOk}
           PipelineCreateFormDataSet={edit && PipelineCreateFormDataSet}
           AppServiceOptionsDs={edit && AppServiceOptionsDs}
@@ -94,8 +94,8 @@ const EditItem = (props) => {
           random={Math.random()}
           jobDetail={jobDetail}
           pipelineStageMainSource={getStepData2}
-          appServiceId={!edit && appServiceName}
-          appServiceName={!edit && appServiceName}
+          appServiceId={appServiceName}
+          appServiceName={appServiceName}
           PipelineCreateFormDataSet={edit && PipelineCreateFormDataSet}
           handleOk={handleEditOk}
           columnIndex={columnIndex}
