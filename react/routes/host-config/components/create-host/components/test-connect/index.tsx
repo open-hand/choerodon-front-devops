@@ -71,13 +71,16 @@ const TestConnect: React.FC<any> = observer(({ handleTestConnection }): any => {
           break;
         case 'failed':
           content = [
-            <Tooltip title={record.get('hostCheckError') || ''}>
-              <Icon
-                type="highlight_off"
-                className={`${prefixCls}-test-text-icon`}
-              />
-            </Tooltip>,
+            <Icon
+              type="highlight_off"
+              className={`${prefixCls}-test-text-icon`}
+            />,
             <span>失败</span>,
+            record.get('hostCheckError') ? (
+              <Tooltip title={record.get('hostCheckError')}>
+                <Icon type="info" className={`${prefixCls}-test-failed-icon-host`} />
+              </Tooltip>
+            ) : null,
           ];
           break;
         case 'operating':
