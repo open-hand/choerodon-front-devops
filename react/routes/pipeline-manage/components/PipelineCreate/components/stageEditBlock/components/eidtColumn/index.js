@@ -290,7 +290,7 @@ export default observer((props) => {
     userSelect: 'none',
     // styles we need to apply on draggables
     ...draggableStyle,
-    cursor: 'all-scroll',
+    cursor: 'unset',
     background: type === 'CI' ? 'rgba(245, 246, 250, 1)' : 'rgba(245,248,250,1)',
   });
 
@@ -308,54 +308,64 @@ export default observer((props) => {
     ),
     <div
       className="c7n-piplineManage-edit-column"
-      ref={innerRef}
       {...dragProvided.draggableProps}
-      {...dragProvided.dragHandleProps}
       style={getItemStyle(
         snapshotinner.isDragging,
         dragProvided.draggableProps.style,
       )}
     >
-      <div className="c7n-piplineManage-edit-column-header">
-        <span>{name}</span>
-        <span className={`c7n-piplineManage-stage-type c7n-piplineManage-stage-type-${realType}`}>
-          {realType}
-        </span>
+      <div
+        ref={innerRef}
+        {...dragProvided.dragHandleProps}
+        style={{
+          cursor: 'all-scroll',
+        }}
+      >
         <div
-          className="c7n-piplineManage-edit-column-header-btnGroup"
+          className="c7n-piplineManage-edit-column-header"
         >
-          <Button
-            funcType="raised"
-            shape="circle"
-            size="small"
-            icon="mode_edit"
-            disabled={!appServiceId}
-            onClick={
+          <span>{name}</span>
+          <span className={`c7n-piplineManage-stage-type c7n-piplineManage-stage-type-${realType}`}>
+            {realType}
+          </span>
+          <div
+            className="c7n-piplineManage-edit-column-header-btnGroup"
+          >
+            <Button
+              funcType="raised"
+              shape="circle"
+              size="small"
+              icon="mode_edit"
+              disabled={!appServiceId}
+              onClick={
               () => openAddStageModal({ optType: 'edit', curType: type })
             }
-            className="c7n-piplineManage-edit-column-header-btnGroup-btn"
-          />
-          {stageLength > 1 && (
-          <Button
-            funcType="raised"
-            shape="circle"
-            size="small"
-            onClick={deleteStep}
-            icon="delete_forever"
-            disabled={!appServiceId}
-            className="c7n-piplineManage-edit-column-header-btnGroup-btn c7n-piplineManage-edit-column-header-btnGroup-btn-delete"
-          />
-          )}
+              className="c7n-piplineManage-edit-column-header-btnGroup-btn"
+            />
+            {stageLength > 1 && (
+            <Button
+              funcType="raised"
+              shape="circle"
+              size="small"
+              onClick={deleteStep}
+              icon="delete_forever"
+              disabled={!appServiceId}
+              className="c7n-piplineManage-edit-column-header-btnGroup-btn c7n-piplineManage-edit-column-header-btnGroup-btn-delete"
+            />
+            )}
+          </div>
         </div>
-      </div>
-      <div className="c7n-piplineManage-edit-column-stageType">
-        <span>任务列表</span>
-        {/* Todo 加上串并行逻辑后优化判断 */}
-        <span
-          className={`c7n-piplineManage-stage-type-task c7n-piplineManage-stage-type-task-${parallel || realType === 'CI' ? 'parallel' : 'serial'}`}
+        <div
+          className="c7n-piplineManage-edit-column-stageType"
         >
-          {parallel || realType === 'CI' ? '任务并行' : '任务串行'}
-        </span>
+          <span>任务列表</span>
+          {/* Todo 加上串并行逻辑后优化判断 */}
+          <span
+            className={`c7n-piplineManage-stage-type-task c7n-piplineManage-stage-type-task-${parallel || realType === 'CI' ? 'parallel' : 'serial'}`}
+          >
+            {parallel || realType === 'CI' ? '任务并行' : '任务串行'}
+          </span>
+        </div>
       </div>
       {renderStepTasks()}
       <Button
