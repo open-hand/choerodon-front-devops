@@ -263,13 +263,13 @@ export default (
       },
     },
     {
-      name: 'accountType',
+      name: 'authType',
       type: 'string',
       label: '账号配置',
       defaultValue: 'accountPassword',
     },
     {
-      name: 'userName',
+      name: 'username',
       type: 'string',
       label: '用户名',
       dynamicProps: {
@@ -282,7 +282,7 @@ export default (
       label: '密码',
       dynamicProps: {
         required: ({ record }) => record.get('type') === 'cdHost'
-          && record.get('accountType') === 'accountPassword' && record.get(addCDTaskDataSetMap.hostSource) === addCDTaskDataSetMap.customhost,
+          && record.get('authType') === 'accountPassword' && record.get(addCDTaskDataSetMap.hostSource) === addCDTaskDataSetMap.customhost,
       },
     },
     {
@@ -306,7 +306,7 @@ export default (
       name: 'workingPath',
       type: 'string',
       label: '工作目录',
-      defaultValue: '/temp',
+      defaultValue: './',
     },
     {
       name: 'pipelineTask',

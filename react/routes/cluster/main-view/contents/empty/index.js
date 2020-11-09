@@ -94,7 +94,7 @@ const EmptyShown = observer(() => {
       group: 1,
     }, {
       name: formatMessage({ id: `${intlPrefix}.modal.createByHost` }),
-      permissions: ['choerodon.code.project.deploy.cluster.cluster-management.ps.create'],
+      permissions: ['choerodon.code.project.deploy.cluster.cluster-management.ps.createByHost'],
       icon: 'playlist_add',
       handler: openCreateByHost,
       display: true,

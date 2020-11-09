@@ -4,14 +4,14 @@ import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
 import toUpper from 'lodash/toUpper';
 import { Action } from '@choerodon/boot';
-import { Icon, Modal } from 'choerodon-ui/pro';
+import { Icon, Tooltip } from 'choerodon-ui/pro';
 import ClusterItem from './ClusterItem';
 import { useClusterStore } from '../../../stores';
 import { useClusterMainStore } from '../../stores';
 
 import './index.less';
 
-function getName(name, search, prefixCls) {
+function getName(name, search, prefixCls, errorMes) {
   const index = toUpper(name).indexOf(toUpper(search));
   const beforeStr = name.substr(0, index);
   const currentStr = name.substr(index, search.length);
@@ -26,6 +26,13 @@ function getName(name, search, prefixCls) {
           {afterStr}
         </>
       ) : name}
+      {
+        errorMes && (
+        <Tooltip title={errorMes}>
+          <Icon type="info" style={{ color: '#f77a70', marginLeft: '8px', fontSize: '15px' }} />
+        </Tooltip>
+        )
+      }
     </span>
   );
 }
@@ -43,7 +50,8 @@ const TreeItem = observer(({ record, search }) => {
 
   const name = useMemo(() => {
     const itemName = record.get('name');
-    return getName(itemName, search, prefixCls);
+    const errorMes = record.get('errorMessage');
+    return getName(itemName, search, prefixCls, errorMes);
   }, [record, search]);
 
   function getIconItem(type) {

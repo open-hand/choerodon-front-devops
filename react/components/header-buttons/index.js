@@ -6,8 +6,7 @@ import flatten from 'lodash/flatten';
 import map from 'lodash/map';
 import { Permission, Action } from '@choerodon/boot';
 // import { Button, Tooltip } from 'choerodon-ui/pro';
-import { Button, Tooltip } from 'choerodon-ui';
-import { Divider } from 'choerodon-ui';
+import { Button, Tooltip, Divider } from 'choerodon-ui';
 
 import './index.less';
 
@@ -81,6 +80,7 @@ const HeaderButtons = ({ items, children, showClassName = true }) => {
 };
 
 HeaderButtons.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
   items: PropTypes.array,
 };
 

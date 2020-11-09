@@ -73,7 +73,6 @@ const DetailItem = (props) => {
     sonarScannerType,
     codeCoverage,
     apiTestTaskRecordVO, // api测试任务独有的
-    deployJobName, // api测试任务独有的
   } = props;
 
   const { gitlabProjectId, appServiceId } = getDetailData && getDetailData.ciCdPipelineVO;
@@ -325,21 +324,22 @@ const DetailItem = (props) => {
     const {
       successCount,
       failCount,
+      deployJobName,
     } = apiTestTaskRecordVO || {};
 
     return (
       <main>
         <div>
           <span>通过率:</span>
-          <span>{successCount && failCount ? calcValue(successCount, failCount) : '-'}</span>
+          <span>{(successCount || successCount === 0) ? calcValue(successCount, failCount) : '-'}</span>
         </div>
         <div>
           <span>成功数量:</span>
-          <span>{successCount || '-'}</span>
+          <span>{successCount === 0 ? '0' : successCount || '-'}</span>
         </div>
         <div>
           <span>失败数量:</span>
-          <span>{failCount || '-'}</span>
+          <span>{failCount === 0 ? '0' : failCount || '-'}</span>
         </div>
         <div>
           <span>关联部署任务:</span>

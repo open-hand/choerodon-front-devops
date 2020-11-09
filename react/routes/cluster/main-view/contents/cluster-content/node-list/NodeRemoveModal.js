@@ -40,6 +40,9 @@ const NodeRemove = observer(({
       color: 'dark',
     },
     onOk: handleSubmit,
+    okText: formatMessage({ id: 'delete' }),
+    title: formatMessage({ id: `${intlPrefix}.node.modal.canDelete` }),
+
     footer: (okbtn, cancelbtn) => (
       <>
         {cancelbtn}

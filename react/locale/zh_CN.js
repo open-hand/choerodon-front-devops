@@ -1358,6 +1358,7 @@ const cluster = {
   'c7ncd.cluster.node.type': '类型',
   'c7ncd.cluster.node.cpu': 'CPU分配',
   'c7ncd.cluster.node.memory': '内存分配',
+  'c7ncd.cluster.node.name.failed': '节点名称必须由小写字母，数字，”-“或”.“组成，并且必须以小写字母或数字开头和结尾。',
   'c7ncd.cluster.modal.create': '连接集群',
   'c7ncd.cluster.modal.createByHost': '新建集群',
   'c7ncd.cluster.modal.createByNodes': '添加节点',

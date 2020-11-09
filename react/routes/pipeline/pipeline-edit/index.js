@@ -1,15 +1,22 @@
+/* eslint-disable */
 import React, { Component, Fragment } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter, Prompt } from 'react-router-dom';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Icon, Form, Input, Select, Radio, Tooltip } from 'choerodon-ui';
+import {
+  Icon, Form, Input, Select, Radio, Tooltip,
+} from 'choerodon-ui';
 import { Button } from 'choerodon-ui/pro';
-import { Content, Header, Page, Choerodon } from '@choerodon/boot';
+import {
+  Content, Header, Page, Choerodon,
+} from '@choerodon/boot';
 import _ from 'lodash';
 import Sidebar from 'choerodon-ui/lib/modal/Sidebar';
 import StageCard from '../components/stageCard';
 import StageCreateModal from '../components/stageCreateModal';
-import { STAGE_FLOW_AUTO, STAGE_FLOW_MANUAL, TRIGGER_TYPE_AUTO, TRIGGER_TYPE_MANUAL } from '../components/Constants';
+import {
+  STAGE_FLOW_AUTO, STAGE_FLOW_MANUAL, TRIGGER_TYPE_AUTO, TRIGGER_TYPE_MANUAL,
+} from '../components/Constants';
 import InterceptMask from '../../../components/intercept-mask';
 import EmptyPage from '../components/emptyPage';
 
@@ -77,7 +84,9 @@ export default class PipelineEdit extends Component {
       },
       refreshTable,
     } = this.props;
-    const { objectVersionNumber, id, name, triggerType } = PipelineCreateStore.getPipeline;
+    const {
+      objectVersionNumber, id, name, triggerType,
+    } = PipelineCreateStore.getPipeline;
 
     validateFieldsAndScroll(async (err, { users }) => {
       if (!err) {
@@ -156,23 +165,27 @@ export default class PipelineEdit extends Component {
     const { PipelineCreateStore: { getStageList } } = this.props;
     if (getStageList.length === 1) {
       const { tempId, stageName } = getStageList[0] || {};
-      return <StageCard
-        head
-        allowDelete={false}
+      return (
+        <StageCard
+          head
+          allowDelete={false}
+          key={tempId}
+          stageId={tempId}
+          stageName={stageName}
+          clickAdd={this.openCreateForm}
+        />
+      );
+    }
+
+    return _.map(getStageList, ({ tempId, stageName }, stageIndex) => (
+      <StageCard
         key={tempId}
+        head={stageIndex === 0}
         stageId={tempId}
         stageName={stageName}
         clickAdd={this.openCreateForm}
-      />;
-    }
-
-    return _.map(getStageList, ({ tempId, stageName }, stageIndex) => (<StageCard
-      key={tempId}
-      head={stageIndex === 0}
-      stageId={tempId}
-      stageName={stageName}
-      clickAdd={this.openCreateForm}
-    />));
+      />
+    ));
   }
 
   loadMoreWrap = (e) => {
@@ -191,7 +204,7 @@ export default class PipelineEdit extends Component {
   };
 
   handleSearch = _.debounce((value) => {
-    const { 
+    const {
       AppState: {
         currentMenuType: { id: projectId },
       },
@@ -216,7 +229,9 @@ export default class PipelineEdit extends Component {
       form: { getFieldDecorator },
       PipelineCreateStore,
     } = this.props;
-    const { triggerType, showCreate, prevId, submitLoading, promptDisplay } = this.state;
+    const {
+      triggerType, showCreate, prevId, submitLoading, promptDisplay,
+    } = this.state;
     const {
       getLoading,
       getUser,
@@ -247,7 +262,7 @@ export default class PipelineEdit extends Component {
           <span className="c7n-option-span">{formatMessage({ id: 'loadMore' })}</span>
         </div>
       </Option>);
-    }     
+    }
 
     const initUser = _.map(getPipeline.pipelineUserRels, (item) => String(item));
 
@@ -269,7 +284,8 @@ export default class PipelineEdit extends Component {
             funcType="raised"
             onClick={this.onSubmit}
             loading={submitLoading}
-            disabled={getIsDisabled || !getCanSubmit}
+            disabled
+            // disabled={getIsDisabled || !getCanSubmit}
           >
             <FormattedMessage id="save" />
           </Button>,
@@ -284,80 +300,94 @@ export default class PipelineEdit extends Component {
           </Button>,
         ]}
       >
-        { _.isNull(getPipeline) ? <EmptyPage /> : <Fragment>
-          <Content className="c7n-pipeline-content">
-            <Form
-              layout="vertical"
-            >
-              <FormItem
-                className="c7n-select_512 c7ncd-formitem-bottom"
-                {...formItemLayout}
+        { _.isNull(getPipeline) ? <EmptyPage /> : (
+          <>
+            <Content className="c7n-pipeline-content">
+              <Form
+                layout="vertical"
               >
-                {getFieldDecorator('triggerType', {
-                  initialValue: getPipeline.triggerType,
-                })(
-                  <div>
-                    <span className="radio-label"><FormattedMessage id="pipeline.trigger" />:</span>
-                    <RadioGroup value={PipelineCreateStore.trigger} onChange={this.changeTriggerType}>
-                      <Radio value={STAGE_FLOW_AUTO} disabled={getPipeline.triggerType}>
-                        <FormattedMessage id="pipeline.trigger.auto" />
-                      </Radio>
-                      <Radio value={STAGE_FLOW_MANUAL} disabled={getPipeline.triggerType}>
-                        <FormattedMessage id="pipeline.trigger.manual" />
-                      </Radio>
-                    </RadioGroup>
+                <FormItem
+                  className="c7n-select_512 c7ncd-formitem-bottom"
+                  {...formItemLayout}
+                >
+                  {getFieldDecorator('triggerType', {
+                    initialValue: getPipeline.triggerType,
+                  })(
+                    <div>
+                      <span className="radio-label">
+                        <FormattedMessage id="pipeline.trigger" />
+                        :
+                      </span>
+                      <RadioGroup value={PipelineCreateStore.trigger} onChange={this.changeTriggerType}>
+                        <Radio value={STAGE_FLOW_AUTO} disabled={getPipeline.triggerType}>
+                          <FormattedMessage id="pipeline.trigger.auto" />
+                        </Radio>
+                        <Radio value={STAGE_FLOW_MANUAL} disabled={getPipeline.triggerType}>
+                          <FormattedMessage id="pipeline.trigger.manual" />
+                        </Radio>
+                      </RadioGroup>
+                    </div>,
+                  )}
+                </FormItem>
+                {showUserSelector && (
+                <FormItem
+                  className="c7n-select_512"
+                  {...formItemLayout}
+                >
+                  {getFieldDecorator('users', {
+                    rules: [{
+                      required: true,
+                      message: formatMessage({ id: 'required' }),
+                    }],
+                    initialValue: initUser,
+                  })(
+                    <Select
+                      filter
+                      filterOption={false}
+                      allowClear
+                      mode="multiple"
+                      label={formatMessage({ id: 'pipeline.trigger.member' })}
+                      loading={getLoading.user}
+                      getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                      onSearch={this.handleSearch}
+                      onChange={this.handleUserChange}
+                    >
+                      {user}
+                    </Select>,
+                  )}
+                </FormItem>
+                )}
+                <div className="c7ncd-pipeline-main">
+                  <div className="c7ncd-pipeline-scroll">
+                    {this.renderPipelineDom}
                   </div>
-                )}
-              </FormItem>
-              {showUserSelector && <FormItem
-                className="c7n-select_512"
-                {...formItemLayout}
-              >
-                {getFieldDecorator('users', {
-                  rules: [{
-                    required: true,
-                    message: formatMessage({ id: 'required' }),
-                  }],
-                  initialValue: initUser,
-                })(
-                  <Select
-                    filter
-                    filterOption={false}
-                    allowClear
-                    mode="multiple"
-                    label={formatMessage({ id: 'pipeline.trigger.member' })}
-                    loading={getLoading.user}
-                    getPopupContainer={(triggerNode) => triggerNode.parentNode}
-                    onSearch={this.handleSearch}
-                    onChange={this.handleUserChange}
-                  >
-                    {user}
-                  </Select>,
-                )}
-              </FormItem>}
-              <div className="c7ncd-pipeline-main">
-                <div className="c7ncd-pipeline-scroll">
-                  {this.renderPipelineDom}
                 </div>
-              </div>
-              {getIsDisabled && <div className="c7ncd-pipeline-error">
-                <Icon type="error" className="c7ncd-pipeline-error-icon" />
-                <span className="c7ncd-pipeline-error-msg">请检查任务类型是否正确！</span>
-              </div>}
-              {!getCanSubmit && <div className="c7ncd-pipeline-error">
-                <Icon type="error" className="c7ncd-pipeline-error-icon" />
-                <span className="c7ncd-pipeline-error-msg">{formatMessage({ id: 'pipeline.create.error-2' })}</span>
-              </div>}
-            </Form>
-            <InterceptMask visible={submitLoading || getDetailLoading} />
-          </Content>
-          {showCreate && <StageCreateModal
-            store={PipelineCreateStore}
-            prevId={prevId}
-            visible={showCreate}
-            onClose={this.closeCreateForm}
-          />}
-        </Fragment>}
-      </Sidebar>);
+                {getIsDisabled && (
+                <div className="c7ncd-pipeline-error">
+                  <Icon type="error" className="c7ncd-pipeline-error-icon" />
+                  <span className="c7ncd-pipeline-error-msg">请检查任务类型是否正确！</span>
+                </div>
+                )}
+                {!getCanSubmit && (
+                <div className="c7ncd-pipeline-error">
+                  <Icon type="error" className="c7ncd-pipeline-error-icon" />
+                  <span className="c7ncd-pipeline-error-msg">{formatMessage({ id: 'pipeline.create.error-2' })}</span>
+                </div>
+                )}
+              </Form>
+              <InterceptMask visible={submitLoading || getDetailLoading} />
+            </Content>
+            {showCreate && (
+            <StageCreateModal
+              store={PipelineCreateStore}
+              prevId={prevId}
+              visible={showCreate}
+              onClose={this.closeCreateForm}
+            />
+            )}
+          </>
+        )}
+      </Sidebar>
+    );
   }
 }

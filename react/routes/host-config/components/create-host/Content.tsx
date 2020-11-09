@@ -6,6 +6,7 @@ import {
 import pick from 'lodash/pick';
 import Tips from '@/components/new-tips';
 import HostConfigApis from '@/routes/host-config/apis';
+import YamlEditor from '@/components/yamlEditor';
 import { useCreateHostStore } from './stores';
 import JmeterGuide from './components/jmeter-guide';
 import TestConnect from './components/test-connect';
@@ -101,9 +102,22 @@ const CreateHost: React.FC<any> = observer((): any => {
         />
         <SelectBox name="authType" />
         <TextField name="username" style={{ marginTop: '-10px' }} />
-        {formDs && formDs.current && formDs.current.get('authType') === 'publickey' ? (
-          <TextField name="password" />
-        ) : <Password name="password" reveal={false} />}
+        {formDs && formDs.current && formDs.current.get('authType') === 'publickey' ? ([
+          <span className={`${prefixCls}-form-password`}>密钥</span>,
+          <YamlEditor
+            readOnly={false}
+            newLine
+            value={formDs.current.get('password')}
+            onValueChange={(valueYaml: any) => formDs.current?.set('password', valueYaml)}
+            modeChange={false}
+            showError={false}
+          />,
+          formDs.current?.getField('password')?.getValidationMessage() ? (
+            <span className={`${prefixCls}-form-password-error`}>
+              {formDs.current?.getField('password')?.getValidationMessage()}
+            </span>
+          ) : null,
+        ]) : <Password name="password" reveal={false} />}
         {formDs && formDs.current && formDs.current.get('type') === 'distribute_test' && ([
           <Tips
             title={formatMessage({ id: `${intlPrefix}.jmeter` })}

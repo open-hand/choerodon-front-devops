@@ -98,6 +98,7 @@ const NodeList = () => {
         contentStore={contentStore}
         afterOk={refresh}
         formatMessage={formatMessage}
+        intlPrefix={intlPrefix}
       />,
       okText: formatMessage({ id: `${intlPrefix}.node.modal.removeRole` }),
       footer: (okbtn, cancelbtn) => (
@@ -139,23 +140,23 @@ const NodeList = () => {
       return null;
     }
     const optsData = [];
-    if (enableDeleteNode) {
-      optsData.unshift({
-        service: [],
-        text: formatMessage({ id: `${intlPrefix}.node.action.removeNode` }),
-        action: () => handleRemoveNode(record),
-      });
-    }
+    // if (enableDeleteNode) {
+    //   optsData.unshift({
+    //     service: ['choerodon.code.project.deploy.cluster.cluster-management.ps.deleteNode'],
+    //     text: formatMessage({ id: `${intlPrefix}.node.action.removeNode` }),
+    //     action: () => handleRemoveNode(record),
+    //   });
+    // }
     if (enableDeleteEtcdRole) {
       optsData.unshift({
-        service: [],
+        service: ['choerodon.code.project.deploy.cluster.cluster-management.ps.deleteEtcdRole'],
         text: formatMessage({ id: `${intlPrefix}.node.action.removeRole.etcd` }),
         action: () => openRemoveRole(record, 'etcd'),
       });
     }
     if (enableDeleteMasterRole) {
       optsData.unshift({
-        service: [],
+        service: ['choerodon.code.project.deploy.cluster.cluster-management.ps.deleteMasterRole'],
         text: formatMessage({ id: `${intlPrefix}.node.action.removeRole.master` }),
         action: () => openRemoveRole(record, 'master'),
       });

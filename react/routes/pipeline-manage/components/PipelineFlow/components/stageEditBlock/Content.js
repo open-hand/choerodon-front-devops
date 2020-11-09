@@ -69,7 +69,7 @@ export default observer(() => {
       return dataSource.map((item, index) => {
         const nextStageType = dataSource[index + 1]?.type && dataSource[index + 1]?.type.toUpperCase();
         return (
-          <Draggable key={`dropStages-${item.id}`} draggableId={`dropStages-${item.id}`} index={index}>
+          <Draggable key={`dropStages-${item.sequence}`} draggableId={`dropStages-${item.sequence}`} index={index}>
             {
               (dragProvided, snapshotinner) => (
                 <EditColumn
@@ -113,7 +113,7 @@ export default observer(() => {
     const sourceType = getStepData2[source.index]?.type;
     const destType = getStepData2[destination.index]?.type;
     if (sourceType !== destType) {
-      message.error('CI阶段必须在CD阶段之后');
+      message.error('CI阶段必须置于CD阶段之前');
       return;
     }
     const arr = [...swap(getStepData2, source.index, destination.index)];

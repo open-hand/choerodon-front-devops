@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Fragment } from 'react';
 import {
   Form, TextField, TextArea, Select,
@@ -7,6 +8,23 @@ import { useFormStore } from './stores';
 import Tips from '../../../../../components/new-tips';
 
 import './index.less';
+
+function ClusterItem({ text, connect }) {
+  return (
+    <>
+      {text && (
+      <StatusDot
+        active
+        synchronize
+        size="inner"
+        connect={connect}
+      />
+      )}
+      {' '}
+      {text}
+    </>
+  );
+}
 
 export default function EnvCreateForm({ intlPrefix, modal, refresh }) {
   const {

@@ -5,9 +5,9 @@ import {
   Page, Content, Header, Permission, Breadcrumb, Choerodon,
 } from '@choerodon/boot';
 import {
-  Table, Modal, Select, Icon,
+  Table, Modal, Select, Icon, Tooltip,
 } from 'choerodon-ui/pro';
-import { Button, Tooltip } from 'choerodon-ui';
+import { Button } from 'choerodon-ui';
 import { FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
@@ -76,6 +76,7 @@ const Deployment = withRouter(observer((props) => {
         refresh={deployAfter}
         intlPrefix={intlPrefix}
         prefixCls={prefixCls}
+        hasHostDeploy
       />,
       afterClose: () => {
         deployStore.setCertificates([]);
@@ -271,13 +272,24 @@ const Deployment = withRouter(observer((props) => {
     const deployObjectName = record.get('deployObjectName');
     const deployObjectVersion = record.get('deployObjectVersion');
     const iconMap = {
-      app,
-      jar,
-      image,
+      app: {
+        img: app,
+        text: '应用服务',
+      },
+      jar: {
+        img: jar,
+        text: 'jar包',
+      },
+      image: {
+        img: image,
+        text: 'Docker镜像',
+      },
     };
     return [
       <p className="c7ncd-deploy-content-deployObjectP">
-        <img src={iconMap[deployObjectType]} alt="" />
+        <Tooltip title={iconMap[deployObjectType]?.text}>
+          <img src={iconMap[deployObjectType]?.img} alt="" />
+        </Tooltip>
         <span className="c7ncd-deploy-content-deployObjectName">
           {deployObjectName}
         </span>

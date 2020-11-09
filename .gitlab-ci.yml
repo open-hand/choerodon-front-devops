@@ -15,5 +15,6 @@ build front:
   only:
     - tags
     - master
-    - release
-    - hotfix
+    - /^.*hotfix.*$/
+    - /^.*release.*$/
+

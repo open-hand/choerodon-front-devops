@@ -28,6 +28,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       intlPrefix,
       deployStore,
       envId,
+      hasHostDeploy,
     } = props;
 
     const deployUseStore = useStore();
@@ -58,6 +59,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       domainDs,
       organizationId,
       deployUseStore,
+      hasHostDeploy,
     })), [projectId]);
 
     useEffect(() => {

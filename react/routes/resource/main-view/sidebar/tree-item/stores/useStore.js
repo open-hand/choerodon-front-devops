@@ -14,5 +14,9 @@ export default function useStore() {
     removeService(projectId, envId, appServiceIds) {
       return axios.delete(`/devops/v1/projects/${projectId}/env/app_services?env_id=${envId}&app_service_id=${appServiceIds}`);
     },
+
+    deleteCustom(projectId, resourceId) {
+      return axios.delete(`/devops/v1/projects/${projectId}/customize_resource?resource_id=${resourceId}`);
+    },
   }));
 }

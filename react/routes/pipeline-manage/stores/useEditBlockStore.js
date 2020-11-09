@@ -1,5 +1,6 @@
 import { useLocalStore } from 'mobx-react-lite';
 import { axios } from '@choerodon/boot';
+import map from 'lodash/map';
 
 export default function useStore(mainStore) {
   return useLocalStore(() => ({
@@ -198,7 +199,16 @@ export default function useStore(mainStore) {
         });
       }
     },
-    editJobLists(sequence, jobList) {
+    editJobLists(sequence, type, jobList) {
+      if (type === 'CD') {
+        const tempArr = map(jobList, (item, index) => {
+          // eslint-disable-next-line no-param-reassign
+          item.sequence = index;
+          return item;
+        });
+        this.dataSource2[sequence].jobList = [...tempArr];
+        return;
+      }
       this.dataSource2[sequence].jobList = [...jobList];
     },
     removeStepTask(sequence, key, edit) {

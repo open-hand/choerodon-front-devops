@@ -103,7 +103,7 @@ export default observer((props) => {
       return;
     }
     const arr = [...swap(jobList, source.index, destination.index)];
-    editJobLists(sequence, arr);
+    editJobLists(sequence, type, arr);
   }
 
   const getListStyle = (isDraggingOver) => ({
@@ -294,6 +294,7 @@ export default observer((props) => {
       funcType="raised"
       icon="add"
       shape="circle"
+      disabled={!appServiceId}
       size="small"
       onClick={() => openAddStageModal({ optType: 'create', curType: type, firstIf: true })}
     />
@@ -321,6 +322,7 @@ export default observer((props) => {
             shape="circle"
             size="small"
             icon="mode_edit"
+            disabled={!appServiceId}
             onClick={
               () => openAddStageModal({ optType: 'edit', curType: type })
             }
@@ -333,6 +335,7 @@ export default observer((props) => {
             size="small"
             onClick={deleteStep}
             icon="delete_forever"
+            disabled={!appServiceId}
             className="c7n-piplineManage-edit-column-header-btnGroup-btn c7n-piplineManage-edit-column-header-btnGroup-btn-delete"
           />
           )}
@@ -354,7 +357,7 @@ export default observer((props) => {
         type="primary"
         onClick={openNewTaskModal}
         style={{ marginTop: '10px' }}
-        disabled={PipelineCreateFormDataSet && !PipelineCreateFormDataSet.current.get('appServiceId')}
+        disabled={PipelineCreateFormDataSet && !appServiceId}
       >
         添加任务
       </Button>
@@ -363,6 +366,7 @@ export default observer((props) => {
         icon="add"
         shape="circle"
         size="small"
+        disabled={!appServiceId}
         className="c7n-piplineManage-edit-column-addBtn"
         onClick={() => openAddStageModal({ optType: 'create', curType: type })}
       />

@@ -81,8 +81,8 @@ export default observer(() => {
     + '# java -jar 后台运行参数会自动添加 不需要在重复添加\n'
     + '# 其余参数可参考可根据需要添加\n'
     + 'java -jar ${jar}\n'
-    + '# 默认工作目录，/temp，jar包下载存放目录为：/temp/jar/xxx.jar 日志存放目录为：/temp/log/xxx.log\n'
-    + '# 填写工作目录，jar包下载存放目录为：工作目录/jar/xxx.jar 日志存放目录为：工作目录/log/xxx.log\n'
+    + '# 默认工作目录，当前工作目录(./)，jar包下载存放目录为：./temp-jar/xxx.jar 日志存放目录为：./temp-log/xxx.log\n'
+    + '# 填写工作目录，jar包下载存放目录为：工作目录/temp-jar/xxx.jar 日志存放目录为：工作目录/temp-jar/xxx.log\n'
     + '# 请确保用户有该目录操作权限');
   const [testStatus, setTestStatus] = useState('');
   const [accountKeyValue, setAccountKeyValue] = useState('');
@@ -117,10 +117,9 @@ export default observer(() => {
         [addCDTaskDataSetMap.host]: ds[addCDTaskDataSetMap.host],
         hostIp: ds.hostIp,
         hostPort: ds.hostPort,
-        accountType: ds.accountType,
-        userName: ds.userName,
-        password: ds.password,
-        accountKey: accountKeyValue && Base64.encode(accountKeyValue),
+        authType: ds.authType,
+        username: ds.username,
+        password: ds.authType === 'accountPassword' ? ds.password : (accountKeyValue && Base64.encode(accountKeyValue)),
       };
       const currentObj = {
         deploySource: ds.deploySource,
@@ -236,8 +235,8 @@ export default observer(() => {
         if (!extra[addCDTaskDataSetMap.hostSource]) {
           extra[addCDTaskDataSetMap.hostSource] = addCDTaskDataSetMap.customhost;
         }
-        if (extra?.accountKey) {
-          setAccountKeyValue(Base64.decode(extra.accountKey));
+        if (extra?.authType === 'accountKey') {
+          setAccountKeyValue(Base64.decode(extra.password));
         }
         const { hostDeployType } = metadata;
         if (hostDeployType === 'customize') {
@@ -353,9 +352,9 @@ export default observer(() => {
     const {
       hostIp,
       hostPort,
-      userName,
+      username,
       password,
-      accountType,
+      authType,
       [addCDTaskDataSetMap.host]: host,
     } = ADDCDTaskDataSet.toData()[0];
     axios
@@ -367,10 +366,9 @@ export default observer(() => {
         {
           hostIp,
           hostPort,
-          userName,
-          password,
-          accountType,
-          accountKey: accountKeyValue && Base64.encode(accountKeyValue),
+          username,
+          password: authType === 'accountPassword' ? password : (accountKeyValue && Base64.encode(accountKeyValue)),
+          authType,
         },
       )
       .then((res) => {
@@ -482,12 +480,12 @@ export default observer(() => {
     return [
       <TextField newLine colSpan={1} name="hostIp" />,
       <TextField colSpan={1} name="hostPort" />,
-      <SelectBox colSpan={1} name="accountType" className="addcdTask-mode">
+      <SelectBox colSpan={1} name="authType" className="addcdTask-mode">
         <Option value="accountPassword">用户名与密码</Option>
         <Option value="accountKey">用户名与密钥</Option>
       </SelectBox>,
-      <TextField colSpan={1} newLine name="userName" />,
-        ADDCDTaskDataSet?.current?.get('accountType')
+      <TextField colSpan={1} newLine name="username" />,
+        ADDCDTaskDataSet?.current?.get('authType')
         === 'accountPassword' ? (
           <Password colSpan={1} name="password" />
           ) : (
@@ -622,12 +620,10 @@ export default observer(() => {
                 helpText={(
                   <>
                     <p style={{ margin: 0 }}>
-                      默认工作目录为：/temp，而默认的jar包下载存放目录为：/temp/jar/xxx.jar，
-                      默认日志存放目录为：/temp/log/xxx.log
+                      默认工作目录，当前工作目录(./)，jar包下载存放目录为：./temp-jar/xxx.jar 日志存放目录为：./temp-log/xxx.log
                     </p>
                     <p style={{ margin: 0 }}>
-                      若此处填写了自定义工作目录,即表示,
-                      jar包下载存放目录为:工作目录/jar/xxx.jar 日志存放目录为:工作目录/log/xxx.log
+                      填写工作目录，jar包下载存放目录为：工作目录/temp-jar/xxx.jar 日志存放目录为：工作目录/temp-jar/xxx.log
                     </p>
                   </>
                 )}
@@ -709,7 +705,7 @@ export default observer(() => {
                 ) === addCDTaskDataSetMap.customhost
                   ? (!ADDCDTaskDataSet.current.get('hostIp')
                 || !ADDCDTaskDataSet.current.get('hostPort')
-                || !ADDCDTaskDataSet.current.get('userName')) : !ADDCDTaskDataSet.current.get(addCDTaskDataSetMap.host)
+                || !ADDCDTaskDataSet.current.get('username')) : !ADDCDTaskDataSet.current.get(addCDTaskDataSetMap.host)
               }
               onClick={handleTestConnect}
               style={{ marginRight: 20 }}
@@ -940,11 +936,11 @@ export default observer(() => {
                   ),
               triggerType: 'refs',
               deployType: 'create',
-              accountType: 'accountPassword',
+              authType: 'accountPassword',
               hostDeployType: 'image',
               deploySource: 'pipelineDeploy',
               [addCDTaskDataSetMap.hostSource]: addCDTaskDataSetMap.alreadyhost,
-              workingPath: '/temp',
+              workingPath: './',
               name: ADDCDTaskDataSet.current.get('name') || undefined,
             },
           ])}

@@ -1,8 +1,10 @@
+/* eslint-disable */
 import React, { useEffect, useState, Fragment } from 'react';
 import _ from 'lodash';
 import { withRouter } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { FormattedMessage } from 'react-intl';
+import { Icon } from 'choerodon-ui';
 import { Button, Select, Table, Spin, Modal } from 'choerodon-ui/pro';
 import { Permission, Content, Header, Page, Action, Breadcrumb, Choerodon } from '@choerodon/boot';
 import { usePiplineStore } from './stores';
@@ -167,8 +169,8 @@ const PiplelineTable = withRouter(observer((props) => {
    * 跳转到创建页面
    */
   function showCreate() {
-    pipelineCreateStore.loadUser(projectId);
-    pipelineCreateStore.setCreateVisible(true);
+    // pipelineCreateStore.loadUser(projectId);
+    // pipelineCreateStore.setCreateVisible(true);
   }
 
   /** ************* 启用、停用 **************** */
@@ -218,11 +220,11 @@ const PiplelineTable = withRouter(observer((props) => {
         text: formatMessage({ id: 'delete' }),
         action: deletePipeline.bind(this, id, itemName),
       },
-      record: {
-        service: ['choerodon.code.project.deploy.app-deployment.pipeline.ps.record'],
-        text: formatMessage({ id: 'pipeline.all.record' }),
-        action: gotoRecord.bind(this, id, itemName),
-      },
+      // record: {
+      //   service: ['choerodon.code.project.deploy.app-deployment.pipeline.ps.record'],
+      //   text: formatMessage({ id: 'pipeline.all.record' }),
+      //   action: gotoRecord.bind(this, id, itemName),
+      // },
     };
 
     let actionItem = _.keys(action);
@@ -335,6 +337,7 @@ const PiplelineTable = withRouter(observer((props) => {
           <Button
             funcType="flat"
             icon="playlist_add"
+            disabled
             onClick={showCreate}
           >
             <FormattedMessage id="pipeline.header.create" />
@@ -347,6 +350,17 @@ const PiplelineTable = withRouter(observer((props) => {
           <FormattedMessage id="refresh" />
         </Button>
       </Header>
+      <div className="c7ncd-tips">
+        <p>
+          <Icon style={{ position: 'relative', bottom: '2px' }} type="warning" />
+          注意：
+        </p>
+        <ul>
+          <li>由于CICD阶段已合并为【应用流水线】，因此【部署-流水线】页面将在近期移除。</li>
+          <li>目前此页面不再支持创建与修改，同时流水线对应的执行记录也将不再保留；但不会影响此页面流水线的正常触发与执行。</li>
+          <li>请务必尽快将下方的流水线维护至【开发-应用流水线】页面，然后将此页面的流水线停用并删除。</li>
+        </ul>
+      </div>
       <Breadcrumb />
       <Content className={`${prefixCls}-content`}>
         <Table
