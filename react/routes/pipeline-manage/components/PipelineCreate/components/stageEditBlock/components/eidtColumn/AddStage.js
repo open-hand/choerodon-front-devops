@@ -10,7 +10,7 @@ import {
 } from 'choerodon-ui/pro';
 import { axios } from '@choerodon/master';
 import { forEach } from 'lodash';
-import Tips from '../../../../../../../../components/new-tips';
+import Tips from '@/components/new-tips';
 
 const { Option } = Select;
 

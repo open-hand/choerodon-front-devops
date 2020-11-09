@@ -218,6 +218,39 @@ export default observer((props) => {
     });
   }
 
+  const renderNewTaskModalChildren = () => {
+    let modalChildren;
+    if (type === 'CI') {
+      modalChildren = (
+        <AddTask
+          PipelineCreateFormDataSet={PipelineCreateFormDataSet}
+          AppServiceOptionsDs={AppServiceOptionsDs}
+          handleOk={hanleStepCreateOk}
+          appServiceId={appServiceName}
+          appServiceName={appServiceName}
+          image={image}
+          columnIndex={columnIndex + 1}
+          witchColumnJobIndex={witchColumnJobIndex + 1}
+        />
+      );
+    } else {
+      modalChildren = (
+        <AddCDTask
+          random={Math.random()}
+          appServiceId={appServiceName}
+          appServiceName={appServiceName}
+          appServiceCode={appServiceCode}
+          pipelineStageMainSource={getStepData}
+          PipelineCreateFormDataSet={PipelineCreateFormDataSet}
+          handleOk={hanleStepCreateOk}
+          columnIndex={columnIndex + 1}
+          witchColumnJobIndex={witchColumnJobIndex + 1}
+        />
+      );
+    }
+    return modalChildren;
+  };
+
   function openNewTaskModal() {
     Modal.open({
       key: Modal.key(),
@@ -241,30 +274,7 @@ export default observer((props) => {
           }
         </div>
       ),
-      children: type === 'CI' ? (
-        <AddTask
-          PipelineCreateFormDataSet={PipelineCreateFormDataSet}
-          AppServiceOptionsDs={AppServiceOptionsDs}
-          handleOk={hanleStepCreateOk}
-          appServiceId={appServiceName}
-          appServiceName={appServiceName}
-          image={image}
-          columnIndex={columnIndex + 1}
-          witchColumnJobIndex={witchColumnJobIndex + 1}
-        />
-      ) : (
-        <AddCDTask
-          random={Math.random()}
-          appServiceId={appServiceName}
-          appServiceName={appServiceName}
-          appServiceCode={appServiceCode}
-          pipelineStageMainSource={getStepData}
-          PipelineCreateFormDataSet={PipelineCreateFormDataSet}
-          handleOk={hanleStepCreateOk}
-          columnIndex={columnIndex + 1}
-          witchColumnJobIndex={witchColumnJobIndex + 1}
-        />
-      ),
+      children: renderNewTaskModalChildren(),
       style: {
         width: '740px',
       },
