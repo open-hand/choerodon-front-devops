@@ -3,13 +3,9 @@ import { observer } from 'mobx-react-lite';
 import {
   Form,
   Select,
-  SelectBox,
   TextField,
   Tooltip,
-  Icon,
 } from 'choerodon-ui/pro';
-import { axios } from '@choerodon/master';
-import { forEach } from 'lodash';
 import Tips from '@/components/new-tips';
 
 const { Option } = Select;
@@ -28,7 +24,6 @@ export default observer(
     useEffect(() => {
       const type = addStepDs?.current?.get('type');
       addStepDs.current.set('parallel', type === 'CI' ? 1 : 0);
-      handleMore();
     }, [addStepDs?.current?.get('type')]);
 
     const renderer = ({ text }) => text;
@@ -58,46 +53,6 @@ export default observer(
       }
       return renderer({ text });
     };
-
-    async function handleMore(e, realName) {
-      e && e.stopPropagation();
-      const pageSize = !e
-        ? addStepDs.current.get('pageSize')
-        : addStepDs.current.get('pageSize') + 20;
-      const url = `/devops/v1/projects/${projectId}/users/list_users?page=0&size=${pageSize}`;
-      const cdAuditsUserIds = [];
-      forEach(addStepDs?.current?.get('cdAuditUserIds'), (obj) => {
-        if (typeof obj === 'string') {
-          cdAuditsUserIds.push(obj);
-        } else if (typeof obj === 'object') {
-          cdAuditsUserIds.push(obj?.id);
-        }
-      });
-      const res = await axios.post(url, {
-        param: [],
-        searchParam: {
-          realName: realName || '',
-        },
-        ids: cdAuditsUserIds || [],
-      });
-      if (res.content.length % 20 === 0 && res.content.length !== 0) {
-        res.content.push({
-          realName: '加载更多',
-          id: 'more',
-        });
-      }
-      addStepDs.current.set('pageSize', pageSize);
-      if (realName) {
-        // eslint-disable-next-line no-param-reassign
-        addStepDs.getField('cdAuditUserIds').props.lookup = [
-          ...res.content,
-          ...addStepDs.getField('cdAuditUserIds').props.lookup,
-        ];
-      } else {
-        // eslint-disable-next-line no-param-reassign
-        addStepDs.getField('cdAuditUserIds').props.lookup = res.content;
-      }
-    }
 
     // eslint-disable-next-line consistent-return
     function hanldeTypeDisabled(record) {
