@@ -1456,6 +1456,18 @@ const cluster = {
   'c7ncd.cluster.nodesCreate.account.password': '用户名与密码',
   'c7ncd.cluster.nodesCreate.account.token': '用户名与密钥',
   'c7ncd.cluster.nodesCreate.token': '密钥',
+  'c7ncd.cluster.env.manage': '环境管理',
+  'c7ncd.cluster.env.manage.detail': '环境名称/编码',
+  'c7ncd.cluster.env.manage.project': '所属项目',
+  'c7ncd.cluster.env.manage.cpu': 'CPU配额',
+  'c7ncd.cluster.env.manage.stack': '内存配额',
+  'c7ncd.cluster.env.manage.resourceQuota': '资源配额',
+  'c7ncd.cluster.env.manage.resourceQuota.title': '资源配额管理',
+  'c7ncd.cluster.env.manage.resourceQuota.enabled': '是否启用资源配额',
+  'c7ncd.cluster.env.manage.resourceQuota.CPULimit': 'CPU限制',
+  'c7ncd.cluster.env.manage.resourceQuota.CPURquest': 'CPU请求',
+  'c7ncd.cluster.env.manage.resourceQuota.memoryLimit': '内存限制',
+  'c7ncd.cluster.env.manage.resourceQuota.memoryRequest': '内存请求',
 };
 
 const zhCN = {

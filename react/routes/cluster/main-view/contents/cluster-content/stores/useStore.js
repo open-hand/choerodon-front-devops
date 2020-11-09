@@ -61,6 +61,7 @@ export default function useStore({ NODE_TAB }) {
       return this.polarisLoading;
     },
 
+    // eslint-disable-next-line consistent-return
     async loadGrafanaUrl(projectId, clusterId) {
       try {
         const res = await axios.get(`/devops/v1/projects/${projectId}/cluster_resource/grafana_url?cluster_id=${clusterId}&type=cluster`);
