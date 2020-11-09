@@ -35,9 +35,9 @@ export default observer((props) => {
   const [rightLineDom, setRightLineDom] = useState([]);
 
   const {
-    getStepData,
     loadData,
     getLoading,
+    getViewData,
   } = editBlockStore || {};
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export default observer((props) => {
   useEffect(() => {
     const leftList = [];
     const rightList = [];
-    forEach(getStepData, ({ jobList }, stageIndex) => {
+    forEach(getViewData, ({ jobList }, stageIndex) => {
       forEach(jobList, (data, index) => {
         const leftItem = (
           <div
@@ -72,7 +72,7 @@ export default observer((props) => {
     });
     setLeftLineDom(leftList);
     setRightLineDom(rightList);
-  }, [getLoading, getStepData]);
+  }, [getLoading, getViewData]);
 
   function getJobTask({
     jobType: type, metadata, iamUserDTOS, jobTriggerValue, triggerValue, envName, countersigned,
@@ -211,7 +211,7 @@ export default observer((props) => {
           <span className="c7ncd-pipeline-detail-title-appService">{appServiceName ? ` (${appServiceName}) ` : ''}</span>
         </div>
         <div className="c7ncd-pipeline-detail-content">
-          {map(getStepData, ({
+          {map(getViewData, ({
             id: stageId, name: stageName, jobList, type: stageType = 'CI', parallel, triggerType = 'auto',
           }, stageIndex) => (
             <div className="c7ncd-pipeline-detail-stage" key={`${stageId}-${stageIndex}`}>
@@ -255,7 +255,7 @@ export default observer((props) => {
                       jobType, metadata, iamUserDTOS, jobTriggerValue, triggerValue, envName, countersigned,
                     })}
                   </div>
-                  {index && stageIndex !== getStepData.length - 1 && rightLineDom[stageIndex] ? rightLineDom[stageIndex][index] : null}
+                  {index && stageIndex !== getViewData.length - 1 && rightLineDom[stageIndex] ? rightLineDom[stageIndex][index] : null}
                 </div>
               ))}
             </div>

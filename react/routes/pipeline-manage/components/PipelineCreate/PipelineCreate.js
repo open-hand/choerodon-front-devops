@@ -9,7 +9,7 @@ import { message, Icon, Tooltip } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { usePipelineCreateStore } from './stores';
 import Tips from '../../../../components/new-tips';
-import StageEditBlock from '../PipelineFlow/components/stageEditBlock';
+import StageEditBlock from './components/stageEditBlock';
 import './pipelineCreate.less';
 
 const { Option } = Select;
@@ -66,8 +66,8 @@ const PipelineCreate = observer(() => {
         ...dataSource,
         ...origin,
         image: origin.selectImage === '1' ? origin.image : null,
-        devopsCiStageVOS: editBlockStore.getStepData2.filter((s) => s.type === 'CI'),
-        devopsCdStageVOS: editBlockStore.getStepData2.filter((s) => s.type === 'CD'),
+        devopsCiStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CI'),
+        devopsCdStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CD'),
       };
       if (!data.bbcl) {
         delete data.versionName;
@@ -100,13 +100,7 @@ const PipelineCreate = observer(() => {
     return false;
   };
 
-  const handelCancel = () => {
-    refreshTree();
-  };
-
   modal.handleOk(handleCreate);
-
-  modal.handleCancel(handelCancel);
 
   const handleChangeSelectImage = (data) => {
     if (data === createUseStore.getDefaultImage) {

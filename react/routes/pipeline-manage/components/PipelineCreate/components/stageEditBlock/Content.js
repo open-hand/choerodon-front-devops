@@ -5,9 +5,8 @@ import { message } from 'choerodon-ui';
 import {
   Droppable, Draggable, DragDropContext,
 } from 'react-beautiful-dnd';
-import EditColumn from '../eidtColumn';
+import EditColumn from './components/eidtColumn';
 import { usePipelineStageEditStore } from './stores';
-import Loading from '../../../../../../components/loading';
 
 const defaultData = [
   {
@@ -29,11 +28,8 @@ const defaultData = [
 
 export default observer(() => {
   const {
-    projectId,
     pipelineId,
     editBlockStore,
-    stepStore,
-    edit,
     appServiceId,
     appServiceName,
     appServiceCode,
@@ -45,26 +41,26 @@ export default observer(() => {
   const {
     setStepData,
     getStepData,
-    getStepData2,
-    getLoading,
     editStepLists,
-  } = editBlockStore || stepStore;
+  } = editBlockStore;
 
   useEffect(() => {
     let stageList = [];
+    if (propsDataSource) {
+      stageList = [...propsDataSource.stageList];
+      setStepData(stageList);
+      return;
+    }
     if (appServiceId && appServiceType === 'test') {
       stageList = [...defaultData.slice(0, 1)];
     } else {
       stageList = [...defaultData];
     }
-    if (propsDataSource) {
-      stageList = [...propsDataSource.stageList];
-    }
-    setStepData(stageList, edit);
-  }, [appServiceId]);
+    setStepData(stageList);
+  }, [appServiceId, appServiceType]);
 
   function renderColumn() {
-    const dataSource = edit ? getStepData2 : getStepData;
+    const dataSource = getStepData;
     if (dataSource && dataSource.length > 0) {
       return dataSource.map((item, index) => {
         const nextStageType = dataSource[index + 1]?.type && dataSource[index + 1]?.type.toUpperCase();
@@ -83,7 +79,6 @@ export default observer(() => {
                   isLast={String(index) === String(dataSource.length - 1)}
                   isFirst={index === 0}
                   nextStageType={nextStageType}
-                  edit={edit}
                   pipelineId={pipelineId}
                   appServiceId={appServiceId}
                   appServiceName={appServiceName}
@@ -110,13 +105,13 @@ export default observer(() => {
     if (!destination) {
       return;
     }
-    const sourceType = getStepData2[source.index]?.type;
-    const destType = getStepData2[destination.index]?.type;
+    const sourceType = getStepData[source.index]?.type;
+    const destType = getStepData[destination.index]?.type;
     if (sourceType !== destType) {
       message.error('CI阶段必须置于CD阶段之前');
       return;
     }
-    const arr = [...swap(getStepData2, source.index, destination.index)];
+    const arr = [...swap(getStepData, source.index, destination.index)];
     arr.map((item, index) => {
       // eslint-disable-next-line no-param-reassign
       item.sequence = index;
@@ -133,11 +128,10 @@ export default observer(() => {
   });
 
   function renderBlock() {
-    if (edit) {
-      return (
-        <DragDropContext onDragEnd={onColomnDragEnd}>
-          <Droppable droppableId="dropStages" direction="horizontal">
-            {
+    return (
+      <DragDropContext onDragEnd={onColomnDragEnd}>
+        <Droppable droppableId="dropStages" direction="horizontal">
+          {
             (provided, snapshot) => (
               <div
                 className="c7n-piplineManage-edit"
@@ -150,16 +144,8 @@ export default observer(() => {
               </div>
             )
           }
-          </Droppable>
-        </DragDropContext>
-      );
-    }
-    return (
-      !getLoading && !edit ? (
-        <div className="c7n-piplineManage-edit">
-          {renderColumn()}
-        </div>
-      ) : <Loading display={getLoading} />
+        </Droppable>
+      </DragDropContext>
     );
   }
 
