@@ -80,6 +80,8 @@ const EditItem = (props) => {
         <AddTask
           jobDetail={jobDetail}
           handleOk={handleEditOk}
+          appServiceId={appServiceName}
+          appServiceName={appServiceName}
           PipelineCreateFormDataSet={PipelineCreateFormDataSet}
           AppServiceOptionsDs={AppServiceOptionsDs}
           image={image}
@@ -90,6 +92,8 @@ const EditItem = (props) => {
         <AddCDTask
           random={Math.random()}
           jobDetail={jobDetail}
+          appServiceId={appServiceName}
+          appServiceName={appServiceName}
           pipelineStageMainSource={getStepData}
           PipelineCreateFormDataSet={PipelineCreateFormDataSet}
           handleOk={handleEditOk}
