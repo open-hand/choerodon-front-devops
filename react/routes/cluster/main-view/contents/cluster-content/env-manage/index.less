@@ -1,0 +1,47 @@
+.c7ncd-cluster-envQuota {
+  &-suffix {
+    width: 18px;
+    height: 20px;
+    font-size: 13px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.54);
+    line-height: 20px;
+  }
+  &-modal {
+    .c7n-pro-modal-body {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+  &-enabled {
+    margin-top: 10px;
+  }
+  &-form {
+    padding: 0 24px;
+    .c7n-pro-input-suffix {
+      width: auto;
+      padding-right: 4px;
+    }
+    & + & {
+      border-top: 1px solid #e0e0e0;
+    }
+    &:first-of-type {
+      position: relative;
+      > i {
+        position: absolute;
+        top: 0;
+        left: 135px;
+      }
+      .c7n-pro-select-box {
+        .c7n-pro-radio-wrapper:nth-of-type(2) {
+          margin-left: 50px;
+        }
+      }
+    }
+    &:not(:first-of-type) {
+      padding-top: 15px;
+      padding-bottom: 3px;
+    }
+  }
+}
