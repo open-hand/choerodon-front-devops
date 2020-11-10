@@ -1,5 +1,6 @@
 import find from 'lodash/find';
 import omit from 'lodash/omit';
+import JSONbig from 'json-bigint';
 
 function formatData(data) {
   const res = omit(data, ['__id', '__status']);
@@ -106,7 +107,7 @@ export default (({ intlPrefix, formatMessage, projectId, appServiceId, shareId }
           data: params,
           transformResponse(data) {
             try {
-              const array = JSON.parse(data);
+              const array = JSONbig.parse(data);
               if (array.length > 1) {
                 const obj = {
                   id: 'all',
