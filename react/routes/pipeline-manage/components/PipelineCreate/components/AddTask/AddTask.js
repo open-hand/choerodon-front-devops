@@ -163,6 +163,12 @@ const AddTask = observer(() => {
           let zpk;
           let jarZpk;
           config && config.forEach((c, cIndex) => {
+            if (c.repos) {
+              c.repo = {
+                privateRepo: c.repos.filter(i => i.private).map(i => {i.privateIf = i.private;return i}),
+                publicRepo: c.repos.filter(i => !i.private).map(i => {i.privateIf = i.private;return i})
+              };
+            }
             if (cIndex === 0) {
               c.checked = true;
             } else {
@@ -1095,8 +1101,8 @@ const AddTask = observer(() => {
                             style={{
                               marginLeft: 8,
                               display: (function () {
-                                const { repo } = steps.find((s) => s.checked);
-                                if (JSON.stringify(repo) && JSON.stringify(repo) !== '{}') {
+                                const { repo, repos } = steps.find((s) => s.checked);
+                                if ((JSON.stringify(repo) && JSON.stringify(repo) !== '{}') || (JSON.stringify(repos) && JSON.stringify(repos) !== '[]')) {
                                   return 'inline-block';
                                 }
                                 return 'none';
