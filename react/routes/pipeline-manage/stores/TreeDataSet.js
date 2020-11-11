@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import forEach from 'lodash/forEach';
 import isEmpty from 'lodash/isEmpty';
 import JSONBigint from 'json-bigint';
@@ -84,7 +85,7 @@ export default ({
   },
   events: {
     select: ({ record, previous }) => {
-      handleSelect(record, mainStore, editBlockStore, previous);
+      handleSelect(record, mainStore);
     },
     unSelect: ({ record }) => {
       // 禁用取消选中
@@ -98,7 +99,7 @@ export default ({
         const newRecord = dataSet.records[0];
         if (newRecord) {
           newRecord.isSelected = true;
-          handleSelect(newRecord, mainStore, editBlockStore);
+          handleSelect(newRecord, mainStore);
         }
       }
 
@@ -111,7 +112,7 @@ export default ({
         const newPipelineIdRecordId = pattern.get('pipelineIdRecordId');
         if (selectedRecord) {
           selectedRecord.isSelected = true;
-          handleSelect(selectedRecord, mainStore, editBlockStore);
+          handleSelect(selectedRecord, mainStore);
         } else if (!newPipelineId || !newPipelineIdRecordId) {
           selectFirstRecord();
         }

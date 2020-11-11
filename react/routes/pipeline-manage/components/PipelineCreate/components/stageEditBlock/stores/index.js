@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { createContext, useContext, useMemo } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
@@ -14,16 +15,14 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
   const {
     children,
     pipelineId,
-    stepStore,
     AppState: { currentMenuType: { projectId } },
     appServiceId,
   } = props;
-  
+
   const addStepDs = useMemo(() => new DataSet(AddStepFormDataSet(projectId)), [projectId, appServiceId]);
 
   const value = {
     ...props,
-    stepStore,
     addStepDs,
     pipelineId,
     projectId,

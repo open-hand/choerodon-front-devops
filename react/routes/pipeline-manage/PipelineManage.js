@@ -47,7 +47,7 @@ const PipelineManage = observer(() => {
   } = usePipelineManageStore();
 
   const {
-    getMainData, loadData, setHasModify,
+    getMainData, loadData,
   } = editBlockStore;
 
   const {
@@ -77,7 +77,6 @@ const PipelineManage = observer(() => {
   const { getSelectedMenu } = mainStore;
 
   async function handleRefresh() {
-    setHasModify(false, false);
     mainStore.setTreeDataPage(1);
     await treeDs.query();
     const { id } = getMainData;
