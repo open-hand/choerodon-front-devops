@@ -82,8 +82,6 @@ const EditItem = (props) => {
           appServiceId={appServiceName}
           appServiceName={appServiceName}
           handleOk={handleEditOk}
-          appServiceId={appServiceName}
-          appServiceName={appServiceName}
           PipelineCreateFormDataSet={PipelineCreateFormDataSet}
           AppServiceOptionsDs={AppServiceOptionsDs}
           image={image}
