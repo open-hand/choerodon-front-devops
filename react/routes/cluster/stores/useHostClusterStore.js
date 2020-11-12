@@ -38,8 +38,14 @@ export default function useStore() {
         return tempItem;
       });
     },
-    handleClusterCreateNodesOutterData(obj) {
-      const tempArr = ['hostPort', 'hostIp', 'username', 'password', 'authType', 'type'];
+    handleClusterCreateNodesOutterData(obj, hasOuterNode) {
+      let tempArr;
+      if (hasOuterNode) {
+        tempArr = ['hostPort', 'hostIp', 'username', 'password', 'authType', 'type', 'innerNodeName'];
+      } else {
+        tempArr = ['hostPort', 'hostIp', 'username', 'password', 'authType', 'type'];
+      }
+
       const tempObj = omit(obj, ['__id', '__status', 'hasError', 'status']);
       // 如果是密匙类型的话需要进行base64加密
       if (tempObj.authType === 'publickey') {
@@ -55,8 +61,9 @@ export default function useStore() {
       const source = omit(JSON.parse(value), ['__id', '__status']);
       const hasInner = source?.devopsClusterInnerNodeVOList?.length;
       const hasOutter = source?.devopsClusterOutterNodeVO?.length;
+      const hasOuterNode = source?.devopsClusterOutterNodeVO?.innerNodeName;
       source.devopsClusterInnerNodeVOList = hasInner ? this.handleClusterCreateNodesInnerData(source?.devopsClusterInnerNodeVOList) : [];
-      source.devopsClusterOutterNodeVO = hasOutter ? this.handleClusterCreateNodesOutterData(source?.devopsClusterOutterNodeVO[0]) : null;
+      source.devopsClusterOutterNodeVO = hasOutter ? this.handleClusterCreateNodesOutterData(source?.devopsClusterOutterNodeVO[0], hasOuterNode) : null;
       return JSON.stringify(source);
     },
 
