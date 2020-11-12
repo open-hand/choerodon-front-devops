@@ -3,17 +3,19 @@ import React, {
   useEffect, useMemo, useState, useCallback,
 } from 'react';
 import {
-  Form, TextField, SelectBox, Password, Button, TextArea,
-} from 'choerodon-ui/pro/lib';
+  Form, TextField, SelectBox, Password, Button, TextArea, Select,
+} from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import Tips from '@/components/new-tips';
-import { difference, pick, without } from 'lodash';
+import { map, pick, without } from 'lodash';
 import { Base64 } from 'js-base64';
 import YamlEditor from '@/components/yamlEditor';
 
 import TestConnect from '../test-connect';
 
 import './index.less';
+
+const { Option } = Select;
 
 const PublicNode = observer((props) => {
   const {
@@ -22,6 +24,7 @@ const PublicNode = observer((props) => {
     parentModal,
     createHostClusterMainStore,
     projectId,
+    nodesDs,
   } = props;
 
   const connectFields = useMemo(() => ['hostIp', 'hostPort', 'authType', 'username', 'password'], []);
@@ -121,13 +124,34 @@ const PublicNode = observer((props) => {
 
   function checkHasAllConnectFieldsFilled() {
     const tempObj = publicNodeDs.toData()[0];
-    const tempArr = ['hostIp', 'hostPort', 'username', 'password', 'authType'];
+    let tempArr;
+    const hasInnerNode = publicNodeDs.current.get('isInnerNode');
+    if (hasInnerNode) {
+      tempArr = ['hostIp', 'hostPort', 'username', 'password', 'authType', 'innerNodeName'];
+    } else {
+      tempArr = ['hostIp', 'hostPort', 'username', 'password', 'authType'];
+    }
     const differArr = without(tempArr, ...Object.keys(tempObj));
     if (differArr.length === 0) {
       return true;
     }
     return false;
   }
+
+  const renderNodeOpts = useCallback(() => {
+    if (!nodesDs.length) {
+      return null;
+    }
+    return (map(nodesDs.data, (record) => (
+      record.get('name') && (
+      <Option
+        value={record.get('name')}
+      >
+        {record.get('name')}
+      </Option>
+      )
+    )));
+  }, [nodesDs]);
 
   return (
     <div className={`${prefixCls}-clusterPublicNode`}>
@@ -148,8 +172,25 @@ const PublicNode = observer((props) => {
           dataSet={publicNodeDs}
           columns={6}
         >
-          <TextField name="hostIp" colSpan={3} />
-          <TextField name="hostPort" colSpan={3} />
+          <SelectBox
+            name="isInnerNode"
+            colSpan={6}
+            className={`${prefixCls}-nodesCreate-right-authType`}
+          >
+            <Option value>是</Option>
+            <Option value={false}>否</Option>
+          </SelectBox>
+          {
+            publicNodeDs.current.get('isInnerNode') && (
+              <Select name="innerNodeName" colSpan={2}>
+                {
+                  renderNodeOpts()
+                }
+              </Select>
+            )
+          }
+          <TextField name="hostIp" colSpan={publicNodeDs.current.get('isInnerNode') ? 2 : 3} />
+          <TextField name="hostPort" colSpan={publicNodeDs.current.get('isInnerNode') ? 2 : 3} />
           <SelectBox
             name="authType"
             colSpan={6}

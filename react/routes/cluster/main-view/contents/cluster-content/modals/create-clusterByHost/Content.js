@@ -287,6 +287,7 @@ function CreateClusterHostForm() {
           intlPrefix={intlPrefix}
           parentModal={modal}
           publicNodeDs={publicNodeDs}
+          nodesDs={nodesDs}
           createHostClusterMainStore={createHostClusterMainStore}
           projectId={projectId}
         />
