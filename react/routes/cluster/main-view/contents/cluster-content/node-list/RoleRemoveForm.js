@@ -63,7 +63,9 @@ const RemoveForm = observer(({
 
     footer: (okbtn, cancelbtn) => (
       <>
-        {cancelbtn}
+        <Button color="dark" disabled>
+          取消
+        </Button>
         <Button color="red" loading>
           移除
         </Button>

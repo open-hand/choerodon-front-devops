@@ -60,13 +60,12 @@ const NodeRemove = observer(({
   };
 
   const loadingModalProps = {
-    cancelProps: {
-      color: 'dark',
-    },
     title: formatMessage({ id: `${intlPrefix}.node.modal.canDelete` }),
     footer: (okbtn, cancelbtn) => (
       <>
-        {cancelbtn}
+        <Button color="dark" disabled>
+          取消
+        </Button>
         <Button color="red" loading>
           删除
         </Button>
