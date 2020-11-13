@@ -176,6 +176,10 @@ export default function useStore({ NODE_TAB }) {
       return axios.delete(`devops/v1/projects/${projectId}/nodes/${nodeId}`);
     },
 
+    handleNodeIdDelele(projectId, id) {
+      return axios.get(`/devops/v1/projects/${projectId}/nodes/check_operating_result?operationRecordId=${id}`);
+    },
+
     removeRole(projectId, nodeId, role) {
       return axios.delete(`devops/v1/projects/${projectId}/nodes/${nodeId}/roles/${role}`);
     },

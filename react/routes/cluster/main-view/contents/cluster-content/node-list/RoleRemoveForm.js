@@ -1,7 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { observer } from 'mobx-react-lite';
-import { Spin } from 'choerodon-ui/pro/lib';
+import { Spin, Button } from 'choerodon-ui/pro/lib';
+
+let timer;
 
 const RemoveForm = observer(({
   nodeName,
@@ -16,6 +18,12 @@ const RemoveForm = observer(({
 }) => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => function () {
+    if (timer) {
+      clearInterval(timer);
+    }
+  }, []);
 
   const successModalProps = {
     okProps: {
@@ -47,15 +55,76 @@ const RemoveForm = observer(({
     ),
   };
 
+  const loadingModalProps = {
+    cancelProps: {
+      color: 'dark',
+    },
+    title: formatMessage({ id: `${intlPrefix}.node.action.removeRole` }),
+
+    footer: (okbtn, cancelbtn) => (
+      <>
+        {cancelbtn}
+        <Button color="red" loading>
+          移除
+        </Button>
+      </>
+    ),
+  };
+
+  const loadingModalFailedProps = {
+    okProps: {
+      color: 'red',
+      loading: false,
+    },
+    cancelProps: {
+      color: 'dark',
+    },
+    okText: '移除',
+    onOk: handleSubmit,
+
+    title: formatMessage({ id: `${intlPrefix}.node.action.removeRole` }),
+
+    footer: (okbtn, cancelbtn) => (
+      <>
+        {cancelbtn}
+        {okbtn}
+      </>
+    ),
+  };
+
+  const handleDeleteFinal = (id) => {
+    modal.update(loadingModalProps);
+    timer = setInterval(async () => {
+      try {
+        const res = await contentStore.handleNodeIdDelele(projectId, id);
+        if (res && res.failed) {
+          return false;
+        }
+        const { status } = res;
+        if (res && status !== 'operating') {
+          clearInterval(timer);
+          modal.close();
+          afterOk();
+        }
+        return false;
+      } catch (error) {
+        modal.update(loadingModalFailedProps);
+        return true;
+      }
+    }, 2000);
+  };
+
   async function handleSubmit() {
     try {
       const res = await contentStore.removeRole(projectId, nodeId, roleType === 'master' ? 4 : 2);
       if (res && res.failed) {
+        modal.update(loadingModalFailedProps);
         return false;
       }
-      afterOk();
-      return true;
+      handleDeleteFinal(res);
+      return false;
     } catch (error) {
+      modal.update(loadingModalFailedProps);
       return false;
     }
   }
