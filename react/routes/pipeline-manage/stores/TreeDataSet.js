@@ -18,15 +18,6 @@ function formatData({ data, expandsKeys }) {
         gitlabProjectId: newGitlabProjectId,
       };
       newData.push(newItem);
-      if (!isEmpty(item.ciCdPipelineRecordVOS)) {
-        flatData(item.ciCdPipelineRecordVOS, newGitlabProjectId, item.id);
-      }
-      if (item.hasMoreRecords) {
-        newData.push({
-          key: `${item.id}-more`,
-          parentId: item.id.toString(),
-        });
-      }
     });
   }
   flatData(data);
@@ -43,11 +34,12 @@ export default ({
   idField: 'key',
   parentField: 'parentId',
   expandField: 'expand',
-  paging: true,
+  pageSize: DEFAULT_SIZE,
   transport: {
     read: ({ dataSet }) => ({
-      url: `devops/v1/projects/${projectId}/cicd_pipelines/query?page=${mainStore.getTreeDataPage || 1}&size=${mainStore.getTreeDataPage === 1 ? mainStore.getTreeDataPageSize : DEFAULT_SIZE}`,
+      url: `devops/v1/projects/${projectId}/cicd_pipelines/query?page=${mainStore.getTreeDataPage || 1}&size=${DEFAULT_SIZE}`,
       method: 'post',
+      data: null,
       transformResponse(response) {
         try {
           const data = JSONBigint.parse(response);
@@ -56,23 +48,18 @@ export default ({
           }
           const { getExpandedKeys, setExpandedKeys } = mainStore;
           let expandsKeys = getExpandedKeys;
-          let newData = [...data.content];
+          const newData = [...data.content];
           if (isEmpty(getExpandedKeys) && newData.length) {
             const newKeys = newData[0].id.toString();
             expandsKeys = [newKeys];
             setExpandedKeys([newKeys]);
           }
-          let newFormatData = formatData({
-            data: [...data.content],
-            expandsKeys,
-          });
-          if (data.number > 0 && dataSet) {
-            newData = [...dataSet.toData(), ...data.content];
-            newFormatData = [...dataSet.toData(), ...newFormatData];
-          }
           mainStore.setTreeDataHasMore(data.totalElements > 0
             && (data.number + 1) < data.totalPages);
-          return newFormatData;
+          return formatData({
+            data: newData,
+            expandsKeys,
+          });
         } catch (e) {
           return response;
         }
@@ -93,8 +80,12 @@ export default ({
       record.isSelected = true;
     },
     load: ({ dataSet }) => {
-      // eslint-disable-next-line no-param-reassign
-      dataSet.pageSize = 13;
+      const records = mainStore.getTreeData;
+      if (mainStore.getTreeDataPage > 1) {
+        dataSet.unshift(...records);
+      }
+      mainStore.setTreeData(dataSet.records);
+
       function selectFirstRecord() {
         const newRecord = dataSet.records[0];
         if (newRecord) {

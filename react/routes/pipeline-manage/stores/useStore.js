@@ -1,5 +1,8 @@
+/* eslint-disable no-param-reassign */
+
 import { useLocalStore } from 'mobx-react-lite';
 import { axios, Choerodon } from '@choerodon/boot';
+import map from 'lodash/map';
 import { handlePromptError } from '../../../utils';
 
 export default function useStore({ DEFAULT_SIZE }) {
@@ -60,12 +63,20 @@ export default function useStore({ DEFAULT_SIZE }) {
       this.treeDataPage = data;
     },
 
-    treeDataPageSize: DEFAULT_SIZE,
-    get getTreeDataPageSize() {
-      return this.treeDataPageSize;
+    treeData: [],
+    get getTreeData() {
+      return this.treeData;
     },
-    setTreeDataPageSize(data) {
-      this.treeDataPageSize = data;
+    setTreeData(data) {
+      this.treeData = data;
+    },
+
+    loadedKeys: [],
+    setLoadedKeys(keys) {
+      this.loadedKeys = keys;
+    },
+    get getLoadedKeys() {
+      return this.loadedKeys.slice();
     },
 
     async changeRecordExecute({
@@ -129,6 +140,45 @@ export default function useStore({ DEFAULT_SIZE }) {
      */
     canCheck(projectId, cdRecordId, data) {
       return axios.post(`/devops/v1/projects/${projectId}/pipeline_records/${cdRecordId}/check_audit_status`, JSON.stringify(data));
+    },
+
+    async loadRecords(projectId, pipelineId, page) {
+      try {
+        const res = await axios.get(`/devops/v1/projects/${projectId}/cicd_pipelines_record/${pipelineId}?page=${page}&size=5`);
+        if (handlePromptError(res)) {
+          return res;
+        }
+        return handlePromptError(res);
+      } catch (e) {
+        return false;
+      }
+    },
+
+    async loadRecordData({ projectId, key, treeDs }) {
+      try {
+        const recordData = await this.loadRecords(projectId, key, 1);
+        if (recordData) {
+          this.setLoadedKeys([...this.loadedKeys, key]);
+          const recordsChildren = map(recordData.list, (item) => {
+            item.key = `${key}-${item.id || item.ciRecordId || item.cdRecordId}`;
+            item.parentId = key;
+            item.status = item.status || (item.ciStatus === 'success' && item.cdStatus ? item.cdStatus : item.ciStatus);
+            item.isLeaf = true;
+            const itemRecord = treeDs.create(item);
+            return itemRecord;
+          });
+          if (recordData.hasNextPage) {
+            const moreRecordOption = treeDs.create({
+              key: `${key}-more`,
+              parentId: key,
+            });
+            recordsChildren.push(moreRecordOption);
+          }
+          treeDs.push(...recordsChildren);
+        }
+      } catch (e) {
+        Choerodon.handleResponseError(e);
+      }
     },
   }));
 }

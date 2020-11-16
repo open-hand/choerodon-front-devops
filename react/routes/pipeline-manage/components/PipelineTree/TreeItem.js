@@ -56,6 +56,7 @@ const TreeItem = observer(({ record, search }) => {
 
   function refresh() {
     mainStore.setTreeDataPage(1);
+    mainStore.setLoadedKeys([]);
     treeDs.query();
   }
 
