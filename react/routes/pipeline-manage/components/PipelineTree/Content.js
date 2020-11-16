@@ -20,7 +20,9 @@ const TreeMenu = observer(() => {
     mainStore,
     prefixCls,
     treeDs,
+    projectId,
   } = usePipelineManageStore();
+
   const bounds = useMemo(() => mainStore.getNavBounds, [mainStore.getNavBounds]);
 
   function nodeRenderer({ record }) {
@@ -99,11 +101,23 @@ const TreeMenu = observer(() => {
 
   const loadMoreTreeData = async () => {
     const page = mainStore.getTreeDataPage;
-    const pageSize = mainStore.getTreeDataPageSize;
     mainStore.setTreeDataPage(page + 1);
-    mainStore.setTreeDataPageSize(pageSize * (page + 1));
     treeDs.query();
   };
+
+  const onLoadData = async ({ key, children }) => {
+    await mainStore.loadRecordData({ projectId, key, treeDs });
+  };
+
+  function nodeCover({ record }) {
+    const nodeProps = {
+      title: <TreeItem record={record} search={mainStore.getSearchValue} />,
+    };
+    if (!record.get('hasRecords')) {
+      nodeProps.isLeaf = true;
+    }
+    return nodeProps;
+  }
 
   return (
     <nav style={bounds} className={`${prefixCls}-sidebar`}>
@@ -126,9 +140,12 @@ const TreeMenu = observer(() => {
       >
         <Tree
           dataSet={treeDs}
-          renderer={nodeRenderer}
+          // renderer={nodeRenderer}
           onExpand={handleExpanded}
           className={`${prefixCls}-sidebar-tree`}
+          loadData={onLoadData}
+          treeNodeRenderer={nodeCover}
+          loadedKeys={mainStore.getLoadedKeys}
         />
       </ScrollContext>
     </nav>

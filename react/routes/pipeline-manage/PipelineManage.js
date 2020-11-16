@@ -77,6 +77,7 @@ const PipelineManage = observer(() => {
   const { getSelectedMenu } = mainStore;
 
   async function handleRefresh() {
+    mainStore.setLoadedKeys([]);
     mainStore.setTreeDataPage(1);
     await treeDs.query();
     const { id } = getMainData;
