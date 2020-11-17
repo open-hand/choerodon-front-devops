@@ -148,7 +148,7 @@ const PipelineCreate = observer(() => {
       <Form columns={3} dataSet={PipelineCreateFormDataSet}>
         <TextField
           name="name"
-          disabled={dataSource}
+          // disabled={dataSource}
         />
         {/* 应用服务只能选择目前没有关联流水线的应用服务 */}
         <Select
