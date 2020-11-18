@@ -56,6 +56,7 @@ function ClusterItem({
       key: deleteModalKey,
       title: formatMessage({ id: `${intlPrefix}.action.delete.title` }, { name: clusterName }),
       children: <Spin />,
+      movable: false,
       footer: null,
     });
     const res = await mainStore.deleteCheck(projectId, record.get('id'));
@@ -85,7 +86,7 @@ function ClusterItem({
             className={`${prefixCls}-delete-input`}
           >
             <Input
-              value={`helm del choerodon-cluster-agent-${code || ''} --purge`}
+              value={`helm uninstall choerodon-cluster-agent-${code || ''} -n choerodon`}
               readOnly
               copy
             />
