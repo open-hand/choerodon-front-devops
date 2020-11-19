@@ -61,7 +61,7 @@ export default function useStore() {
       const source = omit(JSON.parse(value), ['__id', '__status']);
       const hasInner = source?.devopsClusterInnerNodeVOList?.length;
       const hasOutter = source?.devopsClusterOutterNodeVO?.length;
-      const hasOuterNode = source?.devopsClusterOutterNodeVO?.innerNodeName;
+      const hasOuterNode = source?.devopsClusterOutterNodeVO[0]?.innerNodeName;
       source.devopsClusterInnerNodeVOList = hasInner ? this.handleClusterCreateNodesInnerData(source?.devopsClusterInnerNodeVOList) : [];
       source.devopsClusterOutterNodeVO = hasOutter ? this.handleClusterCreateNodesOutterData(source?.devopsClusterOutterNodeVO[0], hasOuterNode) : null;
       return JSON.stringify(source);
