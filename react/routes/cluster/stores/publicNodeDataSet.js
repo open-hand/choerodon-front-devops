@@ -84,7 +84,7 @@ export default ({
         type: 'string',
         label: '集群节点',
         dynamicProps: {
-          required: ({ record }) => hasAllCheckedFields(record),
+          required: ({ record }) => record.get('isInnerNode') && hasAllCheckedFields(record),
           ignore: ({ record }) => (record.get('isInnerNode') ? 'never' : 'always'),
         },
       },
