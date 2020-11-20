@@ -154,6 +154,14 @@ function CreateClusterHostForm() {
     });
   }
 
+  function scrollTimer() {
+    document.querySelector('#loadingProgress') && document.querySelector('#loadingProgress').scrollIntoView({
+      block: 'start',
+      inline: 'nearest',
+      behavior: 'smooth',
+    });
+  }
+
   // 所有节点检测连通性
   function goTimerConnect(clusterString) {
     timer = setInterval(async () => {
@@ -171,6 +179,7 @@ function CreateClusterHostForm() {
         }
         const { status } = nodeStatusRes;
         setConnectObj(nodeStatusRes);
+        scrollTimer();
         // 如果状态成功,
         if (status === 'success') {
           clearInterval(timer);
@@ -189,6 +198,7 @@ function CreateClusterHostForm() {
         return true;
       } catch (error) {
         if (timer) clearInterval(timer);
+        scrollTimer();
         setConnectObj(null);
         // 清除loading和disabled
         modalUpDateLoadingFalse();
