@@ -185,7 +185,7 @@ const NodeList = () => {
         border={false}
         queryBar="none"
       >
-        <Column width={150} header={formatMessage({ id: `${intlPrefix}.node.ip` })} renderer={renderStatusName} />
+        <Column width={170} header={formatMessage({ id: `${intlPrefix}.node.ip` })} renderer={renderStatusName} />
         <Column width={50} renderer={renderNodeOpts} />
         <Column name="role" minWidth={80} renderer={renderType} />
         <Column header={formatMessage({ id: `${intlPrefix}.node.cpu` })} renderer={renderCpu} />
