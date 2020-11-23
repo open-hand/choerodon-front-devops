@@ -148,11 +148,11 @@ const PodDetail = memo(() => {
 
   function renderAction() {
     const buttons = [
-      {
-        service: [],
-        text: intl.formatMessage({ id: `${intlPrefix}.instance.log` }),
-        action: () => openLog(),
-      },
+      // {
+      //   service: [],
+      //   text: intl.formatMessage({ id: `${intlPrefix}.instance.log` }),
+      //   action: () => openLog(),
+      // },
       {
         service: [],
         text: intl.formatMessage({ id: `${intlPrefix}.instance.term` }),
