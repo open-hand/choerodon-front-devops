@@ -31,6 +31,7 @@ const PipelineCreate = observer(() => {
     mainStore,
     // 老mainData 为了在复制之后 重新设置成以前的mainData
     oldMainData,
+    appService,
   } = usePipelineCreateStore();
 
   const [expandIf, setExpandIf] = useState(false);
@@ -38,8 +39,17 @@ const PipelineCreate = observer(() => {
   useEffect(() => {
     if (dataSource) {
       const {
-        name, appServiceId, image, versionName,
+        name, image, versionName,
       } = dataSource;
+      let { appServiceId } = dataSource;
+      // 如果有appService 说明是复制流水线
+      if (appService) {
+        appServiceId = appService.id;
+        PipelineCreateFormDataSet.getField('appServiceId').props.lookup = [{
+          appServiceId,
+          appServiceName: appService.name,
+        }];
+      }
       PipelineCreateFormDataSet.loadData([{
         name,
         appServiceId,
@@ -80,7 +90,7 @@ const PipelineCreate = observer(() => {
         message.error(`流水线中存在空阶段，无法${modal.props.title.includes('创建') ? '创建' : '保存'}`);
         return false;
       }
-      if (dataSource) {
+      if (dataSource && !oldMainData) {
         try {
           await axios.put(`/devops/v1/projects/${projectId}/cicd_pipelines/${dataSource.id}`, data);
           editBlockStore.loadData(projectId, dataSource.id);
