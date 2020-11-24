@@ -3,7 +3,14 @@ import isEmpty from 'lodash/isEmpty';
 
 const dynamicAxios = {};
 
-export default (AppServiceOptionsDs, projectId, createUseStore, dataSource, mathRandom) => {
+export default (
+  AppServiceOptionsDs,
+  projectId,
+  createUseStore,
+  dataSource,
+  mathRandom,
+  appService,
+) => {
   function checkImage(value, name, record) {
     const pa = /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}(\/.+)*:.+$/;
     if (value && pa.test(value)) {
@@ -51,7 +58,7 @@ export default (AppServiceOptionsDs, projectId, createUseStore, dataSource, math
         if (dataSource) {
           return ({
             method: 'get',
-            url: `/devops/v1/projects/${projectId}/app_service/${dataSource.appServiceId}`,
+            url: `/devops/v1/projects/${projectId}/app_service/${appService ? appService.id : dataSource.appServiceId}`,
             transformResponse: (res) => {
               let newRes;
               try {
