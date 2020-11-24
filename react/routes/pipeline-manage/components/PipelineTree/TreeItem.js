@@ -4,11 +4,12 @@ import PropTypes from 'prop-types';
 import { Action, Choerodon } from '@choerodon/boot';
 import { observer } from 'mobx-react-lite';
 import {
-  Icon, Modal, Spin, Tooltip,
+  Icon, Modal, Spin, Tooltip, Select
 } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import forEach from 'lodash/forEach';
 import includes from 'lodash/includes';
+import PipelineCreate from "@/routes/pipeline-manage/components/PipelineCreate";
 import { usePipelineManageStore } from '../../stores';
 import TimePopover from '../../../../components/timePopover';
 import eventStopProp from '../../../../utils/eventStopProp';
@@ -23,6 +24,8 @@ const executeKey = Modal.key();
 const stopKey = Modal.key();
 const auditKey = Modal.key();
 
+const { Option } = Select;
+
 const TreeItem = observer(({ record, search }) => {
   const {
     intlPrefix,
@@ -31,6 +34,7 @@ const TreeItem = observer(({ record, search }) => {
     intl: { formatMessage },
     treeDs,
     mainStore,
+    editBlockStore,
   } = usePipelineManageStore();
   const {
     treeStore,
@@ -103,6 +107,43 @@ const TreeItem = observer(({ record, search }) => {
     if (res) {
       refresh();
     }
+  }
+
+  function handleCopy() {
+    Modal.open({
+      key: Modal.key(),
+      title: '复制流水线',
+      children: (
+        <div>
+          <p>
+            请为新的流水线选择关联应用服务
+          </p>
+          <Select required>
+            <Option value="devops">devops</Option>
+          </Select>
+        </div>
+      ),
+      onOk: async () => {
+        const oldMainData = JSON.parse(JSON.stringify(editBlockStore.getMainData));
+        const result = await editBlockStore.loadDetail(projectId, record.get('id'));
+        editBlockStore.setMainData(result);
+        Modal.open({
+          key: Modal.key(),
+          title: '创建流水线',
+          style: {
+            width: 'calc(100vw - 3.52rem)',
+          },
+          drawer: true,
+          children: <PipelineCreate
+            oldMainData={oldMainData}
+            dataSource={editBlockStore.getMainData}
+            refreshTree={handleRefresh}
+            editBlockStore={editBlockStore}
+          />,
+          okText: formatMessage({ id: 'save' }),
+        });
+      }
+    })
   }
 
   async function handleDelete() {
@@ -270,6 +311,11 @@ const TreeItem = observer(({ record, search }) => {
         service: [`choerodon.code.project.develop.ci-pipeline.ps.${enabled ? 'disable' : 'enable'}`],
         text: formatMessage({ id: enabled ? 'stop' : 'active' }),
         action: handleChangeActive,
+      },
+      {
+        service: [],
+        text: '复制',
+        action: handleCopy,
       },
       {
         service: ['choerodon.code.project.develop.ci-pipeline.ps.delete'],

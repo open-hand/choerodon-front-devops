@@ -29,6 +29,8 @@ const PipelineCreate = observer(() => {
     refreshTree,
     dataSource,
     mainStore,
+    // 老mainData 为了在复制之后 重新设置成以前的mainData
+    oldMainData,
   } = usePipelineCreateStore();
 
   const [expandIf, setExpandIf] = useState(false);
@@ -100,7 +102,17 @@ const PipelineCreate = observer(() => {
     return false;
   };
 
+  const handleCancel = () => {
+    editBlockStore.setMainData(oldMainData);
+  };
+
   modal.handleOk(handleCreate);
+
+  modal.handleCancel(() => {
+    if (oldMainData) {
+      handleCancel();
+    }
+  });
 
   const handleChangeSelectImage = (data) => {
     if (data === createUseStore.getDefaultImage) {
