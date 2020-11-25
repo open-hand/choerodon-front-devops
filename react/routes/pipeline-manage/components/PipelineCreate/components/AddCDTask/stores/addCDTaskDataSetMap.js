@@ -16,8 +16,8 @@ const map = {
   // 关联部署任务
   relativeMission: 'deployJobName',
   triggersTasks: {
-    name: 'triggersTasks',
-    values: ['1', '0'],
+    name: 'checkEnvPermissionFlag',
+    values: [true, false],
   },
 };
 
