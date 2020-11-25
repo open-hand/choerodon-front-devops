@@ -549,6 +549,49 @@ export default observer(() => {
     ];
   };
 
+  /**
+   * 修改配置信息事件
+   */
+  const handleChangeValueIdValues = () => {
+    let tempValues = valueIdValues;
+    Modal.open({
+      key: Modal.key(),
+      title: '修改部署配置""的配置信息',
+      children: (
+        <div
+          style={{
+            maxHeight: 500,
+          }}
+        >
+          <YamlEditor
+            colSpan={3}
+            newLine
+            readOnly={false}
+            className="addcdTask-yamleditor"
+            onValueChange={(data) => {
+              tempValues = data;
+            }}
+            value={tempValues}
+          />
+        </div>
+      ),
+      style: {
+        width: '740px',
+      },
+      okText: '修改',
+      onOk: async () => {
+        await axios.post(`/devops/v1/projects/${projectId}/deploy_value`, {
+          ...ADDCDTaskUseStore.getValueIdList.find((i) => String(i.id) === String(ADDCDTaskDataSet.current.get('valueId'))),
+          value: tempValues,
+        });
+        ADDCDTaskUseStore.setValueIdRandom(Math.random());
+        setValueIdValues(tempValues);
+      },
+      onCancel: () => {
+      },
+    });
+  };
+
   const getOtherConfig = () => {
     function getModeDom() {
       const currentDepoySource = ADDCDTaskDataSet?.current?.get('deploySource');
@@ -706,14 +749,36 @@ export default observer(() => {
             optionRenderer={optionRenderValueId}
             renderer={rendererValueId}
           />
+          <div newLine colSpan={3}>
+            <Icon style={{ color: 'rgb(244, 67, 54)' }} type="error" />
+            <span
+              style={{
+                fontSize: '12px',
+                fontFamily: 'PingFangSC-Regular, PingFang SC',
+                fontWeight: 400,
+                color: 'rgba(0, 0, 0, 0.65)',
+                lineHeight: '20px',
+              }}
+            >
+              修改配置信息后，所选的部署配置中的配置信息也将随之改动。
+            </span>
+            <Button
+              funcType="flat"
+              color="blue"
+              icon="edit-o"
+              onClick={handleChangeValueIdValues}
+            >
+              修改配置信息
+            </Button>
+          </div>
           <YamlEditor
             colSpan={3}
             newLine
-            readOnly={false}
+            readOnly
             className="addcdTask-yamleditor"
-            onValueChange={(data) => {
-              setValueIdValues(data);
-            }}
+            // onValueChange={(data) => {
+            //   setValueIdValues(data);
+            // }}
             value={valueIdValues}
           />
         </Form>,
