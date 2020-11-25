@@ -15,6 +15,10 @@ const map = {
   whetherBlock: 'blockAfterJob',
   // 关联部署任务
   relativeMission: 'deployJobName',
+  triggersTasks: {
+    name: 'triggersTasks',
+    values: ['1', '0'],
+  },
 };
 
 export default map;
