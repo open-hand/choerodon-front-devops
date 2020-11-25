@@ -125,6 +125,12 @@ export default (
       }),
     },
     {
+      name: addCDTaskDataSetMap.triggersTasks.name,
+      type: 'string',
+      label: '是否允许非环境人员触发此部署任务',
+      defaultValue: addCDTaskDataSetMap.triggersTasks.values[1],
+    },
+    {
       // name: 'bsms',
       name: 'deployType',
       type: 'string',

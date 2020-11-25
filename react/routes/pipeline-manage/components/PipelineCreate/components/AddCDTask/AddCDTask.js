@@ -86,10 +86,53 @@ export default observer(() => {
     + '# 请确保用户有该目录操作权限');
   const [testStatus, setTestStatus] = useState('');
   const [accountKeyValue, setAccountKeyValue] = useState('');
+  const [relatedJobOpts, setRelatedJobOpts] = useState([]);
 
   useEffect(() => {
     ADDCDTaskUseStore.setValueIdRandom(Math.random());
   }, []);
+
+  useEffect(() => {
+    const currentHostDeployType = ADDCDTaskDataSet?.current?.get(
+      'hostDeployType'
+    );
+    const tempArr = pipelineStageMainSource
+      && pipelineStageMainSource.length > 0
+      && pipelineStageMainSource.map((item) => item?.jobList.slice());
+    const jobArr = tempArr
+      ? tempArr.length > 0 && [].concat.apply(...tempArr)
+      : [];
+    let filterArr;
+    if (jobArr && currentHostDeployType && currentHostDeployType === 'image') {
+      filterArr = jobArr.filter(
+        (x) => x.configJobTypes?.includes('docker') && x.type === 'build',
+      );
+    } else if (currentHostDeployType === 'jar') {
+      filterArr = jobArr.filter(
+        (x) => (x.configJobTypes?.includes('maven_deploy')
+          || x.configJobTypes?.includes('upload_jar'))
+          && x.type === 'build',
+      );
+    }
+    if (filterArr && filterArr.length === 1) {
+      if (typeof filterArr[0] === 'object') {
+        ADDCDTaskDataSet.current.set('pipelineTask', filterArr[0].name);
+      }
+    }
+    if (filterArr
+      && filterArr.length > 0) {
+      setRelatedJobOpts(filterArr);
+    }
+  }, [ADDCDTaskDataSet?.current?.get(
+    'hostDeployType'
+  ), pipelineStageMainSource]);
+
+  useEffect(() => {
+    if (relatedJobOpts && relatedJobOpts.length === 1) {
+      ADDCDTaskDataSet.current.set('pipelineTask', relatedJobOpts[0].name);
+    }
+  }, [relatedJobOpts, ADDCDTaskDataSet?.current?.get(
+    'hostDeployType')]);
 
   function getMetadata(ds) {
     if (ds.type === 'cdDeploy') {
@@ -381,39 +424,39 @@ export default observer(() => {
       });
   });
 
-  const renderRelatedJobOpts = () => {
-    const currentHostDeployType = ADDCDTaskDataSet?.current?.get(
-      'hostDeployType'
-    );
-    const tempArr = pipelineStageMainSource
-      && pipelineStageMainSource.length > 0
-      && pipelineStageMainSource.map((item) => item?.jobList.slice());
-    const jobArr = tempArr
-      ? tempArr.length > 0 && [].concat.apply(...tempArr)
-      : [];
-    let filterArr;
-    if (jobArr && currentHostDeployType && currentHostDeployType === 'image') {
-      filterArr = jobArr.filter(
-        (x) => x.configJobTypes?.includes('docker') && x.type === 'build',
-      );
-    } else if (currentHostDeployType === 'jar') {
-      filterArr = jobArr.filter(
-        (x) => (x.configJobTypes?.includes('maven_deploy')
-            || x.configJobTypes?.includes('upload_jar'))
-          && x.type === 'build',
-      );
-    }
-    if (filterArr && filterArr.length > 0) {
-      if (typeof filterArr[0] === 'object') {
-        ADDCDTaskDataSet.current.set('pipelineTask', filterArr[0].name);
-      }
-    }
-    return (
-      filterArr
-      && filterArr.length > 0
-      && filterArr.map((item) => <Option value={item.name}>{item.name}</Option>)
-    );
-  };
+  // const renderRelatedJobOpts = () => {
+  //   const currentHostDeployType = ADDCDTaskDataSet?.current?.get(
+  //     'hostDeployType'
+  //   );
+  //   const tempArr = pipelineStageMainSource
+  //     && pipelineStageMainSource.length > 0
+  //     && pipelineStageMainSource.map((item) => item?.jobList.slice());
+  //   const jobArr = tempArr
+  //     ? tempArr.length > 0 && [].concat.apply(...tempArr)
+  //     : [];
+  //   let filterArr;
+  //   if (jobArr && currentHostDeployType && currentHostDeployType === 'image') {
+  //     filterArr = jobArr.filter(
+  //       (x) => x.configJobTypes?.includes('docker') && x.type === 'build',
+  //     );
+  //   } else if (currentHostDeployType === 'jar') {
+  //     filterArr = jobArr.filter(
+  //       (x) => (x.configJobTypes?.includes('maven_deploy')
+  //           || x.configJobTypes?.includes('upload_jar'))
+  //         && x.type === 'build',
+  //     );
+  //   }
+  //   if (filterArr && filterArr.length > 0) {
+  //     if (typeof filterArr[0] === 'object') {
+  //       ADDCDTaskDataSet.current.set('pipelineTask', filterArr[0].name);
+  //     }
+  //   }
+  //   return (
+  //     filterArr
+  //     && filterArr.length > 0
+  //     && filterArr.map((item) => <Option value={item.name}>{item.name}</Option>)
+  //   );
+  // };
 
   function searchMatcher({ record, text }) {
     return record.get('pipelineTask').indexOf(text) !== -1;
@@ -543,7 +586,7 @@ export default observer(() => {
               }
               searchMatcher={searchMatcher}
             >
-              {renderRelatedJobOpts()}
+              {relatedJobOpts.map((item) => <Option value={item.name}>{item.name}</Option>)}
             </Select>
           ),
           currentDepoySource === 'matchDeploy' && (
@@ -596,7 +639,7 @@ export default observer(() => {
               }
               searchMatcher={searchMatcher}
             >
-              {renderRelatedJobOpts()}
+              {relatedJobOpts.map((item) => <Option value={item.name}>{item.name}</Option>)}
             </Select>
           ),
           currentDepoySource === 'matchDeploy' && (
@@ -728,7 +771,8 @@ export default observer(() => {
               ADDCDTaskDataSet.current.set('hostDeployType', data);
               if (data !== 'customize') {
                 ADDCDTaskDataSet.current.set('deploySource', 'pipelineDeploy');
-                ADDCDTaskDataSet.current.set('pipelineTask', null);
+                // console.log(ADDCDTaskDataSet.getField('pipelineTask'));
+                // ADDCDTaskDataSet.current.set('pipelineTask', '123');
               }
             }}
           >
@@ -926,14 +970,14 @@ export default observer(() => {
     <div className="addcdTask">
       <Form columns={3} dataSet={ADDCDTaskDataSet}>
         <Select
-          onChange={(data) => ADDCDTaskDataSet.loadData([
-            {
+          onChange={(data) => {
+            const newData = {
               type: data,
               glyyfw:
-                  appServiceId
-                  || PipelineCreateFormDataSet.getField('appServiceId').getText(
-                    PipelineCreateFormDataSet.current.get('appServiceId'),
-                  ),
+                appServiceId
+                || PipelineCreateFormDataSet.getField('appServiceId').getText(
+                  PipelineCreateFormDataSet.current.get('appServiceId'),
+                ),
               triggerType: 'refs',
               deployType: 'create',
               authType: 'accountPassword',
@@ -942,8 +986,13 @@ export default observer(() => {
               [addCDTaskDataSetMap.hostSource]: addCDTaskDataSetMap.alreadyhost,
               workingPath: './',
               name: ADDCDTaskDataSet.current.get('name') || undefined,
-            },
-          ])}
+            };
+            if (data === 'cdHost') {
+              newData.pipelineTask = relatedJobOpts
+                && relatedJobOpts.length === 1 && relatedJobOpts[0].name;
+            }
+            ADDCDTaskDataSet.loadData([newData]);
+          }}
           colSpan={1}
           name="type"
         >
@@ -1041,6 +1090,26 @@ export default observer(() => {
               disabled: !record.get('connected'),
             })}
           />,
+          <div className="addcdTask-whetherBlock" style={{ position: 'relative', top: '12px' }}>
+            <SelectBox
+              name={addCDTaskDataSetMap.triggersTasks.name}
+              colSpan={2}
+            >
+              <Option value={addCDTaskDataSetMap.triggersTasks.values[0]}>是</Option>
+              <Option value={addCDTaskDataSetMap.triggersTasks.values[1]}>否</Option>
+            </SelectBox>
+            <Tooltip title="123">
+              <Icon
+                style={{
+                  position: 'absolute',
+                  top: '-18px',
+                  left: '157px',
+                  color: 'rgba(0, 0, 0, 0.36)',
+                }}
+                type="help"
+              />
+            </Tooltip>
+          </div>,
           <SelectBox
             className="addcdTask-mode"
             newLine
