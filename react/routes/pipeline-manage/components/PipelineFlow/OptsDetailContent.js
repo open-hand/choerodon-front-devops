@@ -65,6 +65,7 @@ export default observer((props) => {
     const treeIsEqual = status !== treeStatus || !isEqual(detailStatusList, treeStatusList);
     if (devopsPipelineRecordRelId === recordDevopsPipelineRecordRelId && (treeIsEqual)) {
       mainStore.setTreeDataPage(1);
+      mainStore.setLoadedKeys([]);
       treeDs && treeDs.query();
     }
   }, [pipelineRecordId]);

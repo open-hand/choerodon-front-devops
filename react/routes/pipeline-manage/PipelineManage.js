@@ -47,7 +47,7 @@ const PipelineManage = observer(() => {
   } = usePipelineManageStore();
 
   const {
-    getMainData, loadData, setHasModify,
+    getMainData, loadData,
   } = editBlockStore;
 
   const {
@@ -77,7 +77,7 @@ const PipelineManage = observer(() => {
   const { getSelectedMenu } = mainStore;
 
   async function handleRefresh() {
-    setHasModify(false, false);
+    mainStore.setLoadedKeys([]);
     mainStore.setTreeDataPage(1);
     await treeDs.query();
     const { id } = getMainData;
@@ -227,11 +227,17 @@ const PipelineManage = observer(() => {
       group: 1,
     }, {
       permissions: ['choerodon.code.project.develop.ci-pipeline.ps.runner'],
-      name: formatMessage({ id: `${intlPrefix}.gitlab.runner` }),
-      icon: 'find_in_page-o',
-      handler: openRunnerModal,
       display: true,
       group: 1,
+      actions: {
+        data: [
+          {
+            text: formatMessage({ id: `${intlPrefix}.gitlab.runner` }),
+            service: ['choerodon.code.project.develop.ci-pipeline.ps.runner'],
+            action: openRunnerModal,
+          },
+        ],
+      },
     }];
     if (treeDs.length && treeDs.status === 'ready') {
       if (!parentId) {

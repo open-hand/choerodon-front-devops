@@ -1,14 +1,15 @@
 /* eslint-disable */
 import React, { Fragment, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Action, Choerodon } from '@choerodon/boot';
+import {Action, axios, Choerodon} from '@choerodon/boot';
 import { observer } from 'mobx-react-lite';
 import {
-  Icon, Modal, Spin, Tooltip,
+  Icon, Modal, Spin, Tooltip, Select, Form
 } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import forEach from 'lodash/forEach';
 import includes from 'lodash/includes';
+import PipelineCreate from "@/routes/pipeline-manage/components/PipelineCreate";
 import { usePipelineManageStore } from '../../stores';
 import TimePopover from '../../../../components/timePopover';
 import eventStopProp from '../../../../utils/eventStopProp';
@@ -18,10 +19,13 @@ import TreeItemName from '../../../../components/treeitem-name';
 import { usePipelineTreeStore } from './stores';
 import StatusTag from '../PipelineFlow/components/StatusTag';
 import AuditModal from '../audit-modal';
+import Tips from "@/components/new-tips";
 
 const executeKey = Modal.key();
 const stopKey = Modal.key();
 const auditKey = Modal.key();
+
+const { Option } = Select;
 
 const TreeItem = observer(({ record, search }) => {
   const {
@@ -31,10 +35,12 @@ const TreeItem = observer(({ record, search }) => {
     intl: { formatMessage },
     treeDs,
     mainStore,
+    editBlockStore,
   } = usePipelineManageStore();
   const {
     treeStore,
     handleRefresh,
+    CopyPipelineDataSet,
   } = usePipelineTreeStore();
 
   const iconType = useMemo(() => ({
@@ -56,6 +62,7 @@ const TreeItem = observer(({ record, search }) => {
 
   function refresh() {
     mainStore.setTreeDataPage(1);
+    mainStore.setLoadedKeys([]);
     treeDs.query();
   }
 
@@ -102,6 +109,90 @@ const TreeItem = observer(({ record, search }) => {
     if (res) {
       refresh();
     }
+  }
+
+  const handleClickMore = async (e) => {
+    e.stopPropagation();
+    const pageSize = CopyPipelineDataSet.current.get('pageSize') + 20;
+    const result = await axios.post(`/devops/v1/projects/${projectId}/app_service/page_app_services_without_ci?page=0&size=${pageSize}`);
+    if (result.length % 20 === 0) {
+      result.push({
+        appServiceId: 'more',
+        appServiceName: '加载更多',
+      });
+    }
+    CopyPipelineDataSet.current.set('pageSize', pageSize);
+    CopyPipelineDataSet.getField('appServiceId').props.lookup = result;
+  };
+
+  const renderer = ({ text }) => {
+    return text;
+  };
+
+  const optionRenderer = ({ text }) => (text === '加载更多' ? (
+    <a
+      role="none"
+      style={{ width: '100%', height: '100%', display: 'block' }}
+      onClick={handleClickMore}
+    >
+      {text}
+    </a>
+  ) : text);
+
+  function handleCopy() {
+    Modal.open({
+      key: Modal.key(),
+      title: '复制流水线',
+      children: (
+        <div>
+          <p>
+            请为新的流水线选择关联应用服务
+          </p>
+          <Form dataSet={CopyPipelineDataSet}>
+            <Select
+              name="appServiceId"
+              searchable
+              searchMatcher="appServiceName"
+              optionRenderer={optionRenderer}
+              renderer={renderer}
+            />
+          </Form>
+        </div>
+      ),
+      okProps: {
+        disabled: !CopyPipelineDataSet.current.get('appServiceId')
+      },
+      onOk: async () => {
+        const oldMainData = JSON.parse(JSON.stringify(editBlockStore.getMainData));
+        const result = await editBlockStore.loadDetail(projectId, record.get('id'));
+        editBlockStore.setMainData({
+          ...result,
+          devopsCdStageVOS: [],
+          // stageList: result.stageList.filter(s => s.type === 'CI')
+        });
+        editBlockStore.setStepData([...result.devopsCiStageVOS]);
+        const appServiceId = CopyPipelineDataSet.current.get('appServiceId');
+        Modal.open({
+          key: Modal.key(),
+          title: '创建流水线',
+          style: {
+            width: 'calc(100vw - 3.52rem)',
+          },
+          drawer: true,
+          children: <PipelineCreate
+            appService={{
+              id: appServiceId,
+              name: CopyPipelineDataSet.getField('appServiceId').lookup.find(item => item.appServiceId === appServiceId).appServiceName,
+            }}
+            oldMainData={oldMainData}
+            dataSource={editBlockStore.getMainData}
+            refreshTree={handleRefresh}
+            editBlockStore={editBlockStore}
+          />,
+          okText: '创建',
+        });
+      }
+    })
   }
 
   async function handleDelete() {
@@ -269,6 +360,11 @@ const TreeItem = observer(({ record, search }) => {
         service: [`choerodon.code.project.develop.ci-pipeline.ps.${enabled ? 'disable' : 'enable'}`],
         text: formatMessage({ id: enabled ? 'stop' : 'active' }),
         action: handleChangeActive,
+      },
+      {
+        service: [],
+        text: '复制',
+        action: handleCopy,
       },
       {
         service: ['choerodon.code.project.develop.ci-pipeline.ps.delete'],

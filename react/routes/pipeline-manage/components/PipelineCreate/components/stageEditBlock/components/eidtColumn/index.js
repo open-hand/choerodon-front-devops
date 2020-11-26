@@ -7,12 +7,12 @@ import {
 import {
   Droppable, Draggable, DragDropContext,
 } from 'react-beautiful-dnd';
-import { usePipelineStageEditStore } from '../stageEditBlock/stores';
-import AddTask from '../../../PipelineCreate/components/AddTask';
-import AddCDTask from '../../../PipelineCreate/components/AddCDTask';
-import AddStage from './AddStage';
-import { usePipelineCreateStore } from '../../../PipelineCreate/stores';
-import ViewVariable from '../../../view-variables';
+import { usePipelineStageEditStore } from '../../stores';
+import AddTask from '../../../AddTask';
+import AddCDTask from '../../../AddCDTask';
+import AddStage from '../AddStage';
+import { usePipelineCreateStore } from '../../../../stores';
+import ViewVariable from '../../../../../view-variables';
 import EditItem from './EditItem';
 
 import './index.less';
@@ -27,7 +27,6 @@ export default observer((props) => {
     sequence,
     name,
     columnIndex,
-    edit,
     appServiceId,
     appServiceName,
     image,
@@ -56,11 +55,10 @@ export default observer((props) => {
     eidtStep,
     newJob,
     getStepData,
-    getStepData2,
     editJobLists,
   } = editBlockStore || stepStore;
 
-  const stageLength = edit ? getStepData2.length : getStepData.length;
+  const stageLength = getStepData.length;
 
   let PipelineCreateFormDataSet;
   let AppServiceOptionsDs;
@@ -75,7 +73,7 @@ export default observer((props) => {
     const res = await addStepDs.validate();
     if (res) {
       // const a = addStepDs.toData()[0];
-      addNewStep(firstIf ? -1 : columnIndex, addStepDs.toData()[0], edit);
+      addNewStep(firstIf ? -1 : columnIndex, addStepDs.toData()[0]);
       addStepDs.reset();
       return true;
     }
@@ -127,7 +125,7 @@ export default observer((props) => {
               >
                 {
                   jobList.slice().map((item, index) => (
-                    <Draggable key={`dropJobs-${item.id}`} draggableId={`dropJobs-${item.id}`} index={index}>
+                    <Draggable key={`dropJobs-${item.name}`} draggableId={`dropJobs-${item.name}`} index={index}>
                       {
                         (dragProvidedByColomn, snapshotinnerByJob) => (
                           <EditItem
@@ -138,12 +136,11 @@ export default observer((props) => {
                             witchColumnJobIndex={witchColumnJobIndex}
                             columnIndex={columnIndex + 1}
                             sequence={sequence}
-                            edit={edit}
                             appServiceId={appServiceId}
                             appServiceName={appServiceName}
                             appServiceCode={appServiceCode}
-                            AppServiceOptionsDs={edit && AppServiceOptionsDs}
-                            PipelineCreateFormDataSet={edit && PipelineCreateFormDataSet}
+                            AppServiceOptionsDs={AppServiceOptionsDs}
+                            PipelineCreateFormDataSet={PipelineCreateFormDataSet}
                             jobDetail={item}
                             image={image}
                             openVariableModal={openVariableModal}
@@ -199,12 +196,12 @@ export default observer((props) => {
       title: `删除${name}阶段`,
       children: '确认删除此阶段吗？',
       key: Modal.key(),
-      onOk: () => removeStep(sequence, edit),
+      onOk: () => removeStep(sequence),
     });
   }
 
   function hanleStepCreateOk(data) {
-    newJob(sequence, data, edit);
+    newJob(sequence, data);
   }
 
   function openVariableModal() {
@@ -220,6 +217,39 @@ export default observer((props) => {
       okText: '关闭',
     });
   }
+
+  const renderNewTaskModalChildren = () => {
+    let modalChildren;
+    if (type === 'CI') {
+      modalChildren = (
+        <AddTask
+          PipelineCreateFormDataSet={PipelineCreateFormDataSet}
+          AppServiceOptionsDs={AppServiceOptionsDs}
+          handleOk={hanleStepCreateOk}
+          appServiceId={appServiceName}
+          appServiceName={appServiceName}
+          image={image}
+          columnIndex={columnIndex + 1}
+          witchColumnJobIndex={witchColumnJobIndex + 1}
+        />
+      );
+    } else {
+      modalChildren = (
+        <AddCDTask
+          random={Math.random()}
+          appServiceId={appServiceName}
+          appServiceName={appServiceName}
+          appServiceCode={appServiceCode}
+          pipelineStageMainSource={getStepData}
+          PipelineCreateFormDataSet={PipelineCreateFormDataSet}
+          handleOk={hanleStepCreateOk}
+          columnIndex={columnIndex + 1}
+          witchColumnJobIndex={witchColumnJobIndex + 1}
+        />
+      );
+    }
+    return modalChildren;
+  };
 
   function openNewTaskModal() {
     Modal.open({
@@ -244,30 +274,7 @@ export default observer((props) => {
           }
         </div>
       ),
-      children: type === 'CI' ? (
-        <AddTask
-          PipelineCreateFormDataSet={edit && PipelineCreateFormDataSet}
-          AppServiceOptionsDs={edit && AppServiceOptionsDs}
-          handleOk={hanleStepCreateOk}
-          appServiceId={appServiceName}
-          appServiceName={appServiceName}
-          image={image}
-          columnIndex={columnIndex + 1}
-          witchColumnJobIndex={witchColumnJobIndex + 1}
-        />
-      ) : (
-        <AddCDTask
-          random={Math.random()}
-          appServiceId={appServiceName}
-          appServiceName={appServiceName}
-          appServiceCode={appServiceCode}
-          pipelineStageMainSource={getStepData2}
-          PipelineCreateFormDataSet={edit && PipelineCreateFormDataSet}
-          handleOk={hanleStepCreateOk}
-          columnIndex={columnIndex + 1}
-          witchColumnJobIndex={witchColumnJobIndex + 1}
-        />
-      ),
+      children: renderNewTaskModalChildren(),
       style: {
         width: '740px',
       },
@@ -283,7 +290,7 @@ export default observer((props) => {
     userSelect: 'none',
     // styles we need to apply on draggables
     ...draggableStyle,
-    cursor: 'all-scroll',
+    cursor: 'unset',
     background: type === 'CI' ? 'rgba(245, 246, 250, 1)' : 'rgba(245,248,250,1)',
   });
 
@@ -301,54 +308,64 @@ export default observer((props) => {
     ),
     <div
       className="c7n-piplineManage-edit-column"
-      ref={innerRef}
       {...dragProvided.draggableProps}
-      {...dragProvided.dragHandleProps}
       style={getItemStyle(
         snapshotinner.isDragging,
         dragProvided.draggableProps.style,
       )}
     >
-      <div className="c7n-piplineManage-edit-column-header">
-        <span>{name}</span>
-        <span className={`c7n-piplineManage-stage-type c7n-piplineManage-stage-type-${realType}`}>
-          {realType}
-        </span>
+      <div
+        ref={innerRef}
+        {...dragProvided.dragHandleProps}
+        style={{
+          cursor: 'all-scroll',
+        }}
+      >
         <div
-          className="c7n-piplineManage-edit-column-header-btnGroup"
+          className="c7n-piplineManage-edit-column-header"
         >
-          <Button
-            funcType="raised"
-            shape="circle"
-            size="small"
-            icon="mode_edit"
-            disabled={!appServiceId}
-            onClick={
+          <span>{name}</span>
+          <span className={`c7n-piplineManage-stage-type c7n-piplineManage-stage-type-${realType}`}>
+            {realType}
+          </span>
+          <div
+            className="c7n-piplineManage-edit-column-header-btnGroup"
+          >
+            <Button
+              funcType="raised"
+              shape="circle"
+              size="small"
+              icon="mode_edit"
+              disabled={!appServiceId}
+              onClick={
               () => openAddStageModal({ optType: 'edit', curType: type })
             }
-            className="c7n-piplineManage-edit-column-header-btnGroup-btn"
-          />
-          {stageLength > 1 && (
-          <Button
-            funcType="raised"
-            shape="circle"
-            size="small"
-            onClick={deleteStep}
-            icon="delete_forever"
-            disabled={!appServiceId}
-            className="c7n-piplineManage-edit-column-header-btnGroup-btn c7n-piplineManage-edit-column-header-btnGroup-btn-delete"
-          />
-          )}
+              className="c7n-piplineManage-edit-column-header-btnGroup-btn"
+            />
+            {stageLength > 1 && (
+            <Button
+              funcType="raised"
+              shape="circle"
+              size="small"
+              onClick={deleteStep}
+              icon="delete_forever"
+              disabled={!appServiceId}
+              className="c7n-piplineManage-edit-column-header-btnGroup-btn c7n-piplineManage-edit-column-header-btnGroup-btn-delete"
+            />
+            )}
+          </div>
         </div>
-      </div>
-      <div className="c7n-piplineManage-edit-column-stageType">
-        <span>任务列表</span>
-        {/* Todo 加上串并行逻辑后优化判断 */}
-        <span
-          className={`c7n-piplineManage-stage-type-task c7n-piplineManage-stage-type-task-${parallel || realType === 'CI' ? 'parallel' : 'serial'}`}
+        <div
+          className="c7n-piplineManage-edit-column-stageType"
         >
-          {parallel || realType === 'CI' ? '任务并行' : '任务串行'}
-        </span>
+          <span>任务列表</span>
+          {/* Todo 加上串并行逻辑后优化判断 */}
+          <span
+            className={`c7n-piplineManage-stage-type-task c7n-piplineManage-stage-type-task-${parallel || realType === 'CI' ? 'parallel' : 'serial'}`}
+          >
+            {parallel || realType === 'CI' ? '任务并行' : '任务串行'}
+          </span>
+        </div>
       </div>
       {renderStepTasks()}
       <Button

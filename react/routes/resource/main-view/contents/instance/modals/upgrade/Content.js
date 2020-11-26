@@ -1,4 +1,6 @@
-import React, { useEffect, useMemo, useState, Fragment } from 'react';
+import React, {
+  useEffect, useMemo, useState, Fragment,
+} from 'react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
 import { Choerodon } from '@choerodon/boot';
@@ -42,9 +44,9 @@ export default injectIntl(observer(() => {
     try {
       if (await upgradeDs.submit() !== false) {
         refresh();
-      } else {
-        return false;
+        return true;
       }
+      return false;
     } catch (e) {
       Choerodon.handleResponseError(e);
       return false;
@@ -87,9 +89,8 @@ export default injectIntl(observer(() => {
         versionsDs.push(loadMoreRecord);
       }
       return res;
-    } else {
-      return false;
     }
+    return false;
   }
 
   function handleSearchVersion(e) {
@@ -114,36 +115,49 @@ export default injectIntl(observer(() => {
       searchVersion();
     }
   }
-  
+
   function handleOptionRenderer({ text, value }) {
     if (text === 'more__versions') {
-      return <a onClick={handleLoadMoreVersion}>{formatMessage({ id: 'loadMore' })}</a>;
-    } else {
-      return text;
+      return (
+        <a
+          className={`${prefixCls}-instance-upgrade-select-more`}
+          onClick={handleLoadMoreVersion}
+          role="none"
+        >
+          {formatMessage({ id: 'loadMore' })}
+        </a>
+      );
     }
+    return text;
   }
 
   function handleLoadMoreVersion(e) {
     e.stopPropagation();
     loadVersions(versionsDs.currentPage + 1);
   }
-  
+
   function handleRenderer({ text, value }) {
     if (upgradeDs.current && upgradeDs.current.get('appServiceVersionName')) {
       return upgradeDs.current.get('appServiceVersionName');
     }
+    if (value === text) {
+      return '';
+    }
+    return text;
   }
 
   function getValue() {
     const yaml = valueDs && valueDs.current ? valueDs.current.get('yaml') : '';
     const values = record ? record.get('values') : '';
-    return (<YamlEditor
-      readOnly={false}
-      value={values || yaml || ''}
-      originValue={yaml}
-      handleEnableNext={handleNextStepEnable}
-      onValueChange={handleChangeValue}
-    />);
+    return (
+      <YamlEditor
+        readOnly={false}
+        value={values || yaml || ''}
+        originValue={yaml}
+        handleEnableNext={handleNextStepEnable}
+        onValueChange={handleChangeValue}
+      />
+    );
   }
 
   function handleNextStepEnable(flag) {
@@ -156,7 +170,7 @@ export default injectIntl(observer(() => {
   }
 
   return (
-    <Fragment>
+    <>
       <Form dataSet={upgradeDs}>
         <Select
           name="appServiceVersionId"
@@ -173,6 +187,6 @@ export default injectIntl(observer(() => {
       <Spin spinning={valueDs.status === 'loading'}>
         {getValue()}
       </Spin>
-    </Fragment>
+    </>
   );
 }));

@@ -3,9 +3,9 @@ import {
   Modal, Icon, Button,
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
-import { usePipelineStageEditStore } from '../stageEditBlock/stores';
-import AddTask from '../../../PipelineCreate/components/AddTask';
-import AddCDTask from '../../../PipelineCreate/components/AddCDTask';
+import { usePipelineStageEditStore } from '../../stores';
+import AddTask from '../../../AddTask';
+import AddCDTask from '../../../AddCDTask';
 
 const jobTask = {
   build: '构建',
@@ -22,7 +22,6 @@ const EditItem = (props) => {
   const {
     index,
     sequence,
-    edit,
     jobDetail,
     PipelineCreateFormDataSet,
     AppServiceOptionsDs,
@@ -40,15 +39,15 @@ const EditItem = (props) => {
   const { name, type } = jobDetail;
 
   const {
-    editBlockStore, stepStore,
+    editBlockStore,
   } = usePipelineStageEditStore();
 
   const {
-    editJob, removeStepTask, getStepData2,
-  } = editBlockStore || stepStore;
+    editJob, removeStepTask, getStepData,
+  } = editBlockStore;
 
   function handleEditOk(data) {
-    editJob(sequence, index, data, edit);
+    editJob(sequence, index, data);
   }
 
   function openEditJobModal() {
@@ -83,8 +82,8 @@ const EditItem = (props) => {
           appServiceId={appServiceName}
           appServiceName={appServiceName}
           handleOk={handleEditOk}
-          PipelineCreateFormDataSet={edit && PipelineCreateFormDataSet}
-          AppServiceOptionsDs={edit && AppServiceOptionsDs}
+          PipelineCreateFormDataSet={PipelineCreateFormDataSet}
+          AppServiceOptionsDs={AppServiceOptionsDs}
           image={image}
           columnIndex={columnIndex}
           witchColumnJobIndex={witchColumnJobIndex}
@@ -93,10 +92,10 @@ const EditItem = (props) => {
         <AddCDTask
           random={Math.random()}
           jobDetail={jobDetail}
-          pipelineStageMainSource={getStepData2}
           appServiceId={appServiceName}
           appServiceName={appServiceName}
-          PipelineCreateFormDataSet={edit && PipelineCreateFormDataSet}
+          pipelineStageMainSource={getStepData}
+          PipelineCreateFormDataSet={PipelineCreateFormDataSet}
           handleOk={handleEditOk}
           columnIndex={columnIndex}
           witchColumnJobIndex={witchColumnJobIndex}
@@ -114,7 +113,7 @@ const EditItem = (props) => {
       title: `删除${name}任务`,
       children: '确认删除此任务吗？',
       okText: '确认',
-      onOk: () => removeStepTask(sequence, index, edit),
+      onOk: () => removeStepTask(sequence, index),
     });
   }
 

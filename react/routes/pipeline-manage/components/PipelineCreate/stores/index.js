@@ -22,11 +22,21 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
         projectId,
       },
     },
+    appService,
   } = props;
 
   const createUseStore = useStore();
   const AppServiceOptionsDs = useMemo(() => new DataSet(appServiceOptionsDs(projectId)), []);
-  const PipelineCreateFormDataSet = useMemo(() => new DataSet(pipelineCreateFormDataSet(AppServiceOptionsDs, projectId, createUseStore, dataSource, mathRandom)), [dataSource, mathRandom]);
+  const PipelineCreateFormDataSet = useMemo(
+    () => new DataSet(pipelineCreateFormDataSet(
+      AppServiceOptionsDs,
+      projectId,
+      createUseStore,
+      dataSource,
+      mathRandom,
+      appService,
+    )), [dataSource, mathRandom],
+  );
 
   const value = {
     ...props,

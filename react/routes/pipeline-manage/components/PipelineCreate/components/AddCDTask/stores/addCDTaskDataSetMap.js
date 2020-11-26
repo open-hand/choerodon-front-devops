@@ -15,6 +15,10 @@ const map = {
   whetherBlock: 'blockAfterJob',
   // 关联部署任务
   relativeMission: 'deployJobName',
+  triggersTasks: {
+    name: 'checkEnvPermissionFlag',
+    values: [true, false],
+  },
 };
 
 export default map;
