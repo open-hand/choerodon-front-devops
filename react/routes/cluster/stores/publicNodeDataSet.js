@@ -74,6 +74,21 @@ export default ({
     },
     fields: [
       {
+        name: 'isInnerNode',
+        type: 'boolean',
+        label: '是否同时作为集群节点',
+        ignore: 'always',
+      },
+      {
+        name: 'innerNodeName',
+        type: 'string',
+        label: '集群节点',
+        dynamicProps: {
+          required: ({ record }) => record.get('isInnerNode') && hasAllCheckedFields(record),
+          ignore: ({ record }) => (record.get('isInnerNode') ? 'never' : 'always'),
+        },
+      },
+      {
         name: 'hostIp',
         type: 'string',
         label: '公网IP',
@@ -140,11 +155,7 @@ export default ({
               return true;
             }
             return false;
-
-            // record.set('status', 'wait');
-            // return false;
           }
-          // 没填就不用测
           return true;
         },
       },

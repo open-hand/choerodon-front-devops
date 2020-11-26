@@ -1,4 +1,6 @@
-export default ({ formatMessage, projectId, gitlabProjectId, pipelineId, appServiceName }) => ({
+export default ({
+  formatMessage, projectId, gitlabProjectId, pipelineId, appServiceName,
+}) => ({
   autoCreate: true,
   selection: 'single',
   transport: {
@@ -8,6 +10,7 @@ export default ({ formatMessage, projectId, gitlabProjectId, pipelineId, appServ
       return {
         url: `devops/v1/projects/${projectId}/cicd_pipelines/${pipelineId}/execute?gitlab_project_id=${gitlabProjectId}&ref=${branchName}&tag=${isTag}`,
         method: 'post',
+        data: null,
       };
     },
   },

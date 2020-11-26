@@ -163,6 +163,12 @@ const AddTask = observer(() => {
           let zpk;
           let jarZpk;
           config && config.forEach((c, cIndex) => {
+            if (c.repos) {
+              c.repo = {
+                privateRepo: c.repos.filter(i => i.private).map(i => {i.privateIf = i.private;return i}),
+                publicRepo: c.repos.filter(i => !i.private).map(i => {i.privateIf = i.private;return i})
+              };
+            }
             if (cIndex === 0) {
               c.checked = true;
             } else {
@@ -1095,8 +1101,8 @@ const AddTask = observer(() => {
                             style={{
                               marginLeft: 8,
                               display: (function () {
-                                const { repo } = steps.find((s) => s.checked);
-                                if (JSON.stringify(repo) && JSON.stringify(repo) !== '{}') {
+                                const { repo, repos } = steps.find((s) => s.checked);
+                                if ((JSON.stringify(repo) && JSON.stringify(repo) !== '{}') || (JSON.stringify(repos) && JSON.stringify(repos) !== '[]')) {
                                   return 'inline-block';
                                 }
                                 return 'none';
@@ -1336,7 +1342,7 @@ const AddTask = observer(() => {
         style={{ marginTop: '-19px', paddingTop: 0 }}
       >
         <Select
-          addonAfter={<Tips helpText="流水线制品部署表示直接使用所选关联构建任务中产生的镜像进行部署；匹配制品部署则表示可自主选择项目镜像仓库中的镜像，并配置镜像版本的匹配规则，后续部署的镜像版本便会遵循此规则。" />}
+          addonAfter={<Tips helpText="CI任务Runner镜像是该CI任务的执行环境。您可直接使用此处给出的默认Runner镜像，或是输入自定义的CI任务Runner镜像" />}
           onChange={handleChangeImage}
           combo
           colSpan={4}

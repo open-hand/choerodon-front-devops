@@ -149,9 +149,6 @@ export default observer(() => {
   // 用于渲染分支来源
   const renderBranchOrigin = (args) => {
     const { text, value } = args;
-    if (text || value) {
-      return null;
-    }
     return renderOption(value);
   };
 

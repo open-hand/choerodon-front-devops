@@ -29,6 +29,7 @@ const NodeList = () => {
     const nodeName = record.get('nodeName');
     const operatingStatus = record.get('operatingStatus');
     const errorMsg = record.get('errorMsg');
+    const outerNodeFlag = record.get('outerNodeFlag');
     return (
       <>
         <StatusTags name={status} colorCode={status} />
@@ -37,6 +38,13 @@ const NodeList = () => {
             {nodeName}
           </span>
         </Tooltip>
+        {
+          outerNodeFlag && (
+            <span className="c7ncd-cluster-outerNodeFlag">
+              公网
+            </span>
+          )
+        }
         {
           operatingStatus === 'failed'
           && (
@@ -140,13 +148,13 @@ const NodeList = () => {
       return null;
     }
     const optsData = [];
-    // if (enableDeleteNode) {
-    //   optsData.unshift({
-    //     service: ['choerodon.code.project.deploy.cluster.cluster-management.ps.deleteNode'],
-    //     text: formatMessage({ id: `${intlPrefix}.node.action.removeNode` }),
-    //     action: () => handleRemoveNode(record),
-    //   });
-    // }
+    if (enableDeleteNode) {
+      optsData.unshift({
+        service: ['choerodon.code.project.deploy.cluster.cluster-management.ps.deleteNode'],
+        text: formatMessage({ id: `${intlPrefix}.node.action.removeNode` }),
+        action: () => handleRemoveNode(record),
+      });
+    }
     if (enableDeleteEtcdRole) {
       optsData.unshift({
         service: ['choerodon.code.project.deploy.cluster.cluster-management.ps.deleteEtcdRole'],
@@ -177,7 +185,7 @@ const NodeList = () => {
         border={false}
         queryBar="none"
       >
-        <Column width={150} header={formatMessage({ id: `${intlPrefix}.node.ip` })} renderer={renderStatusName} />
+        <Column width={170} header={formatMessage({ id: `${intlPrefix}.node.ip` })} renderer={renderStatusName} />
         <Column width={50} renderer={renderNodeOpts} />
         <Column name="role" minWidth={80} renderer={renderType} />
         <Column header={formatMessage({ id: `${intlPrefix}.node.cpu` })} renderer={renderCpu} />

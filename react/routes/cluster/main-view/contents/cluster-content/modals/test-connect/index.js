@@ -25,13 +25,10 @@ const TestConnect = observer(({ handleTestConnection, nodeRecord }) => {
           break;
         case 'failed':
           content = [
-            <Tooltip title="错误提示">
-              <Icon
-                type="highlight_off"
-                className={`${prefixCls}-test-text-icon`}
-              />
-            </Tooltip>,
-            <span>失败</span>,
+            <Icon
+              type="highlight_off"
+              className={`${prefixCls}-test-text-icon`}
+            />, <span>失败</span>,
           ];
           break;
         case 'operating':
