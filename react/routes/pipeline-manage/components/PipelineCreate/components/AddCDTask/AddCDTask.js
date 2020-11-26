@@ -127,9 +127,6 @@ export default observer(() => {
     'hostDeployType'
   ), pipelineStageMainSource]);
 
-  /**
-   * 这里是如果有关联构建任务 则默认选中该关联任务的匹配类型和触发分支
-   */
   useEffect(() => {
     if (relatedJobOpts && relatedJobOpts.length === 1) {
       ADDCDTaskDataSet.current.set('pipelineTask', relatedJobOpts[0].name);
@@ -137,13 +134,21 @@ export default observer(() => {
   }, [relatedJobOpts, ADDCDTaskDataSet?.current?.get(
     'hostDeployType')]);
 
+  /**
+   * 这里是如果有关联构建任务 则默认选中该关联任务的匹配类型和触发分支
+   */
   useEffect(() => {
     const pipelineTask = ADDCDTaskDataSet?.current?.get('pipelineTask');
     const type = ADDCDTaskDataSet?.current?.get('type');
     if (pipelineTask && relatedJobOpts && relatedJobOpts.length > 0 && type === 'cdHost') {
       const { triggerType, triggerValue } = relatedJobOpts.find((i) => i.name === pipelineTask);
       ADDCDTaskDataSet.current.set('triggerType', triggerType);
+      ADDCDTaskDataSet.getField('triggerType').set('disabled', true);
       ADDCDTaskDataSet.current.set('triggerValue', triggerValue.split(','));
+      ADDCDTaskDataSet.getField('triggerValue').set('disabled', true);
+    } else {
+      ADDCDTaskDataSet.getField('triggerType').set('disabled', false);
+      ADDCDTaskDataSet.getField('triggerValue').set('disabled', false);
     }
   }, [ADDCDTaskDataSet?.current?.get('pipelineTask'), ADDCDTaskDataSet?.current?.get('type')]);
 
@@ -1065,9 +1070,9 @@ export default observer(() => {
               workingPath: './',
               name: ADDCDTaskDataSet.current.get('name') || undefined,
             };
-            if (data === 'cdHost') {
-              newData.pipelineTask = relatedJobOpts
-                && relatedJobOpts.length === 1 && relatedJobOpts[0].name;
+            if (data === 'cdHost' && relatedJobOpts
+              && relatedJobOpts.length === 1) {
+              newData.pipelineTask = relatedJobOpts[0].name;
             }
             ADDCDTaskDataSet.loadData([newData]);
           }}
