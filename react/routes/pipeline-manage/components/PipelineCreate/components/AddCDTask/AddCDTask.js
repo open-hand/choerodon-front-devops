@@ -136,6 +136,7 @@ export default observer(() => {
 
   /**
    * 这里是如果有关联构建任务 则默认选中该关联任务的匹配类型和触发分支
+   * 并且将匹配类型禁用 然后设置触发分支可选项只能为该关联任务的触发分支
    */
   useEffect(() => {
     const pipelineTask = ADDCDTaskDataSet?.current?.get('pipelineTask');
@@ -145,10 +146,15 @@ export default observer(() => {
       ADDCDTaskDataSet.current.set('triggerType', triggerType);
       ADDCDTaskDataSet.getField('triggerType').set('disabled', true);
       ADDCDTaskDataSet.current.set('triggerValue', triggerValue.split(','));
-      ADDCDTaskDataSet.getField('triggerValue').set('disabled', true);
+      setBranchsList(triggerValue.split(',').map((i) => ({
+        value: i,
+        name: i,
+      })));
+      // ADDCDTaskDataSet.getField('triggerValue').set('disabled', true);
     } else {
       ADDCDTaskDataSet.getField('triggerType').set('disabled', false);
-      ADDCDTaskDataSet.getField('triggerValue').set('disabled', false);
+      setBranchsList(originBranchs);
+      // ADDCDTaskDataSet.getField('triggerValue').set('disabled', false);
     }
   }, [ADDCDTaskDataSet?.current?.get('pipelineTask'), ADDCDTaskDataSet?.current?.get('type')]);
 
