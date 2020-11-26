@@ -146,13 +146,8 @@ const PodDetail = memo(() => {
     <TimePopover content={value} />
   ), []);
 
-  function renderAction() {
+  function renderAction({ value, record }) {
     const buttons = [
-      // {
-      //   service: [],
-      //   text: intl.formatMessage({ id: `${intlPrefix}.instance.log` }),
-      //   action: () => openLog(),
-      // },
       {
         service: [],
         text: intl.formatMessage({ id: `${intlPrefix}.instance.term` }),
@@ -164,6 +159,13 @@ const PodDetail = memo(() => {
         action: () => deletePod(),
       },
     ];
+    if (record.get('containers')?.length) {
+      buttons.unshift({
+        service: [],
+        text: intl.formatMessage({ id: `${intlPrefix}.instance.log` }),
+        action: () => openLog(),
+      });
+    }
     return <Action data={buttons} />;
   }
   /**
