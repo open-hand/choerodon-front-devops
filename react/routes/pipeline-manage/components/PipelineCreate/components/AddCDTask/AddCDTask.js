@@ -127,12 +127,25 @@ export default observer(() => {
     'hostDeployType'
   ), pipelineStageMainSource]);
 
+  /**
+   * 这里是如果有关联构建任务 则默认选中该关联任务的匹配类型和触发分支
+   */
   useEffect(() => {
     if (relatedJobOpts && relatedJobOpts.length === 1) {
       ADDCDTaskDataSet.current.set('pipelineTask', relatedJobOpts[0].name);
     }
   }, [relatedJobOpts, ADDCDTaskDataSet?.current?.get(
     'hostDeployType')]);
+
+  useEffect(() => {
+    const pipelineTask = ADDCDTaskDataSet?.current?.get('pipelineTask');
+    const type = ADDCDTaskDataSet?.current?.get('type');
+    if (pipelineTask && relatedJobOpts && relatedJobOpts.length > 0 && type === 'cdHost') {
+      const { triggerType, triggerValue } = relatedJobOpts.find((i) => i.name === pipelineTask);
+      ADDCDTaskDataSet.current.set('triggerType', triggerType);
+      ADDCDTaskDataSet.current.set('triggerValue', triggerValue.split(','));
+    }
+  }, [ADDCDTaskDataSet?.current?.get('pipelineTask'), ADDCDTaskDataSet?.current?.get('type')]);
 
   function getMetadata(ds) {
     if (ds.type === 'cdDeploy') {
