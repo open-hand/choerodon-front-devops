@@ -150,11 +150,6 @@ const PodDetail = memo(() => {
     const buttons = [
       {
         service: [],
-        text: intl.formatMessage({ id: `${intlPrefix}.instance.term` }),
-        action: () => openShell(),
-      },
-      {
-        service: [],
         text: intl.formatMessage({ id: 'delete' }),
         action: () => deletePod(),
       },
@@ -164,6 +159,10 @@ const PodDetail = memo(() => {
         service: [],
         text: intl.formatMessage({ id: `${intlPrefix}.instance.log` }),
         action: () => openLog(),
+      }, {
+        service: [],
+        text: intl.formatMessage({ id: `${intlPrefix}.instance.term` }),
+        action: () => openShell(),
       });
     }
     return <Action data={buttons} />;
