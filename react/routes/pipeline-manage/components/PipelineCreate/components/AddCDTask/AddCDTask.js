@@ -86,10 +86,71 @@ export default observer(() => {
     + '# 请确保用户有该目录操作权限');
   const [testStatus, setTestStatus] = useState('');
   const [accountKeyValue, setAccountKeyValue] = useState('');
+  const [relatedJobOpts, setRelatedJobOpts] = useState([]);
 
   useEffect(() => {
     ADDCDTaskUseStore.setValueIdRandom(Math.random());
   }, []);
+
+  useEffect(() => {
+    const currentHostDeployType = ADDCDTaskDataSet?.current?.get(
+      'hostDeployType'
+    );
+    const tempArr = pipelineStageMainSource
+      && pipelineStageMainSource.length > 0
+      && pipelineStageMainSource.map((item) => item?.jobList.slice());
+    const jobArr = tempArr
+      ? tempArr.length > 0 && [].concat.apply(...tempArr)
+      : [];
+    let filterArr;
+    if (jobArr && currentHostDeployType && currentHostDeployType === 'image') {
+      filterArr = jobArr.filter(
+        (x) => x.configJobTypes?.includes('docker') && x.type === 'build',
+      );
+    } else if (currentHostDeployType === 'jar') {
+      filterArr = jobArr.filter(
+        (x) => (x.configJobTypes?.includes('maven_deploy')
+          || x.configJobTypes?.includes('upload_jar'))
+          && x.type === 'build',
+      );
+    }
+    if (filterArr && filterArr.length === 1) {
+      if (typeof filterArr[0] === 'object') {
+        ADDCDTaskDataSet.current.set('pipelineTask', filterArr[0].name);
+      }
+    }
+    if (filterArr
+      && filterArr.length > 0) {
+      setRelatedJobOpts(filterArr);
+    }
+  }, [ADDCDTaskDataSet?.current?.get(
+    'hostDeployType'
+  ), pipelineStageMainSource]);
+
+  useEffect(() => {
+    if (relatedJobOpts && relatedJobOpts.length === 1) {
+      ADDCDTaskDataSet.current.set('pipelineTask', relatedJobOpts[0].name);
+    }
+  }, [relatedJobOpts, ADDCDTaskDataSet?.current?.get(
+    'hostDeployType')]);
+
+  /**
+   * 这里是如果有关联构建任务 则默认选中该关联任务的匹配类型和触发分支
+   */
+  useEffect(() => {
+    const pipelineTask = ADDCDTaskDataSet?.current?.get('pipelineTask');
+    const type = ADDCDTaskDataSet?.current?.get('type');
+    if (pipelineTask && relatedJobOpts && relatedJobOpts.length > 0 && type === 'cdHost') {
+      const { triggerType, triggerValue } = relatedJobOpts.find((i) => i.name === pipelineTask);
+      ADDCDTaskDataSet.current.set('triggerType', triggerType);
+      ADDCDTaskDataSet.getField('triggerType').set('disabled', true);
+      ADDCDTaskDataSet.current.set('triggerValue', triggerValue.split(','));
+      ADDCDTaskDataSet.getField('triggerValue').set('disabled', true);
+    } else {
+      ADDCDTaskDataSet.getField('triggerType').set('disabled', false);
+      ADDCDTaskDataSet.getField('triggerValue').set('disabled', false);
+    }
+  }, [ADDCDTaskDataSet?.current?.get('pipelineTask'), ADDCDTaskDataSet?.current?.get('type')]);
 
   function getMetadata(ds) {
     if (ds.type === 'cdDeploy') {
@@ -381,39 +442,39 @@ export default observer(() => {
       });
   });
 
-  const renderRelatedJobOpts = () => {
-    const currentHostDeployType = ADDCDTaskDataSet?.current?.get(
-      'hostDeployType'
-    );
-    const tempArr = pipelineStageMainSource
-      && pipelineStageMainSource.length > 0
-      && pipelineStageMainSource.map((item) => item?.jobList.slice());
-    const jobArr = tempArr
-      ? tempArr.length > 0 && [].concat.apply(...tempArr)
-      : [];
-    let filterArr;
-    if (jobArr && currentHostDeployType && currentHostDeployType === 'image') {
-      filterArr = jobArr.filter(
-        (x) => x.configJobTypes?.includes('docker') && x.type === 'build',
-      );
-    } else if (currentHostDeployType === 'jar') {
-      filterArr = jobArr.filter(
-        (x) => (x.configJobTypes?.includes('maven_deploy')
-            || x.configJobTypes?.includes('upload_jar'))
-          && x.type === 'build',
-      );
-    }
-    if (filterArr && filterArr.length > 0) {
-      if (typeof filterArr[0] === 'object') {
-        ADDCDTaskDataSet.current.set('pipelineTask', filterArr[0].name);
-      }
-    }
-    return (
-      filterArr
-      && filterArr.length > 0
-      && filterArr.map((item) => <Option value={item.name}>{item.name}</Option>)
-    );
-  };
+  // const renderRelatedJobOpts = () => {
+  //   const currentHostDeployType = ADDCDTaskDataSet?.current?.get(
+  //     'hostDeployType'
+  //   );
+  //   const tempArr = pipelineStageMainSource
+  //     && pipelineStageMainSource.length > 0
+  //     && pipelineStageMainSource.map((item) => item?.jobList.slice());
+  //   const jobArr = tempArr
+  //     ? tempArr.length > 0 && [].concat.apply(...tempArr)
+  //     : [];
+  //   let filterArr;
+  //   if (jobArr && currentHostDeployType && currentHostDeployType === 'image') {
+  //     filterArr = jobArr.filter(
+  //       (x) => x.configJobTypes?.includes('docker') && x.type === 'build',
+  //     );
+  //   } else if (currentHostDeployType === 'jar') {
+  //     filterArr = jobArr.filter(
+  //       (x) => (x.configJobTypes?.includes('maven_deploy')
+  //           || x.configJobTypes?.includes('upload_jar'))
+  //         && x.type === 'build',
+  //     );
+  //   }
+  //   if (filterArr && filterArr.length > 0) {
+  //     if (typeof filterArr[0] === 'object') {
+  //       ADDCDTaskDataSet.current.set('pipelineTask', filterArr[0].name);
+  //     }
+  //   }
+  //   return (
+  //     filterArr
+  //     && filterArr.length > 0
+  //     && filterArr.map((item) => <Option value={item.name}>{item.name}</Option>)
+  //   );
+  // };
 
   function searchMatcher({ record, text }) {
     return record.get('pipelineTask').indexOf(text) !== -1;
@@ -506,6 +567,49 @@ export default observer(() => {
     ];
   };
 
+  /**
+   * 修改配置信息事件
+   */
+  const handleChangeValueIdValues = () => {
+    let tempValues = valueIdValues;
+    Modal.open({
+      key: Modal.key(),
+      title: '修改部署配置""的配置信息',
+      children: (
+        <div
+          style={{
+            maxHeight: 500,
+          }}
+        >
+          <YamlEditor
+            colSpan={3}
+            newLine
+            readOnly={false}
+            className="addcdTask-yamleditor"
+            onValueChange={(data) => {
+              tempValues = data;
+            }}
+            value={tempValues}
+          />
+        </div>
+      ),
+      style: {
+        width: '740px',
+      },
+      okText: '修改',
+      onOk: async () => {
+        await axios.post(`/devops/v1/projects/${projectId}/deploy_value`, {
+          ...ADDCDTaskUseStore.getValueIdList.find((i) => String(i.id) === String(ADDCDTaskDataSet.current.get('valueId'))),
+          value: tempValues,
+        });
+        ADDCDTaskUseStore.setValueIdRandom(Math.random());
+        setValueIdValues(tempValues);
+      },
+      onCancel: () => {
+      },
+    });
+  };
+
   const getOtherConfig = () => {
     function getModeDom() {
       const currentDepoySource = ADDCDTaskDataSet?.current?.get('deploySource');
@@ -543,7 +647,7 @@ export default observer(() => {
               }
               searchMatcher={searchMatcher}
             >
-              {renderRelatedJobOpts()}
+              {relatedJobOpts.map((item) => <Option value={item.name}>{item.name}</Option>)}
             </Select>
           ),
           currentDepoySource === 'matchDeploy' && (
@@ -596,7 +700,7 @@ export default observer(() => {
               }
               searchMatcher={searchMatcher}
             >
-              {renderRelatedJobOpts()}
+              {relatedJobOpts.map((item) => <Option value={item.name}>{item.name}</Option>)}
             </Select>
           ),
           currentDepoySource === 'matchDeploy' && (
@@ -663,14 +767,36 @@ export default observer(() => {
             optionRenderer={optionRenderValueId}
             renderer={rendererValueId}
           />
+          <div newLine colSpan={3}>
+            <Icon style={{ color: 'rgb(244, 67, 54)' }} type="error" />
+            <span
+              style={{
+                fontSize: '12px',
+                fontFamily: 'PingFangSC-Regular, PingFang SC',
+                fontWeight: 400,
+                color: 'rgba(0, 0, 0, 0.65)',
+                lineHeight: '20px',
+              }}
+            >
+              修改配置信息后，所选的部署配置中的配置信息也将随之改动。
+            </span>
+            <Button
+              funcType="flat"
+              color="blue"
+              icon="edit-o"
+              onClick={handleChangeValueIdValues}
+            >
+              修改配置信息
+            </Button>
+          </div>
           <YamlEditor
             colSpan={3}
             newLine
-            readOnly={false}
+            readOnly
             className="addcdTask-yamleditor"
-            onValueChange={(data) => {
-              setValueIdValues(data);
-            }}
+            // onValueChange={(data) => {
+            //   setValueIdValues(data);
+            // }}
             value={valueIdValues}
           />
         </Form>,
@@ -728,7 +854,8 @@ export default observer(() => {
               ADDCDTaskDataSet.current.set('hostDeployType', data);
               if (data !== 'customize') {
                 ADDCDTaskDataSet.current.set('deploySource', 'pipelineDeploy');
-                ADDCDTaskDataSet.current.set('pipelineTask', null);
+                // console.log(ADDCDTaskDataSet.getField('pipelineTask'));
+                // ADDCDTaskDataSet.current.set('pipelineTask', '123');
               }
             }}
           >
@@ -926,14 +1053,14 @@ export default observer(() => {
     <div className="addcdTask">
       <Form columns={3} dataSet={ADDCDTaskDataSet}>
         <Select
-          onChange={(data) => ADDCDTaskDataSet.loadData([
-            {
+          onChange={(data) => {
+            const newData = {
               type: data,
               glyyfw:
-                  appServiceId
-                  || PipelineCreateFormDataSet.getField('appServiceId').getText(
-                    PipelineCreateFormDataSet.current.get('appServiceId'),
-                  ),
+                appServiceId
+                || PipelineCreateFormDataSet.getField('appServiceId').getText(
+                  PipelineCreateFormDataSet.current.get('appServiceId'),
+                ),
               triggerType: 'refs',
               deployType: 'create',
               authType: 'accountPassword',
@@ -942,8 +1069,13 @@ export default observer(() => {
               [addCDTaskDataSetMap.hostSource]: addCDTaskDataSetMap.alreadyhost,
               workingPath: './',
               name: ADDCDTaskDataSet.current.get('name') || undefined,
-            },
-          ])}
+            };
+            if (data === 'cdHost' && relatedJobOpts
+              && relatedJobOpts.length === 1) {
+              newData.pipelineTask = relatedJobOpts[0].name;
+            }
+            ADDCDTaskDataSet.loadData([newData]);
+          }}
           colSpan={1}
           name="type"
         >
@@ -1041,6 +1173,26 @@ export default observer(() => {
               disabled: !record.get('connected'),
             })}
           />,
+          <div className="addcdTask-whetherBlock" style={{ position: 'relative', top: '12px' }}>
+            <SelectBox
+              name={addCDTaskDataSetMap.triggersTasks.name}
+              colSpan={2}
+            >
+              <Option value={addCDTaskDataSetMap.triggersTasks.values[0]}>是</Option>
+              <Option value={addCDTaskDataSetMap.triggersTasks.values[1]}>否</Option>
+            </SelectBox>
+            <Tooltip title="123">
+              <Icon
+                style={{
+                  position: 'absolute',
+                  top: '-18px',
+                  left: '157px',
+                  color: 'rgba(0, 0, 0, 0.36)',
+                }}
+                type="help"
+              />
+            </Tooltip>
+          </div>,
           <SelectBox
             className="addcdTask-mode"
             newLine

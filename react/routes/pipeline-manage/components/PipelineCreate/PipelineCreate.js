@@ -9,7 +9,7 @@ import { message, Icon, Tooltip } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { usePipelineCreateStore } from './stores';
 import Tips from '../../../../components/new-tips';
-import StageEditBlock from '../PipelineFlow/components/stageEditBlock';
+import StageEditBlock from './components/stageEditBlock';
 import './pipelineCreate.less';
 
 const { Option } = Select;
@@ -29,6 +29,9 @@ const PipelineCreate = observer(() => {
     refreshTree,
     dataSource,
     mainStore,
+    // 老mainData 为了在复制之后 重新设置成以前的mainData
+    oldMainData,
+    appService,
   } = usePipelineCreateStore();
 
   const [expandIf, setExpandIf] = useState(false);
@@ -36,8 +39,17 @@ const PipelineCreate = observer(() => {
   useEffect(() => {
     if (dataSource) {
       const {
-        name, appServiceId, image, versionName,
+        name, image, versionName,
       } = dataSource;
+      let { appServiceId } = dataSource;
+      // 如果有appService 说明是复制流水线
+      if (appService) {
+        appServiceId = appService.id;
+        PipelineCreateFormDataSet.getField('appServiceId').props.lookup = [{
+          appServiceId,
+          appServiceName: appService.name,
+        }];
+      }
       PipelineCreateFormDataSet.loadData([{
         name,
         appServiceId,
@@ -66,8 +78,8 @@ const PipelineCreate = observer(() => {
         ...dataSource,
         ...origin,
         image: origin.selectImage === '1' ? origin.image : null,
-        devopsCiStageVOS: editBlockStore.getStepData2.filter((s) => s.type === 'CI'),
-        devopsCdStageVOS: editBlockStore.getStepData2.filter((s) => s.type === 'CD'),
+        devopsCiStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CI'),
+        devopsCdStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CD'),
       };
       if (!data.bbcl) {
         delete data.versionName;
@@ -78,7 +90,7 @@ const PipelineCreate = observer(() => {
         message.error(`流水线中存在空阶段，无法${modal.props.title.includes('创建') ? '创建' : '保存'}`);
         return false;
       }
-      if (dataSource) {
+      if (dataSource && !oldMainData) {
         try {
           await axios.put(`/devops/v1/projects/${projectId}/cicd_pipelines/${dataSource.id}`, data);
           editBlockStore.loadData(projectId, dataSource.id);
@@ -100,13 +112,17 @@ const PipelineCreate = observer(() => {
     return false;
   };
 
-  const handelCancel = () => {
-    refreshTree();
+  const handleCancel = () => {
+    editBlockStore.setMainData(oldMainData);
   };
 
   modal.handleOk(handleCreate);
 
-  modal.handleCancel(handelCancel);
+  modal.handleCancel(() => {
+    if (oldMainData) {
+      handleCancel();
+    }
+  });
 
   const handleChangeSelectImage = (data) => {
     if (data === createUseStore.getDefaultImage) {
@@ -154,7 +170,7 @@ const PipelineCreate = observer(() => {
       <Form columns={3} dataSet={PipelineCreateFormDataSet}>
         <TextField
           name="name"
-          disabled={dataSource}
+          // disabled={dataSource}
         />
         {/* 应用服务只能选择目前没有关联流水线的应用服务 */}
         <Select
