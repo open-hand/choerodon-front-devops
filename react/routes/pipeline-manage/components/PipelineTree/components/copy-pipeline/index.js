@@ -21,6 +21,7 @@ export default observer(({
     editBlockStore.setMainData({
       ...result,
       devopsCdStageVOS: [],
+      name: undefined,
       // stageList: result.stageList.filter(s => s.type === 'CI')
     });
     editBlockStore.setStepData([...result.devopsCiStageVOS]);
