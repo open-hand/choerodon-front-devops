@@ -60,6 +60,7 @@ export default observer(() => {
     ADDCDTaskDataSet,
     appServiceId,
     PipelineCreateFormDataSet,
+    AppState,
     AppState: {
       currentMenuType: { projectId },
     },
@@ -87,9 +88,13 @@ export default observer(() => {
   const [testStatus, setTestStatus] = useState('');
   const [accountKeyValue, setAccountKeyValue] = useState('');
   const [relatedJobOpts, setRelatedJobOpts] = useState([]);
+  const [isProjectOwner, setIsProjectOwner] = useState(false);
 
   useEffect(() => {
     ADDCDTaskUseStore.setValueIdRandom(Math.random());
+    axios.get(`/iam/choerodon/v1/projects/${projectId}/check_admin_permission`).then((res) => {
+      setIsProjectOwner(res);
+    });
   }, []);
 
   useEffect(() => {
@@ -791,6 +796,7 @@ export default observer(() => {
               color="blue"
               icon="edit-o"
               onClick={handleChangeValueIdValues}
+              disabled={!ADDCDTaskDataSet.current.get('valueId')}
             >
               修改配置信息
             </Button>
@@ -1179,26 +1185,34 @@ export default observer(() => {
               disabled: !record.get('connected'),
             })}
           />,
-          <div className="addcdTask-whetherBlock" style={{ position: 'relative', top: '12px' }}>
-            <SelectBox
-              name={addCDTaskDataSetMap.triggersTasks.name}
-              colSpan={2}
+          isProjectOwner && (
+            <div
+              className="addcdTask-whetherBlock"
+              style={{
+                position: 'relative',
+                top: '12px',
+              }}
             >
-              <Option value={addCDTaskDataSetMap.triggersTasks.values[0]}>是</Option>
-              <Option value={addCDTaskDataSetMap.triggersTasks.values[1]}>否</Option>
-            </SelectBox>
-            <Tooltip title="此处仅项目所有者可以设置；默认为否，即触发用户没有该部署任务的环境权限时，会直接跳过此部署任务；若选择为是，触发成员在没有环境权限时，将会使用管理员账户触发部署。">
-              <Icon
-                style={{
-                  position: 'absolute',
-                  top: '-18px',
-                  left: '157px',
-                  color: 'rgba(0, 0, 0, 0.36)',
-                }}
-                type="help"
-              />
-            </Tooltip>
-          </div>,
+              <SelectBox
+                name={addCDTaskDataSetMap.triggersTasks.name}
+                colSpan={2}
+              >
+                <Option value={addCDTaskDataSetMap.triggersTasks.values[0]}>是</Option>
+                <Option value={addCDTaskDataSetMap.triggersTasks.values[1]}>否</Option>
+              </SelectBox>
+              <Tooltip title="此处仅项目所有者可以设置；默认为否，即触发用户没有该部署任务的环境权限时，会直接跳过此部署任务；若选择为是，触发成员在没有环境权限时，将会使用管理员账户触发部署。">
+                <Icon
+                  style={{
+                    position: 'absolute',
+                    top: '-18px',
+                    left: '157px',
+                    color: 'rgba(0, 0, 0, 0.36)',
+                  }}
+                  type="help"
+                />
+              </Tooltip>
+            </div>
+          ),
           <SelectBox
             className="addcdTask-mode"
             newLine
