@@ -19,6 +19,16 @@ const map = {
     name: 'checkEnvPermissionFlag',
     values: [false, true],
   },
+  // 外部卡点
+  externalStuck: 'externalStuck',
+  // 流水线回调地址
+  pipelineCallbackAddress: 'pipelineCallbackAddress',
+  // 外部地址
+  externalAddress: 'externalAddress',
+  // token
+  externalToken: 'externalToken',
+  // 任务描述
+  missionDes: 'missionDes',
 };
 
 export default map;

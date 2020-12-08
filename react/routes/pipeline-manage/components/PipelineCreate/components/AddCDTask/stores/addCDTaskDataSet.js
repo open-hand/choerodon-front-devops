@@ -542,6 +542,30 @@ export default (
       label: '触发分支',
     },
     {
+      name: addCDTaskDataSetMap.pipelineCallbackAddress,
+      type: 'string',
+      label: '流水线回调地址',
+      required: true,
+      disabled: true,
+    },
+    {
+      name: addCDTaskDataSetMap.externalAddress,
+      type: 'string',
+      label: '外部地址',
+      required: true,
+    },
+    {
+      name: addCDTaskDataSetMap.externalToken,
+      type: 'string',
+      label: 'Token',
+    },
+    {
+      name: addCDTaskDataSetMap.missionDes,
+      type: 'string',
+      label: '任务描述',
+      maxLength: 100,
+    },
+    {
       name: 'pageSize',
       type: 'number',
       defaultValue: 20,
