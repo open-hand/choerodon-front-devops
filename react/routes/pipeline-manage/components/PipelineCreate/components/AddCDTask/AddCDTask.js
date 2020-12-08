@@ -11,6 +11,7 @@ import {
   Tooltip,
   Button,
   Modal,
+  TextArea,
 } from 'choerodon-ui/pro';
 import { Icon, Spin } from 'choerodon-ui';
 import { axios } from '@choerodon/boot';
@@ -979,6 +980,13 @@ export default observer(() => {
     return ldap ? `${text}(${record.get('loginName')})` : `${text}(${record.get('email')})`;
   };
 
+  /**
+   * 外部卡点回调地址的复制事件
+   */
+  const handleCopy = () => {
+    console.log('here');
+  };
+
   const getBranchsList = useCallback(async () => {
     const url = `devops/v1/projects/${projectId}/app_service/${PipelineCreateFormDataSet.current.get(
       'appServiceId',
@@ -1107,6 +1115,7 @@ export default observer(() => {
           <Option value="cdHost">主机部署</Option>
           <Option value="cdAudit">人工卡点</Option>
           <Option value={addCDTaskDataSetMap.apiTest}>API测试</Option>
+          <Option value={addCDTaskDataSetMap.externalStuck}>外部卡点</Option>
         </Select>
         <TextField colSpan={2} name="name" />
         <TextField colSpan={1} name="glyyfw" />
@@ -1298,6 +1307,41 @@ export default observer(() => {
             )}
           </div>
         )}
+        {
+          ADDCDTaskDataSet.current.get('type') === addCDTaskDataSetMap.externalStuck && [
+            <div colSpan={3} className="addcdTask-missionDes">
+              <span>任务说明：</span>
+              <span style={{ display: 'inline-block' }}>
+                - 外部卡点任务用于对接Choerodon平台外的工作流或系统。
+                此任务触发时，会默认将projectId、pipelineId、 stageId、jobId、pipelineRecordId、stageRecordId
+                以及jobRecordId发送至外部地址。
+              </span>
+              <span style={{ display: 'inline-block' }}>
+                - 外部系统执行结束后，会往  流水线回调地址  发送一个状态来作为外部卡点的任务状态。成功后会接着执行后续任务，失败则停留在此任务。
+              </span>
+            </div>,
+            <TextField
+              name={addCDTaskDataSetMap.pipelineCallbackAddress}
+              colSpan={3}
+              addonAfter={
+                <Tips helpText="您可在此输入正则表达式来配置触发分支；例：若想匹配以 feature 开头的分支，可以输入 ^feature.*。更多表达式，详见用户手册。若不填写，则默认为所有分支和tag" />
+              }
+              suffix={<Icon style={{ cursor: 'pointer' }} onClick={handleCopy} type="content_copy" />}
+            />,
+            <TextArea
+              name={addCDTaskDataSetMap.externalAddress}
+              colSpan={3}
+            />,
+            <TextArea
+              name={addCDTaskDataSetMap.externalToken}
+              colSpan={3}
+            />,
+            <TextArea
+              name={addCDTaskDataSetMap.missionDes}
+              colSpan={3}
+            />,
+          ]
+        }
       </Form>
       {getOtherConfig()}
     </div>
