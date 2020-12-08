@@ -145,8 +145,16 @@ export default observer(() => {
    */
   useEffect(() => {
     const pipelineTask = ADDCDTaskDataSet?.current?.get('pipelineTask');
+    const hostDeployType = ADDCDTaskDataSet?.current?.get('hostDeployType');
+    const deploySource = ADDCDTaskDataSet?.current?.get('deploySource');
     const type = ADDCDTaskDataSet?.current?.get('type');
-    if (pipelineTask && relatedJobOpts && relatedJobOpts.length > 0 && type === 'cdHost') {
+    // 如果是主机部署并且部署模式是镜像部署或者jar包部署并且部署来源是流水线制品
+    if (
+      type === 'cdHost' && ['image', 'jar'].includes(hostDeployType)
+      && deploySource === 'pipelineDeploy'
+      && pipelineTask
+      && relatedJobOpts
+      && relatedJobOpts.length > 0) {
       const { triggerType, triggerValue } = relatedJobOpts.find((i) => i.name === pipelineTask);
       ADDCDTaskDataSet.current.set('triggerType', triggerType);
       ADDCDTaskDataSet.getField('triggerType').set('disabled', true);
@@ -155,13 +163,17 @@ export default observer(() => {
         value: i,
         name: i,
       })));
-      // ADDCDTaskDataSet.getField('triggerValue').set('disabled', true);
     } else {
       ADDCDTaskDataSet.getField('triggerType').set('disabled', false);
       setBranchsList(originBranchs);
       // ADDCDTaskDataSet.getField('triggerValue').set('disabled', false);
     }
-  }, [ADDCDTaskDataSet?.current?.get('pipelineTask'), ADDCDTaskDataSet?.current?.get('type')]);
+  }, [
+    ADDCDTaskDataSet?.current?.get('pipelineTask'),
+    ADDCDTaskDataSet?.current?.get('type'),
+    ADDCDTaskDataSet?.current?.get('hostDeployType'),
+    ADDCDTaskDataSet?.current?.get('deploySource'),
+  ]);
 
   function getMetadata(ds) {
     if (ds.type === 'cdDeploy') {
