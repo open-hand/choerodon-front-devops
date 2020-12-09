@@ -545,14 +545,14 @@ export default (
       name: addCDTaskDataSetMap.pipelineCallbackAddress,
       type: 'string',
       label: '流水线回调地址',
-      required: true,
+      required: false,
       disabled: true,
     },
     {
       name: addCDTaskDataSetMap.externalAddress,
       type: 'string',
       label: '外部地址',
-      required: true,
+      required: false,
     },
     {
       name: addCDTaskDataSetMap.externalToken,
