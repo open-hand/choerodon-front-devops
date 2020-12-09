@@ -128,6 +128,8 @@ export default observer(() => {
     if (filterArr
       && filterArr.length > 0) {
       setRelatedJobOpts(filterArr);
+    } else {
+      setRelatedJobOpts([]);
     }
   }, [ADDCDTaskDataSet?.current?.get(
     'hostDeployType'
@@ -136,6 +138,8 @@ export default observer(() => {
   useEffect(() => {
     if (relatedJobOpts && relatedJobOpts.length === 1) {
       ADDCDTaskDataSet.current.set('pipelineTask', relatedJobOpts[0].name);
+    } else {
+      ADDCDTaskDataSet.current.init('pipelineTask');
     }
   }, [relatedJobOpts, ADDCDTaskDataSet?.current?.get(
     'hostDeployType')]);
