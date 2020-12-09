@@ -1212,15 +1212,15 @@ export default observer(() => {
           />,
           isProjectOwner && (
             <div
-              className="addcdTask-whetherBlock"
+              className="addcdTask-whetherBlock addcdTask-triggersTasks"
               style={{
                 position: 'relative',
                 top: '12px',
               }}
+              colSpan={2}
             >
               <SelectBox
                 name={addCDTaskDataSetMap.triggersTasks.name}
-                colSpan={2}
               >
                 <Option value={addCDTaskDataSetMap.triggersTasks.values[0]}>是</Option>
                 <Option value={addCDTaskDataSetMap.triggersTasks.values[1]}>否</Option>
@@ -1230,7 +1230,7 @@ export default observer(() => {
                   style={{
                     position: 'absolute',
                     top: '-18px',
-                    left: '157px',
+                    left: '195px',
                     color: 'rgba(0, 0, 0, 0.36)',
                   }}
                   type="help"
