@@ -67,8 +67,8 @@ function Branch(props) {
     !(appServiceId)
       ? null
       : <Permission
-        service={['choerodon.code.project.develop.code-management.ps.branch.create',
-        ]}
+          service={['choerodon.code.project.develop.code-management.ps.branch.create',
+          ]}
       >
         <Button
           onClick={openCreateBranchModal}
@@ -148,6 +148,7 @@ function Branch(props) {
       summary,
       typeCode,
     };
+    const showDefaultIssue = issueId && issueNum && summary;
     ProModal.open({
       key: branchEditModalKey,
       title: <FormattedMessage id="branch.edit" />,
@@ -157,8 +158,8 @@ function Branch(props) {
         appServiceId={appServiceId}
         objectVersionNumber={objectVersionNumber}
         branchName={branchName}
-        issueId={issueId}
-        initIssue={initIssue}
+        issueId={showDefaultIssue && issueId}
+        initIssue={showDefaultIssue && initIssue}
         handleRefresh={handleRefresh}
       />,
       style: branchCreateModalStyle,
