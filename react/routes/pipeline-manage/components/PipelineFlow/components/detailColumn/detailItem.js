@@ -12,33 +12,7 @@ import CodeQuality from '../codeQuality';
 import CodeLog from '../codeLog';
 import { usePipelineManageStore } from '../../../../stores';
 import renderDuration from '../../../../../../utils/getDuration';
-
-const jobType = {
-  build: {
-    name: '构建',
-  },
-  sonar: {
-    name: '代码检查',
-  },
-  custom: {
-    name: '自定义',
-  },
-  chart: {
-    name: '发布Chart',
-  },
-  cdDeploy: {
-    name: '部署',
-  },
-  cdAudit: {
-    name: '人工卡点',
-  },
-  cdHost: {
-    name: '主机部署',
-  },
-  cdApiTest: {
-    name: 'API测试任务',
-  },
-};
+import jobTypesMappings from '../../../../stores/jobsTypeMappings';
 
 const DetailItem = (props) => {
   const {
@@ -73,6 +47,7 @@ const DetailItem = (props) => {
     sonarScannerType,
     codeCoverage,
     apiTestTaskRecordVO, // api测试任务独有的
+    externalApprovalJobVO,
   } = props;
 
   const { gitlabProjectId, appServiceId } = getDetailData && getDetailData.ciCdPipelineVO;
@@ -109,7 +84,7 @@ const DetailItem = (props) => {
       jobRecordId,
     };
     Modal.open({
-      title: `查看${jobType[itemType].name}日志`,
+      title: `查看${jobTypesMappings[itemType]}日志`,
       key: Modal.key(),
       style: {
         width: 'calc(100vw - 3.52rem)',
@@ -390,6 +365,52 @@ const DetailItem = (props) => {
     }
   }
 
+  const renderCdExternalApproval = () => (
+    <main>
+      <div>
+        <span>外部地址:</span>
+        <span>{externalApprovalJobVO?.triggerUrl || '-'}</span>
+      </div>
+    </main>
+  );
+
+  const renderItemDetail = () => {
+    let temFun;
+    switch (itemType) {
+      case 'cdDeploy':
+        temFun = renderCdAuto;
+        break;
+      case 'cdAudit':
+        temFun = renderCdAudit;
+        break;
+      case 'chart':
+        temFun = renderChart;
+        break;
+      case 'cdHost':
+        temFun = renderCdHost;
+        break;
+      case 'sonar':
+        temFun = renderSonar;
+        break;
+      case 'cdApiTest':
+        temFun = renderApiTest;
+        break;
+      case 'cdExternalApproval':
+        temFun = renderCdExternalApproval;
+      default:
+        break;
+    }
+    return temFun ? temFun() : '';
+  };
+
+  const renderCheckLogFun = () => {
+    if (itemType === 'cdDeploy') {
+      openCdLog();
+      return;
+    }
+    openDescModal(itemType);
+  };
+
   return (
     <div className="c7n-piplineManage-detail-column-item">
       <header>
@@ -401,7 +422,7 @@ const DetailItem = (props) => {
         <div className="c7n-piplineManage-detail-column-item-sub">
           <Tooltip title={jobName}>
             <span>
-              {itemType && `【${jobType[itemType].name}】`}
+              {itemType && `【${jobTypesMappings[itemType]}】`}
               {jobName}
             </span>
           </Tooltip>
@@ -416,14 +437,9 @@ const DetailItem = (props) => {
           )}
         </div>
       </header>
-      {itemType === 'cdDeploy' && renderCdAuto()}
-      {itemType === 'cdAudit' && renderCdAudit()}
-      {itemType === 'chart' && renderChart()}
-      {itemType === 'cdHost' && renderCdHost()}
-      {itemType === 'sonar' && renderSonar()}
-      {itemType === 'cdApiTest' && renderApiTest()}
+      {renderItemDetail()}
       <footer>
-        {(itemType !== 'cdAudit' && itemType !== 'cdApiTest') && (
+        {(!['cdAudit', 'cdApiTest'].includes(itemType)) && (
           <Permission
             service={['choerodon.code.project.develop.ci-pipeline.ps.job.log']}
           >
@@ -433,8 +449,8 @@ const DetailItem = (props) => {
                 shape="circle"
                 size="small"
                 icon="description-o"
-                disabled={jobStatus === 'created' || jobStatus === 'skipped'}
-                onClick={itemType !== 'cdDeploy' ? () => openDescModal(itemType) : openCdLog}
+                disabled={['created', 'skipped'].includes(jobStatus)}
+                onClick={renderCheckLogFun}
                 color="primary"
               />
             </Tooltip>
@@ -455,7 +471,7 @@ const DetailItem = (props) => {
                 icon="refresh"
                 color="primary"
                 onClick={
-                  itemType === 'cdDeploy' || itemType === 'cdHost' || itemType === 'cdAudit'
+                  ['cdDeploy', 'cdHost', 'cdAudit'].includes(itemType)
                     ? handleCdJobRetry
                     : handleJobRetry
                 }

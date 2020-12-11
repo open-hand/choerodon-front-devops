@@ -6,18 +6,7 @@ import { observer } from 'mobx-react-lite';
 import { usePipelineStageEditStore } from '../../stores';
 import AddTask from '../../../AddTask';
 import AddCDTask from '../../../AddCDTask';
-
-const jobTask = {
-  build: '构建',
-  sonar: '代码检查',
-  custom: '自定义',
-  chart: '发布Chart',
-  cdDeploy: '部署',
-  cdHost: '主机部署',
-  cdAudit: '人工卡点',
-  cdApiTest: 'API测试',
-  cdExternalApproval: '外部卡点',
-};
+import jobType from '../../../../../../stores/jobsTypeMappings';
 
 const EditItem = (props) => {
   const {
@@ -139,7 +128,7 @@ const EditItem = (props) => {
     >
       <div className="c7n-piplineManage-edit-column-item-header">
         【
-        {Object.prototype.hasOwnProperty.bind(jobTask, type) && jobTask[type]}
+        {Object.prototype.hasOwnProperty.bind(jobType, type) && jobType[type]}
         】
         {name}
       </div>
