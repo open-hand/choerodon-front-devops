@@ -37,7 +37,7 @@ export default ({
   pageSize: DEFAULT_SIZE,
   transport: {
     read: ({ dataSet }) => ({
-      url: `devops/v1/projects/${projectId}/cicd_pipelines/query?page=${mainStore.getTreeDataPage || 1}&size=${DEFAULT_SIZE}`,
+      url: `devops/v1/projects/${projectId}/cicd_pipelines/query?page=${mainStore.getTreeDataPage || 1}&size=${DEFAULT_SIZE}${mainStore.getSearchValue ? `&searchParam=${mainStore.getSearchValue}` : ''}`,
       method: 'post',
       data: null,
       transformResponse(response) {

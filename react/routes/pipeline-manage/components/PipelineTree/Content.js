@@ -6,6 +6,7 @@ import { runInAction } from 'mobx';
 import { Icon, TextField, Tree } from 'choerodon-ui/pro';
 import { Collapse } from 'choerodon-ui';
 import toUpper from 'lodash/toUpper';
+import debounce from 'lodash/debounce';
 import ScrollContext from 'react-infinite-scroll-component';
 import { usePipelineManageStore } from '../../stores';
 import TreeItem from './TreeItem';
@@ -40,7 +41,7 @@ const TreeMenu = observer(() => {
     if (!record.isExpanded) {
       const { children, parent } = record;
 
-      if (children && children.length) {
+      if ((children && children.length) || record.get('hasRecords')) {
         const key = record.get('key');
         expendedKeys.push(key);
         record.isExpanded = true;
@@ -52,12 +53,15 @@ const TreeMenu = observer(() => {
     }
   }
 
-  function handleSearch(value) {
+  const handleSearch = useCallback(async (value) => {
     const realValue = value || '';
     const expandedKeys = [];
+    mainStore.setSearchValue(realValue);
+    mainStore.setLoadedKeys([]);
+    handleExpanded([]);
 
     // NOTE: 让多个 action 只执行一次
-    runInAction(() => {
+    runInAction(async () => {
       /**
        *
        * 如果在 DataSet 的 load 方法中对原始数据进行了修改
@@ -73,6 +77,7 @@ const TreeMenu = observer(() => {
          * */
         record.isExpanded = false;
       });
+      await treeDs.query();
       treeDs.forEach((treeRecord) => {
         const pipelineName = treeRecord.get('name');
         const appServiceName = treeRecord.get('appServiceName');
@@ -91,9 +96,8 @@ const TreeMenu = observer(() => {
     });
 
     const uniqKeys = new Set(expandedKeys);
-    mainStore.setSearchValue(realValue);
     handleExpanded([...uniqKeys]);
-  }
+  }, []);
 
   function handleExpanded(keys) {
     mainStore.setExpandedKeys(keys);
