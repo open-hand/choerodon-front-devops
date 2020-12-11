@@ -20,15 +20,15 @@ const map = {
     values: [false, true],
   },
   // 外部卡点
-  externalStuck: 'externalStuck',
+  externalStuck: 'cdExternalApproval',
   // 流水线回调地址
   pipelineCallbackAddress: 'pipelineCallbackAddress',
   // 外部地址
-  externalAddress: 'externalAddress',
+  externalAddress: 'triggerUrl',
   // token
-  externalToken: 'externalToken',
+  externalToken: 'secretToken',
   // 任务描述
-  missionDes: 'missionDes',
+  missionDes: 'description',
 };
 
 export default map;

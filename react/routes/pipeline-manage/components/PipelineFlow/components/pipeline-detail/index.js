@@ -20,6 +20,7 @@ const jobTask = {
   cdHost: '主机部署',
   cdAudit: '人工卡点',
   cdApiTest: 'API测试',
+  cdExternalApproval: '外部卡点',
 };
 
 export default observer((props) => {

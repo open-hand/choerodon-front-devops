@@ -552,7 +552,7 @@ export default (
       name: addCDTaskDataSetMap.externalAddress,
       type: 'string',
       label: '外部地址',
-      required: false,
+      required: true,
     },
     {
       name: addCDTaskDataSetMap.externalToken,

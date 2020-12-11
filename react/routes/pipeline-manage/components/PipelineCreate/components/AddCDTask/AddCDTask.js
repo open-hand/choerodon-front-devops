@@ -14,8 +14,9 @@ import {
   TextArea,
 } from 'choerodon-ui/pro';
 import { Icon, Spin } from 'choerodon-ui';
-import { axios } from '@choerodon/boot';
+import { axios, Choerodon } from '@choerodon/boot';
 import { Base64 } from 'js-base64';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { observer } from 'mobx-react-lite';
 import DeployConfig from '@/components/deploy-config';
 import JSONbig from 'json-bigint';
@@ -90,11 +91,15 @@ export default observer(() => {
   const [accountKeyValue, setAccountKeyValue] = useState('');
   const [relatedJobOpts, setRelatedJobOpts] = useState([]);
   const [isProjectOwner, setIsProjectOwner] = useState(false);
+  const [pipelineCallbackAddress, setPipelineCallbackAddress] = useState(undefined);
 
   useEffect(() => {
     ADDCDTaskUseStore.setValueIdRandom(Math.random());
     axios.get(`/iam/choerodon/v1/projects/${projectId}/check_admin_permission`).then((res) => {
       setIsProjectOwner(res);
+    });
+    axios.get('/devops/v1/cd_pipeline/external_approval_task/callback_url').then((res) => {
+      setPipelineCallbackAddress(res);
     });
   }, []);
 
@@ -988,7 +993,7 @@ export default observer(() => {
    * 外部卡点回调地址的复制事件
    */
   const handleCopy = () => {
-    console.log('here');
+    Choerodon.prompt('复制成功');
   };
 
   const getBranchsList = useCallback(async () => {
@@ -1325,12 +1330,22 @@ export default observer(() => {
               </span>
             </div>,
             <TextField
-              name={addCDTaskDataSetMap.pipelineCallbackAddress}
+              label="流水线回调地址"
               colSpan={3}
               addonAfter={
                 <Tips helpText="您可在此输入正则表达式来配置触发分支；例：若想匹配以 feature 开头的分支，可以输入 ^feature.*。更多表达式，详见用户手册。若不填写，则默认为所有分支和tag" />
               }
-              suffix={<Icon style={{ cursor: 'pointer' }} onClick={handleCopy} type="content_copy" />}
+              disabled
+              required
+              suffix={(
+                <CopyToClipboard
+                  text={pipelineCallbackAddress}
+                  onCopy={handleCopy}
+                >
+                  <Icon style={{ cursor: 'pointer' }} type="content_copy" />
+                </CopyToClipboard>
+              )}
+              value={pipelineCallbackAddress}
             />,
             <TextArea
               name={addCDTaskDataSetMap.externalAddress}
