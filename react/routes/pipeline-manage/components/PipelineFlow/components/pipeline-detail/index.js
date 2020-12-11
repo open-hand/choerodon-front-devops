@@ -5,23 +5,12 @@ import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
 import forEach from 'lodash/forEach';
 import { Tooltip } from 'choerodon-ui/pro';
+import jobTypesMappings from '@/routes/pipeline-manage/stores/jobsTypeMappings';
 import { usePipelineManageStore } from '../../../../stores';
 import StageType from '../stage-type';
 import Loading from '../../../../../../components/loading';
 
 import './index.less';
-
-const jobTask = {
-  build: '构建',
-  sonar: '代码检查',
-  custom: '自定义',
-  chart: '发布Chart',
-  cdDeploy: '部署',
-  cdHost: '主机部署',
-  cdAudit: '人工卡点',
-  cdApiTest: 'API测试',
-  cdExternalApproval: '外部卡点',
-};
 
 export default observer((props) => {
   const {
@@ -244,10 +233,10 @@ export default observer((props) => {
                 <div key={`${stageId}-${jobId}`}>
                   {index && leftLineDom[stageIndex] ? leftLineDom[stageIndex][index] : null}
                   <div className={`c7ncd-pipeline-detail-job c7ncd-pipeline-detail-job-${stageType}`} id={`${id}-${stageIndex}-job-${index}`}>
-                    <Tooltip title={`【${jobTask[jobType]}】${jobName}`} placement="top">
+                    <Tooltip title={`【${jobTypesMappings[jobType]}】${jobName}`} placement="top">
                       <div className="c7ncd-pipeline-detail-job-title">
                         【
-                        {jobTask[jobType]}
+                        {jobTypesMappings[jobType]}
                         】
                         {jobName}
                       </div>
