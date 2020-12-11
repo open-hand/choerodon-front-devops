@@ -12,21 +12,6 @@ import Loading from '../../../../../../components/loading';
 
 import './index.less';
 
-<<<<<<< HEAD
-const jobTask = {
-  build: '构建',
-  sonar: '代码检查',
-  custom: '自定义',
-  chart: '发布Chart',
-  cdDeploy: '部署',
-  cdHost: '主机部署',
-  cdAudit: '人工卡点',
-  cdApiTest: 'API测试',
-  cdExternalApproval: '外部卡点',
-};
-
-=======
->>>>>>> [ADD] 增加外部卡点详情
 export default observer((props) => {
   const {
     mainStore: { getSelectedMenu },
