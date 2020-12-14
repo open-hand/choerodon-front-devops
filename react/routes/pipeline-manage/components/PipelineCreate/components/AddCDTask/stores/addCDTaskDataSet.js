@@ -128,7 +128,7 @@ export default (
       name: addCDTaskDataSetMap.triggersTasks.name,
       type: 'boolean',
       label: '是否允许非环境人员触发此部署任务',
-      defaultValue: addCDTaskDataSetMap.triggersTasks.values[1],
+      defaultValue: addCDTaskDataSetMap.triggersTasks.values[0],
     },
     {
       // name: 'bsms',
@@ -553,6 +553,9 @@ export default (
       type: 'string',
       label: '外部地址',
       required: true,
+      dynamicProps: {
+        required: ({ record }) => record.get('type') === addCDTaskDataSetMap.externalStuck,
+      },
     },
     {
       name: addCDTaskDataSetMap.externalToken,
