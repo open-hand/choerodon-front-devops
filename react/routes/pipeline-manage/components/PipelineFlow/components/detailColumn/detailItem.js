@@ -456,7 +456,7 @@ const DetailItem = (props) => {
             </Tooltip>
           </Permission>
         )}
-        {(itemType !== 'cdAudit' && itemType !== 'cdApiTest') && (
+        {(!['cdAudit', 'cdApiTest'].includes(itemType)) && (
           <Permission
             service={[
               'choerodon.code.project.develop.ci-pipeline.ps.job.retry',
@@ -471,7 +471,7 @@ const DetailItem = (props) => {
                 icon="refresh"
                 color="primary"
                 onClick={
-                  ['cdDeploy', 'cdHost', 'cdAudit'].includes(itemType)
+                  ['cdDeploy', 'cdHost', 'cdAudit', 'cdExternalApproval'].includes(itemType)
                     ? handleCdJobRetry
                     : handleJobRetry
                 }
