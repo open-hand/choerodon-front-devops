@@ -148,6 +148,9 @@ const PipelineCreate = observer(() => {
 
   const renderer = ({ text }) => {
     const { appServiceName } = createUseStore.getCurrentAppService || {};
+    if (dataSource && dataSource.appServiceName) {
+      return dataSource.appServiceName;
+    }
     return appServiceName || text;
   };
 
