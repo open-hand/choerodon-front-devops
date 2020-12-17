@@ -165,6 +165,11 @@ export default function useStore({ DEFAULT_SIZE }) {
             item.status = item.status || (item.ciStatus === 'success' && item.cdStatus ? item.cdStatus : item.ciStatus);
             item.isLeaf = true;
             const itemRecord = treeDs.create(item);
+            const { key: selectedKey } = this.getSelectedMenu;
+            if (selectedKey && selectedKey === item.key) {
+              itemRecord.isSelected = true;
+              this.setSelectedMenu(item);
+            }
             return itemRecord;
           });
           if (recordData.hasNextPage) {

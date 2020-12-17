@@ -98,15 +98,19 @@ export default ({
       const { key } = mainStore.getSelectedMenu;
       if (key) {
         const selectedRecord = dataSet.find((treeRecord) => key === treeRecord.get('key'));
-        const pattern = new URLSearchParams(window.location.hash);
-        const newPipelineId = pattern.get('pipelineId');
-        const newPipelineIdRecordId = pattern.get('pipelineIdRecordId');
         if (selectedRecord) {
           selectedRecord.isSelected = true;
           handleSelect(selectedRecord, mainStore);
-        } else if (!newPipelineId || !newPipelineIdRecordId) {
-          selectFirstRecord();
         }
+        // const pattern = new URLSearchParams(window.location.hash);
+        // const newPipelineId = pattern.get('pipelineId');
+        // const newPipelineIdRecordId = pattern.get('pipelineIdRecordId');
+        // if (selectedRecord) {
+        //   selectedRecord.isSelected = true;
+        //   handleSelect(selectedRecord, mainStore);
+        // } else if (!newPipelineId || !newPipelineIdRecordId) {
+        //   selectFirstRecord();
+        // }
       } else {
         selectFirstRecord();
       }
