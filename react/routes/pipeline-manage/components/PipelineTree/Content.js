@@ -56,12 +56,12 @@ const TreeMenu = observer(() => {
   const handleSearch = useCallback(async (value) => {
     const realValue = value || '';
     const expandedKeys = [];
-    mainStore.setSearchValue(realValue);
-    mainStore.setLoadedKeys([]);
-    handleExpanded([]);
 
     // NOTE: 让多个 action 只执行一次
     runInAction(async () => {
+      mainStore.setSearchValue(realValue);
+      mainStore.setLoadedKeys([]);
+      handleExpanded([]);
       /**
        *
        * 如果在 DataSet 的 load 方法中对原始数据进行了修改
@@ -134,24 +134,28 @@ const TreeMenu = observer(() => {
         value={mainStore.getSearchValue}
         onChange={handleSearch}
       />
-      <ScrollContext
-        className={`${prefixCls}-sidebar-scroll`}
-        dataLength={treeDs.length}
-        next={loadMoreTreeData}
-        hasMore={mainStore.getTreeDataHasMore}
-        loader={null}
-        height="100%"
-      >
-        <Tree
-          dataSet={treeDs}
-          // renderer={nodeRenderer}
-          onExpand={handleExpanded}
-          className={`${prefixCls}-sidebar-tree`}
-          loadData={onLoadData}
-          treeNodeRenderer={nodeCover}
-          loadedKeys={mainStore.getLoadedKeys}
-        />
-      </ScrollContext>
+      {!treeDs.length && treeDs.status === 'ready' ? (
+        <span className={`${prefixCls}-sidebar-empty`}>{formatMessage({ id: 'nodata' })}</span>
+      ) : (
+        <ScrollContext
+          className={`${prefixCls}-sidebar-scroll`}
+          dataLength={treeDs.length}
+          next={loadMoreTreeData}
+          hasMore={mainStore.getTreeDataHasMore}
+          loader={null}
+          height="100%"
+        >
+          <Tree
+            dataSet={treeDs}
+            // renderer={nodeRenderer}
+            onExpand={handleExpanded}
+            className={`${prefixCls}-sidebar-tree`}
+            loadData={onLoadData}
+            treeNodeRenderer={nodeCover}
+            loadedKeys={mainStore.getLoadedKeys}
+          />
+        </ScrollContext>
+      )}
     </nav>
   );
 });

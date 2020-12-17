@@ -306,7 +306,7 @@ const PipelineManage = observer(() => {
       </Header>
       <Breadcrumb />
       <Content className={`${prefixCls}-content`}>
-        {!treeDs.length && treeDs.status === 'ready' ? (
+        {!treeDs.length && treeDs.status === 'ready' && !mainStore.getSearchValue ? (
           <div className={`${prefixCls}-wrap`}>
             <Suspense fallback={<span />}>
               <EmptyPage
