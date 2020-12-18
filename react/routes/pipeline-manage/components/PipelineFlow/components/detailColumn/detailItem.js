@@ -369,7 +369,9 @@ const DetailItem = (props) => {
     <main>
       <div>
         <span>外部地址:</span>
-        <span>{externalApprovalJobVO?.triggerUrl || '-'}</span>
+        <Tooltip title={externalApprovalJobVO?.triggerUrl}>
+          <span>{externalApprovalJobVO?.triggerUrl || '-'}</span>
+        </Tooltip>
       </div>
     </main>
   );
