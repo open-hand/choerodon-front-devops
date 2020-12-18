@@ -1326,7 +1326,11 @@ export default observer(() => {
                 以及jobRecordId发送至外部地址。
               </span>
               <span style={{ display: 'inline-block' }}>
-                - 外部系统执行结束后，会往  流水线回调地址  发送一个状态来作为外部卡点的任务状态。成功后会接着执行后续任务，失败则停留在此任务。
+                - 外部系统执行结束后，会往
+                {' '}
+                <span className="addcdTask-missionDes-focus">流水线回调地址</span>
+                {' '}
+                发送一个状态来作为外部卡点的任务状态。成功后会接着执行后续任务，失败则停留在此任务。
               </span>
             </div>,
             <TextField
