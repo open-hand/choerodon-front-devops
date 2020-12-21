@@ -260,7 +260,7 @@ export default (({
       create: ({ data: [data], dataSet }) => {
         // 如果是环境部署
         if (data[mapping.deployWay.value] === mapping.deployWay.options[0].value) {
-          const res = pick(data, ['values', 'devopsServiceReqVO', 'devopsIngressVO', 'environmentId', 'instanceName']);
+          const res = pick(data, ['values', 'devopsServiceReqVO', 'devopsIngressVO', 'environmentId', 'instanceName', 'type', 'isNotChange']);
           const isMarket = data.appServiceSource === 'market_service';
           const { marketServiceDeployObjectVO, id: marketAppServiceId } = data.marketService || {};
           const appServiceId = isMarket ? marketAppServiceId : data.appServiceId.split('**')[0];
