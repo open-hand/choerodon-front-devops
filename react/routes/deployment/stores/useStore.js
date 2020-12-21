@@ -94,10 +94,10 @@ export default function useStore() {
 
     async loadMarketDeployValue(projectId, id) {
       try {
-        const res = await axios.get(`/devops/v1/projects/${projectId}/deploy/values?deploy_object_id=${id}`);
+        const res = await axios.get(`/market/v1/projects/${projectId}/deploy/values?deploy_object_id=${id}`);
         if (handlePromptError(res)) {
-          this.setConfigValue(res.yaml);
-          return res.yaml;
+          this.setConfigValue(res.value);
+          return res.value;
         }
       } catch (e) {
         Choerodon.handleResponseError(e);

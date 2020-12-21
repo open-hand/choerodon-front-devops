@@ -15,6 +15,7 @@ build front:
   only:
     - tags
     - master
+    - feature-C7NCD-6502
     - /^.*hotfix.*$/
     - /^.*release.*$/
 

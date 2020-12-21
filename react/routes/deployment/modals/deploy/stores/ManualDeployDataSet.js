@@ -194,13 +194,12 @@ export default (({
         if (value && !isEmpty(value.marketServiceDeployObjectVO)) {
           const {
             devopsAppServiceName, devopsAppServiceVersion,
-            devopsAppServiceId, devopsAppServiceVersionId,
-            devopsAppServiceCode,
+            id: deployObjectId, devopsAppServiceCode,
           } = value.marketServiceDeployObjectVO;
           record.set('marketAppService', devopsAppServiceName);
           record.set('marketAppServiceVersion', devopsAppServiceVersion);
           record.set('instanceName', getRandomName(devopsAppServiceCode));
-          deployStore.loadMarketDeployValue(projectId, devopsAppServiceVersionId);
+          deployStore.loadMarketDeployValue(projectId, deployObjectId);
         } else {
           record.get('marketAppService') && record.set('marketAppService', null);
           record.get('marketAppServiceVersion') && record.set('marketAppServiceVersion', null);
@@ -271,6 +270,7 @@ export default (({
               && marketServiceDeployObjectVO.id;
           } else {
             res.appServiceId = appServiceId;
+            res.appServiceVersionId = data.appServiceVersionId;
             res.valueId = data.valueId;
           }
           if (data.devopsServiceReqVO[0] && data.devopsServiceReqVO[0].name) {
