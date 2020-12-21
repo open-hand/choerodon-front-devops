@@ -170,7 +170,7 @@ export default ({
       {
         name: 'name',
         type: 'string' as FieldType,
-        maxLength: 30,
+        maxLength: 15,
         required: true,
         validator: checkName,
         label: '主机名称',
