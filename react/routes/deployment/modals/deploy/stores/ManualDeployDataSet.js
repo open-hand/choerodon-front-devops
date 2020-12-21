@@ -1,6 +1,7 @@
 import omit from 'lodash/omit';
 import forEach from 'lodash/forEach';
 import map from 'lodash/map';
+import pick from 'lodash/pick';
 import uuidV1 from 'uuid/v1';
 import { axios } from '@choerodon/boot';
 import isEmpty from 'lodash/isEmpty';
@@ -108,6 +109,8 @@ export default (({
   organizationId,
   deployUseStore,
   hasHostDeploy,
+  marketAndVersionOptionsDs,
+  marketServiceOptionsDs,
 }) => {
   // 如果有该参数 部署方式增加主机部署
   if (hasHostDeploy) {
@@ -136,12 +139,14 @@ export default (({
     switch (name) {
       case 'appServiceSource':
         deployStore.setAppService([]);
-        deployStore.loadAppService(projectId, value);
+        value !== 'market_service' && deployStore.loadAppService(projectId, value);
         record.get('appServiceId') && record.set('appServiceId', null);
         break;
       case 'environmentId':
         record.getField('instanceName').checkValidity();
-        loadValueList(record);
+        if (record.get('appServiceSource') !== 'market_service') {
+          loadValueList(record);
+        }
         networkRecord.getField('name').checkValidity();
         domainRecord.getField('name').checkValidity();
         forEach(domainRecord.getCascadeRecords('pathList'), (pathRecord) => {
@@ -175,6 +180,30 @@ export default (({
           deployStore.loadDeployValue(projectId, record.get('appServiceVersionId'));
         } else {
           deployStore.setConfigValue('');
+        }
+        break;
+      case 'marketAppAndVersion':
+        record.get('marketService') && record.set('marketService', null);
+        if (value) {
+          marketServiceOptionsDs.setQueryParameter('marketVersionId', value);
+          marketServiceOptionsDs.setQueryParameter('deployObjectType', 'chart');
+          marketServiceOptionsDs.query();
+        }
+        break;
+      case 'marketService':
+        if (value && !isEmpty(value.marketServiceDeployObjectVO)) {
+          const {
+            devopsAppServiceName, devopsAppServiceVersion,
+            devopsAppServiceId, devopsAppServiceVersionId,
+            devopsAppServiceCode,
+          } = value.marketServiceDeployObjectVO;
+          record.set('marketAppService', devopsAppServiceName);
+          record.set('marketAppServiceVersion', devopsAppServiceVersion);
+          record.set('instanceName', getRandomName(devopsAppServiceCode));
+          deployStore.loadMarketDeployValue(projectId, devopsAppServiceVersionId);
+        } else {
+          record.get('marketAppService') && record.set('marketAppService', null);
+          record.get('marketAppServiceVersion') && record.set('marketAppServiceVersion', null);
         }
         break;
       default:
@@ -232,9 +261,18 @@ export default (({
       create: ({ data: [data], dataSet }) => {
         // 如果是环境部署
         if (data[mapping.deployWay.value] === mapping.deployWay.options[0].value) {
-          const res = omit(data, ['__id', '__status', 'appServiceSource']);
-          const appServiceId = data.appServiceId.split('**')[0];
-          res.appServiceId = appServiceId;
+          const res = pick(data, ['values', 'devopsServiceReqVO', 'devopsIngressVO', 'environmentId', 'instanceName']);
+          const isMarket = data.appServiceSource === 'market_service';
+          const { marketServiceDeployObjectVO, id: marketAppServiceId } = data.marketService || {};
+          const appServiceId = isMarket ? marketAppServiceId : data.appServiceId.split('**')[0];
+          if (isMarket) {
+            res.marketAppServiceId = marketAppServiceId;
+            res.marketDeployObjectId = marketServiceDeployObjectVO
+              && marketServiceDeployObjectVO.id;
+          } else {
+            res.appServiceId = appServiceId;
+            res.valueId = data.valueId;
+          }
           if (data.devopsServiceReqVO[0] && data.devopsServiceReqVO[0].name) {
             const newPorts = map(data.devopsServiceReqVO[0].ports, ({
               port, targetPort, nodePort, protocol,
@@ -265,7 +303,7 @@ export default (({
             res.devopsIngressVO = null;
           }
           return ({
-            url: `/devops/v1/projects/${projectId}/app_service_instances`,
+            url: `/devops/v1/projects/${projectId}/app_service_instances${isMarket ? '/market/instances' : ''}`,
             method: 'post',
             data: res,
           });
@@ -640,7 +678,7 @@ export default (({
         label: formatMessage({ id: `${intlPrefix}.app` }),
         dynamicProps: {
           required: ({ record }) => (record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[0].value),
+            === mapping.deployWay.options[0].value && record.get('appServiceSource') !== 'market_service'),
         },
       },
       {
@@ -651,7 +689,7 @@ export default (({
         label: formatMessage({ id: `${intlPrefix}.app.version` }),
         dynamicProps: {
           required: ({ record }) => (record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[0].value),
+            === mapping.deployWay.options[0].value && record.get('appServiceSource') !== 'market_service'),
         },
       },
       {
@@ -683,6 +721,50 @@ export default (({
       { name: 'type', type: 'string', defaultValue: 'create' },
       { name: 'isNotChange', type: 'boolean', defaultValue: false },
       { name: 'appServiceSource', type: 'string', defaultValue: 'normal_service' },
+      {
+        name: 'marketAppAndVersion',
+        label: formatMessage({ id: `${intlPrefix}.appAndVersion` }),
+        textField: 'versionNumber',
+        valueField: 'id',
+        dynamicProps: {
+          required: ({ record }) => (record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[0].value && record.get('appServiceSource') === 'market_service'),
+        },
+        options: marketAndVersionOptionsDs,
+        ignore: 'always',
+      },
+      {
+        name: 'marketService',
+        type: 'object',
+        label: formatMessage({ id: `${intlPrefix}.marketService` }),
+        textField: 'marketServiceName',
+        valueField: 'id',
+        dynamicProps: {
+          required: ({ record }) => (record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[0].value && record.get('appServiceSource') === 'market_service'),
+        },
+        options: marketServiceOptionsDs,
+      },
+      {
+        name: 'marketAppService',
+        type: 'string',
+        label: formatMessage({ id: `${intlPrefix}.app` }),
+        dynamicProps: {
+          required: ({ record }) => (record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[0].value && record.get('appServiceSource') === 'market_service'),
+        },
+        ignore: 'always',
+      },
+      {
+        name: 'marketAppServiceVersion',
+        type: 'string',
+        label: formatMessage({ id: `${intlPrefix}.app.version` }),
+        dynamicProps: {
+          required: ({ record }) => (record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[0].value && record.get('appServiceSource') === 'market_service'),
+        },
+        ignore: 'always',
+      },
     ],
     events: {
       create: handleCreate,

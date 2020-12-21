@@ -676,6 +676,8 @@ const deploy = {
   'c7ncd.deploy.retry.tips': '确定重新执行该流程吗？',
   'c7ncd.deploy.app': '应用服务',
   'c7ncd.deploy.app.version': '服务版本',
+  'c7ncd.deploy.appAndVersion': '市场应用及版本',
+  'c7ncd.deploy.marketService': '市场服务',
   'c7ncd.deploy.instance.name': '实例名称',
   'c7ncd.deploy.config': '部署配置',
   'c7ncd.deploy.resource': '资源配置',
