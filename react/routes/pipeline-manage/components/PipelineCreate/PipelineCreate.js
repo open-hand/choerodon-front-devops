@@ -57,6 +57,7 @@ const PipelineCreate = observer(() => {
         selectImage: '1',
         versionName,
         bbcl: !!versionName,
+        versionNameRules: '${C7N_COMMIT_TIME}-${C7N_BRANCH}',
       }]);
       // editBlockStore.setStepData(stageList, true);
     }
