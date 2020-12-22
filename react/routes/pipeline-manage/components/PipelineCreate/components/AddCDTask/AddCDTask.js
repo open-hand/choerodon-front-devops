@@ -1230,7 +1230,7 @@ export default observer(() => {
                 <Option value={addCDTaskDataSetMap.triggersTasks.values[0]}>是</Option>
                 <Option value={addCDTaskDataSetMap.triggersTasks.values[1]}>否</Option>
               </SelectBox>
-              <Tooltip title="此处仅项目所有者可以设置；默认为否，即触发用户没有该部署任务的环境权限时，会直接跳过此部署任务；若选择为是，触发成员在没有环境权限时，将会使用管理员账户触发部署。">
+              <Tooltip title="此处仅项目所有者可以设置；默认为是，即触发用户在没有该部署任务的环境权限时，将会直接使用管理员账户触发部署；若选择为否，触发成员在没有环境权限时，将会直接跳过此部署任务。">
                 <Icon
                   style={{
                     position: 'absolute',
