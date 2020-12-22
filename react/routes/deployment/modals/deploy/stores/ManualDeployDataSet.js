@@ -72,6 +72,16 @@ const mapping = {
   workPath: {
     value: 'workingPath',
   },
+  deploySource: {
+    value: 'deploySource',
+    options: [{
+      value: 'repository',
+      label: '项目制品库',
+    }, {
+      value: 'market',
+      label: '市场应用',
+    }],
+  },
 };
 
 function getRandomName(prefix = '') {
@@ -92,6 +102,14 @@ function formatAnnotation(postData, oldAnnotation = []) {
   });
   // eslint-disable-next-line no-param-reassign
   postData.annotations = isEmpty(annotations) ? null : annotations;
+}
+
+function getRequired({ record }) {
+  return record.get(mapping.deployWay.value) === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : '');
+}
+
+function getIsMarket({ record }) {
+  return record.get(mapping.deploySource.value) === (mapping.deploySource.options.length > 1 ? mapping.deploySource.options[1].value : '');
 }
 
 export { mapping };
@@ -186,7 +204,6 @@ export default (({
         record.get('marketService') && record.set('marketService', null);
         if (value) {
           marketServiceOptionsDs.setQueryParameter('marketVersionId', value);
-          marketServiceOptionsDs.setQueryParameter('deployObjectType', 'chart');
           marketServiceOptionsDs.query();
         }
         break;
@@ -199,10 +216,17 @@ export default (({
           record.set('marketAppService', devopsAppServiceName);
           record.set('marketAppServiceVersion', devopsAppServiceVersion);
           record.set('instanceName', getRandomName(devopsAppServiceCode));
-          deployStore.loadMarketDeployValue(projectId, deployObjectId);
+          record.get(mapping.deployWay.value) === mapping.deployWay.options[0].value
+          && deployStore.loadMarketDeployValue(projectId, deployObjectId);
         } else {
           record.get('marketAppService') && record.set('marketAppService', null);
           record.get('marketAppServiceVersion') && record.set('marketAppServiceVersion', null);
+        }
+        if (value && !isEmpty(value.jarReleaseInfoVO)) {
+          const { version } = value.jarReleaseInfoVO;
+          record.set('marketJarVersion', version);
+        } else {
+          record.get('marketJarVersion') && record.set('marketJarVersion', null);
         }
         break;
       default:
@@ -319,42 +343,64 @@ export default (({
           [mapping.port.value]: data[mapping.port.value],
           hostSource: 'existHost',
         };
+        const deploySource = data[mapping.deploySource.value];
         const deployObject = data[mapping.deployObject.value];
-        // 如果部署对象是Docker镜像
-        if (deployObject === mapping.deployObject.options[0].value) {
-          res.imageDeploy = {
-            [mapping.projectImageRepo.value]: data[mapping.projectImageRepo.value],
-            [mapping.projectImageRepo.textField]: dataSet
-              .current
-              .getField(mapping.projectImageRepo.value)
-              .lookup
-              .find((l) => l.repoId === data[mapping.projectImageRepo.value]).repoName,
-            [mapping.projectImageRepo.extraField]: dataSet
-              .current
-              .getField(mapping.projectImageRepo.value)
-              .lookup
-              .find((l) => l.repoId === data[mapping.projectImageRepo.value]).repoType,
-            [mapping.image.value]: data[mapping.image.value],
-            [mapping.image.textField]: dataSet
-              .current
-              .getField(mapping.image.value)
-              .lookup
-              .find((l) => l.imageId === data[mapping.image.value]).imageName,
-            [mapping.imageVersion.value]: data[mapping.imageVersion.value],
-            [mapping.containerName.value]: data[mapping.containerName.value],
-            value: Base64.encode(deployUseStore.getImageYaml),
-          };
+        // 项目制品库
+        if (deploySource === mapping.deploySource.options[0].value) {
+          // 如果部署对象是Docker镜像
+          if (deployObject === mapping.deployObject.options[0].value) {
+            res.imageDeploy = {
+              [mapping.projectImageRepo.value]: data[mapping.projectImageRepo.value],
+              [mapping.projectImageRepo.textField]: dataSet
+                .current
+                .getField(mapping.projectImageRepo.value)
+                .lookup
+                .find((l) => l.repoId === data[mapping.projectImageRepo.value]).repoName,
+              [mapping.projectImageRepo.extraField]: dataSet
+                .current
+                .getField(mapping.projectImageRepo.value)
+                .lookup
+                .find((l) => l.repoId === data[mapping.projectImageRepo.value]).repoType,
+              [mapping.image.value]: data[mapping.image.value],
+              [mapping.image.textField]: dataSet
+                .current
+                .getField(mapping.image.value)
+                .lookup
+                .find((l) => l.imageId === data[mapping.image.value]).imageName,
+              [mapping.imageVersion.value]: data[mapping.imageVersion.value],
+              [mapping.containerName.value]: data[mapping.containerName.value],
+              value: Base64.encode(deployUseStore.getImageYaml),
+            };
+          } else {
+            //  如果部署对象是jar应用
+            res.jarDeploy = {
+              [mapping.nexus.value]: data[mapping.nexus.value],
+              [mapping.projectProduct.value]: data[mapping.projectProduct.value],
+              [mapping.groupId.value]: data[mapping.groupId.value],
+              [mapping.artifactId.value]: data[mapping.artifactId.value],
+              [mapping.jarVersion.value]: data[mapping.jarVersion.value],
+              [mapping.workPath.value]: data[mapping.workPath.value],
+              value: Base64.encode(deployUseStore.getJarYaml),
+            };
+          }
         } else {
-          //  如果部署对象是jar应用
-          res.jarDeploy = {
-            [mapping.nexus.value]: data[mapping.nexus.value],
-            [mapping.projectProduct.value]: data[mapping.projectProduct.value],
-            [mapping.groupId.value]: data[mapping.groupId.value],
-            [mapping.artifactId.value]: data[mapping.artifactId.value],
-            [mapping.jarVersion.value]: data[mapping.jarVersion.value],
-            [mapping.workPath.value]: data[mapping.workPath.value],
-            value: Base64.encode(deployUseStore.getJarYaml),
-          };
+          // 市场应用
+          const { marketServiceDeployObjectVO } = data.marketService || {};
+          const deployObjectId = marketServiceDeployObjectVO && marketServiceDeployObjectVO.id;
+          res.appSource = 'market';
+          if (deployObject === mapping.deployObject.options[0].value) {
+            res.imageDeploy = {
+              deployObjectId,
+              [mapping.containerName.value]: data[mapping.containerName.value],
+              value: Base64.encode(deployUseStore.getImageYaml),
+            };
+          } else {
+            res.jarDeploy = {
+              deployObjectId,
+              [mapping.workPath.value]: data[mapping.workPath.value],
+              value: Base64.encode(deployUseStore.getJarYaml),
+            };
+          }
         }
         return ({
           url: `/devops/v1/projects/${projectId}/deploy/host`,
@@ -402,8 +448,7 @@ export default (({
         label: 'IP',
         disabled: true,
         dynamicProps: {
-          required: ({ record }) => record.get(mapping.deployWay.value)
-            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''),
+          required: getRequired,
         },
       },
       {
@@ -412,8 +457,7 @@ export default (({
         label: '端口',
         disabled: true,
         dynamicProps: {
-          required: ({ record }) => record.get(mapping.deployWay.value)
-            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''),
+          required: getRequired,
         },
       },
       {
@@ -429,8 +473,7 @@ export default (({
         textField: 'repoName',
         valueField: 'repoId',
         dynamicProps: {
-          required: ({ record }) => (record.get(mapping.deployWay.value)
-            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''))
+          required: ({ record }) => getRequired({ record }) && !getIsMarket({ record })
           && (record.get(mapping.deployObject.value) === mapping.deployObject.options[0].value),
         },
         lookupAxiosConfig: () => ({
@@ -455,8 +498,7 @@ export default (({
         valueField: 'imageId',
         dynamicProps: {
           disabled: ({ record }) => !record.get(mapping.projectImageRepo.value),
-          required: ({ record }) => (record.get(mapping.deployWay.value)
-            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''))
+          required: ({ record }) => getRequired({ record }) && !getIsMarket({ record })
             && (record.get(mapping.deployObject.value) === mapping.deployObject.options[0].value),
           lookupAxiosConfig: ({ record }) => ({
             method: 'get',
@@ -489,8 +531,7 @@ export default (({
         textField: 'tagName',
         valueField: 'tagName',
         dynamicProps: {
-          required: ({ record }) => (record.get(mapping.deployWay.value)
-            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''))
+          required: ({ record }) => getRequired({ record }) && !getIsMarket({ record })
             && (record.get(mapping.deployObject.value) === mapping.deployObject.options[0].value),
           disabled: ({ record }) => !record.get(mapping.image.value),
           lookupAxiosConfig: ({ record }) => ({
@@ -529,8 +570,7 @@ export default (({
         required: true,
         maxLength: 30,
         dynamicProps: {
-          required: ({ record }) => (record.get(mapping.deployWay.value)
-            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''))
+          required: ({ record }) => getRequired({ record })
             && (record.get(mapping.deployObject.value) === mapping.deployObject.options[0].value),
         },
       },
@@ -541,9 +581,8 @@ export default (({
         textField: 'serverName',
         valueField: 'configId',
         dynamicProps: {
-          required: ({ record }) => (record.get(mapping.deployWay.value)
-            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''))
-            && (record.get(mapping.deployObject.value) === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : '')),
+          required: ({ record }) => getRequired({ record }) && !getIsMarket({ record })
+            && (record.get(mapping.deployObject.value) === (mapping.deployObject.options.length > 1 ? mapping.deployObject.options[1].value : '')),
         },
         lookupAxiosConfig: () => ({
           method: 'get',
@@ -557,9 +596,8 @@ export default (({
         textField: 'neRepositoryName',
         valueField: 'repositoryId',
         dynamicProps: {
-          required: ({ record }) => (record.get(mapping.deployWay.value)
-            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''))
-            && (record.get(mapping.deployObject.value) === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : '')),
+          required: ({ record }) => getRequired({ record }) && !getIsMarket({ record })
+            && (record.get(mapping.deployObject.value) === (mapping.deployObject.options.length > 1 ? mapping.deployObject.options[1].value : '')),
           disabled: ({ record }) => !record.get(mapping.nexus.value),
           lookupAxiosConfig: ({ record }) => ({
             method: 'get',
@@ -578,9 +616,8 @@ export default (({
         textField: 'name',
         valueField: 'value',
         dynamicProps: {
-          required: ({ record }) => (record.get(mapping.deployWay.value)
-            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''))
-            && (record.get(mapping.deployObject.value) === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : '')),
+          required: ({ record }) => getRequired({ record }) && !getIsMarket({ record })
+            && (record.get(mapping.deployObject.value) === (mapping.deployObject.options.length > 1 ? mapping.deployObject.options[1].value : '')),
           disabled: ({ record }) => !record.get(mapping.projectProduct.value),
           lookupAxiosConfig: ({ record }) => ({
             method: 'get',
@@ -610,9 +647,8 @@ export default (({
         textField: 'name',
         valueField: 'value',
         dynamicProps: {
-          required: ({ record }) => (record.get(mapping.deployWay.value)
-            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''))
-            && (record.get(mapping.deployObject.value) === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : '')),
+          required: ({ record }) => getRequired({ record }) && !getIsMarket({ record })
+            && (record.get(mapping.deployObject.value) === (mapping.deployObject.options.length > 1 ? mapping.deployObject.options[1].value : '')),
           disabled: ({ record }) => !record.get(mapping.groupId.value),
           lookupAxiosConfig: ({ record }) => ({
             method: 'get',
@@ -642,9 +678,8 @@ export default (({
         textField: 'version',
         valueField: 'version',
         dynamicProps: {
-          required: ({ record }) => (record.get(mapping.deployWay.value)
-            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''))
-            && (record.get(mapping.deployObject.value) === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : '')),
+          required: ({ record }) => getRequired({ record }) && !getIsMarket({ record })
+            && (record.get(mapping.deployObject.value) === (mapping.deployObject.options.length > 1 ? mapping.deployObject.options[1].value : '')),
           disabled: ({ record }) => !record.get(mapping.groupId.value)
             || !record.get(mapping.artifactId.value),
           lookupAxiosConfig: ({ record }) => ({
@@ -667,9 +702,26 @@ export default (({
         label: '工作目录',
         defaultValue: './',
         dynamicProps: {
-          required: ({ record }) => (record.get(mapping.deployWay.value)
-            === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : ''))
-            && (record.get(mapping.deployObject.value) === (mapping.deployWay.options.length > 1 ? mapping.deployWay.options[1].value : '')),
+          required: ({ record }) => getRequired({ record })
+            && (record.get(mapping.deployObject.value) === (mapping.deployObject.options.length > 1 ? mapping.deployObject.options[1].value : '')),
+        },
+      },
+      {
+        name: mapping.deploySource.value,
+        type: 'string',
+        label: '部署来源',
+        defaultValue: 'repository',
+        dynamicProps: {
+          required: getRequired,
+        },
+      },
+      {
+        name: 'marketJarVersion',
+        type: 'string',
+        label: 'jar包版本',
+        dynamicProps: {
+          required: ({ record }) => getRequired({ record }) && getIsMarket({ record })
+          && (record.get(mapping.deployObject.value) === (mapping.deployObject.options.length > 1 ? mapping.deployObject.options[1].value : '')),
         },
       },
       {
@@ -727,8 +779,9 @@ export default (({
         textField: 'versionNumber',
         valueField: 'id',
         dynamicProps: {
-          required: ({ record }) => (record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[0].value && record.get('appServiceSource') === 'market_service'),
+          required: ({ record }) => ((record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[0].value && record.get('appServiceSource') === 'market_service'))
+          || (getRequired({ record }) && getIsMarket({ record })),
         },
         options: marketAndVersionOptionsDs,
         ignore: 'always',
@@ -740,8 +793,9 @@ export default (({
         textField: 'marketServiceName',
         valueField: 'id',
         dynamicProps: {
-          required: ({ record }) => (record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[0].value && record.get('appServiceSource') === 'market_service'),
+          required: ({ record }) => ((record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[0].value && record.get('appServiceSource') === 'market_service'))
+          || (getRequired({ record }) && getIsMarket({ record })),
         },
         options: marketServiceOptionsDs,
       },
@@ -750,8 +804,9 @@ export default (({
         type: 'string',
         label: formatMessage({ id: `${intlPrefix}.app` }),
         dynamicProps: {
-          required: ({ record }) => (record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[0].value && record.get('appServiceSource') === 'market_service'),
+          required: ({ record }) => ((record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[0].value && record.get('appServiceSource') === 'market_service'))
+            || (getRequired({ record }) && getIsMarket({ record })),
         },
         ignore: 'always',
       },
@@ -760,8 +815,9 @@ export default (({
         type: 'string',
         label: formatMessage({ id: `${intlPrefix}.app.version` }),
         dynamicProps: {
-          required: ({ record }) => (record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[0].value && record.get('appServiceSource') === 'market_service'),
+          required: ({ record }) => ((record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[0].value && record.get('appServiceSource') === 'market_service'))
+            || (getRequired({ record }) && getIsMarket({ record })),
         },
         ignore: 'always',
       },

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Button, Form, Icon, Select, SelectBox, TextField,
 } from 'choerodon-ui/pro';
@@ -24,6 +24,22 @@ const HostDeployForm = injectIntl(observer(({ form }) => {
   const record = manualDeployDs.current;
 
   const [testStatus, setTestStatus] = useState('');
+  const isMarket = record.get(mapping.deploySource.value) === (mapping.deploySource.options.length > 1 ? mapping.deploySource.options[1].value : '');
+  const isDocker = record.get(mapping.deployObject.value) === mapping.deployObject.options[0].value;
+  const getWorkPathTips = useMemo(() => (
+    <Tips
+      helpText={(
+        <>
+          <p style={{ margin: 0 }}>
+            默认工作目录，当前工作目录(./)，jar包下载存放目录为：./temp-jar/xxx.jar 日志存放目录为：./temp-log/xxx.log
+          </p>
+          <p style={{ margin: 0 }}>
+            填写工作目录，jar包下载存放目录为：工作目录/temp-jar/xxx.jar 日志存放目录为：工作目录/temp-jar/xxx.log
+          </p>
+        </>
+      )}
+    />
+  ), []);
 
   /**
    * 主机名称下拉改变回调 设置ip和端口
@@ -152,6 +168,13 @@ const HostDeployForm = injectIntl(observer(({ form }) => {
       <div style={{ marginTop: 10 }} className="c7ncd-deploy-manual-deploy-divided" />
       <p className="c7ncd-deploy-manual-deploy-title">部署模式</p>
       <Form columns={2} record={record}>
+        <SelectBox colSpan={1} name={mapping.deploySource.value}>
+          {
+            mapping.deploySource.options.map((o) => (
+              <Option value={o.value}>{o.label}</Option>
+            ))
+          }
+        </SelectBox>
         <SelectBox colSpan={1} name={mapping.deployObject.value}>
           {
             mapping.deployObject.options.map((o) => (
@@ -159,8 +182,8 @@ const HostDeployForm = injectIntl(observer(({ form }) => {
             ))
           }
         </SelectBox>
-        {
-          record.get(mapping.deployObject.value) === mapping.deployObject.options[0].value ? [
+        {!isMarket && (
+          isDocker ? [
             <Select
               newLine
               name={mapping.projectImageRepo.value}
@@ -195,20 +218,7 @@ const HostDeployForm = injectIntl(observer(({ form }) => {
             <TextField
               name={mapping.workPath.value}
               colSpan={1}
-              addonAfter={(
-                <Tips
-                  helpText={(
-                    <>
-                      <p style={{ margin: 0 }}>
-                        默认工作目录，当前工作目录(./)，jar包下载存放目录为：./temp-jar/xxx.jar 日志存放目录为：./temp-log/xxx.log
-                      </p>
-                      <p style={{ margin: 0 }}>
-                        填写工作目录，jar包下载存放目录为：工作目录/temp-jar/xxx.jar 日志存放目录为：工作目录/temp-jar/xxx.log
-                      </p>
-                    </>
-                  )}
-                />
-              )}
+              addonAfter={getWorkPathTips}
             />,
             <YamlEditor
               colSpan={2}
@@ -218,9 +228,57 @@ const HostDeployForm = injectIntl(observer(({ form }) => {
               onValueChange={(value) => deployUseStore.setJarYaml(value)}
             />,
           ]
-        }
-
+        )}
       </Form>
+      {isMarket && (
+        <Form columns={isDocker ? 5 : 4} record={record} style={{ width: '125%' }}>
+          <Select
+            name="marketAppAndVersion"
+            searchable
+            newLine
+          />
+          <Select
+            name="marketService"
+            disabled={!record.get('marketAppAndVersion')}
+            searchable
+          />
+          {
+            isDocker ? [
+              <TextField
+                name="marketAppService"
+                disabled
+              />,
+              <TextField
+                name="marketAppServiceVersion"
+                disabled
+              />,
+              <TextField name={mapping.containerName.value} />,
+              <YamlEditor
+                colSpan={isDocker ? 5 : 4}
+                readOnly={false}
+                value={deployUseStore.getImageYaml}
+                onValueChange={(value) => deployUseStore.setImageYaml(value)}
+              />,
+            ] : [
+              <TextField
+                name="marketJarVersion"
+                disabled
+              />,
+              <TextField
+                name={mapping.workPath.value}
+                addonAfter={getWorkPathTips}
+              />,
+              <YamlEditor
+                colSpan={isDocker ? 5 : 4}
+                readOnly={false}
+                modeChange={false}
+                value={deployUseStore.getJarYaml}
+                onValueChange={(value) => deployUseStore.setJarYaml(value)}
+              />,
+            ]
+          }
+        </Form>
+      )}
     </div>
   );
 }));
