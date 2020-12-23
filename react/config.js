@@ -1,4 +1,5 @@
 const config = {
+  port: 9091,
   server: 'http://api.staging.saas.test.com',
   fileServer: 'http://minio.staging.saas.test.com',
   projectType: 'choerodon',
