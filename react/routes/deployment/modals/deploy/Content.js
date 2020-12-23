@@ -185,14 +185,14 @@ const DeployModal = injectIntl(observer(({ form }) => {
                   newLine={record.get('appServiceSource') !== 'market_service'}
                   optionRenderer={renderEnvOption}
                   notFoundContent={<FormattedMessage id={`${intlPrefix}.env.empty`} />}
-                  // onOption={renderOptionProperty}
+                  onOption={renderOptionProperty}
                 />
               ) : null}
             <TextField
               name="instanceName"
               addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.instance.tips` })} />}
               colSpan={!envId ? 1 : 2}
-              newLine={!!envId}
+              newLine={!!envId && record.get('appServiceSource') !== 'market_service'}
             />
             {record.get('appServiceSource') !== 'market_service' && (
               <Select
