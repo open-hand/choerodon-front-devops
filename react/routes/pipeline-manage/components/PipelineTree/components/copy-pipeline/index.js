@@ -45,6 +45,7 @@ export default observer(({
       />,
       okText: '创建',
     });
+    return true;
   });
 
   const renderer = ({ text }) => text;

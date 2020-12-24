@@ -103,8 +103,9 @@ const PipelineCreate = observer(() => {
       }
       try {
         const res = await createUseStore.axiosCreatePipeline(data, id);
-        res.id && mainStore.setSelectedMenu({ key: String(res.id) });
         refreshTree();
+        modal.close();
+        res.id && mainStore.setSelectedMenu({ key: String(res.id) });
         return true;
       } catch (e) {
         return false;

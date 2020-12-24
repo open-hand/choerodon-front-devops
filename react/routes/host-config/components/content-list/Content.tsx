@@ -21,7 +21,8 @@ const ContentList: React.FC<any> = observer((): any => {
   }
 
   if (listDs && !listDs.length) {
-    return <EmptyPage />;
+    // @ts-ignore
+    return <EmptyPage title="暂无主机" describe="项目下暂无主机，请创建" />;
   }
 
   return (

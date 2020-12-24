@@ -46,7 +46,7 @@ export default ({
   }
 
   function checkoutHasSameIP(value, name, record) {
-    const p = /^((\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.){3}(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])$/;
+    const p = /^(?=^.{3,255}$)[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/;
     if (value && !p.test(value)) {
       return formatMessage({ id: 'network.ip.check.failed' });
     }

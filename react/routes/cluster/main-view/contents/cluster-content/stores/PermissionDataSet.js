@@ -1,6 +1,8 @@
 import getTablePostData from '../../../../../../utils/getTablePostData';
 
-export default ({ formatMessage, projectId, id, skipCheckProjectPermission }) => ({
+export default ({
+  formatMessage, projectId, id, skipCheckProjectPermission,
+}) => ({
   selection: false,
   pageSize: 10,
   transport: {
@@ -36,7 +38,6 @@ export default ({ formatMessage, projectId, id, skipCheckProjectPermission }) =>
     },
     {
       name: 'projectId',
-      type: 'number',
       label: formatMessage({ id: 'c7ncd.cluster.project' }),
       valueField: 'id',
       textField: 'name',

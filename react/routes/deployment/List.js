@@ -295,11 +295,13 @@ const Deployment = withRouter(observer((props) => {
         </span>
       </p>,
       <p className="c7ncd-deploy-content-deployObjectP">
-        <span className="c7ncd-deploy-content-deployObjectVersion">
-          版本:
-          {' '}
-          {deployObjectVersion}
-        </span>
+        <Tooltip title={deployObjectVersion}>
+          <span className="c7ncd-deploy-content-deployObjectVersion">
+            版本:
+            {' '}
+            {deployObjectVersion}
+          </span>
+        </Tooltip>
       </p>,
     ];
   };
@@ -355,6 +357,7 @@ const Deployment = withRouter(observer((props) => {
                 title={formatMessage({ id: `${intlPrefix}.number` })}
               />
             )}
+            width={150}
           />
           <Column
             header={(
@@ -370,6 +373,7 @@ const Deployment = withRouter(observer((props) => {
             name="deployResult"
             renderer={renderDeployStatus}
             header="执行结果"
+            width={80}
           />
           <Column name="instanceName" renderer={renderInstance} />
           <Column

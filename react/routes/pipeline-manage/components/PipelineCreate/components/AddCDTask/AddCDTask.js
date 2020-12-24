@@ -799,6 +799,7 @@ export default observer(() => {
             }}
             optionRenderer={optionRenderValueId}
             renderer={rendererValueId}
+            className="addCdTask-form2-valueId"
           />
           <div newLine colSpan={3}>
             <Icon style={{ color: 'rgb(244, 67, 54)' }} type="error" />

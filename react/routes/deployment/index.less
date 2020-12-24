@@ -1,10 +1,13 @@
-@import '~choerodon-ui/lib/style/themes/default';
+@import "~choerodon-ui/lib/style/themes/default";
 
 .c7ncd-deploy-content {
   padding-top: 0;
 
   &-deployObjectP {
     margin-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &-deployObjectName {
@@ -24,19 +27,18 @@
   }
 
   &-table {
-
     &-number {
       color: #000;
     }
 
     &-mark {
       display: inline-block;
-      margin-right: .06rem;
-      line-height: .18rem;
+      margin-right: 0.06rem;
+      line-height: 0.18rem;
       text-align: center;
-      font-size: .12rem;
-      width: .44rem;
-      height: .20rem;
+      font-size: 0.12rem;
+      width: 0.44rem;
+      height: 0.2rem;
       background: #e6f7ff;
       border-radius: 4px;
       border: 1px solid #91d5ff;
@@ -50,8 +52,8 @@
     }
 
     &-user {
-      line-height: .18rem;
-      margin-bottom: .02rem;
+      line-height: 0.18rem;
+      margin-bottom: 0.02rem;
 
       .c7ncd-userinfo-name {
         color: #000 !important;
@@ -60,10 +62,10 @@
 
     &-time {
       display: flex;
-      line-height: .2rem;
+      line-height: 0.2rem;
 
       &-text {
-        margin-right: .06rem;
+        margin-right: 0.06rem;
       }
     }
 
@@ -73,19 +75,19 @@
     }
 
     &-env {
-      margin-left: .06rem;
+      margin-left: 0.06rem;
       color: #000;
     }
 
     &-appService {
-      line-height: .2rem;
+      line-height: 0.2rem;
       display: block;
       color: #000;
-      margin-bottom: .02rem;
+      margin-bottom: 0.02rem;
     }
 
     &-version {
-      line-height: .2rem;
+      line-height: 0.2rem;
       display: block;
     }
   }
@@ -93,7 +95,7 @@
   &-icon-failed {
     color: #f44336;
     vertical-align: middle;
-    margin-left: .05rem;
+    margin-left: 0.05rem;
   }
 }
 

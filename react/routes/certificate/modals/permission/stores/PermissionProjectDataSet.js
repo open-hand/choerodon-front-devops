@@ -1,6 +1,8 @@
 import map from 'lodash/map';
 
-export default (({ intlPrefix, formatMessage, projectId, detailDs, certId }) => ({
+export default (({
+  intlPrefix, formatMessage, projectId, detailDs, certId,
+}) => ({
   autoQuery: true,
   selection: false,
   transport: {
@@ -30,7 +32,9 @@ export default (({ intlPrefix, formatMessage, projectId, detailDs, certId }) => 
   fields: [
     { name: 'name', type: 'string', label: formatMessage({ id: `${intlPrefix}.project.name` }) },
     { name: 'code', type: 'string', label: formatMessage({ id: `${intlPrefix}.project.code` }) },
-    { name: 'project', type: 'number', textField: 'name', valueField: 'id', label: formatMessage({ id: `${intlPrefix}.project` }), required: true },
+    {
+      name: 'project', textField: 'name', valueField: 'id', label: formatMessage({ id: `${intlPrefix}.project` }), required: true,
+    },
   ],
   queryFields: [
     { name: 'name', type: 'string', label: formatMessage({ id: `${intlPrefix}.project.name` }) },
