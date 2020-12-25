@@ -12,6 +12,8 @@ import PortDataSet from './PortDataSet';
 import PathListDataSet from './PathListDataSet';
 import DomainDataSet from './DomainDataSet';
 import AnnotationDataSet from './AnnotationDataSet';
+import MarketAndVersionOptionsDataSet from './MarketAndVersionOptionsDataSet';
+import MarketServiceOptionsDataSet from './MarketServiceOptionsDataSet';
 
 const Store = createContext();
 
@@ -47,6 +49,14 @@ export const StoreProvider = injectIntl(inject('AppState')(
     const networkDs = useMemo(() => new DataSet(NetworkDataSet({
       formatMessage, projectId, portsDs, pathListDs,
     })), []);
+
+    const marketAndVersionOptionsDs = useMemo(
+      () => new DataSet(MarketAndVersionOptionsDataSet(projectId), []),
+    );
+    const marketServiceOptionsDs = useMemo(
+      () => new DataSet(MarketServiceOptionsDataSet(projectId), []),
+    );
+
     const manualDeployDs = useMemo(() => new DataSet(ManualDeployDataSet({
       intlPrefix,
       formatMessage,
@@ -60,11 +70,14 @@ export const StoreProvider = injectIntl(inject('AppState')(
       organizationId,
       deployUseStore,
       hasHostDeploy,
+      marketAndVersionOptionsDs,
+      marketServiceOptionsDs,
     })), [projectId]);
 
     useEffect(() => {
       envOptionsDs.transport.read.url = `/devops/v1/projects/${projectId}/envs/list_by_active?active=true`;
       envOptionsDs.query();
+      marketAndVersionOptionsDs.query();
     }, [projectId]);
 
     const value = {

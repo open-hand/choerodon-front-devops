@@ -37,10 +37,13 @@ export default function useStore({ defaultKey }) {
       return axios.put(`/devops/v1/projects/${projectId}/app_service_instances`, JSON.stringify(data));
     },
 
-    async loadValue(projectId, id, versionId) {
+    async loadValue(projectId, id, versionId, isMarket = false) {
       this.setValueLoading(true);
       try {
-        const data = await axios.get(`/devops/v1/projects/${projectId}/app_service_instances/${id}/appServiceVersion/${versionId}/upgrade_value`);
+        const url = isMarket
+          ? `/devops/v1/projects/${projectId}/app_service_instances/${id}/upgrade_value?market_deploy_object_id=${versionId}`
+          : `/devops/v1/projects/${projectId}/app_service_instances/${id}/appServiceVersion/${versionId}/upgrade_value`;
+        const data = await axios.get(url);
         const result = handlePromptError(data);
         this.setValueLoading(false);
         if (result) {

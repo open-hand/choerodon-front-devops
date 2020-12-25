@@ -217,9 +217,11 @@ const AppModals = observer(() => {
     }];
   }
 
-  return (<div>
-    <HeaderButtons items={getButtons()} />
-  </div>);
+  return (
+    <div>
+      <HeaderButtons items={getButtons()} />
+    </div>
+  );
 });
 
 export default AppModals;

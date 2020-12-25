@@ -53,7 +53,8 @@ const IstModals = injectIntl(observer(() => {
 
     const appServiceVersionId = record.get('commandVersionId');
     const appServiceId = record.get('appServiceId');
-    istStore.loadValue(projectId, id, appServiceVersionId);
+    const isMarket = record.get('source') === 'market';
+    istStore.loadValue(projectId, id, appServiceVersionId, isMarket);
 
     const deployVo = {
       id,
@@ -93,6 +94,7 @@ const IstModals = injectIntl(observer(() => {
       parentId,
       versionId: appServiceVersionId,
       appServiceId,
+      isMarket: record.get('source') === 'market',
     };
 
     Modal.open({
