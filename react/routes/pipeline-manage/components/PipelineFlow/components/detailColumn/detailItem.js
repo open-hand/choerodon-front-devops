@@ -451,7 +451,7 @@ const DetailItem = (props) => {
                 shape="circle"
                 size="small"
                 icon="description-o"
-                disabled={['created', 'skipped'].includes(jobStatus)}
+                disabled={['created', 'skipped'].includes(jobStatus) || (itemType === 'cdDeploy' && jobStatus === 'failed')}
                 onClick={renderCheckLogFun}
                 color="primary"
               />
