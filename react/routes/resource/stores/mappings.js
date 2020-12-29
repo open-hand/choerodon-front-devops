@@ -26,7 +26,7 @@ const viewTypeMappings = {
 
 const RES_TYPES = ['instances', 'services', 'ingresses', 'certifications', 'configMaps', 'secrets', 'customResources', 'pvcs'];
 
-const ENV_KEYS = ['id', 'name', 'connect'];
+const ENV_KEYS = ['id', 'name', 'connect', 'code'];
 
 const noHeader = [];
 
