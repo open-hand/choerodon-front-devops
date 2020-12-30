@@ -181,12 +181,14 @@ const DetailItem = (props) => {
         </div>
         <div>
           <span>生成实例:</span>
-          <span
-            style={{ color: '#3F51B5', cursor: 'pointer' }}
-            onClick={linkTo}
-          >
-            {(jobStatus !== 'created' && instanceName) || '-'}
-          </span>
+          <Tooltip title={instanceName}>
+            <span
+              style={{ color: '#3F51B5', cursor: 'pointer' }}
+              onClick={linkTo}
+            >
+              {(jobStatus !== 'created' && instanceName) || '-'}
+            </span>
+          </Tooltip>
         </div>
       </main>
     );
@@ -451,7 +453,7 @@ const DetailItem = (props) => {
                 shape="circle"
                 size="small"
                 icon="description-o"
-                disabled={['created', 'skipped'].includes(jobStatus)}
+                disabled={['created', 'skipped'].includes(jobStatus) || (itemType === 'cdDeploy' && jobStatus === 'failed')}
                 onClick={renderCheckLogFun}
                 color="primary"
               />
