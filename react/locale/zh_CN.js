@@ -676,6 +676,8 @@ const deploy = {
   'c7ncd.deploy.retry.tips': '确定重新执行该流程吗？',
   'c7ncd.deploy.app': '应用服务',
   'c7ncd.deploy.app.version': '服务版本',
+  'c7ncd.deploy.appAndVersion': '市场应用及版本',
+  'c7ncd.deploy.marketService': '市场服务',
   'c7ncd.deploy.instance.name': '实例名称',
   'c7ncd.deploy.config': '部署配置',
   'c7ncd.deploy.resource': '资源配置',
@@ -716,6 +718,10 @@ const deploy = {
   'c7ncd.deploy.type.manual': '手动',
   'c7ncd.deploy.type.batch': '批量',
   'c7ncd.deploy.type.auto': '流水线',
+  'c7ncd.deploy.source.deploy': '部署来源',
+  'c7ncd.deploy.source.deploy.currentProject': '本项目',
+  'c7ncd.deploy.source.deploy.share': '共享',
+  'c7ncd.deploy.source.deploy.market': '市场',
 };
 
 const repository = {

@@ -24,7 +24,9 @@ const TreeMenu = observer(() => {
   const { mainStore } = useMainStore();
 
   const bounds = useMemo(() => mainStore.getNavBounds, [mainStore.getNavBounds]);
-  const nodeRenderer = useCallback((record, search) => <TreeItem record={record} search={search} />, []);
+  const nodeRenderer = useCallback(
+    (record, search) => <TreeItem record={record} search={search} />, [],
+  );
 
   useEffect(() => {
     setTreeMenuSelect(treeDs, resourceStore, getEnvItem);
@@ -48,21 +50,23 @@ const TreeMenu = observer(() => {
   function getParentRecord(record) {
     if (record.parent) {
       return getParentRecord(record.parent);
-    } else {
-      return record.toData();
     }
+    return record.toData();
   }
 
-  return <nav style={bounds} className={`${prefixCls}-sidebar`}>
-    <SidebarHeading />
-    <div className={`${prefixCls}-sidebar-menu`}>
-      <TreeView
-        ds={treeDs}
-        store={resourceStore}
-        nodesRender={nodeRenderer}
-      />
-    </div>
-  </nav>;
+  return (
+    <nav style={bounds} className={`${prefixCls}-sidebar`}>
+      <SidebarHeading />
+      <div className={`${prefixCls}-sidebar-menu`}>
+        <TreeView
+          ds={treeDs}
+          store={resourceStore}
+          nodesRender={nodeRenderer}
+          isFilter
+        />
+      </div>
+    </nav>
+  );
 });
 
 export default TreeMenu;

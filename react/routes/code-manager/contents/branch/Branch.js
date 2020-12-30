@@ -155,6 +155,7 @@ function Branch(props) {
       summary,
       typeCode,
     };
+    const showDefaultIssue = issueId && issueNum && summary;
     ProModal.open({
       key: branchEditModalKey,
       title: <FormattedMessage id="branch.edit" />,
@@ -164,8 +165,8 @@ function Branch(props) {
         appServiceId={appServiceId}
         objectVersionNumber={objectVersionNumber}
         branchName={branchName}
-        issueId={issueId}
-        initIssue={initIssue}
+        issueId={showDefaultIssue && issueId}
+        initIssue={showDefaultIssue && initIssue}
         handleRefresh={handleRefresh}
       />,
       style: branchCreateModalStyle,

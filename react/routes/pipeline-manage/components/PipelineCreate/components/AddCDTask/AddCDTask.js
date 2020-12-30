@@ -1337,9 +1337,7 @@ export default observer(() => {
             <TextField
               label="流水线回调地址"
               colSpan={3}
-              disabled
-              required
-              suffix={(
+              addonAfter={(
                 <CopyToClipboard
                   text={pipelineCallbackAddress}
                   onCopy={handleCopy}
@@ -1347,6 +1345,8 @@ export default observer(() => {
                   <Icon style={{ cursor: 'pointer' }} type="content_copy" />
                 </CopyToClipboard>
               )}
+              disabled
+              required
               value={pipelineCallbackAddress}
             />,
             <TextArea

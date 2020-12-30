@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useEffect, useMemo } from 'react';
+import React, {
+  createContext, useContext, useEffect, useMemo,
+} from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
@@ -28,7 +30,11 @@ export const StoreProvider = injectIntl(observer((props) => {
     intlPrefix,
     treeDs,
   } = useResourceStore();
-  const { getSelectedMenu: { id, parentId, itemType } } = resourceStore;
+  const {
+    getSelectedMenu: {
+      id, parentId, itemType, type,
+    },
+  } = resourceStore;
   const tabs = useMemo(() => ({
     NET_TAB: 'net',
     MAPPING_TAB: 'mapping',
@@ -80,10 +86,20 @@ export const StoreProvider = injectIntl(observer((props) => {
     });
   }
 
+  const baseUrl = () => {
+    let tempUrl;
+    if (type === 'market_service') {
+      tempUrl = `/market/v1/projects/${projectId}/market/service/${id}/detail`;
+    } else {
+      tempUrl = `/devops/v1/projects/${projectId}/app_service/${id}`;
+    }
+    return tempUrl;
+  };
+
   useEffect(() => {
     checkAppExist().then((query) => {
       if (query) {
-        baseInfoDs.transport.read.url = `/devops/v1/projects/${projectId}/app_service/${id}`;
+        baseInfoDs.transport.read.url = baseUrl();
         baseInfoDs.query();
         netDs.transport.read = ({ data }) => {
           const postData = getTablePostData(data);
