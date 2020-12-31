@@ -14,11 +14,12 @@ import { useManualDeployStore } from './stores';
 
 const { Option } = Select;
 
-const HostDeployForm = injectIntl(observer(({ form }) => {
+const HostDeployForm = injectIntl(observer(({ handleLinkToDetail }) => {
   const {
     manualDeployDs,
     AppState: { currentMenuType: { projectId } },
     deployUseStore,
+    prefixCls,
   } = useManualDeployStore();
 
   const record = manualDeployDs.current;
@@ -231,45 +232,46 @@ const HostDeployForm = injectIntl(observer(({ form }) => {
         )}
       </Form>
       {isMarket && (
-        <Form columns={isDocker ? 5 : 4} record={record} style={{ width: '125%' }}>
+        <Form columns={7} record={record} style={{ width: '125%' }}>
           <Select
             name="marketAppAndVersion"
             searchable
             newLine
+            colSpan={2}
           />
           <Select
             name="marketService"
             disabled={!record.get('marketAppAndVersion')}
             searchable
+            colSpan={2}
           />
+          <Button
+            className={`${prefixCls}-manual-deploy-market-btn`}
+            disabled={!record.get('marketAppAndVersion')}
+            onClick={handleLinkToDetail}
+          >
+            查看版本详情
+          </Button>
           {
             isDocker ? [
               <TextField
-                name="marketAppService"
-                disabled
+                name={mapping.containerName.value}
+                colSpan={2}
               />,
-              <TextField
-                name="marketAppServiceVersion"
-                disabled
-              />,
-              <TextField name={mapping.containerName.value} />,
               <YamlEditor
-                colSpan={isDocker ? 5 : 4}
+                colSpan={7}
                 readOnly={false}
                 value={deployUseStore.getImageYaml}
                 onValueChange={(value) => deployUseStore.setImageYaml(value)}
               />,
             ] : [
               <TextField
-                name="marketJarVersion"
-                disabled
-              />,
-              <TextField
                 name={mapping.workPath.value}
                 addonAfter={getWorkPathTips}
+                colSpan={2}
               />,
               <YamlEditor
-                colSpan={isDocker ? 5 : 4}
+                colSpan={7}
                 readOnly={false}
                 modeChange={false}
                 value={deployUseStore.getJarYaml}

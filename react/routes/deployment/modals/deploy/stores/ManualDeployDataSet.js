@@ -210,23 +210,13 @@ export default (({
       case 'marketService':
         if (value && !isEmpty(value.marketServiceDeployObjectVO)) {
           const {
-            devopsAppServiceName, devopsAppServiceVersion,
             id: deployObjectId, devopsAppServiceCode,
           } = value.marketServiceDeployObjectVO;
-          record.set('marketAppService', devopsAppServiceName);
-          record.set('marketAppServiceVersion', devopsAppServiceVersion);
           record.set('instanceName', getRandomName(devopsAppServiceCode));
           record.get(mapping.deployWay.value) === mapping.deployWay.options[0].value
           && deployStore.loadMarketDeployValue(projectId, deployObjectId);
         } else {
-          record.get('marketAppService') && record.set('marketAppService', null);
-          record.get('marketAppServiceVersion') && record.set('marketAppServiceVersion', null);
-        }
-        if (value && !isEmpty(value.jarReleaseInfoVO)) {
-          const { version } = value.jarReleaseInfoVO;
-          record.set('marketJarVersion', version);
-        } else {
-          record.get('marketJarVersion') && record.set('marketJarVersion', null);
+          record.get('instanceName') && record.set('instanceName', null);
         }
         break;
       default:
@@ -798,28 +788,6 @@ export default (({
           || (getRequired({ record }) && getIsMarket({ record })),
         },
         options: marketServiceOptionsDs,
-      },
-      {
-        name: 'marketAppService',
-        type: 'string',
-        label: formatMessage({ id: `${intlPrefix}.app` }),
-        dynamicProps: {
-          required: ({ record }) => ((record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[0].value && record.get('appServiceSource') === 'market_service'))
-            || (getRequired({ record }) && getIsMarket({ record })),
-        },
-        ignore: 'always',
-      },
-      {
-        name: 'marketAppServiceVersion',
-        type: 'string',
-        label: formatMessage({ id: `${intlPrefix}.app.version` }),
-        dynamicProps: {
-          required: ({ record }) => ((record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[0].value && record.get('appServiceSource') === 'market_service'))
-            || (getRequired({ record }) && getIsMarket({ record })),
-        },
-        ignore: 'always',
       },
     ],
     events: {

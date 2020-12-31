@@ -1,13 +1,13 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, {
+  Fragment, useCallback, useEffect, useState,
+} from 'react';
 import {
   Button, Form, Icon, Select, SelectBox, TextField,
 } from 'choerodon-ui/pro';
-import { Form as OldForm, Spin } from 'choerodon-ui';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
-import { axios } from '@choerodon/boot';
-import forEach from 'lodash/forEach';
+import find from 'lodash/find';
 import { mapping } from '@/routes/deployment/modals/deploy/stores/ManualDeployDataSet';
 import YamlEditor from '../../../../components/yamlEditor';
 import StatusDot from '../../../../components/status-dot';
@@ -21,7 +21,7 @@ import './index.less';
 
 const { Option, OptGroup } = Select;
 
-const DeployModal = injectIntl(observer(({ form }) => {
+const DeployModal = observer(() => {
   const {
     manualDeployDs,
     deployStore,
@@ -31,8 +31,9 @@ const DeployModal = injectIntl(observer(({ form }) => {
     modal,
     intl: { formatMessage },
     envId,
-    AppState: { currentMenuType: { projectId } },
-    deployUseStore,
+    history,
+    location: { search },
+    marketAndVersionOptionsDs,
   } = useManualDeployStore();
 
   const record = manualDeployDs.current;
@@ -102,6 +103,19 @@ const DeployModal = injectIntl(observer(({ form }) => {
     Operating((pre) => !pre);
   }
 
+  function handleLinkToDetail() {
+    const marketRecord = marketAndVersionOptionsDs.find((optionRecord) => optionRecord.get('id') === record.get('marketAppAndVersion'));
+    if (marketRecord && marketRecord.get('marketAppId')) {
+      history.push({
+        pathname: '/market/app-market/app-detail',
+        search,
+        state: {
+          appId: marketRecord.get('marketAppId'),
+        },
+      });
+    }
+  }
+
   const renderRestForm = () => (
     record.get(mapping.deployWay.value) === mapping.deployWay.options[0].value
       ? (
@@ -139,14 +153,13 @@ const DeployModal = injectIntl(observer(({ form }) => {
                 disabled={!record.get('marketAppAndVersion')}
                 searchable
               />,
-              <TextField
-                name="marketAppService"
-                disabled
-              />,
-              <TextField
-                name="marketAppServiceVersion"
-                disabled
-              />,
+              <Button
+                className={`${prefixCls}-manual-deploy-market-btn`}
+                disabled={!record.get('marketAppAndVersion')}
+                onClick={handleLinkToDetail}
+              >
+                查看版本详情
+              </Button>,
             ]) : ([
               <Select
                 name="appServiceId"
@@ -182,7 +195,7 @@ const DeployModal = injectIntl(observer(({ form }) => {
                 <Select
                   name="environmentId"
                   searchable
-                  newLine={record.get('appServiceSource') !== 'market_service'}
+                  newLine
                   optionRenderer={renderEnvOption}
                   notFoundContent={<FormattedMessage id={`${intlPrefix}.env.empty`} />}
                   onOption={renderOptionProperty}
@@ -192,7 +205,7 @@ const DeployModal = injectIntl(observer(({ form }) => {
               name="instanceName"
               addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.instance.tips` })} />}
               colSpan={!envId ? 1 : 2}
-              newLine={!!envId && record.get('appServiceSource') !== 'market_service'}
+              newLine={!!envId}
             />
             {record.get('appServiceSource') !== 'market_service' && (
               <Select
@@ -259,7 +272,7 @@ const DeployModal = injectIntl(observer(({ form }) => {
             </div>
           </div>
         </>
-      ) : <HostDeployForm />);
+      ) : <HostDeployForm handleLinkToDetail={handleLinkToDetail} />);
 
   return (
     <div className={`${prefixCls}-manual-deploy`}>
@@ -279,6 +292,6 @@ const DeployModal = injectIntl(observer(({ form }) => {
       }
     </div>
   );
-}));
+});
 
-export default OldForm.create()(DeployModal);
+export default DeployModal;
