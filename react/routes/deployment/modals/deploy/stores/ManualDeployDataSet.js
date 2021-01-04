@@ -219,8 +219,24 @@ export default (({
           record.get('instanceName') && record.set('instanceName', null);
         }
         break;
+      case mapping.deployWay.value:
+        if (record.get(mapping.deployObject.value) !== mapping.deployObject.options[0].value) {
+          loadMarketService(record, value === mapping.deployWay.options[0].value ? 'image' : 'jar');
+        }
+        break;
+      case mapping.deployObject.value:
+        loadMarketService(record, value === mapping.deployObject.options[0].value ? 'image' : 'jar');
+        break;
       default:
         break;
+    }
+  }
+
+  function loadMarketService(record, type) {
+    marketServiceOptionsDs.setQueryParameter('type', type);
+    if (record.get('marketAppAndVersion')) {
+      record.get('marketService') && record.set('marketService', null);
+      marketServiceOptionsDs.query();
     }
   }
 
