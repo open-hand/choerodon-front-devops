@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
+import { withRouter } from 'react-router-dom';
 import { DataSet } from 'choerodon-ui/pro';
 import useStore from './useStore';
 import ManualDeployDataSet from './ManualDeployDataSet';
@@ -21,7 +22,7 @@ export function useManualDeployStore() {
   return useContext(Store);
 }
 
-export const StoreProvider = injectIntl(inject('AppState')(
+export const StoreProvider = withRouter(injectIntl(inject('AppState')(
   (props) => {
     const {
       AppState: { currentMenuType: { projectId, organizationId } },
@@ -89,6 +90,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       domainDs,
       annotationDs,
       deployUseStore,
+      marketAndVersionOptionsDs,
     };
     return (
       <Store.Provider value={value}>
@@ -96,4 +98,4 @@ export const StoreProvider = injectIntl(inject('AppState')(
       </Store.Provider>
     );
   },
-));
+)));

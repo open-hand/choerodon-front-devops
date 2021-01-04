@@ -4,7 +4,7 @@ export default ((projectId) => ({
   paging: false,
   transport: {
     read: ({ data }) => ({
-      url: `market/v1/projects/${projectId}/deploy/application/version/${data.marketVersionId}`,
+      url: `market/v1/projects/${projectId}/deploy/application/version/${data.marketVersionId}?type=${data.type || 'image'}`,
       method: 'get',
     }),
   },
