@@ -57,7 +57,7 @@ const CreateHost: React.FC<any> = observer((): any => {
         record.set('jmeterStatus', 'operating');
       }
       record.set('hostStatus', 'operating');
-      const res = await HostConfigApis.testConnection(projectId, postData);
+      const res = await HostConfigApis.testConnection(projectId, postData, postData.type);
       modal.update({
         okProps: { disabled: false },
       });
