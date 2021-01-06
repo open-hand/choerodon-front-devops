@@ -1322,9 +1322,9 @@ export default observer(() => {
             <div colSpan={3} className="addcdTask-missionDes">
               <span>任务说明：</span>
               <span style={{ display: 'inline-block' }}>
-                - 外部卡点任务用于对接Choerodon平台外的工作流或系统。
-                此任务触发时，会默认将projectId、pipelineId、 stageId、jobId、pipelineRecordId、stageRecordId
-                以及jobRecordId发送至外部地址。
+                - 外部卡点任务用于对接Choerodon平台外的工作流或系统。此任务触发时，
+                会默认将projectId、pipelineRecordId、stageRecordId 、jobRecordId、callback_token、
+                currentCdJob以及pipelineRecordDetails发送至外部地址。
               </span>
               <span style={{ display: 'inline-block' }}>
                 - 外部系统执行结束后，会往
@@ -1333,6 +1333,12 @@ export default observer(() => {
                 {' '}
                 发送一个状态来作为外部卡点的任务状态。成功后会接着执行后续任务，失败则停留在此任务。
               </span>
+              <span style={{ display: 'block' }}>流水线回调地址参数说明：</span>
+              <span style={{ display: 'block' }}>- pipelineRecordId： 流水线记录id</span>
+              <span style={{ display: 'block' }}>- stageRecordId: 流水线阶段记录id</span>
+              <span style={{ display: 'block' }}>- jobRecordId: 流水线任务记录id</span>
+              <span style={{ display: 'block' }}>- callback_token: 回调时的认证token</span>
+              <span style={{ display: 'block' }}>- approval_status： 任务执行状态（true/false ,代表外部卡点任务执行成功或失败）</span>
             </div>,
             <TextField
               label="流水线回调地址"
