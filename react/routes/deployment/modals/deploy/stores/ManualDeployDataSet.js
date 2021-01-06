@@ -722,15 +722,6 @@ export default (({
         },
       },
       {
-        name: 'marketJarVersion',
-        type: 'string',
-        label: 'jar包版本',
-        dynamicProps: {
-          required: ({ record }) => getRequired({ record }) && getIsMarket({ record })
-          && (record.get(mapping.deployObject.value) === (mapping.deployObject.options.length > 1 ? mapping.deployObject.options[1].value : '')),
-        },
-      },
-      {
         name: 'appServiceId',
         type: 'string',
         label: formatMessage({ id: `${intlPrefix}.app` }),
