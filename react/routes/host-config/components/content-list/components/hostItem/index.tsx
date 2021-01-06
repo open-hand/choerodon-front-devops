@@ -20,7 +20,7 @@ const HostsItem:React.FC<any> = ({
   jmeterPort, // jmeter进程的端口号
   jmeterStatus, // jmeter状态
   authType, // 认证类型
-  type, // 主机类型 deploy / distribute_test
+  // type, // 主机类型 deploy / distribute_test
   jmeterPath, // jmeter二进制文件的路径
   username, // 用户名
   lastUpdateDate,
@@ -36,6 +36,8 @@ const HostsItem:React.FC<any> = ({
     projectId,
     mainStore,
   } = useHostConfigStore();
+
+  const type = mainStore.getCurrentTabKey; // 主机类型 deploy / distribute_test
 
   const getMainStatus = useMemo(() => {
     if (type === 'deploy') {
