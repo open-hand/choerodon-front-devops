@@ -34,6 +34,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     intl: { formatMessage },
     AppState: { currentMenuType: { projectId } },
     hostId,
+    hostType,
   } = props;
 
   const intlPrefix = 'c7ncd.host.config';
@@ -73,6 +74,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
       accountDs,
       hostId,
       HAS_BASE_PRO,
+      hostType,
     })), [projectId],
   );
 

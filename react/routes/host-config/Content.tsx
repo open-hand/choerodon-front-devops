@@ -22,12 +22,15 @@ const HostConfig: React.FC<any> = observer((): any => {
     refresh,
     listDs,
     projectId,
+    mainStore,
   } = useHostConfigStore();
 
   const handleCorrect = async ():Promise<boolean> => {
     try {
       const postData = map(listDs.toData(), 'id');
-      const res = await HostConfigApis.batchCorrect(projectId, postData);
+      const res = await HostConfigApis.batchCorrect(
+        projectId, postData, mainStore.getCurrentTabKey,
+      );
       if (res && res.failed) {
         return false;
       }

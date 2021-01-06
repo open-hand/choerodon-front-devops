@@ -34,6 +34,7 @@ const HostsItem:React.FC<any> = ({
     intlPrefix,
     refresh,
     projectId,
+    mainStore,
   } = useHostConfigStore();
 
   const getMainStatus = useMemo(() => {
@@ -57,7 +58,7 @@ const HostsItem:React.FC<any> = ({
 
   const handleCorrect = async ():Promise<void> => {
     try {
-      const res = await apis.batchCorrect(projectId, [id]);
+      const res = await apis.batchCorrect(projectId, [id], type);
       if (res && res.failed) {
         return;
       }
@@ -69,7 +70,7 @@ const HostsItem:React.FC<any> = ({
 
   async function deleteRerord():Promise<boolean> {
     try {
-      const res = await apis.getDeleteHostUrl(projectId, id);
+      const res = await apis.getDeleteHostUrl(projectId, id, type);
       if (res && res.failed) {
         return false;
       }
@@ -103,7 +104,7 @@ const HostsItem:React.FC<any> = ({
         width: 380,
       },
       drawer: true,
-      children: <CreateHost hostId={id} refresh={refresh} />,
+      children: <CreateHost hostId={id} refresh={refresh} hostType={type} />,
       okText: formatMessage({ id: 'save' }),
     });
   }
