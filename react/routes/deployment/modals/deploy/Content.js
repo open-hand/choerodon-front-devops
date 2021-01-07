@@ -7,7 +7,7 @@ import {
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
-import find from 'lodash/find';
+import get from 'lodash/get';
 import { mapping } from '@/routes/deployment/modals/deploy/stores/ManualDeployDataSet';
 import YamlEditor from '../../../../components/yamlEditor';
 import StatusDot from '../../../../components/status-dot';
@@ -104,16 +104,28 @@ const DeployModal = observer(() => {
   }
 
   function handleLinkToDetail() {
-    const marketRecord = marketAndVersionOptionsDs.find((optionRecord) => optionRecord.get('id') === record.get('marketAppAndVersion'));
-    if (marketRecord && marketRecord.get('marketAppId')) {
+    const marketAppId = get(record.get('marketService'), 'marketAppId');
+    if (marketAppId) {
       history.push({
         pathname: '/market/app-market/app-detail',
         search,
         state: {
-          appId: marketRecord.get('marketAppId'),
+          appId: marketAppId,
         },
       });
     }
+  }
+
+  function getMarketAndVersionContent() {
+    return (
+      marketAndVersionOptionsDs.map((marketRecord) => (
+        <OptGroup label={marketRecord.get('name')} key={marketRecord.get('id')}>
+          {map(marketRecord.get('appVersionVOS') || [], (item) => (
+            <Option value={item.id} key={item.id}>{item.versionNumber}</Option>
+          ))}
+        </OptGroup>
+      ))
+    );
   }
 
   const renderRestForm = () => (
@@ -147,7 +159,9 @@ const DeployModal = observer(() => {
                 name="marketAppAndVersion"
                 searchable
                 newLine
-              />,
+              >
+                {getMarketAndVersionContent()}
+              </Select>,
               <Select
                 name="marketService"
                 disabled={!record.get('marketAppAndVersion')}
@@ -155,7 +169,7 @@ const DeployModal = observer(() => {
               />,
               <Button
                 className={`${prefixCls}-manual-deploy-market-btn`}
-                disabled={!record.get('marketAppAndVersion')}
+                disabled={!record.get('marketService')}
                 onClick={handleLinkToDetail}
               >
                 查看版本详情
@@ -272,7 +286,12 @@ const DeployModal = observer(() => {
             </div>
           </div>
         </>
-      ) : <HostDeployForm handleLinkToDetail={handleLinkToDetail} />);
+      ) : (
+        <HostDeployForm
+          handleLinkToDetail={handleLinkToDetail}
+          getMarketAndVersionContent={getMarketAndVersionContent}
+        />
+      ));
 
   return (
     <div className={`${prefixCls}-manual-deploy`}>

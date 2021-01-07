@@ -773,14 +773,14 @@ export default (({
       {
         name: 'marketAppAndVersion',
         label: formatMessage({ id: `${intlPrefix}.appAndVersion` }),
-        textField: 'versionNumber',
-        valueField: 'id',
+        // textField: 'versionNumber',
+        // valueField: 'id',
         dynamicProps: {
           required: ({ record }) => ((record.get(mapping.deployWay.value)
             === mapping.deployWay.options[0].value && record.get('appServiceSource') === 'market_service'))
           || (getRequired({ record }) && getIsMarket({ record })),
         },
-        options: marketAndVersionOptionsDs,
+        // options: marketAndVersionOptionsDs,
         ignore: 'always',
       },
       {
