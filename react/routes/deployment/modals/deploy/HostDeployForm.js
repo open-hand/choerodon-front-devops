@@ -14,7 +14,7 @@ import { useManualDeployStore } from './stores';
 
 const { Option } = Select;
 
-const HostDeployForm = injectIntl(observer(({ handleLinkToDetail }) => {
+const HostDeployForm = injectIntl(observer(({ handleLinkToDetail, getMarketAndVersionContent }) => {
   const {
     manualDeployDs,
     AppState: { currentMenuType: { projectId } },
@@ -238,7 +238,9 @@ const HostDeployForm = injectIntl(observer(({ handleLinkToDetail }) => {
             searchable
             newLine
             colSpan={2}
-          />
+          >
+            {getMarketAndVersionContent()}
+          </Select>
           <Select
             name="marketService"
             disabled={!record.get('marketAppAndVersion')}

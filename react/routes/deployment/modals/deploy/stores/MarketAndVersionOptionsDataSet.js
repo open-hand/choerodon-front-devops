@@ -8,7 +8,7 @@ export default ((projectId) => ({
       method: 'get',
     },
   },
-  fields: [
-    { name: 'marketAppName', type: 'string', group: 0 },
-  ],
+  // fields: [
+  //   { name: 'marketAppName', type: 'string', group: 0 },
+  // ],
 }));
