@@ -184,6 +184,17 @@ export default injectIntl(observer(() => {
           className={`${prefixCls}-instance-upgrade-select`}
         />
       </Form>
+      <div className={`${prefixCls}-instance-upgrade-tips`}>
+        <strong>注意：</strong>
+        <br />
+        - 在变更实例时，Chart包内或者values中控制副本数量的配置将不会生效，而是会和现有生效的实例的副本数保持一致。
+        <br />
+
+        - 若想修改副本数量，请在部署后前往运行详情页面中更改Pod数量即可。
+        <br />
+
+        - 下方values中其他参数字段修改后依然会生效。
+      </div>
       <Spin spinning={valueDs.status === 'loading'}>
         {getValue()}
       </Spin>
