@@ -105,15 +105,27 @@ const DeployModal = observer(() => {
 
   function handleLinkToDetail() {
     const marketAppId = get(record.get('marketService'), 'marketAppId');
-    if (marketAppId) {
-      history.push({
-        pathname: '/market/app-market/app-detail',
-        search,
-        state: {
-          appId: marketAppId,
-        },
-      });
-    }
+    const href = `${window.location.origin}/#/market/app-market/app-detail/${marketAppId}${search}`;
+    return (
+      <Button
+        className={`${prefixCls}-manual-deploy-market-btn`}
+        disabled={!record.get('marketService')}
+        onClick={handleLinkToDetail}
+      >
+        {marketAppId ? (
+          <a
+            href={href}
+            rel="nofollow me noopener noreferrer"
+            target="_blank"
+            className={`${prefixCls}-manual-deploy-market-btn-link`}
+          >
+            查看版本详情
+          </a>
+        ) : (
+          <span>查看版本详情</span>
+        )}
+      </Button>
+    );
   }
 
   function getMarketAndVersionContent() {
@@ -167,13 +179,7 @@ const DeployModal = observer(() => {
                 disabled={!record.get('marketAppAndVersion')}
                 searchable
               />,
-              <Button
-                className={`${prefixCls}-manual-deploy-market-btn`}
-                disabled={!record.get('marketService')}
-                onClick={handleLinkToDetail}
-              >
-                查看版本详情
-              </Button>,
+              handleLinkToDetail(),
             ]) : ([
               <Select
                 name="appServiceId"

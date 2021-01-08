@@ -33,8 +33,8 @@ export default function useStore({ defaultKey }) {
       return axios.put(`/devops/v1/projects/${projectId}/app_service_instances/${id}/restart`);
     },
 
-    upgrade(projectId, data) {
-      return axios.put(`/devops/v1/projects/${projectId}/app_service_instances`, JSON.stringify(data));
+    upgrade(projectId, data, isMarket) {
+      return axios.put(`/devops/v1/projects/${projectId}/app_service_instances${isMarket ? `/market/instances/${data.instanceId}` : ''}`, JSON.stringify(data));
     },
 
     async loadValue(projectId, id, versionId, isMarket = false) {
@@ -58,7 +58,9 @@ export default function useStore({ defaultKey }) {
       }
     },
 
-    loadUpVersion({ projectId, appId, page, param = '', init = '' }) {
+    loadUpVersion({
+      projectId, appId, page, param = '', init = '',
+    }) {
       let url = '';
       if (param) {
         url = `&version=${param}`;

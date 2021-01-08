@@ -247,13 +247,7 @@ const HostDeployForm = injectIntl(observer(({ handleLinkToDetail, getMarketAndVe
             searchable
             colSpan={2}
           />
-          <Button
-            className={`${prefixCls}-manual-deploy-market-btn`}
-            disabled={!record.get('marketAppAndVersion')}
-            onClick={handleLinkToDetail}
-          >
-            查看版本详情
-          </Button>
+          {handleLinkToDetail()}
           {
             isDocker ? [
               <TextField

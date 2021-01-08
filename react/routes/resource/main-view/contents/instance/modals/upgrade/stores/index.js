@@ -42,8 +42,8 @@ export const StoreProvider = injectIntl(inject('AppState')(
       formatMessage, intlPrefix, projectId, appServiceId, upgradeStore, versionId,
     })), [projectId, appServiceId]);
     const upgradeDs = useMemo(() => new DataSet(UpgradeDataSet({
-      formatMessage, intlPrefix, projectId, versionsDs, valueDs,
-    })), [projectId]);
+      formatMessage, intlPrefix, projectId, versionsDs, valueDs, isMarket,
+    })), [projectId, isMarket]);
 
     useEffect(() => {
       const record = upgradeDs.current;

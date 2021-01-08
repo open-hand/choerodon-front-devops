@@ -17,6 +17,7 @@ const ValueModalContent = observer((
     prefixCls,
     vo,
     refresh,
+    isMarket,
   },
 ) => {
   const [value, setValue] = useState('');
@@ -26,6 +27,7 @@ const ValueModalContent = observer((
 
   modal.handleOk(handleOk);
 
+  // eslint-disable-next-line consistent-return
   async function handleOk() {
     if (isDisabled) return false;
     setIsLoading(true);
@@ -39,12 +41,18 @@ const ValueModalContent = observer((
       instanceId: id,
       type: 'update',
       environmentId: envId,
-      appServiceId,
-      appServiceVersionId,
     };
 
+    if (isMarket) {
+      data.marketAppServiceId = appServiceId;
+      data.marketDeployObjectId = appServiceVersionId;
+    } else {
+      data.appServiceId = appServiceId;
+      data.appServiceVersionId = appServiceVersionId;
+    }
+
     try {
-      const result = await store.upgrade(projectId, data);
+      const result = await store.upgrade(projectId, data, isMarket);
       if (handlePromptError(result)) {
         Choerodon.prompt('修改成功.');
         refresh();

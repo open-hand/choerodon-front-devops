@@ -49,7 +49,7 @@ const IstModals = injectIntl(observer(() => {
 
   function openValueModal() {
     const record = baseDs.current;
-    if (!record) return false;
+    if (!record) return;
 
     const appServiceVersionId = record.get('commandVersionId');
     const appServiceId = record.get('appServiceId');
@@ -76,6 +76,7 @@ const IstModals = injectIntl(observer(() => {
         prefixCls={prefixCls}
         formatMessage={formatMessage}
         refresh={afterDeploy}
+        isMarket={isMarket}
       />,
       afterClose: () => {
         istStore.setUpgradeValue({});
@@ -85,7 +86,7 @@ const IstModals = injectIntl(observer(() => {
 
   function openUpgradeModal() {
     const record = baseDs.current;
-    if (!record) return false;
+    if (!record) return;
 
     const appServiceVersionId = record.get('appServiceVersionId');
     const appServiceId = record.get('appServiceId');
