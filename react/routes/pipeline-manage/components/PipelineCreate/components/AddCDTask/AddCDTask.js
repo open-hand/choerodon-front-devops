@@ -1320,7 +1320,7 @@ export default observer(() => {
         {
           ADDCDTaskDataSet.current.get('type') === addCDTaskDataSetMap.externalStuck && [
             <div colSpan={3} className="addcdTask-missionDes">
-              <span style={{ fontWeight: 500 }}>任务说明：</span>
+              <span><strong>任务说明：</strong></span>
               <span style={{ display: 'inline-block' }}>
                 - 外部卡点任务用于对接Choerodon平台外的工作流或系统。此任务触发时，
                 会默认将projectId、pipelineRecordId、stageRecordId 、jobRecordId、callback_token、
@@ -1333,7 +1333,12 @@ export default observer(() => {
                 {' '}
                 发送一个状态来作为外部卡点的任务状态。成功后会接着执行后续任务，失败则停留在此任务。
               </span>
-              <span style={{ display: 'block', fontWeight: 500, marginTop: 10 }}>流水线回调地址参数说明：</span>
+              <br />
+              <span style={{ display: 'block', marginTop: 10 }}>
+                <strong>
+                  流水线回调地址参数说明：
+                </strong>
+              </span>
               <span style={{ display: 'block' }}>- pipelineRecordId： 流水线记录id</span>
               <span style={{ display: 'block' }}>- stageRecordId: 流水线阶段记录id</span>
               <span style={{ display: 'block' }}>- jobRecordId: 流水线任务记录id</span>

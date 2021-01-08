@@ -202,7 +202,7 @@ const IstModals = injectIntl(observer(() => {
       display: true,
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.values'],
       group: 1,
-      disabled: btnDisabled,
+      // disabled: btnDisabled,
     }, {
       name: formatMessage({ id: `${intlPrefix}.modal.modify` }),
       icon: 'backup_line',
