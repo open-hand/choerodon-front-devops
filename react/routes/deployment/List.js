@@ -328,7 +328,9 @@ const Deployment = withRouter(observer((props) => {
               {formatMessage({ id: `${intlPrefix}.marketService` })}
               :&nbsp;
             </span>
-            <span>{marketServiceName}</span>
+            <Tooltip title={marketServiceName}>
+              <span>{marketServiceName}</span>
+            </Tooltip>
           </div>,
         ])}
       </>

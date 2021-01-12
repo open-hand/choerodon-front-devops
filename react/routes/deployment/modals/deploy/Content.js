@@ -103,14 +103,35 @@ const DeployModal = observer(() => {
     Operating((pre) => !pre);
   }
 
-  function handleLinkToDetail() {
+  function renderMarketApp({ value, text }) {
+    if (value && value['group-0'] && value.meaning) {
+      return `${value['group-0']}-${value.meaning}`;
+    }
+    return text;
+  }
+
+  function getMarketItem(colSpan = 1) {
     const marketAppId = get(record.get('marketService'), 'marketAppId');
     const href = `${window.location.origin}/#/market/app-market/app-detail/${marketAppId}${search}`;
-    return (
+    return ([
+      <Select
+        name="marketAppAndVersion"
+        searchable
+        newLine
+        colSpan={colSpan}
+        renderer={renderMarketApp}
+      >
+        {getMarketAndVersionContent()}
+      </Select>,
+      <Select
+        name="marketService"
+        disabled={!record.get('marketAppAndVersion')}
+        searchable
+        colSpan={colSpan}
+      />,
       <Button
         className={`${prefixCls}-manual-deploy-market-btn`}
         disabled={!record.get('marketService')}
-        onClick={handleLinkToDetail}
       >
         {marketAppId ? (
           <a
@@ -124,8 +145,8 @@ const DeployModal = observer(() => {
         ) : (
           <span>查看版本详情</span>
         )}
-      </Button>
-    );
+      </Button>,
+    ]);
   }
 
   function getMarketAndVersionContent() {
@@ -133,7 +154,7 @@ const DeployModal = observer(() => {
       marketAndVersionOptionsDs.map((marketRecord) => (
         <OptGroup label={marketRecord.get('name')} key={marketRecord.get('id')}>
           {map(marketRecord.get('appVersionVOS') || [], (item) => (
-            <Option value={item.id} key={item.id}>{item.versionNumber}</Option>
+            <Option value={item} key={item.id}>{item.versionNumber}</Option>
           ))}
         </OptGroup>
       ))
@@ -166,21 +187,7 @@ const DeployModal = observer(() => {
                 </span>
               </Option>
             </SelectBox>
-            {record.get('appServiceSource') === 'market_service' ? ([
-              <Select
-                name="marketAppAndVersion"
-                searchable
-                newLine
-              >
-                {getMarketAndVersionContent()}
-              </Select>,
-              <Select
-                name="marketService"
-                disabled={!record.get('marketAppAndVersion')}
-                searchable
-              />,
-              handleLinkToDetail(),
-            ]) : ([
+            {record.get('appServiceSource') === 'market_service' ? (getMarketItem()) : ([
               <Select
                 name="appServiceId"
                 searchable
@@ -294,8 +301,7 @@ const DeployModal = observer(() => {
         </>
       ) : (
         <HostDeployForm
-          handleLinkToDetail={handleLinkToDetail}
-          getMarketAndVersionContent={getMarketAndVersionContent}
+          getMarketItem={getMarketItem}
         />
       ));
 

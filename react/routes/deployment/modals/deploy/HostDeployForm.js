@@ -14,7 +14,7 @@ import { useManualDeployStore } from './stores';
 
 const { Option } = Select;
 
-const HostDeployForm = injectIntl(observer(({ handleLinkToDetail, getMarketAndVersionContent }) => {
+const HostDeployForm = injectIntl(observer(({ getMarketItem, getMarketAndVersionContent }) => {
   const {
     manualDeployDs,
     AppState: { currentMenuType: { projectId } },
@@ -168,21 +168,30 @@ const HostDeployForm = injectIntl(observer(({ handleLinkToDetail, getMarketAndVe
       {getTestDom()}
       <div style={{ marginTop: 10 }} className="c7ncd-deploy-manual-deploy-divided" />
       <p className="c7ncd-deploy-manual-deploy-title">部署模式</p>
-      <Form columns={2} record={record}>
-        <SelectBox colSpan={1} name={mapping.deploySource.value}>
+      <Form columns={7} record={record} style={{ width: '125%' }}>
+        <SelectBox colSpan={4} name={mapping.deploySource.value}>
           {
             mapping.deploySource.options.map((o) => (
-              <Option value={o.value}>{o.label}</Option>
+              <Option value={o.value}>
+                <span className={`${prefixCls}-manual-deploy-radio`}>{o.label}</span>
+              </Option>
             ))
           }
         </SelectBox>
         <SelectBox colSpan={1} name={mapping.deployObject.value}>
           {
             mapping.deployObject.options.map((o) => (
-              <Option value={o.value}>{o.label}</Option>
+              <Option value={o.value}>
+                <span className={`${prefixCls}-manual-deploy-radio`}>
+                  <img src={o.img} />
+                  {o.label}
+                </span>
+              </Option>
             ))
           }
         </SelectBox>
+      </Form>
+      <Form columns={2} record={record}>
         {!isMarket && (
           isDocker ? [
             <Select
@@ -233,21 +242,7 @@ const HostDeployForm = injectIntl(observer(({ handleLinkToDetail, getMarketAndVe
       </Form>
       {isMarket && (
         <Form columns={7} record={record} style={{ width: '125%' }}>
-          <Select
-            name="marketAppAndVersion"
-            searchable
-            newLine
-            colSpan={2}
-          >
-            {getMarketAndVersionContent()}
-          </Select>
-          <Select
-            name="marketService"
-            disabled={!record.get('marketAppAndVersion')}
-            searchable
-            colSpan={2}
-          />
-          {handleLinkToDetail()}
+          {getMarketItem(2)}
           {
             isDocker ? [
               <TextField
