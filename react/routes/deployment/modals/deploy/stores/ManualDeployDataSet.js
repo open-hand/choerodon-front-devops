@@ -7,6 +7,8 @@ import { axios } from '@choerodon/boot';
 import isEmpty from 'lodash/isEmpty';
 import JSONbig from 'json-bigint';
 import { Base64 } from 'js-base64';
+import dockerImg from '../images/docker.svg';
+import jarImg from '../images/jar.svg';
 
 const mapping = {
   deployWay: {
@@ -34,9 +36,11 @@ const mapping = {
     options: [{
       value: 'image',
       label: 'Docker镜像',
+      img: dockerImg,
     }, {
       value: 'jar',
       label: 'jar应用',
+      img: jarImg,
     }],
   },
   projectImageRepo: {
@@ -202,8 +206,8 @@ export default (({
         break;
       case 'marketAppAndVersion':
         record.get('marketService') && record.set('marketService', null);
-        if (value) {
-          marketServiceOptionsDs.setQueryParameter('marketVersionId', value);
+        if (value && value.value) {
+          marketServiceOptionsDs.setQueryParameter('marketVersionId', value.value?.id);
           marketServiceOptionsDs.query();
         }
         break;
@@ -471,6 +475,9 @@ export default (({
         type: 'string',
         label: '部署对象',
         defaultValue: mapping.deployObject.options[0].value,
+        dynamicProps: {
+          required: getRequired,
+        },
       },
       {
         name: mapping.projectImageRepo.value,
@@ -773,6 +780,7 @@ export default (({
       {
         name: 'marketAppAndVersion',
         label: formatMessage({ id: `${intlPrefix}.appAndVersion` }),
+        type: 'object',
         dynamicProps: {
           required: ({ record }) => ((record.get(mapping.deployWay.value)
             === mapping.deployWay.options[0].value && record.get('appServiceSource') === 'market_service'))
@@ -783,7 +791,7 @@ export default (({
       {
         name: 'marketService',
         type: 'object',
-        label: formatMessage({ id: `${intlPrefix}.marketService` }),
+        label: formatMessage({ id: `${intlPrefix}.marketServiceAndVersion` }),
         textField: 'marketServiceName',
         valueField: 'id',
         dynamicProps: {
