@@ -119,13 +119,13 @@ const MainView = observer(() => {
       ? <Suspense fallback={<Loading display />}>{cmMaps[itemType]}</Suspense>
       : (
         <EmptyPage
-            title="没有该类型资源"
-            describe="请稍后重试"
+          title="没有该类型资源"
+          describe="请稍后重试"
         />
       );
   }, [resourceStore.getViewType, resourceStore.getSelectedMenu.itemType]);
 
-  return (!treeDs.length && treeDs.status === 'ready') ? (
+  return (!treeDs.length && treeDs.status === 'ready' && !resourceStore.getSearchValue) ? (
     <div className={`${prefixCls}-wrap`}>
       <Suspense fallback={<span />}>
         <EmptyShown />

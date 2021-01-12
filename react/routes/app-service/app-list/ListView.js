@@ -24,6 +24,7 @@ import StatusTag from '../components/status-tag';
 import { handlePromptError } from '../../../utils';
 
 import './index.less';
+import ClickText from "../../../components/click-text";
 
 const { Column } = Table;
 const modalKey1 = Modal.key();
@@ -86,6 +87,20 @@ const ListView = withRouter(observer((props) => {
     });
   };
 
+  const handleLinkDetail = (record) => {
+    const {
+      location: {
+        search,
+        pathname,
+      },
+      history,
+    } = props;
+    history.push({
+      pathname: `${pathname}/detail/${record.get('id')}`,
+      search,
+    })
+  };
+
   function renderName({ value, record }) {
     const {
       location: {
@@ -97,17 +112,14 @@ const ListView = withRouter(observer((props) => {
     return (
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <Tooltip title={value} placement="top">
-          {canLink ? (
-            <Link
-              to={{
-                pathname: `${pathname}/detail/${record.get('id')}`,
-                search,
-              }}
-              className={`${prefixCls}-table-name`}
-            >
-              <span className={`${prefixCls}-table-name ${prefixCls}-table-name-link`}>{value}</span>
-            </Link>
-          ) : <span className={`${prefixCls}-table-name`}>{value}</span>}
+          <span className={`${prefixCls}-table-name`}>
+            <ClickText
+              value={value}
+              clickAble={canLink}
+              onClick={handleLinkDetail}
+              record={record}
+            />
+          </span>
         </Tooltip>
         {record.get('sagaInstanceId') ? (
           <Icon

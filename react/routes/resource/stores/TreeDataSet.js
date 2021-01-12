@@ -4,7 +4,9 @@ import pick from 'lodash/pick';
 import map from 'lodash/map';
 import moment from 'moment';
 import setEnvRecentItem from '../../../utils/setEnvRecentItem';
-import { itemTypeMappings, viewTypeMappings, RES_TYPES, ENV_KEYS } from './mappings';
+import {
+  itemTypeMappings, viewTypeMappings, RES_TYPES, ENV_KEYS,
+} from './mappings';
 
 const { IST_VIEW_TYPE, RES_VIEW_TYPE } = viewTypeMappings;
 const { ENV_ITEM, APP_ITEM, IST_ITEM } = itemTypeMappings;
@@ -82,7 +84,9 @@ function formatInstance({ value, expandsKeys }) {
   return flatted;
 }
 
-function handleSelect({ record, store, projectId, organizationId, projectName }) {
+function handleSelect({
+  record, store, projectId, organizationId, projectName,
+}) {
   if (record) {
     const data = record.toData();
     store.setSelectedMenu(data);
@@ -103,12 +107,13 @@ function handleSelect({ record, store, projectId, organizationId, projectName })
 function getParentRecord(record) {
   if (record.parent) {
     return getParentRecord(record.parent);
-  } else {
-    return record.toData();
   }
+  return record.toData();
 }
 
-export default ({ store, type, projectId, formatMessage, organizationId, projectName }) => {
+export default ({
+  store, type, projectId, formatMessage, organizationId, projectName,
+}) => {
   const formatMaps = {
     [IST_VIEW_TYPE]: formatInstance,
     [RES_VIEW_TYPE]: formatResource,
@@ -134,10 +139,13 @@ export default ({ store, type, projectId, formatMessage, organizationId, project
     ],
     events: {
       select: ({ record }) => {
-        handleSelect({ record, store, projectId, organizationId, projectName });
+        handleSelect({
+          record, store, projectId, organizationId, projectName,
+        });
       },
       unSelect: ({ record }) => {
         // 禁用取消选中
+        // eslint-disable-next-line no-param-reassign
         record.isSelected = true;
       },
     },
@@ -150,10 +158,10 @@ export default ({ store, type, projectId, formatMessage, organizationId, project
             const data = JSON.parse(response);
             if (data && data.failed) {
               return data;
-            } else {
-              const expandsKeys = store.getExpandedKeys;
-              return formatMaps[type]({ value: data, expandsKeys, formatMessage });
             }
+            const expandsKeys = store.getExpandedKeys;
+            store.getSearchValue && store.setSearchValue('');
+            return formatMaps[type]({ value: data, expandsKeys, formatMessage });
           } catch (e) {
             return response;
           }

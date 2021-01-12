@@ -13,6 +13,7 @@ interface FormProps {
   accountDs: DataSet,
   hostId: string,
   HAS_BASE_PRO: boolean,
+  hostType?: string,
 }
 
 function setStatus(record: any, isDefault: boolean = false) {
@@ -56,6 +57,7 @@ export default ({
   accountDs,
   hostId,
   HAS_BASE_PRO,
+  hostType,
 }: FormProps): DataSetProps => {
   async function checkName(value: any, name: any, record: any) {
     if (value && record.getPristineValue(name) && value === record.getPristineValue(name)) {
@@ -66,7 +68,7 @@ export default ({
     }
     if (value) {
       try {
-        const res = await HostConfigApis.checkName(projectId, value);
+        const res = await HostConfigApis.checkName(projectId, value, record.get('type'));
         if ((res && res.failed) || !res) {
           return formatMessage({ id: 'checkNameExist' });
         }
@@ -78,10 +80,10 @@ export default ({
     return true;
   }
 
-  async function checkPortUnique(ip: string, port: any, type: string) {
+  async function checkPortUnique(ip: string, port: any, type: string, currentHostType: string) {
     try {
       const control = type === 'sshPort' ? HostConfigApis.checkSshPort : HostConfigApis.checkJmeterPort;
-      const res = await control(projectId, ip, port);
+      const res = await control(projectId, ip, port, currentHostType);
       return res;
     } catch (e) {
       return false;
@@ -119,7 +121,7 @@ export default ({
         && parseInt(value, 10) <= data.max
       ) {
         if (record.get('hostIp')) {
-          if (await checkPortUnique(record.get('hostIp'), value, name) === false) {
+          if (await checkPortUnique(record.get('hostIp'), value, name, record.get('type')) === false) {
             return formatMessage({ id: `${intlPrefix}.port.unique.failed.${name}` });
           }
         }
@@ -136,13 +138,13 @@ export default ({
     autoQueryAfterSubmit: false,
     transport: {
       read: {
-        url: HostConfigApis.getHostDetail(projectId, hostId),
+        url: HostConfigApis.getHostDetail(projectId, hostId, hostType),
         method: 'get',
       },
       create: ({ data: [data] }) => {
         const postData = omit(data, ['__status', '__id', 'status', 'jmeterStatus', 'hostStatus']);
         return ({
-          url: HostConfigApis.createHost(projectId),
+          url: HostConfigApis.createHost(projectId, data.type),
           method: 'post',
           data: postData,
         });
@@ -150,7 +152,7 @@ export default ({
       update: ({ data: [data] }) => {
         const postData = omit(data, ['__status', '__id', 'status', 'jmeterStatus', 'hostStatus']);
         return ({
-          url: HostConfigApis.editHost(projectId, hostId),
+          url: HostConfigApis.editHost(projectId, hostId, data.type),
           method: 'put',
           data: postData,
         });

@@ -49,11 +49,12 @@ const IstModals = injectIntl(observer(() => {
 
   function openValueModal() {
     const record = baseDs.current;
-    if (!record) return false;
+    if (!record) return;
 
     const appServiceVersionId = record.get('commandVersionId');
     const appServiceId = record.get('appServiceId');
-    istStore.loadValue(projectId, id, appServiceVersionId);
+    const isMarket = record.get('source') === 'market';
+    istStore.loadValue(projectId, id, appServiceVersionId, isMarket);
 
     const deployVo = {
       id,
@@ -75,6 +76,7 @@ const IstModals = injectIntl(observer(() => {
         prefixCls={prefixCls}
         formatMessage={formatMessage}
         refresh={afterDeploy}
+        isMarket={isMarket}
       />,
       afterClose: () => {
         istStore.setUpgradeValue({});
@@ -84,7 +86,7 @@ const IstModals = injectIntl(observer(() => {
 
   function openUpgradeModal() {
     const record = baseDs.current;
-    if (!record) return false;
+    if (!record) return;
 
     const appServiceVersionId = record.get('appServiceVersionId');
     const appServiceId = record.get('appServiceId');
@@ -93,6 +95,7 @@ const IstModals = injectIntl(observer(() => {
       parentId,
       versionId: appServiceVersionId,
       appServiceId,
+      isMarket: record.get('source') === 'market',
     };
 
     Modal.open({
@@ -200,7 +203,7 @@ const IstModals = injectIntl(observer(() => {
       display: true,
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.values'],
       group: 1,
-      disabled: btnDisabled,
+      // disabled: btnDisabled,
     }, {
       name: formatMessage({ id: `${intlPrefix}.modal.modify` }),
       icon: 'backup_line',
