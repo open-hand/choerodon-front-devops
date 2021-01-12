@@ -59,6 +59,7 @@ const TreeMenu = observer(() => {
 
     // NOTE: 让多个 action 只执行一次
     runInAction(async () => {
+      mainStore.setTreeDataPage(1);
       mainStore.setSearchValue(realValue);
       mainStore.setLoadedKeys([]);
       handleExpanded([]);
