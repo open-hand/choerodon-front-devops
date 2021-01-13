@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useEffect, useState, Fragment } from 'react';
-import { Table, Modal } from 'choerodon-ui/pro';
+import { Table, Modal, TextField } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import { FormattedMessage } from 'react-intl';
 import { withRouter, Link } from 'react-router-dom';
@@ -46,14 +46,21 @@ const ListView = withRouter(observer((props) => {
     listPermissions,
     appServiceStore,
   } = useAppTopStore();
+
   const {
     intl: { formatMessage },
+    AppState,
     AppState: {
       currentMenuType: { projectId },
     },
     listDs,
     appListStore,
   } = useAppServiceStore();
+
+  if (AppState.getCurrentTheme === 'theme4') {
+    import('./theme4.less');
+  }
+
   const [isInit, setIsInit] = useState(true);
 
   useEffect(() => {
@@ -422,27 +429,102 @@ const ListView = withRouter(observer((props) => {
     );
   }
 
+  const renderTheme4Dom = () => {
+    return (
+      <div className="c7ncd-theme4-appService">
+        <div className="c7ncd-theme4-appService-left">
+          {
+            listDs.records.map(record => (
+              <div className="c7ncd-appService-item">
+                <span
+                  className="c7ncd-appService-item-icon"
+                  style={{
+                    backgroundImage: record.get('imgUrl') ? `url(${record.get('imgUrl')})` : 'unset',
+                  }}
+                >
+                  {
+                    !record.get('imgUrl') && record.get('name').substring(0,1).toUpperCase()
+                  }
+                </span>
+                <div className="c7ncd-appService-item-center">
+                  <div className="c7ncd-appService-item-center-line">
+                    <span className="c7ncd-appService-item-center-line-name">{record.get('name')}</span>
+                    <StatusTag
+                      active={record.get('active')}
+                      fail={record.get('fail')}
+                      synchro={record.get('synchro')}
+                    />
+                    <span className="c7ncd-appService-item-center-line-type">
+                      <FormattedMessage id={`${intlPrefix}.type.${record.get('type')}`} />
+                    </span>
+                    {renderActions({record})}
+                  </div>
+                  <div className="c7ncd-appService-item-center-line">
+                    <p className="c7ncd-appService-item-center-line-code">{record.get('code')}</p>
+                  </div>
+                </div>
+                <div
+                  className="c7ncd-appService-item-center"
+                  style={{
+                    position: 'absolute',
+                    right: '16px',
+                    width: 'unset',
+                  }}
+                >
+                  <div className="c7ncd-appService-item-center-line">
+                    <p className="c7ncd-appService-item-center-line-url">
+                      <Icon className="c7ncd-appService-item-center-line-url-git" type="git" />
+                      {renderUrl({ value: record.get('repoUrl') })}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    )
+  }
+
   return (
     <Page service={listPermissions}>
       {getHeader()}
-      <Breadcrumb />
+      <Breadcrumb
+        {
+          ...AppState.getCurrentTheme === 'theme4' ? {
+            extraNode: (
+              <TextField
+                className="theme4-c7n-member-search"
+                placeholder="搜索成员"
+                style={{ marginLeft: 32 }}
+                suffix={(
+                  <Icon type="search" />
+                )}
+              />),
+          } : {}
+        }
+      />
       <Content className={`${prefixCls}-content`}>
-        <Table
-          dataSet={listDs}
-          border={false}
-          queryBar="bar"
-          pristine
-          className={`${prefixCls}.table`}
-          rowClassName="c7ncd-table-row-font-color"
-        >
-          <Column name="name" renderer={renderName} sortable />
-          <Column renderer={renderActions} width="0.7rem" />
-          <Column name="code" sortable />
-          <Column name="type" renderer={renderType} />
-          <Column name="repoUrl" renderer={renderUrl} />
-          <Column name="creationDate" renderer={renderDate} sortable />
-          <Column name="active" renderer={renderStatus} width="0.7rem" align="left" />
-        </Table>
+        {
+          AppState.getCurrentTheme === 'theme4' ? renderTheme4Dom() : (
+            <Table
+              dataSet={listDs}
+              border={false}
+              queryBar="bar"
+              pristine
+              className={`${prefixCls}.table`}
+              rowClassName="c7ncd-table-row-font-color"
+            >
+              <Column name="name" renderer={renderName} sortable />
+              <Column renderer={renderActions} width="0.7rem" />
+              <Column name="code" sortable />
+              <Column name="type" renderer={renderType} />
+              <Column name="repoUrl" renderer={renderUrl} />
+              <Column name="creationDate" renderer={renderDate} sortable />
+              <Column name="active" renderer={renderStatus} width="0.7rem" align="left" />
+            </Table>
+          )
+        }
       </Content>
     </Page>
   );
