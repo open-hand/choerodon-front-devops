@@ -204,6 +204,16 @@ export default observer(() => {
       ds[addCDTaskDataSetMap.relativeMission] = ADDCDTaskDataSet
         .current
         .get(addCDTaskDataSetMap.relativeMission);
+      ds.warningSettingVO = {
+        [addCDTaskDataSetMap.alarm]: ds[addCDTaskDataSetMap.alarm],
+        [addCDTaskDataSetMap.threshold]: ds[addCDTaskDataSetMap.threshold],
+        [addCDTaskDataSetMap.notifyObject]: ds[addCDTaskDataSetMap.notifyObject],
+      };
+      if (ds[addCDTaskDataSetMap.notifyWay]) {
+        ds[addCDTaskDataSetMap.notifyWay].split(',').forEach((item) => {
+          ds.warningSettingVO[item] = true;
+        });
+      }
     }
     if (ds.type === 'cdHost') {
       ds.hostConnectionVO = {
@@ -317,6 +327,19 @@ export default observer(() => {
           const metadata = JSONbig.parse(jobDetail.metadata.replace(/'/g, '"'));
           extra[addCDTaskDataSetMap.relativeMission] = metadata[
             addCDTaskDataSetMap.relativeMission];
+          if (metadata.warningSettingVO) {
+            Object.keys(metadata.warningSettingVO).forEach((item) => {
+              extra[item] = metadata.warningSettingVO[item];
+            });
+            extra[addCDTaskDataSetMap.notifyWay] = [];
+            if (metadata.warningSettingVO.sendEmail) {
+              extra[addCDTaskDataSetMap.notifyWay].push('sendEmail');
+            }
+            if (metadata.warningSettingVO.sendSiteMessage) {
+              extra[addCDTaskDataSetMap.notifyWay].push('sendSiteMessage');
+            }
+            extra[addCDTaskDataSetMap.notifyWay] = extra[addCDTaskDataSetMap.notifyWay].join(',');
+          }
         }
       } else if (jobDetail.type === 'cdHost') {
         const metadata = JSONbig.parse(jobDetail.metadata.replace(/'/g, '"'));
@@ -929,6 +952,65 @@ export default observer(() => {
               />
             </Tooltip>
           </div>
+        </Form>,
+        <div className="addcdTask-divided" />,
+        <p className="addcdTask-title">
+          告警设置
+          <Tooltip title={(
+            <>
+              <p>若选择为是，则表示API测试任务在执行的过程中，后续的阶段与任务将不会执行</p>
+              <p>若选择为否，则表示在执行API测试任务的同时，会同步执行接下来的任务或阶段</p>
+            </>
+          )}
+          >
+            <Icon
+              style={{
+                position: 'relative',
+                bottom: '2px',
+                marginLeft: '5px',
+                color: 'rgba(0, 0, 0, 0.36)',
+              }}
+              type="help"
+            />
+          </Tooltip>
+        </p>,
+        <Form style={{ marginTop: 20 }} columns={2} dataSet={ADDCDTaskDataSet}>
+          <div className="addcdTask-whetherBlock" style={{ position: 'relative' }}>
+            <SelectBox name={addCDTaskDataSetMap.alarm}>
+              <Option value>是</Option>
+              <Option value={false}>否</Option>
+            </SelectBox>
+          </div>
+          <TextField
+            name={addCDTaskDataSetMap.threshold}
+            newLine
+            suffix="%"
+            restrict="0-9|."
+            min={0}
+            max={100}
+            addonAfter={(
+              <Tips
+                helpText=""
+              />
+            )}
+            onChange={(value) => {
+              if (Number(value) > 100) {
+                ADDCDTaskDataSet.current.set(addCDTaskDataSetMap.threshold, '100');
+              } else if (Number(value) < 0) {
+                ADDCDTaskDataSet.current.set(addCDTaskDataSetMap.threshold, '0');
+              }
+            }}
+          />
+          <Select
+            searchable
+            searchMatcher="param"
+            newLine
+            name={addCDTaskDataSetMap.notifyObject}
+          />
+          <SelectBox newLine name={addCDTaskDataSetMap.notifyWay}>
+            <Option value="sendEmail">邮件</Option>
+            <Option value="sendSiteMessage">站内信</Option>
+          </SelectBox>
         </Form>,
       ],
     };
