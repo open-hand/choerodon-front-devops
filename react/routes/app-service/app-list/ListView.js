@@ -1,6 +1,7 @@
 /* eslint-disable */
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState, Fragment, useRef } from 'react';
 import { Table, Modal, TextField } from 'choerodon-ui/pro';
+import { Tabs } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { FormattedMessage } from 'react-intl';
 import { withRouter, Link } from 'react-router-dom';
@@ -14,6 +15,7 @@ import {
   Button, Spin, Tooltip, Icon,
 } from 'choerodon-ui';
 import pick from 'lodash/pick';
+import ServiceDetail from "@/routes/app-service/service-detail";
 import TimePopover from '../../../components/timePopover';
 import { useAppTopStore } from '../stores';
 import { useAppServiceStore } from './stores';
@@ -25,6 +27,8 @@ import { handlePromptError } from '../../../utils';
 
 import './index.less';
 import ClickText from "../../../components/click-text";
+
+const TabPane = Tabs.TabPane;
 
 const { Column } = Table;
 const modalKey1 = Modal.key();
@@ -47,6 +51,8 @@ const ListView = withRouter(observer((props) => {
     appServiceStore,
   } = useAppTopStore();
 
+  const ref = useRef();
+
   const {
     intl: { formatMessage },
     AppState,
@@ -62,6 +68,7 @@ const ListView = withRouter(observer((props) => {
   }
 
   const [isInit, setIsInit] = useState(true);
+  const [selectedAppService, setSelectedAppService] = useState(undefined);
 
   useEffect(() => {
     // 确定dataset加载完毕后才打开创建框
@@ -72,6 +79,7 @@ const ListView = withRouter(observer((props) => {
         openCreate();
       }
       setIsInit(false);
+      setSelectedAppService(listDs.records[0].toData());
     }
   }, [listDs.status]);
 
@@ -167,6 +175,11 @@ const ListView = withRouter(observer((props) => {
 
   function renderActions({ record }) {
     const actionData = {
+      detail: {
+        service: ['choerodon.code.project.develop.app-service.ps.default'],
+        text: formatMessage({ id: `${intlPrefix}.detail`}),
+        action: ref?.current?.openDetail,
+      },
       edit: {
         service: ['choerodon.code.project.develop.app-service.ps.update'],
         text: formatMessage({ id: 'edit' }),
@@ -191,15 +204,18 @@ const ListView = withRouter(observer((props) => {
     };
     let actionItems;
     if (record.get('fail')) {
-      actionItems = pick(actionData, ['delete']);
+      actionItems = pick(actionData, ['delete', 'detail']);
     } else if (record.get('synchro') && record.get('active')) {
-      actionItems = pick(actionData, ['edit', 'stop']);
+      actionItems = pick(actionData, ['edit', 'stop', 'detail']);
     } else if (record.get('sagaInstanceId')) {
-      actionItems = pick(actionData, ['delete']);
+      actionItems = pick(actionData, ['delete', 'detail']);
     } else if (record.get('active')) {
       return;
     } else {
-      actionItems = pick(actionData, ['run', 'delete']);
+      actionItems = pick(actionData, ['run', 'delete', 'detail']);
+    }
+    if (AppState.getCurrentTheme !== 'theme4') {
+      delete actionItems.detail;
     }
     return <Action data={Object.values(actionItems)} />;
   }
@@ -435,7 +451,13 @@ const ListView = withRouter(observer((props) => {
         <div className="c7ncd-theme4-appService-left">
           {
             listDs.records.map(record => (
-              <div className="c7ncd-appService-item">
+              <div
+                className="c7ncd-appService-item"
+                style={{
+                  background: record.get('id') === selectedAppService?.id ? 'rgba(104, 135, 232, 0.08)' : 'unset',
+                }}
+                onClick={() => setSelectedAppService(record.toData())}
+              >
                 <span
                   className="c7ncd-appService-item-icon"
                   style={{
@@ -473,14 +495,49 @@ const ListView = withRouter(observer((props) => {
                 >
                   <div className="c7ncd-appService-item-center-line">
                     <p className="c7ncd-appService-item-center-line-url">
-                      <Icon className="c7ncd-appService-item-center-line-url-git" type="git" />
-                      {renderUrl({ value: record.get('repoUrl') })}
+                      {
+                        record.get('repoUrl') && (
+                          <>
+                            <Icon className="c7ncd-appService-item-center-line-url-git" type="git" />
+                            {renderUrl({ value: record.get('repoUrl') })}
+                          </>
+                        )
+                      }
                     </p>
+                  </div>
+                  <div className="c7ncd-appService-item-center-line">
+                    <span className="c7ncd-appService-item-center-line-updateUserName">
+                      {record.get('updateUserName')?.substring(0,1)?.toUpperCase()}
+                    </span>
+                    <span className="c7ncd-appService-item-center-line-gxy">更新于</span>
+                    {
+                      record.get('lastUpdateDate') &&
+                      <TimePopover content={record.get('lastUpdateDate')} />
+                    }
+                    <span style={{ marginLeft: 31 }} className="c7ncd-appService-item-center-line-updateUserName">
+                      {record.get('createUserName')?.substring(0,1)?.toUpperCase()}
+                    </span>
+                    <span className="c7ncd-appService-item-center-line-gxy">创建于</span>
+                    {
+                      record.get('creationDate') &&
+                      <TimePopover content={record.get('creationDate')} />
+                    }
                   </div>
                 </div>
               </div>
             ))
           }
+        </div>
+        <div className="c7ncd-theme4-appService-right">
+          <ServiceDetail
+            cRef={ref}
+            match={{
+              params: {
+                id: selectedAppService?.id,
+                projectId: AppState.currentMenuType.projectId,
+              }
+            }}
+          />
         </div>
       </div>
     )

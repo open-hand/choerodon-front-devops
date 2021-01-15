@@ -1,4 +1,6 @@
-import React, { memo, useMemo, Fragment } from 'react';
+import React, {
+  memo, useMemo, Fragment, useImperativeHandle,
+} from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Header, Permission, Choerodon } from '@choerodon/boot';
 import { Button, Tooltip } from 'choerodon-ui';
@@ -17,7 +19,7 @@ const modalStyle = {
   width: 380,
 };
 
-const HeaderButtons = observer(({ children }) => {
+const HeaderButtons = observer(({ children, theme4 }) => {
   const {
     intlPrefix,
     prefixCls,
@@ -27,10 +29,15 @@ const HeaderButtons = observer(({ children }) => {
     intl: { formatMessage },
     AppState: { currentMenuType: { projectId } },
     detailDs,
+    cRef,
   } = useServiceDetailStore();
 
   const serviceActive = useMemo(() => detailDs.current && detailDs.current.get('active'), [detailDs.current]);
   const detailCurrent = useMemo(() => detailDs.current, [detailDs.current]);
+
+  useImperativeHandle(cRef, () => ({
+    openDetail,
+  }));
 
   function refresh() {
     detailDs.query();
@@ -110,10 +117,10 @@ const HeaderButtons = observer(({ children }) => {
           onOk: () => (status ? stopModal.close() : handleChangeActive(false)),
           okText: status ? formatMessage({ id: 'iknow' }) : formatMessage({ id: 'stop' }),
           footer: ((okBtn, cancelBtn) => (
-            <Fragment>
+            <>
               {okBtn}
               {!status && cancelBtn}
-            </Fragment>
+            </>
           )),
         };
         stopModal.update(statusObj);
@@ -126,6 +133,7 @@ const HeaderButtons = observer(({ children }) => {
     });
   }
 
+  // eslint-disable-next-line consistent-return
   async function handleChangeActive(active) {
     const { current } = detailDs;
     try {
@@ -140,7 +148,7 @@ const HeaderButtons = observer(({ children }) => {
     }
   }
 
-  return (
+  return theme4 ? children : (
     <Header>
       <Permission
         service={['choerodon.code.project.develop.app-service.ps.update']}
@@ -163,7 +171,11 @@ const HeaderButtons = observer(({ children }) => {
       >
         <Button
           icon={serviceActive ? 'remove_circle_outline' : 'finished'}
-          onClick={serviceActive ? openStop.bind(this, detailCurrent) : handleChangeActive.bind(this, true)}
+          // eslint-disable-next-line react/jsx-no-bind
+          onClick={
+            serviceActive
+              ? openStop.bind(this, detailCurrent) : handleChangeActive.bind(this, true)
+}
         >
           {getActiveText()}
         </Button>

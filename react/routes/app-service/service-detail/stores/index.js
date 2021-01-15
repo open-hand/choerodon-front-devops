@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useMemo, useEffect, useState } from 'react';
+import React, {
+  createContext, useContext, useMemo, useEffect, useState,
+} from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
@@ -26,9 +28,18 @@ export const StoreProvider = injectIntl(inject('AppState')(
       children,
     } = props;
     const { appServiceStore, intlPrefix } = useAppTopStore();
-    const versionDs = useMemo(() => new DataSet(VersionDataSet(formatMessage, projectId, id)), [formatMessage, id, projectId]);
-    const permissionDs = useMemo(() => new DataSet(AllocationDataSet(formatMessage, intlPrefix, projectId, id)), [formatMessage, id, projectId]);
-    const shareDs = useMemo(() => new DataSet(ShareDataSet(intlPrefix, formatMessage, projectId, id, organizationId)), [formatMessage, id, projectId]);
+    const versionDs = useMemo(
+      () => new DataSet(VersionDataSet(formatMessage, projectId, id)),
+      [formatMessage, id, projectId],
+    );
+    const permissionDs = useMemo(
+      () => new DataSet(AllocationDataSet(formatMessage, intlPrefix, projectId, id)),
+      [formatMessage, id, projectId],
+    );
+    const shareDs = useMemo(
+      () => new DataSet(ShareDataSet(intlPrefix, formatMessage, projectId, id, organizationId)),
+      [formatMessage, id, projectId],
+    );
     const detailDs = useMemo(() => new DataSet(DetailDataSet(intlPrefix, formatMessage)), []);
     const nonePermissionDs = useMemo(() => new DataSet(OptionsDataSet()), []);
     const permissionStore = usePermissionStore();
@@ -37,12 +48,15 @@ export const StoreProvider = injectIntl(inject('AppState')(
     const [accessShare, setAccessShare] = useState(false);
 
     useEffect(() => {
-      nonePermissionDs.transport.read.url = `/devops/v1/projects/${projectId}/app_service/${id}/list_non_permission_users`;
-      detailDs.transport.read = {
-        url: `/devops/v1/projects/${projectId}/app_service/${id}`,
-        method: 'get',
-      };
-      detailDs.query();
+      if (projectId && id) {
+        nonePermissionDs.transport.read.url = `/devops/v1/projects/${projectId}/app_service/${id}/list_non_permission_users`;
+        detailDs.transport.read = {
+          url: `/devops/v1/projects/${projectId}/app_service/${id}`,
+          method: 'get',
+        };
+        detailDs.query();
+        shareDs.query();
+      }
     }, [projectId, id]);
 
     useEffect(() => {
