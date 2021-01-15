@@ -1,14 +1,15 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useImperativeHandle } from 'react';
 import {
-  TabPage, Content, Breadcrumb, Permission,
+  TabPage, Content, Breadcrumb, Permission, Action,
 } from '@choerodon/boot';
 import {
-  Table, Tooltip, Button, CheckBox,
+  Table, Tooltip, Button, CheckBox, TextField,
 } from 'choerodon-ui/pro';
 import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import filter from 'lodash/filter';
+import { Icon } from 'choerodon-ui';
 import { useAppTopStore } from '../stores';
 import { useServiceDetailStore } from './stores';
 import HeaderButtons from './HeaderButtons';
@@ -25,6 +26,7 @@ const Version = withRouter(observer((props) => {
     detailDs,
     versionDs,
     intl: { formatMessage },
+    AppState,
   } = useServiceDetailStore();
 
   const selectedRecordLength = useMemo(
@@ -127,7 +129,46 @@ const Version = withRouter(observer((props) => {
     );
   }
 
-  return (
+  const renderVersionAction = () => ([{
+    service: ['choerodon.code.project.develop.app-service.ps.version.delete'],
+    text: formatMessage({ id: `${intlPrefix}.version.delete` }),
+    action: handleDelete,
+    disabled: !selectedRecordLength,
+  }]);
+
+  const renderTheme4Version = () => (
+    <div className="c7ncd-theme4-version">
+      <TextField
+        placeholder="搜索服务版本"
+        style={{
+          width: '100%',
+        }}
+        suffix={(
+          <Icon type="search" />
+        )}
+      />
+      {
+        versionDs.map((version) => (
+          <div className="c7ncd-theme4-version-item">
+            <div className="c7ncd-theme4-version-item-side">
+              <span className="c7ncd-theme4-version-item-version">{version.get('version')}</span>
+              <Action data={renderVersionAction()} />
+            </div>
+            <div style={{ justifyContent: 'flex-end' }} className="c7ncd-theme4-version-item-side">
+              <span className="c7ncd-theme4-version-item-text">创建于</span>
+              <TimePopover content={version.get('creationDate')} />
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  );
+
+  return AppState.getCurrentTheme === 'theme4' ? (
+    <HeaderButtons theme4>
+      {renderTheme4Version()}
+    </HeaderButtons>
+  ) : (
     <TabPage
       service={[]}
     >

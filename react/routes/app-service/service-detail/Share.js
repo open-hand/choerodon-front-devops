@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import {
   TabPage, Content, Permission, Breadcrumb, Action,
 } from '@choerodon/boot';
-import { Table, Modal } from 'choerodon-ui/pro';
-import { Button, Tooltip } from 'choerodon-ui';
+import { Table, Modal, TextField } from 'choerodon-ui/pro';
+import { Button, Icon, Tooltip } from 'choerodon-ui';
 import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { useAppTopStore } from '../stores';
@@ -29,6 +29,7 @@ const Share = withRouter((props) => {
     shareDs,
     params: { id },
     detailDs,
+    AppState,
   } = useServiceDetailStore();
 
   useEffect(() => {
@@ -152,7 +153,32 @@ const Share = withRouter((props) => {
     }
   }
 
-  return (
+  function renderTheme4Share() {
+    return (
+      <div className="c7ncd-theme4-version">
+        <TextField
+          placeholder="搜索共享设置"
+          style={{
+            width: '100%',
+          }}
+          suffix={(
+            <Icon type="search" />
+          )}
+        />
+        {
+          shareDs.map((share) => (
+            <div className="c7ncd-theme4-version-item">
+              <div className="c7ncd-theme4-version-item-line">
+                <span className="c7ncd-theme4-version-item-line-viewId">{`#${share.get('viewId')}`}</span>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    );
+  }
+
+  return AppState.getCurrentTheme === 'theme4' ? renderTheme4Share() : (
     <TabPage
       service={['choerodon.code.project.develop.app-service.ps.share']}
     >
