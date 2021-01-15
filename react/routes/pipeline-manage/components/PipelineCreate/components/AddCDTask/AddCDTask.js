@@ -205,6 +205,7 @@ export default observer(() => {
         .current
         .get(addCDTaskDataSetMap.relativeMission);
       ds.warningSettingVO = {
+        [addCDTaskDataSetMap.whetherBlock]: ds[addCDTaskDataSetMap.whetherBlock],
         [addCDTaskDataSetMap.alarm]: ds[addCDTaskDataSetMap.alarm],
         [addCDTaskDataSetMap.threshold]: ds[addCDTaskDataSetMap.threshold],
         [addCDTaskDataSetMap.notifyObject]: ds[addCDTaskDataSetMap.notifyObject],
@@ -926,33 +927,33 @@ export default observer(() => {
         </Form>,
       ],
       [addCDTaskDataSetMap.apiTest]: [
-        <div className="addcdTask-divided" />,
-        <p className="addcdTask-title">执行设置</p>,
-        <Form style={{ marginTop: 20 }} columns={2} dataSet={ADDCDTaskDataSet}>
-          <div className="addcdTask-whetherBlock" style={{ position: 'relative' }}>
-            <SelectBox name={addCDTaskDataSetMap.whetherBlock}>
-              <Option value>是</Option>
-              <Option value={false}>否</Option>
-            </SelectBox>
-            <Tooltip title={(
-              <>
-                <p>若选择为是，则表示API测试任务在执行的过程中，后续的阶段与任务将不会执行</p>
-                <p>若选择为否，则表示在执行API测试任务的同时，会同步执行接下来的任务或阶段</p>
-              </>
-            )}
-            >
-              <Icon
-                style={{
-                  position: 'absolute',
-                  top: '-18px',
-                  left: '136px',
-                  color: 'rgba(0, 0, 0, 0.36)',
-                }}
-                type="help"
-              />
-            </Tooltip>
-          </div>
-        </Form>,
+        // <div className="addcdTask-divided" />,
+        // <p className="addcdTask-title">执行设置</p>,
+        // <Form style={{ marginTop: 20 }} columns={2} dataSet={ADDCDTaskDataSet}>
+        //   <div className="addcdTask-whetherBlock" style={{ position: 'relative' }}>
+        //     <SelectBox name={addCDTaskDataSetMap.whetherBlock}>
+        //       <Option value>是</Option>
+        //       <Option value={false}>否</Option>
+        //     </SelectBox>
+        //     <Tooltip title={(
+        //       <>
+        //         <p>若选择为是，则表示API测试任务在执行的过程中，后续的阶段与任务将不会执行</p>
+        //         <p>若选择为否，则表示在执行API测试任务的同时，会同步执行接下来的任务或阶段</p>
+        //       </>
+        //     )}
+        //     >
+        //       <Icon
+        //         style={{
+        //           position: 'absolute',
+        //           top: '-18px',
+        //           left: '136px',
+        //           color: 'rgba(0, 0, 0, 0.36)',
+        //         }}
+        //         type="help"
+        //       />
+        //     </Tooltip>
+        //   </div>
+        // </Form>,
         <div className="addcdTask-divided" />,
         <p className="addcdTask-title">
           告警设置
@@ -1011,6 +1012,29 @@ export default observer(() => {
             <Option value="sendEmail">邮件</Option>
             <Option value="sendSiteMessage">站内信</Option>
           </SelectBox>
+          <div className="addcdTask-whetherBlock" style={{ position: 'relative' }}>
+            <SelectBox name={addCDTaskDataSetMap.whetherBlock}>
+              <Option value>是</Option>
+              <Option value={false}>否</Option>
+            </SelectBox>
+            <Tooltip title={(
+              <>
+                <p>若选择为是，则表示API测试任务在执行的过程中，后续的阶段与任务将不会执行</p>
+                <p>若选择为否，则表示在执行API测试任务的同时，会同步执行接下来的任务或阶段</p>
+              </>
+             )}
+            >
+              <Icon
+                style={{
+                  position: 'absolute',
+                  top: '-18px',
+                  right: '70px',
+                  color: 'rgba(0, 0, 0, 0.36)',
+                }}
+                type="help"
+              />
+            </Tooltip>
+          </div>
         </Form>,
       ],
     };
