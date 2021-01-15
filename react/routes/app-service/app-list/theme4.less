@@ -15,10 +15,16 @@
   }
   &-right {
     margin-left: 16px;
-    flex: 1;
+    width: calc(100% - 63% - 16px);
     height: 100%;
     background: white;
     padding: 16px;
+    .c7n-spin-nested-loading {
+      height: 100%;
+      .c7n-spin-spinning {
+        height: 100%;
+      }
+    }
     .c7n-tabs-bar {
       top: 0 !important;
       margin: 0;
