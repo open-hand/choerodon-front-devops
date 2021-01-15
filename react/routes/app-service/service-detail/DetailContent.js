@@ -1,5 +1,6 @@
 import React from 'react';
 import { PageWrap, PageTab, Page } from '@choerodon/boot';
+import { Spin } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { useAppTopStore } from '../stores';
 import { useServiceDetailStore } from './stores';
@@ -27,6 +28,7 @@ const DetailContent = observer(() => {
       accessPermission,
       accessShare,
     },
+    versionDs,
   } = useServiceDetailStore();
 
   return (
@@ -55,7 +57,7 @@ const DetailContent = observer(() => {
               helpText={formatMessage({ id: `${intlPrefix}.detail.share.tips` })}
               title={formatMessage({ id: `${intlPrefix}.share` })}
             />
-)}
+            )}
           tabKey="Share"
           component={Share}
           alwaysShow={accessShare && detailDs.current && detailDs.current.get('type') === 'normal'}

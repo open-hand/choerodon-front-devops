@@ -9,7 +9,7 @@ import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import filter from 'lodash/filter';
-import { Icon } from 'choerodon-ui';
+import { Icon, Spin } from 'choerodon-ui';
 import { useAppTopStore } from '../stores';
 import { useServiceDetailStore } from './stores';
 import HeaderButtons from './HeaderButtons';
@@ -137,31 +137,33 @@ const Version = withRouter(observer((props) => {
   }]);
 
   const renderTheme4Version = () => (
-    <div className="c7ncd-theme4-version">
-      <TextField
-        placeholder="搜索服务版本"
-        style={{
-          width: '100%',
-        }}
-        suffix={(
-          <Icon type="search" />
-        )}
-      />
-      {
-        versionDs.map((version) => (
-          <div className="c7ncd-theme4-version-item">
-            <div className="c7ncd-theme4-version-item-side">
-              <span className="c7ncd-theme4-version-item-version">{version.get('version')}</span>
-              <Action data={renderVersionAction()} />
+    <Spin spinning={versionDs.status !== 'ready'}>
+      <div className="c7ncd-theme4-version">
+        <TextField
+          placeholder="搜索服务版本"
+          style={{
+            width: '100%',
+          }}
+          suffix={(
+            <Icon type="search" />
+          )}
+        />
+        {
+          versionDs.map((version) => (
+            <div className="c7ncd-theme4-version-item">
+              <div className="c7ncd-theme4-version-item-side">
+                <span className="c7ncd-theme4-version-item-version">{version.get('version')}</span>
+                <Action data={renderVersionAction()} />
+              </div>
+              <div style={{ justifyContent: 'flex-end' }} className="c7ncd-theme4-version-item-side">
+                <span className="c7ncd-theme4-version-item-text">创建于</span>
+                <TimePopover content={version.get('creationDate')} />
+              </div>
             </div>
-            <div style={{ justifyContent: 'flex-end' }} className="c7ncd-theme4-version-item-side">
-              <span className="c7ncd-theme4-version-item-text">创建于</span>
-              <TimePopover content={version.get('creationDate')} />
-            </div>
-          </div>
-        ))
-      }
-    </div>
+          ))
+        }
+      </div>
+    </Spin>
   );
 
   return AppState.getCurrentTheme === 'theme4' ? (

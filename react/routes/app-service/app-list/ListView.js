@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useEffect, useState, Fragment, useRef } from 'react';
-import { Table, Modal, TextField } from 'choerodon-ui/pro';
+import { Table, Modal, TextField, Pagination } from 'choerodon-ui/pro';
 import { Tabs } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { FormattedMessage } from 'react-intl';
@@ -73,6 +73,7 @@ const ListView = withRouter(observer((props) => {
   useEffect(() => {
     // 确定dataset加载完毕后才打开创建框
     // 否则会造成dataset实例丢失
+    debugger;
     if (isInit && listDs.status === 'ready') {
       const { location: { state } } = props;
       if (state && state.openCreate) {
@@ -445,19 +446,29 @@ const ListView = withRouter(observer((props) => {
     );
   }
 
+  const handleChangeListPage = (page, pageSize) => {
+    debugger;
+    listDs.pageSize = pageSize;
+    listDs.query(page);
+  }
+
+  console.log(listDs.toData());
+
   const renderTheme4Dom = () => {
+    console.log(listDs);
     return (
-      <div className="c7ncd-theme4-appService">
-        <div className="c7ncd-theme4-appService-left">
-          {
-            listDs.records.map(record => (
-              <div
-                className="c7ncd-appService-item"
-                style={{
-                  background: record.get('id') === selectedAppService?.id ? 'rgba(104, 135, 232, 0.08)' : 'unset',
-                }}
-                onClick={() => setSelectedAppService(record.toData())}
-              >
+        <div className="c7ncd-theme4-appService">
+          <div className="c7ncd-theme4-appService-left">
+            <Spin spinning={listDs.status !== 'ready'}>
+              {
+                listDs.records.map(record => (
+                  <div
+                    className="c7ncd-appService-item"
+                    style={{
+                      background: record.get('id') === selectedAppService?.id ? 'rgba(104, 135, 232, 0.08)' : 'unset',
+                    }}
+                    onClick={() => setSelectedAppService(record.toData())}
+                  >
                 <span
                   className="c7ncd-appService-item-icon"
                   style={{
@@ -468,78 +479,89 @@ const ListView = withRouter(observer((props) => {
                     !record.get('imgUrl') && record.get('name').substring(0,1).toUpperCase()
                   }
                 </span>
-                <div className="c7ncd-appService-item-center">
-                  <div className="c7ncd-appService-item-center-line">
-                    <span className="c7ncd-appService-item-center-line-name">{record.get('name')}</span>
-                    <StatusTag
-                      active={record.get('active')}
-                      fail={record.get('fail')}
-                      synchro={record.get('synchro')}
-                    />
-                    <span className="c7ncd-appService-item-center-line-type">
+                    <div className="c7ncd-appService-item-center">
+                      <div className="c7ncd-appService-item-center-line">
+                        <span className="c7ncd-appService-item-center-line-name">{record.get('name')}</span>
+                        <StatusTag
+                          active={record.get('active')}
+                          fail={record.get('fail')}
+                          synchro={record.get('synchro')}
+                        />
+                        <span className="c7ncd-appService-item-center-line-type">
                       <FormattedMessage id={`${intlPrefix}.type.${record.get('type')}`} />
                     </span>
-                    {renderActions({record})}
-                  </div>
-                  <div className="c7ncd-appService-item-center-line">
-                    <p className="c7ncd-appService-item-center-line-code">{record.get('code')}</p>
-                  </div>
-                </div>
-                <div
-                  className="c7ncd-appService-item-center"
-                  style={{
-                    position: 'absolute',
-                    right: '16px',
-                    width: 'unset',
-                  }}
-                >
-                  <div className="c7ncd-appService-item-center-line">
-                    <p className="c7ncd-appService-item-center-line-url">
-                      {
-                        record.get('repoUrl') && (
-                          <>
-                            <Icon className="c7ncd-appService-item-center-line-url-git" type="git" />
-                            {renderUrl({ value: record.get('repoUrl') })}
-                          </>
-                        )
-                      }
-                    </p>
-                  </div>
-                  <div className="c7ncd-appService-item-center-line">
+                        {renderActions({record})}
+                      </div>
+                      <div className="c7ncd-appService-item-center-line">
+                        <p className="c7ncd-appService-item-center-line-code">{record.get('code')}</p>
+                      </div>
+                    </div>
+                    <div
+                      className="c7ncd-appService-item-center"
+                      style={{
+                        position: 'absolute',
+                        right: '16px',
+                        width: 'unset',
+                      }}
+                    >
+                      <div className="c7ncd-appService-item-center-line">
+                        <p className="c7ncd-appService-item-center-line-url">
+                          {
+                            record.get('repoUrl') && (
+                              <>
+                                <Icon className="c7ncd-appService-item-center-line-url-git" type="git" />
+                                {renderUrl({ value: record.get('repoUrl') })}
+                              </>
+                            )
+                          }
+                        </p>
+                      </div>
+                      <div className="c7ncd-appService-item-center-line">
                     <span className="c7ncd-appService-item-center-line-updateUserName">
                       {record.get('updateUserName')?.substring(0,1)?.toUpperCase()}
                     </span>
-                    <span className="c7ncd-appService-item-center-line-gxy">更新于</span>
-                    {
-                      record.get('lastUpdateDate') &&
-                      <TimePopover content={record.get('lastUpdateDate')} />
-                    }
-                    <span style={{ marginLeft: 31 }} className="c7ncd-appService-item-center-line-updateUserName">
+                        <span className="c7ncd-appService-item-center-line-gxy">更新于</span>
+                        {
+                          record.get('lastUpdateDate') &&
+                          <TimePopover content={record.get('lastUpdateDate')} />
+                        }
+                        <span style={{ marginLeft: 31 }} className="c7ncd-appService-item-center-line-updateUserName">
                       {record.get('createUserName')?.substring(0,1)?.toUpperCase()}
                     </span>
-                    <span className="c7ncd-appService-item-center-line-gxy">创建于</span>
-                    {
-                      record.get('creationDate') &&
-                      <TimePopover content={record.get('creationDate')} />
-                    }
+                        <span className="c7ncd-appService-item-center-line-gxy">创建于</span>
+                        {
+                          record.get('creationDate') &&
+                          <TimePopover content={record.get('creationDate')} />
+                        }
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))
-          }
-        </div>
-        <div className="c7ncd-theme4-appService-right">
-          <ServiceDetail
-            cRef={ref}
-            match={{
-              params: {
-                id: selectedAppService?.id,
-                projectId: AppState.currentMenuType.projectId,
+                ))
               }
-            }}
-          />
+            </Spin>
+            <Pagination
+              total={listDs.totalCount}
+              pageSize={listDs.pageSize}
+              page={listDs.currentPage}
+              onChange={handleChangeListPage}
+              style={{
+                marginTop: '17px',
+                float: 'right',
+              }}
+            />
+          </div>
+          <div className="c7ncd-theme4-appService-right">
+            <ServiceDetail
+              cRef={ref}
+              match={{
+                params: {
+                  id: selectedAppService?.id,
+                  projectId: AppState.currentMenuType.projectId,
+                }
+              }}
+            />
+          </div>
         </div>
-      </div>
     )
   }
 
