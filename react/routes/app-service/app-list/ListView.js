@@ -73,7 +73,6 @@ const ListView = withRouter(observer((props) => {
   useEffect(() => {
     // 确定dataset加载完毕后才打开创建框
     // 否则会造成dataset实例丢失
-    debugger;
     if (isInit && listDs.status === 'ready') {
       const { location: { state } } = props;
       if (state && state.openCreate) {
@@ -447,15 +446,11 @@ const ListView = withRouter(observer((props) => {
   }
 
   const handleChangeListPage = (page, pageSize) => {
-    debugger;
     listDs.pageSize = pageSize;
     listDs.query(page);
   }
 
-  console.log(listDs.toData());
-
   const renderTheme4Dom = () => {
-    console.log(listDs);
     return (
         <div className="c7ncd-theme4-appService">
           <div className="c7ncd-theme4-appService-left">
