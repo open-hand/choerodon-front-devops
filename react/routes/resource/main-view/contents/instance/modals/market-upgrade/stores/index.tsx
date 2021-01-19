@@ -56,7 +56,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
     } = props;
 
     const versionsDs = useMemo(() => new DataSet(VersionsDataSet({
-      formatMessage, intlPrefix, projectId, marketDeployObjectId,
+      formatMessage, intlPrefix, projectId, marketDeployObjectId, marketAppServiceId,
     })), [projectId, marketDeployObjectId]);
     const valueDs = useMemo(() => new DataSet(ValueDataSet({
       projectId, marketDeployObjectId, instanceId,
