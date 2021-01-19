@@ -1,5 +1,5 @@
 export default ({
-  projectId, appServiceInstanceId, versionId, isMarket,
+  projectId, appServiceInstanceId, versionId,
 }) => ({
   autoCreate: false,
   autoQuery: false,
@@ -8,9 +8,7 @@ export default ({
   paging: false,
   transport: {
     read: ({ data }) => ({
-      url: isMarket
-        ? `/devops/v1/projects/${projectId}/app_service_instances/${appServiceInstanceId}/upgrade_value?market_deploy_object_id=${versionId}`
-        : `/devops/v1/projects/${projectId}/app_service_instances/${appServiceInstanceId}/appServiceVersion/${data.versionId || versionId}/upgrade_value`,
+      url: `/devops/v1/projects/${projectId}/app_service_instances/${appServiceInstanceId}/appServiceVersion/${data.versionId || versionId}/upgrade_value`,
       method: 'get',
     }),
   },

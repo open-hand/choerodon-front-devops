@@ -309,6 +309,7 @@ const deployment = {
   'c7ncd.deployment.modal.config': '部属配置',
   'c7ncd.deployment.modal.config.empty': '未使用部署配置',
   'c7ncd.deployment.modal.modify': '变更实例',
+  'c7ncd.deployment.modal.upgrade.market': '升级市场服务',
   'c7ncd.deployment.modal.version': '选择版本',
   'c7ncd.deployment.modal.version.empty': '暂无相关版本',
   'c7ncd.deployment.modal.redeploy': '重新部署',
@@ -431,6 +432,10 @@ const deployment = {
   'c7ncd.deployment.polaris.empty.des': '当前环境下暂无实例，无法执行健康检查。',
   'c7ncd.deployment.polaris.check.empty': '该实例为空',
   'c7ncd.deployment.pod.disabled.tops': '若想降至0，请直接点击“停用实例',
+  'c7ncd.deployment.marketService': '市场服务',
+  'c7ncd.deployment.marketService.version': '市场服务版本号',
+  'c7ncd.deployment.instance.disable.message': '该服务对应的市场应用已下架，无法操作',
+  'c7ncd.deployment.instance.disable.message.upgrade': '暂无可升级版本',
 
 };
 

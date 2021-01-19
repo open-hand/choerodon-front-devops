@@ -29,21 +29,20 @@ export const StoreProvider = injectIntl(inject('AppState')(
         parentId,
         versionId,
         appServiceId,
-        isMarket,
       },
       intlPrefix,
     } = props;
 
     const upgradeStore = useStore();
     const valueDs = useMemo(() => new DataSet(ValueDataSet({
-      projectId, appServiceInstanceId: id, versionId, isMarket,
-    })), [projectId, id, versionId, isMarket]);
+      projectId, appServiceInstanceId: id, versionId,
+    })), [projectId, id, versionId]);
     const versionsDs = useMemo(() => new DataSet(VersionsDataSet({
       formatMessage, intlPrefix, projectId, appServiceId, upgradeStore, versionId,
     })), [projectId, appServiceId]);
     const upgradeDs = useMemo(() => new DataSet(UpgradeDataSet({
-      formatMessage, intlPrefix, projectId, versionsDs, valueDs, isMarket,
-    })), [projectId, isMarket]);
+      formatMessage, intlPrefix, projectId, versionsDs, valueDs,
+    })), [projectId]);
 
     useEffect(() => {
       const record = upgradeDs.current;
