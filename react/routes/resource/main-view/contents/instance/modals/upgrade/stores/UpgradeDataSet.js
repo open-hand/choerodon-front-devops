@@ -1,7 +1,7 @@
-import pick from 'lodash/pick';
+import omit from 'lodash/omit';
 
 export default ({
-  formatMessage, intlPrefix, projectId, versionsDs, valueDs, isMarket,
+  formatMessage, intlPrefix, projectId, versionsDs, valueDs,
 }) => {
   async function handleUpdate({ name, value, record }) {
     if (name === 'appServiceVersionId') {
@@ -23,20 +23,13 @@ export default ({
     selection: false,
     transport: {
       create: ({ data: [data] }) => {
-        const res = pick(data, ['values', 'type', 'instanceId', 'environmentId']);
+        const res = omit(data, ['appServiceVersionName', '__id', '__status']);
         if (!res.values) {
           const yaml = valueDs && valueDs.current ? valueDs.current.get('yaml') : '';
           res.values = yaml;
         }
-        if (isMarket) {
-          res.marketAppServiceId = data.appServiceId;
-          res.marketDeployObjectId = data.appServiceVersionId;
-        } else {
-          res.appServiceId = data.appServiceId;
-          res.appServiceVersionId = data.appServiceVersionId;
-        }
         return ({
-          url: `/devops/v1/projects/${projectId}/app_service_instances${isMarket ? `/market/instances/${data.instanceId}` : ''}`,
+          url: `/devops/v1/projects/${projectId}/app_service_instances`,
           method: 'put',
           data: res,
         });
