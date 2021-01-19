@@ -7,10 +7,11 @@ interface VersionProps {
   formatMessage(arg0: object, arg1?: object): string,
   projectId: number,
   marketDeployObjectId: string,
+  marketAppServiceId: string,
 }
 
 export default ({
-  formatMessage, intlPrefix, projectId, marketDeployObjectId,
+  formatMessage, intlPrefix, projectId, marketDeployObjectId, marketAppServiceId,
 }: VersionProps): DataSetProps => {
   function handleLoad({ dataSet }: { dataSet: DataSet}) {
     if (dataSet.totalCount) {
@@ -25,7 +26,7 @@ export default ({
     paging: false,
     transport: {
       read: {
-        url: `/market/v1/projects/${projectId}/deploy/application/version/upgrade/${marketDeployObjectId}`,
+        url: `/market/v1/projects/${projectId}/deploy/application/version/upgrade/${marketDeployObjectId}?market_service_id=${marketAppServiceId}`,
         method: 'get',
       },
     },

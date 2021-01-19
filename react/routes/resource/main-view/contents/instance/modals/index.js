@@ -226,7 +226,7 @@ const IstModals = injectIntl(observer(() => {
     const record = baseDs.current;
     const status = record ? record.get('status') : '';
     const isMarket = record && record.get('source') === 'market';
-    const appAvailable = record && record.get('appAvailable');
+    const appAvailable = record && record.get('currentVersionAvailable');
     const upgradeAvailable = record && record.get('upgradeAvailable');
     const btnDisabled = !connect || !status || (status !== 'failed' && status !== 'running') || (isMarket && !appAvailable);
 
