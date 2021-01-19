@@ -109,7 +109,7 @@ const marketUpgrade = observer(() => {
           {getButtonContent}
         </Button>
       </Form>
-      <Spin spinning={formDs.status === 'loading'}>
+      <Spin spinning={valueDs.status === 'loading'}>
         {getValue}
       </Spin>
     </>
