@@ -59,8 +59,8 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       formatMessage, intlPrefix, projectId, marketDeployObjectId,
     })), [projectId, marketDeployObjectId]);
     const valueDs = useMemo(() => new DataSet(ValueDataSet({
-      projectId, marketAppServiceId, marketDeployObjectId,
-    })), [projectId, marketAppServiceId, marketDeployObjectId]);
+      projectId, marketDeployObjectId, instanceId,
+    })), [projectId, instanceId, marketDeployObjectId]);
     const formDs = useMemo(() => new DataSet(FormDataSet({
       formatMessage, intlPrefix, projectId, versionsDs, valueDs,
     })), [projectId]);

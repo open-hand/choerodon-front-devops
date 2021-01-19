@@ -2,12 +2,12 @@ import { DataSetProps } from '@/interface';
 
 interface ValueProps {
   projectId: number,
-  marketAppServiceId: string,
+  instanceId: string,
   marketDeployObjectId: string,
 }
 
 export default ({
-  projectId, marketAppServiceId, marketDeployObjectId,
+  projectId, instanceId, marketDeployObjectId,
 }: ValueProps): DataSetProps => ({
   autoCreate: false,
   autoQuery: true,
@@ -15,7 +15,7 @@ export default ({
   paging: false,
   transport: {
     read: ({ data }) => ({
-      url: `/devops/v1/projects/${projectId}/app_service_instances/${marketAppServiceId}/upgrade_value?market_deploy_object_id=${data.market_deploy_object_id || marketDeployObjectId}`,
+      url: `/devops/v1/projects/${projectId}/app_service_instances/${instanceId}/upgrade_value?market_deploy_object_id=${data.market_deploy_object_id || marketDeployObjectId}`,
       method: 'get',
     }),
   },
