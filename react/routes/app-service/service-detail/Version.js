@@ -3,7 +3,7 @@ import {
   TabPage, Content, Breadcrumb, Permission, Action,
 } from '@choerodon/boot';
 import {
-  Table, Tooltip, Button, CheckBox, TextField,
+  Table, Tooltip, Button, CheckBox, TextField, Pagination,
 } from 'choerodon-ui/pro';
 import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
@@ -136,6 +136,16 @@ const Version = withRouter(observer((props) => {
     disabled: !selectedRecordLength,
   }]);
 
+  const handleChangeListPage = (page, pageSize) => {
+    versionDs.pageSize = pageSize;
+    versionDs.query(page);
+  };
+
+  function handleChangeSearch(value) {
+    versionDs.setQueryParameter('params', value);
+    versionDs.query();
+  }
+
   const renderTheme4Version = () => (
     <Spin spinning={versionDs.status !== 'ready'}>
       <div className="c7ncd-theme4-version">
@@ -147,6 +157,8 @@ const Version = withRouter(observer((props) => {
           suffix={(
             <Icon type="search" />
           )}
+          onEnterDown={(e) => handleChangeSearch(e.target.value)}
+          onChange={handleChangeSearch}
         />
         {
           versionDs.map((version) => (
@@ -162,6 +174,16 @@ const Version = withRouter(observer((props) => {
             </div>
           ))
         }
+        <Pagination
+          total={versionDs.totalCount}
+          pageSize={versionDs.pageSize}
+          page={versionDs.currentPage}
+          onChange={handleChangeListPage}
+          style={{
+            marginTop: '17px',
+            float: 'right',
+          }}
+        />
       </div>
     </Spin>
   );
