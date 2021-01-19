@@ -1,0 +1,133 @@
+.c7ncd-theme4-appService {
+  background: #f5f6fa;
+  display: flex;
+  height: 100%;
+  align-items: flex-start;
+  p {
+    margin: 0;
+  }
+  &-left {
+    width: 63%;
+    background: white;
+    height: 100%;
+    padding: 12px 16px;
+    overflow: auto;
+  }
+  &-right {
+    margin-left: 16px;
+    width: calc(100% - 63% - 16px);
+    height: 100%;
+    background: white;
+    padding: 16px;
+    .c7n-spin-nested-loading {
+      height: 100%;
+      .c7n-spin-spinning {
+        height: 100%;
+      }
+    }
+    .c7n-tabs-bar {
+      top: 0 !important;
+      margin: 0;
+    }
+    .page-container {
+      position: inherit;
+    }
+  }
+  .c7ncd-appService-item {
+    position: relative;
+    padding: 16px;
+    border-bottom: 1px solid #d9e6f2;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    &-icon {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      background: #f0f5ff;
+      border-radius: 6px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 16px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: #5365ea;
+    }
+    &-center {
+      margin-left: 8px;
+      width: calc((100% - 32px - 8px) / 2);
+      &-line {
+        display: flex;
+        align-items: center;
+        time {
+          font-size: 12px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #0f1358;
+        }
+        &-updateUserName {
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: #f0f5ff;
+          display: inline-block;
+          font-weight: 400;
+          color: rgba(15, 19, 88, 0.45);
+          font-size: 10px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        &-gxy {
+          font-size: 12px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: rgba(15, 19, 88, 0.45);
+        }
+        &-url {
+          white-space: nowrap;
+          &-git {
+            font-size: 12px;
+            color: #5365ea;
+          }
+          a {
+            text-decoration: underline;
+          }
+        }
+        &-type {
+          font-size: 10px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #5365ea;
+          background: #f0f5ff;
+          border-radius: 4px;
+          border: 1px solid #adc6ff;
+        }
+        .c7ncd-status-tag {
+          width: 28px;
+          min-width: unset;
+        }
+        &-name {
+          font-size: 13px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #0f1358;
+          margin-right: 8px;
+          white-space: nowrap;
+          max-width: 40%;
+          overflow: hidden;
+          display: inline-block;
+          text-overflow: ellipsis;
+        }
+        &-code {
+          font-size: 12px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: rgba(15, 19, 88, 0.45);
+        }
+      }
+    }
+  }
+}
+

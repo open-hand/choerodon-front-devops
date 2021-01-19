@@ -50,10 +50,12 @@ const TreeItem = observer(({ record, search }) => {
     const isExpand = record.isExpanded;
     const isGroup = record.get('isGroup');
     if (isGroup) {
-      return <Fragment>
-        {isExpand ? <Icon type="folder_open2" /> : <Icon type="folder_open" />}
-        {name}
-      </Fragment>;
+      return (
+        <>
+          {isExpand ? <Icon type="folder_open2" /> : <Icon type="folder_open" />}
+          {name}
+        </>
+      );
     }
 
     const type = record.get('itemType');
@@ -65,10 +67,12 @@ const TreeItem = observer(({ record, search }) => {
     let treeItem;
     switch (type) {
       case ENV_ITEM: {
-        treeItem = <EnvItem
-          name={name}
-          connect={record.get('connect')}
-        />;
+        treeItem = (
+          <EnvItem
+            name={name}
+            connect={record.get('connect')}
+          />
+        );
         break;
       }
       case SERVICES_ITEM:
@@ -80,10 +84,12 @@ const TreeItem = observer(({ record, search }) => {
         treeItem = getNormalItem(type, param);
         break;
       case IST_ITEM: {
-        treeItem = <InstanceItem
-          {...param}
-          podColor={podColor}
-        />;
+        treeItem = (
+          <InstanceItem
+            {...param}
+            podColor={podColor}
+          />
+        );
         break;
       }
       case APP_ITEM:

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
 import { runInAction } from 'mobx';
 import toUpper from 'lodash/toUpper';
+import { uniqBy } from 'lodash';
 import { Tree } from 'choerodon-ui/pro';
 import classnames from 'classnames';
 import ScrollArea from '../scroll-area';
@@ -19,22 +20,47 @@ import './index.less';
  */
 function expandParents(record, expendedKeys) {
   if (!record.isExpanded) {
-    const children = record.children;
+    const { children } = record;
 
     if (children && children.length) {
       const key = record.get('key');
       expendedKeys.push(key);
+      // eslint-disable-next-line no-param-reassign
       record.isExpanded = true;
     }
 
-    const parent = record.parent;
+    const { parent } = record;
     if (parent && !parent.isExpanded) {
       expandParents(parent, expendedKeys);
     }
   }
 }
 
-const TreeView = observer(({ ds, store, nodesRender, searchAble }) => {
+/**
+ * 获取子节点
+ */
+function getChildren(record, childrenRecords) {
+  const { children } = record;
+  if (children && children.length) {
+    childrenRecords.push(...children);
+    children.forEach((childrenRecord) => getChildren(childrenRecord, childrenRecords));
+  }
+}
+
+/**
+ * 获取父节点
+ */
+function getParent(record, parentRecords) {
+  const { parent } = record;
+  if (parent) {
+    parentRecords.push(parent);
+    getParent(parent, parentRecords);
+  }
+}
+
+const TreeView = observer(({
+  ds, store, nodesRender, searchAble, isFilter,
+}) => {
   const treeClass = useMemo(() => classnames({
     'c7ncd-menu-wrap': true,
     'c7ncd-menu-scroll': searchAble,
@@ -46,7 +72,15 @@ const TreeView = observer(({ ds, store, nodesRender, searchAble }) => {
   function handleSearch(value) {
     const realValue = value || '';
     const expandedKeys = [];
+    const searchRecords = [];
 
+    if (isFilter) {
+      store.setSearchValue(realValue);
+      if (!value) {
+        ds.query();
+        return;
+      }
+    }
     // NOTE: 让多个 action 只执行一次
     runInAction(() => {
       /**
@@ -62,23 +96,37 @@ const TreeView = observer(({ ds, store, nodesRender, searchAble }) => {
         /**
          * 未清除搜索值就刷新，Record会记录expand状态，导致上一步record.reset()失效
          * */
+        // eslint-disable-next-line no-param-reassign
         record.isExpanded = false;
       });
-      const treeData = ds.data;
-      // eslint-disable-next-line no-plusplus
-      for (let i = 0, len = treeData.length; i < len; i++) {
-        const record = treeData[i];
+      ds.forEach((record) => {
         const name = record.get('name');
 
         if (value && toUpper(name).indexOf(toUpper(value)) > -1) {
           expandParents(record, expandedKeys);
+
+          if (isFilter) {
+            const childrenRecords = [];
+            const parentRecords = [];
+            getChildren(record, childrenRecords);
+            getParent(record, parentRecords);
+            searchRecords.push(record, ...parentRecords, ...childrenRecords);
+          }
         }
+      });
+      if (isFilter) {
+        const uniqKeys = new Set(expandedKeys);
+        const newSearchRecords = uniqBy(searchRecords, 'id');
+        handleExpanded([...uniqKeys]);
+        ds.loadData(newSearchRecords.map((eachRecord) => eachRecord.toData()));
       }
     });
 
-    const uniqKeys = new Set(expandedKeys);
-    store.setSearchValue(realValue);
-    handleExpanded([...uniqKeys]);
+    if (!isFilter) {
+      const uniqKeys = new Set(expandedKeys);
+      store.setSearchValue(realValue);
+      handleExpanded([...uniqKeys]);
+    }
   }
 
   function handleExpanded(keys) {
@@ -86,7 +134,7 @@ const TreeView = observer(({ ds, store, nodesRender, searchAble }) => {
   }
 
   return (
-    <Fragment>
+    <>
       {searchAble && <TreeSearch value={store.getSearchValue} onChange={handleSearch} />}
       <ScrollArea
         vertical
@@ -98,8 +146,11 @@ const TreeView = observer(({ ds, store, nodesRender, searchAble }) => {
           dataSet={ds}
           renderer={nodeRenderer}
         />
+        {store.getSearchValue && !ds.length && (
+          <span className="c7ncd-menu-search-empty">暂无数据</span>
+        )}
       </ScrollArea>
-    </Fragment>
+    </>
   );
 });
 
@@ -107,10 +158,12 @@ TreeView.propTypes = {
   ds: PropTypes.shape({}).isRequired,
   nodesRender: PropTypes.func.isRequired,
   searchAble: PropTypes.bool,
+  isFilter: PropTypes.bool,
 };
 
 TreeView.defaultProps = {
   searchAble: true,
+  isFilter: false,
 };
 
 export default TreeView;

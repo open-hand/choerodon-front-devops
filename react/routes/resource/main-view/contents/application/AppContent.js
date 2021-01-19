@@ -1,7 +1,8 @@
-import React, { Fragment, lazy, Suspense, memo, useEffect } from 'react';
+import React, {
+  lazy, Suspense, memo, useEffect,
+} from 'react';
 import { observer } from 'mobx-react-lite';
 import { Tabs, Icon, Spin } from 'choerodon-ui';
-import { Permission } from '@choerodon/boot';
 import PageTitle from '../../../../../components/page-title';
 import { useApplicationStore } from './stores';
 import { useResourceStore } from '../../../stores';
@@ -15,10 +16,12 @@ const Configs = lazy(() => import('./configs'));
 const Cipher = lazy(() => import('./cipher'));
 const NetContent = lazy(() => import('./net'));
 
-const AppTitle = memo(({ name }) => (<Fragment>
-  <Icon type="widgets" />
-  <span className="c7ncd-page-title-text">{name}</span>
-</Fragment>));
+const AppTitle = memo(({ name }) => (
+  <>
+    <Icon type="widgets" />
+    <span className="c7ncd-page-title-text">{name}</span>
+  </>
+));
 
 const AppContent = observer(() => {
   const {
@@ -47,7 +50,7 @@ const AppContent = observer(() => {
     const record = baseInfoDs.current;
     if (record) {
       const id = record.get('id');
-      const name = record.get('name');
+      const name = record.get('name') || record.get('marketServiceName');
       return { id, name };
     }
     return null;

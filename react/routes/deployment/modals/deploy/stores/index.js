@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
+import { withRouter } from 'react-router-dom';
 import { DataSet } from 'choerodon-ui/pro';
 import useStore from './useStore';
 import ManualDeployDataSet from './ManualDeployDataSet';
@@ -12,6 +13,8 @@ import PortDataSet from './PortDataSet';
 import PathListDataSet from './PathListDataSet';
 import DomainDataSet from './DomainDataSet';
 import AnnotationDataSet from './AnnotationDataSet';
+import MarketAndVersionOptionsDataSet from './MarketAndVersionOptionsDataSet';
+import MarketServiceOptionsDataSet from './MarketServiceOptionsDataSet';
 
 const Store = createContext();
 
@@ -19,7 +22,7 @@ export function useManualDeployStore() {
   return useContext(Store);
 }
 
-export const StoreProvider = injectIntl(inject('AppState')(
+export const StoreProvider = withRouter(injectIntl(inject('AppState')(
   (props) => {
     const {
       AppState: { currentMenuType: { projectId, organizationId } },
@@ -47,6 +50,14 @@ export const StoreProvider = injectIntl(inject('AppState')(
     const networkDs = useMemo(() => new DataSet(NetworkDataSet({
       formatMessage, projectId, portsDs, pathListDs,
     })), []);
+
+    const marketAndVersionOptionsDs = useMemo(
+      () => new DataSet(MarketAndVersionOptionsDataSet(projectId), []),
+    );
+    const marketServiceOptionsDs = useMemo(
+      () => new DataSet(MarketServiceOptionsDataSet(projectId), []),
+    );
+
     const manualDeployDs = useMemo(() => new DataSet(ManualDeployDataSet({
       intlPrefix,
       formatMessage,
@@ -60,11 +71,14 @@ export const StoreProvider = injectIntl(inject('AppState')(
       organizationId,
       deployUseStore,
       hasHostDeploy,
+      marketAndVersionOptionsDs,
+      marketServiceOptionsDs,
     })), [projectId]);
 
     useEffect(() => {
       envOptionsDs.transport.read.url = `/devops/v1/projects/${projectId}/envs/list_by_active?active=true`;
       envOptionsDs.query();
+      marketAndVersionOptionsDs.query();
     }, [projectId]);
 
     const value = {
@@ -76,6 +90,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       domainDs,
       annotationDs,
       deployUseStore,
+      marketAndVersionOptionsDs,
     };
     return (
       <Store.Provider value={value}>
@@ -83,4 +98,4 @@ export const StoreProvider = injectIntl(inject('AppState')(
       </Store.Provider>
     );
   },
-));
+)));

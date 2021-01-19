@@ -1,4 +1,6 @@
-export default ({ projectId, appServiceInstanceId, versionId }) => ({
+export default ({
+  projectId, appServiceInstanceId, versionId,
+}) => ({
   autoCreate: false,
   autoQuery: false,
   selection: false,

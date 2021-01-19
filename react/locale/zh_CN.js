@@ -309,6 +309,7 @@ const deployment = {
   'c7ncd.deployment.modal.config': '部属配置',
   'c7ncd.deployment.modal.config.empty': '未使用部署配置',
   'c7ncd.deployment.modal.modify': '变更实例',
+  'c7ncd.deployment.modal.upgrade.market': '升级市场服务',
   'c7ncd.deployment.modal.version': '选择版本',
   'c7ncd.deployment.modal.version.empty': '暂无相关版本',
   'c7ncd.deployment.modal.redeploy': '重新部署',
@@ -431,6 +432,10 @@ const deployment = {
   'c7ncd.deployment.polaris.empty.des': '当前环境下暂无实例，无法执行健康检查。',
   'c7ncd.deployment.polaris.check.empty': '该实例为空',
   'c7ncd.deployment.pod.disabled.tops': '若想降至0，请直接点击“停用实例',
+  'c7ncd.deployment.marketService': '市场服务',
+  'c7ncd.deployment.marketService.version': '市场服务版本号',
+  'c7ncd.deployment.instance.disable.message': '该服务对应的市场应用已下架，无法操作',
+  'c7ncd.deployment.instance.disable.message.upgrade': '暂无可升级版本',
 
 };
 
@@ -676,6 +681,9 @@ const deploy = {
   'c7ncd.deploy.retry.tips': '确定重新执行该流程吗？',
   'c7ncd.deploy.app': '应用服务',
   'c7ncd.deploy.app.version': '服务版本',
+  'c7ncd.deploy.appAndVersion': '市场应用及版本',
+  'c7ncd.deploy.marketServiceAndVersion': '市场服务及版本',
+  'c7ncd.deploy.marketService': '市场服务',
   'c7ncd.deploy.instance.name': '实例名称',
   'c7ncd.deploy.config': '部署配置',
   'c7ncd.deploy.resource': '资源配置',
@@ -716,6 +724,10 @@ const deploy = {
   'c7ncd.deploy.type.manual': '手动',
   'c7ncd.deploy.type.batch': '批量',
   'c7ncd.deploy.type.auto': '流水线',
+  'c7ncd.deploy.source.deploy': '部署来源',
+  'c7ncd.deploy.source.deploy.currentProject': '本项目',
+  'c7ncd.deploy.source.deploy.share': '共享',
+  'c7ncd.deploy.source.deploy.market': '市场',
 };
 
 const repository = {
