@@ -63,12 +63,14 @@ const ListView = withRouter(observer((props) => {
     appListStore,
   } = useAppServiceStore();
 
-  if (AppState.getCurrentTheme === 'theme4') {
-    import('./theme4.less');
-  }
-
   const [isInit, setIsInit] = useState(true);
   const [selectedAppService, setSelectedAppService] = useState(undefined);
+
+  useEffect(() => {
+    if (AppState.getCurrentTheme === 'theme4') {
+      import('./theme4.less');
+    }
+  }, [AppState.getCurrentTheme]);
 
   useEffect(() => {
     // 确定dataset加载完毕后才打开创建框
@@ -79,7 +81,9 @@ const ListView = withRouter(observer((props) => {
         openCreate();
       }
       setIsInit(false);
-      setSelectedAppService(listDs.records[0].toData());
+      if (listDs.records && listDs.records.length > 0) {
+        setSelectedAppService(listDs.records[0].toData());
+      }
     }
   }, [listDs.status]);
 
@@ -560,6 +564,11 @@ const ListView = withRouter(observer((props) => {
     )
   }
 
+  function handleChangeSearch(value) {
+    listDs.setQueryParameter('params', value);
+    listDs.query()
+  }
+
   return (
     <Page service={listPermissions}>
       {getHeader()}
@@ -574,6 +583,8 @@ const ListView = withRouter(observer((props) => {
                 suffix={(
                   <Icon type="search" />
                 )}
+                onEnterDown={(e) => handleChangeSearch(e.target.value)}
+                onChange={handleChangeSearch}
               />),
           } : {}
         }

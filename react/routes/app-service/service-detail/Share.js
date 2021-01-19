@@ -2,8 +2,12 @@ import React, { useEffect } from 'react';
 import {
   TabPage, Content, Permission, Breadcrumb, Action,
 } from '@choerodon/boot';
-import { Table, Modal, TextField } from 'choerodon-ui/pro';
-import { Button, Icon, Tooltip } from 'choerodon-ui';
+import {
+  Table, Modal, TextField, Pagination,
+} from 'choerodon-ui/pro';
+import {
+  Button, Icon, Tooltip, Spin,
+} from 'choerodon-ui';
 import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { useAppTopStore } from '../stores';
@@ -13,6 +17,34 @@ import ShareRule from './modals/share-rule';
 import ClickText from '../../../components/click-text';
 
 const { Column } = Table;
+
+const versionTypeStyleMaps = {
+  master: {
+    color: '#4D90FE',
+    background: '#E6F7FF',
+    border: '#91D5FF',
+  },
+  hotfix: {
+    color: '#F76776',
+    background: '#FFF1F0',
+    border: '#FFA39E',
+  },
+  bugfix: {
+    color: '#FAAD14',
+    background: '#FFFBE6',
+    border: '#FFE58F',
+  },
+  feature: {
+    color: '#FD729C',
+    background: '#FFF0F6',
+    border: '#FFADD2',
+  },
+  release: {
+    color: '#1FC2BB',
+    background: '#E6FFFB',
+    border: '#87E8DE',
+  },
+};
 
 const modalKey = Modal.key();
 const modalStyle = {
@@ -153,28 +185,75 @@ const Share = withRouter((props) => {
     }
   }
 
+  const handleChangeListPage = (page, pageSize) => {
+    shareDs.pageSize = pageSize;
+    shareDs.query(page);
+  };
+
+  function handleChangeSearch(value) {
+    shareDs.setQueryParameter('params', value);
+    shareDs.query();
+  }
+
   function renderTheme4Share() {
     return (
-      <div className="c7ncd-theme4-version">
-        <TextField
-          placeholder="搜索共享设置"
-          style={{
-            width: '100%',
-          }}
-          suffix={(
-            <Icon type="search" />
-          )}
-        />
-        {
-          shareDs.map((share) => (
-            <div className="c7ncd-theme4-version-item">
-              <div className="c7ncd-theme4-version-item-line">
-                <span className="c7ncd-theme4-version-item-line-viewId">{`#${share.get('viewId')}`}</span>
+      <Spin spinning={shareDs.status !== 'ready'}>
+        <div className="c7ncd-theme4-version">
+          <TextField
+            placeholder="搜索共享设置"
+            style={{
+              width: '100%',
+            }}
+            suffix={(
+              <Icon type="search" />
+            )}
+            onEnterDown={(e) => handleChangeSearch(e.target.value)}
+            onChange={handleChangeSearch}
+          />
+          {
+            shareDs.map((share) => (
+              <div className="c7ncd-theme4-version-item">
+                <div className="c7ncd-theme4-version-item-line">
+                  <div>
+                    <p>
+                      <span className="c7ncd-theme4-version-item-line-viewId">{`#${share.get('viewId')}`}</span>
+                      <span className="c7ncd-theme4-version-item-line-around">
+                        (共享范围:
+                        {renderProjectName({ value: share.get('projectName'), record: share })}
+                        )
+                      </span>
+                    </p>
+                    <p style={{ marginTop: 6 }}>
+                      <span
+                        className="c7ncd-theme4-version-item-line-versionType"
+                        style={{
+                          color: versionTypeStyleMaps[share.get('versionType')]?.color || '#5365EA',
+                          background: versionTypeStyleMaps[share.get('versionType')]?.background || '#F0F5FF',
+                          border: `1px solid ${versionTypeStyleMaps[share.get('versionType')]?.border || '#ADC6FF'}`,
+                        }}
+                      >
+                        {share.get('versionType') || '未指定'}
+                      </span>
+                      <span className="c7ncd-theme4-version-item-line-versionType">{share.get('version')}</span>
+                    </p>
+                  </div>
+                  {renderAction()}
+                </div>
               </div>
-            </div>
-          ))
-        }
-      </div>
+            ))
+          }
+          <Pagination
+            total={shareDs.totalCount}
+            pageSize={shareDs.pageSize}
+            page={shareDs.currentPage}
+            onChange={handleChangeListPage}
+            style={{
+              marginTop: '17px',
+              float: 'right',
+            }}
+          />
+        </div>
+      </Spin>
     );
   }
 
