@@ -168,8 +168,8 @@ export default observer(() => {
       const { triggerType, triggerValue } = relatedJobOpts.find((i) => i.name === pipelineTask);
       ADDCDTaskDataSet.current.set('triggerType', triggerType);
       ADDCDTaskDataSet.getField('triggerType').set('disabled', true);
-      ADDCDTaskDataSet.current.set('triggerValue', triggerValue.split(','));
-      setBranchsList(triggerValue.split(',').map((i) => ({
+      ADDCDTaskDataSet.current.set('triggerValue', triggerValue?.split(','));
+      setBranchsList(triggerValue?.split(',').map((i) => ({
         value: i,
         name: i,
       })));
@@ -1275,7 +1275,7 @@ export default observer(() => {
               renderer={renderderBranchs}
               colSpan={2}
             >
-              {branchsList.map((b) => (
+              {branchsList?.map((b) => (
                 <Option value={b.value}>{b.name}</Option>
               ))}
             </Select>
