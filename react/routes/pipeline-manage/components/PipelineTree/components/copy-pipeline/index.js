@@ -22,6 +22,8 @@ export default observer(({
       ...result,
       devopsCdStageVOS: [],
       name: undefined,
+      appServiceId: ds.current.get('appServiceId'),
+      appServiceName: ds.getField('appServiceId').lookup.find((item) => item.appServiceId === ds.current.get('appServiceId')).appServiceName,
       // stageList: result.stageList.filter(s => s.type === 'CI')
     });
     editBlockStore.setStepData([...result.devopsCiStageVOS]);
