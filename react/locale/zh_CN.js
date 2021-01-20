@@ -436,6 +436,9 @@ const deployment = {
   'c7ncd.deployment.marketService.version': '市场服务版本号',
   'c7ncd.deployment.instance.disable.message': '该服务对应的市场应用已下架，无法操作',
   'c7ncd.deployment.instance.disable.message.upgrade': '暂无可升级版本',
+  'c7ncd.deployment.market.version.currentVersion': '当前版本',
+  'c7ncd.deployment.market.version.lastVersion': '最新版本',
+  'c7ncd.deployment.market.version.fixVersion': '修复版本',
 
 };
 

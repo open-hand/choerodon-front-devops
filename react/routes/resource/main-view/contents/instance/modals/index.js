@@ -145,7 +145,7 @@ const IstModals = injectIntl(observer(() => {
       instanceId: id,
       marketAppServiceId: record.get('appServiceId'),
       marketDeployObjectId: record.get('appServiceVersionId'),
-      marketServiceName: record.get('marketServiceName'),
+      marketServiceName: record.get('appServiceName'),
       environmentId,
     };
 

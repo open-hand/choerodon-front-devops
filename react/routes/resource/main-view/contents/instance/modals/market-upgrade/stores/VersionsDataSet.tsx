@@ -14,10 +14,12 @@ export default ({
   formatMessage, intlPrefix, projectId, marketDeployObjectId, marketAppServiceId,
 }: VersionProps): DataSetProps => {
   function handleLoad({ dataSet }: { dataSet: DataSet}) {
-    if (dataSet.totalCount) {
-      const record = dataSet.find((eachRecord: Record) => eachRecord.get('id') === marketDeployObjectId);
-      record && record.set('marketServiceVersion', `${record.get('marketServiceVersion')} (${formatMessage({ id: `${intlPrefix}.instance.current.version` })})`);
-    }
+    dataSet.forEach((record) => {
+      const versionType = record.get('versionType')
+        ? `（${formatMessage({ id: `${intlPrefix}.market.version.${record.get('versionType')}` })}）`
+        : '';
+      record.init('marketServiceVersion', `${record.get('marketServiceVersion')}${versionType}`);
+    });
   }
   return ({
     autoCreate: false,
@@ -26,7 +28,7 @@ export default ({
     paging: false,
     transport: {
       read: {
-        url: `/market/v1/projects/${projectId}/deploy/application/version/upgrade/${marketDeployObjectId}?market_service_id=${marketAppServiceId}`,
+        url: `/market/v1/projects/${projectId}/deploy/application/version/upgrade/${marketAppServiceId}?deploy_object_id=${marketDeployObjectId}`,
         method: 'get',
       },
     },
