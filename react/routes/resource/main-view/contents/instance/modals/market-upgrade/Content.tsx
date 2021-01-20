@@ -22,6 +22,7 @@ const marketUpgrade = observer(() => {
     valueDs,
     defaultData: {
       marketAppServiceId,
+      marketDeployObjectId,
     },
     location: { search },
     versionsDs,
@@ -30,6 +31,12 @@ const marketUpgrade = observer(() => {
   const record = useMemo(() => formDs.current, [formDs.current]);
 
   const [hasEditorError, setHasEditorError] = useState(false);
+
+  useEffect(() => {
+    modal.update({
+      okProps: { disabled: !record || record.get('marketDeployObjectId') === marketDeployObjectId },
+    });
+  }, [record, record?.get('marketDeployObjectId')]);
 
   modal.handleOk(async () => {
     if (hasEditorError) {

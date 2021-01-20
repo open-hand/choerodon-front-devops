@@ -3,7 +3,6 @@ import { DataSet } from 'choerodon-ui/pro';
 import {
   DataSetProps, Record, FieldType, FieldIgnore,
 } from '@/interface';
-import { StoreProps } from './useStore';
 
 interface FormProps {
   intlPrefix: string,
