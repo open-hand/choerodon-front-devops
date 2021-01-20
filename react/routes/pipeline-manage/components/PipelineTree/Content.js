@@ -85,11 +85,11 @@ const TreeMenu = observer(() => {
         const parentId = treeRecord.get('parentId');
         const id = parentId && treeRecord.get('viewId') ? treeRecord.get('viewId').toString() : null;
         if (value) {
-          if (!parentId && (toUpper(pipelineName).indexOf(toUpper(value)) > -1
-            || toUpper(appServiceName).indexOf(toUpper(value)) > -1)
+          if (!parentId && (toUpper(pipelineName)?.indexOf(toUpper(value)) > -1
+            || toUpper(appServiceName)?.indexOf(toUpper(value)) > -1)
           ) {
             expandParents(treeRecord, expandedKeys);
-          } else if (parentId && toUpper(id).indexOf(toUpper(value)) > -1) {
+          } else if (parentId && toUpper(id)?.indexOf(toUpper(value)) > -1) {
             expandParents(treeRecord, expandedKeys);
           }
         }

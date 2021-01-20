@@ -510,7 +510,7 @@ export default observer(() => {
   // };
 
   function searchMatcher({ record, text }) {
-    return record.get('pipelineTask').indexOf(text) !== -1;
+    return record.get('pipelineTask')?.indexOf(text) !== -1;
   }
 
   const handleClickCreateValue = (e) => {
