@@ -29,6 +29,14 @@ const map = {
   externalToken: 'secretToken',
   // 任务描述
   missionDes: 'description',
+  // 是否启用告警设置
+  alarm: 'enableWarningSetting',
+  // 执行阈值
+  threshold: 'performThreshold',
+  // 通知对象
+  notifyObject: 'notifyUserIds',
+  // 通知方式
+  notifyWay: 'notifyWay',
 };
 
 export default map;

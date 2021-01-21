@@ -204,6 +204,17 @@ export default observer(() => {
       ds[addCDTaskDataSetMap.relativeMission] = ADDCDTaskDataSet
         .current
         .get(addCDTaskDataSetMap.relativeMission);
+      ds.warningSettingVO = {
+        [addCDTaskDataSetMap.whetherBlock]: ds[addCDTaskDataSetMap.whetherBlock],
+        [addCDTaskDataSetMap.alarm]: ds[addCDTaskDataSetMap.alarm],
+        [addCDTaskDataSetMap.threshold]: ds[addCDTaskDataSetMap.threshold],
+        [addCDTaskDataSetMap.notifyObject]: ds[addCDTaskDataSetMap.notifyObject],
+      };
+      if (ds[addCDTaskDataSetMap.notifyWay]) {
+        ds[addCDTaskDataSetMap.notifyWay].split(',').forEach((item) => {
+          ds.warningSettingVO[item] = true;
+        });
+      }
     }
     if (ds.type === 'cdHost') {
       ds.hostConnectionVO = {
@@ -317,6 +328,19 @@ export default observer(() => {
           const metadata = JSONbig.parse(jobDetail.metadata.replace(/'/g, '"'));
           extra[addCDTaskDataSetMap.relativeMission] = metadata[
             addCDTaskDataSetMap.relativeMission];
+          if (metadata.warningSettingVO) {
+            Object.keys(metadata.warningSettingVO).forEach((item) => {
+              extra[item] = metadata.warningSettingVO[item];
+            });
+            extra[addCDTaskDataSetMap.notifyWay] = [];
+            if (metadata.warningSettingVO.sendEmail) {
+              extra[addCDTaskDataSetMap.notifyWay].push('sendEmail');
+            }
+            if (metadata.warningSettingVO.sendSiteMessage) {
+              extra[addCDTaskDataSetMap.notifyWay].push('sendSiteMessage');
+            }
+            extra[addCDTaskDataSetMap.notifyWay] = extra[addCDTaskDataSetMap.notifyWay].join(',');
+          }
         }
       } else if (jobDetail.type === 'cdHost') {
         const metadata = JSONbig.parse(jobDetail.metadata.replace(/'/g, '"'));
@@ -903,9 +927,91 @@ export default observer(() => {
         </Form>,
       ],
       [addCDTaskDataSetMap.apiTest]: [
+        // <div className="addcdTask-divided" />,
+        // <p className="addcdTask-title">执行设置</p>,
+        // <Form style={{ marginTop: 20 }} columns={2} dataSet={ADDCDTaskDataSet}>
+        //   <div className="addcdTask-whetherBlock" style={{ position: 'relative' }}>
+        //     <SelectBox name={addCDTaskDataSetMap.whetherBlock}>
+        //       <Option value>是</Option>
+        //       <Option value={false}>否</Option>
+        //     </SelectBox>
+        //     <Tooltip title={(
+        //       <>
+        //         <p>若选择为是，则表示API测试任务在执行的过程中，后续的阶段与任务将不会执行</p>
+        //         <p>若选择为否，则表示在执行API测试任务的同时，会同步执行接下来的任务或阶段</p>
+        //       </>
+        //     )}
+        //     >
+        //       <Icon
+        //         style={{
+        //           position: 'absolute',
+        //           top: '-18px',
+        //           left: '136px',
+        //           color: 'rgba(0, 0, 0, 0.36)',
+        //         }}
+        //         type="help"
+        //       />
+        //     </Tooltip>
+        //   </div>
+        // </Form>,
         <div className="addcdTask-divided" />,
-        <p className="addcdTask-title">执行设置</p>,
+        <p className="addcdTask-title">
+          告警设置
+          <Tooltip title={(
+            <>
+              <p>若选择为是，则表示API测试任务在执行的过程中，后续的阶段与任务将不会执行</p>
+              <p>若选择为否，则表示在执行API测试任务的同时，会同步执行接下来的任务或阶段</p>
+            </>
+          )}
+          >
+            <Icon
+              style={{
+                position: 'relative',
+                bottom: '2px',
+                marginLeft: '5px',
+                color: 'rgba(0, 0, 0, 0.36)',
+              }}
+              type="help"
+            />
+          </Tooltip>
+        </p>,
         <Form style={{ marginTop: 20 }} columns={2} dataSet={ADDCDTaskDataSet}>
+          <div className="addcdTask-whetherBlock" style={{ position: 'relative' }}>
+            <SelectBox name={addCDTaskDataSetMap.alarm}>
+              <Option value>是</Option>
+              <Option value={false}>否</Option>
+            </SelectBox>
+          </div>
+          <TextField
+            name={addCDTaskDataSetMap.threshold}
+            newLine
+            suffix="%"
+            restrict="0-9|."
+            min={0}
+            max={100}
+            addonAfter={(
+              <Tips
+                helpText=""
+              />
+            )}
+            onChange={(value) => {
+              if (Number(value) > 100) {
+                ADDCDTaskDataSet.current.set(addCDTaskDataSetMap.threshold, '100');
+              } else if (Number(value) < 0) {
+                ADDCDTaskDataSet.current.set(addCDTaskDataSetMap.threshold, '0');
+              }
+            }}
+          />
+          <Select
+            searchable
+            searchMatcher="param"
+            newLine
+            name={addCDTaskDataSetMap.notifyObject}
+          />
+          <SelectBox newLine name={addCDTaskDataSetMap.notifyWay}>
+            <Option value="sendEmail">邮件</Option>
+            <Option value="sendSiteMessage">站内信</Option>
+          </SelectBox>
           <div className="addcdTask-whetherBlock" style={{ position: 'relative' }}>
             <SelectBox name={addCDTaskDataSetMap.whetherBlock}>
               <Option value>是</Option>
@@ -916,13 +1022,13 @@ export default observer(() => {
                 <p>若选择为是，则表示API测试任务在执行的过程中，后续的阶段与任务将不会执行</p>
                 <p>若选择为否，则表示在执行API测试任务的同时，会同步执行接下来的任务或阶段</p>
               </>
-            )}
+             )}
             >
               <Icon
                 style={{
                   position: 'absolute',
                   top: '-18px',
-                  left: '136px',
+                  right: '70px',
                   color: 'rgba(0, 0, 0, 0.36)',
                 }}
                 type="help"
@@ -1320,7 +1426,7 @@ export default observer(() => {
         {
           ADDCDTaskDataSet.current.get('type') === addCDTaskDataSetMap.externalStuck && [
             <div colSpan={3} className="addcdTask-missionDes">
-              <span>任务说明：</span>
+              <span style={{ fontWeight: 500 }}>任务说明：</span>
               <span style={{ display: 'inline-block' }}>
                 - 外部卡点任务用于对接Choerodon平台外的工作流或系统。此任务触发时，
                 会默认将projectId、pipelineRecordId、stageRecordId 、jobRecordId、callback_token、
@@ -1333,7 +1439,10 @@ export default observer(() => {
                 {' '}
                 发送一个状态来作为外部卡点的任务状态。成功后会接着执行后续任务，失败则停留在此任务。
               </span>
-              <span style={{ display: 'block' }}>流水线回调地址参数说明：</span>
+              <br />
+              <span style={{ display: 'block', marginTop: 10, fontWeight: 500 }}>
+                流水线回调地址参数说明：
+              </span>
               <span style={{ display: 'block' }}>- pipelineRecordId： 流水线记录id</span>
               <span style={{ display: 'block' }}>- stageRecordId: 流水线阶段记录id</span>
               <span style={{ display: 'block' }}>- jobRecordId: 流水线任务记录id</span>
@@ -1343,9 +1452,7 @@ export default observer(() => {
             <TextField
               label="流水线回调地址"
               colSpan={3}
-              disabled
-              required
-              suffix={(
+              addonAfter={(
                 <CopyToClipboard
                   text={pipelineCallbackAddress}
                   onCopy={handleCopy}
@@ -1353,6 +1460,8 @@ export default observer(() => {
                   <Icon style={{ cursor: 'pointer' }} type="content_copy" />
                 </CopyToClipboard>
               )}
+              disabled
+              required
               value={pipelineCallbackAddress}
             />,
             <TextArea

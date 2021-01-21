@@ -17,7 +17,7 @@ export default ({ projectId, HAS_BASE_PRO }: ListProps): DataSetProps => ({
     read: ({ data }) => {
       const { type, params, status } = data;
       return {
-        url: apis.getLoadHostsDetailsUrl(projectId),
+        url: apis.getLoadHostsDetailsUrl(projectId, type),
         method: 'post',
         data: {
           searchParam: {

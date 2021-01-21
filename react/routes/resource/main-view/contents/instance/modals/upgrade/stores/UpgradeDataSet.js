@@ -1,6 +1,8 @@
 import omit from 'lodash/omit';
 
-export default ({ formatMessage, intlPrefix, projectId, versionsDs, valueDs }) => {
+export default ({
+  formatMessage, intlPrefix, projectId, versionsDs, valueDs,
+}) => {
   async function handleUpdate({ name, value, record }) {
     if (name === 'appServiceVersionId') {
       if (value) {
@@ -34,7 +36,9 @@ export default ({ formatMessage, intlPrefix, projectId, versionsDs, valueDs }) =
       },
     },
     fields: [
-      { name: 'appServiceVersionId', type: 'string', textField: 'version', valueField: 'id', label: formatMessage({ id: `${intlPrefix}.choose.version` }), options: versionsDs },
+      {
+        name: 'appServiceVersionId', type: 'string', textField: 'version', valueField: 'id', label: formatMessage({ id: `${intlPrefix}.choose.version` }), options: versionsDs,
+      },
       { name: 'appServiceVersionName', type: 'string' },
       { name: 'appServiceId', type: 'string' },
       { name: 'environmentId', type: 'string' },

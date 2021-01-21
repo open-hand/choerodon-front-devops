@@ -8,6 +8,10 @@ export default observer(({
   ds, modal, projectId, editBlockStore, record, handleRefresh,
 }) => {
   useEffect(() => {
+    ds.reset();
+  }, []);
+
+  useEffect(() => {
     modal.update({
       okProps: {
         disabled: !ds.current.get('appServiceId'),

@@ -30,7 +30,7 @@ const DeleteCheck:FC<DeleteCheckProps> = (props) => {
       title: '正在校验主机...',
     });
     try {
-      const res = await apis.checkHostDeletable(projectId, hostId);
+      const res = await apis.checkHostDeletable(projectId, hostId, hostType);
       setLoading(false);
       if (res) {
         setText('确定要删除该主机配置吗？');
