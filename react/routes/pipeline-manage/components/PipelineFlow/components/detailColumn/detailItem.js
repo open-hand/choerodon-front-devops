@@ -341,7 +341,7 @@ const DetailItem = (props) => {
 
   function getRetryBtnDisabled() {
     const successAndFailed = jobStatus === 'success' || jobStatus === 'failed';
-    if (itemType.indexOf('cd') !== -1 && jobStatus === 'success') {
+    if (itemType?.indexOf('cd') !== -1 && jobStatus === 'success') {
       return true;
     }
     return !(successAndFailed || jobStatus === 'canceled');
