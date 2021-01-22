@@ -309,7 +309,7 @@ const DetailItem = (props) => {
       <main>
         <div>
           <span>阈值:</span>
-          <span>{`${performThreshold}%`}</span>
+          <span>{performThreshold ? `${performThreshold}%` : '未设置'}</span>
         </div>
         <div>
           <span>通过率:</span>
