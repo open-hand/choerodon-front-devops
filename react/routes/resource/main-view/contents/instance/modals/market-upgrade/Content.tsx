@@ -96,6 +96,13 @@ const marketUpgrade = observer(() => {
     return spanDom;
   }, [record, search, versionsDs.records]);
 
+  const renderVersion = useCallback(({ value, text }) => {
+    if (value === text) {
+      return '';
+    }
+    return text;
+  }, []);
+
   if (!record) {
     return <Spin spinning />;
   }
@@ -108,6 +115,7 @@ const marketUpgrade = observer(() => {
           name="marketDeployObjectId"
           clearButton={false}
           className={`${prefixCls}-select`}
+          renderer={renderVersion}
         />
         <Button
           className={`${prefixCls}-btn`}

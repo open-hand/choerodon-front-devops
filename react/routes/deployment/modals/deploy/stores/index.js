@@ -5,6 +5,7 @@ import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { withRouter } from 'react-router-dom';
 import { DataSet } from 'choerodon-ui/pro';
+import some from 'lodash/some';
 import useStore from './useStore';
 import ManualDeployDataSet from './ManualDeployDataSet';
 import OptionsDataSet from '../../../stores/OptionsDataSet';
@@ -25,7 +26,7 @@ export function useManualDeployStore() {
 export const StoreProvider = withRouter(injectIntl(inject('AppState')(
   (props) => {
     const {
-      AppState: { currentMenuType: { projectId, organizationId } },
+      AppState: { currentMenuType: { projectId, organizationId, categories }, currentServices },
       intl: { formatMessage },
       children,
       intlPrefix,
@@ -35,6 +36,8 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
     } = props;
 
     const deployUseStore = useStore();
+    const hasDevops = useMemo(() => some(categories || [], ['code', 'N_DEVOPS']), [categories]);
+    const hasMarket = useMemo(() => some(currentServices || [], ['serviceCode', 'devops-service']), [currentServices]);
 
     const envOptionsDs = useMemo(() => new DataSet(OptionsDataSet()), []);
     const valueIdOptionsDs = useMemo(() => new DataSet(OptionsDataSet()), []);
@@ -73,6 +76,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       hasHostDeploy,
       marketAndVersionOptionsDs,
       marketServiceOptionsDs,
+      hasDevops,
     })), [projectId]);
 
     useEffect(() => {
@@ -91,6 +95,8 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       annotationDs,
       deployUseStore,
       marketAndVersionOptionsDs,
+      hasDevops,
+      hasMarket,
     };
     return (
       <Store.Provider value={value}>

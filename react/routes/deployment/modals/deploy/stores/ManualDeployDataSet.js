@@ -133,6 +133,7 @@ export default (({
   hasHostDeploy,
   marketAndVersionOptionsDs,
   marketServiceOptionsDs,
+  hasDevops,
 }) => {
   // 如果有该参数 部署方式增加主机部署
   if (hasHostDeploy) {
@@ -776,7 +777,7 @@ export default (({
       { name: 'values', type: 'string' },
       { name: 'type', type: 'string', defaultValue: 'create' },
       { name: 'isNotChange', type: 'boolean', defaultValue: false },
-      { name: 'appServiceSource', type: 'string', defaultValue: 'normal_service' },
+      { name: 'appServiceSource', type: 'string', defaultValue: hasDevops ? 'normal_service' : 'share_service' },
       {
         name: 'marketAppAndVersion',
         label: formatMessage({ id: `${intlPrefix}.appAndVersion` }),

@@ -1,8 +1,8 @@
 import React, {
-  Fragment, useCallback, useEffect, useState,
+  Fragment, useCallback, useEffect, useMemo, useState,
 } from 'react';
 import {
-  Button, Form, Icon, Select, SelectBox, TextField,
+  Button, Form, Icon, Select, SelectBox, TextField, Tooltip,
 } from 'choerodon-ui/pro';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
@@ -34,6 +34,8 @@ const DeployModal = observer(() => {
     history,
     location: { search },
     marketAndVersionOptionsDs,
+    hasDevops,
+    hasMarket,
   } = useManualDeployStore();
 
   const record = manualDeployDs.current;
@@ -161,6 +163,13 @@ const DeployModal = observer(() => {
     );
   }
 
+  function handleOptionProps({ record: optionRecord }) {
+    return ({
+      disabled: (optionRecord.get('value') === 'normal_service' && !hasDevops)
+        || (optionRecord.get('value') === 'market_service' && !hasMarket),
+    });
+  }
+
   const renderRestForm = () => (
     record.get(mapping.deployWay.value) === mapping.deployWay.options[0].value
       ? (
@@ -170,11 +179,13 @@ const DeployModal = observer(() => {
             title={formatMessage({ id: `${intlPrefix}.source` })}
           />
           <Form record={record} columns={3}>
-            <SelectBox name="appServiceSource" colSpan={1}>
+            <SelectBox name="appServiceSource" colSpan={1} onOption={handleOptionProps}>
               <Option value="normal_service">
-                <span className={`${prefixCls}-manual-deploy-radio`}>
-                  {formatMessage({ id: `${intlPrefix}.source.project` })}
-                </span>
+                <Tooltip title={hasDevops ? '' : '仅【DevOps流程】项目类型支持部署本项目应用服务'}>
+                  <span className={`${prefixCls}-manual-deploy-radio`}>
+                    {formatMessage({ id: `${intlPrefix}.source.project` })}
+                  </span>
+                </Tooltip>
               </Option>
               <Option value="share_service">
                 <span className={`${prefixCls}-manual-deploy-radio`}>
@@ -182,9 +193,11 @@ const DeployModal = observer(() => {
                 </span>
               </Option>
               <Option value="market_service">
-                <span className={`${prefixCls}-manual-deploy-radio`}>
-                  {formatMessage({ id: `${intlPrefix}.source.market` })}
-                </span>
+                <Tooltip title={hasMarket ? '' : '未安装【应用市场】插件，无法使用此功能'}>
+                  <span className={`${prefixCls}-manual-deploy-radio`}>
+                    {formatMessage({ id: `${intlPrefix}.source.market` })}
+                  </span>
+                </Tooltip>
               </Option>
             </SelectBox>
             {record.get('appServiceSource') === 'market_service' ? (getMarketItem()) : ([
