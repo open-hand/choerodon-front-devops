@@ -302,10 +302,15 @@ const DetailItem = (props) => {
       successCount,
       failCount,
       deployJobName,
+      performThreshold,
     } = apiTestTaskRecordVO || {};
 
     return (
       <main>
+        <div>
+          <span>阈值:</span>
+          <span>{`${performThreshold}%`}</span>
+        </div>
         <div>
           <span>通过率:</span>
           <span>{(successCount || successCount === 0) ? calcValue(successCount, failCount) : '-'}</span>
