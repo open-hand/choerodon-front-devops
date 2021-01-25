@@ -5,17 +5,16 @@ import apis from '../apis';
 interface ListProps {
   projectId: number,
   showTestTab: boolean,
-  mainStore:any,
 }
 
-export default ({ projectId, showTestTab, mainStore }: ListProps): DataSetProps => ({
+export default ({ projectId, showTestTab }: ListProps): DataSetProps => ({
   autoCreate: false,
   autoQuery: true,
   selection: false,
   paging: true,
   pageSize: 10,
   transport: {
-    read: ({ data, dataSet }) => {
+    read: ({ data }) => {
       const { type, params, status } = data;
       return {
         url: apis.getLoadHostsDetailsUrl(projectId, type),
@@ -26,29 +25,6 @@ export default ({ projectId, showTestTab, mainStore }: ListProps): DataSetProps 
             status,
           },
           params: params ? [params] : [],
-        },
-        transformResponse(res) {
-          try {
-            const mainData = JSON.parse(res);
-            if (mainData && mainData.failed) {
-              return mainData;
-            }
-            let newData = [...mainData.content];
-            if (mainData.number > 0 && dataSet) {
-              newData = [...dataSet.toData(), ...mainData.content];
-            }
-            if (dataSet) {
-              // eslint-disable-next-line no-param-reassign
-              dataSet.pageSize *= (mainData.number + 1);
-            }
-            mainStore.setListHasMore(
-              mainData.totalElements > 0 && (mainData.number + 1) < mainData.totalPages,
-            );
-
-            return newData;
-          } catch (error) {
-            return error;
-          }
         },
       };
     },
