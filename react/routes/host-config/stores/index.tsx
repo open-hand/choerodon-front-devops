@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, {
   createContext, useCallback, useContext, useEffect, useMemo,
 } from 'react';
@@ -64,7 +65,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
 
   const mainStore = useStore();
 
-  const listDs = useMemo(() => new DataSet(ListDataSet({ projectId, showTestTab })), [projectId]);
+  const listDs = useMemo(() => new DataSet(ListDataSet({ projectId, showTestTab, mainStore })), [projectId]);
   const searchDs = useMemo(() => new DataSet(SearchDataSet({ projectId })), [projectId]);
 
   const refresh = useCallback(async (callback?:CallableFunction) => {
