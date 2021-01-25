@@ -17,7 +17,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
     hostTabKeys,
     listDs,
     mainStore,
-    HAS_BASE_PRO,
+    showTestTab,
     statusDs,
   } = useHostConfigStore();
 
@@ -68,7 +68,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
 
   return (
     <div className={`${prefixCls}-content-search`}>
-      {HAS_BASE_PRO && <HostPick onChange={handleChange} hostTabKeys={hostTabKeys} />}
+      {showTestTab && <HostPick onChange={handleChange} hostTabKeys={hostTabKeys} />}
       <div style={{
         display: 'flex',
         alignItems: 'center',

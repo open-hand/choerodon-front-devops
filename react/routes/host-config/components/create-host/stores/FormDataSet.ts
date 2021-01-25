@@ -12,7 +12,7 @@ interface FormProps {
   typeDs: DataSet,
   accountDs: DataSet,
   hostId: string,
-  HAS_BASE_PRO: boolean,
+  showTestTab: boolean,
   hostType?: string,
 }
 
@@ -56,7 +56,7 @@ export default ({
   typeDs,
   accountDs,
   hostId,
-  HAS_BASE_PRO,
+                  showTestTab,
   hostType,
 }: FormProps): DataSetProps => {
   async function checkName(value: any, name: any, record: any) {
@@ -165,7 +165,7 @@ export default ({
         type: 'string' as FieldType,
         textField: 'text',
         valueField: 'value',
-        defaultValue: HAS_BASE_PRO ? 'distribute_test' : 'deploy',
+        defaultValue: showTestTab ? 'distribute_test' : 'deploy',
         options: typeDs,
         label: formatMessage({ id: `${intlPrefix}.type` }),
       },

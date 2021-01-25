@@ -5,6 +5,7 @@ import { injectIntl } from 'react-intl';
 import { inject } from 'mobx-react';
 import { DataSet } from 'choerodon-ui/pro';
 import { DataSetSelection } from 'choerodon-ui/pro/lib/data-set/enum';
+import some from 'lodash/some';
 import FormDataSet from './FormDataSet';
 
 // @ts-ignore
@@ -19,7 +20,7 @@ interface ContextProps {
   modal: any,
   refresh(): void,
   hostId?: string,
-  HAS_BASE_PRO: boolean,
+  showTestTab: boolean,
 }
 
 const Store = createContext({} as ContextProps);
@@ -32,7 +33,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const {
     children,
     intl: { formatMessage },
-    AppState: { currentMenuType: { projectId } },
+    AppState: { currentMenuType: { projectId, categories } },
     hostId,
     hostType,
   } = props;
@@ -65,6 +66,9 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     ],
     selection: 'single' as DataSetSelection,
   }), []);
+
+  const showTestTab = useMemo(() => HAS_BASE_PRO && some(categories, ['code', 'N_TEST']), [categories, HAS_BASE_PRO]);
+
   const formDs = useMemo(
     () => new DataSet(FormDataSet({
       formatMessage,
@@ -73,7 +77,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
       typeDs,
       accountDs,
       hostId,
-      HAS_BASE_PRO,
+      showTestTab,
       hostType,
     })), [projectId],
   );
@@ -93,7 +97,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     formatMessage,
     projectId,
     formDs,
-    HAS_BASE_PRO,
+    showTestTab,
   };
   return (
     <Store.Provider value={value}>
