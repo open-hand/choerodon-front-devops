@@ -7,6 +7,7 @@ import { DataSet } from 'choerodon-ui/pro';
 import ListDataSet from '@/routes/host-config/stores/ListDataSet';
 import SearchDataSet from '@/routes/host-config/stores/SearchDataSet';
 import { DataSetSelection } from 'choerodon-ui/pro/lib/data-set/enum';
+import some from 'lodash/some';
 import useStore from './useStore';
 
 // @ts-ignore
@@ -25,7 +26,7 @@ interface ContextProps {
   }[],
   refresh():void,
   mainStore:any,
-  HAS_BASE_PRO: boolean,
+  showTestTab: boolean,
   statusDs:DataSet,
 }
 
@@ -39,7 +40,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const {
     children,
     intl: { formatMessage },
-    AppState: { currentMenuType: { projectId } },
+    AppState: { currentMenuType: { projectId, categories } },
   } = props;
   const intlPrefix = 'c7ncd.host.config';
 
@@ -59,9 +60,11 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     selection: 'single' as DataSetSelection,
   }), []);
 
+  const showTestTab = useMemo(() => HAS_BASE_PRO && some(categories, ['code', 'N_TEST']), [categories, HAS_BASE_PRO]);
+
   const mainStore = useStore();
 
-  const listDs = useMemo(() => new DataSet(ListDataSet({ projectId, HAS_BASE_PRO })), [projectId]);
+  const listDs = useMemo(() => new DataSet(ListDataSet({ projectId, showTestTab })), [projectId]);
   const searchDs = useMemo(() => new DataSet(SearchDataSet({ projectId })), [projectId]);
 
   const refresh = useCallback(async (callback?:CallableFunction) => {
@@ -70,7 +73,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   }, [listDs]);
 
   useEffect(() => {
-    if (!HAS_BASE_PRO) {
+    if (!showTestTab) {
       mainStore.setCurrentTabKey('deploy');
     }
   }, []);
@@ -86,7 +89,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     refresh,
     mainStore,
     projectId,
-    HAS_BASE_PRO,
+    showTestTab,
     statusDs,
   };
   return (

@@ -21,7 +21,7 @@ const CreateHost: React.FC<any> = observer((): any => {
     projectId,
     refresh,
     hostId,
-    HAS_BASE_PRO,
+    showTestTab,
   } = useCreateHostStore();
 
   modal.handleOk(async () => {
@@ -91,7 +91,7 @@ const CreateHost: React.FC<any> = observer((): any => {
   return (
     <div className={`${prefixCls}`}>
       <Form dataSet={formDs} className={`${prefixCls}-form`}>
-        {HAS_BASE_PRO && <SelectBox name="type" disabled={!!hostId} />}
+        {showTestTab && <SelectBox name="type" disabled={!!hostId} />}
         <TextField name="name" style={{ marginTop: '-10px' }} />
         <TextField name="hostIp" />
         <TextField name="sshPort" />
