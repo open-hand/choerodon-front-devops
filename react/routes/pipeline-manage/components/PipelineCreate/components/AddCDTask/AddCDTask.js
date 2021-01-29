@@ -957,13 +957,7 @@ export default observer(() => {
         <div className="addcdTask-divided" />,
         <p className="addcdTask-title">
           告警设置
-          <Tooltip title={(
-            <>
-              <p>若选择为是，则表示API测试任务在执行的过程中，后续的阶段与任务将不会执行</p>
-              <p>若选择为否，则表示在执行API测试任务的同时，会同步执行接下来的任务或阶段</p>
-            </>
-          )}
-          >
+          <Tooltip title="启用告警设置后，若该API测试任务的执行率低于某个设定值，便会通过邮件或站内信通知到指定的通知对象。">
             <Icon
               style={{
                 position: 'relative',
@@ -991,7 +985,7 @@ export default observer(() => {
             max={100}
             addonAfter={(
               <Tips
-                helpText=""
+                helpText="即指定一个执行成功率的标准值，若后续在流水线中执行该API测试任务后成功率低于设定值，便会告警通知到指定人员。仅能填入0-100。"
               />
             )}
             onChange={(value) => {
@@ -1007,6 +1001,9 @@ export default observer(() => {
             searchMatcher="param"
             newLine
             name={addCDTaskDataSetMap.notifyObject}
+            addonAfter={(
+              <Tips helpText="可选择项目下任意人员作为通知对象。" />
+            )}
           />
           <SelectBox newLine name={addCDTaskDataSetMap.notifyWay}>
             <Option value="sendEmail">邮件</Option>
@@ -1019,8 +1016,8 @@ export default observer(() => {
             </SelectBox>
             <Tooltip title={(
               <>
-                <p>若选择为是，则表示API测试任务在执行的过程中，后续的阶段与任务将不会执行</p>
-                <p>若选择为否，则表示在执行API测试任务的同时，会同步执行接下来的任务或阶段</p>
+                <p>若选择为是，则表示API测试任务执行成功率低于设定值后，后续的阶段与任务将被阻塞，不会执行。</p>
+                <p>若选择为否，则表示无论执行成功率如何，此任务执行完成后，均会继续执行接下来的阶段或任务。</p>
               </>
              )}
             >
