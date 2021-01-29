@@ -206,6 +206,11 @@ const DeployModal = observer(() => {
                 searchable
                 newLine={record.get('appServiceSource') !== 'market_service'}
                 notFoundContent={<FormattedMessage id={`${intlPrefix}.app.empty`} />}
+                addonAfter={(
+                  <Tips
+                    helpText="此处会显示出应用市场中所有已上线的市场应用及其版本。"
+                  />
+                )}
               >
                 {record.get('appServiceSource') === 'normal_service' ? (
                   map(deployStore.getAppService[0]
@@ -228,6 +233,16 @@ const DeployModal = observer(() => {
                 searchable
                 searchMatcher="version"
                 disabled={!record.get('appServiceId')}
+                addonAfter={(
+                  <Tips
+                    helpText={() => (
+                      <>
+                        <p> 此处会显示出所选市场应用版本中对应的所有发布了部署包的市场服务及其对应的版本。</p>
+                        <p>若想查看所选市场服务及版本中含有的应用服务信息，点击右侧的「查看版本详情」按钮跳转查看即可。</p>
+                      </>
+                    )}
+                  />
+                )}
               />,
             ])}
             {!envId
