@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Form, Password, SelectBox, TextField,
+  Form, Password, SelectBox, Spin, TextField,
 } from 'choerodon-ui/pro';
 import pick from 'lodash/pick';
 import Tips from '@/components/new-tips';
@@ -87,6 +87,10 @@ const CreateHost: React.FC<any> = observer((): any => {
       return false;
     }
   };
+
+  if (formDs && formDs.status === 'loading') {
+    return <Spin spinning />;
+  }
 
   return (
     <div className={`${prefixCls}`}>
