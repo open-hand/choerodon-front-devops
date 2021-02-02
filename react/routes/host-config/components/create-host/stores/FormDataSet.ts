@@ -13,7 +13,7 @@ interface FormProps {
   accountDs: DataSet,
   hostId: string,
   showTestTab: boolean,
-  hostType?: string,
+  hostType: string,
 }
 
 function setStatus(record: any, isDefault: boolean = false) {
@@ -29,7 +29,10 @@ function setStatus(record: any, isDefault: boolean = false) {
   }
 }
 
-function handleLoad({ dataSet }: { dataSet: DataSet }) {
+function handleLoad({ dataSet, hostType }: { dataSet: DataSet, hostType: string }) {
+  if (dataSet.current) {
+    dataSet.current.init('type', hostType);
+  }
   setStatus(dataSet.current, true);
 }
 
@@ -56,7 +59,7 @@ export default ({
   typeDs,
   accountDs,
   hostId,
-                  showTestTab,
+  showTestTab,
   hostType,
 }: FormProps): DataSetProps => {
   async function checkName(value: any, name: any, record: any) {
@@ -136,6 +139,7 @@ export default ({
     autoCreate: false,
     selection: false,
     autoQueryAfterSubmit: false,
+    paging: false,
     transport: {
       read: {
         url: HostConfigApis.getHostDetail(projectId, hostId, hostType),
@@ -233,7 +237,7 @@ export default ({
       },
     ],
     events: {
-      load: handleLoad,
+      load: (loadProps: { dataSet: DataSet }) => handleLoad({ ...loadProps, hostType }),
       update: handleUpdate,
     },
   });

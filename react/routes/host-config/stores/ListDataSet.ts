@@ -16,12 +16,13 @@ export default ({ projectId, showTestTab }: ListProps): DataSetProps => ({
   transport: {
     read: ({ data }) => {
       const { type, params, status } = data;
+      const newType = type || (showTestTab ? 'distribute_test' : 'deploy');
       return {
-        url: apis.getLoadHostsDetailsUrl(projectId, type),
+        url: apis.getLoadHostsDetailsUrl(projectId, newType),
         method: 'post',
         data: {
           searchParam: {
-            type: type || (showTestTab ? 'distribute_test' : 'deploy'),
+            type: newType,
             status,
           },
           params: params ? [params] : [],
