@@ -48,6 +48,7 @@ const DetailItem = (props) => {
     codeCoverage,
     apiTestTaskRecordVO, // api测试任务独有的
     externalApprovalJobVO,
+    viewId,
   } = props;
 
   const { gitlabProjectId, appServiceId } = getDetailData && getDetailData.ciCdPipelineVO;
@@ -68,6 +69,7 @@ const DetailItem = (props) => {
           cdRecordId={cdRecordId}
           stageRecordId={stageRecordId}
           jobRecordId={jobRecordId}
+          viewId={viewId}
         />
       ),
       drawer: true,
