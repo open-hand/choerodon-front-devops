@@ -88,6 +88,7 @@ export default observer((props) => {
           jobRecordVOList={jobRecordVOList}
           stageId={stageId}
           cdRecordId={cdRecordId}
+          viewId={viewId || loadViewId}
         />
       );
     }) : (

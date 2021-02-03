@@ -43,6 +43,7 @@ export default observer((props) => {
     location,
     stageId,
     cdRecordId,
+    viewId,
   } = props;
 
   const renderItem = () => {
@@ -80,6 +81,7 @@ export default observer((props) => {
             jobName={name}
             gitlabJobId={gitlabJobId}
             cdRecordId={cdRecordId}
+            viewId={viewId}
             {...rest}
           />
         );
