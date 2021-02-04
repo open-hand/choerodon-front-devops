@@ -92,6 +92,18 @@ export default function useStore() {
       }
     },
 
+    async loadMarketDeployValue(projectId, id) {
+      try {
+        const res = await axios.get(`/market/v1/projects/${projectId}/deploy/values?deploy_object_id=${id}`);
+        if (handlePromptError(res)) {
+          this.setConfigValue(res.value);
+          return res.value;
+        }
+      } catch (e) {
+        Choerodon.handleResponseError(e);
+      }
+    },
+
     checkNetWorkName(projectId, envId, value) {
       return axios.get(`/devops/v1/projects/${projectId}/service/check_name?env_id=${envId}&name=${value}`);
     },

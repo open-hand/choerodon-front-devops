@@ -3,7 +3,7 @@
   "routeName": "devops",
   "description": "",
   "license": "ISC",
-  "version": "0.24.5",
+  "version": "0.25.0",
   "keywords": [],
   "contributors": [
     "choerodon"
@@ -26,6 +26,7 @@
     "react-dom": "16.14.0"
   },
   "dependencies": {
+    "copy-to-clipboard": "^3.3.1",
     "diff-match-patch": "^1.0.4",
     "echarts": "^4.2.1",
     "echarts-for-react": "^2.0.12",
@@ -53,8 +54,8 @@
     "xterm": "^3.12.0"
   },
   "devDependencies": {
-    "@choerodon/boot": "0.22.3",
-    "@choerodon/master": "0.24.0",
+    "@choerodon/boot": "0.23.0-test",
+    "@choerodon/master": "0.25.0",
     "@types/react": "^16.9.44",
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.5",

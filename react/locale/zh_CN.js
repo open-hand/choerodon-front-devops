@@ -309,6 +309,7 @@ const deployment = {
   'c7ncd.deployment.modal.config': '部属配置',
   'c7ncd.deployment.modal.config.empty': '未使用部署配置',
   'c7ncd.deployment.modal.modify': '变更实例',
+  'c7ncd.deployment.modal.upgrade.market': '升级市场服务',
   'c7ncd.deployment.modal.version': '选择版本',
   'c7ncd.deployment.modal.version.empty': '暂无相关版本',
   'c7ncd.deployment.modal.redeploy': '重新部署',
@@ -431,6 +432,13 @@ const deployment = {
   'c7ncd.deployment.polaris.empty.des': '当前环境下暂无实例，无法执行健康检查。',
   'c7ncd.deployment.polaris.check.empty': '该实例为空',
   'c7ncd.deployment.pod.disabled.tops': '若想降至0，请直接点击“停用实例',
+  'c7ncd.deployment.marketService': '市场服务',
+  'c7ncd.deployment.marketService.version': '市场服务版本号',
+  'c7ncd.deployment.instance.disable.message': '该服务对应的市场应用已下架，无法操作',
+  'c7ncd.deployment.instance.disable.message.upgrade': '暂无可升级版本',
+  'c7ncd.deployment.market.version.currentVersion': '当前版本',
+  'c7ncd.deployment.market.version.lastVersion': '最新版本',
+  'c7ncd.deployment.market.version.fixVersion': '修复版本',
 
 };
 
@@ -676,6 +684,9 @@ const deploy = {
   'c7ncd.deploy.retry.tips': '确定重新执行该流程吗？',
   'c7ncd.deploy.app': '应用服务',
   'c7ncd.deploy.app.version': '服务版本',
+  'c7ncd.deploy.appAndVersion': '市场应用及版本',
+  'c7ncd.deploy.marketServiceAndVersion': '市场服务及版本',
+  'c7ncd.deploy.marketService': '市场服务',
   'c7ncd.deploy.instance.name': '实例名称',
   'c7ncd.deploy.config': '部署配置',
   'c7ncd.deploy.resource': '资源配置',
@@ -705,7 +716,7 @@ const deploy = {
   'c7ncd.deploy.type.tips': '此处是指记录的部署类型，分为手动部署、批量部署和流水线部署',
   'c7ncd.deploy.pipeline.tips': '此处是指部署记录对应的流水线名称；手动部署的部署记录此项为空',
   'c7ncd.deploy.trigger.tips': '此处是指流水线的部署记录所对应的触发方式，分为人工触发与自动触发；手动部署的部署记录此项为空',
-  'c7ncd.deploy.source.tips': '您可在此选择项目下已有的应用服务以及组织中其他项目共享出的应用服务',
+  'c7ncd.deploy.source.tips': '您可在此选择项目下已有的应用服务、组织中其他项目共享出的应用服务或者应用市场中已上线的市场服务。',
   'c7ncd.deploy.instance.tips': '选择应用服务后，会默认生成实例名称，此名称可修改；此次部署默认为新建一个实例',
   'c7ncd.deploy.config.tips': '您可在此选择一个部署配置并使用其中的配置信息；或者直接在已有基础上进行修改后部署',
   'c7ncd.deploy.resource.tips': '您可在部署实例的同时，为此实例创建一个网络和一个域名，从而完成资源的配置；此步骤为可选执行',
@@ -716,6 +727,10 @@ const deploy = {
   'c7ncd.deploy.type.manual': '手动',
   'c7ncd.deploy.type.batch': '批量',
   'c7ncd.deploy.type.auto': '流水线',
+  'c7ncd.deploy.source.deploy': '部署来源',
+  'c7ncd.deploy.source.deploy.currentProject': '本项目',
+  'c7ncd.deploy.source.deploy.share': '共享',
+  'c7ncd.deploy.source.deploy.market': '市场',
 };
 
 const repository = {

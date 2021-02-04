@@ -20,7 +20,7 @@ const HostsItem:React.FC<any> = ({
   jmeterPort, // jmeter进程的端口号
   jmeterStatus, // jmeter状态
   authType, // 认证类型
-  type, // 主机类型 deploy / distribute_test
+  // type, // 主机类型 deploy / distribute_test
   jmeterPath, // jmeter二进制文件的路径
   username, // 用户名
   lastUpdateDate,
@@ -34,7 +34,10 @@ const HostsItem:React.FC<any> = ({
     intlPrefix,
     refresh,
     projectId,
+    mainStore,
   } = useHostConfigStore();
+
+  const type = mainStore.getCurrentTabKey; // 主机类型 deploy / distribute_test
 
   const getMainStatus = useMemo(() => {
     if (type === 'deploy') {
@@ -57,7 +60,7 @@ const HostsItem:React.FC<any> = ({
 
   const handleCorrect = async ():Promise<void> => {
     try {
-      const res = await apis.batchCorrect(projectId, [id]);
+      const res = await apis.batchCorrect(projectId, [id], type);
       if (res && res.failed) {
         return;
       }
@@ -69,7 +72,7 @@ const HostsItem:React.FC<any> = ({
 
   async function deleteRerord():Promise<boolean> {
     try {
-      const res = await apis.getDeleteHostUrl(projectId, id);
+      const res = await apis.getDeleteHostUrl(projectId, id, type);
       if (res && res.failed) {
         return false;
       }
@@ -103,7 +106,7 @@ const HostsItem:React.FC<any> = ({
         width: 380,
       },
       drawer: true,
-      children: <CreateHost hostId={id} refresh={refresh} />,
+      children: <CreateHost hostId={id} refresh={refresh} hostType={type} />,
       okText: formatMessage({ id: 'save' }),
     });
   }

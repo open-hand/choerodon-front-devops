@@ -4,10 +4,10 @@ import apis from '../apis';
 
 interface ListProps {
   projectId: number,
-  HAS_BASE_PRO: boolean,
+  showTestTab: boolean,
 }
 
-export default ({ projectId, HAS_BASE_PRO }: ListProps): DataSetProps => ({
+export default ({ projectId, showTestTab }: ListProps): DataSetProps => ({
   autoCreate: false,
   autoQuery: true,
   selection: false,
@@ -16,12 +16,13 @@ export default ({ projectId, HAS_BASE_PRO }: ListProps): DataSetProps => ({
   transport: {
     read: ({ data }) => {
       const { type, params, status } = data;
+      const newType = type || (showTestTab ? 'distribute_test' : 'deploy');
       return {
-        url: apis.getLoadHostsDetailsUrl(projectId),
+        url: apis.getLoadHostsDetailsUrl(projectId, newType),
         method: 'post',
         data: {
           searchParam: {
-            type: type || (HAS_BASE_PRO ? 'distribute_test' : 'deploy'),
+            type: newType,
             status,
           },
           params: params ? [params] : [],

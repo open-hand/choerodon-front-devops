@@ -54,6 +54,7 @@ export default ((
     { name: 'appServiceName', type: 'string', label: formatMessage({ id: 'appService' }) },
     { name: 'userImage', type: 'string' },
     { name: 'realName', type: 'string' },
+    { name: 'deploySourceVO', label: formatMessage({ id: `${intlPrefix}.source.deploy` }) },
   ],
   queryFields: [
     {

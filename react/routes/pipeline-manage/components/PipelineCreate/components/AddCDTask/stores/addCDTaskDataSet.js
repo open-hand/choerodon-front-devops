@@ -636,8 +636,48 @@ export default (
     {
       name: addCDTaskDataSetMap.whetherBlock,
       type: 'boolean',
-      label: '是否阻塞后续阶段与任务',
+      label: '执行成功率低于阈值后是否阻塞后续阶段与任务',
       defaultValue: true,
+    },
+    {
+      name: addCDTaskDataSetMap.alarm,
+      type: 'boolean',
+      label: '是否启用告警设置',
+      defaultValue: false,
+    },
+    {
+      name: addCDTaskDataSetMap.threshold,
+      type: 'string',
+      label: '执行阈值',
+      dynamicProps: {
+        required: ({ record }) => record.get(addCDTaskDataSetMap.alarm),
+        disabled: ({ record }) => !record.get(addCDTaskDataSetMap.alarm),
+      },
+    },
+    {
+      name: addCDTaskDataSetMap.notifyObject,
+      type: 'string',
+      label: '通知对象',
+      dynamicProps: {
+        required: ({ record }) => record.get(addCDTaskDataSetMap.alarm),
+        disabled: ({ record }) => !record.get(addCDTaskDataSetMap.alarm),
+      },
+      textField: 'realName',
+      valueField: 'id',
+      multiple: true,
+      lookupAxiosConfig: {
+        url: `/iam/choerodon/v1/projects/${projectId}/users?page=0&size=20`,
+        method: 'get',
+      },
+    },
+    {
+      name: addCDTaskDataSetMap.notifyWay,
+      type: 'string',
+      label: '通知方式',
+      multiple: ',',
+      dynamicProps: {
+        disabled: ({ record }) => !record.get(addCDTaskDataSetMap.alarm),
+      },
     },
   ],
 });

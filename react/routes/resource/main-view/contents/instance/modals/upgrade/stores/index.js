@@ -1,4 +1,6 @@
-import React, { createContext, useMemo, useContext, useEffect } from 'react';
+import React, {
+  createContext, useMemo, useContext, useEffect,
+} from 'react';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
@@ -32,9 +34,15 @@ export const StoreProvider = injectIntl(inject('AppState')(
     } = props;
 
     const upgradeStore = useStore();
-    const valueDs = useMemo(() => new DataSet(ValueDataSet({ projectId, appServiceInstanceId: id, versionId })), [projectId, id, versionId]);
-    const versionsDs = useMemo(() => new DataSet(VersionsDataSet({ formatMessage, intlPrefix, projectId, appServiceId, upgradeStore, versionId })), [projectId, appServiceId]);
-    const upgradeDs = useMemo(() => new DataSet(UpgradeDataSet({ formatMessage, intlPrefix, projectId, versionsDs, valueDs })), [projectId]);
+    const valueDs = useMemo(() => new DataSet(ValueDataSet({
+      projectId, appServiceInstanceId: id, versionId,
+    })), [projectId, id, versionId]);
+    const versionsDs = useMemo(() => new DataSet(VersionsDataSet({
+      formatMessage, intlPrefix, projectId, appServiceId, upgradeStore, versionId,
+    })), [projectId, appServiceId]);
+    const upgradeDs = useMemo(() => new DataSet(UpgradeDataSet({
+      formatMessage, intlPrefix, projectId, versionsDs, valueDs,
+    })), [projectId]);
 
     useEffect(() => {
       const record = upgradeDs.current;

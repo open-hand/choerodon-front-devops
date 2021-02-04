@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Form, Password, SelectBox, TextField,
+  Form, Password, SelectBox, Spin, TextField,
 } from 'choerodon-ui/pro';
 import pick from 'lodash/pick';
 import Tips from '@/components/new-tips';
@@ -21,7 +21,7 @@ const CreateHost: React.FC<any> = observer((): any => {
     projectId,
     refresh,
     hostId,
-    HAS_BASE_PRO,
+    showTestTab,
   } = useCreateHostStore();
 
   modal.handleOk(async () => {
@@ -57,7 +57,7 @@ const CreateHost: React.FC<any> = observer((): any => {
         record.set('jmeterStatus', 'operating');
       }
       record.set('hostStatus', 'operating');
-      const res = await HostConfigApis.testConnection(projectId, postData);
+      const res = await HostConfigApis.testConnection(projectId, postData, postData.type);
       modal.update({
         okProps: { disabled: false },
       });
@@ -88,10 +88,14 @@ const CreateHost: React.FC<any> = observer((): any => {
     }
   };
 
+  if (formDs && formDs.status === 'loading') {
+    return <Spin spinning />;
+  }
+
   return (
     <div className={`${prefixCls}`}>
       <Form dataSet={formDs} className={`${prefixCls}-form`}>
-        {HAS_BASE_PRO && <SelectBox name="type" disabled={!!hostId} />}
+        {showTestTab && <SelectBox name="type" disabled={!!hostId} />}
         <TextField name="name" style={{ marginTop: '-10px' }} />
         <TextField name="hostIp" />
         <TextField name="sshPort" />

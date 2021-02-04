@@ -1,6 +1,7 @@
 /* eslint-disable */
-import React, { useEffect, useState, Fragment } from 'react';
-import { Table, Modal } from 'choerodon-ui/pro';
+import React, { useEffect, useState, Fragment, useRef } from 'react';
+import { Table, Modal, TextField, Pagination } from 'choerodon-ui/pro';
+import { Tabs } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { FormattedMessage } from 'react-intl';
 import { withRouter, Link } from 'react-router-dom';
@@ -14,6 +15,7 @@ import {
   Button, Spin, Tooltip, Icon,
 } from 'choerodon-ui';
 import pick from 'lodash/pick';
+import ServiceDetail from "@/routes/app-service/service-detail";
 import TimePopover from '../../../components/timePopover';
 import { useAppTopStore } from '../stores';
 import { useAppServiceStore } from './stores';
@@ -24,6 +26,9 @@ import StatusTag from '../components/status-tag';
 import { handlePromptError } from '../../../utils';
 
 import './index.less';
+import ClickText from "../../../components/click-text";
+
+const TabPane = Tabs.TabPane;
 
 const { Column } = Table;
 const modalKey1 = Modal.key();
@@ -45,15 +50,27 @@ const ListView = withRouter(observer((props) => {
     listPermissions,
     appServiceStore,
   } = useAppTopStore();
+
+  const ref = useRef();
+
   const {
     intl: { formatMessage },
+    AppState,
     AppState: {
       currentMenuType: { projectId },
     },
     listDs,
     appListStore,
   } = useAppServiceStore();
+
   const [isInit, setIsInit] = useState(true);
+  const [selectedAppService, setSelectedAppService] = useState(undefined);
+
+  useEffect(() => {
+    if (AppState.getCurrentTheme === 'theme4') {
+      import('./theme4.less');
+    }
+  }, [AppState.getCurrentTheme]);
 
   useEffect(() => {
     // 确定dataset加载完毕后才打开创建框
@@ -64,6 +81,9 @@ const ListView = withRouter(observer((props) => {
         openCreate();
       }
       setIsInit(false);
+      if (listDs.records && listDs.records.length > 0) {
+        setSelectedAppService(listDs.records[0].toData());
+      }
     }
   }, [listDs.status]);
 
@@ -86,6 +106,20 @@ const ListView = withRouter(observer((props) => {
     });
   };
 
+  const handleLinkDetail = (record) => {
+    const {
+      location: {
+        search,
+        pathname,
+      },
+      history,
+    } = props;
+    history.push({
+      pathname: `${pathname}/detail/${record.get('id')}`,
+      search,
+    })
+  };
+
   function renderName({ value, record }) {
     const {
       location: {
@@ -97,17 +131,14 @@ const ListView = withRouter(observer((props) => {
     return (
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <Tooltip title={value} placement="top">
-          {canLink ? (
-            <Link
-              to={{
-                pathname: `${pathname}/detail/${record.get('id')}`,
-                search,
-              }}
-              className={`${prefixCls}-table-name`}
-            >
-              <span className={`${prefixCls}-table-name ${prefixCls}-table-name-link`}>{value}</span>
-            </Link>
-          ) : <span className={`${prefixCls}-table-name`}>{value}</span>}
+          <span className={`${prefixCls}-table-name`}>
+            <ClickText
+              value={value}
+              clickAble={canLink}
+              onClick={handleLinkDetail}
+              record={record}
+            />
+          </span>
         </Tooltip>
         {record.get('sagaInstanceId') ? (
           <Icon
@@ -148,6 +179,11 @@ const ListView = withRouter(observer((props) => {
 
   function renderActions({ record }) {
     const actionData = {
+      detail: {
+        service: ['choerodon.code.project.develop.app-service.ps.default'],
+        text: formatMessage({ id: `${intlPrefix}.detail`}),
+        action: ref?.current?.openDetail,
+      },
       edit: {
         service: ['choerodon.code.project.develop.app-service.ps.update'],
         text: formatMessage({ id: 'edit' }),
@@ -172,15 +208,18 @@ const ListView = withRouter(observer((props) => {
     };
     let actionItems;
     if (record.get('fail')) {
-      actionItems = pick(actionData, ['delete']);
+      actionItems = pick(actionData, ['delete', 'detail']);
     } else if (record.get('synchro') && record.get('active')) {
-      actionItems = pick(actionData, ['edit', 'stop']);
+      actionItems = pick(actionData, ['edit', 'stop', 'detail']);
     } else if (record.get('sagaInstanceId')) {
-      actionItems = pick(actionData, ['delete']);
+      actionItems = pick(actionData, ['delete', 'detail']);
     } else if (record.get('active')) {
       return;
     } else {
-      actionItems = pick(actionData, ['run', 'delete']);
+      actionItems = pick(actionData, ['run', 'delete', 'detail']);
+    }
+    if (AppState.getCurrentTheme !== 'theme4') {
+      delete actionItems.detail;
     }
     return <Action data={Object.values(actionItems)} />;
   }
@@ -410,27 +449,167 @@ const ListView = withRouter(observer((props) => {
     );
   }
 
+  const handleChangeListPage = (page, pageSize) => {
+    listDs.pageSize = pageSize;
+    listDs.query(page);
+  }
+
+  const renderTheme4Dom = () => {
+    return (
+        <div className="c7ncd-theme4-appService">
+          <div className="c7ncd-theme4-appService-left">
+            <Spin spinning={listDs.status !== 'ready'}>
+              {
+                listDs.records.map(record => (
+                  <div
+                    className="c7ncd-appService-item"
+                    style={{
+                      background: record.get('id') === selectedAppService?.id ? 'rgba(104, 135, 232, 0.08)' : 'unset',
+                    }}
+                    onClick={() => setSelectedAppService(record.toData())}
+                  >
+                <span
+                  className="c7ncd-appService-item-icon"
+                  style={{
+                    backgroundImage: record.get('imgUrl') ? `url(${record.get('imgUrl')})` : 'unset',
+                  }}
+                >
+                  {
+                    !record.get('imgUrl') && record.get('name').substring(0,1).toUpperCase()
+                  }
+                </span>
+                    <div className="c7ncd-appService-item-center">
+                      <div className="c7ncd-appService-item-center-line">
+                        <span className="c7ncd-appService-item-center-line-name">{record.get('name')}</span>
+                        <StatusTag
+                          active={record.get('active')}
+                          fail={record.get('fail')}
+                          synchro={record.get('synchro')}
+                        />
+                        <span className="c7ncd-appService-item-center-line-type">
+                      <FormattedMessage id={`${intlPrefix}.type.${record.get('type')}`} />
+                    </span>
+                        {renderActions({record})}
+                      </div>
+                      <div className="c7ncd-appService-item-center-line">
+                        <p className="c7ncd-appService-item-center-line-code">{record.get('code')}</p>
+                      </div>
+                    </div>
+                    <div
+                      className="c7ncd-appService-item-center"
+                      style={{
+                        position: 'absolute',
+                        right: '16px',
+                        width: 'unset',
+                      }}
+                    >
+                      <div className="c7ncd-appService-item-center-line">
+                        <p className="c7ncd-appService-item-center-line-url">
+                          {
+                            record.get('repoUrl') && (
+                              <>
+                                <Icon className="c7ncd-appService-item-center-line-url-git" type="git" />
+                                {renderUrl({ value: record.get('repoUrl') })}
+                              </>
+                            )
+                          }
+                        </p>
+                      </div>
+                      <div className="c7ncd-appService-item-center-line">
+                    <span className="c7ncd-appService-item-center-line-updateUserName">
+                      {record.get('updateUserName')?.substring(0,1)?.toUpperCase()}
+                    </span>
+                        <span className="c7ncd-appService-item-center-line-gxy">更新于</span>
+                        {
+                          record.get('lastUpdateDate') &&
+                          <TimePopover content={record.get('lastUpdateDate')} />
+                        }
+                        <span style={{ marginLeft: 31 }} className="c7ncd-appService-item-center-line-updateUserName">
+                      {record.get('createUserName')?.substring(0,1)?.toUpperCase()}
+                    </span>
+                        <span className="c7ncd-appService-item-center-line-gxy">创建于</span>
+                        {
+                          record.get('creationDate') &&
+                          <TimePopover content={record.get('creationDate')} />
+                        }
+                      </div>
+                    </div>
+                  </div>
+                ))
+              }
+            </Spin>
+            <Pagination
+              total={listDs.totalCount}
+              pageSize={listDs.pageSize}
+              page={listDs.currentPage}
+              onChange={handleChangeListPage}
+              style={{
+                marginTop: '17px',
+                float: 'right',
+              }}
+            />
+          </div>
+          <div className="c7ncd-theme4-appService-right">
+            <ServiceDetail
+              cRef={ref}
+              match={{
+                params: {
+                  id: selectedAppService?.id,
+                  projectId: AppState.currentMenuType.projectId,
+                }
+              }}
+            />
+          </div>
+        </div>
+    )
+  }
+
+  function handleChangeSearch(value) {
+    listDs.setQueryParameter('params', value);
+    listDs.query()
+  }
+
   return (
     <Page service={listPermissions}>
       {getHeader()}
-      <Breadcrumb />
+      <Breadcrumb
+        {
+          ...AppState.getCurrentTheme === 'theme4' ? {
+            extraNode: (
+              <TextField
+                className="theme4-c7n-member-search"
+                placeholder="搜索成员"
+                style={{ marginLeft: 32 }}
+                suffix={(
+                  <Icon type="search" />
+                )}
+                onEnterDown={(e) => handleChangeSearch(e.target.value)}
+                onChange={handleChangeSearch}
+              />),
+          } : {}
+        }
+      />
       <Content className={`${prefixCls}-content`}>
-        <Table
-          dataSet={listDs}
-          border={false}
-          queryBar="bar"
-          pristine
-          className={`${prefixCls}.table`}
-          rowClassName="c7ncd-table-row-font-color"
-        >
-          <Column name="name" renderer={renderName} sortable />
-          <Column renderer={renderActions} width="0.7rem" />
-          <Column name="code" sortable />
-          <Column name="type" renderer={renderType} />
-          <Column name="repoUrl" renderer={renderUrl} />
-          <Column name="creationDate" renderer={renderDate} sortable />
-          <Column name="active" renderer={renderStatus} width="0.7rem" align="left" />
-        </Table>
+        {
+          AppState.getCurrentTheme === 'theme4' ? renderTheme4Dom() : (
+            <Table
+              dataSet={listDs}
+              border={false}
+              queryBar="bar"
+              pristine
+              className={`${prefixCls}.table`}
+              rowClassName="c7ncd-table-row-font-color"
+            >
+              <Column name="name" renderer={renderName} sortable />
+              <Column renderer={renderActions} width="0.7rem" />
+              <Column name="code" sortable />
+              <Column name="type" renderer={renderType} />
+              <Column name="repoUrl" renderer={renderUrl} />
+              <Column name="creationDate" renderer={renderDate} sortable />
+              <Column name="active" renderer={renderStatus} width="0.7rem" align="left" />
+            </Table>
+          )
+        }
       </Content>
     </Page>
   );

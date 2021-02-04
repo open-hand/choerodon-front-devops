@@ -1,17 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, {
+  useCallback, useEffect, useMemo, useState,
+} from 'react';
 import forEach from 'lodash/forEach';
 import { Terminal } from 'xterm';
 import { fit } from 'xterm/lib/addons/fit/fit';
 import { observer } from 'mobx-react-lite';
 import { axios, Choerodon } from '@choerodon/boot';
+import { Button } from 'choerodon-ui/pro';
 
 import 'xterm/dist/xterm.css';
 import './index.less';
 
 export default observer((props) => {
   const {
-    gitlabJobId, projectId, gitlabProjectId, type, cdRecordId, stageRecordId, jobRecordId,
+    gitlabJobId, projectId, gitlabProjectId, type, cdRecordId,
+    stageRecordId, jobRecordId, viewId,
   } = props;
+
+  const prefixCls = useMemo(() => 'c7n-pipelineManage-codeLog', []);
+  const [logData, setLogData] = useState();
 
   const term = new Terminal({
     fontSize: 13,
@@ -27,6 +34,7 @@ export default observer((props) => {
         if (res && !res.failed) {
           const newRes = res.split(/\n/);
           forEach(newRes, (item) => term.writeln(item));
+          setLogData(res);
         } else {
           term.writeln('暂无日志');
         }
@@ -35,6 +43,7 @@ export default observer((props) => {
         if (res && !res.failed) {
           const newRes = res.split(/\n/);
           forEach(newRes, (item) => term.writeln(item));
+          setLogData(res);
         } else {
           term.writeln('暂无日志');
         }
@@ -50,5 +59,38 @@ export default observer((props) => {
     fit(term);
   }, []);
 
-  return <div className="c7n-pipelineManage-codeLog" id="jobLog" />;
+  const handleDownload = useCallback(() => {
+    const blob = new Blob([logData], { type: 'text/plain' });
+    const filename = `#${viewId}-构建日志.log`;
+    // 创建隐藏的可下载链接
+    const eleLink = document.createElement('a');
+    eleLink.download = filename;
+    eleLink.style.display = 'none';
+    // 下载内容转变成blob地址
+    eleLink.href = URL.createObjectURL(blob);
+    // 触发点击
+    document.body.appendChild(eleLink);
+    eleLink.click();
+    // 然后移除
+    URL.revokeObjectURL(eleLink.href);
+    document.body.removeChild(eleLink);
+  }, [logData]);
+
+  return (
+    <>
+      {type === 'build' && (
+        <div className={`${prefixCls}-btn`}>
+          <Button
+            icon="get_app-o"
+            color="primary"
+            onClick={handleDownload}
+            className={`${prefixCls}-download`}
+          >
+            下载构建日志
+          </Button>
+        </div>
+      )}
+      <div className={`${prefixCls} ${type === 'build' ? `${prefixCls}-hasBtn` : ''}`} id="jobLog" />
+    </>
+  );
 });

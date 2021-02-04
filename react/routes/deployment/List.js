@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Page, Content, Header, Permission, Breadcrumb, Choerodon,
 } from '@choerodon/boot';
@@ -306,6 +306,37 @@ const Deployment = withRouter(observer((props) => {
     ];
   };
 
+  const renderDeploySource = useCallback(({ value, record }) => {
+    const {
+      type, marketAppName, marketServiceName, projectName,
+    } = value || {};
+    if (!type) {
+      return null;
+    }
+    return (
+      <>
+        <span className={`${prefixCls}-content-source`}>
+          {formatMessage({ id: `${intlPrefix}.source.deploy.${type}` })}
+        </span>
+        {type === 'share' && (
+          <span className={`${prefixCls}-content-source-text`}>{projectName}</span>
+        )}
+        {type === 'market' && marketServiceName && ([
+          <span className={`${prefixCls}-content-source-text`}>{marketAppName}</span>,
+          <div className={`${prefixCls}-content-source-market`}>
+            <span>
+              {formatMessage({ id: `${intlPrefix}.marketService` })}
+              :&nbsp;
+            </span>
+            <Tooltip title={marketServiceName}>
+              <span>{marketServiceName}</span>
+            </Tooltip>
+          </div>,
+        ])}
+      </>
+    );
+  }, []);
+
   return (
     <Page
       service={['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.default']}
@@ -376,6 +407,7 @@ const Deployment = withRouter(observer((props) => {
             width={80}
           />
           <Column name="instanceName" renderer={renderInstance} />
+          <Column name="deploySourceVO" renderer={renderDeploySource} />
           <Column
             name={mapping.deployObject.value}
             renderer={renderDeployObejct}

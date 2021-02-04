@@ -5,7 +5,7 @@
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    //justify-content: space-between;
   }
   &-title {
     font-size: 16px;
@@ -61,6 +61,11 @@
 
   &-radio {
     margin-right: .65rem;
+
+    & > img {
+      vertical-align: text-bottom;
+      padding-right: .04rem;
+    }
   }
 
   .c7ncd-deploy-resource-network,
@@ -96,6 +101,24 @@
 
   .c7n-pro-validation-message {
     white-space: nowrap;
+  }
+
+  &-market-btn {
+    font-weight: 500;
+    color: #5365ea;
+    background: rgba(83, 101, 234, 0.08);
+    border-radius: 6px;
+    width: auto;
+
+    &-link {
+      color: #5365ea;
+
+      &:hover,
+      &:focus {
+        color: #5365ea;
+        text-decoration: none;
+      }
+    }
   }
 }
 
