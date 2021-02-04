@@ -2,8 +2,9 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React from 'react';
 import { Tooltip } from 'choerodon-ui';
-import { Button, Modal } from 'choerodon-ui/pro';
-import { Choerodon, Permission } from '@choerodon/boot';
+import { Button, Modal, message } from 'choerodon-ui/pro';
+import { Choerodon, Permission, Action } from '@choerodon/boot';
+import copy from 'copy-to-clipboard';
 import { handlePromptError } from '../../../../../../utils';
 import StatusTag from '../StatusTag';
 import DepolyLog from '../deployLog';
@@ -49,6 +50,9 @@ const DetailItem = (props) => {
     apiTestTaskRecordVO, // api测试任务独有的
     externalApprovalJobVO,
     viewId,
+    downloadJar,
+    downloadNpm,
+    downloadImage,
   } = props;
 
   const { gitlabProjectId, appServiceId } = getDetailData && getDetailData.ciCdPipelineVO;
@@ -408,6 +412,7 @@ const DetailItem = (props) => {
         break;
       case 'cdExternalApproval':
         temFun = renderCdExternalApproval;
+        break;
       default:
         break;
     }
@@ -420,6 +425,157 @@ const DetailItem = (props) => {
       return;
     }
     openDescModal(itemType);
+  };
+
+  const logCheckDisabeldCondition = ['created', 'skipped'].includes(jobStatus) || (itemType === 'cdDeploy' && jobStatus === 'failed');
+
+  const renderLogCheckBtn = () => (
+    <Permission
+      service={['choerodon.code.project.develop.ci-pipeline.ps.job.log']}
+    >
+      <Tooltip title="查看日志">
+        <Button
+          funcType="flat"
+          shape="circle"
+          size="small"
+          icon="description-o"
+          disabled={logCheckDisabeldCondition}
+          onClick={renderCheckLogFun}
+          color="primary"
+        />
+      </Tooltip>
+    </Permission>
+  );
+
+  const renderRetryBtnFn = ['cdDeploy', 'cdHost', 'cdAudit', 'cdExternalApproval'].includes(itemType)
+    ? handleCdJobRetry
+    : handleJobRetry;
+
+  const renderRetryBtn = () => {
+    const clickFn = renderRetryBtnFn;
+    return (
+      <Permission
+        service={[
+          'choerodon.code.project.develop.ci-pipeline.ps.job.retry',
+        ]}
+      >
+        <Tooltip title="重试">
+          <Button
+            funcType="flat"
+            disabled={getRetryBtnDisabled()}
+            shape="circle"
+            size="small"
+            icon="refresh"
+            color="primary"
+            onClick={clickFn}
+          />
+        </Tooltip>
+      </Permission>
+    );
+  };
+
+  const renderCodeQualityBtn = () => (
+    <Permission
+      service={[
+        'choerodon.code.project.develop.ci-pipeline.ps.job.sonarqube',
+      ]}
+    >
+      <Tooltip title="查看代码质量报告">
+        <Button
+          funcType="flat"
+          shape="circle"
+          size="small"
+          onClick={openCodequalityModal}
+          icon="policy-o"
+          color="primary"
+        />
+      </Tooltip>
+    </Permission>
+  );
+
+  const renderCheckDetailsBtn = () => (
+    <Tooltip title="查看详情">
+      <Button
+        funcType="flat"
+        shape="circle"
+        size="small"
+        disabled={jobStatus === 'created'}
+        onClick={goToApiTest}
+        icon="find_in_page-o"
+        color="primary"
+      />
+    </Tooltip>
+  );
+
+  const handleJarDownload = () => {
+    window.open(downloadJar);
+  };
+
+  const handleNpmDownload = () => {
+    window.open(downloadNpm);
+  };
+
+  const handleImageCopy = () => {
+    copy(downloadImage);
+    message.success('复制成功');
+  };
+
+  const renderFooterBtns = () => {
+    const cp = [];
+    if (itemType === 'build') {
+      const data = [
+        {
+          service: ['choerodon.code.project.develop.ci-pipeline.ps.job.log'],
+          text: '查看日志',
+          action: renderCheckLogFun,
+          disabled: logCheckDisabeldCondition,
+        },
+        {
+          service: ['choerodon.code.project.develop.ci-pipeline.ps.job.retry'],
+          text: '重试',
+          action: renderRetryBtnFn,
+          disabled: getRetryBtnDisabled(),
+        },
+      ];
+      if (downloadJar) {
+        data.push({
+          service: [],
+          text: 'jar包下载',
+          action: handleJarDownload,
+          // disabled: getRetryBtnDisabled(),
+        });
+      }
+      if (downloadNpm) {
+        data.push({
+          service: [],
+          text: 'npm下载',
+          action: handleNpmDownload,
+          // disabled: getRetryBtnDisabled(),
+        });
+      }
+      if (downloadImage) {
+        data.push({
+          service: [],
+          text: '复制镜像下载命令',
+          action: handleImageCopy,
+          // disabled: getRetryBtnDisabled(),
+        });
+      }
+      return (
+        <Action data={data} />
+      );
+    }
+    if (!['cdAudit', 'cdApiTest'].includes(itemType)) {
+      cp.push(renderLogCheckBtn());
+      cp.push(renderRetryBtn());
+    }
+    if (itemType === 'sonar') {
+      cp.push(renderCodeQualityBtn());
+    }
+    if (itemType === 'cdApiTest') {
+      cp.push(renderCheckDetailsBtn());
+    }
+    return cp;
   };
 
   return (
@@ -450,79 +606,7 @@ const DetailItem = (props) => {
       </header>
       {renderItemDetail()}
       <footer>
-        {(!['cdAudit', 'cdApiTest'].includes(itemType)) && (
-          <Permission
-            service={['choerodon.code.project.develop.ci-pipeline.ps.job.log']}
-          >
-            <Tooltip title="查看日志">
-              <Button
-                funcType="flat"
-                shape="circle"
-                size="small"
-                icon="description-o"
-                disabled={['created', 'skipped'].includes(jobStatus) || (itemType === 'cdDeploy' && jobStatus === 'failed')}
-                onClick={renderCheckLogFun}
-                color="primary"
-              />
-            </Tooltip>
-          </Permission>
-        )}
-        {(!['cdAudit', 'cdApiTest'].includes(itemType)) && (
-          <Permission
-            service={[
-              'choerodon.code.project.develop.ci-pipeline.ps.job.retry',
-            ]}
-          >
-            <Tooltip title="重试">
-              <Button
-                funcType="flat"
-                disabled={getRetryBtnDisabled()}
-                shape="circle"
-                size="small"
-                icon="refresh"
-                color="primary"
-                onClick={
-                  ['cdDeploy', 'cdHost', 'cdAudit', 'cdExternalApproval'].includes(itemType)
-                    ? handleCdJobRetry
-                    : handleJobRetry
-                }
-              />
-            </Tooltip>
-          </Permission>
-        )}
-        {itemType === 'sonar' && (
-          <Permission
-            service={[
-              'choerodon.code.project.develop.ci-pipeline.ps.job.sonarqube',
-            ]}
-          >
-            <Tooltip title="查看代码质量报告">
-              <Button
-                funcType="flat"
-                shape="circle"
-                size="small"
-                onClick={openCodequalityModal}
-                icon="policy-o"
-                color="primary"
-              />
-            </Tooltip>
-          </Permission>
-        )}
-        {
-          itemType === 'cdApiTest' && (
-          <Tooltip title="查看详情">
-            <Button
-              funcType="flat"
-              shape="circle"
-              size="small"
-              disabled={jobStatus === 'created'}
-              onClick={goToApiTest}
-              icon="find_in_page-o"
-              color="primary"
-            />
-          </Tooltip>
-          )
-        }
+        {renderFooterBtns()}
         <span className="c7n-piplineManage-detail-column-item-time">
           <span>任务耗时：</span>
           <span>

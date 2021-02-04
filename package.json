@@ -26,6 +26,7 @@
     "react-dom": "16.14.0"
   },
   "dependencies": {
+    "copy-to-clipboard": "^3.3.1",
     "diff-match-patch": "^1.0.4",
     "echarts": "^4.2.1",
     "echarts-for-react": "^2.0.12",
