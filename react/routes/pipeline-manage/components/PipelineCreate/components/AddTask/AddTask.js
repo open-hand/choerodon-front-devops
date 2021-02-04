@@ -768,6 +768,7 @@ const AddTask = observer(() => {
   };
 
   const handleOpenRepo = () => {
+    debugger;
     if (AddTaskFormDataSet.current.get('private').includes('copy')) {
       Modal.confirm({
         title: '切换配置方式',
@@ -882,6 +883,7 @@ const AddTask = observer(() => {
   };
 
   const handleChangePrivate = (newV, oldV) => {
+    debugger;
     newV = newV || [];
     oldV = oldV || [];
     function minus(a, b) {
@@ -904,6 +906,7 @@ const AddTask = observer(() => {
           setSteps(steps.map((s) => {
             if (s.checked) {
               s.repo = undefined;
+              s.repos = undefined;
             }
             return s;
           }));
