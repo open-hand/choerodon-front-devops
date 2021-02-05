@@ -26,7 +26,6 @@
     "react-dom": "16.14.0"
   },
   "dependencies": {
-    "babel-preset-c7n-app": "^0.0.1",
     "copy-to-clipboard": "^3.3.1",
     "diff-match-patch": "^1.0.4",
     "echarts": "^4.2.1",
