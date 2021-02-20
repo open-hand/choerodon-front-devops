@@ -2280,10 +2280,10 @@ babel-plugin-try-import@^0.0.2:
   resolved "https://nexus.choerodon.com.cn/repository/choerodon-npm/babel-plugin-try-import/-/babel-plugin-try-import-0.0.2.tgz#a6b76fa9bbbabe7a331db0c1f1c6ccb11f37b652"
   integrity sha1-prdvqbu6vnozHbDB8cbMsR83tlI=
 
-babel-preset-c7n-app@^0.0.1:
+babel-preset-c7n@^0.0.1:
   version "0.0.1"
-  resolved "https://nexus.choerodon.com.cn/repository/choerodon-npm/babel-preset-c7n-app/-/babel-preset-c7n-app-0.0.1.tgz#36f9bbf6e66ef574708988649c4a6642ddb7e79f"
-  integrity sha512-//fn3uYoCp2JsbnN5efoGr2Pg6qhr6mZnxgV82W44ZrxSZN5IuhoNlIawVGQAYZgLuZH3T+m5KWiQ9h8YJGOTA==
+  resolved "https://nexus.choerodon.com.cn/repository/choerodon-npm/babel-preset-c7n/-/babel-preset-c7n-0.0.1.tgz#e0d99c8be8828b5584e642694fe4ab169e7d8a8d"
+  integrity sha1-4Nmci+iCi1WE5kJpT+SrFp59io0=
   dependencies:
     "@babel/core" "7.10.1"
     "@babel/plugin-proposal-class-properties" "7.10.1"
@@ -4770,6 +4770,11 @@ file-loader@^5.1.0:
   dependencies:
     loader-utils "^1.4.0"
     schema-utils "^2.5.0"
+
+file-saver@^2.0.5:
+  version "2.0.5"
+  resolved "https://nexus.choerodon.com.cn/repository/choerodon-npm/file-saver/-/file-saver-2.0.5.tgz#d61cfe2ce059f414d899e9dd6d4107ee25670c38"
+  integrity sha1-1hz+LOBZ9BTYmendbUEH7iVnDDg=
 
 file-uri-to-path@1.0.0:
   version "1.0.0"
