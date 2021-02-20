@@ -3,8 +3,14 @@
 import React from 'react';
 import { Tooltip } from 'choerodon-ui';
 import { Button, Modal, message } from 'choerodon-ui/pro';
-import { Choerodon, Permission, Action } from '@choerodon/boot';
+import {
+  Choerodon, Permission, Action,
+} from '@choerodon/boot';
+import axios from 'axios';
 import copy from 'copy-to-clipboard';
+import FileSaver from 'file-saver';
+import { get } from 'lodash';
+import { Base64 } from 'js-base64';
 import { handlePromptError } from '../../../../../../utils';
 import StatusTag from '../StatusTag';
 import DepolyLog from '../deployLog';
@@ -50,7 +56,7 @@ const DetailItem = (props) => {
     apiTestTaskRecordVO, // api测试任务独有的
     externalApprovalJobVO,
     viewId,
-    downloadJar,
+    downloadMavenJarVO,
     downloadNpm,
     downloadImage,
   } = props;
@@ -507,13 +513,40 @@ const DetailItem = (props) => {
     </Tooltip>
   );
 
-  const handleJarDownload = () => {
-    window.open(downloadJar);
+  const handleFileDownLoad = async (url, username, password, filename) => {
+    const config = {
+      auth: {
+        username,
+        password,
+      },
+    };
+    try {
+      const res = await axios.get(url, config);
+      if (res && res.failed) {
+        return;
+      }
+      const blob = new Blob([res], {
+        type: 'application/octest-stream',
+      });
+      FileSaver.saveAs(blob, `${filename}.jar`);
+      Choerodon.prompt('下载成功');
+    } catch (error) {
+      throw new Error(error);
+    }
   };
 
-  const handleNpmDownload = () => {
-    window.open(downloadNpm);
+  const handleJarDownload = () => {
+    const jarUrl = get(downloadMavenJarVO, 'downloaJar');
+    const server = get(downloadMavenJarVO, 'server');
+    const password = get(server, 'password');
+    const username = get(server, 'username');
+    const filename = get(server, 'id');
+    handleFileDownLoad(jarUrl, username, password, filename);
   };
+
+  // const handleNpmDownload = () => {
+  //   window.open(downloadNpm);
+  // };
 
   const handleImageCopy = () => {
     copy(downloadImage);
@@ -537,7 +570,7 @@ const DetailItem = (props) => {
           disabled: getRetryBtnDisabled(),
         },
       ];
-      if (downloadJar) {
+      if (downloadMavenJarVO) {
         data.push({
           service: [],
           text: 'jar包下载',
@@ -545,14 +578,15 @@ const DetailItem = (props) => {
           // disabled: getRetryBtnDisabled(),
         });
       }
-      if (downloadNpm) {
-        data.push({
-          service: [],
-          text: 'npm下载',
-          action: handleNpmDownload,
-          // disabled: getRetryBtnDisabled(),
-        });
-      }
+      // 目前先不做npm代码保留着
+      // if (downloadNpm) {
+      //   data.push({
+      //     service: [],
+      //     text: 'npm下载',
+      //     action: handleNpmDownload,
+      //     // disabled: getRetryBtnDisabled(),
+      //   });
+      // }
       if (downloadImage) {
         data.push({
           service: [],
