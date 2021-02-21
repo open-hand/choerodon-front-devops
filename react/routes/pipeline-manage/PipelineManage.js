@@ -102,6 +102,7 @@ const PipelineManage = observer(() => {
         dataSource={editBlockStore.getMainData}
         refreshTree={handleRefresh}
         editBlockStore={editBlockStore}
+        isEdit
       />,
       okText: formatMessage({ id: 'save' }),
     });

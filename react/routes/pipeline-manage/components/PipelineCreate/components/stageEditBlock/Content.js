@@ -35,29 +35,27 @@ export default observer(() => {
     appServiceCode,
     appServiceType,
     image,
-    dataSource: propsDataSource,
+    isEdit,
   } = usePipelineStageEditStore();
 
   const {
     setStepData,
     getStepData,
     editStepLists,
+    getViewData,
   } = editBlockStore;
 
   useEffect(() => {
     let stageList = [];
-    if (propsDataSource) {
-      stageList = [...propsDataSource.stageList];
-      setStepData(stageList);
-      return;
-    }
-    if (appServiceId && appServiceType === 'test') {
+    if (isEdit) {
+      stageList = [...getViewData];
+    } else if (appServiceId && appServiceType === 'test') {
       stageList = [...defaultData.slice(0, 1)];
     } else {
       stageList = [...defaultData];
     }
     setStepData(stageList);
-  }, [appServiceId, appServiceType]);
+  }, [appServiceId, appServiceType, getViewData, isEdit]);
 
   function renderColumn() {
     const dataSource = getStepData;
@@ -127,27 +125,23 @@ export default observer(() => {
     background: isDraggingOver ? 'rgba(82, 102, 212, 0.1)' : 'none',
   });
 
-  function renderBlock() {
-    return (
-      <DragDropContext onDragEnd={onColomnDragEnd}>
-        <Droppable droppableId="dropStages" direction="horizontal">
-          {
-            (provided, snapshot) => (
-              <div
-                className="c7n-piplineManage-edit"
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                style={getListStyle(snapshot.isDraggingOver)}
-              >
-                {renderColumn()}
-                {provided.placeholder}
-              </div>
-            )
-          }
-        </Droppable>
-      </DragDropContext>
-    );
-  }
-
-  return renderBlock();
+  return (
+    <DragDropContext onDragEnd={onColomnDragEnd}>
+      <Droppable droppableId="dropStages" direction="horizontal">
+        {
+          (provided, snapshot) => (
+            <div
+              className="c7n-piplineManage-edit"
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              style={getListStyle(snapshot.isDraggingOver)}
+            >
+              {renderColumn()}
+              {provided.placeholder}
+            </div>
+          )
+        }
+      </Droppable>
+    </DragDropContext>
+  );
 });
