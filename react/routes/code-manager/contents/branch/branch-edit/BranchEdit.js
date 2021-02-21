@@ -3,6 +3,7 @@ import { Form, Select } from 'choerodon-ui/pro';
 import { injectIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import MouserOverWrapper from '../../../../../components/MouseOverWrapper';
+import IssueType from '../../../components/issue-type';
 import { useSelectStore } from './stores';
 
 function BranchEdit() {
@@ -21,9 +22,8 @@ function BranchEdit() {
       if ((await selectDs.submit()) !== false) {
         handleRefresh();
         return true;
-      } else {
-        return false;
       }
+      return false;
     } catch (e) {
       return false;
     }
@@ -32,7 +32,9 @@ function BranchEdit() {
   modal.handleOk(() => handleOk());
 
   // 用于问题名称的渲染函数
-  const renderissueName = (typeCode, issueNum, summary) => {
+  const renderIssueName = ({
+    typeCode, issueNum, summary, issueTypeVO,
+  }) => {
     let mes = '';
     let icon = '';
     let color = '';
@@ -63,10 +65,12 @@ function BranchEdit() {
         color = '#4d90fe';
     }
     return (
-      <span>
-        <div style={{ color }} className="branch-issue">
-          <i className={`icon icon-${icon}`} />
-        </div>
+      <>
+        {issueTypeVO ? <IssueType data={issueTypeVO} /> : (
+          <div style={{ color }} className="branch-issue">
+            <i className={`icon icon-${icon}`} />
+          </div>
+        )}
         <span className="branch-issue-content">
           <span style={{ color: 'rgb(0,0,0,0.65)' }}>{issueNum}</span>
           <MouserOverWrapper
@@ -77,26 +81,34 @@ function BranchEdit() {
             {summary}
           </MouserOverWrapper>
         </span>
-      </span>
+      </>
     );
   };
 
   const issueNameRender = ({ text, value }) => {
-    const { typeCode, issueNum, summary } = value || {};
+    const {
+      typeCode, issueNum, summary, issueTypeVO,
+    } = value || {};
     return (
-      text ? <span>
-        {renderissueName(typeCode, issueNum, summary)}
-      </span> : null
+      typeCode || issueTypeVO ? (
+        <span>
+          {renderIssueName({
+            typeCode, issueNum, summary, issueTypeVO,
+          })}
+        </span>
+      ) : null
     );
   };
 
   const issueNameOptionRender = ({ record }) => {
-    const typeCode = record.get('typeCode');
     const issueNum = record.get('issueNum');
     const summary = record.get('summary');
+    const issueTypeVO = record.get('issueTypeVO');
     return (
       <span>
-        {renderissueName(typeCode, issueNum, summary)}
+        {renderIssueName({
+          issueNum, summary, issueTypeVO,
+        })}
       </span>
     );
   };

@@ -185,6 +185,7 @@ export default ({
         name: 'hostIp',
         type: 'string' as FieldType,
         required: true,
+        // @ts-ignore
         validator: checkIP,
         label: 'IP',
       },

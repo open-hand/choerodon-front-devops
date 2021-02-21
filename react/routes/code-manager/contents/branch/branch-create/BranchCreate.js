@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { withRouter } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
-import { Form, TextField, Select, Progress } from 'choerodon-ui/pro';
+import {
+  Form, TextField, Select, Progress,
+} from 'choerodon-ui/pro';
 import { Content, axios } from '@choerodon/boot';
 import { injectIntl } from 'react-intl';
 import _ from 'lodash';
@@ -12,6 +14,7 @@ import { handlePromptError } from '../../../../../utils';
 import '../../../../main.less';
 import './index.less';
 import '../index.less';
+import IssueType from '../../../components/issue-type';
 
 const { Option, OptGroup } = Select;
 
@@ -23,9 +26,8 @@ function BranchCreate(props) {
     formDs,
     projectId,
     appServiceId,
+    intl: { formatMessage },
   } = useFormStore();
-  const { formatMessage } = props.intl;
-
 
   const [branchPageSize, setBranchPageSize] = useState(3);
   const [tagPageSize, setTagPageSize] = useState(3);
@@ -56,7 +58,8 @@ function BranchCreate(props) {
     if (selectCom && selectCom.options) {
       selectCom.options.changeStatus('loading');
     }
-    axios.all([contentStore.loadBranchData(projectId, appServiceId, branchPageSize, text), contentStore.loadTagData(projectId, appServiceId, tagPageSize, text)])
+    axios.all([contentStore.loadBranchData(projectId, appServiceId, branchPageSize, text),
+      contentStore.loadTagData(projectId, appServiceId, tagPageSize, text)])
       .then(axios.spread((branchs, tags) => {
         if (selectCom && selectCom.options) {
           selectCom.options.changeStatus('ready');
@@ -86,7 +89,6 @@ function BranchCreate(props) {
         }
       }));
   }, 700), [selectCom, projectId, appServiceId, branchPageSize, tagPageSize]);
-
 
   /**
    * 加载分支数据
@@ -123,9 +125,8 @@ function BranchCreate(props) {
       if ((await formDs.submit()) !== false) {
         handleRefresh();
         return true;
-      } else {
-        return false;
       }
+      return false;
     } catch (e) {
       return false;
     }
@@ -201,12 +202,14 @@ function BranchCreate(props) {
       setPrefixeData(null);
     }
     return (
-      text ? <div>
-        <div style={{ width: '100%' }}>
-          {getIcon(text)}
-          <span className="c7n-branch-text">{text}</span>
+      text ? (
+        <div>
+          <div style={{ width: '100%' }}>
+            {getIcon(text)}
+            <span className="c7n-branch-text">{text}</span>
+          </div>
         </div>
-      </div> : null
+      ) : null
     );
   };
   // 用于分支类型的渲染函数
@@ -218,7 +221,9 @@ function BranchCreate(props) {
   );
 
   // 用于问题名称的渲染函数
-  const renderissueName = (typeCode, issueNum, summary) => {
+  const renderIssueName = ({
+    typeCode, issueNum, summary, issueTypeVO,
+  }) => {
     let mes = '';
     let icon = '';
     let color = '';
@@ -249,10 +254,12 @@ function BranchCreate(props) {
         color = '#4d90fe';
     }
     return (
-      <span>
-        <div style={{ color }} className="branch-issue">
-          <i className={`icon icon-${icon}`} />
-        </div>
+      <>
+        {issueTypeVO ? <IssueType data={issueTypeVO} /> : (
+          <div style={{ color }} className="branch-issue">
+            <i className={`icon icon-${icon}`} />
+          </div>
+        )}
         <span className="branch-issue-content">
           <span style={{ color: 'rgb(0,0,0,0.65)' }}>{issueNum}</span>
           <MouserOverWrapper
@@ -263,29 +270,37 @@ function BranchCreate(props) {
             {summary}
           </MouserOverWrapper>
         </span>
-      </span>
+      </>
     );
   };
 
   const issueNameRender = ({ text, value }) => {
-    const { typeCode, issueNum, summary } = value || {};
+    const {
+      typeCode, issueNum, summary, issueTypeVO,
+    } = value || {};
     return (
-      text ? <span>
-        {renderissueName(typeCode, issueNum, summary)}
-      </span> : null
+      typeCode || issueTypeVO ? (
+        <span>
+          {renderIssueName({
+            typeCode, issueNum, summary, issueTypeVO,
+          })}
+        </span>
+      ) : null
     );
   };
   const issueNameOptionRender = ({ record }) => {
     const typeCode = record.get('typeCode');
     const issueNum = record.get('issueNum');
     const summary = record.get('summary');
+    const issueTypeVO = record.get('issueTypeVO');
     return (
       <span>
-        {renderissueName(typeCode, issueNum, summary)}
+        {renderIssueName({
+          typeCode, issueNum, summary, issueTypeVO,
+        })}
       </span>
     );
   };
-
 
   const loadMore = (type, e) => {
     e.stopPropagation();
@@ -318,7 +333,8 @@ function BranchCreate(props) {
         >
           {progress}
           <span className="c7n-option-span">{formatMessage({ id: 'loadMore' })}</span>
-        </div>);
+        </div>
+      );
     }
 
     return renderOption(record.get('value'));
@@ -335,10 +351,12 @@ function BranchCreate(props) {
 
   function renderOption(text) {
     if (!text) return null;
-    return (<span>
-      <i className={`icon c7n-branch-formItem-icon ${text.slice(-7) === '_type_t' ? 'icon-local_offer' : 'icon-branch'}`} />
-      {text && text.slice(0, -7)}
-    </span>);
+    return (
+      <span>
+        <i className={`icon c7n-branch-formItem-icon ${text.slice(-7) === '_type_t' ? 'icon-local_offer' : 'icon-branch'}`} />
+        {text && text.slice(0, -7)}
+      </span>
+    );
   }
 
   function searchMatcher() {
@@ -350,10 +368,9 @@ function BranchCreate(props) {
     searchData(value);
   }
 
-
   function changeRef(obj) {
     if (obj) {
-      const fields = obj.fields;
+      const { fields } = obj;
       if (fields instanceof Array && fields.length > 0) {
         const select = fields[1];
         if (select && !selectCom) {
@@ -380,7 +397,8 @@ function BranchCreate(props) {
         >
           {
             !isOPERATIONS
-              && <Select
+              && (
+              <Select
                 name="issue"
                 colSpan={5}
                 onChange={changeIssue}
@@ -389,6 +407,7 @@ function BranchCreate(props) {
                 searchable
                 searchMatcher="content"
               />
+              )
           }
           <Select
             colSpan={5}
@@ -418,9 +437,11 @@ function BranchCreate(props) {
               key="more"
             >
               {branchTagData.map((s) => (s.release
-                ? <Option value={`${s.release.tagName}_type_t`} key={s.release.tagName}>
-                  {s.release.tagName}
-                </Option> : null))}
+                ? (
+                  <Option value={`${s.release.tagName}_type_t`} key={s.release.tagName}>
+                    {s.release.tagName}
+                  </Option>
+                ) : null))}
               {loadMoreTag ? (
                 <Option value="tag" />) : null }
             </OptGroup>
@@ -431,7 +452,7 @@ function BranchCreate(props) {
                 <Option value={s} key={s} title={s}>
                   {s}
                 </Option>
-              )
+              ),
             )}
           </Select>
           <TextField colSpan={3} prefix={prefixData} name="branchName" />
@@ -441,7 +462,6 @@ function BranchCreate(props) {
   );
 }
 export default withRouter(injectIntl(observer(BranchCreate)));
-
 
 function judgeShowMore(data) {
   return data.total > data.size && data.size > 0;
