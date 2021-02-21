@@ -514,25 +514,15 @@ const DetailItem = (props) => {
   );
 
   const handleFileDownLoad = async (url, username, password, filename) => {
-    const config = {
-      auth: {
-        username,
-        password,
-      },
+    const xhr = new XMLHttpRequest();
+    xhr.open('get', url);
+    xhr.responseType = 'blob';
+    xhr.setRequestHeader('Authorization', `Basic ${Base64.encode(`${username}:${password}`)}`);
+    xhr.onload = function () {
+      const blob = xhr.response;
+      FileSaver.saveAs(blob, filename);
     };
-    try {
-      const res = await axios.get(url, config);
-      if (res && res.failed) {
-        return;
-      }
-      const blob = new Blob([res], {
-        type: 'application/octest-stream',
-      });
-      FileSaver.saveAs(blob, `${filename}.jar`);
-      Choerodon.prompt('下载成功');
-    } catch (error) {
-      throw new Error(error);
-    }
+    xhr.send();
   };
 
   const handleJarDownload = () => {
@@ -540,8 +530,7 @@ const DetailItem = (props) => {
     const server = get(downloadMavenJarVO, 'server');
     const password = get(server, 'password');
     const username = get(server, 'username');
-    const filename = get(server, 'id');
-    handleFileDownLoad(jarUrl, username, password, filename);
+    handleFileDownLoad(jarUrl, username, password, jarUrl.split('/')[jarUrl.split('/').length - 1]);
   };
 
   // const handleNpmDownload = () => {
