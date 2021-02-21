@@ -514,15 +514,23 @@ const DetailItem = (props) => {
   );
 
   const handleFileDownLoad = async (url, username, password, filename) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open('get', url);
-    xhr.responseType = 'blob';
-    xhr.setRequestHeader('Authorization', `Basic ${Base64.encode(`${username}:${password}`)}`);
-    xhr.onload = function () {
-      const blob = xhr.response;
-      FileSaver.saveAs(blob, filename);
+    const config = {
+      auth: {
+        username,
+        password,
+      },
+      responseType: 'blob',
     };
-    xhr.send();
+    try {
+      const res = await axios.get(url, config);
+      if (res && res.failed) {
+        return;
+      }
+      FileSaver.saveAs(res, filename);
+      Choerodon.prompt('下载成功');
+    } catch (error) {
+      throw new Error(error);
+    }
   };
 
   const handleJarDownload = () => {
