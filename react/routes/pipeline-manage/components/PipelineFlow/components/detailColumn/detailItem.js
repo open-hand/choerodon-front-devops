@@ -10,7 +10,6 @@ import axios from 'axios';
 import copy from 'copy-to-clipboard';
 import FileSaver from 'file-saver';
 import { get } from 'lodash';
-import { Base64 } from 'js-base64';
 import { handlePromptError } from '../../../../../../utils';
 import StatusTag from '../StatusTag';
 import DepolyLog from '../deployLog';
@@ -538,7 +537,15 @@ const DetailItem = (props) => {
     const server = get(downloadMavenJarVO, 'server');
     const password = get(server, 'password');
     const username = get(server, 'username');
-    handleFileDownLoad(jarUrl, username, password, jarUrl.split('/')[jarUrl.split('/').length - 1]);
+    Modal.open({
+      title: '下载jar包',
+      children: '确定要下载此次构建任务产生的jar包吗？',
+      okText: '下载',
+      cancelProps: {
+        color: 'dark',
+      },
+      onOk: () => handleFileDownLoad(jarUrl, username, password, jarUrl.split('/')[jarUrl.split('/').length - 1]),
+    });
   };
 
   // const handleNpmDownload = () => {
