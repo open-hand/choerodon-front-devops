@@ -26,6 +26,7 @@ export default function useStore() {
             const res = handlePromptError(data);
             if (res) {
               this.data = data;
+              this.setIsEmpty(false);
             }
           }
         });
