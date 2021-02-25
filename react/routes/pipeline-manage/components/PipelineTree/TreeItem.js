@@ -130,6 +130,10 @@ const TreeItem = observer(({ record, search }) => {
     };
     const res = await treeDs.delete(record, modalProps);
     if (res && res.success) {
+      const { key } = mainStore.getSelectedMenu || {};
+      if (key === record.get('key')) {
+        mainStore.setSelectedMenu({});
+      }
       refresh();
     }
   }
