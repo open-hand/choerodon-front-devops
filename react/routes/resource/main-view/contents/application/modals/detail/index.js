@@ -51,7 +51,7 @@ const Details = (props) => {
         <span className="detail-item-text">
           所属市场应用及版本
         </span>
-        <span>{`${record.get('appName')}(${record.get('appVersion')})`}</span>
+        <span>{`${record.get('appName')}`}</span>
       </li>
     </ul>
   );
