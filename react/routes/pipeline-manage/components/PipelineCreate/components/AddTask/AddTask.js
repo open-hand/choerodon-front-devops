@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import { axios } from '@choerodon/boot';
 import {
-  Form, Select, TextField, Modal, SelectBox, Button, Password,
+  Form, Select, TextField, Modal, SelectBox, Button, Password, message,
 } from 'choerodon-ui/pro';
 import _ from 'lodash';
 import {
@@ -106,6 +106,9 @@ const AddTask = observer(() => {
       AddTaskFormDataSet.getField('uploadArtifactFileName').set('required', steps.some((s) => s.type === 'upload'));
       AddTaskFormDataSet.getField('zpk').set('required', steps.some((s) => s.type === 'maven_deploy'));
       AddTaskFormDataSet.getField('jar_zpk').set('required', steps.some((s) => s.type === 'upload_jar'));
+    }
+    if (AddTaskFormDataSet.current.get('type') === 'build') {
+      AddTaskFormDataSet.getField('bzmc').set('required', steps.length > 0)
     }
   }, [steps]);
 
@@ -292,6 +295,12 @@ const AddTask = observer(() => {
   }
 
   const handleAdd = async () => {
+    if (AddTaskFormDataSet.current.get('type') === 'build') {
+      if (steps.length === 0) {
+        message.error('请先添加步骤');
+        return false;
+      }
+    }
     const result = await AddTaskFormDataSet.validate();
     if (result) {
       if (AddTaskFormDataSet.current.get('type') === 'sonar'
