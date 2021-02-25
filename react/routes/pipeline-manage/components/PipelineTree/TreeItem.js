@@ -291,7 +291,7 @@ const TreeItem = observer(({ record, search }) => {
         action: handleChangeActive,
       },
       {
-        service: [],
+        service: ['choerodon.code.project.develop.ci-pipeline.ps.create'],
         text: '复制',
         action: handleCopy,
       },
