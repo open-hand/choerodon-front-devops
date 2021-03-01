@@ -84,10 +84,7 @@ function CreateNodesForm() {
   const renderNodetypeOpts = useCallback(({ value, text }) => {
     if (value === 'etcd') {
       return (
-        <>
-          <span>{text}</span>
-          <NewTips showHelp helpText="提示" />
-        </>
+        <span>{text}</span>
       );
     }
     return <span>{text}</span>;

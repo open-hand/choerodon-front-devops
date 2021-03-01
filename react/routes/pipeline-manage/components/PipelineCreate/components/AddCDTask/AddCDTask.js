@@ -20,6 +20,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { observer } from 'mobx-react-lite';
 import DeployConfig from '@/components/deploy-config';
 import JSONbig from 'json-bigint';
+import { get } from 'lodash';
 import addCDTaskDataSetMap from './stores/addCDTaskDataSetMap';
 import { useAddCDTaskStore } from './stores';
 import YamlEditor from '../../../../../../components/yamlEditor';
@@ -1397,11 +1398,21 @@ export default observer(() => {
                   );
                 }}
                 optionRenderer={renderderAuditUsersList}
-                renderer={({ text, value }) => (
-                  <Tooltip title={`${text}(${value.loginName})`}>
-                    {text}
-                  </Tooltip>
-                )}
+                renderer={({ text, value }) => {
+                  if (typeof value === 'object') {
+                    const isLdap = get(value, 'ldap');
+                    return (
+                      <Tooltip title={isLdap ? `${value.realName}(${value.loginName})` : `${value.realName}(${value.email})`}>
+                        {value.realName}
+                      </Tooltip>
+                    );
+                  }
+                  return (
+                    <Tooltip title={text}>
+                      {text}
+                    </Tooltip>
+                  );
+                }}
               />
             </div>
             {ADDCDTaskDataSet?.current?.get('cdAuditUserIds')?.length > 1 && (

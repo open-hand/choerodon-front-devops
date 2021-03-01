@@ -91,7 +91,7 @@ export default observer((props) => {
             </div>
           </Suspense>
         </TabPane>
-        <TabPane
+        {/* <TabPane
           key={ENV_TAB}
           tab={formatMessage({ id: `${intlPrefix}.env.manage` })}
         >
@@ -100,7 +100,7 @@ export default observer((props) => {
               <EnvManage />
             </div>
           </Suspense>
-        </TabPane>
+        </TabPane> */}
         <TabPane
           key={POLARIS_TAB}
           tab={formatMessage({ id: `${intlPrefix}.polaris` })}

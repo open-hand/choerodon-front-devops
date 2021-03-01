@@ -47,7 +47,7 @@ const AppModals = observer(() => {
     appStore,
     checkAppExist,
   } = useApplicationStore();
-  const { id, parentId } = resourceStore.getSelectedMenu;
+  const { id, parentId, type: appType } = resourceStore.getSelectedMenu;
 
   function refresh() {
     checkAppExist().then((query) => {
@@ -92,6 +92,7 @@ const AppModals = observer(() => {
         intlPrefix={intlPrefix}
         prefixCls={prefixCls}
         formatMessage={formatMessage}
+        type={appType}
       />,
       drawer: true,
       style: modalStyle,

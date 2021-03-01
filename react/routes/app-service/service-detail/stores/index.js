@@ -55,7 +55,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
           method: 'get',
         };
         detailDs.query();
-        shareDs.query();
+        // shareDs.query();
       }
     }, [projectId, id]);
 

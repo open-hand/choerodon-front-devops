@@ -130,6 +130,10 @@ const TreeItem = observer(({ record, search }) => {
     };
     const res = await treeDs.delete(record, modalProps);
     if (res && res.success) {
+      const { key } = mainStore.getSelectedMenu || {};
+      if (key === record.get('key')) {
+        mainStore.setSelectedMenu({});
+      }
       refresh();
     }
   }
@@ -287,7 +291,7 @@ const TreeItem = observer(({ record, search }) => {
         action: handleChangeActive,
       },
       {
-        service: [],
+        service: ['choerodon.code.project.develop.ci-pipeline.ps.create'],
         text: '复制',
         action: handleCopy,
       },
@@ -312,7 +316,7 @@ const TreeItem = observer(({ record, search }) => {
             </span>
           </Tooltip>
           <div style={{ flexShrink: '0' }}>
-            <Action data={enabled ? actionData : actionData.slice(1, 3)} onClick={eventStopProp} />
+            <Action data={enabled ? actionData.slice(0, 3) : actionData.slice(1, 4)} onClick={eventStopProp} />
           </div>
         </div>
         <div className={`${prefixCls}-sidebar-header`}>
