@@ -1,7 +1,8 @@
 /* eslint-disable max-len */
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { message } from 'choerodon-ui';
+import { get } from 'lodash';
 import {
   Droppable, Draggable, DragDropContext,
 } from 'react-beautiful-dnd';
@@ -36,30 +37,32 @@ export default observer(() => {
     appServiceType,
     image,
     dataSource: propsDataSource,
+    isEdit,
   } = usePipelineStageEditStore();
 
   const {
     setStepData,
     getStepData,
     editStepLists,
+    getViewData,
   } = editBlockStore;
 
   useEffect(() => {
     let stageList = [];
-    if (propsDataSource) {
-      stageList = [...propsDataSource.stageList];
-      setStepData(stageList);
-      return;
-    }
-    if (appServiceId && appServiceType === 'test') {
+    if (isEdit) {
+      stageList = [...getViewData];
+    } else if (propsDataSource) {
+      const tempLists = get(propsDataSource, 'stageList') || [];
+      stageList = [...tempLists];
+    } else if (appServiceId && appServiceType === 'test') {
       stageList = [...defaultData.slice(0, 1)];
     } else {
       stageList = [...defaultData];
     }
     setStepData(stageList);
-  }, [appServiceId, appServiceType]);
+  }, [appServiceId, appServiceType, getViewData, isEdit, propsDataSource]);
 
-  function renderColumn() {
+  const renderColumn = useCallback(() => {
     const dataSource = getStepData;
     if (dataSource && dataSource.length > 0) {
       return dataSource.map((item, index) => {
@@ -93,7 +96,7 @@ export default observer(() => {
       });
     }
     return [];
-  }
+  }, [getStepData, pipelineId]);
 
   function swap(arr, from, to) {
     arr.splice(to, 0, arr.splice(from, 1)[0]);

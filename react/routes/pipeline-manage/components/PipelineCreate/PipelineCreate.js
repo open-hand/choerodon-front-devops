@@ -32,6 +32,7 @@ const PipelineCreate = observer(() => {
     // 老mainData 为了在复制之后 重新设置成以前的mainData
     oldMainData,
     appService,
+    isEdit,
   } = usePipelineCreateStore();
 
   const [expandIf, setExpandIf] = useState(false);
@@ -274,6 +275,7 @@ const PipelineCreate = observer(() => {
       <StageEditBlock
         editBlockStore={editBlockStore}
         edit
+        isEdit={isEdit}
         image={PipelineCreateFormDataSet.current.get('image')}
         appServiceId={PipelineCreateFormDataSet.current.get('appServiceId')}
         appServiceCode={
