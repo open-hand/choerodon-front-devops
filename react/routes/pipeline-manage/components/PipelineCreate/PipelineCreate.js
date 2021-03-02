@@ -32,7 +32,6 @@ const PipelineCreate = observer(() => {
     // 老mainData 为了在复制之后 重新设置成以前的mainData
     oldMainData,
     appService,
-    isEdit,
   } = usePipelineCreateStore();
 
   const [expandIf, setExpandIf] = useState(false);
@@ -171,23 +170,6 @@ const PipelineCreate = observer(() => {
     return createUseStore.getCurrentAppService || {};
   }
 
-  const renderEditBlock = () => (
-    <StageEditBlock
-      dataSourceLists={dataSource.stageList}
-      editBlockStore={editBlockStore}
-      isEdit={isEdit}
-      image={PipelineCreateFormDataSet.current.get('image')}
-      appServiceId={PipelineCreateFormDataSet.current.get('appServiceId')}
-      appServiceCode={
-          getAppServiceData()?.appServiceCode || editBlockStore.getMainData?.appServiceCode
-        }
-      appServiceName={
-          getAppServiceData()?.appServiceName || editBlockStore.getMainData?.appServiceName
-        }
-      appServiceType={getAppServiceData().type || editBlockStore.getMainData?.appServiceType}
-    />
-  );
-
   return (
     <div>
       <Form columns={3} dataSet={PipelineCreateFormDataSet}>
@@ -289,9 +271,20 @@ const PipelineCreate = observer(() => {
           ] : ''
         }
       </Form>
-      {
-        renderEditBlock()
-      }
+      <StageEditBlock
+        editBlockStore={editBlockStore}
+        edit
+        image={PipelineCreateFormDataSet.current.get('image')}
+        appServiceId={PipelineCreateFormDataSet.current.get('appServiceId')}
+        appServiceCode={
+          getAppServiceData()?.appServiceCode || editBlockStore.getMainData?.appServiceCode
+        }
+        appServiceName={
+          getAppServiceData()?.appServiceName || editBlockStore.getMainData?.appServiceName
+        }
+        appServiceType={getAppServiceData().type || editBlockStore.getMainData?.appServiceType}
+        dataSource={dataSource}
+      />
       <p className="pipeline_createInfo">
         <Icon style={{ color: 'red', verticalAlign: 'text-bottom' }} type="error" />
         此页面定义了CI阶段或其中的任务后，GitLab仓库中的.gitlab-ci.yml文件也会同步修改。

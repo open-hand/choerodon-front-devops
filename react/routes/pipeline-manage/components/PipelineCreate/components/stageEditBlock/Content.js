@@ -1,11 +1,10 @@
 /* eslint-disable max-len */
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { message } from 'choerodon-ui';
 import {
   Droppable, Draggable, DragDropContext,
 } from 'react-beautiful-dnd';
-import { get } from 'lodash';
 import EditColumn from './components/eidtColumn';
 import { usePipelineStageEditStore } from './stores';
 
@@ -36,32 +35,31 @@ export default observer(() => {
     appServiceCode,
     appServiceType,
     image,
-    isEdit,
-    dataSourceLists,
+    dataSource: propsDataSource,
   } = usePipelineStageEditStore();
 
   const {
     setStepData,
     getStepData,
     editStepLists,
-    getViewData,
   } = editBlockStore;
 
   useEffect(() => {
     let stageList = [];
-    if (isEdit) {
-      stageList = [...getViewData];
-    } else if (get(dataSourceLists, 'length')) {
-      stageList = [...dataSourceLists];
-    } else if (appServiceId && appServiceType === 'test') {
+    if (propsDataSource) {
+      stageList = [...propsDataSource.stageList];
+      setStepData(stageList);
+      return;
+    }
+    if (appServiceId && appServiceType === 'test') {
       stageList = [...defaultData.slice(0, 1)];
     } else {
       stageList = [...defaultData];
     }
     setStepData(stageList);
-  }, [appServiceId, appServiceType, getViewData, isEdit, dataSourceLists]);
+  }, [appServiceId, appServiceType]);
 
-  const renderColumn = useCallback(() => {
+  function renderColumn() {
     const dataSource = getStepData;
     if (dataSource && dataSource.length > 0) {
       return dataSource.map((item, index) => {
@@ -95,7 +93,7 @@ export default observer(() => {
       });
     }
     return [];
-  }, [getStepData, pipelineId]);
+  }
 
   function swap(arr, from, to) {
     arr.splice(to, 0, arr.splice(from, 1)[0]);
@@ -129,23 +127,27 @@ export default observer(() => {
     background: isDraggingOver ? 'rgba(82, 102, 212, 0.1)' : 'none',
   });
 
-  return (
-    <DragDropContext onDragEnd={onColomnDragEnd}>
-      <Droppable droppableId="dropStages" direction="horizontal">
-        {
-          (provided, snapshot) => (
-            <div
-              className="c7n-piplineManage-edit"
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-              style={getListStyle(snapshot.isDraggingOver)}
-            >
-              {renderColumn()}
-              {provided.placeholder}
-            </div>
-          )
-        }
-      </Droppable>
-    </DragDropContext>
-  );
+  function renderBlock() {
+    return (
+      <DragDropContext onDragEnd={onColomnDragEnd}>
+        <Droppable droppableId="dropStages" direction="horizontal">
+          {
+            (provided, snapshot) => (
+              <div
+                className="c7n-piplineManage-edit"
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                style={getListStyle(snapshot.isDraggingOver)}
+              >
+                {renderColumn()}
+                {provided.placeholder}
+              </div>
+            )
+          }
+        </Droppable>
+      </DragDropContext>
+    );
+  }
+
+  return renderBlock();
 });
