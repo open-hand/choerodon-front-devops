@@ -1,10 +1,11 @@
 /* eslint-disable max-len */
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { message } from 'choerodon-ui';
 import {
   Droppable, Draggable, DragDropContext,
 } from 'react-beautiful-dnd';
+import { get } from 'lodash';
 import EditColumn from './components/eidtColumn';
 import { usePipelineStageEditStore } from './stores';
 
@@ -36,6 +37,7 @@ export default observer(() => {
     appServiceType,
     image,
     isEdit,
+    dataSourceLists,
   } = usePipelineStageEditStore();
 
   const {
@@ -49,15 +51,17 @@ export default observer(() => {
     let stageList = [];
     if (isEdit) {
       stageList = [...getViewData];
+    } else if (get(dataSourceLists, 'length')) {
+      stageList = [...dataSourceLists];
     } else if (appServiceId && appServiceType === 'test') {
       stageList = [...defaultData.slice(0, 1)];
     } else {
       stageList = [...defaultData];
     }
     setStepData(stageList);
-  }, [appServiceId, appServiceType, getViewData, isEdit]);
+  }, [appServiceId, appServiceType, getViewData, isEdit, dataSourceLists]);
 
-  function renderColumn() {
+  const renderColumn = useCallback(() => {
     const dataSource = getStepData;
     if (dataSource && dataSource.length > 0) {
       return dataSource.map((item, index) => {
@@ -91,7 +95,7 @@ export default observer(() => {
       });
     }
     return [];
-  }
+  }, [getStepData, pipelineId]);
 
   function swap(arr, from, to) {
     arr.splice(to, 0, arr.splice(from, 1)[0]);

@@ -173,6 +173,7 @@ const PipelineCreate = observer(() => {
 
   const renderEditBlock = () => (
     <StageEditBlock
+      dataSourceLists={dataSource.stageList}
       editBlockStore={editBlockStore}
       isEdit={isEdit}
       image={PipelineCreateFormDataSet.current.get('image')}
