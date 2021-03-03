@@ -2460,6 +2460,12 @@ const zhCN = {
   'report.code-quality.nclocs': '代码行',
   'report.code-quality.duplicatedLines': '重复行',
 
+  // 流水线构建次数图
+  'report.pipelineTrigger-number.success': '成功次数',
+  'report.pipelineTrigger-number.fail': '失败次数',
+  'report.pipelineTrigger-number.yAxis': '次数',
+  'report.pipelineTrigger-number.build': '触发',
+
   // 部署总览
   'dpOverview.head': '部署总览',
   'dpOverview.update': '可升级',
