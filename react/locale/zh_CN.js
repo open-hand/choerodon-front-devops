@@ -1184,6 +1184,7 @@ const pageDetail = {
   'report.build-number.title': '项目"{name}"的构建次数',
   'report.build-duration.title': '项目"{name}"的构建时长',
   'report.code-quality.title': '项目"{name}"的代码质量图',
+  'report.pipelineTrigger-number.title': '项目"{name}"的流水线触发次数',
   'report.description':
     'DevOps报表将从多个维度直观清晰地展示您当前项目中的代码提交、代码质量、应用构建和应用部署等情况。点击相应报表便能查看对应的内容。',
   'report.submission.description':
@@ -1204,6 +1205,7 @@ const pageDetail = {
   'report.deploy-times.link': `${docServer}/user-guide/report/devops-report/deploy-frequency`,
   'report.build-duration.link': `${docServer}/user-guide/report/devops-report/build-duration`,
   'report.code-quality.link': `${docServer}/user-guide/report/devops-report/code-quality`,
+  'report.pipelineTrigger-number.link': `${docServer}/user-guide/report/devops-report/pipelineTrigger-number`,
   'report.link': `${docServer}/user-guide/report/devops-report/`,
 
   // 开发控制台
@@ -2388,6 +2390,7 @@ const zhCN = {
   'report.build-number.head': '构建次数图',
   'report.build-duration.head': '构建时长图',
   'report.deploy-times.head': '部署次数图',
+  'report.pipelineTrigger-number.head': '流水线触发次数图',
   'report.submission.des':
     '跟踪项目下团队与个人的代码提交情况。这有助于了解团队的整体效率与个人效率。',
   'report.code-quality.des':
