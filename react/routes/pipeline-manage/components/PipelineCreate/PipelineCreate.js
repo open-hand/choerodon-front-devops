@@ -171,22 +171,6 @@ const PipelineCreate = observer(() => {
     return createUseStore.getCurrentAppService || {};
   }
 
-  const renderEditBlock = () => (
-    <StageEditBlock
-      editBlockStore={editBlockStore}
-      isEdit={isEdit}
-      image={PipelineCreateFormDataSet.current.get('image')}
-      appServiceId={PipelineCreateFormDataSet.current.get('appServiceId')}
-      appServiceCode={
-          getAppServiceData()?.appServiceCode || editBlockStore.getMainData?.appServiceCode
-        }
-      appServiceName={
-          getAppServiceData()?.appServiceName || editBlockStore.getMainData?.appServiceName
-        }
-      appServiceType={getAppServiceData().type || editBlockStore.getMainData?.appServiceType}
-    />
-  );
-
   return (
     <div>
       <Form columns={3} dataSet={PipelineCreateFormDataSet}>
@@ -288,9 +272,21 @@ const PipelineCreate = observer(() => {
           ] : ''
         }
       </Form>
-      {
-        renderEditBlock()
-      }
+      <StageEditBlock
+        editBlockStore={editBlockStore}
+        edit
+        isEdit={isEdit}
+        image={PipelineCreateFormDataSet.current.get('image')}
+        appServiceId={PipelineCreateFormDataSet.current.get('appServiceId')}
+        appServiceCode={
+          getAppServiceData()?.appServiceCode || editBlockStore.getMainData?.appServiceCode
+        }
+        appServiceName={
+          getAppServiceData()?.appServiceName || editBlockStore.getMainData?.appServiceName
+        }
+        appServiceType={getAppServiceData().type || editBlockStore.getMainData?.appServiceType}
+        dataSource={dataSource}
+      />
       <p className="pipeline_createInfo">
         <Icon style={{ color: 'red', verticalAlign: 'text-bottom' }} type="error" />
         此页面定义了CI阶段或其中的任务后，GitLab仓库中的.gitlab-ci.yml文件也会同步修改。
