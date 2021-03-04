@@ -26,7 +26,8 @@ const PipelineTriggerNumber = () => {
       location: { state, search },
     },
     prefixCls,
-    pipelineDs,
+    pipelineSelectDs,
+    mainStore,
   } = usePipelineTriggerNumberStore();
 
   const [dateType, setDateType] = useState('seven');
@@ -45,25 +46,25 @@ const PipelineTriggerNumber = () => {
 
   };
 
+  const handlePipelineSelect = (value, oldValue) => {
+    console.log(value);
+  };
+
   const renderForm = () => (
     <div className={`${prefixCls}-form`}>
       <Form
-        dataSet={pipelineDs}
         className={`${prefixCls}-form-content`}
       >
         <Select
-          name="triggerNumber"
-          // optionFilterProp="children"
-          // filterOption={(input, option) => option.props.children.props.children.props.children
-          //   .toLowerCase()
-          //   .indexOf(input.toLowerCase()) >= 0}
+          label="应用流水线"
           filter
           searchable
-          // onChange={handleAppSelect}
+          onChange={handlePipelineSelect}
           clearButton={false}
         >
-          <Option value="hello">helloo</Option>
-          <Option value="sasas">hesaslloo</Option>
+          {
+            pipelineSelectDs.map((record) => <Option value={record.get('value')}>{record.get('name')}</Option>)
+          }
         </Select>
       </Form>
       <TimePicker
