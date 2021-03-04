@@ -23,5 +23,9 @@ export default [
     key: 'deploy-duration',
     link: '/devops/reports/deploy-duration',
     pic: 'deploy-duration',
+  },{
+    key: 'pipelineTrigger-number',
+    link: '/devops/reports/pipelineTrigger-number',
+    pic: 'pipelineTrigger-number',
   },
 ];
