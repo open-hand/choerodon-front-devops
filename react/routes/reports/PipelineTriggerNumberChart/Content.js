@@ -47,7 +47,7 @@ const PipelineTriggerNumber = () => {
   };
 
   const handlePipelineSelect = (value, oldValue) => {
-    console.log(value);
+    mainStore.setSelectedPipeline(value);
   };
 
   const renderForm = () => (
