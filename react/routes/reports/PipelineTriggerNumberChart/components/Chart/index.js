@@ -3,6 +3,8 @@ import ReactEcharts from 'echarts-for-react';
 import React from 'react';
 import map from 'lodash/map';
 import reduce from 'lodash/reduce';
+import { useReportsStore } from '@/routes/reports/stores';
+import Loading from '@/components/loading';
 import { usePipelineTriggerNumberStore } from '../../stores';
 import mapings from '../../stores/mappings';
 import { getAxis } from '../../../util';
@@ -13,11 +15,12 @@ const Chart = (props) => {
     history,
     history: { location: { state, search } },
     prefixCls,
+    pipelineChartDs,
   } = usePipelineTriggerNumberStore();
 
   const {
     ReportsStore,
-  } = props;
+  } = useReportsStore();
 
   const startTime = ReportsStore.getStartTime;
   const endTime = ReportsStore.getEndTime;
@@ -180,7 +183,7 @@ const Chart = (props) => {
   const getOpts = () => {
     const {
       createDates, pipelineFrequencys, pipelineSuccessFrequency, pipelineFailFrequency,
-    } = mapings;
+    } = pipelineChartDs.current ? pipelineChartDs.current.toData() : {};
 
     const { xAxis, yAxis } = getAxis(startTime, endTime, createDates, { pipelineFailFrequency, pipelineSuccessFrequency, pipelineFrequencys });
 
@@ -194,6 +197,10 @@ const Chart = (props) => {
     };
     return option;
   };
+
+  if (pipelineChartDs.status === 'loading') {
+    return <Loading display />;
+  }
 
   return (
     <ReactEcharts

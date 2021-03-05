@@ -6,7 +6,9 @@ import {
 import { Button, Form, Select } from 'choerodon-ui/pro';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
+import Loading from '@/components/loading';
 import TimePicker from '../Component/TimePicker';
+import NoChart from '../Component/NoChart';
 import ChartSwitch from '../Component/ChartSwitch';
 import MyTable from './components/Table';
 
@@ -59,11 +61,12 @@ const PipelineTriggerNumber = () => {
           label="应用流水线"
           filter
           searchable
+          value={mainStore.selectedPipelineId}
           onChange={handlePipelineSelect}
           clearButton={false}
         >
           {
-            pipelineSelectDs.map((record) => <Option value={record.get('value')}>{record.get('name')}</Option>)
+            pipelineSelectDs.map((record) => <Option value={record.get('id')}>{record.get('name')}</Option>)
           }
         </Select>
       </Form>
@@ -78,13 +81,21 @@ const PipelineTriggerNumber = () => {
     </div>
   );
 
-  const renderContent = () => (
-    <>
-      {renderForm()}
-      <Chart ReportsStore={ReportsStore} />
-      <MyTable />
-    </>
-  );
+  const renderContent = () => {
+    if (pipelineSelectDs.status === 'loading') {
+      return <Loading display />;
+    }
+    if (!pipelineSelectDs.length) {
+      return <NoChart getProRole={ReportsStore.getProRole} type="pipeline" />;
+    }
+    return (
+      <>
+        {renderForm()}
+        <Chart />
+        <MyTable />
+      </>
+    );
+  };
 
   return (
     <Page className={prefixCls} service={[]}>
