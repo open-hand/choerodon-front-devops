@@ -35,13 +35,21 @@ export const StoreProvider = injectIntl(
     const { selectedPipelineId } = mainStore;
     const { getStartTime, getEndTime } = ReportsStore;
 
-    const pipelineSelectDs = useMemo(() => new DataSet(PipelineSelectDataSet({ projectId, ReportsStore, mainStore })), [ReportsStore, mainStore, projectId]);
+    const pipelineSelectDs = useMemo(() => new DataSet(PipelineSelectDataSet({ projectId, ReportsStore, mainStore })), [projectId]);
 
     const pipelineChartDs = useMemo(() => new DataSet(PipelineChartDataSet({
-      selectedPipelineId, projectId, startDate: getStartTime.format('YYYY-MM-DD HH:mm:ss'), endDate: getEndTime.format('YYYY-MM-DD HH:mm:ss'),
+      selectedPipelineId,
+      projectId,
+      startDate: getStartTime.format('YYYY-MM-DD HH:mm:ss'),
+      endDate: getEndTime.format('YYYY-MM-DD HH:mm:ss'),
     })), [getEndTime, getStartTime, projectId, selectedPipelineId]);
 
-    const pipelineTableDs = useMemo(() => new DataSet(PipelineTableDataSet()), []);
+    const pipelineTableDs = useMemo(() => new DataSet(PipelineTableDataSet({
+      projectId,
+      startDate: getStartTime.format('YYYY-MM-DD HH:mm:ss'),
+      endDate: getEndTime.format('YYYY-MM-DD HH:mm:ss'),
+      selectedPipelineId,
+    })), [projectId, getStartTime, getEndTime, selectedPipelineId]);
 
     const value = {
       ...props,
@@ -50,6 +58,7 @@ export const StoreProvider = injectIntl(
       pipelineTableDs,
       pipelineChartDs,
       mainStore,
+      formatMessage,
     };
 
     return <Store.Provider value={value}>{children}</Store.Provider>;

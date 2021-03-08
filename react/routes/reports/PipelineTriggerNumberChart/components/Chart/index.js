@@ -8,6 +8,7 @@ import Loading from '@/components/loading';
 import { usePipelineTriggerNumberStore } from '../../stores';
 import mapings from '../../stores/mappings';
 import { getAxis } from '../../../util';
+import { observer } from 'mobx-react-lite';
 
 const Chart = (props) => {
   const {
@@ -185,7 +186,7 @@ const Chart = (props) => {
       createDates, pipelineFrequencys, pipelineSuccessFrequency, pipelineFailFrequency,
     } = pipelineChartDs.current ? pipelineChartDs.current.toData() : {};
 
-    const { xAxis, yAxis } = getAxis(startTime, endTime, createDates, { pipelineFailFrequency, pipelineSuccessFrequency, pipelineFrequencys });
+    const { xAxis, yAxis } = getAxis(startTime, endTime, createDates || [], { pipelineFailFrequency, pipelineSuccessFrequency, pipelineFrequencys });
 
     const option = {
       legend: getLegend(pipelineSuccessFrequency, pipelineFailFrequency),
@@ -209,4 +210,4 @@ const Chart = (props) => {
   );
 };
 
-export default Chart;
+export default observer(Chart);

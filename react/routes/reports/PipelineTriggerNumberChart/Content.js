@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Page, Header, Content, Breadcrumb,
 } from '@choerodon/boot';
@@ -30,6 +30,8 @@ const PipelineTriggerNumber = () => {
     prefixCls,
     pipelineSelectDs,
     mainStore,
+    pipelineChartDs,
+    pipelineTableDs,
   } = usePipelineTriggerNumberStore();
 
   const [dateType, setDateType] = useState('seven');
@@ -42,7 +44,10 @@ const PipelineTriggerNumber = () => {
 
   useEffect(() => {}, []);
 
-  const handleRefresh = () => {};
+  const handleRefresh = () => {
+    pipelineTableDs.query();
+    pipelineChartDs.query();
+  };
 
   const loadCharts = () => {
 
@@ -52,7 +57,7 @@ const PipelineTriggerNumber = () => {
     mainStore.setSelectedPipeline(value);
   };
 
-  const renderForm = () => (
+  const renderForm = useCallback(() => (
     <div className={`${prefixCls}-form`}>
       <Form
         className={`${prefixCls}-form-content`}
@@ -79,7 +84,7 @@ const PipelineTriggerNumber = () => {
         store={ReportsStore}
       />
     </div>
-  );
+  ), [dateType, pipelineSelectDs]);
 
   const renderContent = () => {
     if (pipelineSelectDs.status === 'loading') {
@@ -98,7 +103,12 @@ const PipelineTriggerNumber = () => {
   };
 
   return (
-    <Page className={prefixCls} service={[]}>
+    <Page
+      className={prefixCls}
+      service={[
+        'choerodon.code.project.operation.chart.ps.pipelineTrigger.times',
+      ]}
+    >
       <Header
         title={formatMessage({ id: 'report.pipelineTrigger-number.head' })}
         backPath={`/charts${search}`}
