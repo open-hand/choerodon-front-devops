@@ -1,25 +1,38 @@
 /* eslint-disable import/no-anonymous-default-export */
-export default () => ({
+export default ({
+  projectId,
+  selectedPipelineId,
+  startDate,
+  endDate,
+}) => ({
   selection: false,
+  autoQuery: true,
+  paging: true,
+  transport: {
+    read: () => (selectedPipelineId && startDate && endDate ? {
+      url: `devops/v1/projects/${projectId}/cicd_pipelines/trigger/page?pipeline_id=${selectedPipelineId}&start_time=${startDate}&end_time=${endDate}`,
+      method: 'get',
+    } : {}),
+  },
   fields: [
     {
       name: 'status',
       label: '状态',
     },
     {
-      name: 'code',
+      name: 'viewId',
       label: '执行编号',
     },
     {
-      name: 'name',
+      name: 'pipelineName',
       label: '流水线名称',
     },
     {
-      name: 'stages',
+      name: 'stageRecordVOS',
       label: '阶段',
     },
     {
-      name: 'appservice',
+      name: 'appServiceName',
       label: '关联应用服务',
     },
     {
@@ -27,7 +40,7 @@ export default () => ({
       label: '开始时间',
     },
     {
-      name: 'durations',
+      name: 'durationSeconds',
       label: '执行耗时',
     },
     {

@@ -900,6 +900,7 @@ const emptyPage = {
   'empty.link.app': '跳转至应用服务',
   'empty.link.env': '跳转至环境配置',
   'empty.link.code': '跳转至代码库管理',
+  'empty.link.pipeline': '跳转至应用流水线',
   'empty.title.code': '当前用户在该应用服务的GitLab权限为Guest，无法查看此页面。若想执行对应操作，请转至代码库管理界面申请更高的GitLab权限。',
 };
 
