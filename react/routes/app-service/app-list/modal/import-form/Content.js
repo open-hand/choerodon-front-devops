@@ -1,5 +1,9 @@
-import React, { Fragment, useState, useEffect, useMemo } from 'react';
-import { Form, TextField, Select, SelectBox, Spin } from 'choerodon-ui/pro';
+import React, {
+  Fragment, useState, useEffect, useMemo,
+} from 'react';
+import {
+  Form, TextField, Select, SelectBox, Spin,
+} from 'choerodon-ui/pro';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { Choerodon } from '@choerodon/boot';
@@ -27,6 +31,7 @@ const ImportForm = injectIntl(observer((props) => {
     modal,
     importDs,
     selectedDs,
+    marketSelectedDs,
     importStore,
   } = useImportAppServiceStore();
   const record = useMemo(() => importDs.current || importDs.records[0], [importDs.current]);
@@ -38,7 +43,11 @@ const ImportForm = injectIntl(observer((props) => {
 
   modal.handleOk(async () => {
     if (record.get('platformType') === 'share' || record.get('platformType') === 'market') {
-      if (!selectedDs.length) return true;
+      const ds = record.get('platformType') === 'market' ? marketSelectedDs : selectedDs;
+      if (!ds.length) return true;
+      if (await validateDs() === false) {
+        return false;
+      }
       const result = await checkData();
       if (!result) {
         return false;
@@ -47,25 +56,43 @@ const ImportForm = injectIntl(observer((props) => {
     try {
       if ((await importDs.submit()) !== false) {
         refresh();
-      } else {
-        return false;
+        return true;
       }
+      return false;
     } catch (e) {
       Choerodon.handleResponseError(e);
       return false;
     }
   });
 
+  async function validateDs() {
+    let validateResult = false;
+    // 因为市场服务应用通过ds.loadData方法添加，调用ds.validate不会触发每条record的校验
+    if (record.get('platformType') === 'market') {
+      const results = await Promise.all(
+        marketSelectedDs.map((eachRecord) => eachRecord.validate(true)),
+      );
+      validateResult = results.every((result) => result);
+    } else {
+      validateResult = await selectedDs.validate();
+      importStore.setSkipCheck(false);
+    }
+    return validateResult;
+  }
+
   async function checkData() {
-    const lists = selectedDs.toData();
-    const { listCode, listName, repeatName, repeatCode } = getRepeatData(lists);
+    const ds = record.get('platformType') === 'market' ? marketSelectedDs : selectedDs;
+    const lists = ds.toData();
+    const {
+      listCode, listName, repeatName, repeatCode,
+    } = getRepeatData(lists);
 
     try {
       importStore.setSkipCheck(true);
       const res = await importStore.batchCheck(projectId, listCode, listName);
-      await selectedDs.validate();
-      importStore.setSkipCheck(false);
-      if (res && isEmpty(repeatName) && isEmpty(repeatCode) && isEmpty(res.listCode) && isEmpty(res.listName)) {
+      validateDs();
+      if (res && isEmpty(repeatName) && isEmpty(repeatCode)
+        && isEmpty(res.listCode) && isEmpty(res.listName)) {
         setHasFailed(false);
         return true;
       }
@@ -82,10 +109,12 @@ const ImportForm = injectIntl(observer((props) => {
     const codeData = countBy(lists, 'code');
     const listName = keys(nameData);
     const listCode = keys(codeData);
-    const repeatName = keys(pickBy(nameData, (value) => value > 1) || {});
-    const repeatCode = keys(pickBy(codeData, (value) => value > 1) || {});
+    const repeatName = keys(pickBy(nameData, (value, key) => key && value > 1) || {});
+    const repeatCode = keys(pickBy(codeData, (value, key) => key && value > 1) || {});
 
-    return { listCode, listName, repeatName, repeatCode };
+    return {
+      listCode, listName, repeatName, repeatCode,
+    };
   }
 
   return (
@@ -105,14 +134,14 @@ const ImportForm = injectIntl(observer((props) => {
         </SelectBox>
       </Form>
       {record.get('platformType') === 'share' || record.get('platformType') === 'market' ? (
-        <Fragment>
+        <>
           <PlatForm checkData={checkData} />
           {hasFailed && (
             <span className={`${prefixCls}-import-wrap-failed`}>
               {formatMessage({ id: `${intlPrefix}.platform.failed` })}
             </span>
           )}
-        </Fragment>
+        </>
       ) : (
         <Form record={record} style={{ width: '3.6rem' }}>
           {record.get('platformType') === 'github' && (

@@ -3,6 +3,7 @@ const commonField = {
   // 表格通用列名
   status: '状态',
   name: '名称',
+  code: '编码',
   creator: '创建者',
   updater: '更新者',
   updateDate: '更新时间',
@@ -576,6 +577,12 @@ const appService = {
   'c7ncd.appService.version.delete.des.single': '确定要删除“{version}”服务版本吗？删除后，将不可恢复。',
   'c7ncd.appService.version.delete.disable': '请在下方列表中选择服务版本',
   'c7ncd.appService.version.tips': '无法删除存在关联实例或共享规则的服务版本',
+  'c7ncd.appService.market': '应用',
+  'c7ncd.appService.market.source': '应用来源',
+  'c7ncd.appService.market.version': '应用版本',
+  'c7ncd.appService.sourceApp': '所属应用-应用版本',
+  'c7ncd.appService.sourceProject': '来源组织-项目',
+  'c7ncd.appService.versionName': '市场服务版本',
 };
 
 const envrionment = {
