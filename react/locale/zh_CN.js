@@ -157,6 +157,7 @@ const commonField = {
   collapseAll: '全部折叠',
   checkCodeExist: '编码已存在',
   checkCodeReg: '编码只能由小写字母、数字、"-"组成，且以小写字母开头，不能以"-"结尾',
+  checkNameReg: '名称只能由小写字母、数字、"-"组成，且以小写字母开头，不能以"-"结尾',
   checkCodeFailed: '编码校验失败，请稍后再试',
   checkNameExist: '名称已存在',
   checkNameFailed: '名称重名校验失败，请稍后再试',

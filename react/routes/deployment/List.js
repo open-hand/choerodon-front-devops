@@ -203,12 +203,15 @@ const Deployment = withRouter(observer((props) => {
     if (record.get('deployMode') === 'host') {
       return '';
     }
+    if (record.get('deployMode') === 'env' && !value) {
+      return '';
+    }
     return (
       <span
         className={`${prefixCls}-content-table-instance`}
         onClick={() => linkToInstance(record)}
       >
-        {value || '生成实例名称'}
+        {value || ''}
       </span>
     );
   }
