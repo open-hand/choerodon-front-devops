@@ -769,7 +769,7 @@ export default (({
           required: ({ record }) => (record.get(mapping.deployWay.value)
             === mapping.deployWay.options[0].value),
           maxLength: ({ record }) => ((record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[0].value) ? 64 : null),
+            === mapping.deployWay.options[0].value) ? 53 : null),
         },
         validator: checkName,
       },

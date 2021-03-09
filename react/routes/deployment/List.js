@@ -207,12 +207,14 @@ const Deployment = withRouter(observer((props) => {
       return '';
     }
     return (
-      <span
-        className={`${prefixCls}-content-table-instance`}
-        onClick={() => linkToInstance(record)}
-      >
-        {value || ''}
-      </span>
+      <Tooltip title={value || ''}>
+        <span
+          className={`${prefixCls}-content-table-instance`}
+          onClick={() => linkToInstance(record)}
+        >
+          {value || ''}
+        </span>
+      </Tooltip>
     );
   }
 
