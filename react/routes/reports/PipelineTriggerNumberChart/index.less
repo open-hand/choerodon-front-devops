@@ -1,0 +1,97 @@
+@success: #00bfa5;
+@running: #4d90fe;
+@pending: #ffb100;
+@failed: #f77a70;
+@canceled: #d8d8d8;
+@skipped: #d8d8d8;
+@stop: #ff7043;
+@not_audit: #f1b42d;
+
+.c7ncd-pipelineTriggerNumber {
+  &-table {
+    margin-top: 0.35rem;
+    &-stages {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      &-item {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: @canceled;
+        display: block;
+        flex-shrink: 0;
+        &-line {
+          width: 6px;
+          height: 1px;
+          background: #d3d3d3;
+          margin: 0 1px;
+          flex-shrink: 0;
+        }
+        &-success {
+          background: @success;
+        }
+        &-running {
+          background: @running;
+        }
+        &-pending {
+          background: @pending;
+        }
+        &-failed {
+          background: @failed;
+        }
+        &-stop {
+          background: @stop;
+        }
+        &-not_audit {
+          background: @not_audit;
+        }
+      }
+    }
+    &-status {
+      width: 28px;
+      border-radius: 4px;
+      color: #fff;
+      background-color: @canceled;
+      font-size: 10px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      line-height: 16px;
+      padding: 0 2px;
+
+      &-success {
+        background: @success;
+      }
+      &-running {
+        background: @running;
+      }
+      &-pending {
+        background: @pending;
+      }
+      &-failed {
+        background: @failed;
+      }
+      &-stop {
+        background: @stop;
+      }
+      &-not_audit {
+        background: @not_audit;
+      }
+    }
+  }
+  &-form {
+    display: flex;
+    &-content {
+      width: 20.8%;
+      margin-bottom: 20px;
+      margin-right: 60px;
+    }
+  }
+  .c7ncd-echarts-tooltip {
+    display: inline-block;
+    margin-right: 5px;
+    border-radius: 10px;
+    width: 10px;
+    height: 10px;
+  }
+}
