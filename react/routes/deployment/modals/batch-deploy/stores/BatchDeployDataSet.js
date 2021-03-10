@@ -29,7 +29,7 @@ export default (({ intlPrefix, formatMessage, projectId, envOptionsDs, deploySto
     const defaultEnvId = (dataSet.records)[0].get('environmentId');
     defaultEnvId && record.set('environmentId', defaultEnvId);
   }
-  
+
   async function handleUpdate({ dataSet, record, name, value }) {
     const networkRecord = record.getCascadeRecords('devopsServiceReqVO')[0];
     const domainRecord = record.getCascadeRecords('devopsIngressVO')[0];
@@ -104,7 +104,7 @@ export default (({ intlPrefix, formatMessage, projectId, envOptionsDs, deploySto
         return formatMessage({ id: 'checkNameFailed' });
       }
     } else {
-      return formatMessage({ id: 'checkCodeReg' });
+      return formatMessage({ id: 'checkNameReg' });
     }
   }
 
@@ -159,7 +159,7 @@ export default (({ intlPrefix, formatMessage, projectId, envOptionsDs, deploySto
       { name: 'appServiceId', type: 'string', label: formatMessage({ id: `${intlPrefix}.app` }), required: true },
       { name: 'appServiceVersionId', type: 'string', textField: 'version', valueField: 'id', label: formatMessage({ id: `${intlPrefix}.app.version` }), required: true },
       { name: 'environmentId', type: 'string', textField: 'name', valueField: 'id', label: formatMessage({ id: 'environment' }), required: true, options: envOptionsDs },
-      { name: 'instanceName', type: 'string', label: formatMessage({ id: `${intlPrefix}.instance.name` }), required: true, validator: checkName },
+      { name: 'instanceName', type: 'string', label: formatMessage({ id: `${intlPrefix}.instance.name` }), required: true, validator: checkName, maxLength: 53 },
       {
         name: 'valueId',
         type: 'string',

@@ -276,7 +276,7 @@ export default (({
         }
       } else {
         // eslint-disable-next-line consistent-return
-        return formatMessage({ id: 'checkCodeReg' });
+        return formatMessage({ id: 'checkNameReg' });
       }
     }
     // eslint-disable-next-line consistent-return
@@ -768,6 +768,8 @@ export default (({
         dynamicProps: {
           required: ({ record }) => (record.get(mapping.deployWay.value)
             === mapping.deployWay.options[0].value),
+          maxLength: ({ record }) => ((record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[0].value) ? 53 : null),
         },
         validator: checkName,
       },
