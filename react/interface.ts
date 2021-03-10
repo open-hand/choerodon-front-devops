@@ -8,8 +8,16 @@ import { Size } from 'choerodon-ui/lib/_util/enum';
 import Record from 'choerodon-ui/pro/lib/data-set/Record';
 import { DataSetProps } from 'choerodon-ui/pro/lib/data-set/DataSet';
 import { DataSetSelection, FieldType, FieldIgnore } from 'choerodon-ui/pro/lib/data-set/enum';
-import { TableQueryBarType, SelectionMode } from 'choerodon-ui/pro/lib/table/enum';
+import { TableQueryBarType, SelectionMode, TableColumnTooltip } from 'choerodon-ui/pro/lib/table/enum';
 import DataSet from 'choerodon-ui/pro/lib/data-set';
+
+interface UserDTOProps {
+  realName: string,
+  loginName: string,
+  email: string,
+  ldap: boolean,
+  imageUrl: string,
+}
 
 export {
   ButtonColor,
@@ -24,4 +32,6 @@ export {
   TableQueryBarType,
   SelectionMode,
   DataSet,
+  UserDTOProps,
+  TableColumnTooltip,
 };

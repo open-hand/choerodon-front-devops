@@ -917,6 +917,18 @@ const prompt = {
   'prompt.inform.message': '此页面修改项尚未保存，确定要离开此页面？',
 };
 
+const reports = {
+  // 流水线执行时长图
+  'c7ncd.reports.pipeline.duration.title': '流水线执行时长图',
+  'c7ncd.reports.pipeline.duration.number': '执行编号',
+  'c7ncd.reports.pipeline.duration.name': '流水线名称',
+  'c7ncd.reports.pipeline.duration.stage': '阶段',
+  'c7ncd.reports.pipeline.duration.appService': '关联应用服务',
+  'c7ncd.reports.pipeline.duration.startTime': '开始时间',
+  'c7ncd.reports.pipeline.duration.execute': '执行耗时',
+  'c7ncd.reports.pipeline.duration.trigger': '触发者',
+};
+
 // 文档地址前缀
 const docServer = 'http://v0-18.choerodon.io/zh/docs';
 // 界面标题描述统一管理
@@ -2400,6 +2412,7 @@ const zhCN = {
   'report.build-duration.head': '构建时长图',
   'report.deploy-times.head': '部署次数图',
   'report.pipelineTrigger-number.head': '流水线触发次数图',
+  'report.pipeline-duration.head': '流水线执行时长图',
   'report.submission.des':
     '跟踪项目下团队与个人的代码提交情况。这有助于了解团队的整体效率与个人效率。',
   'report.code-quality.des':
@@ -2965,6 +2978,7 @@ const zhCN = {
   ...pipelineManage,
   ...prompt,
   ...hostConfig,
+  ...reports,
 };
 
 export default zhCN;
