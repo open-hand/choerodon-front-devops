@@ -112,6 +112,10 @@ const DeployModal = observer(() => {
     return text;
   }
 
+  function renderSearchMatcher({ record: eachRecord, text, textField }) {
+    return eachRecord.get(textField).indexOf(text) !== -1 || eachRecord.get('group-0').indexOf(text) !== -1;
+  }
+
   function getMarketItem(colSpan = 1) {
     const marketAppId = get(record.get('marketService'), 'marketAppId');
     const href = `${window.location.origin}/#/market/app-market/app-detail/${marketAppId}${search}`;
@@ -122,6 +126,7 @@ const DeployModal = observer(() => {
         newLine
         colSpan={colSpan}
         renderer={renderMarketApp}
+        searchMatcher={renderSearchMatcher}
       >
         {getMarketAndVersionContent()}
       </Select>,
