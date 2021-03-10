@@ -42,6 +42,7 @@ const TreeItem = observer(({ record, search }) => {
     treeStore,
     handleRefresh,
     CopyPipelineDataSet,
+    seletDs,
   } = usePipelineTreeStore();
 
   const iconType = useMemo(() => ({
@@ -116,7 +117,7 @@ const TreeItem = observer(({ record, search }) => {
     Modal.open({
       key: Modal.key(),
       title: '复制流水线',
-      children: <CopyPipeline ds={CopyPipelineDataSet} projectId={projectId} editBlockStore={editBlockStore} record={record} handleRefresh={handleRefresh} />,
+      children: <CopyPipeline ds={CopyPipelineDataSet} seletDs={seletDs} projectId={projectId} editBlockStore={editBlockStore} record={record} handleRefresh={handleRefresh} />,
     })
   }
 

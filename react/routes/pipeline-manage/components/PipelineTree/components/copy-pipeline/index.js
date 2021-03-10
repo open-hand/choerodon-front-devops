@@ -5,10 +5,14 @@ import { axios } from '@choerodon/boot';
 import PipelineCreate from '@/routes/pipeline-manage/components/PipelineCreate';
 
 export default observer(({
-  ds, modal, projectId, editBlockStore, record, handleRefresh,
+  ds, modal, projectId, editBlockStore, record, handleRefresh, seletDs,
 }) => {
   useEffect(() => {
     ds.reset();
+    seletDs.query();
+    return function () {
+      seletDs.reset();
+    };
   }, []);
 
   useEffect(() => {
@@ -27,8 +31,7 @@ export default observer(({
       devopsCdStageVOS: [],
       name: undefined,
       appServiceId: ds.current.get('appServiceId'),
-      appServiceName: ds.getField('appServiceId').lookup.find((item) => item.appServiceId === ds.current.get('appServiceId')).appServiceName,
-      // stageList: result.stageList.filter(s => s.type === 'CI')
+      appServiceName: seletDs.toData().find((item) => item.appServiceId === ds.current.get('appServiceId')).appServiceName,
     });
     editBlockStore.setStepData([...result.devopsCiStageVOS]);
     const appServiceId = ds.current.get('appServiceId');
@@ -42,7 +45,7 @@ export default observer(({
       children: <PipelineCreate
         appService={{
           id: appServiceId,
-          name: ds.getField('appServiceId').lookup.find((item) => item.appServiceId === appServiceId).appServiceName,
+          name: seletDs.toData().find((item) => item.appServiceId === appServiceId).appServiceName,
         }}
         oldMainData={oldMainData}
         dataSource={editBlockStore.getMainData}
@@ -68,7 +71,7 @@ export default observer(({
 
   const handleClickMore = async (e) => {
     e.stopPropagation();
-    const pageSize = ds.current.get('pageSize') + 20;
+    const pageSize = seletDs.pageSize + 20;
     const result = await axios.post(`/devops/v1/projects/${projectId}/app_service/page_app_services_without_ci?page=0&size=${pageSize}`);
     if (result.length % 20 === 0) {
       result.push({
@@ -76,9 +79,8 @@ export default observer(({
         appServiceName: '加载更多',
       });
     }
-    ds.current.set('pageSize', pageSize);
-    // eslint-disable-next-line no-param-reassign
-    ds.getField('appServiceId').props.lookup = result;
+    seletDs.current.set('pageSize', pageSize);
+    seletDs.loadData(result);
   };
 
   return (
