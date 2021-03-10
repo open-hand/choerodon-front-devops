@@ -7,16 +7,15 @@ import { Button, Form, Select } from 'choerodon-ui/pro';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import Loading from '@/components/loading';
+import PipelineTable from '@/routes/reports/pipeline-duration/components/table';
 import TimePicker from '../Component/TimePicker';
 import NoChart from '../Component/NoChart';
 import ChartSwitch from '../Component/ChartSwitch';
-import MyTable from './components/Table';
-
 import { usePipelineTriggerNumberStore } from './stores';
 import { useReportsStore } from '../stores';
+import Chart from './components/Chart';
 
 import './index.less';
-import Chart from './components/Chart';
 
 const { Option } = Select;
 
@@ -25,7 +24,7 @@ const PipelineTriggerNumber = () => {
     intl: { formatMessage },
     history,
     history: {
-      location: { state, search },
+      location: { search },
     },
     prefixCls,
     pipelineSelectDs,
@@ -97,7 +96,7 @@ const PipelineTriggerNumber = () => {
       <>
         {renderForm()}
         <Chart />
-        <MyTable />
+        <PipelineTable tableDs={pipelineTableDs} />
       </>
     );
   };

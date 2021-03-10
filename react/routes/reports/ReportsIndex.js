@@ -15,6 +15,7 @@ const BUILDDURATION = asyncRouter(() => import('./BuildDuration'));
 const DeployTimes = asyncRouter(() => import('./DeployTimes'));
 const DeployDuration = asyncRouter(() => import('./DeployDuration'));
 const PipelineTriggerNumber = asyncRouter(() => import('./PipelineTriggerNumberChart'));
+const PipelineDuration = asyncRouter(() => import('./pipeline-duration'));
 
 const ReportsIndex = (props) => {
   const { match } = props;
@@ -29,6 +30,7 @@ const ReportsIndex = (props) => {
         <Route exact path={`${match.url}/deploy-times`} component={DeployTimes} />
         <Route exact path={`${match.url}/deploy-duration`} component={DeployDuration} />
         <Route exact path={`${match.url}/pipelineTrigger-number`} component={PipelineTriggerNumber} />
+        <Route exact path={`${match.url}/pipeline-duration`} component={PipelineDuration} />
         <Route path="*" component={nomatch} />
       </Switch>
     </StoreProvider>

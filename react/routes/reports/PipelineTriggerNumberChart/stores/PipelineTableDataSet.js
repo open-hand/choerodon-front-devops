@@ -36,7 +36,7 @@ export default ({
       label: '关联应用服务',
     },
     {
-      name: 'startDate',
+      name: 'createdDate',
       label: '开始时间',
     },
     {
@@ -44,7 +44,7 @@ export default ({
       label: '执行耗时',
     },
     {
-      name: 'user',
+      name: 'iamUserDTO',
       label: '触发者',
     },
   ],
