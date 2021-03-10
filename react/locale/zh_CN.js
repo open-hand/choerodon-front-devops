@@ -3,6 +3,7 @@ const commonField = {
   // 表格通用列名
   status: '状态',
   name: '名称',
+  code: '编码',
   creator: '创建者',
   updater: '更新者',
   updateDate: '更新时间',
@@ -577,6 +578,12 @@ const appService = {
   'c7ncd.appService.version.delete.des.single': '确定要删除“{version}”服务版本吗？删除后，将不可恢复。',
   'c7ncd.appService.version.delete.disable': '请在下方列表中选择服务版本',
   'c7ncd.appService.version.tips': '无法删除存在关联实例或共享规则的服务版本',
+  'c7ncd.appService.market': '应用',
+  'c7ncd.appService.market.source': '应用来源',
+  'c7ncd.appService.market.version': '应用版本',
+  'c7ncd.appService.sourceApp': '所属应用-应用版本',
+  'c7ncd.appService.sourceProject': '来源组织-项目',
+  'c7ncd.appService.versionName': '市场服务版本',
 };
 
 const envrionment = {
@@ -901,12 +908,25 @@ const emptyPage = {
   'empty.link.app': '跳转至应用服务',
   'empty.link.env': '跳转至环境配置',
   'empty.link.code': '跳转至代码库管理',
+  'empty.link.pipeline': '跳转至应用流水线',
   'empty.title.code': '当前用户在该应用服务的GitLab权限为Guest，无法查看此页面。若想执行对应操作，请转至代码库管理界面申请更高的GitLab权限。',
 };
 
 const prompt = {
   'prompt.inform.title': '离开此页',
   'prompt.inform.message': '此页面修改项尚未保存，确定要离开此页面？',
+};
+
+const reports = {
+  // 流水线执行时长图
+  'c7ncd.reports.pipeline.duration.title': '流水线执行时长图',
+  'c7ncd.reports.pipeline.duration.number': '执行编号',
+  'c7ncd.reports.pipeline.duration.name': '流水线名称',
+  'c7ncd.reports.pipeline.duration.stage': '阶段',
+  'c7ncd.reports.pipeline.duration.appService': '关联应用服务',
+  'c7ncd.reports.pipeline.duration.startTime': '开始时间',
+  'c7ncd.reports.pipeline.duration.execute': '执行耗时',
+  'c7ncd.reports.pipeline.duration.trigger': '触发者',
 };
 
 // 文档地址前缀
@@ -1185,6 +1205,7 @@ const pageDetail = {
   'report.build-number.title': '项目"{name}"的构建次数',
   'report.build-duration.title': '项目"{name}"的构建时长',
   'report.code-quality.title': '项目"{name}"的代码质量图',
+  'report.pipelineTrigger-number.title': '项目"{name}"的流水线触发次数',
   'report.description':
     'DevOps报表将从多个维度直观清晰地展示您当前项目中的代码提交、代码质量、应用构建和应用部署等情况。点击相应报表便能查看对应的内容。',
   'report.submission.description':
@@ -1205,6 +1226,7 @@ const pageDetail = {
   'report.deploy-times.link': `${docServer}/user-guide/report/devops-report/deploy-frequency`,
   'report.build-duration.link': `${docServer}/user-guide/report/devops-report/build-duration`,
   'report.code-quality.link': `${docServer}/user-guide/report/devops-report/code-quality`,
+  'report.pipelineTrigger-number.link': `${docServer}/user-guide/report/devops-report/pipelineTrigger-number`,
   'report.link': `${docServer}/user-guide/report/devops-report/`,
 
   // 开发控制台
@@ -2389,6 +2411,8 @@ const zhCN = {
   'report.build-number.head': '构建次数图',
   'report.build-duration.head': '构建时长图',
   'report.deploy-times.head': '部署次数图',
+  'report.pipelineTrigger-number.head': '流水线触发次数图',
+  'report.pipeline-duration.head': '流水线执行时长图',
   'report.submission.des':
     '跟踪项目下团队与个人的代码提交情况。这有助于了解团队的整体效率与个人效率。',
   'report.code-quality.des':
@@ -2457,6 +2481,12 @@ const zhCN = {
   'report.code-quality.coverLines': '覆盖行',
   'report.code-quality.nclocs': '代码行',
   'report.code-quality.duplicatedLines': '重复行',
+
+  // 流水线构建次数图
+  'report.pipelineTrigger-number.success': '成功次数',
+  'report.pipelineTrigger-number.fail': '失败次数',
+  'report.pipelineTrigger-number.yAxis': '次数',
+  'report.pipelineTrigger-number.build': '触发',
 
   // 部署总览
   'dpOverview.head': '部署总览',
@@ -2948,6 +2978,7 @@ const zhCN = {
   ...pipelineManage,
   ...prompt,
   ...hostConfig,
+  ...reports,
 };
 
 export default zhCN;
