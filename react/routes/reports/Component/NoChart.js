@@ -30,7 +30,7 @@ const NoChart = observer((props) => {
         break;
       case 'pipeline':
         history.push({
-          pathname: 'devops/pipeline-manage',
+          pathname: '/devops/pipeline-manage',
           search,
         });
       default:
