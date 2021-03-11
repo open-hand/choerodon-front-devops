@@ -927,6 +927,7 @@ const reports = {
   'c7ncd.reports.pipeline.duration.startTime': '开始时间',
   'c7ncd.reports.pipeline.duration.execute': '执行耗时',
   'c7ncd.reports.pipeline.duration.trigger': '触发者',
+  'c7ncd.reports.pipeline.duration.failed': '每次最多可同时选择5个应用流水线',
 };
 
 // 文档地址前缀
