@@ -1,5 +1,6 @@
 import { DataSetProps, DataSet, Record } from '@/interface';
 import { Choerodon } from '@choerodon/boot';
+import isEmpty from 'lodash/isEmpty';
 
 interface SelectProps {
   formatMessage(arg0: object, arg1?: object): string,
@@ -21,6 +22,9 @@ export default ({
   async function handleUpdate({
     name, value, record,
   }: DataSetUpdateEventProps) {
+    if (name === 'pipelineIds' && isEmpty(value)) {
+      return;
+    }
     chartDs.setQueryParameter(name, value);
     tableDs.setQueryParameter(name, value);
     if (name === 'pipelineIds' && value.length > 5) {
@@ -28,7 +32,7 @@ export default ({
       chartDs.setQueryParameter(name, newValue);
       tableDs.setQueryParameter(name, newValue);
       record.set(name, newValue);
-      Choerodon.prompt(formatMessage({ id: 'report.deploy-duration.apps' }));
+      Choerodon.prompt(formatMessage({ id: 'c7ncd.reports.pipeline.duration.failed' }));
     }
     chartDs.query();
     tableDs.query();
