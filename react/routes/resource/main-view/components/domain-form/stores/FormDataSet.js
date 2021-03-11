@@ -1,20 +1,24 @@
 import { axios } from '@choerodon/boot';
 import omit from 'lodash/omit';
 import forEach from 'lodash/forEach';
+import map from 'lodash/map';
 import pick from 'lodash/pick';
 import isEmpty from 'lodash/isEmpty';
 
 function formatAnnotation(postData, data, oldAnnotations) {
   const annotations = {};
-  forEach(oldAnnotations || data.annotations, ({ domain, key, value }) => {
+  forEach(oldAnnotations || data.annotations, ({ key, value }) => {
     if (key && value) {
-      annotations[`${domain ? `${domain}/` : ''}${key}`] = value;
+      annotations[key] = value;
     }
   });
   postData.annotations = isEmpty(annotations) ? null : annotations;
 }
 
-export default ({ formatMessage, intlPrefix, projectId, envId, ingressId, pathListDs, serviceDs, appServiceId, annotationDs }) => {
+export default ({
+  formatMessage, intlPrefix, projectId, envId, ingressId,
+  pathListDs, serviceDs, appServiceId, annotationDs,
+}) => {
   async function checkName(value) {
     if (ingressId) return;
     const p = /^([a-z0-9]([-a-z0-9]?[a-z0-9])*)$/;
@@ -24,9 +28,8 @@ export default ({ formatMessage, intlPrefix, projectId, envId, ingressId, pathLi
           const res = await axios.get(`/devops/v1/projects/${projectId}/ingress/check_name?env_id=${envId}&name=${value}`);
           if (res && !res.failed) {
             return true;
-          } else {
-            return formatMessage({ id: 'checkNameExist' });
           }
+          return formatMessage({ id: 'checkNameExist' });
         } catch (e) {
           return formatMessage({ id: 'checkNameFailed' });
         }
@@ -37,7 +40,7 @@ export default ({ formatMessage, intlPrefix, projectId, envId, ingressId, pathLi
   }
 
   function checkDomain(value) {
-    const pattern = /^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)+)$/;
+    const pattern = /^(\*\.)?[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/;
     if (!pattern.test(value)) {
       return formatMessage({ id: 'domain.domain.check.failed' });
     }
@@ -59,19 +62,11 @@ export default ({ formatMessage, intlPrefix, projectId, envId, ingressId, pathLi
 
   function handleLoad({ dataSet }) {
     const record = dataSet.current;
-    const annotations = [];
     record.init('isNormal', !record.get('certId'));
-    forEach(record.get('annotations') || [], (value, key) => {
-      const [annotationDomain, annotationKey] = key.split('/');
-      const annotation = { value };
-      if (annotationKey) {
-        annotation.domain = annotationDomain;
-        annotation.key = annotationKey;
-      } else {
-        annotation.key = annotationDomain;
-      }
-      annotations.push(annotation);
-    });
+    const annotations = map(record.get('annotations') || [], (value, key) => ({
+      value,
+      key,
+    }));
     annotationDs.loadData(isEmpty(annotations) ? [{}] : annotations);
   }
 
@@ -124,9 +119,15 @@ export default ({ formatMessage, intlPrefix, projectId, envId, ingressId, pathLi
       },
     },
     fields: [
-      { name: 'name', type: 'string', label: formatMessage({ id: `${intlPrefix}.application.net.ingress` }), required: true, validator: checkName, maxLength: 40 },
-      { name: 'domain', type: 'string', label: formatMessage({ id: `${intlPrefix}.domains` }), required: true, validator: checkDomain, maxLength: 50 },
-      { name: 'isNormal', type: 'boolean', defaultValue: true, required: true, ignore: 'always' },
+      {
+        name: 'name', type: 'string', label: formatMessage({ id: `${intlPrefix}.application.net.ingress` }), required: true, validator: checkName, maxLength: 40,
+      },
+      {
+        name: 'domain', type: 'string', label: formatMessage({ id: `${intlPrefix}.domains` }), required: true, validator: checkDomain, maxLength: 50,
+      },
+      {
+        name: 'isNormal', type: 'boolean', defaultValue: true, required: true, ignore: 'always',
+      },
       {
         name: 'certId',
         type: 'string',
