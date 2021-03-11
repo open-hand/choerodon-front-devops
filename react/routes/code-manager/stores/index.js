@@ -24,8 +24,11 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       AppState: {
         currentMenuType: { id: projectId },
       },
-      location: { state },
+      location: { state, search },
     } = props;
+
+    const searchParams = new URLSearchParams(search);
+    const urlAppServiceId = searchParams.get('appServiceId');
 
     const checkHasApp = (value, recentApp) => recentApp.some((e) => e?.id === value);
 
@@ -130,6 +133,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
     useEffect(() => {
       codeManagerStore.checkHasApp(projectId);
     }, []);
+
     useEffect(() => {
       appServiceDs.transport.read = () => ({
         url: `/devops/v1/projects/${projectId}/app_service/list_by_active`,
@@ -143,12 +147,19 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
         if (res && res.length && res.length > 0) {
           updateLocalAppService(res);
           const recentAppList = localGet('recent-app');
-          const newAppServiceId = recentAppList !== null
-          && !isEmpty(recentAppList[projectId]) ? recentAppList[projectId][0]?.id : res[0]?.id;
+          let newAppServiceId;
+          if (urlAppServiceId) {
+            newAppServiceId = urlAppServiceId;
+          } else if (recentAppList !== null && !isEmpty(recentAppList[projectId])) {
+            newAppServiceId = recentAppList[projectId][0]?.id;
+          } else {
+            newAppServiceId = res[0]?.id;
+          }
           selectAppDs.current.set('appServiceId', newAppServiceId);
         }
       });
     }, [projectId]);
+
     const value = {
       ...props,
       prefixCls: 'c7ncd-code-manager',
