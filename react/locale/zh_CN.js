@@ -550,7 +550,7 @@ const appService = {
   'c7ncd.appService.gitlab.tips':
     '支持从GitLab公库或私库导入应用服务，填写私库地址后，还需填写私有Token',
   'c7ncd.appService.market.tips':
-    '市场应用指的是在应用市场中已经下载好的应用',
+    '市场应用指的是应用市场中已发布的应用',
   'c7ncd.appService.add.tips':
     '您可在此批量选择应用服务添加至导入列表。此处展示的均是有代码库的应用服务',
   'c7ncd.appService.import.tips':

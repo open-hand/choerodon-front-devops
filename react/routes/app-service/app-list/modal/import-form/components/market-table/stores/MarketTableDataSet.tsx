@@ -9,6 +9,8 @@ interface TableProps {
   setAppChildren(record: Record): void,
   setVersionChildren(record: Record): void,
   handleMarketServiceCheck(data: SetCheckProps): void,
+  handleAppExpand(expanded: boolean, record: Record): void, // 展开应用
+  handleVersionExpand(record: Record): void, // 展开应用版本
 }
 
 const setIndeterminate = (record: Record) => {
@@ -20,7 +22,7 @@ const setIndeterminate = (record: Record) => {
 
 export default ({
   intlPrefix, formatMessage, selectedDs, setAppChildren,
-  setVersionChildren, handleMarketServiceCheck,
+  setVersionChildren, handleMarketServiceCheck, handleAppExpand, handleVersionExpand,
 }: TableProps): DataSetProps => ({
   autoQuery: true,
   pageSize: 10,
@@ -68,6 +70,9 @@ export default ({
       });
     },
     load: ({ dataSet }: { dataSet: DataSet }) => {
+      if (!dataSet.length) {
+        return;
+      }
       if (selectedDs.length) {
         const selectedData = selectedDs.toData();
         const appIdObject = countBy(selectedData, 'marketAppId');
@@ -97,6 +102,16 @@ export default ({
             });
           }
         });
+      }
+      const record = dataSet.get(0);
+      if (record) {
+        record.set('expand', true);
+        handleAppExpand(true, record);
+        const childDs = record.get('childrenDataSet');
+        const childRecord = childDs.get(0);
+        if (childRecord) {
+          handleVersionExpand(childRecord);
+        }
       }
     },
   },
