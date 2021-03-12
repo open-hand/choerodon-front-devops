@@ -33,6 +33,8 @@ interface ContextProps {
   getChecked(record: Record): boolean, // 判断勾选框是否选中
   getIndeterminate(record: Record): boolean, // 判断勾选框是否不定状态
   getAppIndeterminate(record: Record): boolean, // 判断应用勾选框是否不定状态
+  handleAppExpand(expanded: boolean, record: Record): void, // 展开应用
+  handleVersionExpand(record: Record): void, // 展开应用版本
 }
 
 export interface SetCheckProps {
@@ -107,6 +109,19 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
         && childrenDataSet.selected.length !== childrenDataSet.length);
   }, []);
 
+  const handleAppExpand = useCallback(async (expanded, record) => {
+    if (expanded && !record.get('childrenDataSet')) {
+      setAppChildren(record);
+    }
+  }, []);
+
+  const handleVersionExpand = useCallback(async (eachRecord: Record) => {
+    if (!eachRecord.get('expand')) {
+      setVersionChildren(eachRecord);
+    }
+    eachRecord.set('expand', !eachRecord.get('expand'));
+  }, []);
+
   const tableDs = useMemo(() => new DataSet(MarketTableDataSet({
     intlPrefix,
     formatMessage,
@@ -114,6 +129,8 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     setAppChildren,
     setVersionChildren,
     handleMarketServiceCheck,
+    handleAppExpand,
+    handleVersionExpand,
   })), []);
   const allAppDs = useMemo(() => new DataSet(AllMarketDataSet()), []);
   const allAppVersionDs = useMemo(() => new DataSet(AllMarketVersionDataSet()), []);

@@ -1,14 +1,14 @@
 /* eslint-disable no-param-reassign */
 
 import React, {
-  useCallback, useEffect,
+  useCallback,
 } from 'react';
 import {
   Table, Select, Form, TextField, Icon, CheckBox, Spin, Button,
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import {
-  some, forEach, isEmpty, countBy,
+  forEach, isEmpty,
 } from 'lodash';
 import {
   TableQueryBarType, Record, SelectionMode, ButtonColor,
@@ -16,17 +16,6 @@ import {
 import { useMarketTableStore } from './stores';
 
 import './index.less';
-
-interface SelectedProp {
-  name: string,
-  appServiceId: string,
-  sourceProject: string,
-  marketAppId: string,
-  marketAppVersionId: string,
-  sourceApp: string,
-  versionId: string,
-  versionName: string,
-}
 
 const { Column } = Table;
 
@@ -46,6 +35,8 @@ const MarketSourceTable = observer(() => {
     getIndeterminate,
     getAppIndeterminate,
     handleMarketServiceCheck,
+    handleAppExpand,
+    handleVersionExpand,
   } = useMarketTableStore();
 
   modal.handleOk(async () => {
@@ -87,19 +78,6 @@ const MarketSourceTable = observer(() => {
     await selectedDs.push(...records);
     checkData();
   });
-
-  const handleAppExpand = useCallback(async (expanded, record) => {
-    if (expanded && !record.get('childrenDataSet')) {
-      setAppChildren(record);
-    }
-  }, []);
-
-  const handleVersionExpand = useCallback(async (eachRecord: Record) => {
-    if (!eachRecord.get('expand')) {
-      setVersionChildren(eachRecord);
-    }
-    eachRecord.set('expand', !eachRecord.get('expand'));
-  }, []);
 
   const handleTableHeaderCheck = useCallback((checked: boolean) => {
     if (checked) {
@@ -250,6 +228,9 @@ const MarketSourceTable = observer(() => {
 
   return (
     <div>
+      <div className={`${prefixCls}-tips`}>
+        <span>此页面仅会显示出发布了源代码的市场服务。</span>
+      </div>
       <Form dataSet={searchDs} columns={4}>
         <Select name="app" searchable />
         <Select name="market_app_version_id" />
@@ -278,8 +259,7 @@ const MarketSourceTable = observer(() => {
         />
         <Column name="name" />
         <Column name="sourceProject" />
-        <Column name="lastUpdateDate" width={150} />
-        <Column width={50} />
+        <Column name="lastUpdateDate" width={170} />
       </Table>
     </div>
   );
