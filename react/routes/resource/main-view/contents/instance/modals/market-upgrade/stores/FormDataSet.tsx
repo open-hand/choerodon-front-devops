@@ -1,4 +1,5 @@
 import omit from 'lodash/omit';
+import pick from 'lodash/pick';
 import { DataSet } from 'choerodon-ui/pro';
 import {
   DataSetProps, Record, FieldType, FieldIgnore,
@@ -23,6 +24,8 @@ export default ({
 }: FormProps): DataSetProps => {
   async function handleUpdate({ name, value, record }: updateProps) {
     if (name === 'marketDeployObjectId' && value) {
+      const appData = pick(value, ['marketAppName', 'marketAppVersion']);
+      record.init(appData);
       valueDs.setQueryParameter('market_deploy_object_id', value);
       await valueDs.query();
       record.set('values', valueDs.current ? valueDs.current.get('yaml') : '');
@@ -58,6 +61,16 @@ export default ({
         name: 'marketServiceName',
         type: 'string' as FieldType,
         label: formatMessage({ id: `${intlPrefix}.marketService` }),
+        ignore: 'always' as FieldIgnore,
+      }, {
+        name: 'marketAppName',
+        type: 'string' as FieldType,
+        label: formatMessage({ id: `${intlPrefix}.marketApp` }),
+        ignore: 'always' as FieldIgnore,
+      }, {
+        name: 'marketAppVersion',
+        type: 'string' as FieldType,
+        label: formatMessage({ id: `${intlPrefix}.marketApp.version` }),
         ignore: 'always' as FieldIgnore,
       },
       { name: 'values', type: 'string' as FieldType },
