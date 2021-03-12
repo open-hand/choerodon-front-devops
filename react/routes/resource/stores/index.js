@@ -1,5 +1,5 @@
 import React, {
-  createContext, useContext, useEffect, useMemo,
+  createContext, useCallback, useContext, useEffect, useMemo,
 } from 'react';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
@@ -10,6 +10,7 @@ import queryString from 'query-string';
 import { viewTypeMappings, itemTypeMappings } from './mappings';
 import TreeDataSet from './TreeDataSet';
 import useStore from './useStore';
+import ResourceServices from '../services';
 
 const Store = createContext();
 
@@ -42,45 +43,57 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
     })), [viewType, id]);
 
     useEffect(() => {
-      // NOTE: 这里只对部署跳转进来的这一种情况处理，若之后添加新的情况可在此处做
+      // NOTE: 1、部署或实例视图的部署后跳转至实例视图实例层。2、资源视图的部署后跳转至资源视图实例层。
+      // 3、消息通知通过url传参跳转至资源视图各资源列表层。
+      handleSelect();
+    }, []);
+
+    const handleSelect = useCallback(async () => {
       const { IST_VIEW_TYPE, RES_VIEW_TYPE } = viewTypeMemo;
       const {
         envId, appServiceId, instanceId, itemType = 'instances',
       } = state || queryString.parse(search) || {};
       if (envId) {
+        let newEnvId = envId;
+        if (!state) {
+          // NOTE: 通过消息通知跳转，需要对Id进行加解密处理
+          const res = await ResourceServices.getEncrypt([envId]);
+          if (res && res[envId]) {
+            newEnvId = res[envId];
+          }
+        }
         if (newViewType === IST_VIEW_TYPE) {
           if (instanceId) {
-            const parentId = `${envId}**${appServiceId}`;
+            const parentId = `${newEnvId}**${appServiceId}`;
             resourceStore.setSelectedMenu({
               id: instanceId,
               parentId,
               key: `${parentId}**${instanceId}`,
               itemType: itemTypes.IST_ITEM,
             });
-            resourceStore.setExpandedKeys([`${envId}`, `${envId}**${appServiceId}`]);
+            resourceStore.setExpandedKeys([`${newEnvId}`, `${newEnvId}**${appServiceId}`]);
           } else {
             resourceStore.setSelectedMenu({
-              id: envId,
+              id: newEnvId,
               parentId: '0',
-              key: String(envId),
+              key: String(newEnvId),
               itemType: itemTypes.ENV_ITEM,
             });
-            resourceStore.setExpandedKeys([`${envId}`]);
+            resourceStore.setExpandedKeys([`${newEnvId}`]);
           }
         } else {
           resourceStore.setSelectedMenu({
             id: 0,
             name: formatMessage({ id: itemType }),
-            key: `${envId}**${itemType}`,
+            key: `${newEnvId}**${itemType}`,
             isGroup: true,
             itemType: `group_${itemType}`,
-            parentId: String(envId),
+            parentId: String(newEnvId),
           });
-          resourceStore.setExpandedKeys([`${envId}`]);
-          resourceStore.setExpandedKeys([`${envId}`]);
+          resourceStore.setExpandedKeys([`${newEnvId}`]);
         }
       }
-    }, []);
+    }, [state, search]);
 
     const value = {
       ...props,
