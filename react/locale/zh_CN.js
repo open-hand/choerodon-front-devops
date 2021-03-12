@@ -2146,6 +2146,8 @@ const zhCN = {
     '由小写字母，数字和 - 组成，以字母、数字开始和结束',
   'domain.domain.check.failed':
     '由小写字母，数字和 . 组成，以字母、数字开始和结束',
+  'domain.domain.check.reg.failed':
+    '由小写字母，数字， 中划线和 . 组成，以字母、数字开始和结束， 且支持 *. 开头进行通配',
   'domain.path.check.exist': '域名地址与路径的组合已经存在',
   'domain.path.check.failed': '以 / 开始，且不能有空白字符',
   'domain.annotation.check.failed': '输入内容格式有误',
