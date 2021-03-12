@@ -236,6 +236,7 @@ const ClusterModals = observer(() => {
       icon: 'playlist_add',
       handler: openCreateByNodes,
       display: true,
+      disabled: !getCanCreate,
       permissions: ['choerodon.code.project.deploy.cluster.cluster-management.ps.createNodes'],
       group: 2,
     }, {
