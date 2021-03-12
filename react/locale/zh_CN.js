@@ -434,6 +434,8 @@ const deployment = {
   'c7ncd.deployment.polaris.empty.des': '当前环境下暂无实例，无法执行健康检查。',
   'c7ncd.deployment.polaris.check.empty': '该实例为空',
   'c7ncd.deployment.pod.disabled.tops': '若想降至0，请直接点击“停用实例',
+  'c7ncd.deployment.marketApp': '市场应用',
+  'c7ncd.deployment.marketApp.version': '市场版本',
   'c7ncd.deployment.marketService': '市场服务',
   'c7ncd.deployment.marketService.version': '市场服务版本号',
   'c7ncd.deployment.instance.disable.message': '该服务对应的市场应用已下架，无法操作',
