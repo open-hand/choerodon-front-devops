@@ -144,21 +144,21 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
           renderer={({ text }) => text}
         >
           {
-          localStorage.getItem('recent-app') && (
-          <OptGroup label={formatMessage({ id: 'deploy.app-recent' })} key="app-recent">
-            {
-              _.map(JSON.parse(localStorage.getItem('recent-app'))[projectId], ({ id, code, name: opName }, index) => (
-                <Option
-                  value={id}
-                  key={index}
-                >
-                  {opName}
-                </Option>
-              ))
-            }
-          </OptGroup>
-          )
-        }
+            localStorage.getItem('recent-app') && (
+            <OptGroup label={formatMessage({ id: 'deploy.app-recent' })} key="app-recent">
+              {
+                _.map(JSON.parse(localStorage.getItem('recent-app'))[projectId], ({ id, code, name: opName }, index) => (
+                  <Option
+                    value={id}
+                    key={index}
+                  >
+                    {opName}
+                  </Option>
+                ))
+              }
+            </OptGroup>
+            )
+          }
 
           <OptGroup label={formatMessage({ id: 'deploy.app' })} key="app">
             {
