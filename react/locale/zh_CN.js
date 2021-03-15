@@ -932,6 +932,19 @@ const reports = {
   'c7ncd.reports.pipeline.duration.failed': '每次最多可同时选择5个应用流水线',
 };
 
+const appTemplate = {
+  'c7ncd.template.status.F': '成功',
+  'c7ncd.template.status.C': '创建中',
+  'c7ncd.template.status.enable': '启用',
+  'c7ncd.template.status.disable': '停用',
+  'c7ncd.template.title.create': '创建应用模板',
+  'c7ncd.template.title.edit': '修改应用模板',
+  'c7ncd.template.enable.title': '停用应用模板“{name}”',
+  'c7ncd.template.enable.des': '确定停用该应用模板吗？',
+  'c7ncd.template.delete.title': '删除应用模板“{name}”',
+  'c7ncd.template.delete.des': '确定删除该应用模板吗？',
+};
+
 // 文档地址前缀
 const docServer = 'http://v0-18.choerodon.io/zh/docs';
 // 界面标题描述统一管理
@@ -2982,6 +2995,7 @@ const zhCN = {
   ...prompt,
   ...hostConfig,
   ...reports,
+  ...appTemplate,
 };
 
 export default zhCN;

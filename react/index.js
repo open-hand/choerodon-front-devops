@@ -4,7 +4,7 @@ import { inject } from 'mobx-react';
 import { asyncRouter, asyncLocaleProvider, nomatch } from '@choerodon/boot';
 import { ModalContainer } from 'choerodon-ui/pro';
 
-import './index.less';
+import './style/index.less';
 
 const AppService = asyncRouter(() => import('./routes/app-service'));
 const Code = asyncRouter(() => import('./routes/code-manager'));
@@ -20,6 +20,8 @@ const ProRepository = asyncRouter(() => import('./routes/pro-repository'));
 const PVManager = asyncRouter(() => import('./routes/pv-manager'));
 const PipelineManage = asyncRouter(() => import('./routes/pipeline-manage'));
 const HostConfig = asyncRouter(() => import('./routes/host-config'));
+const OrgTemplate = asyncRouter(() => import('./routes/app-template/OrgIndex'));
+const SiteTemplate = asyncRouter(() => import('./routes/app-template/SiteIndex'));
 
 function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
   const IntlProviderAsync = asyncLocaleProvider(language, () => import(`./locale/${language}`));
@@ -41,6 +43,8 @@ function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
           <Route path={`${match.url}/reports`} component={Reports} />
           <Route path={`${match.url}/pv-management`} component={PVManager} />
           <Route path={`${match.url}/host-config`} component={HostConfig} />
+          <Route path={`${match.url}/org-template`} component={OrgTemplate} />
+          <Route path={`${match.url}/application-template`} component={SiteTemplate} />
           <Route path="*" component={nomatch} />
         </Switch>
         <ModalContainer />
