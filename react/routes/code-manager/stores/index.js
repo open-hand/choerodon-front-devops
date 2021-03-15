@@ -149,6 +149,12 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
           const recentAppList = localGet('recent-app');
           let newAppServiceId;
           if (urlAppServiceId) {
+            if (urlAppServiceId.indexOf('=') !== -1) {
+              codeManagerStore.handleEncrept(urlAppServiceId, (encodeId) => {
+                selectAppDs.current.set('appServiceId', encodeId);
+              });
+              return;
+            }
             newAppServiceId = urlAppServiceId;
           } else if (recentAppList !== null && !isEmpty(recentAppList[projectId])) {
             newAppServiceId = recentAppList[projectId][0]?.id;
