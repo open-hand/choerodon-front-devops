@@ -59,7 +59,7 @@ export default (({
       }
     }
     if (name === 'appServiceSource') {
-      if (value) {
+      if (value && ['normal_service', 'share_service'].includes(value)) {
         store.loadAppService(projectId, record.get('appServiceSource'));
       } else {
         store.setAppService([]);
@@ -95,11 +95,19 @@ export default (({
       },
       { name: 'imgUrl', type: 'string' },
       {
-        name: 'appServiceSource', type: 'string', textField: 'text', valueField: 'value', label: formatMessage({ id: `${intlPrefix}.service.source` }), options: sourceDs,
+        name: 'appServiceSource', defaultValue: 'normal_service', type: 'string', textField: 'text', valueField: 'value', label: formatMessage({ id: `${intlPrefix}.service.source` }), options: sourceDs,
       },
       { name: 'templateAppServiceId', type: 'string', label: formatMessage({ id: intlPrefix }) },
       {
         name: 'templateAppServiceVersionId', type: 'string', textField: 'version', valueField: 'id', label: formatMessage({ id: `${intlPrefix}.version` }),
+      },
+      {
+        name: 'templateName',
+        type: 'string',
+        label: '模板名称',
+        dynamicProps: {
+          required: ({ record }) => ['organization', 'site'].includes(record.get('appServiceSource')),
+        },
       },
     ],
     events: {

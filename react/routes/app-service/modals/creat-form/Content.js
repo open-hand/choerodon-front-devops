@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
-import { Form, TextField, Select, Tooltip } from 'choerodon-ui/pro';
+import {
+  Form, TextField, Select, Tooltip, SelectBox,
+} from 'choerodon-ui/pro';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { Icon, Input } from 'choerodon-ui';
@@ -31,9 +33,9 @@ const CreateForm = injectIntl(observer((props) => {
     try {
       if (await formDs.submit() !== false) {
         refresh();
-      } else {
-        return false;
+        return true;
       }
+      return false;
     } catch (e) {
       Choerodon.handleResponseError(e);
       return false;
@@ -84,88 +86,97 @@ const CreateForm = injectIntl(observer((props) => {
     );
   }
 
-  return (<div className={`${prefixCls}-create-wrap`}>
-    <div
-      style={{
-        backgroundImage: record.get('imgUrl') ? `url('${record.get('imgUrl')}')` : '',
-      }}
-      className={`${prefixCls}-create-img`}
-      onClick={triggerFileBtn}
-      role="none"
-    >
-      <div className="create-img-mask">
-        <Icon type="photo_camera" className="create-img-icon" />
+  return (
+    <div className={`${prefixCls}-create-wrap`}>
+      <div
+        style={{
+          backgroundImage: record.get('imgUrl') ? `url('${record.get('imgUrl')}')` : '',
+        }}
+        className={`${prefixCls}-create-img`}
+        onClick={triggerFileBtn}
+        role="none"
+      >
+        <div className="create-img-mask">
+          <Icon type="photo_camera" className="create-img-icon" />
+        </div>
+        <Input
+          id="file"
+          type="file"
+          accept={FILE_TYPE}
+          onChange={selectFile}
+          style={{ display: 'none' }}
+        />
       </div>
-      <Input
-        id="file"
-        type="file"
-        accept={FILE_TYPE}
-        onChange={selectFile}
-        style={{ display: 'none' }}
-      />
+      <div className={`${prefixCls}-create-text`}>
+        <FormattedMessage id={`${intlPrefix}.icon`} />
+      </div>
+      <Form dataSet={formDs}>
+        <Select
+          name="type"
+          clearButton={false}
+          addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.type.tips` })} />}
+        >
+          <Option value="normal">
+            {formatMessage({ id: `${intlPrefix}.type.normal` })}
+          </Option>
+          <Option value="test">
+            {formatMessage({ id: `${intlPrefix}.type.test` })}
+          </Option>
+        </Select>
+        <TextField
+          name="code"
+          autoFocus
+          addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.code.tips` })} />}
+        />
+        <TextField name="name" colSpan={3} />
+      </Form>
+      <div className={`${prefixCls}-create-wrap-template-title`}>
+        <Tips
+          helpText={formatMessage({ id: `${intlPrefix}.template.tips` })}
+          title={formatMessage({ id: `${intlPrefix}.template` })}
+        />
+      </div>
+      <Form dataSet={formDs} columns={3}>
+        <SelectBox name="appServiceSource" colSpan={3} optionRenderer={renderSourceOption} />
+        {
+        ['normal_service', 'share_service'].includes(formDs.current.get('appServiceSource')) ? [
+          <Select
+            name="templateAppServiceId"
+            colSpan={3}
+            searchable
+            disabled={!record.get('appServiceSource')}
+            notFoundContent={<FormattedMessage id={`${intlPrefix}.empty`} />}
+          >
+            {record.get('appServiceSource') === 'normal_service' ? (
+              map(store.getAppService[0]
+                && store.getAppService[0].appServiceList, ({ id, name }) => (
+                  <Option value={id} key={id}>{name}</Option>
+              ))
+            ) : (
+              map(store.getAppService, ({ id: groupId, name: groupName, appServiceList }) => (
+                <OptGroup label={groupName} key={groupId}>
+                  {map(appServiceList, ({ id, name }) => (
+                    <Option value={id} key={id}>{name}</Option>
+                  ))}
+                </OptGroup>
+              ))
+            )}
+          </Select>,
+          <Select
+            name="templateAppServiceVersionId"
+            colSpan={3}
+            searchable
+            searchMatcher="version"
+            clearButton={false}
+            disabled={!record.get('templateAppServiceId')}
+          />,
+        ] : (
+          <Select colSpan={3} name="templateName" />
+        )
+      }
+      </Form>
     </div>
-    <div className={`${prefixCls}-create-text`}>
-      <FormattedMessage id={`${intlPrefix}.icon`} />
-    </div>
-    <Form dataSet={formDs}>
-      <Select
-        name="type"
-        clearButton={false}
-        addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.type.tips` })} />}
-      >
-        <Option value="normal">
-          {formatMessage({ id: `${intlPrefix}.type.normal` })}
-        </Option>
-        <Option value="test">
-          {formatMessage({ id: `${intlPrefix}.type.test` })}
-        </Option>
-      </Select>
-      <TextField
-        name="code"
-        autoFocus
-        addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.code.tips` })} />}
-      />
-      <TextField name="name" colSpan={3} />
-    </Form>
-    <div className={`${prefixCls}-create-wrap-template-title`}>
-      <Tips
-        helpText={formatMessage({ id: `${intlPrefix}.template.tips` })}
-        title={formatMessage({ id: `${intlPrefix}.template` })}
-      />
-    </div>
-    <Form dataSet={formDs} columns={3}>
-      <Select name="appServiceSource" colSpan={1} optionRenderer={renderSourceOption} />
-      <Select
-        name="templateAppServiceId"
-        colSpan={2}
-        searchable
-        disabled={!record.get('appServiceSource')}
-        notFoundContent={<FormattedMessage id={`${intlPrefix}.empty`} />}
-      >
-        {record.get('appServiceSource') === 'normal_service' ? (
-          map(store.getAppService[0] && store.getAppService[0].appServiceList, ({ id, name }) => (
-            <Option value={id} key={id}>{name}</Option>
-          ))
-        ) : (
-          map(store.getAppService, ({ id: groupId, name: groupName, appServiceList }) => (
-            <OptGroup label={groupName} key={groupId}>
-              {map(appServiceList, ({ id, name }) => (
-                <Option value={id} key={id}>{name}</Option>
-              ))}
-            </OptGroup>
-          ))
-        )}
-      </Select>
-      <Select
-        name="templateAppServiceVersionId"
-        colSpan={3}
-        searchable
-        searchMatcher="version"
-        clearButton={false}
-        disabled={!record.get('templateAppServiceId')}
-      />
-    </Form>
-  </div>);
+  );
 }));
 
 export default CreateForm;
