@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useEffect, useMemo } from 'react';
+import React, {
+  createContext, useContext, useEffect, useMemo,
+} from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
@@ -32,11 +34,21 @@ export const StoreProvider = injectIntl(inject('AppState')(
           text: formatMessage({ id: `${intlPrefix}.source.organization` }),
           value: 'share_service',
         },
+        {
+          text: '组织层模板',
+          value: 'organization',
+        },
+        {
+          text: '平台层模板',
+          value: 'site',
+        },
       ],
       selection: 'single',
     }), []);
 
-    const formDs = useMemo(() => new DataSet(FormDataSet({ intlPrefix, formatMessage, projectId, sourceDs, store })), [projectId]);
+    const formDs = useMemo(() => new DataSet(FormDataSet({
+      intlPrefix, formatMessage, projectId, sourceDs, store,
+    })), [projectId]);
 
     const value = {
       ...props,

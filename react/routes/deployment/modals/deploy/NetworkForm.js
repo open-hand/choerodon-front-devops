@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useImperativeHandle } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Button, Form, Icon, Select, SelectBox, TextField } from 'choerodon-ui/pro';
+import {
+  Button, Form, Icon, Select, SelectBox, TextField,
+} from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import { useManualDeployStore } from './stores';
 
 const { Option } = SelectBox;
 
-export default observer(() => {
+export default observer(({ cRef, envId }) => {
   const {
     intl: { formatMessage },
     prefixCls,
@@ -14,6 +16,23 @@ export default observer(() => {
     portsDs,
     networkDs,
   } = useManualDeployStore();
+
+  useImperativeHandle(cRef, () => ({
+    getDevopsServiceReqVO: async () => {
+      const newworkResult = networkDs.validate();
+      const portsResult = portsDs.validate();
+      if (newworkResult && portsResult) {
+        return ({
+          devopsServiceReqVO: {
+            ...networkDs.current.toData(),
+            externalIp: networkDs.current.get('externalIp').join(','),
+            ports: portsDs.toData(),
+          },
+        });
+      }
+      return false;
+    },
+  }));
 
   const record = networkDs.current;
 
@@ -31,7 +50,7 @@ export default observer(() => {
       <Form dataSet={networkDs}>
         <TextField
           name="name"
-          disabled={!manualDeployDs.current.get('environmentId')}
+          disabled={!manualDeployDs.current.get('environmentId') && !envId}
         />
         <SelectBox name="type" className={`${prefixCls}-resource-mgt-12`}>
           <Option value="ClusterIP">
@@ -41,7 +60,8 @@ export default observer(() => {
             <span className={`${prefixCls}-resource-radio`}>NodePort</span>
           </Option>
           <Option value="LoadBalancer">
-            <span className={`${prefixCls}-resource-radio`}>LoadBalancer</span></Option>
+            <span className={`${prefixCls}-resource-radio`}>LoadBalancer</span>
+          </Option>
         </SelectBox>
         {record.get('type') === 'ClusterIP' && <TextField name="externalIp" />}
       </Form>
@@ -58,13 +78,15 @@ export default observer(() => {
             && <Select name="protocol" />
           }
           {
-            portsDs.length > 1 ? <Button
-              funcType="flat"
-              icon="delete"
-              onClick={() => handleRemovePort(portRecord)}
-              className={`${prefixCls}-resource-delete-btn`}
-              colSpan={3}
-            /> : <span colSpan={3} />
+            portsDs.length > 1 ? (
+              <Button
+                funcType="flat"
+                icon="delete"
+                onClick={() => handleRemovePort(portRecord)}
+                className={`${prefixCls}-resource-delete-btn`}
+                colSpan={3}
+              />
+            ) : <span colSpan={3} />
           }
         </Form>
       ))}

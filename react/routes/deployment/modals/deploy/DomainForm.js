@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useImperativeHandle } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Button, Form, Icon, Select, SelectBox, TextField } from 'choerodon-ui/pro';
+import {
+  Button, Form, Icon, Select, SelectBox, TextField,
+} from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import { useManualDeployStore } from './stores';
 import Tips from '../../../../components/new-tips';
 
 const { Option } = SelectBox;
 
-export default observer(() => {
+export default observer(({ cRef, envId: otherEnvId }) => {
   const {
     intl: { formatMessage },
     prefixCls,
@@ -19,6 +21,28 @@ export default observer(() => {
 
   const record = domainDs.current;
   const envId = manualDeployDs.current.get('environmentId');
+
+  useImperativeHandle(cRef, () => ({
+    getDevopsIngressVO: async () => {
+      const domainResult = domainDs.validate();
+      const annotationResult = annotationDs.validate();
+      const pathListResult = pathListDs.validate();
+      if (domainResult && annotationResult && pathListResult) {
+        const annotations = {};
+        annotationDs.toData().forEach((i) => {
+          annotations[i.key] = i.value;
+        });
+        return ({
+          devopsIngressVO: {
+            ...domainDs.current.toData(),
+            annotations,
+            pathList: pathListDs.toData(),
+          },
+        });
+      }
+      return false;
+    },
+  }));
 
   function handleAddPath() {
     pathListDs.create();
@@ -39,7 +63,7 @@ export default observer(() => {
   return (
     <div className={`${prefixCls}-resource-domain`}>
       <Form dataSet={domainDs}>
-        <TextField name="name" disabled={!envId} />
+        <TextField name="name" disabled={!envId && !otherEnvId} />
         <SelectBox name="isNormal" className={`${prefixCls}-resource-mgt-12`}>
           <Option value>
             <span className={`${prefixCls}-resource-radio`}>{formatMessage({ id: 'domain.protocol.normal' })}</span>
@@ -48,7 +72,7 @@ export default observer(() => {
             <span className={`${prefixCls}-resource-radio`}>{formatMessage({ id: 'domain.protocol.secret' })}</span>
           </Option>
         </SelectBox>
-        <TextField name="domain" disabled={!envId} />
+        <TextField name="domain" disabled={!envId && !otherEnvId} />
         {!record.get('isNormal') && <Select name="certId" disabled={!envId} searchable />}
       </Form>
       {map(pathListDs.data, (pathRecord) => (
