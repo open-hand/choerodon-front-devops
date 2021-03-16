@@ -85,8 +85,8 @@ export default observer(() => {
         const baseValid = await BaseDeployDataSet.validate();
         const hostValid = await HostSettingDataSet.validate();
         if (baseValid && hostValid) {
-          if (HostSettingDataSet.records.some((i) => !i.get(hostMapping.status.name))) {
-            message.error('请先测试连接主机后再部署');
+          if (HostSettingDataSet.records.some((i) => !i.get(hostMapping.status.name) || i.get(hostMapping.status.name) !== 'success')) {
+            message.error('请先将主机测试成功');
             return false;
           }
           for (let i = 0; i < ParamSettingDataSet.records.length; i += 1) {
@@ -421,6 +421,9 @@ export default observer(() => {
                 <Select
                   colSpan={1}
                   name={hostMapping.hostName.name}
+                  onOption={(data) => ({
+                    disabled: HostSettingDataSet.records.find((i) => i.get(hostMapping.hostName.name) === data.record.get('id')),
+                  })}
                 />
                 <TextField colSpan={1} name={hostMapping.ip.name} />
                 <TextField colSpan={1} name={hostMapping.port.name} />
