@@ -1,0 +1,35 @@
+@success: #00bfa5;
+@failed: #f44336;
+@creating: #4d90fe;
+@disable: rgba(0, 0, 0, 0.2);
+
+.c7ncd-template {
+
+  &-table {
+
+    &-status {
+      width: .48rem;
+      text-align: center;
+      border-radius: 2px;
+      color: #fff;
+      background-color: @disable;
+      line-height: .2rem;
+      padding: 0 4px;
+      font-size: 12px;
+      transform: scale(0.83);
+      display: inline-block;
+
+      &-enable {
+        background: @success;
+      }
+
+      &-C {
+        background: @creating;
+      }
+
+      &-F {
+        background: @failed;
+      }
+    }
+  }
+}

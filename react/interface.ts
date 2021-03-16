@@ -19,6 +19,10 @@ interface UserDTOProps {
   imageUrl: string,
 }
 
+interface RecordObjectProps {
+  record: Record;
+}
+
 export {
   ButtonColor,
   FuncType,
@@ -34,4 +38,5 @@ export {
   DataSet,
   UserDTOProps,
   TableColumnTooltip,
+  RecordObjectProps,
 };

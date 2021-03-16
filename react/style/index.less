@@ -1,8 +1,18 @@
 @import '~choerodon-ui/lib/style/themes/default';
-
-@TABLE_FONT_COLOR: rgba(0, 0, 0, 0.65);
+@import "./default";
 
 .c7ncd-root {
+  // 表格名称可点击列样式
+  .table-link {
+    color: @primary-color;
+    cursor: pointer;
+
+    &:hover {
+      color: @primary-color;
+      text-decoration: underline;
+    }
+  }
+
   .@{c7n-pro-prefix}-table {
     .@{c7n-pro-prefix}-table-tbody {
       color: @TABLE_FONT_COLOR;
