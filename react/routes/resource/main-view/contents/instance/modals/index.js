@@ -55,7 +55,7 @@ const IstModals = injectIntl(observer(() => {
 
     const appServiceVersionId = record.get('commandVersionId');
     const appServiceId = record.get('appServiceId');
-    const isMarket = record.get('source') === 'market';
+    const isMarket = ['middleware', 'market'].includes(record.get('source'));
     istStore.loadValue(projectId, id, appServiceVersionId, isMarket);
 
     const deployVo = {
@@ -97,7 +97,7 @@ const IstModals = injectIntl(observer(() => {
       parentId,
       versionId: appServiceVersionId,
       appServiceId,
-      isMarket: record.get('source') === 'market',
+      isMarket: ['middleware', 'market'].includes(record.get('source')),
     };
 
     Modal.open({
@@ -225,7 +225,7 @@ const IstModals = injectIntl(observer(() => {
     const connect = envRecord && envRecord.get('connect');
     const record = baseDs.current;
     const status = record ? record.get('status') : '';
-    const isMarket = record && record.get('source') === 'market';
+    const isMarket = record && ['middleware', 'market'].includes(record.get('source'));
     const appAvailable = record && record.get('currentVersionAvailable');
     const upgradeAvailable = record && record.get('upgradeAvailable');
     const btnDisabled = !connect || !status || (status !== 'failed' && status !== 'running') || (isMarket && !appAvailable);

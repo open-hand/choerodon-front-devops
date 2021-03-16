@@ -12,7 +12,9 @@ import { useTreeItemStore } from './stores';
 
 const modalKey = Modal.key();
 
-function AppItem({ name, record, intl: { formatMessage }, intlPrefix }) {
+function AppItem({
+  name, record, intl: { formatMessage }, intlPrefix,
+}) {
   const {
     treeDs,
     AppState: { currentMenuType: { id } },
@@ -64,7 +66,7 @@ function AppItem({ name, record, intl: { formatMessage }, intlPrefix }) {
     const type = record.get('type');
     let iconType = 'widgets';
     let message = 'project';
-    if (type === 'market_service') {
+    if (['middleware_service', 'market_service'].includes(type)) {
       iconType = 'application_market';
       message = 'market';
     } else if (type === 'share_service') {
@@ -77,11 +79,13 @@ function AppItem({ name, record, intl: { formatMessage }, intlPrefix }) {
       </Tooltip>
     );
   }
-  return <Fragment>
-    {renderIcon()}
-    {name}
-    {getSuffix()}
-  </Fragment>;
+  return (
+    <>
+      {renderIcon()}
+      {name}
+      {getSuffix()}
+    </>
+  );
 }
 
 AppItem.propTypes = {

@@ -97,7 +97,7 @@ const Details = (props) => {
   );
 
   const getContent = () => {
-    if (type === 'market_service') {
+    if (['middleware_service', 'market_service'].includes(type)) {
       return renderMarketDetails();
     }
     return renderOtherDetails();
