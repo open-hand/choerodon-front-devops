@@ -60,6 +60,13 @@ const Deployment = withRouter(observer((props) => {
     pipelineOptionsDs,
   } = useDeployStore();
 
+  useEffect(() => {
+    const { location: { state } } = props;
+    if (state && state.type === 'middlewareDeploy') {
+      openBaseDeploy(state.data);
+    }
+  }, []);
+
   function refresh() {
     envOptionsDs.query();
     pipelineOptionsDs.query();
@@ -88,13 +95,18 @@ const Deployment = withRouter(observer((props) => {
     });
   }
 
-  function openBaseDeploy() {
+  function openBaseDeploy(deployWay) {
     Modal.open({
       key: Modal.key(),
       style: modalStyle2,
       drawer: true,
       title: '基础组件部署',
       children: <BaseComDeploy
+        {
+          ...(deployWay ? {
+            deployWay,
+          } : {})
+        }
         refresh={refresh}
       />,
       okText: '部署',
@@ -383,7 +395,7 @@ const Deployment = withRouter(observer((props) => {
         </Permission>
         <Button
           icon="jsfiddle"
-          onClick={openBaseDeploy}
+          onClick={() => openBaseDeploy()}
         >
           基础组件部署
         </Button>

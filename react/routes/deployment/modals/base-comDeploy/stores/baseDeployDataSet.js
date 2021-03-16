@@ -103,6 +103,7 @@ const mapping = {
     name: 'resourceName',
     type: 'string',
     label: '资源名称',
+    defaultValue: `${middleWareData[0].value}-${uuidV1().substring(0, 5)}`,
     maxLength: 64,
   },
   env: {
@@ -198,11 +199,13 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore) => ({
           // 如果是主机部署
           if (record.get(mapping.deployWay.name) === deployWayOptionsData[1].value) {
             if (value === deployModeOptionsData[0].value) {
-              // eslint-disable-next-line no-param-reassign
-              HostSettingDataSet.records = [{}];
+              HostSettingDataSet.splice(0, HostSettingDataSet.records.length);
+              HostSettingDataSet.create();
             } else {
-              // eslint-disable-next-line no-param-reassign
-              HostSettingDataSet.records = [{}, {}, {}];
+              HostSettingDataSet.splice(0, HostSettingDataSet.records.length);
+              HostSettingDataSet.create();
+              HostSettingDataSet.create();
+              HostSettingDataSet.create();
             }
           } else {
             //  如果是环境部署

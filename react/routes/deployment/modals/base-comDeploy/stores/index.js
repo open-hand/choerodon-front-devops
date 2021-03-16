@@ -24,7 +24,9 @@ export const StoreProvider = inject('AppState')(
 
     const BaseComDeployStore = useStore();
 
-    const HostSettingDataSet = useMemo(() => new DataSet(hostSettingDataSet()), []);
+    const HostSettingDataSet = useMemo(
+      () => new DataSet(hostSettingDataSet(projectId, BaseComDeployStore)), [projectId],
+    );
     const BaseDeployDataSet = useMemo(
       () => new DataSet(baseDeployDataSet(
         projectId,

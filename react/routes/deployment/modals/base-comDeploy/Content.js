@@ -2,7 +2,7 @@ import React, { useMemo, useEffect, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import classNames from 'classnames';
 import {
-  Select, Form, SelectBox, TextField, Button, Table,
+  Select, Form, SelectBox, TextField, Button, Table, Tooltip, message,
 } from 'choerodon-ui/pro';
 import { Icon } from 'choerodon-ui';
 import YamlEditor from '@/components/yamlEditor';
@@ -13,7 +13,7 @@ import {
   mapping, deployWayOptionsData, deployModeOptionsData, middleWareData,
 } from './stores/baseDeployDataSet';
 import { mapping as hostMapping } from './stores/hostSettingDataSet';
-import { mapping as paramMapping } from './stores/paramSettingDataSet';
+import paramSettingDataSet, { mapping as paramMapping } from './stores/paramSettingDataSet';
 import { useBaseComDeployStore } from './stores';
 import redis from './images/redis.png';
 import mysql from './images/mysql.png';
@@ -30,9 +30,8 @@ export default observer(() => {
     modal,
     AppState: { currentMenuType: { projectId } },
     refresh,
+    deployWay,
   } = useBaseComDeployStore();
-
-  console.log(modal);
 
   const networkRef = useRef();
   const domainRef = useRef();
@@ -41,6 +40,7 @@ export default observer(() => {
     const middleWare = BaseDeployDataSet.current.get(mapping.middleware.name);
     let pass;
     let axiosData;
+    let flag = false;
     // redis
     if (middleWare === middleWareData[0].value) {
       // 环境部署
@@ -80,13 +80,50 @@ export default observer(() => {
         } else {
           return false;
         }
+      } else {
+      //  主机部署
+        const baseValid = await BaseDeployDataSet.validate();
+        const hostValid = await HostSettingDataSet.validate();
+        if (baseValid && hostValid) {
+          if (HostSettingDataSet.records.some((i) => !i.get(hostMapping.status.name))) {
+            message.error('请先测试连接主机后再部署');
+            return false;
+          }
+          for (let i = 0; i < ParamSettingDataSet.records.length; i += 1) {
+            const result = handleValidParamsRunningValue(ParamSettingDataSet
+              .records[i].get(paramMapping.paramsRunnigValue.name), ParamSettingDataSet.records[i]);
+            if (result !== true) {
+              flag = true;
+              break;
+            }
+          }
+          const configuration = {};
+          ParamSettingDataSet.records.forEach((i) => {
+            configuration[i.get(paramMapping.params.name)] = i
+              .get(paramMapping.paramsRunnigValue.name);
+          });
+          if (!flag) {
+            axiosData = {
+              hostIds: HostSettingDataSet.records.map((i) => i.get(hostMapping.hostId.name)),
+              [mapping.deployMode.name]: BaseDeployDataSet.current.get(mapping.deployMode.name),
+              name: BaseDeployDataSet.current.get(mapping.resourceName.name),
+              [mapping.serviceVersion.name]: BaseDeployDataSet
+                .current.get(mapping.serviceVersion.name),
+              configuration,
+            };
+          }
+        } else {
+          return false;
+        }
       }
-      try {
-        await BaseComDeployServices.axiosPostDeployMiddleware(projectId, axiosData);
-        refresh();
-        return true;
-      } catch (e) {
-        return false;
+      if (!flag) {
+        try {
+          await BaseComDeployServices.axiosPostDeployMiddleware(projectId, axiosData);
+          refresh();
+          return true;
+        } catch (e) {
+          return false;
+        }
       }
     }
     return false;
@@ -94,8 +131,21 @@ export default observer(() => {
 
   useEffect(() => {
     // 初始化为哨兵模式 初始化三个record
-    HostSettingDataSet.records = [{}, {}, {}];
+    HostSettingDataSet.create();
+    HostSettingDataSet.create();
+    if (deployWay) {
+      BaseDeployDataSet.current.set(mapping.deployWay.name, deployWay);
+    }
   }, []);
+
+  useEffect(() => {
+    const middleware = BaseDeployDataSet.current.get(mapping.middleware.name);
+    const deployWary = BaseDeployDataSet.current.get(mapping.deployWay.name);
+    HostSettingDataSet.getField(hostMapping.hostName.name).set('required', (middleware === middleWareData[0].value) && (deployWary === deployWayOptionsData[1].value));
+  }, [
+    BaseDeployDataSet.current.get(mapping.middleware.name),
+    BaseDeployDataSet.current.get(mapping.deployWay.name),
+  ]);
 
   /**
    * 添加主机
@@ -184,6 +234,179 @@ export default observer(() => {
     // console.log(HostSettingDataSet);
   };
 
+  /**
+   * 测试连接
+   */
+  const handleTestConnect = async () => {
+    const valid = await HostSettingDataSet.validate();
+    if (valid) {
+      const ids = HostSettingDataSet
+        .records
+        .filter(
+          (i) => i.get(hostMapping.hostName.name),
+        ).map((i) => i.get(hostMapping.hostName.name));
+      const result = await BaseComDeployServices.axiosPostTestHost(projectId, ids);
+      if (result) {
+        HostSettingDataSet.records.forEach((record) => {
+          if (result.includes(record.get(hostMapping.hostId.name))) {
+            record.set(hostMapping.status.name, 'failed');
+          } else {
+            record.set(hostMapping.status.name, 'success');
+          }
+        });
+        console.log(HostSettingDataSet);
+      }
+    }
+  };
+
+  const renderItemHostStatus = (record) => {
+    if (record.get) {
+      switch (record?.get(hostMapping.status.name)) {
+        case 'success': {
+          return (
+            <span
+              className="c7ncd-baseDeploy-middle-deploySetting-status"
+              style={{
+                color: '#1FC2BB',
+              }}
+            >
+              <Icon
+                type="check"
+                style={{
+                  background: 'rgb(31, 194, 187)',
+                  color: 'white',
+                }}
+              />
+              成功
+            </span>
+          );
+          break;
+        }
+        case 'failed': {
+          return (
+            <span
+              className="c7ncd-baseDeploy-middle-deploySetting-status"
+              style={{
+                color: '#f76776',
+              }}
+            >
+              <Icon
+                type="close"
+                style={{
+                  background: '#F76776',
+                  color: 'white',
+                }}
+              />
+              失败
+            </span>
+          );
+        }
+        default:
+          return '';
+          break;
+      }
+    }
+    return '';
+  };
+
+  /**
+   * 参数运行值 render
+   * @param value
+   * @param record
+   */
+  const renderParamsRunningValue = ({ value, record }) => (
+    <Form>
+      <TextField
+        required
+        value={value}
+        onChange={(text) => record.set(paramMapping.paramsRunnigValue.name, text)}
+        validator={(values) => handleValidParamsRunningValue(values, record)}
+      />
+    </Form>
+  );
+
+  /**
+   * table 参数render
+   * @param value
+   * @param record
+   * @returns {*}
+   */
+  const renderParams = ({ value, record }) => (
+    <span>
+      {value}
+      <Tooltip title={record.get(paramMapping.tooltip.name)}>
+        <Icon
+          style={{
+            color: 'rgba(0, 0, 0, 0.36)',
+            position: 'relative',
+            bottom: '2px',
+          }}
+          type="help"
+        />
+      </Tooltip>
+    </span>
+  );
+
+  /**
+   * 测试连接整个结果渲染
+   */
+  const renderHostResult = () => {
+    if (HostSettingDataSet.records.some((i) => i.get(hostMapping.status.name))) {
+      if (HostSettingDataSet.records.some((i) => i.get(hostMapping.status.name) === 'failed')) {
+        return (
+          <div className="c7ncd-baseDeploy-middle-testButton-result c7ncd-baseDeploy-middle-failed">
+            <span>测试连接:</span>
+            <span>
+              <Icon type="close" />
+              失败
+            </span>
+          </div>
+        );
+      }
+      return (
+        <div className="c7ncd-baseDeploy-middle-testButton-result c7ncd-baseDeploy-middle-success">
+          <span>测试连接:</span>
+          <span>
+            <Icon type="check" />
+            成功
+          </span>
+        </div>
+      );
+    }
+    return '';
+  };
+
+  const handleValidParamsRunningValue = (values, record) => {
+    if (!values) {
+      message.error('请输入数字');
+      return '该字段为必填';
+    }
+    const itemScope = record.get(paramMapping.paramsScope.name);
+    if (itemScope.includes('～')) {
+      //  为区间
+      if (parseFloat(values).toString() === 'NaN') {
+        message.error('请输入数字');
+        return '请输入数字';
+      }
+      const scope = itemScope.split('～');
+      const newValues = values.replace(/,/gi, '');
+      if (newValues <= parseFloat(scope[1].replace(/,/gi, ''))
+        && newValues >= parseFloat(scope[0].replace(/,/gi, ''))) {
+        return true;
+      }
+      message.error('超出区间范围');
+      return '超出区间范围';
+    } if (itemScope.includes(',')) {
+      //  select取值
+      if (itemScope.split(',').includes(values)) {
+        return true;
+      }
+      message.error('超出区间范围');
+      return '超出区间范围';
+    }
+    return true;
+  };
+
   const renderBottomDomBaseOnDeployWay = () => (
     BaseDeployDataSet.current.get(mapping.deployWay.name) === deployWayOptionsData[1].value ? (
       <>
@@ -194,8 +417,11 @@ export default observer(() => {
         {
           HostSettingDataSet.records.filter((i) => !i.isRemoved).map((record) => (
             <div style={{ position: 'relative', width: '80%' }}>
-              <Form columns={3} style={{ width: '100%' }} record={HostSettingDataSet}>
-                <Select colSpan={1} name={hostMapping.hostName.name} />
+              <Form columns={3} style={{ width: '100%' }} record={record}>
+                <Select
+                  colSpan={1}
+                  name={hostMapping.hostName.name}
+                />
                 <TextField colSpan={1} name={hostMapping.ip.name} />
                 <TextField colSpan={1} name={hostMapping.port.name} />
               </Form>
@@ -209,6 +435,7 @@ export default observer(() => {
                 }}
                 onClick={() => handleDeleteHost(record)}
               />
+              {renderItemHostStatus(record)}
             </div>
           ))
         }
@@ -226,26 +453,31 @@ export default observer(() => {
           <Button
             funcType="raised"
             color="blue"
+            disabled={HostSettingDataSet
+              .records.filter((i) => !i.isRemoved).every((i) => !i.get(hostMapping.hostName.name))}
+            onClick={handleTestConnect}
           >
             测试连接
           </Button>
-          <div className="c7ncd-baseDeploy-middle-testButton-result">
-            <span>测试连接:</span>
-            <span>
-              <Icon type="check" />
-              成功
-            </span>
-          </div>
+          {
+            renderHostResult()
+          }
+
         </div>
         <p style={{ marginTop: 30 }} className="c7ncd-baseDeploy-middle-deploySetting">
           参数配置
           <Icon type="expand_less" />
         </p>
-        <Table style={{ marginTop: 20 }} queryBar="none" dataSet={ParamSettingDataSet}>
-          <Column name={paramMapping.params.name} />
+        <Table
+          style={{ marginTop: 20 }}
+          queryBar="none"
+          dataSet={ParamSettingDataSet}
+          rowHeight={60}
+        >
+          <Column name={paramMapping.params.name} renderer={renderParams} />
           <Column name={paramMapping.defaultParams.name} />
           <Column name={paramMapping.paramsScope.name} />
-          <Column name={paramMapping.paramsRunnigValue.name} />
+          <Column name={paramMapping.paramsRunnigValue.name} renderer={renderParamsRunningValue} />
         </Table>
       </>
     ) : [
