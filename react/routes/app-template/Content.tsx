@@ -47,6 +47,14 @@ const TemplateTable = observer(() => {
     });
   }, []);
 
+  const openOperationModal = useCallback((modalProps) => {
+    Modal.open({
+      key: Modal.key(),
+      movable: false,
+      ...modalProps,
+    });
+  }, []);
+
   const openEnabledModal = useCallback(({ record }) => {
     if (!record) {
       return;
@@ -81,6 +89,17 @@ const TemplateTable = observer(() => {
     }
   }, []);
 
+  const openPermissionModal = useCallback(({ record }) => {
+    if (!record) {
+      return;
+    }
+    openOperationModal({
+      title: formatMessage({ id: `${intlPrefix}.permission.title` }),
+      children: formatMessage({ id: `${intlPrefix}.permission.des` }),
+      onOk: () => handlePermission({ record }),
+    });
+  }, []);
+
   const handlePermission = useCallback(async ({ record }) => {
     if (!record) {
       return;
@@ -106,6 +125,15 @@ const TemplateTable = observer(() => {
     tableDs.delete(record, modalProps);
   }, []);
 
+  const openNoPermissionModal = useCallback(() => {
+    openOperationModal({
+      title: formatMessage({ id: `${intlPrefix}.permission.no.title` }),
+      children: formatMessage({ id: `${intlPrefix}.permission.no.des` }),
+      okText: formatMessage({ id: 'iknow' }),
+      okCancel: false,
+    });
+  }, []);
+
   const renderName = useCallback(({ value, record }) => {
     // type 为P：预定义；C: 自定义
     if (record.get('type') === 'P' || !record.get('enable')) {
@@ -129,11 +157,25 @@ const TemplateTable = observer(() => {
 
   const renderDate = useCallback(({ value }) => <TimePopover datetime={value} />, []);
 
-  const renderUrl = useCallback(({ value }) => (
-    <a href={value} rel="nofollow me noopener noreferrer" target="_blank">
-      {value ? `../${value.split('/')[value.split('/').length - 1]}` : ''}
-    </a>
-  ), []);
+  const renderUrl = useCallback(({ value, record }) => {
+    const text = value ? `../${value.split('/')[value.split('/').length - 1]}` : '';
+    if (record && !record.get('permission')) {
+      return (
+        <span
+          role="none"
+          onClick={openNoPermissionModal}
+          className={`${prefixCls}-table-url`}
+        >
+          {text}
+        </span>
+      );
+    }
+    return (
+      <a href={value} rel="nofollow me noopener noreferrer" target="_blank">
+        {text}
+      </a>
+    );
+  }, []);
 
   const renderSource = useCallback(({ value }) => (value === 'C' ? '自定义' : '预定义'), []);
 
@@ -151,6 +193,7 @@ const TemplateTable = observer(() => {
     const enabled = record.get('enable');
     const status = record.get('status');
     const builtIn = record.get('type') === 'P';
+    const hasPermission = record.get('permission');
     const deleteData = ({
       service: permissionCodes.delete,
       text: '删除',
@@ -166,11 +209,11 @@ const TemplateTable = observer(() => {
         });
         if (!enabled) {
           actionData.push(deleteData);
-        } else {
+        } else if (!organizationId && !hasPermission) {
           actionData.push({
             service: permissionCodes.permission,
             text: '获取GitLab仓库权限',
-            action: () => handlePermission({ record }),
+            action: () => openPermissionModal({ record }),
           });
         }
         break;

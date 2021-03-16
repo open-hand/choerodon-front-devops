@@ -47,7 +47,7 @@ export default class TemplateApis {
   }
 
   static updateTemplateName(templateId: string, name: string, organizationId?: number): string {
-    return `${getApiUrl(organizationId)}/update_template/${templateId}?name=${name}`;
+    return `${getApiUrl(organizationId)}/${templateId}?name=${name}`;
   }
 
   static addTemplatePermission(templateId: string, organizationId?: number): string {

@@ -162,7 +162,7 @@ export default ({
     },
     update: ({ data: [data] }) => ({
       url: TemplateApis.updateTemplateName(data.id, data.name, organizationId),
-      method: 'get',
+      method: 'put',
     }),
   },
   fields: Object.keys(mapping).map((key) => {

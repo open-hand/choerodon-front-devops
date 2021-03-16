@@ -933,7 +933,7 @@ const reports = {
 };
 
 const appTemplate = {
-  'c7ncd.template.status.F': '成功',
+  'c7ncd.template.status.F': '失败',
   'c7ncd.template.status.C': '创建中',
   'c7ncd.template.status.enable': '启用',
   'c7ncd.template.status.disable': '停用',
@@ -943,6 +943,10 @@ const appTemplate = {
   'c7ncd.template.enable.des': '确定停用该应用模板吗？',
   'c7ncd.template.delete.title': '删除应用模板“{name}”',
   'c7ncd.template.delete.des': '确定删除该应用模板吗？',
+  'c7ncd.template.permission.title': '获取仓库权限',
+  'c7ncd.template.permission.des': '确定后，您将获得该仓库的Developer权限，即访问、推拉代码与修改的权限。',
+  'c7ncd.template.permission.no.title': '暂无代码库权限',
+  'c7ncd.template.permission.no.des': '您没有该模板对应的仓库权限,请点击列表中该模板对应的<三点>图标按钮，并执行<获取GitLab仓库权限>后，才能获得该仓库的访问、推拉与修改权限。',
 };
 
 // 文档地址前缀
