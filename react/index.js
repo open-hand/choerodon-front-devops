@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { inject } from 'mobx-react';
 import { asyncRouter, asyncLocaleProvider, nomatch } from '@choerodon/boot';
+import { PermissionRoute } from '@choerodon/master';
 import { ModalContainer } from 'choerodon-ui/pro';
 
 import './style/index.less';
@@ -43,8 +44,16 @@ function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
           <Route path={`${match.url}/reports`} component={Reports} />
           <Route path={`${match.url}/pv-management`} component={PVManager} />
           <Route path={`${match.url}/host-config`} component={HostConfig} />
-          <Route path={`${match.url}/org-template`} component={OrgTemplate} />
-          <Route path={`${match.url}/application-template`} component={SiteTemplate} />
+          <Route
+            service={['choerodon.code.organization.manager.application-template.ps.default']}
+            path={`${match.url}/org-template`}
+            component={OrgTemplate}
+          />
+          <PermissionRoute
+            service={['choerodon.code.site.manager.application-template.ps.default']}
+            path={`${match.url}/application-template`}
+            component={SiteTemplate}
+          />
           <Route path="*" component={nomatch} />
         </Switch>
         <ModalContainer />
