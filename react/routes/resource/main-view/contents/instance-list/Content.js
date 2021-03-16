@@ -13,7 +13,6 @@ import ResourceListTitle from '../../components/resource-list-title';
 
 import './index.less';
 
-
 const { Column } = Table;
 
 const Content = observer(() => {
@@ -50,7 +49,7 @@ const Content = observer(() => {
     let iconType;
     if (appServiceType === 'share_service') {
       iconType = 'share';
-    } else if (appServiceType === 'market_service') {
+    } else if (['middleware_service', 'market_service'].includes(appServiceType)) {
       iconType = 'application_market';
     } else {
       iconType = 'widgets';
