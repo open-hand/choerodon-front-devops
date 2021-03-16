@@ -3,6 +3,7 @@ import {
 } from '@/interface';
 import TemplateApis from '@/routes/app-template/apis';
 import TemplateServices from '@/routes/app-template/services';
+import map from "@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/addCDTaskDataSetMap";
 
 interface FormProps {
   templateId: string,
@@ -222,4 +223,11 @@ export default ({
     }
     return item;
   }),
+  events: {
+    update: ({ name, record }: { name: string, record: Record }) => {
+      if (name === mapping.templateSource.name && record.get(mapping.appTemplate.name)) {
+        record.set(mapping.appTemplate.name, null);
+      }
+    },
+  },
 });

@@ -136,7 +136,7 @@ const TemplateTable = observer(() => {
 
   const renderName = useCallback(({ value, record }) => {
     // type 为P：预定义；C: 自定义
-    if (record.get('type') === 'P' || !record.get('enable')) {
+    if (record.get('type') === 'P' || record.get('status') !== 'S' || !record.get('enable')) {
       return <span style={{ color: 'rgba(0, 0, 0, 0.65)' }}>{value}</span>;
     }
     return (
@@ -159,7 +159,7 @@ const TemplateTable = observer(() => {
 
   const renderUrl = useCallback(({ value, record }) => {
     const text = value ? `../${value.split('/')[value.split('/').length - 1]}` : '';
-    if (record && !record.get('permission')) {
+    if (!organizationId && record && !record.get('permission')) {
       return (
         <span
           role="none"
