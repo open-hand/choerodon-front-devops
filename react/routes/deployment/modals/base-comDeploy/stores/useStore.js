@@ -11,5 +11,16 @@ export default function useStore() {
     setServiceVersionList(data) {
       this.serviceVersionList = data;
     },
+
+    hostList: [],
+
+    get getHostList() {
+      return this.hostList;
+    },
+
+    setHostList(data) {
+      this.hostList = data;
+    },
+
   }));
 }

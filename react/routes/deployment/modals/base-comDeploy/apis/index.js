@@ -14,4 +14,12 @@ export default class BaseComDeployApis {
   static getDeployMiddlewareApi(projectId) {
     return `/devops/v1/projects/${projectId}/middleware/redis/deploy/env`;
   }
+
+  static getHostListApi(projectId) {
+    return `/devops/v1/projects/${projectId}/hosts/page_by_options`;
+  }
+
+  static getTestHostApi(projectId) {
+    return `/devops/v1/projects/${projectId}/hosts/multi/connection_test`;
+  }
 }
