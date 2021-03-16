@@ -7,6 +7,7 @@ import TemplateServices from '@/routes/app-template/services';
 interface FormProps {
   templateId: string,
   templateOptionsDs: DataSet,
+  orgTemplateOptionsDs: DataSet,
   organizationId?: number,
 }
 
@@ -90,7 +91,23 @@ const mapping = {
         text: '从Github导入模板',
       }],
     }),
-    required: true,
+  },
+  templateSource: {
+    name: 'templateSource',
+    type: 'string',
+    label: '模板来源',
+    textField: 'text',
+    valueField: 'value',
+    defaultValue: 'site',
+    options: new DataSet({
+      data: [{
+        value: 'site',
+        text: '平台层已有模板',
+      }, {
+        value: 'organization',
+        text: '组织层已有模板',
+      }],
+    }),
   },
   appTemplate: {
     name: 'selectedTemplateId',
@@ -118,13 +135,15 @@ const mapping = {
 
 export { mapping };
 
-export default ({ templateId, templateOptionsDs, organizationId }: FormProps): DataSetProps => ({
+export default ({
+  templateId, templateOptionsDs, organizationId, orgTemplateOptionsDs,
+}: FormProps): DataSetProps => ({
   autoCreate: false,
   autoQuery: false,
   autoQueryAfterSubmit: false,
   transport: {
     read: {
-      url: TemplateApis.getTemplateDetail(templateId),
+      url: TemplateApis.getTemplateDetail(templateId, organizationId),
       method: 'get',
     },
     create: ({ data: [data] }) => {
@@ -136,7 +155,7 @@ export default ({ templateId, templateOptionsDs, organizationId }: FormProps): D
         postData[mapping.appTemplate.name] = null;
       }
       return ({
-        url: TemplateApis.createTemplate(),
+        url: TemplateApis.createTemplate(organizationId),
         method: 'post',
         data: postData,
       });
@@ -153,28 +172,35 @@ export default ({ templateId, templateOptionsDs, organizationId }: FormProps): D
       case 'createWay':
         item.required = !templateId;
         break;
+      case 'templateSource':
+        item.dynamicProps = {
+          required: ({ record }: RecordObjectProps) => !templateId && organizationId && record.get(mapping.createWay.name) === 'template',
+        };
+        break;
       // 应用模板
       case 'appTemplate':
         item.dynamicProps = {
-          required: ({ record }: RecordObjectProps) => record.get(mapping.createWay.name) === 'template',
+          required: ({ record }: RecordObjectProps) => !templateId && record.get(mapping.createWay.name) === 'template',
+          options: ({ record }: RecordObjectProps) => (
+            record.get(mapping.templateSource.name) === 'site' ? templateOptionsDs : orgTemplateOptionsDs
+          ),
         };
-        item.options = templateOptionsDs;
         break;
       //  gitlab地址
       case 'gitlabAddress':
         item.dynamicProps = {
-          required: ({ record }: RecordObjectProps) => record.get(mapping.createWay.name) === 'gitlab',
+          required: ({ record }: RecordObjectProps) => !templateId && record.get(mapping.createWay.name) === 'gitlab',
         };
         break;
       //  私有Token
       case 'token':
         item.dynamicProps = {
-          required: ({ record }: RecordObjectProps) => record.get(mapping.createWay.name) === 'gitlab',
+          required: ({ record }: RecordObjectProps) => !templateId && record.get(mapping.createWay.name) === 'gitlab',
         };
         break;
       case 'githubAddress':
         item.dynamicProps = {
-          required: ({ record }: RecordObjectProps) => record.get(mapping.createWay.name) === 'github',
+          required: ({ record }: RecordObjectProps) => !templateId && record.get(mapping.createWay.name) === 'github',
         };
         break;
       case 'templateName':

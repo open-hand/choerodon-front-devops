@@ -33,9 +33,12 @@ export const StoreProvider = inject('AppState')((props) => {
 
   const organizationId = useMemo(() => (pageType === 'organization' ? orgId : null), [pageType, orgId]);
 
-  const templateOptionsDs = useMemo(() => new DataSet(TemplateOptionsDataSet()), []);
+  const templateOptionsDs = useMemo(() => new DataSet(TemplateOptionsDataSet('site', organizationId)), []);
+  const orgTemplateOptionsDs = useMemo(
+    () => new DataSet(TemplateOptionsDataSet('organization', organizationId)), [organizationId],
+  );
   const formDs = useMemo(() => new DataSet(FormDataSet({
-    templateId, templateOptionsDs,
+    templateId, templateOptionsDs, orgTemplateOptionsDs, organizationId,
   })), [templateId]);
 
   useEffect(() => {
@@ -44,6 +47,9 @@ export const StoreProvider = inject('AppState')((props) => {
     } else {
       formDs.create();
       templateOptionsDs.query();
+      if (organizationId) {
+        orgTemplateOptionsDs.query();
+      }
     }
   }, []);
 

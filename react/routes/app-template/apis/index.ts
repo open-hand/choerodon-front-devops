@@ -28,8 +28,12 @@ export default class TemplateApis {
     return `${getApiUrl(organizationId)}/${templateId}`;
   }
 
-  static getTemplateList(organizationId?: number): string {
-    return `${getApiUrl(organizationId)}/list`;
+  static getTemplateList(): string {
+    return `${getApiUrl()}/list`;
+  }
+
+  static getOrgTemplateList(type: string, organizationId?: number): string {
+    return `${getApiUrl(organizationId)}/list?selectedLevel=${type}`;
   }
 
   static checkTemplateNameOrCode({

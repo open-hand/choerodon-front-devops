@@ -37,7 +37,10 @@ export default observer(() => {
     const createWayValue = record.get(mapping.createWay.name);
     switch (createWayValue) {
       case 'template':
-        return <Select name={mapping.appTemplate.name} />;
+        return [
+          organizationId ? <SelectBox name={mapping.templateSource.name} /> : null,
+          <Select name={mapping.appTemplate.name} />,
+        ];
         break;
       case 'gitlab':
         return [
