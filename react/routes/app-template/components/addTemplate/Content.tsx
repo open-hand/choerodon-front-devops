@@ -6,6 +6,8 @@ import { observer } from 'mobx-react-lite';
 import { useAddTemplateStore } from './stores';
 import { mapping } from './stores/FormDataSet';
 
+import './index.less';
+
 export default observer(() => {
   const {
     formDs,
@@ -13,6 +15,7 @@ export default observer(() => {
     modal,
     refresh,
     organizationId,
+    prefixCls,
   } = useAddTemplateStore();
 
   const record = useMemo(() => formDs.current, [formDs.current]);
@@ -63,7 +66,7 @@ export default observer(() => {
   }
 
   return (
-    <Form className="c7ncd-appAddTemplate-form" dataSet={formDs}>
+    <Form className={`${prefixCls}`} dataSet={formDs}>
       <TextField name={mapping.templateName.name} autoFocus />
       <TextField name={mapping.templateCode.name} disabled={!!templateId} />
       {!templateId && ([

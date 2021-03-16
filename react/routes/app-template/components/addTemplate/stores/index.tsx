@@ -58,6 +58,7 @@ export const StoreProvider = inject('AppState')((props) => {
     formDs,
     templateId,
     organizationId,
+    prefixCls: 'c7ncd-template-form',
   };
   return (
     <Store.Provider value={value}>
