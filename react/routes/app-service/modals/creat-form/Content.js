@@ -136,7 +136,7 @@ const CreateForm = injectIntl(observer((props) => {
           title={formatMessage({ id: `${intlPrefix}.template` })}
         />
       </div>
-      <Form dataSet={formDs}>
+      <Form dataSet={formDs} className={`${prefixCls}-create-wrap-form`}>
         <SelectBox name="appServiceSource" optionRenderer={renderSourceOption} />
         {
         ['normal_service', 'share_service'].includes(formDs.current.get('appServiceSource')) ? [
