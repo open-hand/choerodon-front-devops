@@ -136,13 +136,12 @@ const CreateForm = injectIntl(observer((props) => {
           title={formatMessage({ id: `${intlPrefix}.template` })}
         />
       </div>
-      <Form dataSet={formDs} columns={3}>
-        <SelectBox name="appServiceSource" colSpan={3} optionRenderer={renderSourceOption} />
+      <Form dataSet={formDs}>
+        <SelectBox name="appServiceSource" optionRenderer={renderSourceOption} />
         {
         ['normal_service', 'share_service'].includes(formDs.current.get('appServiceSource')) ? [
           <Select
             name="templateAppServiceId"
-            colSpan={3}
             searchable
             disabled={!record.get('appServiceSource')}
             notFoundContent={<FormattedMessage id={`${intlPrefix}.empty`} />}
@@ -164,14 +163,13 @@ const CreateForm = injectIntl(observer((props) => {
           </Select>,
           <Select
             name="templateAppServiceVersionId"
-            colSpan={3}
             searchable
             searchMatcher="version"
             clearButton={false}
             disabled={!record.get('templateAppServiceId')}
           />,
         ] : (
-          <Select colSpan={3} name="templateName" />
+          <Select name="devopsAppTemplateId" searchable />
         )
       }
       </Form>

@@ -1,5 +1,6 @@
 import { axios } from '@choerodon/boot';
 import omit from 'lodash/omit';
+import AppServiceApis from '../../../apis';
 
 async function fetchLookup(field, record) {
   const data = await field.fetchLookup();
@@ -10,6 +11,7 @@ async function fetchLookup(field, record) {
 
 export default (({
   intlPrefix, formatMessage, projectId, sourceDs, store,
+  siteTemplateOptionsDs, orgTemplateOptionsDs,
 }) => {
   async function checkCode(value) {
     const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
@@ -59,12 +61,24 @@ export default (({
       }
     }
     if (name === 'appServiceSource') {
-      if (value && ['normal_service', 'share_service'].includes(value)) {
-        store.loadAppService(projectId, record.get('appServiceSource'));
-      } else {
-        store.setAppService([]);
-      }
       record.set('templateAppServiceId', null);
+      record.set('devopsAppTemplateId', null);
+      store.setAppService([]);
+      switch (value) {
+        case 'organization_template':
+          if (!orgTemplateOptionsDs.length) {
+            orgTemplateOptionsDs.query();
+          }
+          break;
+        case 'site_template':
+          if (!siteTemplateOptionsDs.length) {
+            siteTemplateOptionsDs.query();
+          }
+          break;
+        default:
+          store.loadAppService(projectId, value);
+          break;
+      }
     }
   }
 
@@ -77,7 +91,9 @@ export default (({
       create: ({ data: [data] }) => {
         const res = omit(data, ['appServiceSource', '__id', '__status']);
         return ({
-          url: `/devops/v1/projects/${projectId}/app_service`,
+          url: ['organization_template', 'site_template'].includes(data.appServiceSource) && data.devopsAppTemplateId
+            ? AppServiceApis.createAppServiceByTemplate(projectId)
+            : `/devops/v1/projects/${projectId}/app_service`,
           method: 'post',
           data: { ...res, isSkipCheckPermission: true },
         });
@@ -95,22 +111,32 @@ export default (({
       },
       { name: 'imgUrl', type: 'string' },
       {
-        name: 'appServiceSource', defaultValue: 'normal_service', type: 'string', textField: 'text', valueField: 'value', label: formatMessage({ id: `${intlPrefix}.service.source` }), options: sourceDs,
+        name: 'appServiceSource',
+        defaultValue: 'normal_service',
+        type: 'string',
+        textField: 'text',
+        valueField: 'value',
+        label: formatMessage({ id: `${intlPrefix}.service.source` }),
+        options: sourceDs,
       },
       { name: 'templateAppServiceId', type: 'string', label: formatMessage({ id: intlPrefix }) },
       {
         name: 'templateAppServiceVersionId', type: 'string', textField: 'version', valueField: 'id', label: formatMessage({ id: `${intlPrefix}.version` }),
       },
       {
-        name: 'templateName',
-        type: 'string',
-        label: '模板名称',
+        name: 'devopsAppTemplateId',
+        label: formatMessage({ id: `${intlPrefix}.template.name` }),
+        textField: 'name',
+        valueField: 'id',
         dynamicProps: {
-          required: ({ record }) => ['organization', 'site'].includes(record.get('appServiceSource')),
+          options: ({ record }) => (record.get('appServiceSource') === 'organization_template' ? orgTemplateOptionsDs : siteTemplateOptionsDs),
         },
       },
     ],
     events: {
+      create: () => {
+        store.loadAppService(projectId, 'normal_service');
+      },
       update: handleUpdate,
     },
   });

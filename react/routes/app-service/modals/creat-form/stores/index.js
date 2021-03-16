@@ -6,6 +6,7 @@ import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
 import FormDataSet from './FormDataSet';
 import useStore from './useStore';
+import TemplateOptionsDataSet from './TemplateOptionsDataSet';
 
 const Store = createContext();
 
@@ -35,19 +36,27 @@ export const StoreProvider = injectIntl(inject('AppState')(
           value: 'share_service',
         },
         {
-          text: '组织层模板',
-          value: 'organization',
+          text: formatMessage({ id: `${intlPrefix}.template.organization` }),
+          value: 'organization_template',
         },
         {
-          text: '平台层模板',
-          value: 'site',
+          text: formatMessage({ id: `${intlPrefix}.template.site` }),
+          value: 'site_template',
         },
       ],
       selection: 'single',
     }), []);
 
+    const siteTemplateOptionsDs = useMemo(() => new DataSet(TemplateOptionsDataSet(projectId, 'site')), [projectId]);
+    const orgTemplateOptionsDs = useMemo(() => new DataSet(TemplateOptionsDataSet(projectId, 'organization')), [projectId]);
     const formDs = useMemo(() => new DataSet(FormDataSet({
-      intlPrefix, formatMessage, projectId, sourceDs, store,
+      intlPrefix,
+      formatMessage,
+      projectId,
+      sourceDs,
+      store,
+      siteTemplateOptionsDs,
+      orgTemplateOptionsDs,
     })), [projectId]);
 
     const value = {
