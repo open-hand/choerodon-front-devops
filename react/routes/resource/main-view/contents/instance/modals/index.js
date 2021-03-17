@@ -57,7 +57,7 @@ const IstModals = injectIntl(observer(() => {
     const appServiceId = record.get('appServiceId');
     const isMarket = record.get('source') === 'market';
     const isMiddleware = record.get('source') === 'middleware';
-    istStore.loadValue(projectId, id, appServiceVersionId, isMarket);
+    istStore.loadValue(projectId, id, appServiceVersionId, isMarket || isMiddleware);
 
     const deployVo = {
       id,
