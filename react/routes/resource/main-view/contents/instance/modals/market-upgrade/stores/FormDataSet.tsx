@@ -11,6 +11,7 @@ interface FormProps {
   projectId: number,
   versionsDs: DataSet,
   valueDs: DataSet,
+  isMiddleware: boolean,
 }
 
 interface updateProps {
@@ -20,7 +21,7 @@ interface updateProps {
 }
 
 export default ({
-  formatMessage, intlPrefix, projectId, versionsDs, valueDs,
+  formatMessage, intlPrefix, projectId, versionsDs, valueDs, isMiddleware,
 }: FormProps): DataSetProps => {
   async function handleUpdate({ name, value, record }: updateProps) {
     if (name === 'marketDeployObjectId' && value) {
@@ -43,7 +44,9 @@ export default ({
           res.values = valueDs && valueDs.current ? valueDs.current.get('yaml') : '';
         }
         return ({
-          url: `/devops/v1/projects/${projectId}/app_service_instances/market/instances/${data.instanceId}`,
+          url: isMiddleware
+            ? `/devops/v1/projects/${projectId}/middleware/redis/${data.instanceId}`
+            : `/devops/v1/projects/${projectId}/app_service_instances/market/instances/${data.instanceId}`,
           method: 'put',
           data: res,
         });

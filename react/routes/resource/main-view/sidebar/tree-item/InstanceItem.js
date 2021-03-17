@@ -2,8 +2,9 @@ import React, { Fragment, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
-import { Action, Choerodon } from '@choerodon/boot';
+import { Action, Choerodon, axios } from '@choerodon/boot';
 import { Modal } from 'choerodon-ui/pro';
+import isEmpty from 'lodash/isEmpty';
 import eventStopProp from '../../../../../utils/eventStopProp';
 import PodCircle from '../../components/pod-circle';
 import { useResourceStore } from '../../../stores';
@@ -13,6 +14,7 @@ import { useMainStore } from '../../stores';
 import openWarnModal from '../../../../../utils/openWarnModal';
 
 const stopKey = Modal.key();
+const stopKey2 = Modal.key();
 
 function InstanceItem({
   record,
@@ -79,9 +81,43 @@ function InstanceItem({
     });
   }
 
-  function openChangeActive(active) {
-    checkDataExist().then((query) => {
-      if (query) {
+  function checkPipelineReference() {
+    return treeItemStore.checkPipelineReference({
+      projectId,
+      instanceId: record.get('id'),
+    });
+  }
+
+  function openPipelineReferenceModal(active, hasPipelineReference) {
+    Modal.open({
+      movable: false,
+      closable: false,
+      key: stopKey2,
+      title: formatMessage({ id: `${intlPrefix}.instance.action.${active}.title` }, { name: record.get('name') }),
+      children: formatMessage({ id: `${intlPrefix}.instance.action.${active}.no.tips` }, { ...hasPipelineReference }),
+      okCancel: false,
+      okText: formatMessage({ id: 'iknow' }),
+    });
+  }
+
+  async function openDelete(envId, istId, istName) {
+    const hasPipelineReference = await checkPipelineReference();
+    if (!isEmpty(hasPipelineReference)) {
+      openPipelineReferenceModal('delete', hasPipelineReference);
+    } else {
+      openDeleteModal(envId, istId, istName, 'instance', freshMenu);
+    }
+  }
+
+  async function openChangeActive(active) {
+    const [isExist, hasPipelineReference] = await axios.all([
+      checkDataExist(),
+      active === 'stop' ? checkPipelineReference() : null,
+    ]);
+    if (isExist) {
+      if (!isEmpty(hasPipelineReference)) {
+        openPipelineReferenceModal(active, hasPipelineReference);
+      } else {
         Modal.open({
           movable: false,
           closable: false,
@@ -91,7 +127,7 @@ function InstanceItem({
           onOk: () => handleChangeActive(active),
         });
       }
-    });
+    }
   }
 
   async function handleChangeActive(active) {
@@ -134,7 +170,7 @@ function InstanceItem({
       delete: {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete'],
         text: formatMessage({ id: `${intlPrefix}.instance.action.delete` }),
-        action: () => openDeleteModal(envId, istId, istName, 'instance', freshMenu),
+        action: () => openDelete(envId, istId, istName),
       },
     };
     switch (record.get('status')) {
@@ -151,21 +187,25 @@ function InstanceItem({
         break;
     }
 
-    return actionData ? <Action
-      placement="bottomRight"
-      data={actionData}
-      onClick={eventStopProp}
-    /> : null;
+    return actionData ? (
+      <Action
+        placement="bottomRight"
+        data={actionData}
+        onClick={eventStopProp}
+      />
+    ) : null;
   }
 
-  return <Fragment>
-    <PodCircle
-      size="small"
-      dataSource={podData}
-    />
-    {name}
-    {getSuffix()}
-  </Fragment>;
+  return (
+    <>
+      <PodCircle
+        size="small"
+        dataSource={podData}
+      />
+      {name}
+      {getSuffix()}
+    </>
+  );
 }
 
 InstanceItem.propTypes = {

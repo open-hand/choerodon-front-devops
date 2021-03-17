@@ -44,7 +44,7 @@ function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
           <Route path={`${match.url}/reports`} component={Reports} />
           <Route path={`${match.url}/pv-management`} component={PVManager} />
           <Route path={`${match.url}/host-config`} component={HostConfig} />
-          <Route
+          <PermissionRoute
             service={['choerodon.code.organization.manager.application-template.ps.default']}
             path={`${match.url}/org-template`}
             component={OrgTemplate}
