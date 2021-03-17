@@ -364,10 +364,8 @@ const DetailItem = (props) => {
   }
 
   function goToApiTest() {
-    const {
-      id, // 记录id
-      taskId, // 任务id
-    } = apiTestTaskRecordVO;
+    const id = apiTestTaskRecordVO.get('id'); // 记录id
+    const taskId = apiTestTaskRecordVO.get('taskId'); // 任务id
     if (id && taskId) {
       history.push({
         pathname: '/testManager/test-task',
@@ -547,10 +545,6 @@ const DetailItem = (props) => {
       onOk: () => handleFileDownLoad(jarUrl, username, password, jarUrl.split('/')[jarUrl.split('/').length - 1]),
     });
   };
-
-  // const handleNpmDownload = () => {
-  //   window.open(downloadNpm);
-  // };
 
   const handleImageCopy = () => {
     copy(downloadImage);
