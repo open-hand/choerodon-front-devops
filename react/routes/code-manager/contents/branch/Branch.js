@@ -6,6 +6,7 @@ import {
 import {
   Page, Permission, stores, Action,
 } from '@choerodon/boot';
+import classNames from 'classnames';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { SagaDetails } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
@@ -46,6 +47,8 @@ function Branch(props) {
     formatMessage,
     branchStore,
   } = useTableStore();
+
+  const { styles } = props;
 
   const [isOPERATIONS, setIsOPERATIONS] = useState(false);
 
@@ -403,7 +406,7 @@ function Branch(props) {
 
   return (
     <Page
-      className="c7n-region c7n-branch"
+      className={classNames('c7n-region c7n-branch', styles?.['c7n-branch-theme4-page'])}
       service={['choerodon.code.project.develop.code-management.ps.branch.create']}
     >
       {!appServiceId || appServiceDs.status !== 'ready' ? <Loading display /> : tableBranch()}
