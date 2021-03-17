@@ -55,7 +55,8 @@ const IstModals = injectIntl(observer(() => {
 
     const appServiceVersionId = record.get('commandVersionId');
     const appServiceId = record.get('appServiceId');
-    const isMarket = ['middleware', 'market'].includes(record.get('source'));
+    const isMarket = record.get('source') === 'market';
+    const isMiddleware = record.get('source') === 'middleware';
     istStore.loadValue(projectId, id, appServiceVersionId, isMarket);
 
     const deployVo = {
@@ -79,6 +80,7 @@ const IstModals = injectIntl(observer(() => {
         formatMessage={formatMessage}
         refresh={afterDeploy}
         isMarket={isMarket}
+        isMiddleware={isMiddleware}
       />,
       afterClose: () => {
         istStore.setUpgradeValue({});
@@ -97,7 +99,6 @@ const IstModals = injectIntl(observer(() => {
       parentId,
       versionId: appServiceVersionId,
       appServiceId,
-      isMarket: ['middleware', 'market'].includes(record.get('source')),
     };
 
     Modal.open({
@@ -161,6 +162,7 @@ const IstModals = injectIntl(observer(() => {
         intlPrefix={intlPrefix}
         prefixCls={prefixCls}
         refresh={afterDeploy}
+        isMiddleware={record.get('source') === 'middleware'}
       />,
     });
   }

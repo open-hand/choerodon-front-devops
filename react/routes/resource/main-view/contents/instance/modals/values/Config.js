@@ -18,6 +18,7 @@ const ValueModalContent = observer((
     vo,
     refresh,
     isMarket,
+    isMiddleware,
   },
 ) => {
   const [value, setValue] = useState('');
@@ -52,7 +53,7 @@ const ValueModalContent = observer((
     }
 
     try {
-      const result = await store.upgrade(projectId, data, isMarket);
+      const result = await store.upgrade(projectId, data, isMarket, isMiddleware);
       if (handlePromptError(result)) {
         Choerodon.prompt('修改成功.');
         refresh();

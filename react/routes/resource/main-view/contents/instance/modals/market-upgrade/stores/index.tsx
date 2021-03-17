@@ -53,6 +53,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       },
       intlPrefix,
       prefixCls,
+      isMiddleware = false,
     } = props;
 
     const versionsDs = useMemo(() => new DataSet(VersionsDataSet({
@@ -62,7 +63,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       projectId, marketDeployObjectId, instanceId,
     })), [projectId, instanceId, marketDeployObjectId]);
     const formDs = useMemo(() => new DataSet(FormDataSet({
-      formatMessage, intlPrefix, projectId, versionsDs, valueDs,
+      formatMessage, intlPrefix, projectId, versionsDs, valueDs, isMiddleware,
     })), [projectId]);
 
     useEffect(() => {
@@ -84,7 +85,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       await versionsDs.query();
       versionsDs.forEach((eachRecord) => {
         const versionType = eachRecord.get('versionType');
-        if (versionType === '"currentVersion"') {
+        if (versionType === 'currentVersion') {
           record.init({
             marketAppName: eachRecord.get('marketAppName'),
             marketAppVersion: eachRecord.get('marketAppVersion'),
