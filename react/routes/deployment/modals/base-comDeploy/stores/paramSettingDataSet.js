@@ -88,7 +88,7 @@ function setData() {
     [mapping.defaultParams.name]: item[1],
     [mapping.paramsScope.name]: item[2],
     [mapping.tooltip.name]: item[3],
-    [mapping.paramsRunnigValue.name]: item[1],
+    [mapping.paramsRunnigValue.name]: item[1].replace(/,/gi, ''),
   }));
 }
 

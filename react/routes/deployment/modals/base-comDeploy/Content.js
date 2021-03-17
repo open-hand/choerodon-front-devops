@@ -118,7 +118,12 @@ export default observer(() => {
       }
       if (!flag) {
         try {
-          await BaseComDeployServices.axiosPostDeployMiddleware(projectId, axiosData);
+          if (BaseDeployDataSet
+            .current.get(mapping.deployWay.name) === deployWayOptionsData[0].value) {
+            await BaseComDeployServices.axiosPostDeployMiddleware(projectId, axiosData);
+          } else {
+            await BaseComDeployServices.axiosPostDeployHost(projectId, axiosData);
+          }
           refresh();
           return true;
         } catch (e) {
