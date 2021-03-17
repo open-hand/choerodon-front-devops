@@ -45,12 +45,18 @@ export default observer(() => {
     if (middleWare === middleWareData[0].value) {
       // 环境部署
       if (BaseDeployDataSet.current.get(mapping.deployWay.name) === deployWayOptionsData[0].value) {
-        const devopsServiceReqVo = await networkRef.current.getDevopsServiceReqVO();
+        const devopsServiceReqVO = await networkRef.current.getDevopsServiceReqVO();
         const devopsIngressVO = await domainRef.current.getDevopsIngressVO();
         let resource;
-        if (devopsServiceReqVo && devopsIngressVO) {
+        if (devopsServiceReqVO && devopsIngressVO) {
+          if (!devopsServiceReqVO?.devopsServiceReqVO?.name) {
+            devopsServiceReqVO.devopsServiceReqVO = null;
+          }
+          if (!devopsIngressVO?.devopsIngressVO?.name) {
+            devopsIngressVO.devopsIngressVO = null;
+          }
           resource = {
-            ...devopsServiceReqVo,
+            ...devopsServiceReqVO,
             ...devopsIngressVO,
           };
         } else {

@@ -123,6 +123,7 @@ const mapping = {
   values: {
     name: 'values',
     type: 'string',
+    defaultValue: '',
   },
 };
 
@@ -216,7 +217,7 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore) => ({
               .find((item) => item.versionNumber === serviceVersion).id;
             const result = await BaseComDeployServices
               .axiosGetMiddlewareValue(appVersionId, deployMode);
-            record.set(mapping.values.name, result);
+            record.set(mapping.values.name, result || '');
           }
           break;
         case mapping.serviceVersion.name: {
@@ -226,7 +227,7 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore) => ({
             const appVersionId = lookupData.find((item) => item.versionNumber === value).id;
             const result = await BaseComDeployServices
               .axiosGetMiddlewareValue(appVersionId, deployMode);
-            record.set(mapping.values.name, result);
+            record.set(mapping.values.name, result || '');
           }
           break;
         }
