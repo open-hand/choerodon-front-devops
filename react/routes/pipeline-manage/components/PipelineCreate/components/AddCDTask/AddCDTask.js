@@ -563,7 +563,18 @@ export default observer(() => {
   };
 
   const rendererValueId = ({ value, text, record }) => (text === '创建部署配置' ? (
-    <a style={{ width: '100%', display: 'inline-block' }} role="none" onClick={(e) => handleClickCreateValue(e)}>{text}</a>) : text);
+    <a
+      style={{
+        width: 'calc(100% + 0.24rem)', display: 'inline-block', position: 'relative', right: '0.12rem',
+      }}
+      role="none"
+      onClick={(e) => handleClickCreateValue(e)}
+    >
+      <span style={{ marginLeft: '0.12rem' }}>
+        {text}
+      </span>
+    </a>
+  ) : text);
 
   const optionRenderValueId = ({ value, text, record }) => rendererValueId({ text });
 
