@@ -26,4 +26,8 @@ export default class BaseComDeployServices {
   static axiosPostTestHost(projectId, data) {
     return axios.post(BaseComDeployApis.getTestHostApi(projectId), data);
   }
+
+  static axiosPostDeployHost(projectId, data) {
+    return axios.post(BaseComDeployApis.getDeployHostApi(projectId), data);
+  }
 }

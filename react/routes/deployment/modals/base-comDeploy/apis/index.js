@@ -22,4 +22,8 @@ export default class BaseComDeployApis {
   static getTestHostApi(projectId) {
     return `/devops/v1/projects/${projectId}/hosts/multi/connection_test`;
   }
+
+  static getDeployHostApi(projectId) {
+    return `/devops/v1/projects/${projectId}/middleware/redis/deploy/host`;
+  }
 }
