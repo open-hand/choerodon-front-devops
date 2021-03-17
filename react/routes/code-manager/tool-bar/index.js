@@ -21,7 +21,7 @@ const CodeManagerToolBar = injectIntl(inject('AppState')(observer((props) => {
     handleRefresh();
   }, [selectAppDs.current]);
 
-  const { name, intl: { formatMessage } } = props;
+  const { name, intl: { formatMessage }, type } = props;
   const currentApp = _.find(appServiceDs.toData(), ['id', selectAppDs.current.get('appServiceId')]);
   const noRepoUrl = formatMessage({ id: 'repository.noUrl' });
   const getSelfToolBar = () => {
@@ -48,7 +48,15 @@ const CodeManagerToolBar = injectIntl(inject('AppState')(observer((props) => {
       }
     });
   };
-  return (
+  return type && type === 'button' ? [
+    getSelfToolBar(),
+    <Button
+      onClick={refreshApp}
+      icon="refresh"
+    >
+      {formatMessage({ id: 'refresh' })}
+    </Button>,
+  ] : (
     <>
       <Header>
         {getSelfToolBar()}
@@ -68,7 +76,7 @@ export default CodeManagerToolBar;
 export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
   const codeManagerStore = useCodeManagerStore();
   const { appServiceDs, selectAppDs, projectId } = codeManagerStore;
-  const { intl: { formatMessage } } = props;
+  const { intl: { formatMessage }, theme4 } = props;
   const currentApp = _.find(appServiceDs.toData(), ['id', selectAppDs.current.get('appServiceId')]);
   const noRepoUrl = formatMessage({ id: 'repository.noUrl' });
 
@@ -129,11 +137,19 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
 
   return (
     <div style={{ paddingLeft: 24, display: 'flex', alignItems: 'center' }}>
-      <Form columns={2} style={{ maxWidth: '5.5rem' }}>
+      <Form
+        {
+          ...theme4 ? {
+            labelLayout: 'hhorizontal',
+          } : {}
+        }
+        columns={2}
+        style={{ maxWidth: '5.5rem' }}
+      >
         <Select
           colSpan={1}
           className="c7ncd-cm-select"
-          label={formatMessage({ id: 'c7ncd.deployment.app-service' })}
+          label={theme4 ? undefined : formatMessage({ id: 'c7ncd.deployment.app-service' })}
           dataSet={selectAppDs}
           notFoundContent={appServiceDs.length === 0 ? formatMessage({ id: 'ist.noApp' }) : '未找到应用服务'}
           searchable
