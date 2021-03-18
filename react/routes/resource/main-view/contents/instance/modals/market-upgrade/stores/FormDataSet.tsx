@@ -25,8 +25,13 @@ export default ({
 }: FormProps): DataSetProps => {
   async function handleUpdate({ name, value, record }: updateProps) {
     if (name === 'marketDeployObjectId' && value) {
-      const appData = pick(value, ['marketAppName', 'marketAppVersion']);
-      record.init(appData);
+      const deployObjectRecord = versionsDs.find((eachRecord) => eachRecord.get('id') === value);
+      if (deployObjectRecord) {
+        record.init({
+          marketAppName: deployObjectRecord.get('marketAppName'),
+          marketAppVersion: deployObjectRecord.get('marketAppVersion'),
+        });
+      }
       valueDs.setQueryParameter('market_deploy_object_id', value);
       await valueDs.query();
       record.set('values', valueDs.current ? valueDs.current.get('yaml') : '');

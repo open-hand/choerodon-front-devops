@@ -230,7 +230,8 @@ const IstModals = injectIntl(observer(() => {
     const isMarket = record && ['middleware', 'market'].includes(record.get('source'));
     const appAvailable = record && record.get('currentVersionAvailable');
     const upgradeAvailable = record && record.get('upgradeAvailable');
-    const btnDisabled = !connect || !status || (status !== 'failed' && status !== 'running') || (isMarket && !appAvailable);
+    const btnDisabled = !connect || !status || (status !== 'failed' && status !== 'running');
+    const marketDisable = isMarket && !appAvailable;
 
     const buttons = [{
       name: formatMessage({ id: `${intlPrefix}.modal.values` }),
@@ -239,8 +240,8 @@ const IstModals = injectIntl(observer(() => {
       display: true,
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.values'],
       group: 1,
-      disabled: btnDisabled,
-      disabledMessage: isMarket ? formatMessage({ id: `${intlPrefix}.instance.disable.message` }) : null,
+      disabled: btnDisabled || marketDisable,
+      disabledMessage: !btnDisabled ? formatMessage({ id: `${intlPrefix}.instance.disable.message` }) : null,
     }, {
       name: formatMessage({ id: `${intlPrefix}.modal.modify` }),
       icon: 'backup_line',
@@ -256,8 +257,8 @@ const IstModals = injectIntl(observer(() => {
       permissions: [''],
       display: isMarket,
       group: 1,
-      disabled: btnDisabled || !upgradeAvailable,
-      disabledMessage: formatMessage({ id: `${intlPrefix}.instance.disable.message${appAvailable ? '.upgrade' : ''}` }),
+      disabled: btnDisabled || marketDisable || !upgradeAvailable,
+      disabledMessage: !btnDisabled ? formatMessage({ id: `${intlPrefix}.instance.disable.message${appAvailable ? '.upgrade' : ''}` }) : null,
     }, {
       name: formatMessage({ id: `${intlPrefix}.modal.redeploy` }),
       icon: 'redeploy_line',
@@ -265,8 +266,8 @@ const IstModals = injectIntl(observer(() => {
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.redeploy'],
       display: true,
       group: 1,
-      disabled: btnDisabled,
-      disabledMessage: isMarket ? formatMessage({ id: `${intlPrefix}.instance.disable.message` }) : null,
+      disabled: btnDisabled || marketDisable,
+      disabledMessage: !btnDisabled ? formatMessage({ id: `${intlPrefix}.instance.disable.message` }) : null,
     }, {
       name: formatMessage({ id: 'refresh' }),
       icon: 'refresh',
