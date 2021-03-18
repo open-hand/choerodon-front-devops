@@ -154,7 +154,14 @@ function FormContent() {
     if (current.get('target') === 'instance') {
       targetForm = (
         <>
-          <Select name="appServiceId" colSpan={3} className="app-service-select" optionRenderer={appServiceRenderer} />
+          <Select
+            name="appServiceId"
+            colSpan={3}
+            className="app-service-select"
+            searchable
+            searchMatcher="appServiceName"
+            optionRenderer={appServiceRenderer}
+          />
           <Select name="appInstance" colSpan={3} className="app-instance-select" optionRenderer={appInstanceOptionRenderer} renderer={appInstanceRenderer} />
         </>
       );
