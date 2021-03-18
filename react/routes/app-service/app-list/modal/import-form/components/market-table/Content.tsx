@@ -50,12 +50,12 @@ const MarketSourceTable = observer(() => {
               const marketDs = eachRecord.get('childrenDataSet');
               if (marketDs && !isEmpty(marketDs.selected)) {
                 forEach(marketDs.selected, (childRecord: Record) => {
-                  const selected = selectedDs.find((selectedRecord: Record) => selectedRecord.get('id') === childRecord.get('id'));
+                  const selected = selectedDs.find((selectedRecord: Record) => selectedRecord.get('deployObjectId') === childRecord.get('deployObjectId'));
                   if (!selected) {
                     const newRecord = selectedDs.create({
-                      id: childRecord.get('id'),
+                      id: childRecord.get('deployObjectId'),
                       name: childRecord.get('marketServiceName'),
-                      appServiceId: childRecord.get('id'),
+                      appServiceId: childRecord.get('deployObjectId'),
                       sourceProject: record.get('sourceProject'),
                       deployObjectId: childRecord.get('deployObjectId'),
                       versionName: childRecord.get('marketServiceVersion'),

@@ -17,9 +17,8 @@ function getRequestData(appServiceList) {
 
 function getMarketRequestData(appServiceList) {
   const res = map(appServiceList, ({
-    id, name, code, type, deployObjectId,
+    name, code, type, deployObjectId,
   }) => ({
-    appServiceId: id,
     appName: name,
     appCode: code,
     deployObjectId,
