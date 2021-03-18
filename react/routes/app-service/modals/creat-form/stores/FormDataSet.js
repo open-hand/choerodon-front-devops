@@ -10,8 +10,7 @@ async function fetchLookup(field, record) {
 }
 
 export default (({
-  intlPrefix, formatMessage, projectId, sourceDs, store,
-  siteTemplateOptionsDs, orgTemplateOptionsDs,
+  intlPrefix, formatMessage, projectId, sourceDs, store, randomString,
 }) => {
   async function checkCode(value) {
     const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
@@ -53,10 +52,6 @@ export default (({
       const field = record.getField('templateAppServiceVersionId');
       field.reset();
       if (value) {
-        field.set('lookupAxiosConfig', {
-          url: `/devops/v1/projects/${projectId}/app_service_versions/page_by_options?app_service_id=${value}&deploy_only=false&do_page=true&page=1&size=10`,
-          method: 'post',
-        });
         fetchLookup(field, record);
       }
     }
@@ -64,20 +59,8 @@ export default (({
       record.set('templateAppServiceId', null);
       record.set('devopsAppTemplateId', null);
       store.setAppService([]);
-      switch (value) {
-        case 'organization_template':
-          if (!orgTemplateOptionsDs.length) {
-            orgTemplateOptionsDs.query();
-          }
-          break;
-        case 'site_template':
-          if (!siteTemplateOptionsDs.length) {
-            siteTemplateOptionsDs.query();
-          }
-          break;
-        default:
-          store.loadAppService(projectId, value);
-          break;
+      if (['normal_service', 'share_service'].includes(value)) {
+        store.loadAppService(projectId, value);
       }
     }
   }
@@ -121,7 +104,19 @@ export default (({
       },
       { name: 'templateAppServiceId', type: 'string', label: formatMessage({ id: intlPrefix }) },
       {
-        name: 'templateAppServiceVersionId', type: 'string', textField: 'version', valueField: 'id', label: formatMessage({ id: `${intlPrefix}.version` }),
+        name: 'templateAppServiceVersionId',
+        type: 'string',
+        textField: 'version',
+        valueField: 'id',
+        label: formatMessage({ id: `${intlPrefix}.version` }),
+        dynamicProps: {
+          lookupAxiosConfig: ({ record }) => ({
+            url: record.get('templateAppServiceId')
+              ? `/devops/v1/projects/${projectId}/app_service_versions/page_by_options?app_service_id=${record.get('templateAppServiceId')}&deploy_only=false&do_page=true&page=1&size=10&randomString=${randomString}`
+              : '',
+            method: 'post',
+          }),
+        },
       },
       {
         name: 'devopsAppTemplateId',
@@ -129,7 +124,12 @@ export default (({
         textField: 'name',
         valueField: 'id',
         dynamicProps: {
-          options: ({ record }) => (record.get('appServiceSource') === 'organization_template' ? orgTemplateOptionsDs : siteTemplateOptionsDs),
+          lookupAxiosConfig: ({ record }) => ({
+            url: ['organization_template', 'site_template'].includes(record.get('appServiceSource'))
+              ? AppServiceApis.getTemplateList(projectId, record.get('appServiceSource') === 'organization_template' ? 'organization' : 'site', randomString)
+              : '',
+            method: 'get',
+          }),
         },
       },
     ],

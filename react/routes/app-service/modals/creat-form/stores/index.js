@@ -1,12 +1,12 @@
 import React, {
-  createContext, useContext, useEffect, useMemo,
+  createContext, useContext, useMemo,
 } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
+import uuidv1 from 'uuid/v1';
 import FormDataSet from './FormDataSet';
 import useStore from './useStore';
-import TemplateOptionsDataSet from './TemplateOptionsDataSet';
 
 const Store = createContext();
 
@@ -23,6 +23,8 @@ export const StoreProvider = injectIntl(inject('AppState')(
       intlPrefix,
     } = props;
 
+    // 确保每次打开弹窗时能够重新请求数据
+    const randomString = useMemo(() => uuidv1().substring(0, 5), []);
     const store = useStore();
 
     const sourceDs = useMemo(() => new DataSet({
@@ -47,16 +49,13 @@ export const StoreProvider = injectIntl(inject('AppState')(
       selection: 'single',
     }), []);
 
-    const siteTemplateOptionsDs = useMemo(() => new DataSet(TemplateOptionsDataSet(projectId, 'site')), [projectId]);
-    const orgTemplateOptionsDs = useMemo(() => new DataSet(TemplateOptionsDataSet(projectId, 'organization')), [projectId]);
     const formDs = useMemo(() => new DataSet(FormDataSet({
       intlPrefix,
       formatMessage,
       projectId,
       sourceDs,
       store,
-      siteTemplateOptionsDs,
-      orgTemplateOptionsDs,
+      randomString,
     })), [projectId]);
 
     const value = {
