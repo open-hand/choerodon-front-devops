@@ -84,7 +84,7 @@ export default ({
               if (some(appVersionIdObject, (value: string, key: string) => eachRecord.get('id') === key)) {
                 setVersionChildren(eachRecord);
                 eachRecord.get('childrenDataSet')?.forEach((childRecord: Record) => {
-                  if (selectedDs.some((selectedRecord) => selectedRecord.get('id') === childRecord.get('id')
+                  if (selectedDs.some((selectedRecord) => selectedRecord.get('deployObjectId') === childRecord.get('deployObjectId')
                     && selectedRecord.get('marketAppId') === record.get('id')
                     && selectedRecord.get('marketAppVersionId') === eachRecord.get('id'))
                   ) {
