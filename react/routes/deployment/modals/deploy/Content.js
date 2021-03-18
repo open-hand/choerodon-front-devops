@@ -2,7 +2,7 @@ import React, {
   Fragment, useCallback, useEffect, useMemo, useState,
 } from 'react';
 import {
-  Button, Form, Icon, Select, SelectBox, TextField, Tooltip,
+  Button, Form, Icon, Select, SelectBox, TextField, Tooltip, Spin,
 } from 'choerodon-ui/pro';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
@@ -44,6 +44,21 @@ const DeployModal = observer(() => {
   const [resourceIsExpand, setResourceIsExpand] = useState(false);
   const [netIsExpand, setNetIsExpand] = useState(false);
   const [ingressIsExpand, setIngressIsExpand] = useState(false);
+
+  const optionLoading = useMemo(() => (
+    <Option value="loading">
+      <div
+        className="c7ncd-select-option-loading"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        role="none"
+      >
+        <Spin />
+      </div>
+    </Option>
+  ), []);
 
   useEffect(() => {
     if (envId) {
@@ -157,6 +172,9 @@ const DeployModal = observer(() => {
   }
 
   function getMarketAndVersionContent() {
+    if (marketAndVersionOptionsDs.status === 'loading') {
+      return optionLoading;
+    }
     return (
       marketAndVersionOptionsDs.map((marketRecord) => (
         <OptGroup label={marketRecord.get('name')} key={marketRecord.get('id')}>
@@ -173,6 +191,27 @@ const DeployModal = observer(() => {
       disabled: (optionRecord.get('value') === 'normal_service' && !hasDevops)
         || (optionRecord.get('value') === 'market_service' && !hasMarket),
     });
+  }
+
+  function getAppServiceOptions() {
+    if (deployStore.getAppServiceLoading || !record) {
+      return optionLoading;
+    }
+    return (record.get('appServiceSource') === 'normal_service' ? (
+      map(deployStore.getAppService[0]
+        && deployStore.getAppService[0].appServiceList, ({ id, name, code }) => (
+          <Option value={`${id}**${code}`} key={id}>{name}</Option>
+      ))
+    ) : (
+      map(deployStore.getAppService,
+        ({ id: groupId, name: groupName, appServiceList }) => (
+          <OptGroup label={groupName} key={groupId}>
+            {map(appServiceList, ({ id, name, code }) => (
+              <Option value={`${id}**${code}`} key={id}>{name}</Option>
+            ))}
+          </OptGroup>
+        ))
+    ));
   }
 
   const renderRestForm = () => (
@@ -217,21 +256,7 @@ const DeployModal = observer(() => {
                   />
                 )}
               >
-                {record.get('appServiceSource') === 'normal_service' ? (
-                  map(deployStore.getAppService[0]
-                    && deployStore.getAppService[0].appServiceList, ({ id, name, code }) => (
-                      <Option value={`${id}**${code}`} key={id}>{name}</Option>
-                  ))
-                ) : (
-                  map(deployStore.getAppService,
-                    ({ id: groupId, name: groupName, appServiceList }) => (
-                      <OptGroup label={groupName} key={groupId}>
-                        {map(appServiceList, ({ id, name, code }) => (
-                          <Option value={`${id}**${code}`} key={id}>{name}</Option>
-                        ))}
-                      </OptGroup>
-                    ))
-                )}
+                {getAppServiceOptions()}
               </Select>,
               <Select
                 name="appServiceVersionId"

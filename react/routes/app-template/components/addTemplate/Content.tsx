@@ -46,7 +46,12 @@ export default observer(() => {
       case 'template':
         return [
           organizationId ? <SelectBox name={mapping.templateSource.name} /> : null,
-          <Select name={mapping.appTemplate.name} searchable searchMatcher="param" />,
+          <Select
+            name={mapping.appTemplate.name}
+            searchable
+            searchMatcher="param"
+            addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.tips` })} />}
+          />,
         ];
         break;
       case 'gitlab':

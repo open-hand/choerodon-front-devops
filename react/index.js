@@ -30,20 +30,20 @@ function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
     <IntlProviderAsync>
       <div className="c7ncd-root">
         <Switch>
-          <Route path={`${match.url}/app-service`} component={AppService} />
-          <Route path={`${match.url}/code-management`} component={Code} />
-          <Route path={`${match.url}/resource`} component={Resource} />
-          <Route path={`${match.url}/deployment-operation`} component={Deployment} />
-          <Route path={`${match.url}/pipeline-manage`} component={PipelineManage} />
-          <Route path={`${match.url}/pipeline`} component={Pipeline} />
-          <Route path={`${match.url}/environment`} component={Environment} />
-          <Route path={`${match.url}/cert-management`} component={Certificate} />
-          <Route path={`${match.url}/cluster-management`} component={Cluster} />
-          <Route path={`${match.url}/repository`} component={Repository} />
-          <Route path={`${match.url}/project-repository`} component={ProRepository} />
+          <PermissionRoute path={`${match.url}/app-service`} component={AppService} service={['choerodon.code.project.develop.app-service.ps.default']} />
+          <PermissionRoute path={`${match.url}/code-management`} component={Code} service={['choerodon.code.project.develop.code-management.ps.default']} />
+          <PermissionRoute path={`${match.url}/resource`} component={Resource} service={['choerodon.code.project.deploy.app-deployment.resource.ps.default']} />
+          <PermissionRoute path={`${match.url}/deployment-operation`} component={Deployment} service={['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.default']} />
+          <PermissionRoute path={`${match.url}/pipeline-manage`} component={PipelineManage} service={['choerodon.code.project.develop.ci-pipeline.ps.default']} />
+          <PermissionRoute path={`${match.url}/pipeline`} component={Pipeline} service={['choerodon.code.project.deploy.app-deployment.pipeline.ps.default']} />
+          <PermissionRoute path={`${match.url}/environment`} component={Environment} service={['choerodon.code.project.deploy.environment.ps.default']} />
+          <PermissionRoute path={`${match.url}/cert-management`} component={Certificate} service={['choerodon.code.project.deploy.cluster.cert-management.ps.default']} />
+          <PermissionRoute path={`${match.url}/cluster-management`} component={Cluster} service={['choerodon.code.project.deploy.cluster.cluster-management.ps.default']} />
+          <PermissionRoute path={`${match.url}/repository`} component={Repository} service={['choerodon.code.organization.setting.repository.ps.default']} />
+          <PermissionRoute path={`${match.url}/project-repository`} component={ProRepository} service={['choerodon.code.project.setting.setting-repository.ps.default']} />
           <Route path={`${match.url}/reports`} component={Reports} />
-          <Route path={`${match.url}/pv-management`} component={PVManager} />
-          <Route path={`${match.url}/host-config`} component={HostConfig} />
+          <PermissionRoute path={`${match.url}/pv-management`} component={PVManager} service={['choerodon.code.project.deploy.cluster.pv-management.ps.default']} />
+          <PermissionRoute path={`${match.url}/host-config`} component={HostConfig} service={['choerodon.code.project.deploy.host.ps.default']} />
           <PermissionRoute
             service={['choerodon.code.organization.manager.application-template.ps.default']}
             path={`${match.url}/org-template`}
