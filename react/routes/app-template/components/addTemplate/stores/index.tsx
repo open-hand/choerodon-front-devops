@@ -4,7 +4,7 @@ import React, {
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
-import TemplateOptionsDataSet from './TemplateOptionsDataSet';
+import { v1 as uuidv1 } from 'uuid';
 import FormDataSet from './FormDataSet';
 
 interface ContextProps {
@@ -35,12 +35,11 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
 
   const organizationId = useMemo(() => (pageType === 'organization' ? orgId : null), [pageType, orgId]);
 
-  const templateOptionsDs = useMemo(() => new DataSet(TemplateOptionsDataSet('site', organizationId)), []);
-  const orgTemplateOptionsDs = useMemo(
-    () => new DataSet(TemplateOptionsDataSet('organization', organizationId)), [organizationId],
-  );
+  // 确保每次打开弹窗时能够重新请求数据
+  const randomString = useMemo(() => uuidv1().substring(0, 5), []);
+
   const formDs = useMemo(() => new DataSet(FormDataSet({
-    templateId, templateOptionsDs, orgTemplateOptionsDs, organizationId,
+    templateId, organizationId, randomString,
   })), [templateId]);
 
   useEffect(() => {
@@ -48,10 +47,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
       formDs.query();
     } else {
       formDs.create();
-      templateOptionsDs.query();
-      if (organizationId) {
-        orgTemplateOptionsDs.query();
-      }
     }
   }, []);
 

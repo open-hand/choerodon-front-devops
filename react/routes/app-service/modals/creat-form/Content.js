@@ -169,7 +169,7 @@ const CreateForm = injectIntl(observer((props) => {
             disabled={!record.get('templateAppServiceId')}
           />,
         ] : (
-          <Select name="devopsAppTemplateId" searchable />
+          <Select name="devopsAppTemplateId" searchable searchMatcher="param" />
         )
       }
       </Form>

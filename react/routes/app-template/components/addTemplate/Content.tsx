@@ -46,7 +46,7 @@ export default observer(() => {
       case 'template':
         return [
           organizationId ? <SelectBox name={mapping.templateSource.name} /> : null,
-          <Select name={mapping.appTemplate.name} searchable />,
+          <Select name={mapping.appTemplate.name} searchable searchMatcher="param" />,
         ];
         break;
       case 'gitlab':

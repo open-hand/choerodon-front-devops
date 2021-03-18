@@ -3,13 +3,11 @@ import {
 } from '@/interface';
 import TemplateApis from '@/routes/app-template/apis';
 import TemplateServices from '@/routes/app-template/services';
-import map from "@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/addCDTaskDataSetMap";
 
 interface FormProps {
   templateId: string,
-  templateOptionsDs: DataSet,
-  orgTemplateOptionsDs: DataSet,
   organizationId?: number,
+  randomString: string,
 }
 
 interface ValidatorProps {
@@ -137,7 +135,7 @@ const mapping = {
 export { mapping };
 
 export default ({
-  templateId, templateOptionsDs, organizationId, orgTemplateOptionsDs,
+  templateId, organizationId, randomString,
 }: FormProps): DataSetProps => ({
   autoCreate: false,
   autoQuery: false,
@@ -182,9 +180,13 @@ export default ({
       case 'appTemplate':
         item.dynamicProps = {
           required: ({ record }: RecordObjectProps) => !templateId && record.get(mapping.createWay.name) === 'template',
-          options: ({ record }: RecordObjectProps) => (
-            record.get(mapping.templateSource.name) === 'site' ? templateOptionsDs : orgTemplateOptionsDs
-          ),
+          lookupAxiosConfig: ({ record }: RecordObjectProps) => (!templateId ? ({
+            // eslint-disable-next-line no-nested-ternary
+            url: !organizationId
+              ? TemplateApis.getTemplateList(randomString)
+              : TemplateApis.getOrgTemplateList(record.get('templateSource'), organizationId, randomString),
+            method: 'get',
+          }) : null),
         };
         break;
       //  gitlab地址

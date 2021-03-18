@@ -1,6 +1,6 @@
 export default class AppServiceApis {
-  static getTemplateList(projectId: number, selectedLevel: string): string {
-    return `/devops/v1/app_template/project/${projectId}/list?selectedLevel=${selectedLevel}`;
+  static getTemplateList(projectId: number, selectedLevel: string, randomString: string): string {
+    return `/devops/v1/app_template/project/${projectId}/list?selectedLevel=${selectedLevel}&randomString=${randomString}`;
   }
 
   static createAppServiceByTemplate(projectId: number): string {
