@@ -45,6 +45,20 @@ export default function useStore() {
       return this.hasApp;
     },
 
+    async handleEncrept(urlAppServiceId, callback) {
+      try {
+        const res = await axios.post('/devops/v1/encrypt', JSON.stringify([urlAppServiceId]));
+        if (res && res.failed) {
+          return;
+        }
+        if (typeof res === 'object' && Object.prototype.hasOwnProperty.call(res, urlAppServiceId)) {
+          callback(res[urlAppServiceId]);
+        }
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+
     async checkHasApp(projectId) {
       this.setLoading(true);
       try {

@@ -20,6 +20,7 @@ import StatusTag from '../../components/status-tag';
 import TimePopover from '../../components/timePopover/TimePopover';
 import UserInfo from '../../components/userInfo';
 import Deploy from './modals/deploy';
+import BaseComDeploy from './modals/base-comDeploy';
 import BatchDeploy from './modals/batch-deploy';
 import Tips from '../../components/new-tips';
 import StatusDot from '../../components/status-dot';
@@ -59,6 +60,13 @@ const Deployment = withRouter(observer((props) => {
     pipelineOptionsDs,
   } = useDeployStore();
 
+  useEffect(() => {
+    const { location: { state } } = props;
+    if (state && state.type === 'middlewareDeploy') {
+      openBaseDeploy(state.data);
+    }
+  }, []);
+
   function refresh() {
     envOptionsDs.query();
     pipelineOptionsDs.query();
@@ -84,6 +92,24 @@ const Deployment = withRouter(observer((props) => {
         deployStore.setConfigValue('');
       },
       okText: formatMessage({ id: 'deployment' }),
+    });
+  }
+
+  function openBaseDeploy(deployWay) {
+    Modal.open({
+      key: Modal.key(),
+      style: modalStyle2,
+      drawer: true,
+      title: '基础组件部署',
+      children: <BaseComDeploy
+        {
+          ...(deployWay ? {
+            deployWay,
+          } : {})
+        }
+        refresh={refresh}
+      />,
+      okText: '部署',
     });
   }
 
@@ -367,6 +393,12 @@ const Deployment = withRouter(observer((props) => {
             <FormattedMessage id={`${intlPrefix}.batch`} />
           </Button>
         </Permission>
+        <Button
+          icon="jsfiddle"
+          onClick={() => openBaseDeploy()}
+        >
+          基础组件部署
+        </Button>
         <Button
           icon="refresh"
           onClick={() => refresh()}

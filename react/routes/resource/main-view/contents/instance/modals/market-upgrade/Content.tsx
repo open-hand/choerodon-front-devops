@@ -110,7 +110,9 @@ const marketUpgrade = observer(() => {
   return (
     <>
       <Form dataSet={formDs} columns={3}>
-        <TextField name="marketServiceName" disabled />
+        <TextField name="marketAppName" disabled />
+        <TextField name="marketAppVersion" disabled />
+        <TextField name="marketServiceName" disabled newLine />
         <Select
           name="marketDeployObjectId"
           clearButton={false}

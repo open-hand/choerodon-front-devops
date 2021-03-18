@@ -1,0 +1,94 @@
+@success: #00bfa5;
+@running: #4d90fe;
+@pending: #ffb100;
+@failed: #f77a70;
+@canceled: #d8d8d8;
+@skipped: #d8d8d8;
+@stop: #ff7043;
+@not_audit: #f1b42d;
+
+.c7ncd-reports-pipeline-table {
+  margin-top: 0.35rem;
+
+  &-stages {
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    &-item {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: @canceled;
+      display: block;
+      flex-shrink: 0;
+
+      &-line {
+        width: 6px;
+        height: 1px;
+        background: #d3d3d3;
+        margin: 0 1px;
+        flex-shrink: 0;
+      }
+
+      &-success {
+        background: @success;
+      }
+
+      &-running {
+        background: @running;
+      }
+
+      &-pending {
+        background: @pending;
+      }
+
+      &-failed {
+        background: @failed;
+      }
+
+      &-stop {
+        background: @stop;
+      }
+
+      &-not_audit {
+        background: @not_audit;
+      }
+    }
+  }
+
+  &-status {
+    border-radius: 4px;
+    color: #fff;
+    background-color: @canceled;
+    line-height: .2rem;
+    padding: 0 4px;
+    font-size: 12px;
+    transform: scale(0.83);
+    display: inline-block;
+
+    &-success {
+      background: @success;
+    }
+
+    &-running {
+      background: @running;
+    }
+
+    &-pending {
+      background: @pending;
+    }
+
+    &-failed {
+      background: @failed;
+    }
+
+    &-stop {
+      background: @stop;
+    }
+
+    &-not_audit {
+      background: @not_audit;
+    }
+  }
+}

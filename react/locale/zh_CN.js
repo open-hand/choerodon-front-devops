@@ -3,6 +3,7 @@ const commonField = {
   // 表格通用列名
   status: '状态',
   name: '名称',
+  code: '编码',
   creator: '创建者',
   updater: '更新者',
   updateDate: '更新时间',
@@ -258,6 +259,9 @@ const deployment = {
   'c7ncd.deployment.instance.action.stop': '停用实例',
   'c7ncd.deployment.instance.action.stop.title': '停用实例“{name}”',
   'c7ncd.deployment.instance.action.stop.tips': '确定要停用该实例吗？',
+  'c7ncd.deployment.instance.action.stop.no.tips': '该实例在流水线“{pipelineName}”，阶段“{stageName}”，任务“{jobName}”中作为替换实例，无法停用。若想停用此实例，请先前往该流水线修改界面将替换实例改为其他实例。',
+  'c7ncd.deployment.instance.action.delete.title': '删除实例“{name}”',
+  'c7ncd.deployment.instance.action.delete.no.tips': '该实例在流水线“{pipelineName}”，阶段“{stageName}”，任务“{jobName}”中作为替换实例，无法删除。若想删除此实例，请先前往该流水线修改界面将替换实例改为其他实例。',
   'c7ncd.deployment.instance.action.start': '启用实例',
   'c7ncd.deployment.instance.action.start.title': '启用实例“{name}”',
   'c7ncd.deployment.instance.action.start.tips': '确定要启用该实例吗？',
@@ -433,6 +437,8 @@ const deployment = {
   'c7ncd.deployment.polaris.empty.des': '当前环境下暂无实例，无法执行健康检查。',
   'c7ncd.deployment.polaris.check.empty': '该实例为空',
   'c7ncd.deployment.pod.disabled.tops': '若想降至0，请直接点击“停用实例',
+  'c7ncd.deployment.marketApp': '市场应用',
+  'c7ncd.deployment.marketApp.version': '市场版本',
   'c7ncd.deployment.marketService': '市场服务',
   'c7ncd.deployment.marketService.version': '市场服务版本号',
   'c7ncd.deployment.instance.disable.message': '该服务对应的市场应用已下架，无法操作',
@@ -504,6 +510,9 @@ const appService = {
   'c7ncd.appService.source.project': '项目应用服务',
   'c7ncd.appService.source.organization': '共享应用',
   'c7ncd.appService.source.market': '市场应用',
+  'c7ncd.appService.template.organization': '组织层模板',
+  'c7ncd.appService.template.site': '平台层模板',
+  'c7ncd.appService.template.name': '模板名称',
   'c7ncd.appService.user.all': '项目下所有人员',
   'c7ncd.appService.user': '成员',
   'c7ncd.appService.file.failed': '请上传图片格式的文件',
@@ -549,7 +558,7 @@ const appService = {
   'c7ncd.appService.gitlab.tips':
     '支持从GitLab公库或私库导入应用服务，填写私库地址后，还需填写私有Token',
   'c7ncd.appService.market.tips':
-    '市场应用指的是在应用市场中已经下载好的应用',
+    '市场应用指的是应用市场中已发布的应用',
   'c7ncd.appService.add.tips':
     '您可在此批量选择应用服务添加至导入列表。此处展示的均是有代码库的应用服务',
   'c7ncd.appService.import.tips':
@@ -577,6 +586,12 @@ const appService = {
   'c7ncd.appService.version.delete.des.single': '确定要删除“{version}”服务版本吗？删除后，将不可恢复。',
   'c7ncd.appService.version.delete.disable': '请在下方列表中选择服务版本',
   'c7ncd.appService.version.tips': '无法删除存在关联实例或共享规则的服务版本',
+  'c7ncd.appService.market': '应用',
+  'c7ncd.appService.market.source': '应用来源',
+  'c7ncd.appService.market.version': '应用版本',
+  'c7ncd.appService.sourceApp': '所属应用-应用版本',
+  'c7ncd.appService.sourceProject': '来源组织-项目',
+  'c7ncd.appService.versionName': '市场服务版本',
 };
 
 const envrionment = {
@@ -901,12 +916,43 @@ const emptyPage = {
   'empty.link.app': '跳转至应用服务',
   'empty.link.env': '跳转至环境配置',
   'empty.link.code': '跳转至代码库管理',
+  'empty.link.pipeline': '跳转至应用流水线',
   'empty.title.code': '当前用户在该应用服务的GitLab权限为Guest，无法查看此页面。若想执行对应操作，请转至代码库管理界面申请更高的GitLab权限。',
 };
 
 const prompt = {
   'prompt.inform.title': '离开此页',
   'prompt.inform.message': '此页面修改项尚未保存，确定要离开此页面？',
+};
+
+const reports = {
+  // 流水线执行时长图
+  'c7ncd.reports.pipeline.duration.title': '流水线执行时长图',
+  'c7ncd.reports.pipeline.duration.number': '执行编号',
+  'c7ncd.reports.pipeline.duration.name': '流水线名称',
+  'c7ncd.reports.pipeline.duration.stage': '阶段',
+  'c7ncd.reports.pipeline.duration.appService': '关联应用服务',
+  'c7ncd.reports.pipeline.duration.startTime': '开始时间',
+  'c7ncd.reports.pipeline.duration.execute': '执行耗时',
+  'c7ncd.reports.pipeline.duration.trigger': '触发者',
+  'c7ncd.reports.pipeline.duration.failed': '每次最多可同时选择5个应用流水线',
+};
+
+const appTemplate = {
+  'c7ncd.template.status.F': '失败',
+  'c7ncd.template.status.C': '创建中',
+  'c7ncd.template.status.enable': '启用',
+  'c7ncd.template.status.disable': '停用',
+  'c7ncd.template.title.create': '创建应用模板',
+  'c7ncd.template.title.edit': '修改应用模板',
+  'c7ncd.template.enable.title': '停用应用模板“{name}”',
+  'c7ncd.template.enable.des': '确定停用该应用模板吗？',
+  'c7ncd.template.delete.title': '删除应用模板“{name}”',
+  'c7ncd.template.delete.des': '确定删除该应用模板吗？',
+  'c7ncd.template.permission.title': '获取仓库权限',
+  'c7ncd.template.permission.des': '确定后，您将获得该仓库的Developer权限，即访问、推拉代码与修改的权限。',
+  'c7ncd.template.permission.no.title': '暂无代码库权限',
+  'c7ncd.template.permission.no.des': '您没有该模板对应的仓库权限,请点击列表中该模板对应的<三点>图标按钮，并执行<获取GitLab仓库权限>后，才能获得该仓库的访问、推拉与修改权限。',
 };
 
 // 文档地址前缀
@@ -1185,6 +1231,7 @@ const pageDetail = {
   'report.build-number.title': '项目"{name}"的构建次数',
   'report.build-duration.title': '项目"{name}"的构建时长',
   'report.code-quality.title': '项目"{name}"的代码质量图',
+  'report.pipelineTrigger-number.title': '项目"{name}"的流水线触发次数',
   'report.description':
     'DevOps报表将从多个维度直观清晰地展示您当前项目中的代码提交、代码质量、应用构建和应用部署等情况。点击相应报表便能查看对应的内容。',
   'report.submission.description':
@@ -1205,6 +1252,7 @@ const pageDetail = {
   'report.deploy-times.link': `${docServer}/user-guide/report/devops-report/deploy-frequency`,
   'report.build-duration.link': `${docServer}/user-guide/report/devops-report/build-duration`,
   'report.code-quality.link': `${docServer}/user-guide/report/devops-report/code-quality`,
+  'report.pipelineTrigger-number.link': `${docServer}/user-guide/report/devops-report/pipelineTrigger-number`,
   'report.link': `${docServer}/user-guide/report/devops-report/`,
 
   // 开发控制台
@@ -2391,6 +2439,8 @@ const zhCN = {
   'report.build-number.head': '构建次数图',
   'report.build-duration.head': '构建时长图',
   'report.deploy-times.head': '部署次数图',
+  'report.pipelineTrigger-number.head': '流水线触发次数图',
+  'report.pipeline-duration.head': '流水线执行时长图',
   'report.submission.des':
     '跟踪项目下团队与个人的代码提交情况。这有助于了解团队的整体效率与个人效率。',
   'report.code-quality.des':
@@ -2459,6 +2509,12 @@ const zhCN = {
   'report.code-quality.coverLines': '覆盖行',
   'report.code-quality.nclocs': '代码行',
   'report.code-quality.duplicatedLines': '重复行',
+
+  // 流水线构建次数图
+  'report.pipelineTrigger-number.success': '成功次数',
+  'report.pipelineTrigger-number.fail': '失败次数',
+  'report.pipelineTrigger-number.yAxis': '次数',
+  'report.pipelineTrigger-number.build': '触发',
 
   // 部署总览
   'dpOverview.head': '部署总览',
@@ -2950,6 +3006,8 @@ const zhCN = {
   ...pipelineManage,
   ...prompt,
   ...hostConfig,
+  ...reports,
+  ...appTemplate,
 };
 
 export default zhCN;

@@ -88,7 +88,7 @@ export const StoreProvider = injectIntl(observer((props) => {
 
   const baseUrl = () => {
     let tempUrl;
-    if (type === 'market_service') {
+    if (['middleware_service', 'market_service'].includes(type)) {
       tempUrl = `/market/v1/projects/${projectId}/market/service/${id}/detail`;
     } else {
       tempUrl = `/devops/v1/projects/${projectId}/app_service/${id}`;

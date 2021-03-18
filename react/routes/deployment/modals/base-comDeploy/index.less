@@ -1,0 +1,109 @@
+.c7ncd-baseDeploy-middle {
+  p {
+    margin: 0;
+  }
+  &-success {
+    background: rgba(0, 191, 165, 0.04);
+    border: 1px dashed #00bfa5;
+    span {
+      color: rgba(58, 52, 95, 0.76);
+      i {
+        color: #00bfa5;
+        border: 1px solid #00bfa5;
+      }
+    }
+  }
+  &-failed {
+    background: rgba(247, 103, 118, 0.04);
+    border: 1px dashed #f76776;
+    span {
+      color: #f76776 !important;
+      i {
+        color: #f76776;
+        border: 1px solid #f76776;
+      }
+    }
+  }
+  &-service {
+    line-height: 15px;
+    font-size: 12px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #000;
+  }
+  &-img {
+    margin-top: 12px;
+    img {
+      padding: 5px;
+      width: 60px;
+    }
+    span {
+      position: relative;
+      cursor: pointer;
+    }
+    i {
+      position: absolute;
+      right: 3px;
+      color: #6887e8;
+      font-size: 10px;
+    }
+    &-checked {
+      border-radius: 4px;
+      border: 1px solid #5266d4;
+    }
+  }
+  &-deploySetting {
+    font-size: 16px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #000;
+    line-height: 22px;
+    i {
+      cursor: pointer;
+      margin-left: 10px;
+      font-size: 20px;
+    }
+    &-status {
+      position: absolute;
+      font-size: 13px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      line-height: 20px;
+      right: -70px;
+      top: 12px;
+      i {
+        border-radius: 50%;
+        margin-right: 4px;
+      }
+    }
+  }
+  &-hostSetting {
+    display: flex;
+    align-items: center;
+  }
+  &-testButton {
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    &-result {
+      margin-left: 20px;
+      border-radius: 4px;
+      width: 340px;
+      padding: 7px 0;
+      text-align: center;
+      span {
+        font-size: 15px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        line-height: 28px;
+        i {
+          border-radius: 50%;
+        }
+      }
+      span:nth-child(2) {
+        color: #00bfa5;
+        margin-left: 5px;
+      }
+    }
+  }
+}

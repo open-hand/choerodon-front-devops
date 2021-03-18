@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Tooltip } from 'choerodon-ui';
+import { Form, Output } from 'choerodon-ui/pro';
 
 import './index.less';
 
@@ -96,7 +97,28 @@ const Details = (props) => {
     </ul>
   );
 
+  const renderMiddlewareDetails = () => (
+    <ul className={`${prefixCls}-application-detail-modal`}>
+      <li className="detail-item">
+        <span className="detail-item-text">
+          应用来源
+        </span>
+        <span>平台预置</span>
+      </li>
+
+      <li className="detail-item">
+        <span className="detail-item-text">
+          应用及版本
+        </span>
+        <span>{record.get('appName') || '-'}</span>
+      </li>
+    </ul>
+  );
+
   const getContent = () => {
+    if (type === 'middleware_service') {
+      return renderMiddlewareDetails();
+    }
     if (type === 'market_service') {
       return renderMarketDetails();
     }

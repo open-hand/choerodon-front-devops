@@ -1,5 +1,5 @@
 import React, {
-  createContext, useMemo, useContext, useEffect,
+  createContext, useMemo, useContext, useEffect, useCallback,
 } from 'react';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
@@ -53,6 +53,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       },
       intlPrefix,
       prefixCls,
+      isMiddleware = false,
     } = props;
 
     const versionsDs = useMemo(() => new DataSet(VersionsDataSet({
@@ -62,7 +63,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       projectId, marketDeployObjectId, instanceId,
     })), [projectId, instanceId, marketDeployObjectId]);
     const formDs = useMemo(() => new DataSet(FormDataSet({
-      formatMessage, intlPrefix, projectId, versionsDs, valueDs,
+      formatMessage, intlPrefix, projectId, versionsDs, valueDs, isMiddleware,
     })), [projectId]);
 
     useEffect(() => {
@@ -73,7 +74,29 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
           type: 'update',
         });
       }
+      loadVersion();
     }, []);
+
+    const loadVersion = useCallback(async () => {
+      const record = formDs.current;
+      if (!record) {
+        return;
+      }
+      await versionsDs.query();
+      versionsDs.forEach((eachRecord) => {
+        const versionType = eachRecord.get('versionType');
+        if (versionType === 'currentVersion') {
+          record.init({
+            marketAppName: eachRecord.get('marketAppName'),
+            marketAppVersion: eachRecord.get('marketAppVersion'),
+          });
+        }
+        const versionTypeText = versionType
+          ? `（${formatMessage({ id: `${intlPrefix}.market.version.${versionType}` })}）`
+          : '';
+        eachRecord.init('marketServiceVersion', `${eachRecord.get('marketServiceVersion')}${versionTypeText}`);
+      });
+    }, [formDs.current]);
 
     const value = {
       ...props,

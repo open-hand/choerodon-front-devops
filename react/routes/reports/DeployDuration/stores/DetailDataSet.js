@@ -2,9 +2,15 @@ import { Choerodon } from '@choerodon/boot';
 import forEach from 'lodash/forEach';
 import map from 'lodash/map';
 import includes from 'lodash/includes';
+import isEmpty from 'lodash/isEmpty';
 
-export default ({ formatMessage, appServiceDs, chartsDs, envDs, tableDs }) => {
+export default ({
+  formatMessage, appServiceDs, chartsDs, envDs, tableDs,
+}) => {
   async function handleUpdate({ name, value, record }) {
+    if (name === 'appServiceIds' && isEmpty(value)) {
+      return;
+    }
     chartsDs.setQueryParameter(name, value);
     tableDs.setQueryParameter(name, value);
     if (name === 'appServiceIds' && value.length > 5) {

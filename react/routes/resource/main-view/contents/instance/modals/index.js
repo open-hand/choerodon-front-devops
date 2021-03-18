@@ -56,7 +56,8 @@ const IstModals = injectIntl(observer(() => {
     const appServiceVersionId = record.get('commandVersionId');
     const appServiceId = record.get('appServiceId');
     const isMarket = record.get('source') === 'market';
-    istStore.loadValue(projectId, id, appServiceVersionId, isMarket);
+    const isMiddleware = record.get('source') === 'middleware';
+    istStore.loadValue(projectId, id, appServiceVersionId, isMarket || isMiddleware);
 
     const deployVo = {
       id,
@@ -79,6 +80,7 @@ const IstModals = injectIntl(observer(() => {
         formatMessage={formatMessage}
         refresh={afterDeploy}
         isMarket={isMarket}
+        isMiddleware={isMiddleware}
       />,
       afterClose: () => {
         istStore.setUpgradeValue({});
@@ -97,7 +99,6 @@ const IstModals = injectIntl(observer(() => {
       parentId,
       versionId: appServiceVersionId,
       appServiceId,
-      isMarket: record.get('source') === 'market',
     };
 
     Modal.open({
@@ -161,6 +162,7 @@ const IstModals = injectIntl(observer(() => {
         intlPrefix={intlPrefix}
         prefixCls={prefixCls}
         refresh={afterDeploy}
+        isMiddleware={record.get('source') === 'middleware'}
       />,
     });
   }
@@ -225,7 +227,7 @@ const IstModals = injectIntl(observer(() => {
     const connect = envRecord && envRecord.get('connect');
     const record = baseDs.current;
     const status = record ? record.get('status') : '';
-    const isMarket = record && record.get('source') === 'market';
+    const isMarket = record && ['middleware', 'market'].includes(record.get('source'));
     const appAvailable = record && record.get('currentVersionAvailable');
     const upgradeAvailable = record && record.get('upgradeAvailable');
     const btnDisabled = !connect || !status || (status !== 'failed' && status !== 'running') || (isMarket && !appAvailable);

@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useEffect, useMemo } from 'react';
+import React, {
+  createContext, useContext, useEffect, useMemo,
+} from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
@@ -30,12 +32,27 @@ export const StoreProvider = injectIntl(inject('AppState')(
     const envOptionsDs = useMemo(() => new DataSet(OptionsDataSet()), []);
     const valueIdOptionsDs = useMemo(() => new DataSet(OptionsDataSet()), []);
 
-    const pathListDs = useMemo(() => new DataSet(PathListDataSet({ formatMessage, projectId })), [projectId]);
+    const pathListDs = useMemo(
+      () => new DataSet(PathListDataSet({ formatMessage, projectId })), [projectId],
+    );
     const annotationDs = useMemo(() => new DataSet(AnnotationDataSet({ formatMessage })), []);
-    const domainDs = useMemo(() => new DataSet(DomainDataSet({ formatMessage, projectId, pathListDs, annotationDs })), [projectId]);
+    const domainDs = useMemo(() => new DataSet(DomainDataSet({
+      formatMessage, projectId, pathListDs, annotationDs,
+    })), [projectId]);
     const portsDs = useMemo(() => new DataSet(PortDataSet({ formatMessage, pathListDs })), []);
-    const networkDs = useMemo(() => new DataSet(NetworkDataSet({ formatMessage, projectId, portsDs, pathListDs })), []);
-    const batchDeployDs = useMemo(() => new DataSet(BatchDeployDataSet({ intlPrefix, formatMessage, projectId, envOptionsDs, valueIdOptionsDs, deployStore, networkDs, domainDs })), [projectId]);
+    const networkDs = useMemo(() => new DataSet(NetworkDataSet({
+      formatMessage, projectId, portsDs, pathListDs,
+    })), []);
+    const batchDeployDs = useMemo(() => new DataSet(BatchDeployDataSet({
+      intlPrefix,
+      formatMessage,
+      projectId,
+      envOptionsDs,
+      valueIdOptionsDs,
+      deployStore,
+      networkDs,
+      domainDs,
+    })), [projectId]);
 
     useEffect(() => {
       envOptionsDs.transport.read.url = `/devops/v1/projects/${projectId}/envs/list_by_active?active=true`;

@@ -1,3 +1,5 @@
+@import '~choerodon-ui/lib/style/themes/default';
+
 .c7ncd-appService-create-wrap {
 
   .c7ncd-appService-create {
@@ -50,7 +52,7 @@
       align-items: center;
       border-top: 1px solid #d8d8d8;
       padding: .2rem .2rem 0.1rem;
-      margin: 0 -.2rem;
+      margin: 0 -.2rem .2rem;
     }
 
     &-icon {
@@ -60,6 +62,12 @@
       &:hover {
         cursor: pointer;
       }
+    }
+  }
+
+  &-form {
+    .@{c7n-pro-prefix}-radio-wrapper {
+      width: 50%;
     }
   }
 
