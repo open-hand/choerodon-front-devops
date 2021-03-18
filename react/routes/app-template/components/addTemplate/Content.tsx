@@ -3,6 +3,7 @@ import {
   Form, TextField, SelectBox, Select, Spin, Password,
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
+import Tips from '@/components/new-tips';
 import { useAddTemplateStore } from './stores';
 import { mapping } from './stores/FormDataSet';
 
@@ -16,6 +17,8 @@ export default observer(() => {
     refresh,
     organizationId,
     prefixCls,
+    formatMessage,
+    intlPrefix,
   } = useAddTemplateStore();
 
   const record = useMemo(() => formDs.current, [formDs.current]);
@@ -38,6 +41,7 @@ export default observer(() => {
       return '';
     }
     const createWayValue = record.get(mapping.createWay.name);
+    const urlTips = <Tips helpText={formatMessage({ id: `${intlPrefix}.url.tips` })} />;
     switch (createWayValue) {
       case 'template':
         return [
@@ -47,13 +51,13 @@ export default observer(() => {
         break;
       case 'gitlab':
         return [
-          <TextField name={mapping.gitlabAddress.name} />,
+          <TextField name={mapping.gitlabAddress.name} addonAfter={urlTips} />,
           <Password name={mapping.token.name} />,
         ];
         break;
       case 'github':
         return [
-          <TextField name={mapping.githubAddress.name} />,
+          <TextField name={mapping.githubAddress.name} addonAfter={urlTips} />,
         ];
       default:
         return '';

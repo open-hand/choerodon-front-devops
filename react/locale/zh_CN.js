@@ -955,6 +955,7 @@ const appTemplate = {
   'c7ncd.template.permission.des': '确定后，您将获得该仓库的Developer权限，即访问、推拉代码与修改的权限。',
   'c7ncd.template.permission.no.title': '暂无代码库权限',
   'c7ncd.template.permission.no.des': '您没有该模板对应的仓库权限,请点击列表中该模板对应的<三点>图标按钮，并执行<获取GitLab仓库权限>后，才能获得该仓库的访问、推拉与修改权限。',
+  'c7ncd.template.url.tips': '此处支持填写HTTP或HTTPS地址',
 };
 
 // 文档地址前缀
