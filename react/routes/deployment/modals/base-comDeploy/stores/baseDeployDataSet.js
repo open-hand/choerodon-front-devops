@@ -194,6 +194,22 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore) => ({
       dataSet, record, name, value,
     }) => {
       switch (name) {
+        case mapping.deployWay.name: {
+          // 主机部署
+          if (value === deployWayOptionsData[1].value) {
+            // 单机
+            if (record.get(mapping.deployMode.name) === deployModeOptionsData[0].value) {
+              HostSettingDataSet.splice(0, HostSettingDataSet.records.length);
+              HostSettingDataSet.create();
+            } else {
+              HostSettingDataSet.splice(0, HostSettingDataSet.records.length);
+              HostSettingDataSet.create();
+              HostSettingDataSet.create();
+              HostSettingDataSet.create();
+            }
+          }
+          break;
+        }
         case mapping.middleware.name:
           record.set(mapping.instance.name, `${value}-${uuidV1().substring(0, 5)}`);
           break;
