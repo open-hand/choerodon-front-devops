@@ -109,13 +109,13 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
         && childrenDataSet.selected.length !== childrenDataSet.length);
   }, []);
 
-  const handleAppExpand = useCallback(async (expanded, record) => {
+  const handleAppExpand = useCallback((expanded, record) => {
     if (expanded && !record.get('childrenDataSet')) {
       setAppChildren(record);
     }
   }, []);
 
-  const handleVersionExpand = useCallback(async (eachRecord: Record) => {
+  const handleVersionExpand = useCallback((eachRecord: Record) => {
     if (!eachRecord.get('expand')) {
       setVersionChildren(eachRecord);
     }
@@ -152,6 +152,8 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     getIndeterminate,
     getAppIndeterminate,
     handleMarketServiceCheck,
+    handleAppExpand,
+    handleVersionExpand,
   };
   return (
     <Store.Provider value={value}>
