@@ -63,8 +63,10 @@ const Deployment = withRouter(observer((props) => {
 
   useEffect(() => {
     const { location: { state } } = props;
-    if (state && state.type === 'middlewareDeploy') {
-      openBaseDeploy(state.data);
+    if (state && state.mode === 'middlewareDeploy') {
+      setTimeout(() => {
+        openBaseDeploy(state.data);
+      }, 1000);
     }
   }, []);
 
