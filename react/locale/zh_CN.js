@@ -743,10 +743,12 @@ const deploy = {
   'c7ncd.deploy.type.manual': '手动',
   'c7ncd.deploy.type.batch': '批量',
   'c7ncd.deploy.type.auto': '流水线',
+  'c7ncd.deploy.type.baseComponent': '基础组件',
   'c7ncd.deploy.source.deploy': '部署来源',
   'c7ncd.deploy.source.deploy.currentProject': '本项目',
   'c7ncd.deploy.source.deploy.share': '共享',
   'c7ncd.deploy.source.deploy.market': '市场',
+  'c7ncd.deploy.source.deploy.platformPreset': '平台预置',
 };
 
 const repository = {

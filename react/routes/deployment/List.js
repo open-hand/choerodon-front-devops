@@ -10,6 +10,7 @@ import {
 import { Button } from 'choerodon-ui';
 import { FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router-dom';
+import classNames from 'classnames';
 import { observer } from 'mobx-react-lite';
 import app from '@/images/app.svg';
 import image from '@/images/image.svg';
@@ -102,6 +103,7 @@ const Deployment = withRouter(observer((props) => {
       drawer: true,
       title: '基础组件部署',
       children: <BaseComDeploy
+        random={Math.random()}
         {
           ...(deployWay ? {
             deployWay,
@@ -179,7 +181,12 @@ const Deployment = withRouter(observer((props) => {
     const viewId = record.get('viewId');
     return (
       <>
-        <span className={`${prefixCls}-content-table-mark ${prefixCls}-content-table-mark-${type}`}>
+        <span
+          className={classNames({
+            [`${prefixCls}-content-table-mark ${prefixCls}-content-table-mark-${type}`]: true,
+            'c7ncd-number-base': type === 'baseComponent',
+          })}
+        >
           {formatMessage({ id: `${intlPrefix}.type.${type}` })}
         </span>
         <span className={`${prefixCls}-content-table-number`}>

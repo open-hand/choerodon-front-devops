@@ -20,6 +20,7 @@ export const StoreProvider = inject('AppState')(
     const {
       AppState: { currentMenuType: { projectId } },
       children,
+      random,
     } = props;
 
     const BaseComDeployStore = useStore();
@@ -32,7 +33,7 @@ export const StoreProvider = inject('AppState')(
         projectId,
         HostSettingDataSet,
         BaseComDeployStore,
-      )), [projectId],
+      )), [projectId, random],
     );
     const ParamSettingDataSet = useMemo(() => new DataSet(paramSettingDataSet()), []);
 
