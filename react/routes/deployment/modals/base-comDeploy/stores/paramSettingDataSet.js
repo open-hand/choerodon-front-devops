@@ -37,9 +37,13 @@ function setData() {
     ['appendonly', 'yes', 'yes,no', '指定是否在每次更新操作后进行日志记录，Redis在默认情况下是异步的把数据写入磁盘，如果不开启，可能会在断电时导致一段时间内的数据丢失。有2个取值供选择：\n'
     + 'yes：开启。\n'
     + 'no：关闭。\n'],
-    ['client-output-buffer-limit-slave-soft-seconds', '60', '0～60', 'slave客户端output-buffer超过client-output-buffer-slave-soft-limit设置的大小，并且持续时间超过此值（单位为秒），服务端会主动断开连接。'],
-    ['client-output-buffer-slave-hard-limit', '429,496,729', '0～4,294,967,296', '对slave客户端output-buffer的硬限制（单位为字节），如果slave客户端output-buffer大于此值，服务端会主动断开连接。'],
-    ['client-output-buffer-slave-soft-limit', '429,496,729', '0～4,294,967,296', '对slave客户端output-buffer的软限制（单位为字节），如果output-buffer大于此值并且持续时间超过client-output-buffer-limit-slave-soft-seconds设置的时长，服务端会主动断开连接。'],
+    // ['client-output-buffer-limit-slave-soft-seconds', '60', '0～60', 'slave客户端output-buffer超过
+    // client-output-buffer-slave-soft-limit设置的大小，并且持续时间超过此值（单位为秒），服务端会主动断开连接。'],
+    // ['client-output-buffer-slave-hard-limit', '429,496,729', '0～4,294,967,296', '对slave客户端ou
+    // tput-buffer的硬限制（单位为字节），如果slave客户端output-buffer大于此值，服务端会主动断开连接。'],
+    // ['client-output-buffer-slave-soft-limit', '429,496,729', '0～4,294,967,296', '对slave客户端output
+    // -buffer的软限制（单位为字节），如果output-buffer大于此值并且持续时间超过client-output-buffe
+    // r-limit-slave-soft-seconds设置的时长，服务端会主动断开连接。'],
     ['hash-max-ziplist-entries', '512', '1～10,000', '当hash表中只有少量记录时，使用有利于节约内存的的数据结构来对hashes进行编码。'],
     ['hash-max-ziplist-value', '64', '1～10,000', '当hash表中最大的取值不超过预设阈值时，使用有利于节约内存的的数据结构来对hashes进行编码。'],
     ['latency-monitor-threshold', '0', '0～86,400,000', '延时监控的采样时间阀值（最小值），单位为毫秒。\n'
@@ -47,7 +51,7 @@ function setData() {
     + '阀值设置为大于0：，将记录执行耗时大于阀值的操作。\n'
     + '可以通过LATENCY等命令获取统计数据和配置、执行采样监控。\n'],
     ['lua-time-limit', '5,000', '100～5,000', 'Lua脚本的最长执行时间，单位为毫秒。'],
-    ['master-read-only', 'no', 'yes,no', '设置实例为只读状态。设置只读后，所有写入命令将返回失败。'],
+    // ['master-read-only', 'no', 'yes,no', '设置实例为只读状态。设置只读后，所有写入命令将返回失败。'],
     ['maxclients', '10,000', '1,000～50,000', '最大同时连接的客户端个数。'],
     ['maxmemory-policy', 'volatile-lru', 'volatile-lru,allkeys-lru,volatile-lfu,allkeys-lfu,volatile-random,allkeys-random,volatile-ttl,noeviction', '在达到内存上限（maxmemory）时DCS将如何选择要删除的内容。有8个取值供选择：\n'
     + 'volatile-lru：根据LRU算法删除设置了过期时间的键值。\n'
