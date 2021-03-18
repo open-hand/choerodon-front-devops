@@ -36,7 +36,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
 
     useEffect(() => {
       if (ingressId) {
-        formDs.query();
+        // formDs.query();
         loadData();
       } else {
         serviceDs.query();

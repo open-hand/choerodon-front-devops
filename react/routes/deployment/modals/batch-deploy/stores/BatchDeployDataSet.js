@@ -18,19 +18,23 @@ function formatAnnotation(postData, oldAnnotation = []) {
   const annotations = {};
   forEach(oldAnnotation, ({ domain, key, value }) => {
     if (key && value) {
-      annotations[`${domain ? `${domain}/` : ''}${key}`] = value;
+      annotations[key] = value;
     }
   });
   postData.annotations = isEmpty(annotations) ? null : annotations;
 }
 
-export default (({ intlPrefix, formatMessage, projectId, envOptionsDs, deployStore, networkDs, domainDs }) => {
+export default (({
+  intlPrefix, formatMessage, projectId, envOptionsDs, deployStore, networkDs, domainDs,
+}) => {
   function handleCreate({ dataSet, record }) {
     const defaultEnvId = (dataSet.records)[0].get('environmentId');
     defaultEnvId && record.set('environmentId', defaultEnvId);
   }
 
-  async function handleUpdate({ dataSet, record, name, value }) {
+  async function handleUpdate({
+    dataSet, record, name, value,
+  }) {
     const networkRecord = record.getCascadeRecords('devopsServiceReqVO')[0];
     const domainRecord = record.getCascadeRecords('devopsIngressVO')[0];
     switch (name) {
@@ -97,9 +101,8 @@ export default (({ intlPrefix, formatMessage, projectId, envOptionsDs, deploySto
         const res = await axios.get(`/devops/v1/projects/${projectId}/app_service_instances/check_name?instance_name=${value}&env_id=${record.get('environmentId')}`);
         if ((res && res.failed) || !res) {
           return formatMessage({ id: 'checkNameExist' });
-        } else {
-          return true;
         }
+        return true;
       } catch (err) {
         return formatMessage({ id: 'checkNameFailed' });
       }
@@ -126,13 +129,15 @@ export default (({ intlPrefix, formatMessage, projectId, envOptionsDs, deploySto
           const devopsIngressVO = item.devopsIngressVO ? omit(item.devopsIngressVO[0], ['__id', '__status']) : null;
           res.appServiceId = appServiceId;
           if (devopsServiceReqVO && devopsServiceReqVO.name) {
-            const newPorts = map(devopsServiceReqVO.ports || [], ({ port, targetPort, nodePort, protocol }) => ({
+            const newPorts = map(devopsServiceReqVO.ports || [], ({
+              port, targetPort, nodePort, protocol,
+            }) => ({
               port: Number(port),
               targetPort: Number(targetPort),
               nodePort: nodePort ? Number(nodePort) : null,
               protocol: devopsServiceReqVO.type === 'NodePort' ? protocol : null,
             }));
-            const externalIp = devopsServiceReqVO.externalIp;
+            const { externalIp } = devopsServiceReqVO;
             devopsServiceReqVO.ports = newPorts;
             devopsServiceReqVO.externalIp = externalIp && externalIp.length ? externalIp.join(',') : null;
             devopsServiceReqVO.targetInstanceCode = res.instanceName;
@@ -156,10 +161,18 @@ export default (({ intlPrefix, formatMessage, projectId, envOptionsDs, deploySto
       },
     },
     fields: [
-      { name: 'appServiceId', type: 'string', label: formatMessage({ id: `${intlPrefix}.app` }), required: true },
-      { name: 'appServiceVersionId', type: 'string', textField: 'version', valueField: 'id', label: formatMessage({ id: `${intlPrefix}.app.version` }), required: true },
-      { name: 'environmentId', type: 'string', textField: 'name', valueField: 'id', label: formatMessage({ id: 'environment' }), required: true, options: envOptionsDs },
-      { name: 'instanceName', type: 'string', label: formatMessage({ id: `${intlPrefix}.instance.name` }), required: true, validator: checkName, maxLength: 53 },
+      {
+        name: 'appServiceId', type: 'string', label: formatMessage({ id: `${intlPrefix}.app` }), required: true,
+      },
+      {
+        name: 'appServiceVersionId', type: 'string', textField: 'version', valueField: 'id', label: formatMessage({ id: `${intlPrefix}.app.version` }), required: true,
+      },
+      {
+        name: 'environmentId', type: 'string', textField: 'name', valueField: 'id', label: formatMessage({ id: 'environment' }), required: true, options: envOptionsDs,
+      },
+      {
+        name: 'instanceName', type: 'string', label: formatMessage({ id: `${intlPrefix}.instance.name` }), required: true, validator: checkName, maxLength: 53,
+      },
       {
         name: 'valueId',
         type: 'string',
@@ -174,7 +187,9 @@ export default (({ intlPrefix, formatMessage, projectId, envOptionsDs, deploySto
       { name: 'type', type: 'string', defaultValue: 'create' },
       { name: 'isNotChange', type: 'boolean', defaultValue: false },
       { name: 'appServiceSource', type: 'string', defaultValue: 'normal_service' },
-      { name: 'hasError', type: 'boolean', defaultValue: false, ignore: 'always' },
+      {
+        name: 'hasError', type: 'boolean', defaultValue: false, ignore: 'always',
+      },
     ],
     events: {
       create: handleCreate,

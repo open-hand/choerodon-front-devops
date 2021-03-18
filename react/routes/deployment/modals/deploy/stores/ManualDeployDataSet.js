@@ -99,9 +99,9 @@ function getRandomName(prefix = '') {
 
 function formatAnnotation(postData, oldAnnotation = []) {
   const annotations = {};
-  forEach(oldAnnotation, ({ domain, key, value }) => {
+  forEach(oldAnnotation, ({ key, value }) => {
     if (key && value) {
-      annotations[`${domain ? `${domain}/` : ''}${key}`] = value;
+      annotations[key] = value;
     }
   });
   // eslint-disable-next-line no-param-reassign

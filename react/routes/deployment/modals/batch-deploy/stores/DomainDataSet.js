@@ -35,9 +35,9 @@ export default ({ formatMessage, intlPrefix, projectId, pathListDs, annotationDs
     if (!value) {
       return;
     }
-    const pattern = /^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)+)$/;
+    const pattern = /^(\*\.)?[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/;
     if (!pattern.test(value)) {
-      return formatMessage({ id: 'domain.domain.check.failed' });
+      return formatMessage({ id: 'domain.domain.check.reg.failed' });
     }
   }
 

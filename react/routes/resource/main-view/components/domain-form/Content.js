@@ -161,11 +161,9 @@ export default observer(() => {
       </div>
       {map(annotationDs.data, (annotationRecord) => (
         <Form columns={14} record={annotationRecord} style={{ width: '103.3%' }} key={annotationRecord.id}>
-          <TextField colSpan={3} name="domain" />
-          <span className={`${prefixCls}-domain-form-annotation-equal`}>/</span>
-          <TextField colSpan={3} name="key" />
+          <TextField colSpan={6} name="key" />
           <span className={`${prefixCls}-domain-form-annotation-equal`}>=</span>
-          <TextField colSpan={5} name="value" />
+          <TextField colSpan={6} name="value" />
           {annotationDs.length > 1 ? (
             <Button
               funcType="flat"

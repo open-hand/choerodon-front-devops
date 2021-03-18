@@ -2194,10 +2194,12 @@ const zhCN = {
     '由小写字母，数字和 - 组成，以字母、数字开始和结束',
   'domain.domain.check.failed':
     '由小写字母，数字和 . 组成，以字母、数字开始和结束',
+  'domain.domain.check.reg.failed':
+    '由小写字母，数字， 中划线和 . 组成，以字母、数字开始和结束， 且支持 *. 开头进行通配',
   'domain.path.check.exist': '域名地址与路径的组合已经存在',
   'domain.path.check.failed': '以 / 开始，且不能有空白字符',
   'domain.annotation.check.failed': '输入内容格式有误',
-  'domain.annotation.check.repeat': '“子域名+名称”不能重复',
+  'domain.annotation.check.repeat': '“键”不能重复',
   'domain.path.check.notSet': '如不设置，请填写 /',
   'domain.path.add': '添加路径',
   'domain.annotation.add': '添加Annotation',

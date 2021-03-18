@@ -1,9 +1,11 @@
 function domainValidator(dataSet) {
-  dataSet.forEach((eachRecord) => eachRecord.getField('domain').checkValidity());
+  dataSet.forEach((eachRecord) => eachRecord.getField('key').checkValidity());
 }
 
-function handleUpdate({ value, name, record, dataSet }) {
-  if (name === 'key' || name === 'domain') {
+function handleUpdate({
+  value, name, record, dataSet,
+}) {
+  if (name === 'key') {
     domainValidator(dataSet);
   }
 }
@@ -13,31 +15,17 @@ function handleRemove({ dataSet }) {
 }
 
 export default ({ formatMessage }) => {
-  function checkDomain(value, name, record) {
-    const pa = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/;
-    if (value && !pa.test(value)) {
-      return formatMessage({ id: 'domain.annotation.check.failed' });
-    }
-    if (record.get('key')) {
+  function checkKey(value, name, record) {
+    const pa = /^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*\/)?([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$/;
+    if (value) {
+      if (!pa.test(value)) {
+        return formatMessage({ id: 'domain.annotation.check.failed' });
+      }
       const ds = record.dataSet;
-      const recordKey = `${record.get('domain')}/${record.get('key')}`;
-      const hasRepeat = ds.some((annotationRecord) => {
-        const text = `${annotationRecord.get('domain')}/${annotationRecord.get('key')}`;
-        return annotationRecord.id !== record.id && recordKey === text;
-      });
+      const hasRepeat = ds.some((annotationRecord) => annotationRecord.id !== record.id && value === annotationRecord.get('key'));
       if (hasRepeat) {
         return formatMessage({ id: 'domain.annotation.check.repeat' });
       }
-    }
-  }
-
-  function checkKey(value, name, record) {
-    const pa = /^([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$/;
-    if (value && !pa.test(value)) {
-      return formatMessage({ id: 'domain.annotation.check.failed' });
-    }
-    if (!value && record.get('value')) {
-      return formatMessage({ id: 'mapping.keyValueSpan' });
     }
   }
 
@@ -54,18 +42,11 @@ export default ({ formatMessage }) => {
     paging: false,
     fields: [
       {
-        name: 'domain',
-        type: 'string',
-        validator: checkDomain,
-        maxLength: 253,
-        label: formatMessage({ id: 'domain.annotation' }),
-      },
-      {
         name: 'key',
         type: 'string',
         validator: checkKey,
-        maxLength: 63,
-        label: formatMessage({ id: 'name' }),
+        maxLength: 316,
+        label: formatMessage({ id: 'key' }),
       },
       {
         name: 'value',
