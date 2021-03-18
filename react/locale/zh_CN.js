@@ -956,6 +956,7 @@ const appTemplate = {
   'c7ncd.template.permission.no.title': '暂无代码库权限',
   'c7ncd.template.permission.no.des': '您没有该模板对应的仓库权限,请点击列表中该模板对应的<三点>图标按钮，并执行<获取GitLab仓库权限>后，才能获得该仓库的访问、推拉与修改权限。',
   'c7ncd.template.url.tips': '此处支持填写HTTP或HTTPS地址',
+  'c7ncd.template.tips': '此处仅默认查出20个应用模板，您可通过模糊搜索查询到其他的模板',
 };
 
 // 文档地址前缀

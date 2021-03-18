@@ -4,7 +4,13 @@ import { handlePromptError } from '../../../utils';
 
 export default function useStore() {
   return useLocalStore(() => ({
-
+    appServiceLoading: false,
+    setAppServiceLoading(flag) {
+      this.appServiceLoading = flag;
+    },
+    get getAppServiceLoading() {
+      return this.appServiceLoading;
+    },
     appService: [],
     setAppService(data) {
       this.appService = data;
@@ -48,11 +54,14 @@ export default function useStore() {
 
     async loadAppService(projectId, type) {
       try {
+        this.setAppServiceLoading(true);
         const res = await axios.get(`/devops/v1/projects/${projectId}/app_service/list_all_app_services?service_type=normal&deploy_only=true&type=${type}`);
         if (handlePromptError(res)) {
           this.setAppService(res);
         }
+        this.setAppServiceLoading(false);
       } catch (e) {
+        this.setAppServiceLoading(false);
         Choerodon.handleResponseError(e);
       }
     },

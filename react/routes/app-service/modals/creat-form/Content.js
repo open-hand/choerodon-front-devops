@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import {
-  Form, TextField, Select, Tooltip, SelectBox,
+  Form, TextField, Select, Tooltip, SelectBox, Spin,
 } from 'choerodon-ui/pro';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
@@ -28,6 +28,21 @@ const CreateForm = injectIntl(observer((props) => {
     formDs,
   } = useCreateAppServiceStore();
   const record = formDs.current;
+
+  const optionLoading = useMemo(() => (
+    <Option value="loading">
+      <div
+        className="c7ncd-select-option-loading"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        role="none"
+      >
+        <Spin />
+      </div>
+    </Option>
+  ), []);
 
   modal.handleOk(async () => {
     try {
@@ -84,6 +99,26 @@ const CreateForm = injectIntl(observer((props) => {
         {text}
       </Tooltip>
     );
+  }
+
+  function getAppServiceOptions() {
+    if (store.getAppServiceLoading || !record) {
+      return optionLoading;
+    }
+    return (record.get('appServiceSource') === 'normal_service' ? (
+      map(store.getAppService[0]
+        && store.getAppService[0].appServiceList, ({ id, name }) => (
+          <Option value={id} key={id}>{name}</Option>
+      ))
+    ) : (
+      map(store.getAppService, ({ id: groupId, name: groupName, appServiceList }) => (
+        <OptGroup label={groupName} key={groupId}>
+          {map(appServiceList, ({ id, name }) => (
+            <Option value={id} key={id}>{name}</Option>
+          ))}
+        </OptGroup>
+      ))
+    ));
   }
 
   return (
@@ -146,20 +181,7 @@ const CreateForm = injectIntl(observer((props) => {
             disabled={!record.get('appServiceSource')}
             notFoundContent={<FormattedMessage id={`${intlPrefix}.empty`} />}
           >
-            {record.get('appServiceSource') === 'normal_service' ? (
-              map(store.getAppService[0]
-                && store.getAppService[0].appServiceList, ({ id, name }) => (
-                  <Option value={id} key={id}>{name}</Option>
-              ))
-            ) : (
-              map(store.getAppService, ({ id: groupId, name: groupName, appServiceList }) => (
-                <OptGroup label={groupName} key={groupId}>
-                  {map(appServiceList, ({ id, name }) => (
-                    <Option value={id} key={id}>{name}</Option>
-                  ))}
-                </OptGroup>
-              ))
-            )}
+            {getAppServiceOptions()}
           </Select>,
           <Select
             name="templateAppServiceVersionId"
@@ -169,7 +191,12 @@ const CreateForm = injectIntl(observer((props) => {
             disabled={!record.get('templateAppServiceId')}
           />,
         ] : (
-          <Select name="devopsAppTemplateId" searchable searchMatcher="param" />
+          <Select
+            name="devopsAppTemplateId"
+            searchable
+            searchMatcher="param"
+            addonAfter={<Tips helpText={formatMessage({ id: 'c7ncd.template.tips' })} />}
+          />
         )
       }
       </Form>
