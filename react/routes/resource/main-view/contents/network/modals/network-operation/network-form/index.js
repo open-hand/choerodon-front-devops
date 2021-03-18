@@ -159,7 +159,6 @@ function FormContent() {
             colSpan={3}
             className="app-service-select"
             searchable
-            searchMatcher="appServiceName"
             optionRenderer={appServiceRenderer}
           />
           <Select name="appInstance" colSpan={3} className="app-instance-select" optionRenderer={appInstanceOptionRenderer} renderer={appInstanceRenderer} />
