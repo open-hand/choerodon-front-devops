@@ -2,6 +2,7 @@ import React, {
   createContext, useMemo, useContext, useEffect,
 } from 'react';
 import { inject } from 'mobx-react';
+import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
 import TemplateOptionsDataSet from './TemplateOptionsDataSet';
 import FormDataSet from './FormDataSet';
@@ -23,12 +24,13 @@ export function useAddTemplateStore() {
   return useContext(Store);
 }
 
-export const StoreProvider = inject('AppState')((props) => {
+export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const {
     children,
     templateId,
     AppState: { currentMenuType: { organizationId: orgId } },
     pageType,
+    intl: { formatMessage },
   } = props;
 
   const organizationId = useMemo(() => (pageType === 'organization' ? orgId : null), [pageType, orgId]);
@@ -55,14 +57,16 @@ export const StoreProvider = inject('AppState')((props) => {
 
   const value = {
     ...props,
+    formatMessage,
     formDs,
     templateId,
     organizationId,
     prefixCls: 'c7ncd-template-form',
+    intlPrefix: 'c7ncd.template',
   };
   return (
     <Store.Provider value={value}>
       {children}
     </Store.Provider>
   );
-});
+}));
