@@ -92,8 +92,10 @@ export default observer(() => {
         const hostValid = await HostSettingDataSet.validate();
         if (baseValid && hostValid) {
           if (HostSettingDataSet.records.some((i) => !i.get(hostMapping.status.name) || i.get(hostMapping.status.name) !== 'success')) {
-            message.error('请先将主机测试成功');
-            return false;
+            const result = await handleTestConnect();
+            if (!result) {
+              return false;
+            }
           }
           for (let i = 0; i < ParamSettingDataSet.records.length; i += 1) {
             const result = handleValidParamsRunningValue(ParamSettingDataSet
@@ -265,9 +267,13 @@ export default observer(() => {
             record.set(hostMapping.status.name, 'success');
           }
         });
-        console.log(HostSettingDataSet);
+        if (!result || result.length === 0) {
+          return true;
+        }
       }
+      return false;
     }
+    return false;
   };
 
   const renderItemHostStatus = (record) => {
@@ -321,6 +327,17 @@ export default observer(() => {
   };
 
   /**
+   * 默认值渲染
+   * @param value
+   * @returns {*}
+   */
+  const renderParamsScope = ({ value }) => (
+    <Tooltip title={value}>
+      {value}
+    </Tooltip>
+  );
+
+  /**
    * 参数运行值 render
    * @param value
    * @param record
@@ -345,7 +362,7 @@ export default observer(() => {
   const renderParams = ({ value, record }) => (
     <span>
       {value}
-      <Tooltip title={record.get(paramMapping.tooltip.name)}>
+      <Tooltip title={(<span style={{ whiteSpace: 'pre-line' }}>{record.get(paramMapping.tooltip.name)}</span>)}>
         <Icon
           style={{
             color: 'rgba(0, 0, 0, 0.36)',
@@ -490,7 +507,7 @@ export default observer(() => {
         >
           <Column name={paramMapping.params.name} renderer={renderParams} />
           <Column name={paramMapping.defaultParams.name} />
-          <Column name={paramMapping.paramsScope.name} />
+          <Column name={paramMapping.paramsScope.name} renderer={renderParamsScope} />
           <Column name={paramMapping.paramsRunnigValue.name} renderer={renderParamsRunningValue} />
         </Table>
       </>
