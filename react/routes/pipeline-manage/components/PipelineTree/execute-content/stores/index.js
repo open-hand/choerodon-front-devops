@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useMemo, useEffect } from 'react';
+import React, {
+  createContext, useContext, useMemo, useEffect,
+} from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
@@ -23,12 +25,9 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
   } = props;
 
   const store = useStore();
-  const selectDs = useMemo(() => new DataSet(SelectDataSet({ projectId, formatMessage, gitlabProjectId, pipelineId, appServiceName })), [projectId, gitlabProjectId, pipelineId]);
-
-  useEffect(() => {
-    store.loadBranchData({ projectId, appServiceId, page: 1 });
-    store.loadTagData({ projectId, appServiceId, page: 1 });
-  }, []);
+  const selectDs = useMemo(() => new DataSet(SelectDataSet({
+    projectId, formatMessage, gitlabProjectId, pipelineId, appServiceName,
+  })), [projectId, gitlabProjectId, pipelineId]);
 
   const value = {
     ...props,

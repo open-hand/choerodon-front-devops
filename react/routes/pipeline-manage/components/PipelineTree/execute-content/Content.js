@@ -1,4 +1,6 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, {
+  useState, useMemo, useEffect, useRef,
+} from 'react';
 import {
   Form, Progress, Select, Icon, TextField,
 } from 'choerodon-ui/pro';
@@ -26,11 +28,11 @@ export default observer(() => {
     record,
   } = useExecuteContentStore();
 
+  const formRef = useRef();
   const [branchPage, setBranchPage] = useState(1);
   const [tagPage, setTagPage] = useState(1);
   const [moreTagLoading, setMoreTagLoading] = useState(false);
   const [moreBranchLoading, setMoreBranchLoading] = useState(false);
-  const [selectCom, setSelectCom] = useState(null);
   const [searchValue, setSearchValue] = useState('');
 
   const {
@@ -39,6 +41,10 @@ export default observer(() => {
     getHasMoreBranch,
     getHasMoreTag,
   } = store;
+
+  useEffect(() => {
+    loadData('');
+  }, []);
 
   // eslint-disable-next-line consistent-return
   modal.handleOk(async () => {
@@ -78,6 +84,14 @@ export default observer(() => {
   const loadData = useMemo(() => debounce(async (text) => {
     setBranchPage(1);
     setTagPage(1);
+    let selectCom;
+    if (formRef.current) {
+      const { fields } = formRef.current;
+      if (fields instanceof Array && fields.length) {
+        // eslint-disable-next-line prefer-destructuring
+        selectCom = fields[1];
+      }
+    }
     if (selectCom && selectCom.options) {
       selectCom.options.changeStatus('loading');
     }
@@ -88,13 +102,13 @@ export default observer(() => {
         projectId, appServiceId, page: 1, searchValue: text,
       })]);
       const value = selectDs.current.get('branch');
-      if (selectCom && selectCom.options) {
-        selectCom.options.changeStatus('ready');
-      }
       if (!branchData && !tagData) {
+        if (selectCom && selectCom.options) {
+          selectCom.options.changeStatus('ready');
+        }
         return;
       }
-      if (!searchValue
+      if (!text
         && value
         && !(some(branchData.list, (item) => item.branchName === value.slice(0, -7))
           || some(tagData.list, (item) => item.release.tagName === value.slice(0, -7)))) {
@@ -114,10 +128,16 @@ export default observer(() => {
           ]);
         }
       }
+      if (selectCom && selectCom.options) {
+        selectCom.options.changeStatus('ready');
+      }
     } catch (e) {
+      if (selectCom && selectCom.options) {
+        selectCom.options.changeStatus('ready');
+      }
       Choerodon.handleResponseError(e);
     }
-  }, 700), [projectId, appServiceId, selectCom]);
+  }, 700), [projectId, appServiceId, formRef]);
 
   function renderBranchOptionOrigin(args) {
     // eslint-disable-next-line no-shadow
@@ -182,23 +202,11 @@ export default observer(() => {
     loadData('');
   }
 
-  function changeRef(obj) {
-    if (obj) {
-      const { fields } = obj;
-      if (fields instanceof Array && fields.length) {
-        const select = fields[0];
-        if (select && !selectCom) {
-          setSelectCom(select);
-        }
-      }
-    }
-  }
-
   return (
     <Form
       dataSet={selectDs}
       // style={{ width: 340 }}
-      ref={changeRef}
+      ref={formRef}
       columns={3}
     >
       <TextField name="appServiceName" disabled />
