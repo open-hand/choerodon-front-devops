@@ -103,7 +103,6 @@ const mapping = {
     name: 'resourceName',
     type: 'string',
     label: '资源名称',
-    defaultValue: `${middleWareData[0].value}-${uuidV1().substring(0, 5)}`,
     maxLength: 64,
   },
   env: {
@@ -117,7 +116,7 @@ const mapping = {
     name: 'instanceName',
     type: 'string',
     label: '实例名称',
-    defaultValue: `${middleWareData[0].value}-${uuidV1().substring(0, 5)}`,
+    // defaultValue: `${middleWareData[0].value}-${uuidV1().substring(0, 5)}`,
     maxLength: 64,
   },
   values: {
@@ -174,6 +173,7 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore) => ({
         required: ({ record }) => (record.get(mapping.middleware.name) === middleWareData[0].value)
         && (record.get(mapping.deployWay.name) === deployWayOptionsData[0].value),
       };
+      item.defaultValue = `${middleWareData[0].value}-${uuidV1().substring(0, 5)}`;
     } else if (key === 'resourceName') {
       item.dynamicProps = {
         required: ({ record }) => (record.get(mapping.middleware.name) === middleWareData[0].value)
@@ -185,6 +185,7 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore) => ({
         }
         return true;
       };
+      item.defaultValue = `${middleWareData[0].value}-${uuidV1().substring(0, 5)}`;
     }
     return item;
   }),
