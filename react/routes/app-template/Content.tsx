@@ -105,7 +105,8 @@ const TemplateTable = observer(() => {
       return;
     }
     try {
-      TemplateServices.addTemplatePermission(record.get('id'), organizationId);
+      await TemplateServices.addTemplatePermission(record.get('id'), organizationId);
+      refresh();
     } catch (e) {
       Choerodon.handleResponseError(e);
     }
@@ -159,7 +160,7 @@ const TemplateTable = observer(() => {
 
   const renderUrl = useCallback(({ value, record }) => {
     const text = value ? `../${value.split('/')[value.split('/').length - 1]}` : '';
-    if (!organizationId && record && !record.get('permission')) {
+    if (record && !record.get('permission')) {
       return (
         <span
           role="none"
@@ -209,7 +210,7 @@ const TemplateTable = observer(() => {
         });
         if (!enabled) {
           actionData.push(deleteData);
-        } else if (!organizationId && !hasPermission) {
+        } else if (!hasPermission) {
           actionData.push({
             service: permissionCodes.permission,
             text: '获取GitLab仓库权限',

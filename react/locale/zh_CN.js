@@ -942,7 +942,7 @@ const reports = {
 
 const appTemplate = {
   'c7ncd.template.status.F': '失败',
-  'c7ncd.template.status.C': '创建中',
+  'c7ncd.template.status.C': '处理中',
   'c7ncd.template.status.enable': '启用',
   'c7ncd.template.status.disable': '停用',
   'c7ncd.template.title.create': '创建应用模板',
