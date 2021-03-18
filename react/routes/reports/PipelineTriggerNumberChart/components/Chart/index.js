@@ -5,10 +5,10 @@ import map from 'lodash/map';
 import reduce from 'lodash/reduce';
 import { useReportsStore } from '@/routes/reports/stores';
 import Loading from '@/components/loading';
+import { observer } from 'mobx-react-lite';
 import { usePipelineTriggerNumberStore } from '../../stores';
 import mapings from '../../stores/mappings';
 import { getAxis } from '../../../util';
-import { observer } from 'mobx-react-lite';
 
 const Chart = (props) => {
   const {
@@ -74,7 +74,7 @@ const Chart = (props) => {
     padding: [0, 5, 5, 5],
     formatter(name) {
       let count = 0;
-      map(getVal(pipelineSuccessFrequency, pipelineFailFrequency), (data) => {
+      map(getVal(pipelineFailFrequency, pipelineSuccessFrequency), (data) => {
         if (data.name === name) {
           count = data.value;
         }
@@ -187,7 +187,6 @@ const Chart = (props) => {
     } = pipelineChartDs.current ? pipelineChartDs.current.toData() : {};
 
     const { xAxis, yAxis } = getAxis(startTime, endTime, createDates || [], { pipelineFailFrequency, pipelineSuccessFrequency, pipelineFrequencys });
-
     const option = {
       legend: getLegend(pipelineSuccessFrequency, pipelineFailFrequency),
       tooltip: getTooltip(),
