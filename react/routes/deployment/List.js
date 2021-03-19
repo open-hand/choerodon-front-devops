@@ -62,11 +62,12 @@ const Deployment = withRouter(observer((props) => {
   } = useDeployStore();
 
   useEffect(() => {
-    const { location: { state } } = props;
-    if (state && state.mode === 'middlewareDeploy') {
-      setTimeout(() => {
-        openBaseDeploy(state.data);
-      }, 1000);
+    const { location: { search } } = props;
+    const urlQuery = new URLSearchParams(search);
+    if (urlQuery.get('mode')) {
+      openBaseDeploy(urlQuery.get('mode'));
+      urlQuery.delete('mode');
+      window.history.replaceState(null, null, `/#/devops/deployment-operation${urlQuery.toString()}`);
     }
   }, []);
 
