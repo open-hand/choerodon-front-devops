@@ -9,6 +9,8 @@ import {
 import axios from 'axios';
 import copy from 'copy-to-clipboard';
 import FileSaver from 'file-saver';
+import StreamSaver from 'streamsaver';
+import { Base64 } from 'js-base64';
 import { get } from 'lodash';
 import { handlePromptError } from '../../../../../../utils';
 import StatusTag from '../StatusTag';
@@ -511,23 +513,30 @@ const DetailItem = (props) => {
   );
 
   const handleFileDownLoad = async (url, username, password, filename) => {
-    const config = {
-      auth: {
-        username,
-        password,
-      },
-      responseType: 'blob',
-    };
-    try {
-      const res = await axios.get(url, config);
-      if (res && res.failed) {
-        return;
-      }
-      FileSaver.saveAs(res, filename);
-      Choerodon.prompt('下载成功');
-    } catch (error) {
-      throw new Error(error);
-    }
+    const tempHeader = new Headers();
+    tempHeader.append('Authorization', `Basic ${Base64.encode(`${username}:${password}`)}`);
+    fetch(url, {
+      method: 'GET',
+      headers: tempHeader,
+    })
+      .then((response) => {
+        const fileStream = StreamSaver.createWriteStream(filename);
+        const readableStream = response.body;
+        if (readableStream.pipeTo) {
+          return readableStream.pipeTo(fileStream);
+        }
+        const writer = fileStream.getWriter();
+        window.writer = writer;
+
+        const reader = response.body.getReader();
+        const pump = () => reader.read()
+          .then((res) => (res.done
+            ? writer.close()
+            : writer.write(res.value).then(pump)));
+        pump();
+      }).catch((error) => {
+        throw new Error(error);
+      });
   };
 
   const handleJarDownload = () => {
