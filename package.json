@@ -49,6 +49,7 @@
     "react-loading": "^1.0.4",
     "react-markdown": "^3.5.0",
     "simplebar-react": "^1.2.1",
+    "streamsaver": "^2.0.5",
     "styled-components": "^4.1.3",
     "timeago-react": "^2.0.0",
     "uuid": "^3.3.3",
