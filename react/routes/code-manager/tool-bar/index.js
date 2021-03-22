@@ -140,13 +140,16 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
       <Form
         {
           ...theme4 ? {
-            labelLayout: 'hhorizontal',
-          } : {}
+            labelLayout: 'horizontal',
+          } : {
+            labelLayout: 'float',
+          }
         }
         columns={2}
         style={{ maxWidth: '5.5rem' }}
       >
         <Select
+          addonBefore={theme4 ? '应用服务' : undefined}
           colSpan={1}
           className="c7ncd-cm-select"
           label={theme4 ? undefined : formatMessage({ id: 'c7ncd.deployment.app-service' })}
@@ -200,6 +203,9 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
             funcType="raised"
             disabled={!(currentApp && currentApp.repoUrl)}
             className="c7ncd-copyBtn"
+            style={{
+              marginLeft: theme4 ? 16 : 'unset',
+            }}
           >
             <span className="c7ncd-copyBtn-span">
               {formatMessage({ id: 'repository.copyUrl' })}
