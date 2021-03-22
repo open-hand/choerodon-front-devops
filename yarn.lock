@@ -1176,8 +1176,8 @@
 
 "@choerodon/master@0.25.0":
   version "0.25.0"
-  resolved "https://nexus.choerodon.com.cn/repository/choerodon-npm/@choerodon/master/-/master-0.25.0.tgz#e2aa16bafff4554a9dc8132a31232b5d761ca599"
-  integrity sha512-04n/+y1EDsBP3FLZDvPgkq5Vqvh9sMlZ/mgUio+U3XPGcshMd9Bq248L60bDqIHDmGlePDLChtG0KvJo3SK60Q==
+  resolved "https://nexus.choerodon.com.cn/repository/choerodon-npm/@choerodon/master/-/master-0.25.0.tgz#2d8dcf38cadff39af64f4f970f88d0f0cd6bdc24"
+  integrity sha512-yPVzpaU4IW3zTzkO4FjexmkM+U36VGETWD9sefZ0cT6aR6Fs8WFJhkdA7G52lN/bPU4i0beCbGAIHSpLqdTNDg==
   dependencies:
     "@hzero-front-ui/c7n-ui" "2.0.7-alpha-c7n.24"
     "@hzero-front-ui/cfg" "2.0.7-alpha-c7n.24"
