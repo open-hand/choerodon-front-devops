@@ -55,7 +55,6 @@ const MarketSourceTable = observer(() => {
                     const newRecord = selectedDs.create({
                       id: childRecord.get('deployObjectId'),
                       name: childRecord.get('marketServiceName'),
-                      appServiceId: childRecord.get('deployObjectId'),
                       sourceProject: record.get('sourceProject'),
                       deployObjectId: childRecord.get('deployObjectId'),
                       versionName: childRecord.get('marketServiceVersion'),
