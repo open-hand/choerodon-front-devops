@@ -1,7 +1,9 @@
+/* eslint-disable */
 import React, { useEffect, Fragment, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { withRouter, Link } from 'react-router-dom';
 import _ from 'lodash';
+import classNames from 'classnames';
 import { Icon } from 'choerodon-ui/pro';
 import { Page } from '@choerodon/boot';
 import EmptyPage from '../../../../../components/empty-page';
@@ -33,7 +35,7 @@ export default withRouter(observer((props) => {
 
   const { location: {
     search,
-  } } = props;
+  }, styles } = props;
 
   function getDetail() {
     if (codeQuality.getIsEmpty) {
@@ -118,7 +120,7 @@ export default withRouter(observer((props) => {
   }
   return (
     <Page
-      className="c7n-region c7n-codeQuality-wrapper page-container"
+      className={classNames('c7n-region', 'c7n-codeQuality-wrapper', 'page-container', styles?.['c7n-branch-theme4-page'])}
       service={[]}
     >
       {appServiceDs.status !== 'ready' || codeQuality.loading ? <Loading display /> : getDetail()}

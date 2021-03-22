@@ -1174,10 +1174,10 @@
     webpack-theme-color-replacer "^1.2.17"
     webpackbar "^4.0.0"
 
-"@choerodon/master@^0.25.0":
+"@choerodon/master@0.25.0":
   version "0.25.0"
-  resolved "https://nexus.choerodon.com.cn/repository/choerodon-npm/@choerodon/master/-/master-0.25.0.tgz#d887868d11900bd5f6043c6664b4e1d8b8dcf7aa"
-  integrity sha512-dxtP6wd3qgh8LaT58w21A7xhaIgV891iahGPGmxnRbbozRfHhgWuLIjZrj+nP82ArdJDy0aBpPwfjL9yzb3/tw==
+  resolved "https://nexus.choerodon.com.cn/repository/choerodon-npm/@choerodon/master/-/master-0.25.0.tgz#e2aa16bafff4554a9dc8132a31232b5d761ca599"
+  integrity sha512-04n/+y1EDsBP3FLZDvPgkq5Vqvh9sMlZ/mgUio+U3XPGcshMd9Bq248L60bDqIHDmGlePDLChtG0KvJo3SK60Q==
   dependencies:
     "@hzero-front-ui/c7n-ui" "2.0.7-alpha-c7n.24"
     "@hzero-front-ui/cfg" "2.0.7-alpha-c7n.24"

@@ -1,9 +1,11 @@
+/* eslint-disable */
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Tooltip } from 'choerodon-ui';
 import { Table } from 'choerodon-ui/pro';
 import { Action, Page } from '@choerodon/boot';
 import { injectIntl } from 'react-intl';
+import classNames from 'classnames';
 import TimeAgo from 'timeago-react';
 import MouserOverWrapper from '../../../../components/MouseOverWrapper';
 import Loading from '../../../../components/loading';
@@ -64,7 +66,7 @@ const ICONS = {
 
 const { Column } = Table;
 
-export default injectIntl(observer(() => {
+export default injectIntl(observer((props) => {
   const {
     ciTableDS,
     pipelineActionStore: {
@@ -76,6 +78,8 @@ export default injectIntl(observer(() => {
     AppState: { currentMenuType: { projectId } },
     pipelineActionStore,
   } = usePipelineStore();
+
+  const { styles } = props;
 
   const { appServiceDs, selectAppDs } = useCodeManagerStore();
   const appServiceId = selectAppDs.current.get('appServiceId');
@@ -344,7 +348,7 @@ export default injectIntl(observer(() => {
   }
   return (
     <Page
-      className="c7n-ciPipeline page-container"
+      className={classNames('c7n-ciPipeline', 'page-container', styles?.['c7n-branch-theme4-page'])}
       service={[]}
     >
       {appServiceDs.status !== 'ready' || !appServiceId

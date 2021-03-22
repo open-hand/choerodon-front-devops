@@ -1,8 +1,10 @@
+/* eslint-disable */
 import React, { useEffect, Fragment, useMemo } from 'react';
 import { Icon, Tooltip } from 'choerodon-ui';
 import { Table, Button, Tabs } from 'choerodon-ui/pro';
 import { withRouter } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
+import classNames from 'classnames';
 import { Page, Permission } from '@choerodon/boot';
 import map from 'lodash/map';
 import { useRequestStore } from './stores';
@@ -28,6 +30,8 @@ const RequestPanel = withRouter(observer((props) => {
     openTableDS,
     mergedRequestStore,
   } = useRequestStore();
+
+  const { styles } = props;
   const {
     appServiceDs,
     selectAppDs,
@@ -199,7 +203,7 @@ const RequestPanel = withRouter(observer((props) => {
 
   return (
     <Page
-      className="c7n-region page-container c7n-merge-wrapper"
+      className={classNames('c7n-region page-container', 'c7n-merge-wrapper', styles?.['c7n-branch-theme4-page'])}
       service={[]}
     >
       {appServiceDs.status !== 'ready' || !appId
