@@ -112,12 +112,6 @@ const Platform = injectIntl(observer(({ checkData }) => {
       >
         <FormattedMessage id={`${intlPrefix}.add`} />
       </Button>
-      <div className={`${prefixCls}-import-platform-selected`}>
-        <Tips
-          helpText={formatMessage({ id: `${intlPrefix}.import.tips` })}
-          title={formatMessage({ id: `${intlPrefix}.selected` }, { number: selectedDs.length })}
-        />
-      </div>
       {importRecord?.get('platformType') === 'share' ? (
         <Table
           dataSet={selectedDs}
