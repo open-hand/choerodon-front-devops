@@ -5,7 +5,7 @@ import uuidV1 from 'uuid/v1';
 import { axios } from '@choerodon/master';
 
 const deployWayOptionsData = [{
-  text: '环境部署',
+  text: '容器部署',
   value: 'env',
 }, {
   text: '主机部署',
