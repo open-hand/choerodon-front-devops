@@ -6,20 +6,18 @@ import { Button, Modal, message } from 'choerodon-ui/pro';
 import {
   Choerodon, Permission, Action,
 } from '@choerodon/boot';
-import axios from 'axios';
 import copy from 'copy-to-clipboard';
-import FileSaver from 'file-saver';
 import StreamSaver from 'streamsaver';
 import { Base64 } from 'js-base64';
 import { get } from 'lodash';
-import { handlePromptError } from '../../../../../../utils';
+import renderDuration from '@/utils/getDuration';
+import { handlePromptError } from '@/utils';
 import StatusTag from '../StatusTag';
 import DepolyLog from '../deployLog';
 import StatusDot from '../statusDot';
 import CodeQuality from '../codeQuality';
 import CodeLog from '../codeLog';
 import { usePipelineManageStore } from '../../../../stores';
-import renderDuration from '../../../../../../utils/getDuration';
 import jobTypesMappings from '../../../../stores/jobsTypeMappings';
 
 const DetailItem = (props) => {
@@ -525,6 +523,7 @@ const DetailItem = (props) => {
         if (readableStream.pipeTo) {
           return readableStream.pipeTo(fileStream);
         }
+
         const writer = fileStream.getWriter();
         window.writer = writer;
 
@@ -534,6 +533,7 @@ const DetailItem = (props) => {
             ? writer.close()
             : writer.write(res.value).then(pump)));
         pump();
+        return true;
       }).catch((error) => {
         throw new Error(error);
       });

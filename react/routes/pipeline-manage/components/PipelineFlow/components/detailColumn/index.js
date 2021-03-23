@@ -3,30 +3,8 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import './index.less';
+import getDuration from '@/utils/getDuration';
 import DetailItem from './detailItem';
-
-function renderDuration(value) {
-  let secondTime = parseInt(value, 10); // 秒
-  let minuteTime = 0; // 分
-  let hourTime = 0; // 小时
-  if (secondTime > 60) {
-    minuteTime = parseInt(secondTime / 60, 10);
-    secondTime = parseInt(secondTime % 60, 10);
-    if (minuteTime > 60) {
-      hourTime = parseInt(minuteTime / 60, 10);
-      minuteTime = parseInt(minuteTime % 60, 10);
-    }
-  }
-  let result = `${parseInt(secondTime, 10)}秒`;
-
-  if (minuteTime > 0) {
-    result = `${parseInt(minuteTime, 10)}分${result}`;
-  }
-  if (hourTime > 0) {
-    result = `${parseInt(hourTime, 10)}小时${result}`;
-  }
-  return result;
-}
 
 export default observer((props) => {
   // 抛出piplineName
@@ -103,7 +81,7 @@ export default observer((props) => {
         >
           {realType}
         </span>
-        {stageSeconds ? <span>{renderDuration(stageSeconds)}</span> : null}
+        {stageSeconds ? <span>{getDuration(stageSeconds)}</span> : null}
       </div>
       <div className="c7n-piplineManage-detail-column-lists">
         <h6>
