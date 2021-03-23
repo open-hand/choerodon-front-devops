@@ -17,12 +17,21 @@ const defaultData = [
     type: 'CI',
     parallel: 1,
     triggerType: '',
-  }, {
-    name: '部署',
+  },
+  {
+    name: '发布',
     sequence: 2,
     jobList: [],
+    type: 'CI',
+    parallel: 2,
+    triggerType: '',
+  },
+  {
+    name: '部署',
+    sequence: 3,
+    jobList: [],
     type: 'CD',
-    parallel: 0,
+    parallel: 3,
     triggerType: 'auto',
   },
 ];
