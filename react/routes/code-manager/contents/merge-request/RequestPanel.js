@@ -19,6 +19,7 @@ import EmptyPage from '../../components/empty-page';
 
 import './index.less';
 import '../../../main.less';
+import './theme4.less';
 
 const TabPane = Tabs.TabPane;
 const { Column } = Table;

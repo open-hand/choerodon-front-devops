@@ -11,6 +11,7 @@ import { useResourceStore } from '../../stores';
 import { useMainStore } from '../stores';
 
 import './index.less';
+import './theme4.less';
 
 const { ENV_ITEM } = itemTypeMappings;
 
