@@ -235,6 +235,11 @@ export default observer(() => {
           onOption={renderOptionProperty}
         />,
         <TextField colSpan={1} name={mapping.instance.name} />,
+        <Select
+          combo
+          name={mapping.pvc.name}
+          colSpan={1}
+        />,
       ]
   ), [BaseDeployDataSet.current
     .get(mapping.deployWay.name)]);
