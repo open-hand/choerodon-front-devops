@@ -48,7 +48,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
     }), []);
     const deployModeDs = useMemo(() => new DataSet({
       data: [{
-        text: '环境部署',
+        text: '容器部署',
         value: 'env',
       }, {
         text: '主机部署',

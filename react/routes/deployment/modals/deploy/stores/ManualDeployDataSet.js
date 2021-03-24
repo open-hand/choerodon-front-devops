@@ -15,7 +15,7 @@ const mapping = {
     value: 'deployType',
     options: [{
       value: 'env',
-      label: '环境部署',
+      label: '容器部署',
     }],
     // , {
     //   value: 'host',
@@ -139,7 +139,7 @@ export default (({
   if (hasHostDeploy) {
     mapping.deployWay.options = [{
       value: 'env',
-      label: '环境部署',
+      label: '容器部署',
     }, {
       value: 'host',
       label: '主机部署',
@@ -147,7 +147,7 @@ export default (({
   } else {
     mapping.deployWay.options = [{
       value: 'env',
-      label: '环境部署',
+      label: '容器部署',
     }];
   }
   function handleCreate({ dataSet, record }) {
