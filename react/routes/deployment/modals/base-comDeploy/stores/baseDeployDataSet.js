@@ -119,6 +119,11 @@ const mapping = {
     // defaultValue: `${middleWareData[0].value}-${uuidV1().substring(0, 5)}`,
     maxLength: 64,
   },
+  pvc: {
+    name: 'pvc',
+    type: 'string',
+    label: 'PVC名称',
+  },
   values: {
     name: 'values',
     type: 'string',
