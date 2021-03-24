@@ -7,6 +7,7 @@ import { useEnvironmentStore } from '../../stores';
 import { useMainStore } from '../stores';
 
 import './index.less';
+import './theme4.less';
 
 const TreeMenu = observer(() => {
   const {
@@ -16,19 +17,23 @@ const TreeMenu = observer(() => {
   } = useEnvironmentStore();
   const { mainStore } = useMainStore();
   const bounds = useMemo(() => mainStore.getNavBounds, [mainStore.getNavBounds]);
-  const nodeRenderer = useCallback((record, search) => <TreeItem record={record} search={search} />, []);
+  const nodeRenderer = useCallback(
+    (record, search) => <TreeItem record={record} search={search} />, [],
+  );
 
   useEffect(() => {
     setTreeMenuSelect(treeDs, envStore);
   }, [treeDs.data]);
 
-  return <nav style={bounds} className={`${prefixCls}-sidebar`}>
-    <TreeView
-      ds={treeDs}
-      store={envStore}
-      nodesRender={nodeRenderer}
-    />
-  </nav>;
+  return (
+    <nav style={bounds} className={`${prefixCls}-sidebar`}>
+      <TreeView
+        ds={treeDs}
+        store={envStore}
+        nodesRender={nodeRenderer}
+      />
+    </nav>
+  );
 });
 
 export default TreeMenu;
