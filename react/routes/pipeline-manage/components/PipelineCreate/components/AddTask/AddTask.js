@@ -161,6 +161,7 @@ const AddTask = observer(() => {
           let uploadArtifactFileName;
           let dockerArtifactFileName;
           let skipDockerTlsVerify;
+          let imageScan;
           const share = [];
           let nexusMavenRepoIds;
           let zpk;
@@ -184,6 +185,7 @@ const AddTask = observer(() => {
               dockerContextDir = c.dockerContextDir;
               dockerFilePath = c.dockerFilePath;
               skipDockerTlsVerify = c.skipDockerTlsVerify;
+              imageScan = c.imageScan;
               dockerArtifactFileName = c.artifactFileName;
             } else if (c.type === 'Maven') {
               if (c.nexusMavenRepoIds) {
@@ -221,6 +223,7 @@ const AddTask = observer(() => {
             zpk,
             jar_zpk: jarZpk,
             skipDockerTlsVerify,
+            imageScan,
             scannerType,
             sources,
             skipTests,
@@ -355,6 +358,7 @@ const AddTask = observer(() => {
                   s.dockerContextDir = data.dockerContextDir;
                   s.dockerFilePath = data.dockerFilePath;
                   s.skipDockerTlsVerify = data.skipDockerTlsVerify;
+                  s.imageScan = data.imageScan;
                   if (data.dockerArtifactFileName) {
                     s.artifactFileName = data.dockerArtifactFileName;
                   }
@@ -1244,6 +1248,13 @@ const AddTask = observer(() => {
                           style={{ position: 'absolute', top: '1px', left: '96px' }}
                         />
                       </Tooltip>
+                      <SelectBox
+                        name="imageScan"
+                        className="c7ncd-addTask-imageScan"
+                      >
+                        <Option value>是</Option>
+                        <Option value={false}>否</Option>
+                      </SelectBox>
                     </div>,
                   ];
                 }
