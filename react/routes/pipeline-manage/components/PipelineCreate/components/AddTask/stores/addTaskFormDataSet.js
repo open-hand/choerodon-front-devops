@@ -134,6 +134,12 @@ export default (
       required: true,
     },
     {
+      name: 'imageScan',
+      type: 'boolean',
+      label: '是否启用镜像安全扫描',
+      defaultValue: false,
+    },
+    {
       name: 'skipDockerTlsVerify',
       type: 'boolean',
       label: '是否启用TLS校验',
