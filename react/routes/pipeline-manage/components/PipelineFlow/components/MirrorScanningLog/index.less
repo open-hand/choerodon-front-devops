@@ -1,0 +1,49 @@
+.c7ncd-mirrorScanning {
+  &-detail {
+    padding: 16px 17px;
+    background: #f5f6fa;
+    border-radius: 4px;
+    &-row {
+      display: flex;
+      align-items: center;
+      & + & {
+        margin-top: 12px;
+      }
+    }
+    &-content {
+      display: flex;
+      align-items: center;
+      & + & {
+        margin-left: auto;
+      }
+      > span {
+        font-size: 13px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        &:first-of-type {
+          color: rgba(15, 19, 88, 0.65);
+        }
+        &:nth-of-type(2) {
+          color: #0f1358;
+        }
+      }
+    }
+  }
+  &-table {
+    margin-top: 20px;
+    .c7n-pro-table-expanded-row > td {
+      background-color: unset !important;
+    }
+    &-describe {
+      font-size: 13px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: rgba(15, 19, 88, 0.65);
+      line-height: 20px;
+      background: #fff;
+      p > {
+        white-space: break-spaces;
+      }
+    }
+  }
+}
