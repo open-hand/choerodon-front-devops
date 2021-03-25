@@ -18,6 +18,7 @@ import StatusDot from '../statusDot';
 import CodeQuality from '../codeQuality';
 import CodeLog from '../codeLog';
 import { usePipelineManageStore } from '../../../../stores';
+import MirrorScanning from '../MirrorScanningLog';
 import jobTypesMappings from '../../../../stores/jobsTypeMappings';
 
 const DetailItem = (props) => {
@@ -560,6 +561,18 @@ const DetailItem = (props) => {
     message.success('复制成功');
   };
 
+  const openMirrorScanningLog = () => {
+    Modal.open({
+      title: '查看镜像扫描报告',
+      key: Modal.key(),
+      children: <MirrorScanning />,
+      style: {
+        width: '740px',
+      },
+      drawer: true,
+    });
+  };
+
   const renderFooterBtns = () => {
     const cp = [];
     if (itemType === 'build') {
@@ -575,6 +588,11 @@ const DetailItem = (props) => {
           text: '重试',
           action: renderRetryBtnFn,
           disabled: getRetryBtnDisabled(),
+        },
+        {
+          service: [''],
+          text: '查看镜像扫描报告',
+          action: openMirrorScanningLog,
         },
       ];
       if (downloadMavenJarVO) {
