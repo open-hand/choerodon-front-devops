@@ -2,7 +2,7 @@ import React, { useMemo, useEffect, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import classNames from 'classnames';
 import {
-  Select, Form, SelectBox, TextField, Button, Table, Tooltip, message,
+  Select, Form, SelectBox, TextField, Button, Table, Tooltip, message, Password, NumberField,
 } from 'choerodon-ui/pro';
 import { Icon } from 'choerodon-ui';
 import YamlEditor from '@/components/yamlEditor';
@@ -20,6 +20,7 @@ import mysql from './images/mysql.png';
 
 import './index.less';
 
+const { Option } = Select;
 const { Column } = Table;
 
 export default observer(() => {
@@ -27,6 +28,7 @@ export default observer(() => {
     BaseDeployDataSet,
     HostSettingDataSet,
     ParamSettingDataSet,
+    PVLabelsDataSet,
     modal,
     AppState: { currentMenuType: { projectId } },
     refresh,
@@ -235,11 +237,11 @@ export default observer(() => {
           onOption={renderOptionProperty}
         />,
         <TextField colSpan={1} name={mapping.instance.name} />,
-        <Select
-          combo
-          name={mapping.pvc.name}
-          colSpan={1}
-        />,
+        // <Select
+        //   combo
+        //   name={mapping.pvc.name}
+        //   colSpan={1}
+        // />,
       ]
   ), [BaseDeployDataSet.current
     .get(mapping.deployWay.name)]);
@@ -517,19 +519,80 @@ export default observer(() => {
         </Table>
       </>
     ) : [
-      <YamlEditor
-        readOnly={false}
-        value={BaseDeployDataSet.current.get(mapping.values.name)}
-        onValueChange={(data) => BaseDeployDataSet.current.set(mapping.values.name, data)}
-      />,
-      <ResourceSetting
-        networkRef={networkRef}
-        domainRef={domainRef}
-        envId={BaseDeployDataSet.current.get(mapping.env.name)}
-        style={{
-          marginTop: 30,
-        }}
-      />,
+      <p className="c7ncd-baseDeploy-middle-deploySetting">
+        参数配置
+        <Icon type="expand_less" />
+      </p>,
+      <Form columns={3} style={{ width: '80%', marginTop: 16 }} dataSet={BaseDeployDataSet}>
+        <Password autoComplete="new-password" colSpan={1} name={mapping.password.name} />
+        <Select colSpan={1} name={mapping.sysctlImage.name}>
+          <Option value>true</Option>
+          <Option value={false}>false</Option>
+        </Select>
+        {
+          BaseDeployDataSet.current
+            .get(mapping.deployMode.name) === deployModeOptionsData[0].value ? (
+              <Select combo newLine colSpan={1} name={mapping.pvc.name} />
+            ) : (
+              <NumberField newLine colSpan={1} name={mapping.slaveCount.name} />
+            )
+        }
+      </Form>,
+      BaseDeployDataSet.current
+        .get(mapping.deployMode.name) === deployModeOptionsData[0].value ? '' : [
+          <p className="c7ncd-baseDeploy-middle-deploySetting">
+            PV标签
+            <Icon type="expand_less" />
+            <Tooltip title="此处输入的PV标签用于定位对应的PV，此处需保证匹配得到的PV数量应大于等于slaveCount的数量">
+              <Icon
+                style={{
+                  color: 'rgba(15, 19, 88, 0.35)',
+                  fontSize: '16px',
+                }}
+                type="help"
+              />
+            </Tooltip>
+          </p>,
+          PVLabelsDataSet.records.filter((item) => !item.isRemoved).map((item) => (
+            <>
+              <Form style={{ width: '80%' }} record={item} columns={3}>
+                <div className="c7ncd-base-pvlabels" colSpan={1}>
+                  <TextField name="key" />
+                  <span style={{ margin: '0 10px' }}>=</span>
+                  <TextField name="value" />
+                  <Button
+                    style={{
+                      flexShrink: 0,
+                      marginLeft: 10,
+                    }}
+                    icon="delete"
+                    onClick={() => PVLabelsDataSet.remove(item)}
+                  />
+                </div>
+              </Form>
+            </>
+          )),
+          <Button
+            icon="add"
+            color="primary"
+            onClick={() => PVLabelsDataSet.create()}
+          >
+            添加PV标签
+          </Button>,
+        ],
+      // <YamlEditor
+      //   readOnly={false}
+      //   value={BaseDeployDataSet.current.get(mapping.values.name)}
+      //   onValueChange={(data) => BaseDeployDataSet.current.set(mapping.values.name, data)}
+      // />,
+      // <ResourceSetting
+      //   networkRef={networkRef}
+      //   domainRef={domainRef}
+      //   envId={BaseDeployDataSet.current.get(mapping.env.name)}
+      //   style={{
+      //     marginTop: 30,
+      //   }}
+      // />,
     ]
   );
 

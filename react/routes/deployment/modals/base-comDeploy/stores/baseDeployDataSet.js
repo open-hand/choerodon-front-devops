@@ -61,6 +61,24 @@ const middleWareData = [{
 }];
 
 const mapping = {
+  password: {
+    name: 'password',
+    type: 'string',
+    label: '密码',
+    defaultValue: 'password',
+  },
+  sysctlImage: {
+    name: 'sysctlImage',
+    type: 'boolean',
+    label: 'sysctlImage',
+  },
+  slaveCount: {
+    name: 'slaveCount',
+    type: 'number',
+    min: 3,
+    step: 1,
+    label: 'slaveCount',
+  },
   middleware: {
     name: 'middleware',
     defaultValue: middleWareData[0].value,
@@ -120,9 +138,11 @@ const mapping = {
     maxLength: 64,
   },
   pvc: {
-    name: 'pvc',
+    textField: 'pvName',
+    valueField: 'pvName',
+    name: 'pvcName',
     type: 'string',
-    label: 'PVC名称',
+    label: 'PVC',
   },
   values: {
     name: 'values',
@@ -140,29 +160,66 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore) => ({
   fields: Object.keys(mapping).map((key) => {
     const item = mapping[key];
     if (key === 'serviceVersion') {
-      item.lookupAxiosConfig = ({ record }) => ({
-        url: BaseComDeployApis.getServiceVersionApi(),
-        method: 'get',
-        transformResponse: (res) => {
-          function finalFunc(data) {
-            if (data.length && data.length > 0) {
-              if (record) {
-                record.set(mapping.serviceVersion.name, data[0].versionNumber);
+      item.dynamicProps = {
+        lookupAxiosConfig: ({ record }) => (record ? ({
+          url: BaseComDeployApis.getServiceVersionApi(),
+          method: 'get',
+          transformResponse: (res) => {
+            function finalFunc(data) {
+              if (data.length && data.length > 0) {
+                BaseComDeployStore.setServiceVersionList(data);
+                if (record) {
+                  record.set(mapping.serviceVersion.name, data[0].versionNumber);
+                }
               }
             }
-            BaseComDeployStore.setServiceVersionList(data);
-          }
-          let newRes = res;
-          try {
-            newRes = JSON.parse(newRes);
-            finalFunc(newRes);
-            return newRes;
-          } catch (e) {
-            finalFunc(newRes);
-            return newRes;
-          }
-        },
-      });
+            let newRes = res;
+            try {
+              newRes = JSON.parse(newRes);
+              finalFunc(newRes);
+              return newRes;
+            } catch (e) {
+              finalFunc(newRes);
+              return newRes;
+            }
+          },
+        }) : undefined),
+      };
+    } else if (key === 'password') {
+      item.dynamicProps = {
+        required: ({ record }) => (record.get(mapping.middleware.name) === middleWareData[0].value)
+          && (record.get(mapping.deployWay.name) === deployWayOptionsData[0].value),
+      };
+    } else if (key === 'sysctlImage') {
+      item.dynamicProps = {
+        required: ({ record }) => (record.get(mapping.middleware.name) === middleWareData[0].value)
+          && (record.get(mapping.deployWay.name) === deployWayOptionsData[0].value),
+      };
+    } else if (key === 'slaveCount') {
+      item.dynamicProps = {
+        required: ({ record }) => (record.get(mapping.middleware.name) === middleWareData[0].value)
+          && (record.get(mapping.deployWay.name) === deployWayOptionsData[0].value)
+        && (record.get(mapping.deployMode.name) === deployModeOptionsData[1].value),
+      };
+    } else if (key === 'pvc') {
+      item.dynamicProps = {
+        lookupAxiosConfig: ({ record }) => (record.get(mapping.env.name) ? ({
+          url: BaseComDeployApis.getPvcListApi(
+            projectId,
+            record.get(mapping.env.name),
+          ),
+          method: 'post',
+          data: {
+            params: [],
+            searchParam: {
+              status: 'Bound',
+            },
+          },
+        }) : undefined),
+        required: ({ record }) => (record.get(mapping.middleware.name) === middleWareData[0].value)
+          && (record.get(mapping.deployWay.name) === deployWayOptionsData[0].value)
+          && (record.get(mapping.deployMode.name) === deployModeOptionsData[0].value),
+      };
     } else if (key === 'env') {
       item.lookupAxiosConfig = () => ({
         url: BaseComDeployApis.getEnvListApi(projectId),
