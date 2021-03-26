@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useMemo, useEffect } from 'react';
+import React, {
+  createContext, useContext, useMemo, useEffect,
+} from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
@@ -8,6 +10,7 @@ import ProjectTableDataSet from './ProjectTableDataSet';
 import ProjectOptionsDataSet from './ProjectOptionsDataSet';
 import SelectDataSet from './SelectDataSet';
 import NodeNameDataSet from './NodeNameDataSet';
+import LabelDataSet from './LabelDataSet';
 
 const Store = createContext();
 
@@ -65,12 +68,33 @@ export const StoreProvider = injectIntl(inject('AppState')(
       ],
       selection: 'single',
     }), []);
+    const labelDs = useMemo(() => new DataSet(LabelDataSet({
+      formatMessage, intlPrefix,
+    })), []);
     const clusterDs = useMemo(() => new DataSet(OptionsDataSet(projectId)), [projectId]);
-    const projectOptionsDs = useMemo(() => new DataSet(ProjectOptionsDataSet({ projectId })), [projectId]);
-    const projectTableDs = useMemo(() => new DataSet(ProjectTableDataSet({ intlPrefix, formatMessage })), []);
-    const selectDs = useMemo(() => new DataSet(SelectDataSet({ intlPrefix, formatMessage, projectOptionsDs })), []);
+    const projectOptionsDs = useMemo(() => new DataSet(ProjectOptionsDataSet({
+      projectId,
+    })), [projectId]);
+    const projectTableDs = useMemo(() => new DataSet(ProjectTableDataSet({
+      intlPrefix, formatMessage,
+    })), []);
+    const selectDs = useMemo(() => new DataSet(SelectDataSet({
+      intlPrefix, formatMessage, projectOptionsDs,
+    })), []);
     const nodeNameDs = useMemo(() => new DataSet((NodeNameDataSet({ projectId }))), [projectId]);
-    const formDs = useMemo(() => new DataSet(FormDataSet({ intlPrefix, formatMessage, projectId, typeDs, modeDs, storageDs, clusterDs, projectOptionsDs, projectTableDs, nodeNameDs })), [projectId]);
+    const formDs = useMemo(() => new DataSet(FormDataSet({
+      intlPrefix,
+      formatMessage,
+      projectId,
+      typeDs,
+      modeDs,
+      storageDs,
+      clusterDs,
+      projectOptionsDs,
+      projectTableDs,
+      nodeNameDs,
+      labelDs,
+    })), [projectId]);
 
     const value = {
       ...props,
@@ -78,6 +102,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       projectTableDs,
       projectOptionsDs,
       selectDs,
+      labelDs,
     };
     return (
       <Store.Provider value={value}>

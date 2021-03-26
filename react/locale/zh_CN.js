@@ -73,6 +73,7 @@ const commonField = {
   not_installed: '未安装',
   branch: '分支',
   tag: '标记',
+  'label.add': '添加标签',
 
   // 状态描述
   null: '无',
@@ -813,6 +814,8 @@ const pvManager = {
   'c7ncd.pv.delete.disabled': '存在已绑定的PVC，无法删除',
   'c7ncd.pv.permission.delete.title': '删除权限',
   'c7ncd.pv.permission.project.delete.des': '确定要删除该项目的权限吗？',
+  'c7ncd.pv.label.exist': '键值重复',
+  'c7ncd.pv.label.failed': '键值格式不符合',
 };
 
 const codeManagement = {
