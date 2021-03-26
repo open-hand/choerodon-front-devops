@@ -22,6 +22,7 @@ export default observer((props) => {
     stageId,
     cdRecordId,
     viewId,
+    gitlabPipelineId,
   } = props;
 
   const renderItem = () => {
@@ -47,6 +48,7 @@ export default observer((props) => {
         } = item;
         return (
           <DetailItem
+            gitlabPipelineId={gitlabPipelineId}
             key={gitlabJobId}
             jobStatus={status}
             jobRecordId={jobRecordId}

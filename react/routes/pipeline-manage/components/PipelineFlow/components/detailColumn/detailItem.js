@@ -59,6 +59,8 @@ const DetailItem = (props) => {
     downloadMavenJarVO,
     downloadNpm,
     downloadImage,
+    gitlabPipelineId,
+    imageScan, // 是否显示镜像的扫描报告btn
   } = props;
 
   const { gitlabProjectId, appServiceId } = getDetailData && getDetailData.ciCdPipelineVO;
@@ -394,33 +396,16 @@ const DetailItem = (props) => {
   );
 
   const renderItemDetail = () => {
-    let temFun;
-    switch (itemType) {
-      case 'cdDeploy':
-        temFun = renderCdAuto;
-        break;
-      case 'cdAudit':
-        temFun = renderCdAudit;
-        break;
-      case 'chart':
-        temFun = renderChart;
-        break;
-      case 'cdHost':
-        temFun = renderCdHost;
-        break;
-      case 'sonar':
-        temFun = renderSonar;
-        break;
-      case 'cdApiTest':
-        temFun = renderApiTest;
-        break;
-      case 'cdExternalApproval':
-        temFun = renderCdExternalApproval;
-        break;
-      default:
-        break;
-    }
-    return temFun ? temFun() : '';
+    const funcMap = new Map([
+      ['cdDeploy', renderCdAuto],
+      ['cdAudit', renderCdAudit],
+      ['chart', renderChart],
+      ['cdHost', renderCdHost],
+      ['sonar', renderSonar],
+      ['cdApiTest', renderApiTest],
+      ['cdExternalApproval', renderCdExternalApproval],
+    ]);
+    return funcMap.get(itemType) && funcMap.get(itemType)();
   };
 
   const renderCheckLogFun = () => {
@@ -565,7 +550,7 @@ const DetailItem = (props) => {
     Modal.open({
       title: '查看镜像扫描报告',
       key: Modal.key(),
-      children: <MirrorScanning />,
+      children: <MirrorScanning jobId={gitlabJobId} gitlabPipelineId={gitlabPipelineId} />,
       style: {
         width: '740px',
       },
@@ -589,20 +574,18 @@ const DetailItem = (props) => {
           action: renderRetryBtnFn,
           disabled: getRetryBtnDisabled(),
         },
-        {
-          service: [''],
-          text: '查看镜像扫描报告',
-          action: openMirrorScanningLog,
-        },
       ];
-      if (downloadMavenJarVO) {
-        data.push({
-          service: [],
-          text: 'jar包下载',
-          action: handleJarDownload,
-          // disabled: getRetryBtnDisabled(),
-        });
-      }
+      downloadMavenJarVO && data.push({
+        service: [''],
+        text: 'jar包下载',
+        action: handleJarDownload,
+        // disabled: getRetryBtnDisabled(),
+      });
+      imageScan && data.push({
+        service: [''],
+        text: '查看镜像扫描报告',
+        action: openMirrorScanningLog,
+      });
       // 目前先不做npm代码保留着
       // if (downloadNpm) {
       //   data.push({
@@ -612,14 +595,12 @@ const DetailItem = (props) => {
       //     // disabled: getRetryBtnDisabled(),
       //   });
       // }
-      if (downloadImage) {
-        data.push({
-          service: [],
-          text: '复制镜像下载命令',
-          action: handleImageCopy,
-          // disabled: getRetryBtnDisabled(),
-        });
-      }
+      downloadImage && data.push({
+        service: [],
+        text: '复制镜像下载命令',
+        action: handleImageCopy,
+        // disabled: getRetryBtnDisabled(),
+      });
       return (
         <Action data={data} />
       );
