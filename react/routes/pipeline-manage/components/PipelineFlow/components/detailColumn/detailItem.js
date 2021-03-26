@@ -582,7 +582,7 @@ const DetailItem = (props) => {
         // disabled: getRetryBtnDisabled(),
       });
       imageScan && data.push({
-        service: [''],
+        service: ['choerodon.code.project.develop.ci-pipeline.ps.job.imageReport'],
         text: '查看镜像扫描报告',
         action: openMirrorScanningLog,
       });
