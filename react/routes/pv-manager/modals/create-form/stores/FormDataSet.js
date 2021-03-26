@@ -1,5 +1,7 @@
 import { axios } from '@choerodon/boot';
-import { omit, pick, map, compact } from 'lodash';
+import {
+  omit, pick, map, compact,
+} from 'lodash';
 
 function getIpRequired({ record }) {
   return record.get('type') === 'NFS';
@@ -9,18 +11,20 @@ function getNodeIpRequired({ record }) {
   return record.get('type') === 'LocalPV';
 }
 
-export default (({ intlPrefix, formatMessage, projectId, typeDs, modeDs, storageDs, clusterDs, projectOptionsDs, projectTableDs, nodeNameDs }) => {
+export default (({
+  intlPrefix, formatMessage, projectId, typeDs, modeDs,
+  storageDs, clusterDs, projectOptionsDs, projectTableDs, nodeNameDs, labelDs,
+}) => {
   async function checkName(value, name, record) {
     const pa = /^[a-z]([-.a-z0-9]*[a-z0-9])?$/;
-    if (!value) return;
+    if (!value) return true;
     if (pa.test(value)) {
       try {
         const res = await axios.get(`/devops/v1/projects/${projectId}/pvs/check_name?clusterId=${record.get('clusterId')}&pvName=${value}`);
         if ((res && res.failed) || !res) {
           return formatMessage({ id: 'checkNameExist' });
-        } else {
-          return true;
         }
+        return true;
       } catch (err) {
         return formatMessage({ id: 'checkNameFailed' });
       }
@@ -34,6 +38,7 @@ export default (({ intlPrefix, formatMessage, projectId, typeDs, modeDs, storage
     if (value && !pa.test(value)) {
       return formatMessage({ id: `${intlPrefix}.ip.failed` });
     }
+    return true;
   }
 
   function checkPath(value) {
@@ -41,6 +46,7 @@ export default (({ intlPrefix, formatMessage, projectId, typeDs, modeDs, storage
     if (value && !pa.test(value)) {
       return formatMessage({ id: `${intlPrefix}.path.failed` });
     }
+    return true;
   }
 
   function handleUpdate({ value, record, name }) {
@@ -48,8 +54,10 @@ export default (({ intlPrefix, formatMessage, projectId, typeDs, modeDs, storage
       const cluster = clusterDs.find((clusterRecord) => clusterRecord.get('id') === value);
       if (cluster) {
         if (cluster.get('skipCheckProjectPermission')) {
+          // eslint-disable-next-line no-param-reassign
           projectOptionsDs.transport.read.url = `/devops/v1/projects/${projectId}/page_projects`;
         } else {
+          // eslint-disable-next-line no-param-reassign
           projectOptionsDs.transport.read.url = `/devops/v1/projects/${projectId}/clusters/${value}/permission/page_related`;
         }
       }
@@ -65,9 +73,11 @@ export default (({ intlPrefix, formatMessage, projectId, typeDs, modeDs, storage
     selection: false,
     children: {
       projects: projectTableDs,
+      labels: labelDs,
     },
     transport: {
       create: ({ data: [data] }) => {
+        // eslint-disable-next-line no-param-reassign
         data.nodeName = data.clusterNodeName;
         const res = omit(data, ['__id', '__status', 'storage', 'unit', 'server', 'path', 'projects', 'nodeName']);
         const arr = ['path'];
@@ -96,15 +106,33 @@ export default (({ intlPrefix, formatMessage, projectId, typeDs, modeDs, storage
         required: true,
         options: clusterDs,
       },
-      { name: 'name', type: 'string', label: formatMessage({ id: 'name' }), required: true, maxLength: 30, validator: checkName },
-      { name: 'description', type: 'string', label: formatMessage({ id: 'description' }), maxLength: 40 },
-      { name: 'type', type: 'string', textField: 'value', defaultValue: 'NFS', label: formatMessage({ id: `${intlPrefix}.type` }), required: true, options: typeDs },
-      { name: 'accessModes', type: 'string', textField: 'value', label: formatMessage({ id: `${intlPrefix}.mode` }), required: true, options: modeDs, defaultValue: 'ReadWriteMany' },
-      { name: 'storage', type: 'number', label: formatMessage({ id: `${intlPrefix}.storage` }), required: true, min: 1 },
-      { name: 'unit', type: 'string', textField: 'value', defaultValue: 'Gi', options: storageDs },
-      { name: 'path', type: 'string', label: formatMessage({ id: `${intlPrefix}.path` }), required: true, validator: checkPath },
-      { name: 'server', type: 'string', label: formatMessage({ id: `${intlPrefix}.ip` }), validator: checkIp, dynamicProps: { required: getIpRequired } },
-      { name: 'clusterNodeName', type: 'string', textField: 'value', valueField: 'value', label: formatMessage({ id: `${intlPrefix}.node.name` }), dynamicProps: { required: getNodeIpRequired }, options: nodeNameDs },
+      {
+        name: 'name', type: 'string', label: formatMessage({ id: 'name' }), required: true, maxLength: 30, validator: checkName,
+      },
+      {
+        name: 'description', type: 'string', label: formatMessage({ id: 'description' }), maxLength: 40,
+      },
+      {
+        name: 'type', type: 'string', textField: 'value', defaultValue: 'NFS', label: formatMessage({ id: `${intlPrefix}.type` }), required: true, options: typeDs,
+      },
+      {
+        name: 'accessModes', type: 'string', textField: 'value', label: formatMessage({ id: `${intlPrefix}.mode` }), required: true, options: modeDs, defaultValue: 'ReadWriteMany',
+      },
+      {
+        name: 'storage', type: 'number', label: formatMessage({ id: `${intlPrefix}.storage` }), required: true, min: 1,
+      },
+      {
+        name: 'unit', type: 'string', textField: 'value', defaultValue: 'Gi', options: storageDs,
+      },
+      {
+        name: 'path', type: 'string', label: formatMessage({ id: `${intlPrefix}.path` }), required: true, validator: checkPath,
+      },
+      {
+        name: 'server', type: 'string', label: formatMessage({ id: `${intlPrefix}.ip` }), validator: checkIp, dynamicProps: { required: getIpRequired },
+      },
+      {
+        name: 'clusterNodeName', type: 'string', textField: 'value', valueField: 'value', label: formatMessage({ id: `${intlPrefix}.node.name` }), dynamicProps: { required: getNodeIpRequired }, options: nodeNameDs,
+      },
       { name: 'skipCheckProjectPermission', type: 'boolean', defaultValue: true },
     ],
     events: {
