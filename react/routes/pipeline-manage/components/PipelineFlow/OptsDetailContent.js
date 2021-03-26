@@ -89,6 +89,7 @@ export default observer((props) => {
           stageId={stageId}
           cdRecordId={cdRecordId}
           viewId={viewId || loadViewId}
+          gitlabPipelineId={pipelineRecordId}
         />
       );
     }) : (

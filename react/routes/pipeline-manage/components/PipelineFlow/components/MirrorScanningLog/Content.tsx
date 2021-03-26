@@ -1,7 +1,8 @@
 import React from 'react';
 import { StatusTag, TimePopover } from '@choerodon/components';
 import { observer } from 'mobx-react-lite';
-import { TableQueryBarType } from '@/interface';
+import { TableMode, TableQueryBarType } from '@/interface';
+import ClickText from '@/components/click-text';
 import getDuration from '@/utils/getDuration';
 import { Table } from 'choerodon-ui/pro';
 import { useMirrorScanStore } from './stores';
@@ -13,10 +14,15 @@ const MirrorScanning = () => {
   const {
     prefixCls,
     detailDs,
+    tableDs,
+    statusMap,
+    history,
   } = useMirrorScanStore();
 
+  const detailRecord = detailDs.current;
+
   const renderExpandRow = ({ dataSet, record }:any) => {
-    const text = record.get('describe');
+    const text = record.get('description');
     return (
       <div className={`${prefixCls}-table-describe`}>
         <p>
@@ -27,22 +33,42 @@ const MirrorScanning = () => {
     );
   };
 
-  return (
-    <div className={`${prefixCls}`}>
+  const renderStatus = ({ value, text }:any) => {
+    const { code, name } = statusMap.get(text) || {};
+    return <StatusTag colorCode={code} type="border" name={name} />;
+  };
+
+  function handleLink(vulnerabilityCode:string) {
+    window.open(`https://cve.mitre.org/cgi-bin/cvename.cgi?name=${vulnerabilityCode}`);
+  }
+
+  const renderDetails = () => {
+    const {
+      startDate,
+      spendTime,
+      level,
+      highCount,
+      lowCount,
+      mediumCount,
+      unknownCount,
+      criticalCount,
+    } = detailRecord.toData();
+    const { code, name } = statusMap.get(level) || {};
+    return (
       <div className={`${prefixCls}-detail`}>
         <div className={`${prefixCls}-detail-row`}>
           <div className={`${prefixCls}-detail-content`}>
             <span>
               漏洞严重度：
             </span>
-            <StatusTag colorCode="error" type="border" name="严重" />
+            {code ? <StatusTag colorCode={code} type="border" name={name} /> : '-'}
           </div>
 
           <div className={`${prefixCls}-detail-content`}>
             <span>
               镜像扫描开始时间：
             </span>
-            <TimePopover content="2020.01.01 12:23:23" />
+            {startDate ? <TimePopover content={startDate} /> : '-'}
           </div>
 
           <div className={`${prefixCls}-detail-content`}>
@@ -50,7 +76,7 @@ const MirrorScanning = () => {
               镜像扫描耗时：
             </span>
             <span>
-              {getDuration({ value: 5000 })}
+              {spendTime ? getDuration({ value: spendTime }) : '-'}
             </span>
           </div>
         </div>
@@ -60,7 +86,7 @@ const MirrorScanning = () => {
               危急漏洞：
             </span>
             <span>
-              0
+              {criticalCount || '-'}
             </span>
           </div>
           <div className={`${prefixCls}-detail-content`}>
@@ -68,7 +94,15 @@ const MirrorScanning = () => {
               严重漏洞：
             </span>
             <span>
-              12
+              {highCount || '-'}
+            </span>
+          </div>
+          <div className={`${prefixCls}-detail-content`}>
+            <span>
+              中等漏洞：
+            </span>
+            <span>
+              {mediumCount || '-'}
             </span>
           </div>
           <div className={`${prefixCls}-detail-content`}>
@@ -76,7 +110,7 @@ const MirrorScanning = () => {
               较低漏洞：
             </span>
             <span>
-              0
+              {lowCount || '-'}
             </span>
           </div>
           <div className={`${prefixCls}-detail-content`}>
@@ -84,22 +118,39 @@ const MirrorScanning = () => {
               未知漏洞：
             </span>
             <span>
-              0
+              {unknownCount || '-'}
             </span>
           </div>
         </div>
       </div>
+    );
+  };
+
+  return (
+    <div className={`${prefixCls}`}>
+      {detailRecord && renderDetails()}
       <div className={`${prefixCls}-table`}>
         <Table
-          dataSet={detailDs}
+          dataSet={tableDs}
+          mode={'tree' as TableMode}
           queryBar={'none' as TableQueryBarType}
           expandedRowRenderer={renderExpandRow}
         >
-          <Column name="code" />
-          <Column name="status" />
-          <Column name="component" />
-          <Column name="version" />
-          <Column name="versionFix" />
+          <Column
+            name="vulnerabilityCode"
+            renderer={({ text, record }:any) => (
+              <ClickText
+                clickAble
+                onClick={() => handleLink(record.get('vulnerabilityCode'))}
+                value={text}
+              />
+            )}
+            sortable
+          />
+          <Column name="severity" renderer={renderStatus} width={100} sortable />
+          <Column name="pkgName" sortable />
+          <Column name="installedVersion" sortable />
+          <Column name="fixedVersion" sortable />
         </Table>
       </div>
     </div>

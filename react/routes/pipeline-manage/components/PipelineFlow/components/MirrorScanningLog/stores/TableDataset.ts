@@ -1,53 +1,47 @@
 /* eslint-disable import/no-anonymous-default-export */
-export default (():any => ({
+export default (({
+  projectId,
+  gitlabPipelineId,
+  jobId,
+}:any):any => ({
   autoQuery: true,
   selection: false,
-  data: [
-    {
-      code: 'w-weng',
-      status: 'error',
-      component: 'libfreetype6',
-      versionFix: '1.1.1',
-      version: '1.1.0',
-      describe: 'Heap buffer overflow in Freetype in Google Chrome prior to 86.0.4240.111 allowed a remote attacker to potentially exploit heap corruption via a crafted HTML page.',
-    },
-    {
-      code: 'w-weng',
-      status: 'error',
-      component: 'libfreetype6',
-      versionFix: '1.1.1',
-      version: '1.1.0',
-      describe: 'hellowrodsadsadsadwqdwqddsadsdsadqwdqwdsacsadsadsadqs',
-    },
-  ],
+  paging: true,
+  transport: {
+    read: () => ({
+      // url: '/devops/v1/projects/1/image/1/1',
+      url: `/devops/v1/projects/${projectId}/image/${gitlabPipelineId}/${jobId}`,
+      method: 'get',
+    }),
+  },
   fields: [
     {
       label: '缺陷码',
-      name: 'code',
+      name: 'vulnerabilityCode',
       type: 'string',
     },
     {
       label: '严重度',
-      name: 'status',
+      name: 'severity',
       type: 'string',
     },
     {
       label: '组件',
-      name: 'component',
+      name: 'pkgName',
       type: 'string',
     },
     {
       label: '当前版本',
-      name: 'version',
+      name: 'installedVersion',
       type: 'string',
     },
     {
       label: '修复版本',
-      name: 'versionFix',
+      name: 'fixedVersion',
       type: 'string',
     },
     {
-      name: 'decribe',
+      name: 'description',
       type: 'string',
     },
   ],
