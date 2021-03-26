@@ -69,12 +69,15 @@ const TreeView = observer(({
   const nodeRenderer = useCallback(({ record }) => nodesRender(record, store.getSearchValue),
     [store.getSearchValue]);
 
-  function handleSearch(value) {
+  async function handleSearch(value) {
     const realValue = value || '';
     const expandedKeys = [];
     const searchRecords = [];
 
     if (isFilter) {
+      if (value && store.getSearchValue && value !== store.getSearchValue) {
+        await ds.query();
+      }
       store.setSearchValue(realValue);
       if (!value) {
         ds.query();
