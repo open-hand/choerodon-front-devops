@@ -1,8 +1,13 @@
-import React, { useMemo, useState, useEffect, Fragment } from 'react';
+import React, {
+  useCallback,
+} from 'react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Action, Choerodon } from '@choerodon/boot';
-import { Form, Select, TextField, TextArea, NumberField, SelectBox, Table, Button, Modal } from 'choerodon-ui/pro';
+import {
+  Form, Select, TextField, TextArea, NumberField, SelectBox, Table, Button, Modal,
+} from 'choerodon-ui/pro';
+import { SMALL } from '@/utils/getModalWidth';
 import { usePVCreateStore } from './stores';
 import StatusDot from '../../../../components/status-dot';
 import Tips from '../../../../components/new-tips';
@@ -14,7 +19,7 @@ const { Column } = Table;
 const { Option } = SelectBox;
 const modalKey = Modal.key();
 const modalStyle = {
-  width: 380,
+  width: SMALL,
 };
 
 const CreateForm = () => {
@@ -28,15 +33,16 @@ const CreateForm = () => {
     projectTableDs,
     projectOptionsDs,
     selectDs,
+    labelDs,
   } = usePVCreateStore();
 
   modal.handleOk(async () => {
     try {
       if (await formDs.submit() !== false) {
         refresh();
-      } else {
-        return false;
+        return true;
       }
+      return false;
     } catch (error) {
       Choerodon.handleResponseError(error);
       return false;
@@ -45,15 +51,17 @@ const CreateForm = () => {
 
   function renderClusterOption({ record, text, value }) {
     return (
-      <Fragment>
-        {text && <StatusDot
+      <>
+        {text && (
+        <StatusDot
           active
           synchronize
           size="inner"
           connect={record.get('connect')}
-        />}
+        />
+        )}
         {text}
-      </Fragment>
+      </>
     );
   }
 
@@ -89,6 +97,14 @@ const CreateForm = () => {
     });
   }
 
+  const handleRemoveLabel = useCallback((labelRecord) => {
+    labelDs.remove(labelRecord);
+  }, []);
+
+  const handleAddLabel = useCallback(() => {
+    labelDs.create();
+  }, []);
+
   return (
     <div className={`${prefixCls}-create-wrap`}>
       <Form dataSet={formDs} columns={3} style={{ width: '5.2rem' }}>
@@ -114,6 +130,31 @@ const CreateForm = () => {
           <Select name="clusterNodeName" clearButton={false} colSpan={3} />
         )}
       </Form>
+      <div className={`${prefixCls}-create-wrap-label-title`}>
+        <span>{formatMessage({ id: 'label' })}</span>
+      </div>
+      {labelDs.map((labelRecord) => (
+        <Form record={labelRecord} columns={14} key={labelRecord.id} style={{ width: '5.2rem' }}>
+          <TextField colSpan={6} name="key" />
+          <span className={`${prefixCls}-create-wrap-label-equal`}>=</span>
+          <TextField colSpan={6} name="value" />
+          {labelDs.length > 1 ? (
+            <Button
+              funcType="flat"
+              icon="delete"
+              onClick={() => handleRemoveLabel(labelRecord)}
+            />
+          ) : <span />}
+        </Form>
+      ))}
+      <Button
+        funcType="flat"
+        color="primary"
+        icon="add"
+        onClick={handleAddLabel}
+      >
+        {formatMessage({ id: 'label.add' })}
+      </Button>
       <div className={`${prefixCls}-create-wrap-permission`}>
         <Tips
           title={formatMessage({ id: `${intlPrefix}.share` })}
@@ -130,7 +171,8 @@ const CreateForm = () => {
           </Option>
         </SelectBox>
       </Form>
-      {!formDs.current.get('skipCheckProjectPermission') && (<Fragment>
+      {!formDs.current.get('skipCheckProjectPermission') && (
+      <>
         <Button
           color="primary"
           icon="add"
@@ -145,7 +187,8 @@ const CreateForm = () => {
           <Column renderer={renderAction} />
           <Column name="code" />
         </Table>
-      </Fragment>)}
+      </>
+      )}
     </div>
   );
 };
