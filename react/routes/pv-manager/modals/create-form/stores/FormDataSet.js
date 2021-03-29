@@ -1,6 +1,6 @@
 import { axios } from '@choerodon/boot';
 import {
-  omit, pick, map, compact,
+  omit, pick, map, compact, forEach, get, isEmpty,
 } from 'lodash';
 
 function getIpRequired({ record }) {
@@ -81,6 +81,7 @@ export default (({
         data.nodeName = data.clusterNodeName;
         const res = omit(data, ['__id', '__status', 'storage', 'unit', 'server', 'path', 'projects', 'nodeName']);
         const arr = ['path'];
+        const labels = {};
         if (data.type === 'NFS') {
           arr.push('server');
         } else if (data.type === 'LocalPV') {
@@ -89,6 +90,14 @@ export default (({
         res.requestResource = `${data.storage}${data.unit}`;
         res.valueConfig = JSON.stringify(pick(data, arr));
         res.projectIds = data.skipCheckProjectPermission ? [] : compact(map(data.projects, 'projectId') || []);
+        forEach(data.labels || [], (item) => {
+          const labelKey = get(item, 'key');
+          const labelValue = get(item, 'value');
+          if (labelKey && labelValue) {
+            labels[labelKey] = labelValue;
+          }
+        });
+        res.labels = isEmpty(labels) ? null : JSON.stringify(labels);
         return ({
           url: `/devops/v1/projects/${projectId}/pvs`,
           method: 'post',

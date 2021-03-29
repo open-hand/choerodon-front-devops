@@ -815,7 +815,7 @@ const pvManager = {
   'c7ncd.pv.permission.delete.title': '删除权限',
   'c7ncd.pv.permission.project.delete.des': '确定要删除该项目的权限吗？',
   'c7ncd.pv.label.exist': '键值重复',
-  'c7ncd.pv.label.failed': '键值格式不符合',
+  'c7ncd.pv.label.failed': '由字母、数字、"."、"_"、"-"组成，且以字母数字开头结尾',
 };
 
 const codeManagement = {
