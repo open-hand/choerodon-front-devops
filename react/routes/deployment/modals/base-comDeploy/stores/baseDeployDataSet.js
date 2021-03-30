@@ -53,7 +53,7 @@ async function checkName(value, name, record, projectId) {
 }
 
 const middleWareData = [{
-  value: 'redis',
+  value: 'Redis',
   text: 'redis',
 }, {
   value: 'mysql',
@@ -71,6 +71,7 @@ const mapping = {
     name: 'sysctlImage',
     type: 'boolean',
     label: 'sysctlImage',
+    defaultValue: false,
   },
   slaveCount: {
     name: 'slaveCount',
@@ -78,6 +79,7 @@ const mapping = {
     min: 3,
     step: 1,
     label: 'slaveCount',
+    defaultValue: 3,
   },
   middleware: {
     name: 'middleware',
@@ -235,7 +237,7 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore) => ({
         required: ({ record }) => (record.get(mapping.middleware.name) === middleWareData[0].value)
         && (record.get(mapping.deployWay.name) === deployWayOptionsData[0].value),
       };
-      item.defaultValue = `${middleWareData[0].value}-${uuidV1().substring(0, 5)}`;
+      item.defaultValue = `${middleWareData[0].text}-${uuidV1().substring(0, 5)}`;
     } else if (key === 'resourceName') {
       item.dynamicProps = {
         required: ({ record }) => (record.get(mapping.middleware.name) === middleWareData[0].value)
@@ -247,7 +249,7 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore) => ({
         }
         return true;
       };
-      item.defaultValue = `${middleWareData[0].value}-${uuidV1().substring(0, 5)}`;
+      item.defaultValue = `${middleWareData[0].text}-${uuidV1().substring(0, 5)}`;
     }
     return item;
   }),
@@ -289,25 +291,25 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore) => ({
             }
           } else {
             //  如果是环境部署
-            const deployMode = value;
-            const serviceVersion = record.get(mapping.serviceVersion.name);
-            const lookupData = BaseComDeployStore.getServiceVersionList;
-            const appVersionId = lookupData
-              .find((item) => item.versionNumber === serviceVersion).id;
-            const result = await BaseComDeployServices
-              .axiosGetMiddlewareValue(appVersionId, deployMode);
-            record.set(mapping.values.name, result || '');
+            // const deployMode = value;
+            // const serviceVersion = record.get(mapping.serviceVersion.name);
+            // const lookupData = BaseComDeployStore.getServiceVersionList;
+            // const appVersionId = lookupData
+            //   .find((item) => item.versionNumber === serviceVersion).id;
+            // const result = await BaseComDeployServices
+            //   .axiosGetMiddlewareValue(appVersionId, deployMode);
+            // record.set(mapping.values.name, result || '');
           }
           break;
         case mapping.serviceVersion.name: {
-          if (record.get(mapping.deployWay.name) === deployWayOptionsData[0].value) {
-            const deployMode = record.get(mapping.deployMode.name);
-            const lookupData = BaseComDeployStore.getServiceVersionList;
-            const appVersionId = lookupData.find((item) => item.versionNumber === value).id;
-            const result = await BaseComDeployServices
-              .axiosGetMiddlewareValue(appVersionId, deployMode);
-            record.set(mapping.values.name, result || '');
-          }
+          // if (record.get(mapping.deployWay.name) === deployWayOptionsData[0].value) {
+          //   const deployMode = record.get(mapping.deployMode.name);
+          //   const lookupData = BaseComDeployStore.getServiceVersionList;
+          //   const appVersionId = lookupData.find((item) => item.versionNumber === value).id;
+          //   const result = await BaseComDeployServices
+          //     .axiosGetMiddlewareValue(appVersionId, deployMode);
+          //   record.set(mapping.values.name, result || '');
+          // }
           break;
         }
         default:

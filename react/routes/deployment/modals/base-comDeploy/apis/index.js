@@ -1,4 +1,8 @@
 export default class BaseComDeployApis {
+  static getParamsSettingApi(middlewareName, deployPattern, deployModel) {
+    return `/market/v1/middleware/config?middlewareName=${middlewareName}&deployPattern=${deployPattern}&deployModel=${deployModel}`;
+  }
+
   static getPvcListApi(projectId, envId) {
     return `/devops/v1/projects/${projectId}/pvcs/page_by_options?env_id=${envId}&page=0&size=0`;
   }
