@@ -2,7 +2,7 @@ import React, { useMemo, useEffect, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import classNames from 'classnames';
 import {
-  Select, Form, SelectBox, TextField, Button, Table, Tooltip, message,
+  Select, Form, SelectBox, TextField, Button, Table, Tooltip, message, Password, NumberField,
 } from 'choerodon-ui/pro';
 import { Icon } from 'choerodon-ui';
 import YamlEditor from '@/components/yamlEditor';
@@ -20,6 +20,7 @@ import mysql from './images/mysql.png';
 
 import './index.less';
 
+const { Option } = Select;
 const { Column } = Table;
 
 export default observer(() => {
@@ -27,6 +28,7 @@ export default observer(() => {
     BaseDeployDataSet,
     HostSettingDataSet,
     ParamSettingDataSet,
+    PVLabelsDataSet,
     modal,
     AppState: { currentMenuType: { projectId } },
     refresh,
@@ -45,44 +47,85 @@ export default observer(() => {
     if (middleWare === middleWareData[0].value) {
       // 环境部署
       if (BaseDeployDataSet.current.get(mapping.deployWay.name) === deployWayOptionsData[0].value) {
-        const devopsServiceReqVO = await networkRef.current.getDevopsServiceReqVO();
-        const devopsIngressVO = await domainRef.current.getDevopsIngressVO();
-        let resource;
-        if (devopsServiceReqVO && devopsIngressVO) {
-          if (!devopsServiceReqVO?.devopsServiceReqVO?.name) {
-            devopsServiceReqVO.devopsServiceReqVO = null;
-          }
-          if (!devopsIngressVO?.devopsIngressVO?.name) {
-            devopsIngressVO.devopsIngressVO = null;
-          }
-          resource = {
-            ...devopsServiceReqVO,
-            ...devopsIngressVO,
-          };
-        } else {
-          return false;
-        }
+        // const devopsServiceReqVO = await networkRef.current.getDevopsServiceReqVO();
+        // const devopsIngressVO = await domainRef.current.getDevopsIngressVO();
+        // let resource;
+        // if (devopsServiceReqVO && devopsIngressVO) {
+        //   if (!devopsServiceReqVO?.devopsServiceReqVO?.name) {
+        //     devopsServiceReqVO.devopsServiceReqVO = null;
+        //   }
+        //   if (!devopsIngressVO?.devopsIngressVO?.name) {
+        //     devopsIngressVO.devopsIngressVO = null;
+        //   }
+        //   resource = {
+        //     ...devopsServiceReqVO,
+        //     ...devopsIngressVO,
+        //   };
+        // } else {
+        //   return false;
+        // }
+        // axiosData = {
+        //   ...resource,
+        // };
         axiosData = {
-          ...resource,
+          [mapping.serviceVersion.name]: BaseDeployDataSet
+            .toData()[0][mapping.serviceVersion.name],
+          [mapping.deployWay.name]: BaseDeployDataSet
+            .toData()[0][mapping.deployWay.name],
+          [mapping.deployMode.name]: BaseDeployDataSet
+            .toData()[0][mapping.deployMode.name],
+          [mapping.env.name]: BaseDeployDataSet
+            .toData()[0][mapping.env.name],
+          [mapping.instance.name]: BaseDeployDataSet
+            .toData()[0][mapping.instance.name],
+          [mapping.password.name]: BaseDeployDataSet
+            .toData()[0][mapping.password.name],
+          [mapping.sysctlImage.name]: BaseDeployDataSet
+            .toData()[0][mapping.sysctlImage.name],
+          type: 'create',
+          isNotChange: false,
         };
+        // 如果是哨兵
+        if (BaseDeployDataSet.current.get(mapping.deployMode.name)
+          === deployModeOptionsData[1].value) {
+          flag = !await PVLabelsDataSet.validate();
+          if (!flag) {
+            const pvLength = PVLabelsDataSet.records.filter((i) => !i.isRemoved).length;
+            const slaveCount = BaseDeployDataSet.current.get(mapping.slaveCount.name);
+            if (!(pvLength && pvLength >= slaveCount)) {
+              flag = true;
+              message.error('pv标签数量应大于等于slaveCount的数量');
+            }
+          }
+          const pvlabels = {};
+          PVLabelsDataSet.records.forEach((i) => {
+            pvlabels[i.get('key')] = i.get('value');
+          });
+          axiosData[mapping.slaveCount.name] = BaseDeployDataSet
+            .toData()[0][mapping.slaveCount.name];
+          axiosData.pvLabels = pvlabels;
+        } else {
+        //  如果是单机
+          axiosData[mapping.pvc.name] = BaseDeployDataSet
+            .toData()[0][mapping.pvc.name];
+        }
         pass = await BaseDeployDataSet.validate();
         // 如果通过校验
-        if (pass) {
-          axiosData = {
-            ...axiosData,
-            [mapping.serviceVersion.name]: BaseDeployDataSet
-              .toData()[0][mapping.serviceVersion.name],
-            [mapping.deployMode.name]: BaseDeployDataSet
-              .toData()[0][mapping.deployMode.name],
-            [mapping.env.name]: BaseDeployDataSet
-              .toData()[0][mapping.env.name],
-            [mapping.instance.name]: BaseDeployDataSet
-              .toData()[0][mapping.instance.name],
-            [mapping.values.name]: BaseDeployDataSet
-              .toData()[0][mapping.values.name],
-            type: 'create',
-            isNotChange: false,
-          };
+        if (pass && !flag) {
+          // axiosData = {
+          //   [mapping.serviceVersion.name]: BaseDeployDataSet
+          //     .toData()[0][mapping.serviceVersion.name],
+          //   [mapping.deployMode.name]: BaseDeployDataSet
+          //     .toData()[0][mapping.deployMode.name],
+          //   [mapping.env.name]: BaseDeployDataSet
+          //     .toData()[0][mapping.env.name],
+          //   [mapping.instance.name]: BaseDeployDataSet
+          //     .toData()[0][mapping.instance.name],
+          //   [mapping.values.name]: BaseDeployDataSet
+          //     .toData()[0][mapping.values.name],
+          //   type: 'create',
+          //   isNotChange: false,
+          // };
         } else {
           return false;
         }
@@ -97,19 +140,6 @@ export default observer(() => {
               return false;
             }
           }
-          for (let i = 0; i < ParamSettingDataSet.records.length; i += 1) {
-            const result = handleValidParamsRunningValue(ParamSettingDataSet
-              .records[i].get(paramMapping.paramsRunnigValue.name), ParamSettingDataSet.records[i]);
-            if (result !== true) {
-              flag = true;
-              break;
-            }
-          }
-          const configuration = {};
-          ParamSettingDataSet.records.forEach((i) => {
-            configuration[i.get(paramMapping.params.name)] = i
-              .get(paramMapping.paramsRunnigValue.name);
-          });
           if (!flag) {
             axiosData = {
               hostIds: HostSettingDataSet.records.map((i) => i.get(hostMapping.hostId.name)),
@@ -117,12 +147,32 @@ export default observer(() => {
               name: BaseDeployDataSet.current.get(mapping.resourceName.name),
               [mapping.serviceVersion.name]: BaseDeployDataSet
                 .current.get(mapping.serviceVersion.name),
-              configuration,
+              type: 'create',
+              isNotChange: false,
             };
           }
         } else {
           return false;
         }
+      }
+      for (let i = 0; i < ParamSettingDataSet.records.length; i += 1) {
+        const result = handleValidParamsRunningValue(ParamSettingDataSet
+          .records[i].get(paramMapping.paramsRunnigValue.name), ParamSettingDataSet.records[i]);
+        if (result !== true) {
+          flag = true;
+          break;
+        }
+      }
+      if (!flag) {
+        const configuration = {};
+        ParamSettingDataSet.records.forEach((i) => {
+          configuration[i.get(paramMapping.params.name)] = i
+            .get(paramMapping.paramsRunnigValue.name);
+        });
+        axiosData = {
+          ...axiosData,
+          configuration,
+        };
       }
       if (!flag) {
         try {
@@ -155,9 +205,13 @@ export default observer(() => {
     const middleware = BaseDeployDataSet.current.get(mapping.middleware.name);
     const deployWary = BaseDeployDataSet.current.get(mapping.deployWay.name);
     HostSettingDataSet.getField(hostMapping.hostName.name).set('required', (middleware === middleWareData[0].value) && (deployWary === deployWayOptionsData[1].value));
+
+    // 中间件 部署方式 部署模式改变 重新查询table数据
+    ParamSettingDataSet.read();
   }, [
     BaseDeployDataSet.current.get(mapping.middleware.name),
     BaseDeployDataSet.current.get(mapping.deployWay.name),
+    BaseDeployDataSet.current.get(mapping.deployMode.name),
   ]);
 
   /**
@@ -235,11 +289,11 @@ export default observer(() => {
           onOption={renderOptionProperty}
         />,
         <TextField colSpan={1} name={mapping.instance.name} />,
-        <Select
-          combo
-          name={mapping.pvc.name}
-          colSpan={1}
-        />,
+        // <Select
+        //   combo
+        //   name={mapping.pvc.name}
+        //   colSpan={1}
+        // />,
       ]
   ), [BaseDeployDataSet.current
     .get(mapping.deployWay.name)]);
@@ -364,21 +418,32 @@ export default observer(() => {
    * @param record
    * @returns {*}
    */
-  const renderParams = ({ value, record }) => (
+  const renderParams = ({ value, record, name }) => (record.get('custom') ? (
+    <Form>
+      <TextField
+        value={value}
+        onChange={(v) => record.set(name, v)}
+      />
+    </Form>
+  ) : (
     <span>
       {value}
-      <Tooltip title={(<span style={{ whiteSpace: 'pre-line' }}>{record.get(paramMapping.tooltip.name)}</span>)}>
-        <Icon
-          style={{
-            color: 'rgba(0, 0, 0, 0.36)',
-            position: 'relative',
-            bottom: '2px',
-          }}
-          type="help"
-        />
-      </Tooltip>
+      {
+        record.get(paramMapping.tooltip.name) && (
+          <Tooltip title={(<span style={{ whiteSpace: 'pre-line' }}>{record.get(paramMapping.tooltip.name)}</span>)}>
+            <Icon
+              style={{
+                color: 'rgba(0, 0, 0, 0.36)',
+                position: 'relative',
+                bottom: '2px',
+              }}
+              type="help"
+            />
+          </Tooltip>
+        )
+      }
     </span>
-  );
+  ));
 
   /**
    * 测试连接整个结果渲染
@@ -411,17 +476,20 @@ export default observer(() => {
 
   const handleValidParamsRunningValue = (values, record) => {
     if (!values) {
-      message.error('请输入数字');
+      message.error('请输入参数');
       return '该字段为必填';
     }
     const itemScope = record.get(paramMapping.paramsScope.name);
-    if (itemScope.includes('～')) {
+    let middleValue;
+    if (itemScope.includes('~') || itemScope.includes('～')) {
+      if (itemScope.includes('~')) { middleValue = '~'; }
+      if (itemScope.includes('～')) { middleValue = '～'; }
       //  为区间
       if (parseFloat(values).toString() === 'NaN') {
         message.error('请输入数字');
         return '请输入数字';
       }
-      const scope = itemScope.split('～');
+      const scope = itemScope.split(middleValue);
       const newValues = values.replace(/,/gi, '');
       if (newValues <= parseFloat(scope[1].replace(/,/gi, ''))
         && newValues >= parseFloat(scope[0].replace(/,/gi, ''))) {
@@ -504,34 +572,104 @@ export default observer(() => {
           参数配置
           <Icon type="expand_less" />
         </p>
-        <Table
-          style={{ marginTop: 20 }}
-          queryBar="none"
-          dataSet={ParamSettingDataSet}
-          rowHeight={60}
-        >
-          <Column name={paramMapping.params.name} renderer={renderParams} />
-          <Column name={paramMapping.defaultParams.name} />
-          <Column name={paramMapping.paramsScope.name} renderer={renderParamsScope} />
-          <Column name={paramMapping.paramsRunnigValue.name} renderer={renderParamsRunningValue} />
-        </Table>
       </>
     ) : [
-      <YamlEditor
-        readOnly={false}
-        value={BaseDeployDataSet.current.get(mapping.values.name)}
-        onValueChange={(data) => BaseDeployDataSet.current.set(mapping.values.name, data)}
-      />,
-      <ResourceSetting
-        networkRef={networkRef}
-        domainRef={domainRef}
-        envId={BaseDeployDataSet.current.get(mapping.env.name)}
-        style={{
-          marginTop: 30,
-        }}
-      />,
+      <p className="c7ncd-baseDeploy-middle-deploySetting">
+        参数配置
+        <Icon type="expand_less" />
+      </p>,
+      <Form columns={3} style={{ width: '80%', marginTop: 16 }} dataSet={BaseDeployDataSet}>
+        <Password autoComplete="new-password" colSpan={1} name={mapping.password.name} />
+        <Select colSpan={1} name={mapping.sysctlImage.name}>
+          <Option value>true</Option>
+          <Option value={false}>false</Option>
+        </Select>
+        {
+          BaseDeployDataSet.current
+            .get(mapping.deployMode.name) === deployModeOptionsData[0].value ? (
+              <Select combo colSpan={1} name={mapping.pvc.name} />
+            ) : (
+              <NumberField newLine colSpan={1} name={mapping.slaveCount.name} />
+            )
+        }
+      </Form>,
+      BaseDeployDataSet.current
+        .get(mapping.deployMode.name) === deployModeOptionsData[0].value ? '' : [
+          <p className="c7ncd-baseDeploy-middle-deploySetting">
+            PV标签
+            <Icon type="expand_less" />
+            <Tooltip title="此处输入的PV标签用于定位对应的PV，此处需保证匹配得到的PV数量应大于等于slaveCount的数量">
+              <Icon
+                style={{
+                  color: 'rgba(15, 19, 88, 0.35)',
+                  fontSize: '16px',
+                }}
+                type="help"
+              />
+            </Tooltip>
+          </p>,
+          PVLabelsDataSet.records.filter((item) => !item.isRemoved).map((item) => (
+            <>
+              <Form style={{ width: '80%' }} record={item} columns={3}>
+                <div className="c7ncd-base-pvlabels" colSpan={1}>
+                  <div>
+                    <TextField name="key" />
+                  </div>
+                  <span style={{ margin: '0 10px' }}>=</span>
+                  <div>
+                    <TextField name="value" />
+                  </div>
+                  <Button
+                    style={{
+                      flexShrink: 0,
+                      marginLeft: 10,
+                    }}
+                    icon="delete"
+                    onClick={() => PVLabelsDataSet.remove(item)}
+                  />
+                </div>
+              </Form>
+            </>
+          )),
+          <Button
+            icon="add"
+            color="primary"
+            style={{
+              display: 'block',
+            }}
+            onClick={() => PVLabelsDataSet.create()}
+          >
+            添加PV标签
+          </Button>,
+        ],
+      // <YamlEditor
+      //   readOnly={false}
+      //   value={BaseDeployDataSet.current.get(mapping.values.name)}
+      //   onValueChange={(data) => BaseDeployDataSet.current.set(mapping.values.name, data)}
+      // />,
+      // <ResourceSetting
+      //   networkRef={networkRef}
+      //   domainRef={domainRef}
+      //   envId={BaseDeployDataSet.current.get(mapping.env.name)}
+      //   style={{
+      //     marginTop: 30,
+      //   }}
+      // />,
     ]
   );
+
+  /**
+   * 添加table 一行参数
+   */
+  const handleAddParams = () => {
+    ParamSettingDataSet.create({
+      [paramMapping.params.name]: '',
+      [paramMapping.defaultParams.name]: '——',
+      [paramMapping.paramsScope.name]: '——',
+      [paramMapping.paramsRunnigValue.name]: '',
+      custom: 'true',
+    }, 0);
+  };
 
   /**
    * 删除按钮disabled属性
@@ -613,6 +751,28 @@ export default observer(() => {
       {
         renderBottomDomBaseOnDeployWay()
       }
+      <Button
+        icon="add"
+        color="primary"
+        style={{
+          position: 'relative',
+          left: 'calc(100% - 100px)',
+        }}
+        onClick={handleAddParams}
+      >
+        添加参数
+      </Button>
+      <Table
+        style={{ marginTop: 20 }}
+        queryBar="none"
+        dataSet={ParamSettingDataSet}
+        rowHeight={60}
+      >
+        <Column name={paramMapping.params.name} renderer={renderParams} />
+        <Column name={paramMapping.defaultParams.name} />
+        <Column name={paramMapping.paramsScope.name} renderer={renderParamsScope} />
+        <Column name={paramMapping.paramsRunnigValue.name} renderer={renderParamsRunningValue} />
+      </Table>
     </div>
   );
 });

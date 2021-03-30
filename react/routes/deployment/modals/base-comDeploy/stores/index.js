@@ -8,6 +8,7 @@ import baseDeployDataSet from './baseDeployDataSet';
 import hostSettingDataSet from './hostSettingDataSet';
 import paramSettingDataSet from './paramSettingDataSet';
 import useStore from './useStore';
+import pvLabelsDataSet from './pvLabelsDataSet';
 
 const Store = createContext();
 
@@ -35,7 +36,10 @@ export const StoreProvider = inject('AppState')(
         BaseComDeployStore,
       )), [projectId, random],
     );
-    const ParamSettingDataSet = useMemo(() => new DataSet(paramSettingDataSet()), []);
+    const ParamSettingDataSet = useMemo(
+      () => new DataSet(paramSettingDataSet(BaseDeployDataSet)), [BaseDeployDataSet],
+    );
+    const PVLabelsDataSet = useMemo(() => new DataSet(pvLabelsDataSet()), []);
 
     const value = {
       ...props,
@@ -43,6 +47,7 @@ export const StoreProvider = inject('AppState')(
       HostSettingDataSet,
       ParamSettingDataSet,
       BaseComDeployStore,
+      PVLabelsDataSet,
     };
     return (
       <Store.Provider value={value}>
