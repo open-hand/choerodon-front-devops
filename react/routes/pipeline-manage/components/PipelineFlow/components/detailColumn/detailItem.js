@@ -4,6 +4,9 @@ import React from 'react';
 import { Tooltip } from 'choerodon-ui';
 import { Button, Modal, message } from 'choerodon-ui/pro';
 import {
+  WritableStream,
+} from 'web-streams-polyfill';
+import {
   Choerodon, Permission, Action,
 } from '@choerodon/boot';
 import copy from 'copy-to-clipboard';
@@ -504,9 +507,13 @@ const DetailItem = (props) => {
       headers: tempHeader,
     })
       .then((response) => {
+        if (!window.WritableStream) {
+          StreamSaver.WritableStream = WritableStream;
+          window.WritableStream = WritableStream;
+        }
         const fileStream = StreamSaver.createWriteStream(filename);
         const readableStream = response.body;
-        if (readableStream.pipeTo) {
+        if (get(readableStream, 'pipeTo')) {
           return readableStream.pipeTo(fileStream);
         }
 
