@@ -5,7 +5,7 @@ import { Tooltip } from 'choerodon-ui';
 import { Button, Modal, message } from 'choerodon-ui/pro';
 import {
   WritableStream,
-} from 'web-streams-polyfill';
+} from 'web-streams-polyfill/ponyfill';
 import {
   Choerodon, Permission, Action,
 } from '@choerodon/boot';
@@ -513,7 +513,8 @@ const DetailItem = (props) => {
         }
         const fileStream = StreamSaver.createWriteStream(filename);
         const readableStream = response.body;
-        if (get(readableStream, 'pipeTo')) {
+        const pipeTo = get(readableStream, 'pipeTo');
+        if (pipeTo && typeof pipeTo === 'function') {
           return readableStream.pipeTo(fileStream);
         }
 
