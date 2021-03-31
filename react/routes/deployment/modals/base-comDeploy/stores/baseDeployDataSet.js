@@ -140,8 +140,8 @@ const mapping = {
     maxLength: 64,
   },
   pvc: {
-    textField: 'pvName',
-    valueField: 'pvName',
+    textField: 'name',
+    valueField: 'name',
     name: 'pvcName',
     type: 'string',
     label: 'PVC',
@@ -218,9 +218,6 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore) => ({
             },
           },
         }) : undefined),
-        required: ({ record }) => (record.get(mapping.middleware.name) === middleWareData[0].value)
-          && (record.get(mapping.deployWay.name) === deployWayOptionsData[0].value)
-          && (record.get(mapping.deployMode.name) === deployModeOptionsData[0].value),
       };
     } else if (key === 'env') {
       item.lookupAxiosConfig = () => ({

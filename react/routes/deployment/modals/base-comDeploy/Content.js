@@ -88,19 +88,27 @@ export default observer(() => {
         // 如果是哨兵
         if (BaseDeployDataSet.current.get(mapping.deployMode.name)
           === deployModeOptionsData[1].value) {
-          flag = !await PVLabelsDataSet.validate();
-          if (!flag) {
-            const pvLength = PVLabelsDataSet.records.filter((i) => !i.isRemoved).length;
-            const slaveCount = BaseDeployDataSet.current.get(mapping.slaveCount.name);
-            if (!(pvLength && pvLength >= slaveCount)) {
-              flag = true;
-              message.error('pv标签数量应大于等于slaveCount的数量');
-            }
-          }
+          // flag = !await PVLabelsDataSet.validate();
+          // if (!flag) {
+          //   const pvLength = PVLabelsDataSet.records.filter((i) => !i.isRemoved).length;
+          //   const slaveCount = BaseDeployDataSet.current.get(mapping.slaveCount.name);
+          //   if (!(pvLength && pvLength >= slaveCount)) {
+          //     flag = true;
+          //     message.error('pv标签数量应大于等于slaveCount的数量');
+          //   }
+          // }
           const pvlabels = {};
-          PVLabelsDataSet.records.forEach((i) => {
-            pvlabels[i.get('key')] = i.get('value');
-          });
+          for (let i = 0; i < PVLabelsDataSet.records.length; i += 1) {
+            if (!PVLabelsDataSet.records[i].get('key') || !PVLabelsDataSet.records[i].get('value')) {
+              message.error('pv标签应配对填写');
+              flag = true;
+              break;
+            }
+            pvlabels[PVLabelsDataSet.records[i].get('key')] = PVLabelsDataSet.records[i].get('value');
+          }
+          // PVLabelsDataSet.records.forEach((i) => {
+          //   pvlabels[i.get('key')] = i.get('value');
+          // });
           axiosData[mapping.slaveCount.name] = BaseDeployDataSet
             .toData()[0][mapping.slaveCount.name];
           axiosData.pvLabels = pvlabels;
