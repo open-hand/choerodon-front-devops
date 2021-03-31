@@ -99,16 +99,26 @@ export default observer(() => {
           // }
           const pvlabels = {};
           for (let i = 0; i < PVLabelsDataSet.records.length; i += 1) {
-            if (!PVLabelsDataSet.records[i].get('key') || !PVLabelsDataSet.records[i].get('value')) {
+            // 如果都没有
+            if (!PVLabelsDataSet.records[i].get('key') && !PVLabelsDataSet.records[i].get('value')) {
+              // message.error('pv标签应配对填写');
+              // flag = true;
+              // break;
+            } else if (PVLabelsDataSet.records[i].get('key') && PVLabelsDataSet.records[i].get('value')) {
+              //   如果都有
+              if (Object.keys(pvlabels).includes(PVLabelsDataSet.records[i].get('key'))) {
+                flag = true;
+                message.error('pv标签键值应唯一');
+                break;
+              } else {
+                pvlabels[PVLabelsDataSet.records[i].get('key')] = PVLabelsDataSet.records[i].get('value');
+              }
+            } else {
               message.error('pv标签应配对填写');
               flag = true;
               break;
             }
-            pvlabels[PVLabelsDataSet.records[i].get('key')] = PVLabelsDataSet.records[i].get('value');
           }
-          // PVLabelsDataSet.records.forEach((i) => {
-          //   pvlabels[i.get('key')] = i.get('value');
-          // });
           axiosData[mapping.slaveCount.name] = BaseDeployDataSet
             .toData()[0][mapping.slaveCount.name];
           axiosData.pvLabels = pvlabels;
