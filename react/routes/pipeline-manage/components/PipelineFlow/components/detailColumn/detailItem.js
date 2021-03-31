@@ -519,7 +519,7 @@ const DetailItem = (props) => {
         }
 
         const writer = fileStream.getWriter();
-        window.writer = writer;
+        // window.writer = writer;
 
         const reader = response.body.getReader();
         const pump = () => reader.read()
@@ -587,7 +587,6 @@ const DetailItem = (props) => {
         service: [''],
         text: 'jar包下载',
         action: handleJarDownload,
-        // disabled: getRetryBtnDisabled(),
       });
       imageScan && data.push({
         service: ['choerodon.code.project.develop.ci-pipeline.ps.job.imageReport'],
