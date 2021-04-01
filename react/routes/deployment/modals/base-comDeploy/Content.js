@@ -431,6 +431,16 @@ export default observer(() => {
   );
 
   /**
+   * table操作列
+   */
+  const renderOperation = ({ record }) => record.get('custom') && (
+    <Button
+      onClick={() => ParamSettingDataSet.remove(record)}
+      icon="delete"
+    />
+  );
+
+  /**
    * table 参数render
    * @param value
    * @param record
@@ -790,6 +800,7 @@ export default observer(() => {
         <Column name={paramMapping.defaultParams.name} />
         <Column name={paramMapping.paramsScope.name} renderer={renderParamsScope} />
         <Column name={paramMapping.paramsRunnigValue.name} renderer={renderParamsRunningValue} />
+        <Column width={60} renderer={renderOperation} />
       </Table>
     </div>
   );
