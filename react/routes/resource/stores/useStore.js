@@ -1,8 +1,14 @@
 import { useLocalStore } from 'mobx-react-lite';
-import { axios } from '@choerodon/boot';
-import { viewTypeMappings } from './mappings';
+import { axios, Choerodon } from '@choerodon/boot';
+import {
+  map, isEmpty, forEach, omit, pick, concat, get,
+} from 'lodash';
+import {
+  itemTypeMappings, viewTypeMappings, RES_TYPES, ENV_KEYS,
+} from './mappings';
 
-const { IST_VIEW_TYPE } = viewTypeMappings;
+const { IST_VIEW_TYPE, RES_VIEW_TYPE } = viewTypeMappings;
+const { ENV_ITEM, APP_ITEM, IST_ITEM } = itemTypeMappings;
 
 export default function useStore(viewType) {
   return useLocalStore(() => ({
@@ -55,7 +61,37 @@ export default function useStore(viewType) {
       return this.upTarget;
     },
 
-    async checkExist({ projectId, envId, type, id }) {
+    /**
+     * 树结构已展开的节点的key
+     */
+    loadedKeys: [],
+    setLoadedKeys(keys) {
+      this.loadedKeys = keys;
+    },
+    get getLoadedKeys() {
+      return this.loadedKeys.slice();
+    },
+
+    childrenDataMap: new Map(),
+    get getChildrenDataMap() {
+      return this.childrenDataMap;
+    },
+    parentDataMap: new Map(),
+    get getParentDataMap() {
+      return this.parentDataMap;
+    },
+
+    allTreeData: [],
+    get getAllTreeData() {
+      return this.allTreeData;
+    },
+    setAllTreeData(data) {
+      this.allTreeData = data;
+    },
+
+    async checkExist({
+      projectId, envId, type, id,
+    }) {
       try {
         const res = await axios.get(`/devops/v1/projects/${projectId}/envs/${envId}/check?type=${type}&object_id=${id}`);
         if (typeof res === 'boolean') {
@@ -66,6 +102,170 @@ export default function useStore(viewType) {
       } catch (e) {
         return true;
       }
+    },
+
+    handleSelectedMenuData({ treeDs, item }) {
+      const itemRecord = treeDs.create(item);
+      const { key: selectedKey } = this.selectedMenu;
+      if (selectedKey && selectedKey === item.key) {
+        itemRecord.isSelected = true;
+        this.setSelectedMenu(item);
+      }
+      return itemRecord;
+    },
+
+    loadInstanceRecordData({ key, treeDs }) {
+      try {
+        const recordData = this.childrenDataMap.get(key);
+        this.setLoadedKeys([...this.loadedKeys, key]);
+        if (recordData) {
+          const records = map(recordData, (item) => {
+            const itemRecord = this.handleSelectedMenuData({ treeDs, item });
+            return itemRecord;
+          });
+          treeDs.push(...records);
+        }
+      } catch (e) {
+        Choerodon.handleResponseError(e);
+      }
+    },
+
+    loadResourceRecordData({
+      key, record, treeDs, formatMessage,
+    }) {
+      try {
+        const recordData = record.get('childrenData');
+        if (recordData) {
+          this.setLoadedKeys([...this.loadedKeys, key]);
+          const itemType = record.get('itemType');
+          if (itemType === ENV_ITEM) {
+            const recordsChildren = map(RES_TYPES, (type, index) => {
+              const children = recordData[type];
+              const groupKey = `${key}**${type}`;
+              const item = {
+                id: index,
+                name: formatMessage({ id: type }),
+                key: groupKey,
+                isGroup: true,
+                itemType: `group_${type}`,
+                parentId: key,
+                expand: this.expandedKeys.includes(groupKey),
+                childrenData: !isEmpty(children) ? children : null,
+              };
+              const itemRecord = this.handleSelectedMenuData({ treeDs, item });
+              return itemRecord;
+            });
+            treeDs.push(...recordsChildren);
+          } else {
+            const recordsChildren = map(recordData, (node) => {
+              const [, type] = itemType.split('group_');
+              const item = {
+                ...node,
+                name: type === 'instances' ? node.code : node.name,
+                key: `${record.get('parentId')}**${node.id}**${type}`,
+                itemType: type,
+                parentId: key,
+                expand: false,
+              };
+              const itemRecord = this.handleSelectedMenuData({ treeDs, item });
+              return itemRecord;
+            });
+            treeDs.push(...recordsChildren);
+          }
+        }
+      } catch (e) {
+        Choerodon.handleResponseError(e);
+      }
+    },
+
+    loadAllTreeData(allData, formatMessage) {
+      const flatted = [];
+      const expandsKeys = this.expandedKeys;
+      this.childrenDataMap.clear();
+      this.parentDataMap.clear();
+      const flatInstanceData = (data, prevKey = '', itemType = APP_ITEM, parentNode) => {
+        const items = [];
+        forEach(data, (node) => {
+          const children = node.instances;
+          const peerNode = omit(node, ['instances']);
+          const key = prevKey ? `${prevKey}**${node.id}` : String(node.id);
+          const item = {
+            ...peerNode,
+            name: node.name || node.code,
+            expand: expandsKeys.includes(key),
+            parentId: prevKey || '0',
+            itemType,
+            key,
+            isLeaf: isEmpty(children),
+          };
+          flatted.push(item);
+          items.push(item);
+          this.parentDataMap.set(key, parentNode);
+          if (!isEmpty(children)) {
+            flatInstanceData(children, key, IST_ITEM, item);
+          }
+        });
+        this.childrenDataMap.set(prevKey, items);
+      };
+      const flatResourceData = (data) => {
+        forEach(data, (node) => {
+          const envInfo = pick(node, ENV_KEYS);
+          const envId = envInfo.id;
+          const envKey = String(envId);
+          const { childrenData } = node;
+          const groups = [];
+          forEach(RES_TYPES, (type, index) => {
+            const child = childrenData[type];
+            const groupKey = `${envId}**${type}`;
+            const group = {
+              id: index,
+              name: formatMessage({ id: type }),
+              key: groupKey,
+              isGroup: true,
+              itemType: `group_${type}`,
+              parentId: envKey,
+              expand: expandsKeys.includes(groupKey),
+              isLeaf: isEmpty(child),
+            };
+
+            const items = [];
+            forEach(child, (item) => {
+              const newItemKey = `${envId}**${item.id}**${type}`;
+              const newItem = ({
+                ...item,
+                name: type === 'instances' ? item.code : item.name,
+                key: newItemKey,
+                itemType: type,
+                parentId: groupKey,
+                expand: false,
+                isLeaf: true,
+              });
+              items.push(newItem);
+              this.parentDataMap.set(newItemKey, group);
+            });
+            groups.push(group);
+            flatted.push(group, ...items);
+            this.parentDataMap.set(groupKey, node);
+            if (!isEmpty(child)) {
+              this.childrenDataMap.set(groupKey, items);
+            }
+          });
+          this.childrenDataMap.set(envKey, groups);
+        });
+      };
+      if (this.viewType === IST_VIEW_TYPE) {
+        forEach(allData, (node) => {
+          const children = node.childrenData;
+          const key = String(node.id);
+          if (!isEmpty(children)) {
+            flatInstanceData(children, key, APP_ITEM, node);
+          }
+        });
+      } else {
+        flatResourceData(allData);
+      }
+      const realData = concat(allData, flatted);
+      this.setAllTreeData(realData);
     },
   }));
 }
