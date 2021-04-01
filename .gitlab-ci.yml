@@ -15,6 +15,7 @@ build front:
   only:
     - tags
     - master
+    - feature-lyf
     - /^.*hotfix.*$/
     - /^.*release.*$/
 
