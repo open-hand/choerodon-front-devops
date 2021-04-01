@@ -272,7 +272,7 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore) => ({
           break;
         }
         case mapping.middleware.name:
-          record.set(mapping.instance.name, `${value}-${uuidV1().substring(0, 5)}`);
+          record.set(mapping.instance.name, `${middleWareData.find((i) => i.value === value).text}-${uuidV1().substring(0, 5)}`);
           break;
         case mapping.deployMode.name:
           // 如果是主机部署
