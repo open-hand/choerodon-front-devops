@@ -41,6 +41,7 @@ const DetailItem = (props) => {
     finishedDate,
     itemType,
     gitlabJobId,
+    devopsJobId,
     jobName,
     handleRefresh,
     cdAuto, // cd阶段job独有的
@@ -560,7 +561,7 @@ const DetailItem = (props) => {
     Modal.open({
       title: '查看镜像扫描报告',
       key: Modal.key(),
-      children: <MirrorScanning jobId={gitlabJobId} gitlabPipelineId={gitlabPipelineId} />,
+      children: <MirrorScanning jobId={devopsJobId} gitlabPipelineId={gitlabPipelineId} />,
       style: {
         width: '740px',
       },
