@@ -76,7 +76,7 @@ const MirrorScanning = () => {
               镜像扫描耗时：
             </span>
             <span>
-              {spendTime ? getDuration({ value: spendTime }) : '-'}
+              {spendTime ? getDuration({ value: spendTime, unit: 'ms' }) : '-'}
             </span>
           </div>
         </div>
