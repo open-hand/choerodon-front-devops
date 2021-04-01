@@ -25,6 +25,7 @@ import EmptyPage from '../../components/empty-page';
 import '../../../main.less';
 import './Branch.less';
 import './index.less';
+import './theme4.less';
 
 const { Column } = Table;
 const branchCreateModalKey = ProModal.key();
@@ -48,7 +49,7 @@ function Branch(props) {
     branchStore,
   } = useTableStore();
 
-  const { styles } = props;
+  const { styles, columnsRender } = props;
 
   const [isOPERATIONS, setIsOPERATIONS] = useState(false);
 
@@ -379,6 +380,63 @@ function Branch(props) {
     });
   }
 
+  /**
+   * theme4主题 table column渲染
+   */
+  function theme4RenderColumn({ record, text }) {
+    return (
+      <div className={styles?.['c7n-branch-theme4-table-column']}>
+        <div
+          className={styles?.['c7n-branch-theme4-table-column-side']}
+          style={{
+            width: '500px',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <div style={{ marginRight: 30 }}>
+            <div className={styles?.['c7n-branch-theme4-table-column-side-line']}>
+              <Icon type="branch" />
+              <span className={styles?.['c7n-branch-theme4-table-column-side-line-firstLetter']}>{ record.get('branchName').substring(0, 1).toUpperCase() }</span>
+              <span className={styles?.['c7n-branch-theme4-table-column-side-line-branchName']}>{ record.get('branchName') }</span>
+            </div>
+            <div className={styles?.['c7n-branch-theme4-table-column-side-line']}>
+              <Icon type="point" />
+              <a href={record.get('commitUrl')}>{ record.get('sha').substring(0, 8) }</a>
+              <span className={styles?.['c7n-branch-theme4-table-column-side-line-commitContent']}>{ record.get('commitContent') }</span>
+              <img src={record.get('commitUserUrl')} alt=""/>
+              <TimePopover
+                content={record.get('commitDate')}
+                style={{
+                  color: 'rgba(15, 19, 88, 0.65)',
+                }}
+              />
+            </div>
+          </div>
+          {actionRender({ record })}
+        </div>
+        <div
+          className={styles?.['c7n-branch-theme4-table-column-side']}
+        >
+          <div className={styles?.['c7n-branch-theme4-table-column-side-line']}>
+            <img src={record.get('createUserUrl')} alt=""/>
+            <span>
+              {record.get('createUserRealName')}
+              <span>创建
+                {
+                  record.get('typeCode') && '、关联问题'
+                }
+              </span>
+            </span>
+            {
+              record.get('typeCode') && issueNameRender({ record, text })
+            }
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   // 获取分支正文列表
   function tableBranch() {
     if (branchStore.getIsEmpty) {
@@ -393,12 +451,18 @@ function Branch(props) {
     }
     return (
       <div className="c7ncd-tab-table">
-        <Table className="c7n-branch-main-table" queryBar="bar" dataSet={tableDs}>
-          <Column name="branchName" renderer={branchNameRenderer} sortable />
-          <Column align="right" width={60} renderer={actionRender} />
-          <Column name="commitContent" className="lasetCommit" width={300} renderer={updateCommitRender} />
-          <Column name="createUserRealName" renderer={createUserRender} />
-          { !isOPERATIONS && <Column name="issueName" renderer={issueNameRender} /> }
+        <Table
+          className={classNames('c7n-branch-main-table', styles?.['c7n-branch-theme4-table'])} queryBar="bar" dataSet={tableDs}
+        >
+          {columnsRender({
+            branchNameRenderer,
+            actionRender,
+            updateCommitRender,
+            createUserRender,
+            isOPERATIONS,
+            issueNameRender,
+            theme4RenderColumn,
+          })}
         </Table>
       </div>
     );
