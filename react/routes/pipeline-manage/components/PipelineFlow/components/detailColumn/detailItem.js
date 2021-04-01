@@ -513,12 +513,12 @@ const DetailItem = (props) => {
           window.WritableStream = WritableStream;
         }
         const fileStream = StreamSaver.createWriteStream(filename);
-        const readableStream = response.body;
-        if (window.WritableStream && readableStream.pipeTo) {
-          return readableStream.pipeTo(fileStream).then(() => {
-            message.success('下载成功');
-          });
-        }
+        // const readableStream = response.body;
+        // if (window.WritableStream && readableStream.pipeTo) {
+        //   return readableStream.pipeTo(fileStream).then(() => {
+        //     message.success('下载成功');
+        //   });
+        // }
 
         const writer = fileStream.getWriter();
         window.writer = writer;
@@ -529,7 +529,7 @@ const DetailItem = (props) => {
             ? writer.close()
             : writer.write(res.value).then(pump)));
         pump();
-        message.success('下载成功');
+        // message.success('下载成功');
         return true;
       }).catch((error) => {
         throw new Error(error);
