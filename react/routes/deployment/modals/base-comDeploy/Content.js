@@ -165,6 +165,7 @@ export default observer(() => {
               name: BaseDeployDataSet.current.get(mapping.resourceName.name),
               [mapping.serviceVersion.name]: BaseDeployDataSet
                 .current.get(mapping.serviceVersion.name),
+              [mapping.password.name]: BaseDeployDataSet.current.get(mapping.password.name),
               type: 'create',
               isNotChange: false,
             };
@@ -600,6 +601,9 @@ export default observer(() => {
           参数配置
           <Icon type="expand_less" />
         </p>
+        <Form columns={3} style={{ width: '80%', marginTop: 16 }} dataSet={BaseDeployDataSet}>
+          <Password autoComplete="new-password" colSpan={1} name={mapping.password.name} />
+        </Form>
       </>
     ) : [
       <p className="c7ncd-baseDeploy-middle-deploySetting">

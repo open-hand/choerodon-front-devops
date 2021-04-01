@@ -185,7 +185,7 @@ const AddTask = observer(() => {
               dockerContextDir = c.dockerContextDir;
               dockerFilePath = c.dockerFilePath;
               skipDockerTlsVerify = c.skipDockerTlsVerify;
-              imageScan = c.imageScan;
+              imageScan = c.imageScan || false;
               dockerArtifactFileName = c.artifactFileName;
             } else if (c.type === 'Maven') {
               if (c.nexusMavenRepoIds) {
