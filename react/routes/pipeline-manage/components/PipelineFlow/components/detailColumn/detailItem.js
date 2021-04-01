@@ -513,13 +513,14 @@ const DetailItem = (props) => {
         }
         const fileStream = StreamSaver.createWriteStream(filename);
         const readableStream = response.body;
-        const pipeTo = get(readableStream, 'pipeTo');
-        if (pipeTo && typeof pipeTo === 'function') {
-          return readableStream.pipeTo(fileStream);
+        if (window.WritableStream && readableStream.pipeTo) {
+          return readableStream.pipeTo(fileStream).then(() => {
+            message.success('下载成功');
+          });
         }
 
         const writer = fileStream.getWriter();
-        // window.writer = writer;
+        window.writer = writer;
 
         const reader = response.body.getReader();
         const pump = () => reader.read()
@@ -527,6 +528,7 @@ const DetailItem = (props) => {
             ? writer.close()
             : writer.write(res.value).then(pump)));
         pump();
+        message.success('下载成功');
         return true;
       }).catch((error) => {
         throw new Error(error);
