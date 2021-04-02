@@ -2,15 +2,13 @@
 export default (({
   projectId,
   gitlabPipelineId,
-  jobId,
 }:any):any => ({
   autoQuery: true,
   selection: false,
   paging: true,
   transport: {
     read: () => ({
-      // url: '/devops/v1/projects/1/image/1/1',
-      url: `/devops/v1/projects/${projectId}/image/${gitlabPipelineId}/${jobId}`,
+      url: `/devops/v1/projects/${projectId}/image/${gitlabPipelineId}`,
       method: 'get',
     }),
   },
