@@ -901,6 +901,8 @@ const hostConfig = {
   'c7ncd.host.config.batch.correct.title': '批量校准状态',
   'c7ncd.host.config.batch.correct.des': '确定对页面中所有的主机执行测试连接的操作吗？',
   'c7ncd.host.config.batch.correct': '校准',
+  'c7ncd.host.config.ip.private': '内网IP',
+  'c7ncd.host.config.port.private': '内网端口',
 };
 
 const emptyPage = {

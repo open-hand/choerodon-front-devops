@@ -1,9 +1,8 @@
 /* eslint-disable import/no-anonymous-default-export */
-import { DataSetProps } from 'choerodon-ui/pro/lib/data-set/DataSet';
-import { FieldType } from 'choerodon-ui/pro/lib/data-set/enum';
 import { DataSet } from 'choerodon-ui/pro';
 import HostConfigApis from '@/routes/host-config/apis';
 import omit from 'lodash/omit';
+import { RecordObjectProps, DataSetProps, FieldType } from '@/interface';
 
 interface FormProps {
   formatMessage(arg0: object, arg1?: object): string,
@@ -135,6 +134,27 @@ export default ({
     return true;
   }
 
+  function checkPrivatePort(value: any, name: any, record: any) {
+    if (value && record.getPristineValue(name)
+      && String(value) === String(record.getPristineValue(name))
+    ) {
+      return true;
+    }
+    const p = /^([1-9]\d*|0)$/;
+    const data = {
+      typeMsg: '',
+      min: 1,
+      max: 65535,
+      failedMsg: `${intlPrefix}.port.check.failed`,
+    };
+
+    if (value && (!p.test(value) || parseInt(value, 10) < data.min
+      || parseInt(value, 10) > data.max)) {
+      return formatMessage({ id: data.failedMsg });
+    }
+    return true;
+  }
+
   return ({
     autoCreate: false,
     selection: false,
@@ -206,7 +226,7 @@ export default ({
         type: 'string' as FieldType,
         required: true,
         dynamicProps: {
-          label: ({ record }) => formatMessage({ id: record.get('authType') === 'accountPassword' ? 'password' : `${intlPrefix}.token` }),
+          label: ({ record }: RecordObjectProps) => formatMessage({ id: record.get('authType') === 'accountPassword' ? 'password' : `${intlPrefix}.token` }),
         },
       },
       {
@@ -222,8 +242,8 @@ export default ({
         name: 'jmeterPort',
         type: 'string' as FieldType,
         dynamicProps: {
-          required: ({ record }) => record.get('type') === 'distribute_test',
-          validator: ({ record }) => record.get('type') === 'distribute_test' && checkPort,
+          required: ({ record }: RecordObjectProps) => record.get('type') === 'distribute_test',
+          validator: ({ record }: RecordObjectProps) => record.get('type') === 'distribute_test' && checkPort,
         },
         label: formatMessage({ id: `${intlPrefix}.jmeter.port` }),
       },
@@ -232,9 +252,28 @@ export default ({
         type: 'string' as FieldType,
         pattern: /^(\/[\w\W]+)+$/,
         dynamicProps: {
-          required: ({ record }) => record.get('type') === 'distribute_test',
+          required: ({ record }: RecordObjectProps) => record.get('type') === 'distribute_test',
         },
         label: formatMessage({ id: `${intlPrefix}.jmeter.path` }),
+      },
+      {
+        name: 'privateIp',
+        type: 'string' as FieldType,
+        label: formatMessage({ id: `${intlPrefix}.ip.private` }),
+        dynamicProps: {
+          required: ({ record }: RecordObjectProps) => record.get('type') === 'deploy'
+            && record.get('privatePort'),
+          validator: ({ record }: RecordObjectProps) => record.get('type') === 'deploy' && checkIP,
+        },
+      },
+      {
+        name: 'privatePort',
+        label: formatMessage({ id: `${intlPrefix}.port.private` }),
+        dynamicProps: {
+          required: ({ record }: RecordObjectProps) => record.get('type') === 'deploy'
+            && record.get('privateIp'),
+          validator: ({ record }: RecordObjectProps) => record.get('type') === 'deploy' && checkPrivatePort,
+        },
       },
     ],
     events: {
