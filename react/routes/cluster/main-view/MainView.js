@@ -9,6 +9,7 @@ import { useClusterStore } from '../stores';
 import { useClusterMainStore } from './stores';
 
 import './index.less';
+import './theme4.less';
 
 const ClusterContent = lazy(() => import('./contents/cluster-content'));
 const NodeContent = lazy(() => import('./contents/node-content'));

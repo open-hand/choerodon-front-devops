@@ -420,7 +420,7 @@ function Branch(props) {
         >
           <div className={styles?.['c7n-branch-theme4-table-column-side-line']}>
             <img src={record.get('createUserUrl')} alt=""/>
-            <span>
+            <span className={styles?.['c7n-branch-theme4-table-column-side-line-userIssue']}>
               {record.get('createUserRealName')}
               <span>创建
                 {
