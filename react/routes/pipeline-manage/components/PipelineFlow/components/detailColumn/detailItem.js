@@ -502,23 +502,28 @@ const DetailItem = (props) => {
 
   const handleFileDownLoad = async (url, username, password, filename) => {
     const tempHeader = new Headers();
-    tempHeader.append('Authorization', `Basic ${Base64.encode(`${username}:${password}`)}`);
-    fetch(url, {
+    // Basic ${Base64.encode(`${username}:${password}`)}
+    tempHeader.append('Authorization', 'Basic bWF2ZW4tZGVtby1zbmFwc2hvdC1kZWZVc2VyOmZmNDljMGUy');
+    fetch('https://api.choerodon.com.cn/rdupm/v1/nexus/proxy/1/repository/maven-demo-snapshot/io/choerodon/springboot/0.0.1-SNAPSHOT/springboot-0.0.1-20210310.020647-1.jar', {
       method: 'GET',
       headers: tempHeader,
+      mode: 'cors',
     })
       .then((response) => {
         if (!window.WritableStream) {
           StreamSaver.WritableStream = WritableStream;
           window.WritableStream = WritableStream;
         }
-        const fileStream = StreamSaver.createWriteStream(filename);
-        // const readableStream = response.body;
-        // if (window.WritableStream && readableStream.pipeTo) {
-        //   return readableStream.pipeTo(fileStream).then(() => {
-        //     message.success('下载成功');
-        //   });
-        // }
+        const fileStream = StreamSaver.createWriteStream(filename, {
+          writableStrategy: true,
+          readableStrategy: true,
+        });
+        const readableStream = response.body;
+        if (window.WritableStream && readableStream.pipeTo) {
+          return readableStream.pipeTo(fileStream).then(() => {
+            message.success('下载成功');
+          });
+        }
 
         const writer = fileStream.getWriter();
         window.writer = writer;
