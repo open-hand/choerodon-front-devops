@@ -503,7 +503,7 @@ const DetailItem = (props) => {
   const handleFileDownLoad = async (url, username, password, filename) => {
     const tempHeader = new Headers();
     tempHeader.append('Authorization', `Basic ${Base64.encode(`${username}:${password}`)}`);
-    fetch('https://api.choerodon.com.cn/rdupm/v1/nexus/proxy/1/repository/maven-demo-snapshot/io/choerodon/springboot/0.0.1-SNAPSHOT/springboot-0.0.1-20210310.020647-1.jar', {
+    fetch(url, {
       method: 'GET',
       headers: tempHeader,
       mode: 'cors',
