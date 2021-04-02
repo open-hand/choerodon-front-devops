@@ -152,7 +152,7 @@ const TreeMenu = observer(() => {
 
   const onLoadData = useCallback(async ({ record, key, children }) => {
     if (!children) {
-      resourceStore.loadInstanceRecordData({ key, treeDs });
+      resourceStore.loadMoreRecordData({ key, treeDs });
     }
   }, [projectId]);
 

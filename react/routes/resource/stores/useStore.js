@@ -114,7 +114,7 @@ export default function useStore(viewType) {
       return itemRecord;
     },
 
-    loadInstanceRecordData({ key, treeDs }) {
+    loadMoreRecordData({ key, treeDs }) {
       try {
         const recordData = this.childrenDataMap.get(key);
         this.setLoadedKeys([...this.loadedKeys, key]);
@@ -124,54 +124,6 @@ export default function useStore(viewType) {
             return itemRecord;
           });
           treeDs.push(...records);
-        }
-      } catch (e) {
-        Choerodon.handleResponseError(e);
-      }
-    },
-
-    loadResourceRecordData({
-      key, record, treeDs, formatMessage,
-    }) {
-      try {
-        const recordData = record.get('childrenData');
-        if (recordData) {
-          this.setLoadedKeys([...this.loadedKeys, key]);
-          const itemType = record.get('itemType');
-          if (itemType === ENV_ITEM) {
-            const recordsChildren = map(RES_TYPES, (type, index) => {
-              const children = recordData[type];
-              const groupKey = `${key}**${type}`;
-              const item = {
-                id: index,
-                name: formatMessage({ id: type }),
-                key: groupKey,
-                isGroup: true,
-                itemType: `group_${type}`,
-                parentId: key,
-                expand: this.expandedKeys.includes(groupKey),
-                childrenData: !isEmpty(children) ? children : null,
-              };
-              const itemRecord = this.handleSelectedMenuData({ treeDs, item });
-              return itemRecord;
-            });
-            treeDs.push(...recordsChildren);
-          } else {
-            const recordsChildren = map(recordData, (node) => {
-              const [, type] = itemType.split('group_');
-              const item = {
-                ...node,
-                name: type === 'instances' ? node.code : node.name,
-                key: `${record.get('parentId')}**${node.id}**${type}`,
-                itemType: type,
-                parentId: key,
-                expand: false,
-              };
-              const itemRecord = this.handleSelectedMenuData({ treeDs, item });
-              return itemRecord;
-            });
-            treeDs.push(...recordsChildren);
-          }
         }
       } catch (e) {
         Choerodon.handleResponseError(e);
