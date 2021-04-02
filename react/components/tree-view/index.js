@@ -59,7 +59,7 @@ function getParent(record, parentRecords) {
 }
 
 const TreeView = observer(({
-  ds, store, nodesRender, searchAble, isFilter,
+  ds, store, nodesRender, searchAble, isFilter, otherTreeProps, onSearch,
 }) => {
   const treeClass = useMemo(() => classnames({
     'c7ncd-menu-wrap': true,
@@ -138,7 +138,12 @@ const TreeView = observer(({
 
   return (
     <>
-      {searchAble && <TreeSearch value={store.getSearchValue} onChange={handleSearch} />}
+      {searchAble && (
+        <TreeSearch
+          value={store.getSearchValue}
+          onChange={onSearch || handleSearch}
+        />
+      )}
       <ScrollArea
         vertical
         className={treeClass}
@@ -148,6 +153,7 @@ const TreeView = observer(({
           onExpand={handleExpanded}
           dataSet={ds}
           renderer={nodeRenderer}
+          {...otherTreeProps}
         />
         {store.getSearchValue && !ds.length && (
           <span className="c7ncd-menu-search-empty">暂无数据</span>
@@ -162,11 +168,13 @@ TreeView.propTypes = {
   nodesRender: PropTypes.func.isRequired,
   searchAble: PropTypes.bool,
   isFilter: PropTypes.bool,
+  otherTreeProps: PropTypes.objectOf(PropTypes.string),
 };
 
 TreeView.defaultProps = {
   searchAble: true,
   isFilter: false,
+  otherTreeProps: {},
 };
 
 export default TreeView;

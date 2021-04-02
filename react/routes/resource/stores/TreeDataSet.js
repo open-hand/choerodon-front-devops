@@ -1,7 +1,7 @@
 import omit from 'lodash/omit';
 import isEmpty from 'lodash/isEmpty';
 import pick from 'lodash/pick';
-import map from 'lodash/map';
+import forEach from 'lodash/forEach';
 import moment from 'moment';
 import setEnvRecentItem from '../../../utils/setEnvRecentItem';
 import {
@@ -14,8 +14,7 @@ const { ENV_ITEM, APP_ITEM, IST_ITEM } = itemTypeMappings;
 function formatResource({ value, expandsKeys, formatMessage }) {
   if (isEmpty(value)) return [];
   const flatted = [];
-  for (let i = 0; i < value.length; i++) {
-    const node = value[i];
+  forEach(value, (node, key) => {
     const envInfo = pick(node, ENV_KEYS);
     const envId = envInfo.id;
     const envKey = String(envId);
@@ -25,32 +24,10 @@ function formatResource({ value, expandsKeys, formatMessage }) {
       itemType: ENV_ITEM,
       expand: expandsKeys.includes(envKey),
       parentId: '0',
+      childrenData: omit(node, ENV_KEYS),
+      isLeaf: false,
     });
-    for (let j = 0; j < RES_TYPES.length; j++) {
-      const type = RES_TYPES[j];
-      const child = node[type];
-      const groupKey = `${envId}**${type}`;
-      const group = {
-        id: j,
-        name: formatMessage({ id: type }),
-        key: groupKey,
-        isGroup: true,
-        itemType: `group_${type}`,
-        parentId: String(envId),
-        expand: expandsKeys.includes(groupKey),
-      };
-
-      const items = map(child, (item) => ({
-        ...item,
-        name: type === 'instances' ? item.code : item.name,
-        key: `${envId}**${item.id}**${type}`,
-        itemType: type,
-        parentId: `${envId}**${type}`,
-        expand: false,
-      }));
-      flatted.push(group, ...items);
-    }
-  }
+  });
 
   return flatted;
 }
@@ -59,9 +36,9 @@ function formatInstance({ value, expandsKeys }) {
   if (isEmpty(value)) return [];
   const flatted = [];
   function flatData(data, prevKey = '', itemType = ENV_ITEM) {
-    for (let i = 0; i < data.length; i++) {
-      const node = data[i];
-      const peerNode = omit(node, ['apps', 'instances']);
+    forEach(data, (node) => {
+      const children = node.apps;
+      const peerNode = omit(node, ['apps']);
       const key = prevKey ? `${prevKey}**${node.id}` : String(node.id);
 
       flatted.push({
@@ -71,14 +48,10 @@ function formatInstance({ value, expandsKeys }) {
         parentId: prevKey || '0',
         itemType,
         key,
+        childrenData: !isEmpty(children) ? children : null,
+        isLeaf: isEmpty(children),
       });
-      const children = node.apps || node.instances;
-
-      if (!isEmpty(children)) {
-        const type = node.apps ? APP_ITEM : IST_ITEM;
-        flatData(children, key, type);
-      }
-    }
+    });
   }
   flatData(value);
   return flatted;
@@ -138,6 +111,16 @@ export default ({
       { name: 'itemType', type: 'string' },
     ],
     events: {
+      query: () => {
+        // 请求数据前清空已加载子节点的key,确保展开的子节点获取最新数据
+        store.setLoadedKeys([]);
+        return true;
+      },
+      load: ({ dataSet }) => {
+        if (!store.getSearchValue) {
+          store.loadAllTreeData(dataSet.toData(), formatMessage);
+        }
+      },
       select: ({ record }) => {
         handleSelect({
           record, store, projectId, organizationId, projectName,
