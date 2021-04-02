@@ -99,6 +99,10 @@ const CreateHost: React.FC<any> = observer((): any => {
         <TextField name="name" style={{ marginTop: '-10px' }} />
         <TextField name="hostIp" />
         <TextField name="sshPort" />
+        {formDs && formDs.current && formDs.current.get('type') === 'deploy' && ([
+          <TextField name="privateIp" />,
+          <TextField name="privatePort" />,
+        ])}
         <Tips
           title={formatMessage({ id: `${intlPrefix}.account` })}
           className={`${prefixCls}-module-title ${prefixCls}-module-title-radio`}
