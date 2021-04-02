@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import { TableMode, TableQueryBarType } from '@/interface';
 import ClickText from '@/components/click-text';
 import getDuration from '@/utils/getDuration';
-import { Table } from 'choerodon-ui/pro';
+import { Table, Tooltip } from 'choerodon-ui/pro';
 import { useMirrorScanStore } from './stores';
 import './index.less';
 
@@ -143,14 +143,15 @@ const MirrorScanning = () => {
                 clickAble
                 onClick={() => handleLink(record.get('vulnerabilityCode'))}
                 value={text}
+                showToolTip
               />
             )}
             sortable
           />
           <Column name="severity" renderer={renderStatus} width={100} sortable />
           <Column name="pkgName" sortable />
-          <Column name="installedVersion" sortable />
-          <Column name="fixedVersion" sortable />
+          <Column name="installedVersion" sortable renderer={({ text }) => <Tooltip title={text}>{text}</Tooltip>} />
+          <Column name="fixedVersion" sortable renderer={({ text }) => <Tooltip title={text}>{text}</Tooltip>} />
         </Table>
       </div>
     </div>
