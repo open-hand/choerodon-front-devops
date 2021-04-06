@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import React, {
-  createContext, useContext, useEffect, useMemo,
+  createContext, useContext, useMemo,
 } from 'react';
 import { injectIntl } from 'react-intl';
 import { inject } from 'mobx-react';
@@ -20,21 +20,18 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
     children,
     AppState: { currentMenuType: { projectId } },
     gitlabPipelineId,
-    jobId,
     history,
   } = props;
 
   const tableDs = useMemo(() => new DataSet(TableDataset({
     projectId,
     gitlabPipelineId,
-    jobId,
-  })), [gitlabPipelineId, jobId, projectId]);
+  })), [gitlabPipelineId, projectId]);
 
   const detailDs = useMemo(() => new DataSet(DetailDataSet({
     projectId,
     gitlabPipelineId,
-    jobId,
-  })), [gitlabPipelineId, jobId, projectId]);
+  })), [gitlabPipelineId, projectId]);
 
   const statusMap = new Map([
     ['UNKNOWN', { code: 'unready', name: '未知' }],

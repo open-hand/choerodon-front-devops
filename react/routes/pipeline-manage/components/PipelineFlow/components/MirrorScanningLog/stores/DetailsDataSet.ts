@@ -2,7 +2,6 @@
 export default (({
   projectId,
   gitlabPipelineId,
-  jobId,
 }:any):any => ({
   autoQuery: true,
   selection: false,
@@ -10,7 +9,7 @@ export default (({
   transport: {
     read: () => ({
       // url: '/devops/v1/projects/1/image/info/1/1',
-      url: `/devops/v1/projects/${projectId}/image/info/${gitlabPipelineId}/${jobId}`,
+      url: `/devops/v1/projects/${projectId}/image/info/${gitlabPipelineId}`,
       method: 'get',
     }),
   },

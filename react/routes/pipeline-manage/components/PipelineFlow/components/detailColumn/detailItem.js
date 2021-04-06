@@ -15,6 +15,7 @@ import { Base64 } from 'js-base64';
 import { get } from 'lodash';
 import renderDuration from '@/utils/getDuration';
 import { handlePromptError } from '@/utils';
+import { MIDDLE } from '@/utils/getModalWidth';
 import StatusTag from '../StatusTag';
 import DepolyLog from '../deployLog';
 import StatusDot from '../statusDot';
@@ -565,11 +566,13 @@ const DetailItem = (props) => {
     Modal.open({
       title: '查看镜像扫描报告',
       key: Modal.key(),
-      children: <MirrorScanning jobId={devopsJobId} gitlabPipelineId={gitlabPipelineId} />,
+      children: <MirrorScanning gitlabPipelineId={gitlabPipelineId} />,
       style: {
-        width: '740px',
+        width: MIDDLE,
       },
       drawer: true,
+      okCancel: false,
+      okText: '关闭',
     });
   };
 
