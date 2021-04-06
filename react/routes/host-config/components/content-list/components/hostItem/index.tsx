@@ -44,14 +44,14 @@ const HostsItem:React.FC<any> = ({
       return hostStatus;
     }
     if (type === 'distribute_test') {
+      if (jmeterStatus === 'occupied') {
+        return 'occupied';
+      }
       if (jmeterStatus === 'success' && hostStatus === 'success') {
         return 'success';
       }
       if (jmeterStatus === 'failed' || hostStatus === 'failed') {
         return 'failed';
-      }
-      if (jmeterStatus === 'occupied') {
-        return 'occupied';
       }
       return 'operating';
     }
