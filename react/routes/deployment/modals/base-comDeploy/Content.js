@@ -233,6 +233,37 @@ export default observer(() => {
     BaseDeployDataSet.current.get(mapping.deployMode.name),
   ]);
 
+  useEffect(() => {
+    // 主机模式 部署模式改变 清空主机设置
+    if (BaseDeployDataSet.current.get(mapping.middleware.name) === middleWareData[0].value) {
+      if (BaseDeployDataSet.current.get(mapping.deployWay.name) === deployWayOptionsData[1].value) {
+        HostSettingDataSet.records.forEach((item) => {
+          Object.keys(hostMapping).forEach((key) => {
+            item.init(key);
+          });
+        });
+      }
+    }
+  }, [BaseDeployDataSet.current.get(mapping.deployMode.name)]);
+
+  /**
+   * 获取主机名称disabled属性
+   */
+  const getHostNameDisabled = (data) => {
+    if (HostSettingDataSet.records.find((i) => i.get(hostMapping.hostName.name) === data.record.get('id'))) {
+      return true;
+    } if (BaseDeployDataSet
+      .current
+      .get(mapping.deployMode.name) === deployModeOptionsData[1].value) {
+      //  如果是哨兵模式
+      if (data.record.get('privateIp')) {
+        return false;
+      }
+      return true;
+    }
+    return false;
+  };
+
   /**
    * 添加主机
    */
@@ -547,16 +578,33 @@ export default observer(() => {
         {
           HostSettingDataSet.records.filter((i) => !i.isRemoved).map((record) => (
             <div style={{ position: 'relative', width: '80%' }}>
-              <Form columns={3} style={{ width: '100%' }} record={record}>
+              <Form
+                columns={
+                  BaseDeployDataSet
+                    .current
+                    .get(mapping.deployMode.name) === deployModeOptionsData[0].value ? 3 : 5
+                }
+                style={{ width: '100%' }}
+                record={record}
+              >
                 <Select
                   colSpan={1}
                   name={hostMapping.hostName.name}
                   onOption={(data) => ({
-                    disabled: HostSettingDataSet.records.find((i) => i.get(hostMapping.hostName.name) === data.record.get('id')),
+                    disabled: getHostNameDisabled(data),
                   })}
                 />
                 <TextField colSpan={1} name={hostMapping.ip.name} />
                 <TextField colSpan={1} name={hostMapping.port.name} />
+                {
+                  BaseDeployDataSet
+                    .current
+                    .get(mapping.deployMode.name) === deployModeOptionsData[1].value && [
+                      <TextField colSpan={1} name={hostMapping.privateIp.name} />,
+                      <TextField colSpan={1} name={hostMapping.privatePort.name} />,
+                  ]
+                }
+
               </Form>
               <Button
                 disabled={deleteHostDisabled(BaseDeployDataSet, HostSettingDataSet)}
