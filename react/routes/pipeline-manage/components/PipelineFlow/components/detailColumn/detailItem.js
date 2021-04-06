@@ -598,11 +598,13 @@ const DetailItem = (props) => {
         text: 'jar包下载',
         action: handleJarDownload,
       });
-      imageScan && data.push({
-        service: ['choerodon.code.project.develop.ci-pipeline.ps.job.imageReport'],
-        text: '查看镜像扫描报告',
-        action: openMirrorScanningLog,
-      });
+      if (imageScan && jobStatus === 'success') {
+        data.push({
+          service: ['choerodon.code.project.develop.ci-pipeline.ps.job.imageReport'],
+          text: '查看镜像扫描报告',
+          action: openMirrorScanningLog,
+        });
+      }
       // 目前先不做npm代码保留着
       // if (downloadNpm) {
       //   data.push({

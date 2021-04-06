@@ -1245,7 +1245,7 @@ const AddTask = observer(() => {
                         <Icon
                           type="help"
                           className="c7ncd-select-tips-icon"
-                          style={{ position: 'absolute', top: '1px', left: '96px' }}
+                          style={{ position: 'absolute', top: '2px', left: '96px' }}
                         />
                       </Tooltip>
                       <SelectBox
@@ -1255,6 +1255,19 @@ const AddTask = observer(() => {
                         <Option value>是</Option>
                         <Option value={false}>否</Option>
                       </SelectBox>
+                      <Tooltip title={
+                        <span>
+                          开启镜像安全扫描后，此步骤中生成的镜像将会通过Trivy进行漏洞扫描，并在记录中生成报告；
+                          <br />
+                          但注意，该扫描目前暂不支持多阶段构建的镜像。例如：当Dockerfile中存在多个FROM指令时，此时构建出来的镜像便不支持扫描，且任务会被置为失败的状态。
+                        </span>
+                      }>
+                        <Icon
+                          type="help"
+                          className="c7ncd-select-tips-icon"
+                          style={{ position: 'absolute', top: '2px', left: '275px' }}
+                        />
+                      </Tooltip>
                     </div>,
                   ];
                 }
