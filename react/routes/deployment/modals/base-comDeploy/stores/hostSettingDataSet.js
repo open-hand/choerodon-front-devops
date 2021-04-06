@@ -28,6 +28,18 @@ const mapping = {
     label: '端口',
     disabled: true,
   },
+  privateIp: {
+    name: 'privateIp',
+    type: 'string',
+    label: '内网IP',
+    disabled: true,
+  },
+  privatePort: {
+    name: 'privatePort',
+    type: 'number',
+    label: '内网端口',
+    disabled: true,
+  },
 };
 
 export { mapping };
@@ -72,10 +84,14 @@ export default (projectId, BaseComDeployStore) => ({
             record.set(mapping.ip.name, item.hostIp);
             record.set(mapping.port.name, item.sshPort);
             record.set(mapping.hostId.name, item.id);
+            record.set(mapping.privateIp.name, item.privateIp);
+            record.set(mapping.privatePort.name, item.privatePort);
           } else {
             record.set(mapping.ip.name, '');
             record.set(mapping.port.name, '');
             record.set(mapping.hostId.name, '');
+            record.set(mapping.privateIp.name, '');
+            record.set(mapping.privatePort.name, '');
           }
           break;
         }
