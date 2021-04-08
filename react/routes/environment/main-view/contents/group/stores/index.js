@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useMemo, useEffect } from 'react';
+import React, {
+  createContext, useContext, useMemo, useEffect,
+} from 'react';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
@@ -16,7 +18,10 @@ export function useEnvGroupStore() {
 
 export const StoreProvider = injectIntl(inject('AppState')(
   observer((props) => {
-    const { intl: { formatMessage }, children, AppState: { currentMenuType: { id: projectId } } } = props;
+    const {
+      intl: { formatMessage }, children,
+      AppState: { currentMenuType: { id: projectId } },
+    } = props;
     const {
       intlPrefix,
       envStore: {
@@ -53,7 +58,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
     useEffect(() => {
       checkGroupExist().then((query) => {
         if (query) {
-          const param = typeof id === 'number' && id ? `?group_id=${id}` : '';
+          const param = id ? `?group_id=${id}` : '';
           groupDs.transport.read.url = `/devops/v1/projects/${projectId}/envs/list_by_group${param}`;
           groupDs.query();
         }
@@ -76,5 +81,5 @@ export const StoreProvider = injectIntl(inject('AppState')(
         {children}
       </Store.Provider>
     );
-  })
+  }),
 ));

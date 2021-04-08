@@ -118,7 +118,7 @@ const mapping = {
   gitlabAddress: {
     name: 'gitlab',
     type: 'string',
-    label: 'GitLab地址',
+    label: 'GitLab仓库克隆地址',
   },
   token: {
     name: 'token',
@@ -128,7 +128,7 @@ const mapping = {
   githubAddress: {
     name: 'github',
     type: 'string',
-    label: 'GitHub地址',
+    label: 'GitHub仓库克隆地址',
   },
 };
 
