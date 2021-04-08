@@ -493,6 +493,8 @@ const appService = {
   'c7ncd.appService.import.type.gitlab': '从GitLab导入',
   'c7ncd.appService.url.gitlab': 'GitLab地址',
   'c7ncd.appService.url.github': 'GitHub地址',
+  'c7ncd.appService.url.gitlab.clone': 'GitLab仓库克隆地址',
+  'c7ncd.appService.url.github.clone': 'GitHub仓库克隆地址',
   'c7ncd.appService.token': '私有Token',
   'c7ncd.appService.import': '导入应用服务',
   'c7ncd.appService.add': '添加应用服务',
