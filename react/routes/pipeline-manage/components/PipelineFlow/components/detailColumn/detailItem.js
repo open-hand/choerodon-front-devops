@@ -423,83 +423,9 @@ const DetailItem = (props) => {
 
   const logCheckDisabeldCondition = ['created', 'skipped'].includes(jobStatus) || (itemType === 'cdDeploy' && jobStatus === 'failed');
 
-  const renderLogCheckBtn = () => (
-    <Permission
-      service={['choerodon.code.project.develop.ci-pipeline.ps.job.log']}
-    >
-      <Tooltip title="查看日志">
-        <Button
-          funcType="flat"
-          shape="circle"
-          size="small"
-          icon="description-o"
-          disabled={logCheckDisabeldCondition}
-          onClick={renderCheckLogFun}
-          color="primary"
-        />
-      </Tooltip>
-    </Permission>
-  );
-
   const renderRetryBtnFn = ['cdDeploy', 'cdHost', 'cdAudit', 'cdExternalApproval'].includes(itemType)
     ? handleCdJobRetry
     : handleJobRetry;
-
-  const renderRetryBtn = () => {
-    const clickFn = renderRetryBtnFn;
-    return (
-      <Permission
-        service={[
-          'choerodon.code.project.develop.ci-pipeline.ps.job.retry',
-        ]}
-      >
-        <Tooltip title="重试">
-          <Button
-            funcType="flat"
-            disabled={getRetryBtnDisabled()}
-            shape="circle"
-            size="small"
-            icon="refresh"
-            color="primary"
-            onClick={clickFn}
-          />
-        </Tooltip>
-      </Permission>
-    );
-  };
-
-  const renderCodeQualityBtn = () => (
-    <Permission
-      service={[
-        'choerodon.code.project.develop.ci-pipeline.ps.job.sonarqube',
-      ]}
-    >
-      <Tooltip title="查看代码质量报告">
-        <Button
-          funcType="flat"
-          shape="circle"
-          size="small"
-          onClick={openCodequalityModal}
-          icon="policy-o"
-          color="primary"
-        />
-      </Tooltip>
-    </Permission>
-  );
-
-  const renderCheckDetailsBtn = () => (
-    <Tooltip title="查看详情">
-      <Button
-        funcType="flat"
-        shape="circle"
-        size="small"
-        disabled={jobStatus === 'created'}
-        onClick={goToApiTest}
-        icon="find_in_page-o"
-        color="primary"
-      />
-    </Tooltip>
-  );
 
   const handleFileDownLoad = async (url, username, password, filename) => {
     const tempHeader = new Headers();
@@ -577,22 +503,24 @@ const DetailItem = (props) => {
   };
 
   const renderFooterBtns = () => {
-    const cp = [];
-    if (itemType === 'build') {
-      const data = [
-        {
+    const data = [];
+    if (!['cdAudit', 'cdApiTest'].includes(itemType)) {
+      if (!logCheckDisabeldCondition) {
+        data.push({
           service: ['choerodon.code.project.develop.ci-pipeline.ps.job.log'],
           text: '查看日志',
           action: renderCheckLogFun,
-          disabled: logCheckDisabeldCondition,
-        },
-        {
+        });
+      }
+      if (!getRetryBtnDisabled()) {
+        data.push({
           service: ['choerodon.code.project.develop.ci-pipeline.ps.job.retry'],
           text: '重试',
           action: renderRetryBtnFn,
-          disabled: getRetryBtnDisabled(),
-        },
-      ];
+        });
+      }
+    }
+    if (itemType === 'build') {
       downloadMavenJarVO && data.push({
         service: [''],
         text: 'jar包下载',
@@ -618,23 +546,27 @@ const DetailItem = (props) => {
         service: [],
         text: '复制镜像下载命令',
         action: handleImageCopy,
-        // disabled: getRetryBtnDisabled(),
       });
-      return (
-        <Action data={data} />
-      );
     }
-    if (!['cdAudit', 'cdApiTest'].includes(itemType)) {
-      cp.push(renderLogCheckBtn());
-      cp.push(renderRetryBtn());
-    }
+
     if (itemType === 'sonar') {
-      cp.push(renderCodeQualityBtn());
+      data.push({
+        service: ['choerodon.code.project.develop.ci-pipeline.ps.job.sonarqube'],
+        text: '查看代码质量报告',
+        action: openCodequalityModal,
+      });
     }
-    if (itemType === 'cdApiTest') {
-      cp.push(renderCheckDetailsBtn());
+    if (itemType === 'cdApiTest' && jobStatus === 'created') {
+      data.push({
+        text: '查看详情',
+        service: [],
+        action: goToApiTest,
+      });
     }
-    return cp;
+
+    return (
+      data.length ? <Action data={data} /> : ''
+    );
   };
 
   return (
