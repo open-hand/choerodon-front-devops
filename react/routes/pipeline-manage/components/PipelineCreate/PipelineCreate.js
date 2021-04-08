@@ -288,7 +288,7 @@ const PipelineCreate = observer(() => {
         dataSource={dataSource}
       />
       <p className="pipeline_createInfo">
-        <Icon style={{ color: 'red', verticalAlign: 'text-bottom' }} type="error" />
+        <Icon style={{ color: 'rgba(247, 103, 118, 1)', verticalAlign: 'text-bottom' }} type="error" />
         此页面定义了CI阶段或其中的任务后，GitLab仓库中的.gitlab-ci.yml文件也会同步修改。
       </p>
     </div>
