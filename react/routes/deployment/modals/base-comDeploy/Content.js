@@ -816,29 +816,32 @@ export default observer(() => {
             )
           }
         </span>
-        <span
-          style={{
-            cursor: 'not-allowed',
-          }}
-          role="none"
-          // onClick={() => {
-          //   BaseDeployDataSet.current.set(mapping.middleware.name, middleWareData[1].value);
-          // }}
-        >
-          <img
-            style={{ marginLeft: 20 }}
-            src={mysql}
-            alt=""
-            className={classNames({
-              'c7ncd-baseDeploy-middle-img-checked': BaseDeployDataSet.current.get(mapping.middleware.name) === middleWareData[1].value,
-            })}
-          />
-          {
-            BaseDeployDataSet.current.get(mapping.middleware.name) === middleWareData[1].value && (
-              <Icon type="check_circle" />
-            )
-          }
-        </span>
+        {/* <span */}
+        {/*  style={{ */}
+        {/*    cursor: 'not-allowed', */}
+        {/*  }} */}
+        {/*  role="none" */}
+        {/*  // onClick={() => { */}
+        {/*  //   BaseDeployDataSet.current.set(
+        mapping.middleware.name, middleWareData[1].value); */}
+        {/*  // }} */}
+        {/* > */}
+        {/*  <img */}
+        {/*    style={{ marginLeft: 20 }} */}
+        {/*    src={mysql} */}
+        {/*    alt="" */}
+        {/*    className={classNames({ */}
+        {/*      'c7ncd-baseDeploy-middle-img-checked':
+        BaseDeployDataSet.current.get(mapping.middleware.name) === middleWareData[1].value, */}
+        {/*    })} */}
+        {/*  /> */}
+        {/*  { */}
+        {/*    BaseDeployDataSet.current.get(mapping.middleware.name)
+        === middleWareData[1].value && ( */}
+        {/*      <Icon type="check_circle" /> */}
+        {/*    ) */}
+        {/*  } */}
+        {/* </span> */}
       </div>
       <Form columns={2} style={{ width: '80%', marginTop: 25 }} dataSet={BaseDeployDataSet}>
         <Select colSpan={1} name={mapping.serviceVersion.name} />
