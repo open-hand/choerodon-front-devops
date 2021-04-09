@@ -403,12 +403,16 @@ const Deployment = withRouter(observer((props) => {
             <FormattedMessage id={`${intlPrefix}.batch`} />
           </Button>
         </Permission>
-        <Button
-          icon="jsfiddle"
-          onClick={() => openBaseDeploy()}
+        <Permission
+          service={['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.basedComponent']}
         >
-          基础组件部署
-        </Button>
+          <Button
+            icon="jsfiddle"
+            onClick={() => openBaseDeploy()}
+          >
+            基础组件部署
+          </Button>
+        </Permission>
         <Button
           icon="refresh"
           onClick={() => refresh()}
