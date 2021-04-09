@@ -8,6 +8,7 @@ import { Icon } from 'choerodon-ui';
 import YamlEditor from '@/components/yamlEditor';
 import StatusDot from '@/components/status-dot';
 import BaseComDeployServices from '@/routes/deployment/modals/base-comDeploy/services';
+import Tips from '@/components/new-tips';
 import ResourceSetting from './components/resource-setting';
 import {
   mapping, deployWayOptionsData, deployModeOptionsData, middleWareData,
@@ -327,7 +328,10 @@ export default observer(() => {
     BaseDeployDataSet.current
       .get(mapping.deployWay.name) === deployWayOptionsData[1].value ? [
         <TextField style={{ visibility: 'hidden' }} colSpan={1} />,
-        <SelectBox colSpan={1} name={mapping.deployMode.name} />,
+        <SelectBox
+          colSpan={1}
+          name={mapping.deployMode.name}
+        />,
         <TextField newLine colSpan={1} name={mapping.resourceName.name} />,
       ] : [
         <SelectBox colSpan={1} name={mapping.deployMode.name} />,
@@ -659,17 +663,36 @@ export default observer(() => {
         <Icon type="expand_less" />
       </p>,
       <Form columns={3} style={{ width: '80%', marginTop: 16 }} dataSet={BaseDeployDataSet}>
-        <Password autoComplete="new-password" colSpan={1} name={mapping.password.name} />
-        <Select colSpan={1} name={mapping.sysctlImage.name}>
+        <Password
+          autoComplete="new-password"
+          colSpan={1}
+          name={mapping.password.name}
+          addonAfter={<Tips helpText="访问redis服务的密码" />}
+        />
+        <Select
+          colSpan={1}
+          name={mapping.sysctlImage.name}
+          addonAfter={<Tips helpText="此处指：是否启用内核参数优化。比如优化redis连接数、内存使用等等。" />}
+        >
           <Option value>true</Option>
           <Option value={false}>false</Option>
         </Select>
         {
           BaseDeployDataSet.current
             .get(mapping.deployMode.name) === deployModeOptionsData[0].value ? (
-              <Select combo colSpan={1} name={mapping.pvc.name} />
+              <Select
+                combo
+                colSpan={1}
+                name={mapping.pvc.name}
+                addonAfter={<Tips helpText="此项填值，redis将使用对应的PVC进行数据持久化" />}
+              />
             ) : (
-              <NumberField newLine colSpan={1} name={mapping.slaveCount.name} />
+              <NumberField
+                newLine
+                colSpan={1}
+                name={mapping.slaveCount.name}
+                addonAfter={<Tips helpText="哨兵节点数量。最小是3" />}
+              />
             )
         }
       </Form>,
