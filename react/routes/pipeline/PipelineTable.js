@@ -267,7 +267,7 @@ const PiplelineTable = withRouter(observer((props) => {
       title: `${formatMessage({ id: 'pipeline.execute' })}“${itemName}”`,
       // footer: null,
       okCancel: false,
-      onOk: () => { true; },
+      onOk: () => true,
       okText: <FormattedMessage id="close" />,
       children: (
         <Fragment>

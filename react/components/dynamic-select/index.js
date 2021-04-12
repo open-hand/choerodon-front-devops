@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Fragment, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
@@ -18,8 +19,13 @@ const formItemLayout = {
 
 // eslint-disable-next-line func-names
 const selectKeyGen = (function* (id) {
+  let num = 0;
   while (true) {
     // eslint-disable-next-line no-plusplus
+    num += 1;
+    if (num > 10000) {
+      break;
+    }
     yield `key${id++}`;
   }
 }(1));
@@ -32,7 +38,9 @@ function getRepeatKey(data, value, field) {
   return findKey(omit(data, ['keys', field]), (item) => item === value);
 }
 
-export const SimpleSelect = injectIntl(({ intl, uid, label, options, onDelete, removeable, form, notFoundContent, requireText }) => {
+export const SimpleSelect = injectIntl(({
+  intl, uid, label, options, onDelete, removeable, form, notFoundContent, requireText,
+}) => {
   const handleDelete = useCallback(() => {
     onDelete(uid);
   }, [uid]);
@@ -52,38 +60,40 @@ export const SimpleSelect = injectIntl(({ intl, uid, label, options, onDelete, r
     callback();
   }
 
-  return <FormItem
-    {...formItemLayout}
-    className="c7ncd-dynamic-select"
-    key={uid}
-  >
-    {form.getFieldDecorator(uid, {
-      rules: [{
-        required: true,
-        validator: uniqValid,
-      }],
-    })(<Select
-      required
-      searchable
-      filter
-      optionFilterProp="children"
-      notFoundContent={notFoundContent}
-      filterOption={(input, option) => option.props.children.props.children
-        .toLowerCase()
-        .indexOf(input.toLowerCase()) >= 0}
-      label={label}
-      getPopupContainer={(triggerNode) => triggerNode.parentNode}
+  return (
+    <FormItem
+      {...formItemLayout}
+      className="c7ncd-dynamic-select"
+      key={uid}
     >
-      {options}
-    </Select>)}
-    <Button
-      className="c7ncd-dynamic-select-remove"
-      disabled={!removeable}
-      shape="circle"
-      icon="delete"
-      onClick={handleDelete}
-    />
-  </FormItem>;
+      {form.getFieldDecorator(uid, {
+        rules: [{
+          required: true,
+          validator: uniqValid,
+        }],
+      })(<Select
+        required
+        searchable
+        filter
+        optionFilterProp="children"
+        notFoundContent={notFoundContent}
+        filterOption={(input, option) => option.props.children.props.children
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0}
+        label={label}
+        getPopupContainer={(triggerNode) => triggerNode.parentNode}
+      >
+        {options}
+      </Select>)}
+      <Button
+        className="c7ncd-dynamic-select-remove"
+        disabled={!removeable}
+        shape="circle"
+        icon="delete"
+        onClick={handleDelete}
+      />
+    </FormItem>
+  );
 });
 
 SimpleSelect.propTypes = {
@@ -101,7 +111,9 @@ SimpleSelect.defaultProps = {
   options: [],
 };
 
-export default function DynamicSelect({ form, label, fieldKeys, options, addText, notFoundContent, requireText }) {
+export default function DynamicSelect({
+  form, label, fieldKeys, options, addText, notFoundContent, requireText,
+}) {
   function add() {
     const keys = form.getFieldValue('keys');
     if (!keys) return;
@@ -130,29 +142,33 @@ export default function DynamicSelect({ form, label, fieldKeys, options, addText
   const keys = useMemo(() => fieldKeys.keys, [fieldKeys]);
   // const disabledAdd = options.length <= 1 || (keys && keys.length >= options.length);
 
-  return <Fragment>
-    {map(keys, (key, index) => (<SimpleSelect
-      key={key}
-      uid={key}
-      form={form}
-      notFoundContent={notFoundContent}
-      requireText={requireText}
-      options={options}
-      removeable={index > 0 || (keys && keys.length > 1)}
-      onDelete={remove}
-      label={label}
-    />))}
-    <FormItem>
-      <Button
-        icon="add"
-        type="primary"
-        funcType="flat"
-        onClick={add}
-      >
-        {addText}
-      </Button>
-    </FormItem>
-  </Fragment>;
+  return (
+    <>
+      {map(keys, (key, index) => (
+        <SimpleSelect
+          key={key}
+          uid={key}
+          form={form}
+          notFoundContent={notFoundContent}
+          requireText={requireText}
+          options={options}
+          removeable={index > 0 || (keys && keys.length > 1)}
+          onDelete={remove}
+          label={label}
+        />
+      ))}
+      <FormItem>
+        <Button
+          icon="add"
+          type="primary"
+          funcType="flat"
+          onClick={add}
+        >
+          {addText}
+        </Button>
+      </FormItem>
+    </>
+  );
 }
 
 DynamicSelect.propTypes = {

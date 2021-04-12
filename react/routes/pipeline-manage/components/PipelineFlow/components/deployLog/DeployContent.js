@@ -1,6 +1,9 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Tooltip, Icon, Progress, Modal } from 'choerodon-ui/pro';
+import {
+  Tooltip, Icon, Progress, Modal,
+} from 'choerodon-ui/pro';
 import { Button } from 'choerodon-ui';
 import _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
@@ -52,7 +55,7 @@ const LogItem = observer((props) => {
     window.scrollTo(info.scrollLeft, info.scrollTop);
     cm.refresh();
     window.removeEventListener('keydown', (e) => {
-      setNormal(e.which);
+      setNormal();
     });
   }
 
@@ -75,7 +78,7 @@ const LogItem = observer((props) => {
     document.documentElement.style.overflow = 'hidden';
     cm.refresh();
     window.addEventListener('keydown', (e) => {
-      setNormal(e.which);
+      setNormal();
     });
   }
 
@@ -104,7 +107,7 @@ const LogItem = observer((props) => {
         </div>
         <div className="c7n-term-wrap">
           <ReactCodeMirror
-            ref={editor => { editorLog = editor; }}
+            ref={(editor) => { editorLog = editor; }}
             value={log}
             options={logOptions}
             className="c7n-log-editor"
@@ -123,10 +126,12 @@ const LogItem = observer((props) => {
       <div className="content-step-title">
         {jobPodStatus === 'running'
           ? <Progress type="loading" />
-          : <Icon
-            type="wait_circle"
-            className={`content-step-icon-${jobPodStatus}`}
-          />}
+          : (
+            <Icon
+              type="wait_circle"
+              className={`content-step-icon-${jobPodStatus}`}
+            />
+          )}
         <span className="content-step-title-text">{name}</span>
         {log && (
           <Tooltip
@@ -141,9 +146,11 @@ const LogItem = observer((props) => {
         <pre className={!flag ? 'content-step-des-hidden' : ''}>
           {event}
         </pre>
-        {event && event.split('\n').length > 4 ? (<a onClick={handleExpand}>
-          <FormattedMessage id={flag ? 'shrink' : 'expand'} />
-        </a>) : null}
+        {event && event.split('\n').length > 4 ? (
+          <a onClick={handleExpand}>
+            <FormattedMessage id={flag ? 'shrink' : 'expand'} />
+          </a>
+        ) : null}
       </div>
     </div>
   );
@@ -168,14 +175,18 @@ const Cases = observer(() => {
   }, []);
 
   function getContent() {
-    return logContentLoading ? <Loading display /> : <div className="case-operation-main">
-      {
-        getLogData.length > 0 && getLogData.map((item) => <LogItem
-          {...item}
-          formatMessage={formatMessage}
-        />)
+    return logContentLoading ? <Loading display /> : (
+      <div className="case-operation-main">
+        {
+        getLogData.length > 0 && getLogData.map((item) => (
+          <LogItem
+            {...item}
+            formatMessage={formatMessage}
+          />
+        ))
       }
-    </div>;
+      </div>
+    );
   }
 
   return (
