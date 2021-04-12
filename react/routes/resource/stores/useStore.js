@@ -1,14 +1,14 @@
 import { useLocalStore } from 'mobx-react-lite';
 import { axios, Choerodon } from '@choerodon/boot';
 import {
-  map, isEmpty, forEach, omit, pick, concat, get,
+  map, isEmpty, forEach, omit, pick, concat,
 } from 'lodash';
 import {
   itemTypeMappings, viewTypeMappings, RES_TYPES, ENV_KEYS,
 } from './mappings';
 
-const { IST_VIEW_TYPE, RES_VIEW_TYPE } = viewTypeMappings;
-const { ENV_ITEM, APP_ITEM, IST_ITEM } = itemTypeMappings;
+const { IST_VIEW_TYPE } = viewTypeMappings;
+const { APP_ITEM, IST_ITEM } = itemTypeMappings;
 
 export default function useStore(viewType) {
   return useLocalStore(() => ({
@@ -218,6 +218,7 @@ export default function useStore(viewType) {
       }
       const realData = concat(allData, flatted);
       this.setAllTreeData(realData);
+      this.setLoadedKeys([]);
     },
   }));
 }

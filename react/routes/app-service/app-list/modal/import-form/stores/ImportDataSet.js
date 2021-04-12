@@ -189,7 +189,7 @@ export default ({
           required: isGit,
           label: ({ record }) => {
             if (record.get('platformType') === 'gitlab' || record.get('platformType') === 'github') {
-              return formatMessage({ id: `${intlPrefix}.url.${record.get('platformType')}` });
+              return formatMessage({ id: `${intlPrefix}.url.${record.get('platformType')}.clone` });
             }
           },
         },

@@ -106,7 +106,7 @@ const PipelineTriggerDuration = () => {
     <Page
       className={prefixCls}
       service={[
-        'choerodon.code.project.operation.chart.ps.pipelineTrigger.duration',
+        'choerodon.code.project.operation.chart.ps.pipeline.duration',
       ]}
     >
       <Header

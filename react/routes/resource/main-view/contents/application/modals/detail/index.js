@@ -31,7 +31,7 @@ const Details = (props) => {
         <span className="detail-item-text">
           应用服务名称
         </span>
-        <span>{record.get('marketServiceName') || '-'}</span>
+        <span>{record.get('devopsAppServiceName') || '-'}</span>
       </li>
 
       <li className="detail-item">
@@ -45,7 +45,7 @@ const Details = (props) => {
         <span className="detail-item-text">
           所属市场服务
         </span>
-        <span>{record.get('devopsAppServiceName') || '-'}</span>
+        <span>{record.get('marketServiceName') || '-'}</span>
       </li>
 
       <li className="detail-item">

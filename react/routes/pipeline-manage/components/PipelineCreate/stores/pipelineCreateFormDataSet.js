@@ -122,6 +122,7 @@ export default (
       name: 'bbcl',
       type: 'boolean',
       label: '版本策略',
+      defaultValue: false,
     }, {
       name: 'versionName',
       type: 'string',
