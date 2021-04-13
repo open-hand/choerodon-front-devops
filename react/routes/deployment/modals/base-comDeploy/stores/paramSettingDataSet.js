@@ -36,29 +36,40 @@ export default (BaseDeployDataSet) => ({
   autoQuery: true,
   // autoCreate: true,
   transport: {
-    read: BaseDeployDataSet.current.get(baseMapping.middleware.name)
-&& BaseDeployDataSet.current.get(baseMapping.deployWay.name)
-&& BaseDeployDataSet.current.get(baseMapping.deployMode.name) ? {
-        url: BaseComDeployApis.getParamsSettingApi(
-          BaseDeployDataSet.current.get(baseMapping.middleware.name),
-          BaseDeployDataSet.current.get(baseMapping.deployWay.name),
-          BaseDeployDataSet.current.get(baseMapping.deployMode.name),
-        ),
-        method: 'get',
-        transformResponse: (res) => {
-          let newRes = res;
-          try {
-            newRes = JSON.parse(newRes);
-            newRes.middlewareConfigVOS.forEach((item) => {
-              // eslint-disable-next-line no-param-reassign
-              item.paramsRunningValue = item.paramDefaultValue;
-            });
-            return newRes.middlewareConfigVOS;
-          } catch (e) {
-            return newRes.middlewareConfigVOS;
-          }
-        },
-      } : undefined,
+    read: (data) => {
+      let middleware = BaseDeployDataSet.current.get(baseMapping.middleware.name);
+      let deployWay = BaseDeployDataSet.current.get(baseMapping.deployWay.name);
+      let deployMode = BaseDeployDataSet.current.get(baseMapping.deployMode.name);
+      if (data && data.data && data.queryParams) {
+        middleware = data.data.queryParams.middleware;
+        deployWay = data.data.queryParams.deployWay;
+        deployMode = data.data.queryParams.deployMode;
+      }
+      if (middleware && deployWay && deployMode) {
+        return ({
+          url: BaseComDeployApis.getParamsSettingApi(
+            middleware,
+            deployWay,
+            deployMode,
+          ),
+          method: 'get',
+          transformResponse: (res) => {
+            let newRes = res;
+            try {
+              newRes = JSON.parse(newRes);
+              newRes.middlewareConfigVOS.forEach((item) => {
+                // eslint-disable-next-line no-param-reassign
+                item.paramsRunningValue = item.paramDefaultValue;
+              });
+              return newRes.middlewareConfigVOS;
+            } catch (e) {
+              return newRes.middlewareConfigVOS;
+            }
+          },
+        });
+      }
+      return undefined;
+    },
   },
   fields: Object.keys(mapping).map((key) => mapping[key]),
 });

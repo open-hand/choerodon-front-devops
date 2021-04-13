@@ -11,7 +11,7 @@ import BaseComDeployServices from '@/routes/deployment/modals/base-comDeploy/ser
 import Tips from '@/components/new-tips';
 import ResourceSetting from './components/resource-setting';
 import {
-  mapping, deployWayOptionsData, deployModeOptionsData, middleWareData,
+  mapping, deployWayOptionsData, deployModeOptionsData, middleWareData, mapping as baseMapping,
 } from './stores/baseDeployDataSet';
 import { mapping as hostMapping } from './stores/hostSettingDataSet';
 import paramSettingDataSet, { mapping as paramMapping } from './stores/paramSettingDataSet';
@@ -227,7 +227,12 @@ export default observer(() => {
     HostSettingDataSet.getField(hostMapping.hostName.name).set('required', (middleware === middleWareData[0].value) && (deployWary === deployWayOptionsData[1].value));
 
     // 中间件 部署方式 部署模式改变 重新查询table数据
-    ParamSettingDataSet.read();
+    ParamSettingDataSet.setQueryParameter('queryParams', {
+      middleware: BaseDeployDataSet.current.get(baseMapping.middleware.name),
+      deployWay: BaseDeployDataSet.current.get(baseMapping.deployWay.name),
+      deployMode: BaseDeployDataSet.current.get(baseMapping.deployMode.name),
+    });
+    ParamSettingDataSet.query();
   }, [
     BaseDeployDataSet.current.get(mapping.middleware.name),
     BaseDeployDataSet.current.get(mapping.deployWay.name),
