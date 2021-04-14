@@ -1,7 +1,10 @@
+/* eslint-disable */
 import React, { Fragment, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { FormattedMessage } from 'react-intl';
-import { Tooltip, Icon, Progress, Modal } from 'choerodon-ui/pro';
+import {
+  Tooltip, Icon, Progress, Modal,
+} from 'choerodon-ui/pro';
 import { Button, Spin } from 'choerodon-ui';
 import _ from 'lodash';
 import ReactCodeMirror from 'react-codemirror';
@@ -23,7 +26,9 @@ const logOptions = {
   lineWrapping: true,
 };
 
-const InstanceEvent = ({ index, jobPodStatus, name, log, flag, event, intlPrefix, formatMessage, showMore }) => {
+const InstanceEvent = ({
+  index, jobPodStatus, name, log, flag, event, intlPrefix, formatMessage, showMore,
+}) => {
   const [fullScreen, setFullScreen] = useState(false);
   let editorLog;
 
@@ -46,7 +51,7 @@ const InstanceEvent = ({ index, jobPodStatus, name, log, flag, event, intlPrefix
     document.documentElement.style.overflow = 'hidden';
     cm.refresh();
     window.addEventListener('keydown', (e) => {
-      setNormal(e.which);
+      setNormal();
     });
   }
 
@@ -67,7 +72,7 @@ const InstanceEvent = ({ index, jobPodStatus, name, log, flag, event, intlPrefix
     window.scrollTo(info.scrollLeft, info.scrollTop);
     cm.refresh();
     window.removeEventListener('keydown', (e) => {
-      setNormal(e.which);
+      setNormal();
     });
   }
 
@@ -96,7 +101,7 @@ const InstanceEvent = ({ index, jobPodStatus, name, log, flag, event, intlPrefix
         </div>
         <div className="c7n-term-wrap">
           <ReactCodeMirror
-            ref={editor => { editorLog = editor; }}
+            ref={(editor) => { editorLog = editor; }}
             value={log}
             options={logOptions}
             className="c7n-log-editor"
@@ -115,10 +120,12 @@ const InstanceEvent = ({ index, jobPodStatus, name, log, flag, event, intlPrefix
       <div className="content-step-title">
         {jobPodStatus === 'running'
           ? <Progress type="loading" />
-          : <Icon
-            type="wait_circle"
-            className={`content-step-icon-${jobPodStatus}`}
-          />}
+          : (
+            <Icon
+              type="wait_circle"
+              className={`content-step-icon-${jobPodStatus}`}
+            />
+          )}
         <span className="content-step-title-text">{name}</span>
         {log && (
           <Tooltip
@@ -133,11 +140,14 @@ const InstanceEvent = ({ index, jobPodStatus, name, log, flag, event, intlPrefix
         <pre className={!flag ? 'content-step-des-hidden' : ''}>
           {event}
         </pre>
-        {event && event.split('\n').length > 4 ? (<a onClick={handleClick}>
-          <FormattedMessage id={flag ? 'shrink' : 'expand'} />
-        </a>) : null}
+        {event && event.split('\n').length > 4 ? (
+          <a onClick={handleClick}>
+            <FormattedMessage id={flag ? 'shrink' : 'expand'} />
+          </a>
+        ) : null}
       </div>
-    </div>);
+    </div>
+  );
 };
 
 const Cases = observer(() => {
@@ -182,21 +192,29 @@ const Cases = observer(() => {
 
   function istEventDom(data) {
     if (ignore) {
-      return <div className={`${prefixCls}-instance-cases-empty`}>
-        {formatMessage({ id: `${intlPrefix}.instance.cases.ignore` })}
-      </div>;
+      return (
+        <div className={`${prefixCls}-instance-cases-empty`}>
+          {formatMessage({ id: `${intlPrefix}.instance.cases.ignore` })}
+        </div>
+      );
     }
 
     const podEventVO = data.get('podEventVO');
-    const events = _.map(podEventVO, ({ name, log, event, jobPodStatus }, index) => {
+    const events = _.map(podEventVO, ({
+      name, log, event, jobPodStatus,
+    }, index) => {
       const flag = _.includes(expandKeys, `${index}-${name}`);
-      const eventData = { index, jobPodStatus, name, log, flag, event, intlPrefix, formatMessage, showMore };
+      const eventData = {
+        index, jobPodStatus, name, log, flag, event, intlPrefix, formatMessage, showMore,
+      };
       return <InstanceEvent {...eventData} />;
     });
 
-    return events.length ? events : <div className={`${prefixCls}-instance-cases-empty`}>
-      {formatMessage({ id: `${intlPrefix}.instance.cases.none` })}
-    </div>;
+    return events.length ? events : (
+      <div className={`${prefixCls}-instance-cases-empty`}>
+        {formatMessage({ id: `${intlPrefix}.instance.cases.none` })}
+      </div>
+    );
   }
 
   function getContent() {
@@ -208,7 +226,7 @@ const Cases = observer(() => {
       });
       const data = currentPod || casesDs.get(0);
       return (
-        <Fragment>
+        <>
           <Operation
             handleClick={changeEvent}
             active={currentCommandId}
@@ -218,15 +236,17 @@ const Cases = observer(() => {
               {istEventDom(data)}
             </div>
           </div>
-        </Fragment>
+        </>
       );
     }
-    return <div className={`${prefixCls}-event-empty`}>
-      <Icon type="info" className={`${prefixCls}-event-empty-icon`} />
-      <span className={`${prefixCls}-event-empty-text`}>
-        {formatMessage({ id: `${intlPrefix}.instance.cases.empty` })}
-      </span>
-    </div>;
+    return (
+      <div className={`${prefixCls}-event-empty`}>
+        <Icon type="info" className={`${prefixCls}-event-empty-icon`} />
+        <span className={`${prefixCls}-event-empty-text`}>
+          {formatMessage({ id: `${intlPrefix}.instance.cases.empty` })}
+        </span>
+      </div>
+    );
   }
 
   return (

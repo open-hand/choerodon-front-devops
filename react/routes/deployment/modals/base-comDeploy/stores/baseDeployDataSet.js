@@ -14,7 +14,7 @@ const deployWayOptionsData = [{
 
 const deployModeOptionsData = [{
   text: '单机模式',
-  value: 'standalone',
+  value: 'single',
 }, {
   text: '哨兵模式',
   value: 'sentinel',
