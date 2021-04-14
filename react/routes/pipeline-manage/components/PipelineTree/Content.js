@@ -111,7 +111,9 @@ const TreeMenu = observer(() => {
   };
 
   const onLoadData = async ({ key, children }) => {
-    await mainStore.loadRecordData({ projectId, key, treeDs });
+    if (!children) {
+      await mainStore.loadRecordData({ projectId, key, treeDs });
+    }
   };
 
   function nodeCover({ record }) {

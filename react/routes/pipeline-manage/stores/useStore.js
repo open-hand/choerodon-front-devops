@@ -156,9 +156,9 @@ export default function useStore({ DEFAULT_SIZE }) {
 
     async loadRecordData({ projectId, key, treeDs }) {
       try {
+        this.setLoadedKeys([...this.loadedKeys, key]);
         const recordData = await this.loadRecords(projectId, key, 1);
         if (recordData) {
-          this.setLoadedKeys([...this.loadedKeys, key]);
           const recordsChildren = map(recordData.list, (item) => {
             item.key = `${key}-${item.id || item.ciRecordId || item.cdRecordId}`;
             item.parentId = key;
