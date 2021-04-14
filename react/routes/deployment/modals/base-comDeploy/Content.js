@@ -5,7 +5,6 @@ import {
   Select, Form, SelectBox, TextField, Button, Table, Tooltip, message, Password, NumberField,
 } from 'choerodon-ui/pro';
 import { Icon } from 'choerodon-ui';
-import YamlEditor from '@/components/yamlEditor';
 import StatusDot from '@/components/status-dot';
 import BaseComDeployServices from '@/routes/deployment/modals/base-comDeploy/services';
 import Tips from '@/components/new-tips';
@@ -34,16 +33,39 @@ export default observer(() => {
     AppState: { currentMenuType: { projectId } },
     refresh,
     deployWay,
+    ServiceVersionDataSet,
   } = useBaseComDeployStore();
-
-  const networkRef = useRef();
-  const domainRef = useRef();
 
   modal.handleOk(async () => {
     const middleWare = BaseDeployDataSet.current.get(mapping.middleware.name);
     let pass;
-    let axiosData;
+    let axiosData = {};
     let flag = false;
+    function setFlagBaseOnParamsSetting(f, ad = {}) {
+      let resultData = ad;
+      for (let i = 0; i < ParamSettingDataSet.records.length; i += 1) {
+        const result = handleValidParamsRunningValue(ParamSettingDataSet
+          .records[i].get(paramMapping.paramsRunnigValue.name), ParamSettingDataSet.records[i]);
+        if (result !== true) {
+          // eslint-disable-next-line no-param-reassign
+          f = true;
+          break;
+        }
+      }
+      if (!flag) {
+        const configuration = {};
+        ParamSettingDataSet.records.forEach((i) => {
+          configuration[i.get(paramMapping.params.name)] = i
+            .get(paramMapping.paramsRunnigValue.name);
+        });
+        // eslint-disable-next-line no-param-reassign
+        resultData = {
+          ...resultData,
+          configuration,
+        };
+      }
+      return { f, resultData };
+    }
     // redis
     if (middleWare === middleWareData[0].value) {
       // 环境部署
@@ -175,25 +197,9 @@ export default observer(() => {
           return false;
         }
       }
-      for (let i = 0; i < ParamSettingDataSet.records.length; i += 1) {
-        const result = handleValidParamsRunningValue(ParamSettingDataSet
-          .records[i].get(paramMapping.paramsRunnigValue.name), ParamSettingDataSet.records[i]);
-        if (result !== true) {
-          flag = true;
-          break;
-        }
-      }
-      if (!flag) {
-        const configuration = {};
-        ParamSettingDataSet.records.forEach((i) => {
-          configuration[i.get(paramMapping.params.name)] = i
-            .get(paramMapping.paramsRunnigValue.name);
-        });
-        axiosData = {
-          ...axiosData,
-          configuration,
-        };
-      }
+      const result = setFlagBaseOnParamsSetting(flag, axiosData);
+      flag = result.f;
+      axiosData = result.resultData;
       if (!flag) {
         try {
           if (BaseDeployDataSet
@@ -208,9 +214,53 @@ export default observer(() => {
           return false;
         }
       }
+    } else {
+      //  mysql
+      const record = BaseDeployDataSet.current;
+      // 容器部署
+      if (record.get(mapping.deployWay.name) === deployWayOptionsData[0].value) {
+        const flagBase = await BaseDeployDataSet.validate();
+        let flagParams = false;
+        const result = setFlagBaseOnParamsSetting(flagParams, axiosData);
+        flagParams = result.f;
+        axiosData = result.resultData;
+        if (flagBase && !flagParams) {
+          axiosData = {
+            ...axiosData,
+            [mapping.serviceVersion.name]: BaseDeployDataSet
+              .toData()[0][mapping.serviceVersion.name],
+            [mapping.deployWay.name]: BaseDeployDataSet
+              .toData()[0][mapping.deployWay.name],
+            [mapping.env.name]: BaseDeployDataSet
+              .toData()[0][mapping.env.name],
+            [mapping.instance.name]: BaseDeployDataSet
+              .toData()[0][mapping.instance.name],
+            [mapping.password.name]: BaseDeployDataSet
+              .toData()[0][mapping.password.name],
+            [mapping.pvc.name]: BaseDeployDataSet
+              .toData()[0][mapping.pvc.name],
+          };
+          try {
+            await BaseComDeployServices.axiosPostBaseDeployMySqlEnvApi(projectId, axiosData);
+            return true;
+          } catch (e) {
+            return false;
+          }
+        }
+      }
     }
     return false;
   });
+
+  /**
+   * 初始化服务版本options
+   */
+  const getServiceVersionAndSetInit = (name) => {
+    BaseComDeployServices.axiosGetServiceVersion(name).then((res) => {
+      ServiceVersionDataSet.loadData(res);
+      BaseDeployDataSet.current.set(mapping.serviceVersion.name, res[0].versionNumber);
+    });
+  };
 
   useEffect(() => {
     // 初始化为哨兵模式 初始化三个record
@@ -220,6 +270,10 @@ export default observer(() => {
       BaseDeployDataSet.current.set(mapping.deployWay.name, deployWay);
     }
   }, []);
+
+  useEffect(() => {
+    getServiceVersionAndSetInit(BaseDeployDataSet.current.get(mapping.middleware.name));
+  }, [BaseDeployDataSet.current.get(mapping.middleware.name)]);
 
   useEffect(() => {
     const middleware = BaseDeployDataSet.current.get(mapping.middleware.name);
@@ -339,7 +393,7 @@ export default observer(() => {
         />,
         <TextField newLine colSpan={1} name={mapping.resourceName.name} />,
       ] : [
-        <SelectBox colSpan={1} name={mapping.deployMode.name} />,
+        BaseDeployDataSet.current.get(mapping.middleware.name) === middleWareData[0].value ? <SelectBox colSpan={1} name={mapping.deployMode.name} /> : '',
         <Select
           newLine
           colSpan={1}
@@ -355,7 +409,7 @@ export default observer(() => {
         // />,
       ]
   ), [BaseDeployDataSet.current
-    .get(mapping.deployWay.name)]);
+    .get(mapping.deployWay.name), BaseDeployDataSet.current.get(mapping.middleware.name)]);
 
   /**
    * 删除host
@@ -668,87 +722,104 @@ export default observer(() => {
         <Icon type="expand_less" />
       </p>,
       <Form columns={3} style={{ width: '80%', marginTop: 16 }} dataSet={BaseDeployDataSet}>
-        <Password
-          autoComplete="new-password"
-          colSpan={1}
-          name={mapping.password.name}
-          addonAfter={<Tips helpText="访问redis服务的密码" />}
-        />
-        <Select
-          colSpan={1}
-          name={mapping.sysctlImage.name}
-          addonAfter={<Tips helpText="此处指：是否启用内核参数优化。比如优化redis连接数、内存使用等等。" />}
-        >
-          <Option value>true</Option>
-          <Option value={false}>false</Option>
-        </Select>
         {
-          BaseDeployDataSet.current
-            .get(mapping.deployMode.name) === deployModeOptionsData[0].value ? (
-              <Select
-                combo
-                colSpan={1}
-                name={mapping.pvc.name}
-                addonAfter={<Tips helpText="此项填值，redis将使用对应的PVC进行数据持久化" />}
-              />
-            ) : (
-              <NumberField
-                newLine
-                colSpan={1}
-                name={mapping.slaveCount.name}
-                addonAfter={<Tips helpText="哨兵节点数量。最小是3" />}
-              />
-            )
+          BaseDeployDataSet.current.get(mapping.middleware.name) === middleWareData[1].value ? [
+            <Password
+              autoComplete="new-password"
+              colSpan={1}
+              name={mapping.password.name}
+              addonAfter={<Tips helpText="访问redis服务的密码" />}
+            />,
+            <Select
+              combo
+              colSpan={1}
+              name={mapping.pvc.name}
+              addonAfter={<Tips helpText="此项填值，redis将使用对应的PVC进行数据持久化" />}
+            />,
+          ] : [
+            <Password
+              autoComplete="new-password"
+              colSpan={1}
+              name={mapping.password.name}
+              addonAfter={<Tips helpText="访问redis服务的密码" />}
+            />,
+            <Select
+              colSpan={1}
+              name={mapping.sysctlImage.name}
+              addonAfter={<Tips helpText="此处指：是否启用内核参数优化。比如优化redis连接数、内存使用等等。" />}
+            >
+              <Option value>true</Option>
+              <Option value={false}>false</Option>
+            </Select>,
+            BaseDeployDataSet.current
+              .get(mapping.deployMode.name) === deployModeOptionsData[0].value ? (
+                <Select
+                  combo
+                  colSpan={1}
+                  name={mapping.pvc.name}
+                  addonAfter={<Tips helpText="此项填值，redis将使用对应的PVC进行数据持久化" />}
+                />
+              ) : (
+                <NumberField
+                  newLine
+                  colSpan={1}
+                  name={mapping.slaveCount.name}
+                  addonAfter={<Tips helpText="哨兵节点数量。最小是3" />}
+                />
+              ),
+          ]
         }
       </Form>,
-      BaseDeployDataSet.current
-        .get(mapping.deployMode.name) === deployModeOptionsData[0].value ? '' : [
-          <p className="c7ncd-baseDeploy-middle-deploySetting">
-            PV标签
-            <Icon type="expand_less" />
-            <Tooltip title="此处输入的PV标签用于定位对应的PV，此处需保证匹配得到的PV数量应大于等于slaveCount的数量">
-              <Icon
-                style={{
-                  color: 'rgba(15, 19, 88, 0.35)',
-                  fontSize: '16px',
-                }}
-                type="help"
-              />
-            </Tooltip>
-          </p>,
-          PVLabelsDataSet.records.filter((item) => !item.isRemoved).map((item) => (
-            <>
-              <Form style={{ width: '80%' }} record={item} columns={3}>
-                <div className="c7ncd-base-pvlabels" colSpan={1}>
-                  <div>
-                    <TextField name="key" />
-                  </div>
-                  <span style={{ margin: '0 10px' }}>=</span>
-                  <div>
-                    <TextField name="value" />
-                  </div>
-                  <Button
-                    style={{
-                      flexShrink: 0,
-                      marginLeft: 10,
-                    }}
-                    icon="delete"
-                    onClick={() => PVLabelsDataSet.remove(item)}
-                  />
+      (BaseDeployDataSet.current
+        .get(mapping.deployMode.name) === deployModeOptionsData[0].value) || (
+        BaseDeployDataSet.current.get(mapping.middleware.name) === middleWareData[1].value
+      ) ? '' : [
+        <p className="c7ncd-baseDeploy-middle-deploySetting">
+          PV标签
+          <Icon type="expand_less" />
+          <Tooltip title="此处输入的PV标签用于定位对应的PV，此处需保证匹配得到的PV数量应大于等于slaveCount的数量">
+            <Icon
+              style={{
+                color: 'rgba(15, 19, 88, 0.35)',
+                fontSize: '16px',
+              }}
+              type="help"
+            />
+          </Tooltip>
+        </p>,
+        PVLabelsDataSet.records.filter((item) => !item.isRemoved).map((item) => (
+          <>
+            <Form style={{ width: '80%' }} record={item} columns={3}>
+              <div className="c7ncd-base-pvlabels" colSpan={1}>
+                <div>
+                  <TextField name="key" />
                 </div>
-              </Form>
-            </>
-          )),
-          <Button
-            icon="add"
-            color="primary"
-            style={{
-              display: 'block',
-            }}
-            onClick={() => PVLabelsDataSet.create()}
-          >
-            添加PV标签
-          </Button>,
+                <span style={{ margin: '0 10px' }}>=</span>
+                <div>
+                  <TextField name="value" />
+                </div>
+                <Button
+                  style={{
+                    flexShrink: 0,
+                    marginLeft: 10,
+                  }}
+                  icon="delete"
+                  onClick={() => PVLabelsDataSet.remove(item)}
+                />
+              </div>
+            </Form>
+          </>
+        )),
+        <Button
+          icon="add"
+          color="primary"
+          style={{
+            display: 'block',
+          }}
+          onClick={() => PVLabelsDataSet.create()}
+        >
+          添加PV标签
+        </Button>,
         ],
       // <YamlEditor
       //   readOnly={false}
@@ -784,16 +855,25 @@ export default observer(() => {
    */
   const deleteHostDisabled = (baseDataSet, hostDataSet) => {
     const deployMode = baseDataSet.current.get(mapping.deployMode.name);
-    // 哨兵
-    if (deployMode === deployModeOptionsData[1].value) {
-      if (hostDataSet.records.length <= 3) {
+    // redis
+    if (baseDataSet.current.get(mapping.middleware.name) === middleWareData[0].value) {
+      // 哨兵
+      if (deployMode === deployModeOptionsData[1].value) {
+        if (hostDataSet.records.length <= 3) {
+          return true;
+        }
+        return false;
+      }
+      //  单机
+      if (hostDataSet.records.length <= 1) {
         return true;
       }
-      return false;
-    }
-    //  单机
-    if (hostDataSet.records.length <= 1) {
-      return true;
+    } else {
+      // mysql
+      // eslint-disable-next-line no-lonely-if
+      if (hostDataSet.records.length <= 2) {
+        return true;
+      }
     }
     return false;
   };
@@ -821,32 +901,30 @@ export default observer(() => {
             )
           }
         </span>
-        {/* <span */}
-        {/*  style={{ */}
-        {/*    cursor: 'not-allowed', */}
-        {/*  }} */}
-        {/*  role="none" */}
-        {/*  // onClick={() => { */}
-        {/*  //   BaseDeployDataSet.current.set(
-        mapping.middleware.name, middleWareData[1].value); */}
-        {/*  // }} */}
-        {/* > */}
-        {/*  <img */}
-        {/*    style={{ marginLeft: 20 }} */}
-        {/*    src={mysql} */}
-        {/*    alt="" */}
-        {/*    className={classNames({ */}
-        {/*      'c7ncd-baseDeploy-middle-img-checked':
-        BaseDeployDataSet.current.get(mapping.middleware.name) === middleWareData[1].value, */}
-        {/*    })} */}
-        {/*  /> */}
-        {/*  { */}
-        {/*    BaseDeployDataSet.current.get(mapping.middleware.name)
-        === middleWareData[1].value && ( */}
-        {/*      <Icon type="check_circle" /> */}
-        {/*    ) */}
-        {/*  } */}
-        {/* </span> */}
+        <span
+          role="none"
+          onClick={() => {
+            BaseDeployDataSet.current.set(
+              mapping.middleware.name, middleWareData[1].value,
+            );
+          }}
+        >
+          <img
+            style={{ marginLeft: 20 }}
+            src={mysql}
+            alt=""
+            className={classNames({
+              'c7ncd-baseDeploy-middle-img-checked':
+        BaseDeployDataSet.current.get(mapping.middleware.name) === middleWareData[1].value,
+            })}
+          />
+          {
+            BaseDeployDataSet.current.get(mapping.middleware.name)
+        === middleWareData[1].value && (
+        <Icon type="check_circle" />
+            )
+          }
+        </span>
       </div>
       <Form columns={2} style={{ width: '80%', marginTop: 25 }} dataSet={BaseDeployDataSet}>
         <Select colSpan={1} name={mapping.serviceVersion.name} />
