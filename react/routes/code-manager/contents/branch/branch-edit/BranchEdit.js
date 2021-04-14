@@ -1,7 +1,11 @@
-import React, { useEffect } from 'react';
+import React, {
+  useCallback, useMemo, useState,
+} from 'react';
 import { Form, Select } from 'choerodon-ui/pro';
 import { injectIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
+import debounce from 'lodash/debounce';
+import get from 'lodash/get';
 import MouserOverWrapper from '../../../../../components/MouseOverWrapper';
 import IssueType from '../../../components/issue-type';
 import { useSelectStore } from './stores';
@@ -12,7 +16,11 @@ function BranchEdit() {
     modal,
     handleRefresh,
     selectDs,
+    projectOptionsDs,
+    AppState: { currentMenuType: { projectId } },
   } = useSelectStore();
+
+  const [searchValue, setSearchValue] = useState('');
 
   /**
    * 创建
@@ -30,6 +38,40 @@ function BranchEdit() {
   }
 
   modal.handleOk(() => handleOk());
+
+  const loadData = useCallback(() => {
+    projectOptionsDs.query();
+  }, []);
+
+  const handleSearch = useCallback((e) => {
+    e.persist();
+    searchData(e.target.value);
+  }, []);
+
+  const searchData = useMemo(() => debounce((value) => {
+    projectOptionsDs.setQueryParameter('params', value);
+    setSearchValue(value);
+    loadData();
+  }, 500), []);
+
+  const handleBlur = useCallback(() => {
+    if (searchValue) {
+      searchData('');
+    }
+  }, [searchValue]);
+
+  const renderProjectOption = useCallback(({ text, value }) => {
+    if (String(value) === String(projectId)) {
+      return `${text}（本项目）`;
+    }
+    return text;
+  }, []);
+
+  const renderProject = useCallback(({ value }) => {
+    const currentValue = get(value, 'id');
+    const text = get(value, 'name');
+    renderProjectOption({ text, value: currentValue });
+  }, []);
 
   // 用于问题名称的渲染函数
   const renderIssueName = ({
@@ -116,6 +158,16 @@ function BranchEdit() {
   return (
     <div style={{ width: '75%' }}>
       <Form dataSet={selectDs}>
+        <Select
+          name="project"
+          searchable
+          searchMatcher={() => true}
+          onInput={handleSearch}
+          optionRenderer={renderProjectOption}
+          renderer={renderProject}
+          onBlur={handleBlur}
+          clearButton={false}
+        />
         <Select
           name="issue"
           optionRenderer={issueNameOptionRender}
