@@ -1,6 +1,10 @@
 import { axios } from '@choerodon/boot';
+import CodeManagerApis from '@/routes/code-manager/apis';
 
-export default ({ projectId, appServiceId, formatMessage, contentStore }) => {
+export default ({
+  projectId, appServiceId, formatMessage, contentStore, projectOptionsDs,
+  currentProjectData,
+}) => {
   async function checkBranchName(value) {
     const endWith = /(\/|\.|\.lock)$/;
     const contain = /(\s|~|\^|:|\?|\*|\[|\\|\.\.|@\{|\/{2,}){1}/;
@@ -36,7 +40,15 @@ export default ({ projectId, appServiceId, formatMessage, contentStore }) => {
         textField: 'summary',
         valueField: 'issueId',
         label: formatMessage({ id: 'branch.issueName' }),
-        lookupUrl: `/agile/v1/projects/${projectId}/issues/summary?onlyActiveSprint=false&self=true`,
+        lookupAxiosConfig: ({ record }) => {
+          const project = record?.get('project');
+          const selectedProjectId = project?.id ?? projectId;
+          return {
+            url: CodeManagerApis.loadSummaryData(selectedProjectId),
+            method: 'get',
+            params: { onlyActiveSprint: false, self: true },
+          };
+        },
       },
       {
         name: 'branchOrigin',
@@ -58,6 +70,16 @@ export default ({ projectId, appServiceId, formatMessage, contentStore }) => {
         defaultValue: '',
         validator: checkBranchName,
       },
+      {
+        name: 'project',
+        type: 'object',
+        textField: 'name',
+        valueField: 'id',
+        defaultValue: currentProjectData,
+        label: formatMessage({ id: 'branch.issue.source' }),
+        options: projectOptionsDs,
+        ignore: 'always',
+      },
     ],
     transport: {
       create: ({ data: [data] }) => ({
@@ -78,6 +100,17 @@ export default ({ projectId, appServiceId, formatMessage, contentStore }) => {
           return JSON.stringify(postData);
         },
       }),
+    },
+    events: {
+      update: ({ name, value, record }) => {
+        if (name === 'project') {
+          const field = record.getField('issue');
+          field.reset();
+          if (value) {
+            field.fetchLookup();
+          }
+        }
+      },
     },
   };
 };
