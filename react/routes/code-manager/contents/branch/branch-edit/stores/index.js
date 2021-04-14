@@ -33,7 +33,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
 
     const currentProjectData = useMemo(() => ({
       id: projectId,
-      name: `${projectName}（本项目）`,
+      name: projectName,
     }), [projectId, projectName]);
 
     const projectOptionsDs = useMemo(() => new DataSet(ProjectOptionsDataSet({

@@ -1,3 +1,5 @@
+import CodeManagerApis from '@/routes/code-manager/apis';
+
 export default ({
   projectId, issueId, formatMessage, appServiceId, objectVersionNumber,
   branchName, projectOptionsDs, currentProjectData,
@@ -17,7 +19,7 @@ export default ({
         const project = record?.get('project');
         const selectedProjectId = project?.id ?? projectId;
         return {
-          url: `/agile/v1/projects/${selectedProjectId}/issues/summary`,
+          url: CodeManagerApis.loadSummaryData(selectedProjectId),
           method: 'get',
           params: { onlyActiveSprint: false, self: true, issueId: issueId ?? '' },
         };

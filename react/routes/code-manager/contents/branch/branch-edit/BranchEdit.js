@@ -70,7 +70,7 @@ function BranchEdit() {
   const renderProject = useCallback(({ value }) => {
     const currentValue = get(value, 'id');
     const text = get(value, 'name');
-    renderProjectOption({ text, value: currentValue });
+    return renderProjectOption({ text, value: currentValue });
   }, []);
 
   // 用于问题名称的渲染函数

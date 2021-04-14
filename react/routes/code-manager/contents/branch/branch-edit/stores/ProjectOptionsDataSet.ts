@@ -1,19 +1,19 @@
 import { DataSetProps, DataSetSelection } from '@/interface';
+import CodeManagerApis from '@/routes/code-manager/apis';
 
 interface OptionProps {
-  organizationId: number,
-  userId: number,
-  projectId: number
+  organizationId: string,
+  userId: string,
 }
 
 export default ({ organizationId, userId }: OptionProps): DataSetProps => ({
   autoCreate: false,
   autoQuery: true,
   selection: 'single' as DataSetSelection,
-  pageSize: 5,
+  pageSize: 15,
   transport: {
     read: {
-      url: `/iam/choerodon/v1/organizations/${organizationId}/users/${userId}/projects/paging?enabled=true`,
+      url: CodeManagerApis.loadProjectData(organizationId, userId),
       method: 'get',
     },
   },
