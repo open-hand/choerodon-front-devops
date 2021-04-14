@@ -3,12 +3,16 @@ export default class BaseComDeployApis {
     return `/market/v1/middleware/config?middlewareName=${middlewareName}&deployPattern=${deployPattern}&deployModel=${deployModel}`;
   }
 
+  static getBaseDeployMySqlEnvAPi(projectId) {
+    return `/devops/v1/projects/${projectId}/middleware/mysql/deploy/env`;
+  }
+
   static getPvcListApi(projectId, envId) {
     return `/devops/v1/projects/${projectId}/pvcs/page_by_options?env_id=${envId}&page=0&size=0`;
   }
 
-  static getServiceVersionApi() {
-    return '/market/v1/middleware/versions?middleware_name=Redis';
+  static getServiceVersionApi(name) {
+    return `/market/v1/middleware/versions?middleware_name=${name || 'Redis'}`;
   }
 
   static getEnvListApi(projectId) {
