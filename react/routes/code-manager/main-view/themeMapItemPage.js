@@ -37,7 +37,10 @@ const branchMap = {
         <Column align="right" width={60} renderer={actionRender} />,
         <Column name="commitContent" className="lasetCommit" width={300} renderer={updateCommitRender} />,
         <Column name="createUserRealName" renderer={createUserRender} />,
-        !isOPERATIONS && <Column name="issueName" renderer={issueNameRender} />,
+        !isOPERATIONS && [
+          <Column name="projectName" />,
+          <Column name="issueName" renderer={issueNameRender} />,
+        ],
       ],
       theme4: ({ theme4RenderColumn }) => (
         <Column renderer={theme4RenderColumn} />

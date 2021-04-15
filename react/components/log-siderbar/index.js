@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+
 import React, { Component, Fragment } from 'react';
 import _ from 'lodash';
 import { observer, inject } from 'mobx-react';
@@ -6,12 +8,12 @@ import { Modal, Button, Select } from 'choerodon-ui';
 import { Content } from '@choerodon/boot';
 import ReactCodeMirror from 'react-codemirror';
 import uuidv1 from 'uuid/v1';
+import Cookies from 'universal-cookie';
 import { removeEndsChar } from '../../utils';
 
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/base16-dark.css';
 import './index.less';
-
 
 const LOG_OPTIONS = {
   readOnly: true,
@@ -20,8 +22,11 @@ const LOG_OPTIONS = {
   autofocus: true,
   theme: 'base16-dark',
 };
-const Sidebar = Modal.Sidebar;
+const { Sidebar } = Modal;
 const { Option } = Select;
+
+const cookies = new Cookies();
+const getAccessToken = () => cookies.get('access_token');
 
 @inject('AppState')
 @injectIntl
@@ -52,6 +57,7 @@ export default class LogSidebar extends Component {
 
   handleChange = (value) => {
     const [logId, containerName] = value.split('+');
+    // eslint-disable-next-line react/destructuring-assignment
     if (logId !== this.state.logId) {
       this.setState({
         containerName,
@@ -146,15 +152,16 @@ export default class LogSidebar extends Component {
    * 加载日志
    */
   loadLog = (isFollow = true) => {
-    const { record: { namespace, name } } = this.props;
-    const podName = name || this.props.record.podName;
-    const clusterId = this.props.clusterId || this.props.record.clusterId;
+    const { record, clusterId: propsClusterId, projectId: propsProjectId } = this.props;
+    const { namespace, name, podName: recordPodName } = record || {};
+    const clusterId = propsClusterId || record?.clusterId;
+    const projectId = propsProjectId || record?.projectId;
+    const podName = name || recordPodName;
     const { logId, containerName, following } = this.state;
-    const authToken = document.cookie.split('=')[1];
     const wsUrl = removeEndsChar(window._env_.DEVOPS_HOST, '/');
     const secretKey = window._env_.DEVOPS_WEBSOCKET_SECRET_KEY;
     const key = `cluster:${clusterId}.log:${uuidv1()}`;
-    const url = `${wsUrl}/websocket?key=${key}&group=from_front:${key}&processor=front_log&secret_key=${secretKey}&env=${namespace}&podName=${podName}&containerName=${containerName}&logId=${logId}&clusterId=${clusterId}`;
+    const url = `${wsUrl}/websocket?key=${key}&group=from_front:${key}&processor=front_log&secret_key=${secretKey}&env=${namespace}&podName=${podName}&containerName=${containerName}&logId=${logId}&clusterId=${clusterId}&oauthToken=${getAccessToken()}&projectId=${projectId}`;
     const logs = [];
     let oldLogs = [];
     let editor = null;
@@ -235,63 +242,69 @@ export default class LogSidebar extends Component {
     const { following, fullScreen, containerName } = this.state;
     const containerOptions = _.map(containers, (container) => {
       const { logId, name } = container;
-      return (<Option key={logId} value={`${logId}+${name}`}>
-        {name}
-      </Option>);
+      return (
+        <Option key={logId} value={`${logId}+${name}`}>
+          {name}
+        </Option>
+      );
     });
 
-    return (<Sidebar
-      visible={visible}
-      title={<FormattedMessage id="log.header.title" />}
-      onOk={onClose}
-      className="c7n-container-sidebar c7n-region"
-      okText={<FormattedMessage id="close" />}
-      okCancel={false}
-    >
-      <Content
-        className="sidebar-content"
+    return (
+      <Sidebar
+        visible={visible}
+        title={<FormattedMessage id="log.header.title" />}
+        onOk={onClose}
+        className="c7n-container-sidebar c7n-region"
+        okText={<FormattedMessage id="close" />}
+        okCancel={false}
       >
+        <Content
+          className="sidebar-content"
+        >
 
-        <div className={fullScreen ? 'c7n-container-sidebar-content_full' : 'c7n-container-sidebar-content'}>
-          <div className="c7n-term-title">
-            <FormattedMessage id="container.term.log" />
+          <div className={fullScreen ? 'c7n-container-sidebar-content_full' : 'c7n-container-sidebar-content'}>
+            <div className="c7n-term-title">
+              <FormattedMessage id="container.term.log" />
             &nbsp;
-            <Select className="c7n-log-siderbar-select" value={containerName} onChange={this.handleChange}>
-              {containerOptions}
-            </Select>
-            <Button
-              className="c7n-term-fullscreen"
-              type="primary"
-              funcType="flat"
-              shape="circle"
-              icon="fullscreen"
-              onClick={this.setFullScreen}
-            />
+              <Select className="c7n-log-siderbar-select" value={containerName} onChange={this.handleChange}>
+                {containerOptions}
+              </Select>
+              <Button
+                className="c7n-term-fullscreen"
+                type="primary"
+                funcType="flat"
+                shape="circle"
+                icon="fullscreen"
+                onClick={this.setFullScreen}
+              />
+            </div>
+            <div
+              className={`c7n-podLog-action c7n-term-following ${fullScreen ? 'c7n-term-following_full' : ''}`}
+              onClick={following ? this.stopFollowing : this.loadLog}
+              role="none"
+            >
+              {following ? 'Stop Following' : 'Start Following'}
+            </div>
+            <div className="c7n-term-wrap">
+              <ReactCodeMirror
+                ref={(editor) => {
+                  this.editorLog = editor;
+                }}
+                value="Loading..."
+                className="c7n-log-editor"
+                options={LOG_OPTIONS}
+              />
+            </div>
+            <div
+              className={`c7n-podLog-action c7n-term-totop ${fullScreen ? 'c7n-term-totop_full' : ''}`}
+              onClick={this.goTop}
+              role="none"
+            >
+              Go Top
+            </div>
           </div>
-          <div
-            className={`c7n-podLog-action c7n-term-following ${fullScreen ? 'c7n-term-following_full' : ''}`}
-            onClick={following ? this.stopFollowing : this.loadLog}
-          >
-            {following ? 'Stop Following' : 'Start Following'}
-          </div>
-          <div className="c7n-term-wrap">
-            <ReactCodeMirror
-              ref={(editor) => {
-                this.editorLog = editor;
-              }}
-              value="Loading..."
-              className="c7n-log-editor"
-              options={LOG_OPTIONS}
-            />
-          </div>
-          <div
-            className={`c7n-podLog-action c7n-term-totop ${fullScreen ? 'c7n-term-totop_full' : ''}`}
-            onClick={this.goTop}
-          >
-            Go Top
-          </div>
-        </div>
-      </Content>
-    </Sidebar>);
+        </Content>
+      </Sidebar>
+    );
   }
 }

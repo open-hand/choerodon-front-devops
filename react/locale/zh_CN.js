@@ -2064,6 +2064,7 @@ const zhCN = {
   'branch.issue': '问题',
   'branch.issueName': '问题名称',
   'branch.issue.source': '关联问题来源',
+  'branch.issue.source.name': '问题来源',
   'branch.source': '分支来源',
   'branch.owner': '提交者',
   'branch.time': '创建者',
