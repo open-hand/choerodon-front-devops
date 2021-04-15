@@ -29,12 +29,13 @@ export const StoreProvider = injectIntl(inject('AppState')(
       children,
       intlPrefix,
       initIssue,
+      initProject,
     } = props;
 
-    const currentProjectData = useMemo(() => ({
+    const currentProjectData = useMemo(() => (initProject ?? {
       id: projectId,
       name: projectName,
-    }), [projectId, projectName]);
+    }), [projectId, projectName, initProject]);
 
     const projectOptionsDs = useMemo(() => new DataSet(ProjectOptionsDataSet({
       organizationId, userId: getUserId, projectId,

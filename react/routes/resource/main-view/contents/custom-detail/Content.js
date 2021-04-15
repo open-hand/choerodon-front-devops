@@ -1,6 +1,9 @@
+/* eslint-disable no-underscore-dangle */
+
 import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import uuidv1 from 'uuid/v1';
+import Cookies from 'universal-cookie';
 import Loading from '../../../../../components/loading';
 import ResourceTitle from '../../components/resource-title';
 import { removeEndsChar } from '../../../../../utils';
@@ -11,6 +14,9 @@ import Modals from './modals';
 import './index.less';
 
 const TIMEOUT_TIME = 50000;
+
+const cookies = new Cookies();
+const getAccessToken = () => cookies.get('access_token');
 
 const Content = observer(() => {
   const { prefixCls } = useResourceStore();
@@ -44,11 +50,12 @@ const Content = observer(() => {
       const name = record.get('name');
       const kind = record.get('k8sKind');
       const env = record.get('envCode');
+      const projectId = record.get('projectId');
       try {
         const wsHost = removeEndsChar(window._env_.DEVOPS_HOST, '/');
         const key = `cluster:${clusterId}.describe:${uuidv1()}`;
         const secretKey = window._env_.DEVOPS_WEBSOCKET_SECRET_KEY;
-        const url = `${wsHost}/websocket?key=${key}&group=from_front:${key}&processor=front_describe&secret_key=${secretKey}&env=${env}&kind=${kind}&name=${name}&describeId=${id}&clusterId=${clusterId}`;
+        const url = `${wsHost}/websocket?key=${key}&group=from_front:${key}&processor=front_describe&secret_key=${secretKey}&env=${env}&kind=${kind}&name=${name}&describeId=${id}&clusterId=${clusterId}&oauthToken=${getAccessToken()}&projectId=${projectId}`;
         ws = new WebSocket(url);
         ws.addEventListener('message', handleMessage);
         ws.addEventListener('error', handleError);
@@ -60,7 +67,7 @@ const Content = observer(() => {
 
   function handleMessage({ data }) {
     try {
-      const message = JSON.parse(data).message;
+      const { message } = JSON.parse(data) || {};
       const newMessage = message && JSON.parse(message) ? JSON.parse(message).payload || '' : '';
       setValue(newMessage);
       setLoading(false);

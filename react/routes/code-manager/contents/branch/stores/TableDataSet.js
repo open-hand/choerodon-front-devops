@@ -32,6 +32,11 @@ export default ({ projectId, formatMessage, appServiceId }) => ({
       type: 'string',
       label: formatMessage({ id: 'branch.issue' }),
     },
+    {
+      name: 'projectName',
+      type: 'string',
+      label: formatMessage({ id: 'branch.issue.source.name' }),
+    },
   ],
   transport: {
     read: ({ data }) => ({
