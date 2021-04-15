@@ -182,6 +182,7 @@ export default injectIntl(observer(() => {
           optionRenderer={handleOptionRenderer}
           clearButton={false}
           className={`${prefixCls}-instance-upgrade-select`}
+          popupCls="c7ncd-select-menu-item-more-hidden"
         />
       </Form>
       <div className={`${prefixCls}-instance-upgrade-tips`}>

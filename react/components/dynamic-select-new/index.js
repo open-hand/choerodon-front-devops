@@ -169,7 +169,16 @@ const DynamicSelect = injectIntl(observer((props) => {
       {map(selectDataSet.created, (createdRecord, index) => (
         <div className="dynamic-select-form-item" key={`dynamic-select-form-${index}`}>
           <Form record={createdRecord}>
-            <Select name={selectName} optionRenderer={optionRendererWraper} renderer={rendererWraper} optionsFilter={optionsFilterWaper} searchable onInput={handleInput} searchMatcher={() => true} onBlur={handleBlur.bind(this, createdRecord)} />
+            <Select
+              name={selectName}
+              optionRenderer={optionRendererWraper}
+              renderer={rendererWraper}
+              optionsFilter={optionsFilterWaper}
+              searchable onInput={handleInput}
+              searchMatcher={() => true}
+              onBlur={handleBlur.bind(this, createdRecord)}
+              popupCls="c7ncd-select-menu-item-more-hidden"
+            />
           </Form>
           <Button
             icon="delete"
