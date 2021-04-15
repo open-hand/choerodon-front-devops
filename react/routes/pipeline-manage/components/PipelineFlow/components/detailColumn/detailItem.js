@@ -430,7 +430,7 @@ const DetailItem = (props) => {
   const handleFileDownLoad = async (url, username, password, filename) => {
     const tempHeader = new Headers();
     tempHeader.append('Authorization', `Basic ${Base64.encode(`${username}:${password}`)}`);
-    fetch(`${url}`, {
+    fetch(`${url}?pipelineDownLoad=true`, {
       method: 'GET',
       headers: tempHeader,
       mode: 'cors',
