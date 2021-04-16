@@ -19,7 +19,7 @@ const cookies = new Cookies();
 const getAccessToken = () => cookies.get('access_token');
 
 const Content = observer(() => {
-  const { prefixCls } = useResourceStore();
+  const { prefixCls, AppState: { currentMenuType: { projectId } } } = useResourceStore();
   const [value, setValue] = useState('暂无数据');
   const [loading, setLoading] = useState(true);
   const { detailDs } = useCustomDetailStore();
@@ -50,7 +50,6 @@ const Content = observer(() => {
       const name = record.get('name');
       const kind = record.get('k8sKind');
       const env = record.get('envCode');
-      const projectId = record.get('projectId');
       try {
         const wsHost = removeEndsChar(window._env_.DEVOPS_HOST, '/');
         const key = `cluster:${clusterId}.describe:${uuidv1()}`;
