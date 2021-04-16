@@ -152,10 +152,13 @@ export default class LogSidebar extends Component {
    * 加载日志
    */
   loadLog = (isFollow = true) => {
-    const { record, clusterId: propsClusterId, projectId: propsProjectId } = this.props;
+    const {
+      record, clusterId: propsClusterId, projectId: propsProjectId,
+      AppState: { currentMenuType: { projectId: currentProjectId } },
+    } = this.props;
     const { namespace, name, podName: recordPodName } = record || {};
     const clusterId = propsClusterId || record?.clusterId;
-    const projectId = propsProjectId || record?.projectId;
+    const projectId = propsProjectId || record?.projectId || currentProjectId;
     const podName = name || recordPodName;
     const { logId, containerName, following } = this.state;
     const wsUrl = removeEndsChar(window._env_.DEVOPS_HOST, '/');

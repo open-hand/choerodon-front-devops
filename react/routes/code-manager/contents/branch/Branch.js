@@ -153,7 +153,7 @@ function Branch(props) {
       issueName: summary,
       typeCode,
       projectName: sourceProjectName,
-      projectId: sourceProjectId,
+      issueProjectId: sourceProjectId,
     } = recordData || {};
     const initIssue = {
       issueId,

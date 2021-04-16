@@ -39,7 +39,7 @@ const branchMap = {
         <Column name="createUserRealName" renderer={createUserRender} />,
         !isOPERATIONS && [
           <Column name="projectName" />,
-          <Column name="issueName" renderer={issueNameRender} />,
+          <Column name="issueName" renderer={issueNameRender} tooltip="overflow" />,
         ],
       ],
       theme4: ({ theme4RenderColumn }) => (
