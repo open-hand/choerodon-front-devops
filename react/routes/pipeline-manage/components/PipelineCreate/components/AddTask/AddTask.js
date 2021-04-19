@@ -160,8 +160,8 @@ const AddTask = observer(() => {
           let dockerFilePath;
           let uploadArtifactFileName;
           let dockerArtifactFileName;
-          let skipDockerTlsVerify;
-          let imageScan;
+          let skipDockerTlsVerify = false;
+          let imageScan = false;
           const share = [];
           let nexusMavenRepoIds;
           let zpk;
@@ -184,7 +184,7 @@ const AddTask = observer(() => {
             } else if (c.type === 'docker') {
               dockerContextDir = c.dockerContextDir;
               dockerFilePath = c.dockerFilePath;
-              skipDockerTlsVerify = c.skipDockerTlsVerify;
+              skipDockerTlsVerify = c.skipDockerTlsVerify || false;
               imageScan = c.imageScan || false;
               dockerArtifactFileName = c.artifactFileName;
             } else if (c.type === 'Maven') {
