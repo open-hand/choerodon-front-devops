@@ -1,6 +1,13 @@
 import BaseComDeployApis from '@/routes/deployment/modals/base-comDeploy/apis';
+import paramSettingDataSet from '@/routes/deployment/modals/base-comDeploy/stores/paramSettingDataSet';
+import { DataSet } from 'choerodon-ui/pro';
+import { mapping as baseMapping } from './baseDeployDataSet';
 
 const mapping = {
+  checked: {
+    name: 'checked',
+    type: 'boolean',
+  },
   hostId: {
     name: 'hostId',
     type: 'string',
@@ -45,6 +52,7 @@ const mapping = {
 export { mapping };
 
 export default (projectId, BaseComDeployStore) => ({
+  paging: false,
   autoCreate: true,
   fields: Object.keys(mapping).map((key) => {
     const item = mapping[key];

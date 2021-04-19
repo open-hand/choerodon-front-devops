@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, {
+  useState, useEffect, useMemo, useCallback,
+} from 'react';
 import { withRouter } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import {
@@ -7,14 +9,16 @@ import {
 import { Content, axios } from '@choerodon/boot';
 import { injectIntl } from 'react-intl';
 import _ from 'lodash';
+import debounce from 'lodash/debounce';
+import get from 'lodash/get';
 import MouserOverWrapper from '../../../../../components/MouseOverWrapper';
 import { useFormStore } from './stores';
 import { handlePromptError } from '../../../../../utils';
+import IssueType from '../../../components/issue-type';
 
 import '../../../../main.less';
 import './index.less';
 import '../index.less';
-import IssueType from '../../../components/issue-type';
 
 const { Option, OptGroup } = Select;
 
@@ -27,6 +31,7 @@ function BranchCreate(props) {
     projectId,
     appServiceId,
     intl: { formatMessage },
+    projectOptionsDs,
   } = useFormStore();
 
   const [branchPageSize, setBranchPageSize] = useState(3);
@@ -41,6 +46,7 @@ function BranchCreate(props) {
   const [selectCom, setSelectCom] = useState(null);
   const [isCallHandleInput, setIsCallHandleInput] = useState(false);
   const [isOPERATIONS, setIsOPERATIONS] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
     const pattern = new URLSearchParams(window.location.hash);
@@ -71,6 +77,7 @@ function BranchCreate(props) {
           if (!text
             && value
             && !(_.findIndex(branchs.list, (item) => item.branchName === value.slice(0, -7)) !== -1
+            // eslint-disable-next-line max-len
             || _.findIndex(tags.list, (item) => item.release.tagName === value.slice(0, -7)) !== -1)) {
             if (value.slice(-7) === '_type_b') {
               branchs.list.push({
@@ -330,6 +337,7 @@ function BranchCreate(props) {
         <div
           onClick={loadMore.bind(this, record.get('value'))}
           className="c7n-option-popover"
+          role="none"
         >
           {progress}
           <span className="c7n-option-span">{formatMessage({ id: 'loadMore' })}</span>
@@ -387,6 +395,40 @@ function BranchCreate(props) {
     searchData('');
   }
 
+  const loadProjectData = useCallback(() => {
+    projectOptionsDs.query();
+  }, []);
+
+  const handleProjectSearch = useCallback((e) => {
+    e.persist();
+    searchProjectData(e.target.value);
+  }, []);
+
+  const searchProjectData = useMemo(() => debounce((value) => {
+    projectOptionsDs.setQueryParameter('params', value);
+    setSearchValue(value);
+    loadProjectData();
+  }, 500), []);
+
+  const handleProjectBlur = useCallback(() => {
+    if (searchValue) {
+      searchProjectData('');
+    }
+  }, [searchValue]);
+
+  const renderProjectOption = useCallback(({ text, value }) => {
+    if (String(value) === String(projectId)) {
+      return `${text}（本项目）`;
+    }
+    return text;
+  }, []);
+
+  const renderProject = useCallback(({ value }) => {
+    const currentValue = get(value, 'id');
+    const text = get(value, 'name');
+    return renderProjectOption({ text, value: currentValue });
+  }, []);
+
   return (
     <Content className="sidebar-content c7n-createBranch">
       <div style={{ width: '75%' }}>
@@ -397,17 +439,28 @@ function BranchCreate(props) {
         >
           {
             !isOPERATIONS
-              && (
-              <Select
-                name="issue"
-                colSpan={5}
-                onChange={changeIssue}
-                optionRenderer={issueNameOptionRender}
-                renderer={issueNameRender}
-                searchable
-                searchMatcher="content"
-              />
-              )
+              && ([
+                <Select
+                  name="project"
+                  colSpan={5}
+                  searchable
+                  searchMatcher={() => true}
+                  onInput={handleProjectSearch}
+                  optionRenderer={renderProjectOption}
+                  renderer={renderProject}
+                  onBlur={handleProjectBlur}
+                  clearButton={false}
+                />,
+                <Select
+                  name="issue"
+                  colSpan={5}
+                  onChange={changeIssue}
+                  optionRenderer={issueNameOptionRender}
+                  renderer={issueNameRender}
+                  searchable
+                  searchMatcher="content"
+                />,
+              ])
           }
           <Select
             colSpan={5}

@@ -152,6 +152,8 @@ function Branch(props) {
       issueCode: issueNum,
       issueName: summary,
       typeCode,
+      projectName: sourceProjectName,
+      issueProjectId: sourceProjectId,
     } = recordData || {};
     const initIssue = {
       issueId,
@@ -172,6 +174,7 @@ function Branch(props) {
         issueId={showDefaultIssue && issueId}
         initIssue={showDefaultIssue && initIssue}
         handleRefresh={handleRefresh}
+        initProject={sourceProjectId ? { id: sourceProjectId, name: sourceProjectName } : null}
       />,
       style: branchCreateModalStyle,
       okText: <FormattedMessage id="save" />,
