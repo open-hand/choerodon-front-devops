@@ -1,4 +1,6 @@
-import { axios, store, stores, Choerodon } from '@choerodon/boot';
+import {
+  axios, store, stores, Choerodon,
+} from '@choerodon/boot';
 import moment from 'moment';
 import { useLocalStore } from 'mobx-react-lite';
 import { handlePromptError } from '../../../utils';
@@ -298,18 +300,21 @@ export default function useStore(AppState) {
     /**
    * 判断角色
    */
-    judgeRole(codes) {
+    async judgeRole(codes) {
       const { projectId, organizationId, type } = AppState.currentMenuType;
       const datas = ['devops-service.devops-environment.create'];
-      axios
-        .post(`iam/choerodon/v1/permissions/menus/check-permissions?projectId=${projectId}`, JSON.stringify(codes))
-        .then((data) => {
-          const res = handlePromptError(data);
-          if (res && data && data.length) {
-            const { approve } = data[0];
-            this.setProRole(approve ? 'owner' : 'member');
-          }
-        });
+      axios({
+        method: 'post',
+        url: '/iam/choerodon/v1/permissions/menus/check-permissions',
+        data: datas,
+        params: { tenantId: organizationId, projectId },
+      }).then((data) => {
+        const res = handlePromptError(data);
+        if (res && data && data.length) {
+          const { approve } = data[0];
+          this.setProRole(approve ? 'owner' : 'member');
+        }
+      });
     },
 
     /**
@@ -320,7 +325,7 @@ export default function useStore(AppState) {
       this.setEchartsLoading(true);
       return axios
         .get(
-          `/devops/v1/projects/${projectId}/pipeline/frequency?app_service_id=${appId}&start_time=${startTime}&end_time=${endTime}`
+          `/devops/v1/projects/${projectId}/pipeline/frequency?app_service_id=${appId}&start_time=${startTime}&end_time=${endTime}`,
         )
         .then((data) => {
           const res = handlePromptError(data);
@@ -339,7 +344,7 @@ export default function useStore(AppState) {
       this.setEchartsLoading(true);
       return axios
         .get(
-          `/devops/v1/projects/${projectId}/pipeline/time?app_service_id=${appId}&start_time=${startTime}&end_time=${endTime}`
+          `/devops/v1/projects/${projectId}/pipeline/time?app_service_id=${appId}&start_time=${startTime}&end_time=${endTime}`,
         )
         .then((data) => {
           const res = handlePromptError(data);
@@ -360,12 +365,12 @@ export default function useStore(AppState) {
       startTime,
       endTime,
       page = 1,
-      size = this.pageInfo.pageSize
+      size = this.pageInfo.pageSize,
     ) {
       this.changeLoading(true);
       return axios
         .get(
-          `/devops/v1/projects/${projectId}/pipeline/page_by_options?app_service_id=${appId}&start_time=${startTime}&end_time=${endTime}&page=${page}&size=${size}`
+          `/devops/v1/projects/${projectId}/pipeline/page_by_options?app_service_id=${appId}&start_time=${startTime}&end_time=${endTime}&page=${page}&size=${size}`,
         )
         .then((data) => {
           const res = handlePromptError(data);
@@ -381,7 +386,7 @@ export default function useStore(AppState) {
       return axios
         .post(
           `devops/v1/projects/${projectId}/app_service_instances/env_commands/time?envId=${envId}&endTime=${endTime}&startTime=${startTime}`,
-          JSON.stringify(appIds)
+          JSON.stringify(appIds),
         )
         .then((data) => {
           this.setEchartsLoading(false);
@@ -399,7 +404,7 @@ export default function useStore(AppState) {
       return axios
         .post(
           `devops/v1/projects/${projectId}/app_service_instances/env_commands/frequency?app_service_id=${appId}&endTime=${endTime}&startTime=${startTime}`,
-          JSON.stringify(envIds)
+          JSON.stringify(envIds),
         )
         .then((data) => {
           this.setEchartsLoading(false);
@@ -419,13 +424,13 @@ export default function useStore(AppState) {
       endTime,
       appIds,
       page = this.pageInfo.current,
-      size = this.pageInfo.pageSize
+      size = this.pageInfo.pageSize,
     ) {
       this.changeLoading(true);
       return axios
         .post(
           `devops/v1/projects/${projectId}/app_service_instances/env_commands/timeTable?envId=${envId}&endTime=${endTime}&startTime=${startTime}&page=${page}&size=${size}`,
-          JSON.stringify(appIds)
+          JSON.stringify(appIds),
         )
         .then((data) => {
           const res = handlePromptError(data);
@@ -444,13 +449,13 @@ export default function useStore(AppState) {
       endTime,
       envIds,
       page = this.pageInfo.current,
-      size = this.pageInfo.pageSize
+      size = this.pageInfo.pageSize,
     ) {
       this.changeLoading(true);
       return axios
         .post(
           `devops/v1/projects/${projectId}/app_service_instances/env_commands/frequencyTable?app_service_id=${appId}&endTime=${endTime}&startTime=${startTime}&page=${page}&size=${size}`,
-          JSON.stringify(envIds)
+          JSON.stringify(envIds),
         )
         .then((data) => {
           const res = handlePromptError(data);
@@ -474,7 +479,7 @@ export default function useStore(AppState) {
       axios
         .post(
           `devops/v1/projects/${projectId}/commits?start_date=${start}&end_date=${end}`,
-          JSON.stringify(apps)
+          JSON.stringify(apps),
         )
         .then((data) => {
           const res = handlePromptError(data);
@@ -502,13 +507,13 @@ export default function useStore(AppState) {
       start = null,
       end = null,
       apps = null,
-      page = 1
+      page = 1,
     ) {
       this.setHistoryLoad(true);
       axios
         .post(
           `devops/v1/projects/${projectId}/commits/record?page=${page}&size=5&start_date=${start}&end_date=${end}`,
-          JSON.stringify(apps)
+          JSON.stringify(apps),
         )
         .then((data) => {
           const res = handlePromptError(data);
@@ -530,7 +535,7 @@ export default function useStore(AppState) {
       this.setEchartsLoading(true);
       return axios
         .get(
-          `/devops/v1/projects/${projectId}/app_service/${appId}/sonarqube_table?type=${type}&startTime=${startTime}&endTime=${endTime}`
+          `/devops/v1/projects/${projectId}/app_service/${appId}/sonarqube_table?type=${type}&startTime=${startTime}&endTime=${endTime}`,
         )
         .then((data) => {
           const res = handlePromptError(data);
@@ -542,7 +547,9 @@ export default function useStore(AppState) {
     },
 
     handleData(data) {
-      const { pageNum, pageSize, total, list } = data;
+      const {
+        pageNum, pageSize, total, list,
+      } = data;
       this.setAllData(list || []);
       const page = { pageNum, pageSize, total };
       this.setPageInfo(page);
