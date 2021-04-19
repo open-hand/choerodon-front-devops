@@ -2,6 +2,16 @@ import { useLocalStore } from 'mobx-react-lite';
 
 export default function useStore() {
   return useLocalStore(() => ({
+    mysqlParams: [],
+
+    get getMysqlParams() {
+      return this.mysqlParams;
+    },
+
+    setMysqlParams(data) {
+      this.mysqlParams = data;
+    },
+
     serviceVersionList: [],
 
     get getServiceVersionList() {
