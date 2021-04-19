@@ -215,6 +215,7 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore) => ({
             params: [],
             searchParam: {
               status: 'Bound',
+              used: 0,
             },
           },
         }) : undefined),
