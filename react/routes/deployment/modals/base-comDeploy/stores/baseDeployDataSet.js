@@ -3,6 +3,8 @@ import BaseComDeployApis from '@/routes/deployment/modals/base-comDeploy/apis';
 import BaseComDeployServices from '@/routes/deployment/modals/base-comDeploy/services';
 import uuidV1 from 'uuid/v1';
 import { axios } from '@choerodon/master';
+// eslint-disable-next-line import/no-cycle
+import { mapping as paramsMapping } from './paramSettingDataSet';
 
 const deployWayOptionsData = [{
   text: '容器部署',
@@ -25,7 +27,7 @@ const mySqlDeployModeOptionsData = [{
   value: 'standalone',
 }, {
   text: '主备模式',
-  value: 'main',
+  value: 'master-slave',
 }];
 
 async function checkResourceName(value, name, record, projectId) {
@@ -162,7 +164,7 @@ const mapping = {
 };
 
 export {
-  mapping, deployWayOptionsData, deployModeOptionsData, middleWareData,
+  mapping, deployWayOptionsData, deployModeOptionsData, middleWareData, mySqlDeployModeOptionsData,
 };
 
 export default (projectId, HostSettingDataSet, BaseComDeployStore, ServiceVersionDataSet) => ({
@@ -227,6 +229,7 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore, ServiceVersio
             params: [],
             searchParam: {
               status: 'Bound',
+              used: 0,
             },
           },
         }) : undefined),
@@ -277,12 +280,40 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore, ServiceVersio
             // 单机
             if (record.get(mapping.deployMode.name) === deployModeOptionsData[0].value) {
               HostSettingDataSet.splice(0, HostSettingDataSet.records.length);
-              HostSettingDataSet.create();
+              if (record.get(mapping.middleware.name) === middleWareData[1].value) {
+                //  mysql
+                HostSettingDataSet.create({
+                  checked: true,
+                });
+                HostSettingDataSet.records.forEach((i) => {
+                  i.setState('params', new DataSet({
+                    paging: false,
+                    selection: false,
+                    data: BaseComDeployStore.getMysqlParams,
+                    fields: Object.keys(paramsMapping).map((key) => paramsMapping[key]),
+                  }));
+                });
+              } else {
+                // redis
+                HostSettingDataSet.create();
+              }
             } else {
               HostSettingDataSet.splice(0, HostSettingDataSet.records.length);
               if (record.get(mapping.middleware.name) === middleWareData[1].value) {
-                HostSettingDataSet.create();
-                HostSettingDataSet.create();
+                HostSettingDataSet.create({
+                  checked: true,
+                });
+                HostSettingDataSet.create({
+                  checked: false,
+                });
+                HostSettingDataSet.records.forEach((i) => {
+                  i.setState('params', new DataSet({
+                    paging: false,
+                    selection: false,
+                    data: BaseComDeployStore.getMysqlParams,
+                    fields: Object.keys(paramsMapping).map((key) => paramsMapping[key]),
+                  }));
+                });
               } else {
                 HostSettingDataSet.create();
                 HostSettingDataSet.create();
@@ -317,12 +348,40 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore, ServiceVersio
           if (record.get(mapping.deployWay.name) === deployWayOptionsData[1].value) {
             if (value === deployModeOptionsData[0].value) {
               HostSettingDataSet.splice(0, HostSettingDataSet.records.length);
-              HostSettingDataSet.create();
+              if (record.get(mapping.middleware.name) === middleWareData[1].value) {
+                //  mysql
+                HostSettingDataSet.create({
+                  checked: true,
+                });
+                HostSettingDataSet.records.forEach((i) => {
+                  i.setState('params', new DataSet({
+                    paging: false,
+                    selection: false,
+                    data: BaseComDeployStore.getMysqlParams,
+                    fields: Object.keys(mapping).map((key) => mapping[key]),
+                  }));
+                });
+              } else {
+                // redis
+                HostSettingDataSet.create();
+              }
             } else {
               HostSettingDataSet.splice(0, HostSettingDataSet.records.length);
               if (record.get(mapping.middleware.name) === middleWareData[1].value) {
-                HostSettingDataSet.create();
-                HostSettingDataSet.create();
+                HostSettingDataSet.create({
+                  checked: true,
+                });
+                HostSettingDataSet.create({
+                  checked: false,
+                });
+                HostSettingDataSet.records.forEach((i) => {
+                  i.setState('params', new DataSet({
+                    paging: false,
+                    selection: false,
+                    data: BaseComDeployStore.getMysqlParams,
+                    fields: Object.keys(mapping).map((key) => mapping[key]),
+                  }));
+                });
               } else {
                 HostSettingDataSet.create();
                 HostSettingDataSet.create();

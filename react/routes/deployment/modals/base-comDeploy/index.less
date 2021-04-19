@@ -3,6 +3,9 @@
   align-items: center;
 }
 .c7ncd-baseDeploy-middle {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   p {
     margin: 0;
   }
@@ -107,6 +110,36 @@
       span:nth-child(2) {
         color: #00bfa5;
         margin-left: 5px;
+      }
+    }
+  }
+  &-hostList {
+    margin-top: 11px;
+    display: flex;
+    flex: 1;
+    &-left {
+      width: 20%;
+      border-right: 2px solid rgba(0, 0, 0, 0.12);
+      &-checkedLine {
+        width: 5px;
+        background: #5266d4;
+        height: 36px;
+        margin-right: 10px;
+      }
+      .c7n-pro-field-wrapper {
+        margin-top: unset !important;
+        margin-bottom: unset !important;
+      }
+    }
+    &-right {
+      padding: 10px 10px;
+      border-top: 2px solid rgba(0, 0, 0, 0.12);
+      border-right: 2px solid rgba(0, 0, 0, 0.12);
+      border-bottom: 2px solid rgba(0, 0, 0, 0.12);
+      flex: 1;
+      .c7ncd-baseDeploy-middle-deploySetting-status {
+        right: unset !important;
+        width: auto !important;
       }
     }
   }

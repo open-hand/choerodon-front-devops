@@ -7,6 +7,10 @@ export default class BaseComDeployApis {
     return `/devops/v1/projects/${projectId}/middleware/mysql/deploy/env`;
   }
 
+  static getBaseDployMySqlHostApi(projectId) {
+    return `/devops/v1/projects/${projectId}/middleware/mysql/deploy/host`;
+  }
+
   static getPvcListApi(projectId, envId) {
     return `/devops/v1/projects/${projectId}/pvcs/page_by_options?env_id=${envId}&page=0&size=0`;
   }
