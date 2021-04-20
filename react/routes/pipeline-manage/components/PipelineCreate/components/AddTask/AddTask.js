@@ -3,7 +3,15 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import { axios } from '@choerodon/boot';
 import {
-  Form, Select, TextField, Modal, SelectBox, Button, Password, message,
+  Form,
+  Select,
+  TextField,
+  Modal,
+  SelectBox,
+  Button,
+  Password,
+  message,
+  NumberField,
 } from 'choerodon-ui/pro';
 import _ from 'lodash';
 import {
@@ -89,6 +97,24 @@ const AddTask = observer(() => {
   const [branchsList, setBranchsList] = useState(originBranchs);
 
   useEffect(() => {
+    // 有docker步骤设置必填项
+    function setRequiredExistDocker(stepsParams, ds) {
+      // 如果有docker步骤
+      if (stepsParams.find(i => i.type === 'docker')) {
+        const { imageScan, securityControl } = ds.current.toData();
+        // 如果镜像安全扫描和发布门禁都为是
+        if (imageScan && securityControl) {
+          ds.getField('level').set('required', true);
+          ds.getField('condition').set('required', true);
+        } else {
+          ds.getField('level').set('required', false);
+          ds.getField('condition').set('required', false);
+        }
+      } else {
+        ds.getField('level').set('required', false);
+        ds.getField('condition').set('required', false);
+      }
+    }
     if (steps.length > 0) {
       const old = AddTaskFormDataSet.current.get('private');
       if (steps.find((s) => s.checked).repo) {
@@ -106,11 +132,16 @@ const AddTask = observer(() => {
       AddTaskFormDataSet.getField('uploadArtifactFileName').set('required', steps.some((s) => s.type === 'upload'));
       AddTaskFormDataSet.getField('zpk').set('required', steps.some((s) => s.type === 'maven_deploy'));
       AddTaskFormDataSet.getField('jar_zpk').set('required', steps.some((s) => s.type === 'upload_jar'));
+      setRequiredExistDocker(steps, AddTaskFormDataSet);
     }
     if (AddTaskFormDataSet.current.get('type') === 'build') {
       AddTaskFormDataSet.getField('bzmc').set('required', steps.length > 0)
     }
-  }, [steps]);
+  }, [
+    steps,
+    AddTaskFormDataSet.current.get('imageScan'),
+    AddTaskFormDataSet.current.get('securityControl'),
+  ]);
 
   function decode(base64) {
     const decodeStr = atob(base64);
@@ -162,6 +193,10 @@ const AddTask = observer(() => {
           let dockerArtifactFileName;
           let skipDockerTlsVerify;
           let imageScan;
+          let securityControl = true;
+          let level;
+          let symbol = '<=';
+          let condition;
           const share = [];
           let nexusMavenRepoIds;
           let zpk;
@@ -187,6 +222,14 @@ const AddTask = observer(() => {
               skipDockerTlsVerify = c.skipDockerTlsVerify;
               imageScan = c.imageScan || false;
               dockerArtifactFileName = c.artifactFileName;
+              if (!(_.isUndefined(c.securityControl) && _.isNull(c.securityControl))) {
+                securityControl = c.securityControl;
+              }
+              if (c.securityCondition) {
+                level = c.securityCondition.level;
+                symbol = c.securityCondition.symbol;
+                condition = c.securityCondition.condition;
+              }
             } else if (c.type === 'Maven') {
               if (c.nexusMavenRepoIds) {
                 nexusMavenRepoIds = c.nexusMavenRepoIds;
@@ -224,6 +267,10 @@ const AddTask = observer(() => {
             jar_zpk: jarZpk,
             skipDockerTlsVerify,
             imageScan,
+            securityControl,
+            level,
+            symbol,
+            condition,
             scannerType,
             sources,
             skipTests,
@@ -361,6 +408,12 @@ const AddTask = observer(() => {
                   s.imageScan = data.imageScan;
                   if (data.dockerArtifactFileName) {
                     s.artifactFileName = data.dockerArtifactFileName;
+                  }
+                  s.securityControl = data.securityControl;
+                  s.securityCondition = {
+                    level: data.level,
+                    symbol: data.symbol,
+                    condition: data.condition,
                   }
                 }
                 if (data.zpk && s.type === 'maven_deploy') {
@@ -1230,7 +1283,7 @@ const AddTask = observer(() => {
                         }}
                       />
                     </div>,
-                    <div style={{ position: 'relative' }}>
+                    <div style={{ position: 'relative', marginBottom: 20 }}>
                       <SelectBox
                         style={{
                           marginTop: 20,
@@ -1269,6 +1322,80 @@ const AddTask = observer(() => {
                         />
                       </Tooltip>
                     </div>,
+                    <div
+                      style={{
+                        marginBottom: 20,
+                        display: AddTaskFormDataSet.current.get('imageScan') ? 'block' : 'none',
+                      }}
+                    >
+                      <SelectBox
+                        name="securityControl"
+                        style={{ width: 312 }}
+                      />
+                    </div>,
+                    <div
+                      style={{
+                        marginBottom: 20,
+                        display:
+                          AddTaskFormDataSet.current.get('securityControl')
+                          && AddTaskFormDataSet.current.get('imageScan') ? 'block' : 'none',
+                      }}
+                    >
+                      <p
+                        style={{
+                          color: 'rgba(0, 0, 0, 0.6)',
+                          fontWeight: 500,
+                        }}
+                      >
+                        门禁条件
+                        <Icon
+                          style={{
+                            position: 'relative',
+                            bottom: '2px',
+                          }}
+                          type="help"
+                          className="c7ncd-select-tips-icon"
+                        />
+                      </p>
+                      <div
+                        style={{
+                          width: 312,
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: '33%'
+                          }}
+                        >
+                          <Select
+                            name="level"
+                          />
+                        </div>
+                        <div
+                          style={{
+                            width: '33%'
+                          }}
+                        >
+                          <Select
+                            name="symbol"
+                          />
+                        </div>
+                        <div
+                          style={{
+                            width: '33%'
+                          }}
+                        >
+                          <NumberField
+                            min={0}
+                            name='condition'
+                            step={1}
+                          />
+                        </div>
+                      </div>
+                    </div>
                   ];
                 }
               }
