@@ -9,7 +9,7 @@ const optionDs = new DataSet({
     name: 'Npm构建',
     value: 'npm',
   }, {
-    name: 'Docker构建',
+    name: 'Docker构建(仅制作镜像)',
     value: 'docker',
   }, {
     name: 'Maven发布',

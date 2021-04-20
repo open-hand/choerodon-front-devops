@@ -47,7 +47,7 @@ const obj = {
   Maven: 'Maven构建',
   npm: 'Npm构建',
   // upload: '上传软件包至存储库',
-  docker: 'Docker构建',
+  docker: 'Docker构建(仅制作镜像)',
   chart: 'Chart构建',
   go: 'Go语言构建',
   maven_deploy: 'Maven发布',
@@ -481,7 +481,7 @@ const AddTask = observer(() => {
   const renderer = ({ text }) => text;
 
   const optionRenderer = ({ text }) => {
-    if (text === 'Docker构建') {
+    if (text === 'Docker构建(仅制作镜像)') {
       return (
         <Tooltip title="由于该步骤中Dockerfile内kaniko指令限制，建议此步骤作为同任务中最后一个步骤。">
           {text}
@@ -646,19 +646,19 @@ const AddTask = observer(() => {
       if (value === 'Maven') {
         extra = [
           {
-            name: 'Docker构建',
+            name: 'Docker构建(仅制作镜像)',
             type: 'docker',
             checked: false,
           }];
       } else if (value === 'npm') {
         extra = [{
-          name: 'Docker构建',
+          name: 'Docker构建(仅制作镜像)',
           type: 'docker',
           checked: false,
         }];
       } else if (value === 'go') {
         extra = [{
-          name: 'Docker构建',
+          name: 'Docker构建(仅制作镜像)',
           type: 'docker',
           checked: true,
         }];
