@@ -40,9 +40,8 @@ const issueDetailModalStyle = {
 function Branch(props) {
   const {
     tableDs,
-    projectId,
     intl,
-    AppState,
+    AppState: { currentMenuType: { organizationId, projectId } },
     appServiceDs,
     appServiceId,
     formatMessage,
@@ -312,7 +311,7 @@ function Branch(props) {
     return (
       <div>
         {record.get('typeCode') ? getOptionContent(record) : null}
-        <a onClick={() => openIssueDetail(record.get('issueId'), record.get('branchName'))} role="none">
+        <a onClick={() => openIssueDetail(record.get('issueId'), record.get('branchName'), record.get('issueProjectId'))} role="none">
           <Tooltip
             title={text}
           >
@@ -364,9 +363,8 @@ function Branch(props) {
     );
   };
 
-  function openIssueDetail(id, name) {
-    const orgId = AppState.currentMenuType.organizationId;
-    const projId = AppState.currentMenuType.projectId;
+  function openIssueDetail(id, name, issueProjectId) {
+    const newProjectId = issueProjectId || projectId;
     ProModal.open({
       key: issueDetailModalKey,
       title: <FormattedMessage
@@ -376,7 +374,7 @@ function Branch(props) {
         }}
       />,
       drawer: true,
-      children: <IssueDetail intl={intl} projectId={projId} issueId={id} orgId={orgId} />,
+      children: <IssueDetail intl={intl} projectId={newProjectId} issueId={id} orgId={organizationId} />,
       style: issueDetailModalStyle,
       okCancel: false,
       okText: <FormattedMessage id="envPl.close" />,
