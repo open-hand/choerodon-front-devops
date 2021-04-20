@@ -7,6 +7,10 @@ export default class BaseComDeployApis {
     return `/devops/v1/projects/${projectId}/middleware/mysql/deploy/env`;
   }
 
+  static getPvLabesUrl(projectId, clusterId) {
+    return `/devops/v1/projects/${projectId}/pvs/labels?cluster_id=${clusterId}`;
+  }
+
   static getBaseDployMySqlHostApi(projectId) {
     return `/devops/v1/projects/${projectId}/middleware/mysql/deploy/host`;
   }

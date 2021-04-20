@@ -42,7 +42,15 @@ export const StoreProvider = inject('AppState')(
     const ParamSettingDataSet = useMemo(
       () => new DataSet(paramSettingDataSet(BaseDeployDataSet)), [BaseDeployDataSet],
     );
-    const PVLabelsDataSet = useMemo(() => new DataSet(pvLabelsDataSet()), []);
+    const PVLabelsDataSet = useMemo(
+      () => new DataSet(pvLabelsDataSet(
+        projectId,
+        BaseDeployDataSet,
+        BaseComDeployStore,
+      )), [
+        projectId,
+        BaseDeployDataSet],
+    );
 
     const value = {
       ...props,

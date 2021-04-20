@@ -1098,7 +1098,7 @@ export default observer(() => {
               <Form style={{ width: '80%' }} record={item} columns={3}>
                 <div className="c7ncd-base-pvlabels" colSpan={1}>
                   <div>
-                    <TextField name="key" />
+                    <Select combo name="key" />
                   </div>
                   <span style={{ margin: '0 10px' }}>=</span>
                   <div>

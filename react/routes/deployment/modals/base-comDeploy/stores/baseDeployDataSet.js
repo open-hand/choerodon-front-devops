@@ -238,6 +238,17 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore, ServiceVersio
       item.lookupAxiosConfig = () => ({
         url: BaseComDeployApis.getEnvListApi(projectId),
         method: 'get',
+        transformResponse: (res) => {
+          let newRes = res;
+          try {
+            newRes = JSON.parse(newRes);
+            BaseComDeployStore.setEnvList(newRes);
+            return newRes;
+          } catch (e) {
+            BaseComDeployStore.setEnvList(newRes);
+            return newRes;
+          }
+        },
       });
       item.dynamicProps = {
         required: ({ record }) => (record
