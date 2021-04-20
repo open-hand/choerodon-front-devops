@@ -57,7 +57,7 @@
     "xterm": "^3.12.0"
   },
   "devDependencies": {
-    "@choerodon/boot": "0.23.0",
+    "@choerodon/boot": "0.23.1",
     "@choerodon/master": "0.26.0",
     "@types/react": "^16.9.44",
     "@types/react-router": "^5.1.8",

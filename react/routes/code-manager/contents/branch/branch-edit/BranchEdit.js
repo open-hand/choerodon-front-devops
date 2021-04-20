@@ -167,6 +167,7 @@ function BranchEdit() {
           renderer={renderProject}
           onBlur={handleBlur}
           clearButton={false}
+          pagingOptionContent={<span className="c7ncd-select-load-more-text">加载更多</span>}
         />
         <Select
           name="issue"
