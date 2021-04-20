@@ -336,6 +336,7 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore, ServiceVersio
         }
         case mapping.middleware.name:
           record.set(mapping.instance.name, `${middleWareData.find((i) => i.value === value).text}-${uuidV1().substring(0, 5)}`);
+          record.set(mapping.resourceName.name, `${middleWareData.find((i) => i.value === value).text}-${uuidV1().substring(0, 5)}`);
           // 如果是mysql
           if (value === middleWareData[1].value) {
             record.getField(mapping.deployMode.name).options.loadData(mySqlDeployModeOptionsData);

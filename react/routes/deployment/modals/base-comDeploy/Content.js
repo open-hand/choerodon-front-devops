@@ -248,6 +248,7 @@ export default observer(() => {
           } else {
             await BaseComDeployServices.axiosPostDeployHost(projectId, axiosData);
           }
+          BaseDeployDataSet.reset();
           refresh();
           return true;
         } catch (e) {
@@ -282,6 +283,8 @@ export default observer(() => {
           };
           try {
             await BaseComDeployServices.axiosPostBaseDeployMySqlEnvApi(projectId, axiosData);
+            BaseDeployDataSet.reset();
+            refresh();
             return true;
           } catch (e) {
             return false;
@@ -316,6 +319,8 @@ export default observer(() => {
               };
               try {
                 await BaseComDeployServices.axiosPostBaseDeployMySqlHostApi(projectId, axiosData);
+                BaseDeployDataSet.reset();
+                refresh();
                 return true;
               } catch (e) {
                 return false;
@@ -354,6 +359,9 @@ export default observer(() => {
         item.paramsRunningValue = item.paramDefaultValue;
       });
       BaseComDeployStore.setMysqlParams(result.middlewareConfigVOS);
+      BaseDeployDataSet
+        .current.getField(mapping.deployMode.name).options.loadData(deployModeOptionsData);
+      BaseDeployDataSet.current.set(mapping.deployMode.name, deployModeOptionsData[1].value);
     }
   }, []);
 
