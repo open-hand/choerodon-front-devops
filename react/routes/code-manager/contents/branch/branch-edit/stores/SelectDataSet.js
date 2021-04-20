@@ -55,6 +55,7 @@ export default ({
     update: ({ name, value, record }) => {
       if (name === 'project') {
         const field = record.getField('issue');
+        record.get('issue') && record.set('issue', null);
         field.reset();
         if (value) {
           field.fetchLookup();
