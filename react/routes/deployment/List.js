@@ -205,13 +205,43 @@ const Deployment = withRouter(observer((props) => {
     );
   }
 
-  function renderDeployStatus({ value }) {
+  function renderDeployStatus({ value, record }) {
     return (
-      <StatusTag
-        colorCode={value || ''}
-        name={value ? formatMessage({ id: `${intlPrefix}.status.${value}` }) : 'unKnow'}
-        style={statusTagsStyle}
-      />
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
+        <StatusTag
+          colorCode={value || ''}
+          name={value ? formatMessage({ id: `${intlPrefix}.status.${value}` }) : 'unKnow'}
+          style={statusTagsStyle}
+        />
+        {
+          value === 'failed' && record.get('errorMsg') && (
+            <Tooltip title={(
+              <div
+                style={{
+                  maxHeight: '100vh',
+                  overflow: 'auto',
+                }}
+              >
+                {record.get('errorMsg')}
+              </div>
+            )}
+            >
+              <Icon
+                type="error"
+                style={{
+                  color: 'rgb(247, 103, 118)',
+                }}
+              />
+            </Tooltip>
+          )
+        }
+        <Icon />
+      </div>
     );
   }
 
