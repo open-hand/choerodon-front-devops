@@ -219,7 +219,7 @@ const AddTask = observer(() => {
             } else if (c.type === 'docker') {
               dockerContextDir = c.dockerContextDir;
               dockerFilePath = c.dockerFilePath;
-              skipDockerTlsVerify = c.skipDockerTlsVerify;
+              skipDockerTlsVerify = c.skipDockerTlsVerify || false;
               imageScan = c.imageScan || false;
               dockerArtifactFileName = c.artifactFileName;
               if (!(_.isUndefined(c.securityControl) && _.isNull(c.securityControl))) {
