@@ -114,9 +114,12 @@ export default function useStore(viewType) {
       return itemRecord;
     },
 
-    loadMoreRecordData({ key, treeDs }) {
+    loadMoreRecordData({ key, treeDs, children }) {
       try {
         this.setLoadedKeys([...this.loadedKeys, key]);
+        if (children) {
+          return;
+        }
         const recordData = this.childrenDataMap.get(key);
         if (recordData) {
           const records = map(recordData, (item) => {
