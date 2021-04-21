@@ -28,6 +28,7 @@ const PodDetail = memo(() => {
   const {
     prefixCls,
     intlPrefix,
+    AppState: { currentMenuType: { projectId } },
   } = useResourceStore();
   const {
     intl,
@@ -224,6 +225,7 @@ const PodDetail = memo(() => {
           visible={shellVisible}
           onClose={closeShell}
           record={podsDs.current.toData()}
+          projectId={projectId}
         />
         )}
     </>

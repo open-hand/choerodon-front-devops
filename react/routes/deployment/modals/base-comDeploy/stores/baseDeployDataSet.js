@@ -3,6 +3,8 @@ import BaseComDeployApis from '@/routes/deployment/modals/base-comDeploy/apis';
 import BaseComDeployServices from '@/routes/deployment/modals/base-comDeploy/services';
 import uuidV1 from 'uuid/v1';
 import { axios } from '@choerodon/master';
+// eslint-disable-next-line import/no-cycle
+import { mapping as paramsMapping } from './paramSettingDataSet';
 
 const deployWayOptionsData = [{
   text: '容器部署',
@@ -18,6 +20,14 @@ const deployModeOptionsData = [{
 }, {
   text: '哨兵模式',
   value: 'sentinel',
+}];
+
+const mySqlDeployModeOptionsData = [{
+  text: '单机模式',
+  value: 'standalone',
+}, {
+  text: '主备模式',
+  value: 'master-slave',
 }];
 
 async function checkResourceName(value, name, record, projectId) {
@@ -56,7 +66,7 @@ const middleWareData = [{
   value: 'Redis',
   text: 'redis',
 }, {
-  value: 'mysql',
+  value: 'MySQL',
   text: 'mysql',
 }];
 
@@ -154,43 +164,47 @@ const mapping = {
 };
 
 export {
-  mapping, deployWayOptionsData, deployModeOptionsData, middleWareData,
+  mapping, deployWayOptionsData, deployModeOptionsData, middleWareData, mySqlDeployModeOptionsData,
 };
 
-export default (projectId, HostSettingDataSet, BaseComDeployStore) => ({
+export default (projectId, HostSettingDataSet, BaseComDeployStore, ServiceVersionDataSet) => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((key) => {
     const item = mapping[key];
     if (key === 'serviceVersion') {
-      item.dynamicProps = {
-        lookupAxiosConfig: ({ record }) => (record ? ({
-          url: BaseComDeployApis.getServiceVersionApi(),
-          method: 'get',
-          transformResponse: (res) => {
-            function finalFunc(data) {
-              if (data.length && data.length > 0) {
-                BaseComDeployStore.setServiceVersionList(data);
-                if (record) {
-                  record.set(mapping.serviceVersion.name, data[0].versionNumber);
-                }
-              }
-            }
-            let newRes = res;
-            try {
-              newRes = JSON.parse(newRes);
-              finalFunc(newRes);
-              return newRes;
-            } catch (e) {
-              finalFunc(newRes);
-              return newRes;
-            }
-          },
-        }) : undefined),
-      };
+      item.options = ServiceVersionDataSet;
+      // item.lookupAxiosConfig = () => ({
+      //   url: BaseComDeployApis
+      //     .getServiceVersionApi(middleWareData[0].value),
+      //   method: 'get',
+      //   transformResponse: (res) => {
+      //     debugger;
+      //     function finalFunc(data) {
+      //       debugger;
+      //       if (data.length && data.length > 0) {
+      //         BaseComDeployStore.setServiceVersionList(data);
+      //         // if (record) {
+      //         //   record.set(mapping.serviceVersion.name, data[0].versionNumber);
+      //         // }
+      //       }
+      //     }
+      //     let newRes = res;
+      //     try {
+      //       debugger;
+      //       newRes = JSON.parse(newRes);
+      //       finalFunc(newRes);
+      //       return newRes;
+      //     } catch (e) {
+      //       debugger;
+      //       finalFunc(newRes);
+      //       return newRes;
+      //     }
+      //   },
+      // });
     } else if (key === 'password') {
       item.dynamicProps = {
-        required: ({ record }) => (record.get(mapping.middleware.name) === middleWareData[0].value)
-          && (record.get(mapping.deployWay.name) === deployWayOptionsData[0].value),
+        required: ({ record }) => (record
+          .get(mapping.deployWay.name) === deployWayOptionsData[0].value),
       };
     } else if (key === 'sysctlImage') {
       item.dynamicProps = {
@@ -224,22 +238,33 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore) => ({
       item.lookupAxiosConfig = () => ({
         url: BaseComDeployApis.getEnvListApi(projectId),
         method: 'get',
+        transformResponse: (res) => {
+          let newRes = res;
+          try {
+            newRes = JSON.parse(newRes);
+            BaseComDeployStore.setEnvList(newRes);
+            return newRes;
+          } catch (e) {
+            BaseComDeployStore.setEnvList(newRes);
+            return newRes;
+          }
+        },
       });
       item.dynamicProps = {
-        required: ({ record }) => (record.get(mapping.middleware.name) === middleWareData[0].value)
-        && (record.get(mapping.deployWay.name) === deployWayOptionsData[0].value),
+        required: ({ record }) => (record
+          .get(mapping.deployWay.name) === deployWayOptionsData[0].value),
       };
     } else if (key === 'instance') {
       item.validator = (value, name, record) => checkName(value, name, record, projectId);
       item.dynamicProps = {
-        required: ({ record }) => (record.get(mapping.middleware.name) === middleWareData[0].value)
-        && (record.get(mapping.deployWay.name) === deployWayOptionsData[0].value),
+        required: ({ record }) => (record
+          .get(mapping.deployWay.name) === deployWayOptionsData[0].value),
       };
       item.defaultValue = `${middleWareData[0].text}-${uuidV1().substring(0, 5)}`;
     } else if (key === 'resourceName') {
       item.dynamicProps = {
-        required: ({ record }) => (record.get(mapping.middleware.name) === middleWareData[0].value)
-            && (record.get(mapping.deployWay.name) === deployWayOptionsData[1].value),
+        required: ({ record }) => (record
+          .get(mapping.deployWay.name) === deployWayOptionsData[1].value),
       };
       item.validator = (value, name, record) => {
         if (record.get(mapping.deployWay.name) === deployWayOptionsData[1].value) {
@@ -259,33 +284,121 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore) => ({
         case mapping.deployWay.name: {
           // 主机部署
           if (value === deployWayOptionsData[1].value) {
+            // mysql
+            if (record.get(mapping.middleware.name) === middleWareData[1].value) {
+              record.set(mapping.deployMode.name, mySqlDeployModeOptionsData[1].value);
+            }
             // 单机
             if (record.get(mapping.deployMode.name) === deployModeOptionsData[0].value) {
               HostSettingDataSet.splice(0, HostSettingDataSet.records.length);
-              HostSettingDataSet.create();
+              if (record.get(mapping.middleware.name) === middleWareData[1].value) {
+                //  mysql
+                HostSettingDataSet.create({
+                  checked: true,
+                });
+                HostSettingDataSet.records.forEach((i) => {
+                  i.setState('params', new DataSet({
+                    paging: false,
+                    selection: false,
+                    data: BaseComDeployStore.getMysqlParams,
+                    fields: Object.keys(paramsMapping).map((key) => paramsMapping[key]),
+                  }));
+                });
+              } else {
+                // redis
+                HostSettingDataSet.create();
+              }
             } else {
               HostSettingDataSet.splice(0, HostSettingDataSet.records.length);
-              HostSettingDataSet.create();
-              HostSettingDataSet.create();
-              HostSettingDataSet.create();
+              if (record.get(mapping.middleware.name) === middleWareData[1].value) {
+                HostSettingDataSet.create({
+                  checked: true,
+                });
+                HostSettingDataSet.create({
+                  checked: false,
+                });
+                HostSettingDataSet.records.forEach((i) => {
+                  i.setState('params', new DataSet({
+                    paging: false,
+                    selection: false,
+                    data: BaseComDeployStore.getMysqlParams,
+                    fields: Object.keys(paramsMapping).map((key) => paramsMapping[key]),
+                  }));
+                });
+              } else {
+                HostSettingDataSet.create();
+                HostSettingDataSet.create();
+                HostSettingDataSet.create();
+              }
             }
           }
           break;
         }
         case mapping.middleware.name:
           record.set(mapping.instance.name, `${middleWareData.find((i) => i.value === value).text}-${uuidV1().substring(0, 5)}`);
+          record.set(mapping.resourceName.name, `${middleWareData.find((i) => i.value === value).text}-${uuidV1().substring(0, 5)}`);
+          // 如果是mysql
+          if (value === middleWareData[1].value) {
+            record.getField(mapping.deployMode.name).options.loadData(mySqlDeployModeOptionsData);
+            record.set(mapping.deployMode.name, mySqlDeployModeOptionsData[1].value);
+            // 如果部署方式是容器部署
+            if (record.get(mapping.deployWay.name) === deployWayOptionsData[0].value) {
+              record.set(mapping.deployMode.name, mySqlDeployModeOptionsData[0].value);
+            }
+          } else {
+            record.getField(mapping.deployMode.name).options.loadData(deployModeOptionsData);
+            record.set(mapping.deployMode.name, deployModeOptionsData[1].value);
+          }
+          // 重查serviceVersion options
+          // result = await BaseComDeployServices.axiosGetServiceVersion(value);
+          // BaseComDeployStore.setServiceVersionList(result);
+          // console.log(dataSet.current.getField(mapping.serviceVersion.name));
+          // dataSet.current.getField(mapping.serviceVersion.name).options.splice(0, 1, result);
           break;
         case mapping.deployMode.name:
           // 如果是主机部署
           if (record.get(mapping.deployWay.name) === deployWayOptionsData[1].value) {
             if (value === deployModeOptionsData[0].value) {
               HostSettingDataSet.splice(0, HostSettingDataSet.records.length);
-              HostSettingDataSet.create();
+              if (record.get(mapping.middleware.name) === middleWareData[1].value) {
+                //  mysql
+                HostSettingDataSet.create({
+                  checked: true,
+                });
+                HostSettingDataSet.records.forEach((i) => {
+                  i.setState('params', new DataSet({
+                    paging: false,
+                    selection: false,
+                    data: BaseComDeployStore.getMysqlParams,
+                    fields: Object.keys(mapping).map((key) => mapping[key]),
+                  }));
+                });
+              } else {
+                // redis
+                HostSettingDataSet.create();
+              }
             } else {
               HostSettingDataSet.splice(0, HostSettingDataSet.records.length);
-              HostSettingDataSet.create();
-              HostSettingDataSet.create();
-              HostSettingDataSet.create();
+              if (record.get(mapping.middleware.name) === middleWareData[1].value) {
+                HostSettingDataSet.create({
+                  checked: true,
+                });
+                HostSettingDataSet.create({
+                  checked: false,
+                });
+                HostSettingDataSet.records.forEach((i) => {
+                  i.setState('params', new DataSet({
+                    paging: false,
+                    selection: false,
+                    data: BaseComDeployStore.getMysqlParams,
+                    fields: Object.keys(mapping).map((key) => mapping[key]),
+                  }));
+                });
+              } else {
+                HostSettingDataSet.create();
+                HostSettingDataSet.create();
+                HostSettingDataSet.create();
+              }
             }
           } else {
             //  如果是环境部署

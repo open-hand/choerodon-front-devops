@@ -7,6 +7,7 @@ import { DataSet } from 'choerodon-ui/pro';
 import baseDeployDataSet from './baseDeployDataSet';
 import hostSettingDataSet from './hostSettingDataSet';
 import paramSettingDataSet from './paramSettingDataSet';
+import serviceVersionDataSet from './serviceVersionDataSet';
 import useStore from './useStore';
 import pvLabelsDataSet from './pvLabelsDataSet';
 
@@ -29,17 +30,27 @@ export const StoreProvider = inject('AppState')(
     const HostSettingDataSet = useMemo(
       () => new DataSet(hostSettingDataSet(projectId, BaseComDeployStore)), [projectId],
     );
+    const ServiceVersionDataSet = useMemo(() => new DataSet(serviceVersionDataSet()), []);
     const BaseDeployDataSet = useMemo(
       () => new DataSet(baseDeployDataSet(
         projectId,
         HostSettingDataSet,
         BaseComDeployStore,
+        ServiceVersionDataSet,
       )), [projectId, random],
     );
     const ParamSettingDataSet = useMemo(
       () => new DataSet(paramSettingDataSet(BaseDeployDataSet)), [BaseDeployDataSet],
     );
-    const PVLabelsDataSet = useMemo(() => new DataSet(pvLabelsDataSet()), []);
+    const PVLabelsDataSet = useMemo(
+      () => new DataSet(pvLabelsDataSet(
+        projectId,
+        BaseDeployDataSet,
+        BaseComDeployStore,
+      )), [
+        projectId,
+        BaseDeployDataSet],
+    );
 
     const value = {
       ...props,
@@ -48,6 +59,7 @@ export const StoreProvider = inject('AppState')(
       ParamSettingDataSet,
       BaseComDeployStore,
       PVLabelsDataSet,
+      ServiceVersionDataSet,
     };
     return (
       <Store.Provider value={value}>
