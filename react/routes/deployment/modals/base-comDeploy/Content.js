@@ -301,30 +301,32 @@ export default observer(() => {
             if (!testResult) {
               return false;
             }
-            const result = setFlagBaseOnParamsSetting(flag, {}, true);
-            if (!result.f) {
-              axiosData = {
-                [mapping.serviceVersion.name]: BaseDeployDataSet
-                  .toData()[0][mapping.serviceVersion.name],
-                [mapping.deployWay.name]: BaseDeployDataSet
-                  .toData()[0][mapping.deployWay.name],
-                [mapping.deployMode.name]: BaseDeployDataSet.current.get(mapping.deployMode.name),
-                [mapping.env.name]: BaseDeployDataSet
-                  .toData()[0][mapping.env.name],
-                [mapping.password.name]: BaseDeployDataSet
-                  .toData()[0][mapping.password.name],
-                hostIds: HostSettingDataSet.records.map((i) => i.get(hostMapping.hostId.name)),
-                configuration: result.resultData,
-                name: BaseDeployDataSet.current.get(mapping.resourceName.name),
-              };
-              try {
-                await BaseComDeployServices.axiosPostBaseDeployMySqlHostApi(projectId, axiosData);
-                BaseDeployDataSet.reset();
-                refresh();
-                return true;
-              } catch (e) {
-                return false;
-              }
+          }
+          const result = setFlagBaseOnParamsSetting(flag, {}, true);
+          if (!result.f) {
+            axiosData = {
+              [mapping.serviceVersion.name]: BaseDeployDataSet
+                .toData()[0][mapping.serviceVersion.name],
+              [mapping.deployWay.name]: BaseDeployDataSet
+                .toData()[0][mapping.deployWay.name],
+              [mapping.deployMode.name]: BaseDeployDataSet.current.get(mapping.deployMode.name),
+              [mapping.env.name]: BaseDeployDataSet
+                .toData()[0][mapping.env.name],
+              [mapping.password.name]: BaseDeployDataSet
+                .toData()[0][mapping.password.name],
+              [mapping.virtualIp.name]: BaseDeployDataSet
+                .toData()[0][mapping.virtualIp.name],
+              hostIds: HostSettingDataSet.records.map((i) => i.get(hostMapping.hostId.name)),
+              configuration: result.resultData,
+              name: BaseDeployDataSet.current.get(mapping.resourceName.name),
+            };
+            try {
+              await BaseComDeployServices.axiosPostBaseDeployMySqlHostApi(projectId, axiosData);
+              BaseDeployDataSet.reset();
+              refresh();
+              return true;
+            } catch (e) {
+              return false;
             }
           }
         }
@@ -894,6 +896,7 @@ export default observer(() => {
         </p>
         <Form dataSet={BaseDeployDataSet} columns={3}>
           <Password autoComplete="new-password" colSpan={1} name={mapping.password.name} />
+          <TextField colSpan={1} name={mapping.virtualIp.name} />
         </Form>
         <div className="c7ncd-baseDeploy-middle-hostList">
           <div className="c7ncd-baseDeploy-middle-hostList-left">

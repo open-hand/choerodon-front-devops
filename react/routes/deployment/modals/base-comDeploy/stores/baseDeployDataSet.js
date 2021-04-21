@@ -75,13 +75,18 @@ const mapping = {
     name: 'password',
     type: 'string',
     label: '密码',
-    defaultValue: 'password',
+    defaultValue: 'Changeit!123',
   },
   sysctlImage: {
     name: 'sysctlImage',
     type: 'boolean',
     label: 'sysctlImage',
     defaultValue: false,
+  },
+  virtualIp: {
+    name: 'virtualIp',
+    type: 'string',
+    label: '虚拟IP',
   },
   slaveCount: {
     name: 'slaveCount',
@@ -273,6 +278,23 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore, ServiceVersio
         return true;
       };
       item.defaultValue = `${middleWareData[0].text}-${uuidV1().substring(0, 5)}`;
+    } else if (key === 'virtualIp') {
+      item.dynamicProps = {
+        required: ({ record }) => record.get(mapping.middleware.name) === middleWareData[1].value
+        && record.get(mapping.deployWay.name) === deployWayOptionsData[1].value
+        && record.get(mapping.deployMode.name) === mySqlDeployModeOptionsData[1].value,
+      };
+      item.validator = (value) => {
+        function isValidIP(ip) {
+          const reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
+          return reg.test(ip);
+        }
+        const result = isValidIP(value);
+        if (result) {
+          return result;
+        }
+        return '请输入正确格式的ip地址';
+      };
     }
     return item;
   }),
