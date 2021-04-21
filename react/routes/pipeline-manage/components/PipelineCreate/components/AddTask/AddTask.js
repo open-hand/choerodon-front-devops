@@ -55,7 +55,7 @@ const obj = {
   Maven: 'Maven构建',
   npm: 'Npm构建',
   // upload: '上传软件包至存储库',
-  docker: 'Docker构建(仅制作镜像)',
+  docker: 'Docker构建',
   chart: 'Chart构建',
   go: 'Go语言构建',
   maven_deploy: 'Maven发布',
@@ -222,8 +222,10 @@ const AddTask = observer(() => {
               skipDockerTlsVerify = c.skipDockerTlsVerify || false;
               imageScan = c.imageScan || false;
               dockerArtifactFileName = c.artifactFileName;
-              if (!(_.isUndefined(c.securityControl) && _.isNull(c.securityControl))) {
+              if (!(_.isUndefined(c.securityControl) || _.isNull(c.securityControl))) {
                 securityControl = c.securityControl;
+              } else {
+                securityControl = false;
               }
               if (c.securityCondition) {
                 level = c.securityCondition.level;
@@ -534,7 +536,7 @@ const AddTask = observer(() => {
   const renderer = ({ text }) => text;
 
   const optionRenderer = ({ text }) => {
-    if (text === 'Docker构建(仅制作镜像)') {
+    if (text === 'Docker构建') {
       return (
         <Tooltip title="由于该步骤中Dockerfile内kaniko指令限制，建议此步骤作为同任务中最后一个步骤。">
           {text}
@@ -699,19 +701,19 @@ const AddTask = observer(() => {
       if (value === 'Maven') {
         extra = [
           {
-            name: 'Docker构建(仅制作镜像)',
+            name: 'Docker构建',
             type: 'docker',
             checked: false,
           }];
       } else if (value === 'npm') {
         extra = [{
-          name: 'Docker构建(仅制作镜像)',
+          name: 'Docker构建',
           type: 'docker',
           checked: false,
         }];
       } else if (value === 'go') {
         extra = [{
-          name: 'Docker构建(仅制作镜像)',
+          name: 'Docker构建',
           type: 'docker',
           checked: true,
         }];
