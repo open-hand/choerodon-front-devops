@@ -116,8 +116,8 @@ export default function useStore(viewType) {
 
     loadMoreRecordData({ key, treeDs }) {
       try {
-        const recordData = this.childrenDataMap.get(key);
         this.setLoadedKeys([...this.loadedKeys, key]);
+        const recordData = this.childrenDataMap.get(key);
         if (recordData) {
           const records = map(recordData, (item) => {
             const itemRecord = this.handleSelectedMenuData({ treeDs, item });
