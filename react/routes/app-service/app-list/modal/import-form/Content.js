@@ -2,7 +2,7 @@ import React, {
   Fragment, useState, useEffect, useMemo,
 } from 'react';
 import {
-  Form, TextField, Select, SelectBox, Spin,
+  Form, TextField, Select, SelectBox, Spin, Tooltip,
 } from 'choerodon-ui/pro';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
@@ -33,6 +33,7 @@ const ImportForm = injectIntl(observer((props) => {
     selectedDs,
     marketSelectedDs,
     importStore,
+    hasMarket,
   } = useImportAppServiceStore();
   const record = useMemo(() => importDs.current || importDs.records[0], [importDs.current]);
   const [hasFailed, setHasFailed] = useState(false);
@@ -117,18 +118,26 @@ const ImportForm = injectIntl(observer((props) => {
     };
   }
 
+  function handleOptionProps({ record: optionRecord }) {
+    return ({
+      disabled: optionRecord.get('value') === 'market' && !hasMarket,
+    });
+  }
+
   return (
     <div className={`${prefixCls}-import-wrap`}>
       <Form record={record}>
-        <SelectBox name="platformType">
+        <SelectBox name="platformType" onOption={handleOptionProps}>
           {map(IMPORT_METHOD, (item) => (
             <Option value={item} key={item}>
-              <span className={`${prefixCls}-import-wrap-radio`}>
-                <Tips
-                  helpText={formatMessage({ id: `${intlPrefix}.${item}.tips` })}
-                  title={formatMessage({ id: `${intlPrefix}.import.type.${item}` })}
-                />
-              </span>
+              <Tooltip title={hasMarket ? '' : '未安装【应用市场】插件，无法使用此功能'}>
+                <span className={`${prefixCls}-import-wrap-radio`}>
+                  <Tips
+                    helpText={formatMessage({ id: `${intlPrefix}.${item}.tips` })}
+                    title={formatMessage({ id: `${intlPrefix}.import.type.${item}` })}
+                  />
+                </span>
+              </Tooltip>
             </Option>
           ))}
         </SelectBox>
