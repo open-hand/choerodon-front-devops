@@ -86,7 +86,7 @@ const MirrorScanning = () => {
               危急漏洞：
             </span>
             <span>
-              {criticalCount || '-'}
+              {criticalCount}
             </span>
           </div>
           <div className={`${prefixCls}-detail-content`}>
@@ -94,7 +94,7 @@ const MirrorScanning = () => {
               严重漏洞：
             </span>
             <span>
-              {highCount || '-'}
+              {highCount}
             </span>
           </div>
           <div className={`${prefixCls}-detail-content`}>
@@ -102,7 +102,7 @@ const MirrorScanning = () => {
               中等漏洞：
             </span>
             <span>
-              {mediumCount || '-'}
+              {mediumCount}
             </span>
           </div>
           <div className={`${prefixCls}-detail-content`}>
@@ -110,7 +110,7 @@ const MirrorScanning = () => {
               较低漏洞：
             </span>
             <span>
-              {lowCount || '-'}
+              {lowCount}
             </span>
           </div>
           <div className={`${prefixCls}-detail-content`}>
@@ -118,7 +118,7 @@ const MirrorScanning = () => {
               未知漏洞：
             </span>
             <span>
-              {unknownCount || '-'}
+              {unknownCount}
             </span>
           </div>
         </div>
