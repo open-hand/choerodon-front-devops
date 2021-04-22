@@ -854,6 +854,7 @@ export default observer(() => {
           <Button
             icon="add"
             color="primary"
+            className="c7ncd-baseDeploy-middle-flexButton"
             disabled={addHostDisabled()}
             onClick={handleAddHost}
           >
@@ -912,11 +913,19 @@ export default observer(() => {
                         alignItems: 'center',
                         borderTop: i.get(hostMapping.checked.name) ? '2px solid rgba(0, 0, 0, 0.12)' : 'unset',
                         borderBottom: i.get(hostMapping.checked.name) ? '2px solid rgba(0, 0, 0, 0.12)' : 'unset',
+                        position: 'relative',
+                        bottom: '1px',
                       }}
                       onClick={() => handleClickItemHost({ record: i, ds: HostSettingDataSet })}
                     >
                       <div
                         className="c7ncd-baseDeploy-middle-hostList-left-checkedLine"
+                        style={{
+                          visibility: i.get(hostMapping.checked.name) ? 'visible' : 'hidden',
+                        }}
+                      />
+                      <div
+                        className="c7ncd-baseDeploy-middle-hostList-left-whiteline"
                         style={{
                           visibility: i.get(hostMapping.checked.name) ? 'visible' : 'hidden',
                         }}
@@ -944,10 +953,10 @@ export default observer(() => {
             <Button
               icon="add"
               color="primary"
+              className="c7ncd-baseDeploy-middle-flexButton"
               disabled={addHostDisabled()}
               onClick={() => {
                 HostSettingDataSet.create();
-                console.log(HostSettingDataSet, HostSettingDataSet.last());
                 HostSettingDataSet.records[HostSettingDataSet.records.length - 1].setState('params', new DataSet({
                   paging: false,
                   selection: false,
@@ -1132,6 +1141,9 @@ export default observer(() => {
             color="primary"
             style={{
               display: 'block',
+              flexShrink: 0,
+              flexGrow: 0,
+              width: 'max-content',
             }}
             onClick={() => PVLabelsDataSet.create()}
           >
@@ -1282,17 +1294,6 @@ export default observer(() => {
             .current.get(mapping.deployWay.name) === deployWayOptionsData[1].value)
           ? '' : (
             <>
-              <Button
-                icon="add"
-                color="primary"
-                style={{
-                  position: 'relative',
-                  left: 'calc(100% - 100px)',
-                }}
-                onClick={handleAddParams}
-              >
-                添加参数
-              </Button>
               <Table
                 style={{ marginTop: 20 }}
                 queryBar="none"
@@ -1308,6 +1309,20 @@ export default observer(() => {
                 />
                 <Column width={60} renderer={renderOperation} />
               </Table>
+              <Button
+                icon="add"
+                color="primary"
+                style={{
+                  margin: '20px 0',
+                  position: 'relative',
+                  flexShrink: 0,
+                  flexGrow: 0,
+                  width: 'max-content',
+                }}
+                onClick={handleAddParams}
+              >
+                添加参数
+              </Button>
             </>
           )
       }
