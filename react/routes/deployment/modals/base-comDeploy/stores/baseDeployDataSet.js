@@ -284,10 +284,16 @@ export default (projectId, HostSettingDataSet, BaseComDeployStore, ServiceVersio
         && record.get(mapping.deployWay.name) === deployWayOptionsData[1].value
         && record.get(mapping.deployMode.name) === mySqlDeployModeOptionsData[1].value,
       };
-      item.validator = (value) => {
+      item.validator = (value, name, record) => {
         function isValidIP(ip) {
           const reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
           return reg.test(ip);
+        }
+        const flag = record.get(mapping.middleware.name) === middleWareData[1].value
+          && record.get(mapping.deployWay.name) === deployWayOptionsData[1].value
+          && record.get(mapping.deployMode.name) === mySqlDeployModeOptionsData[1].value;
+        if (!flag) {
+          return true;
         }
         const result = isValidIP(value);
         if (result) {

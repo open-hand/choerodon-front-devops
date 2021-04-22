@@ -1040,7 +1040,7 @@ const AddTask = observer(() => {
                   }));
                 }}
                 style={{
-                  width: 339,
+                  width: 312,
                   marginTop: 30,
                   marginBottom: AddTaskFormDataSet.current.getField('bzmc').isValid() ? 20 : 40,
                   marginRight: 8,
@@ -1258,14 +1258,12 @@ const AddTask = observer(() => {
                   ];
                 } if (type === 'docker') {
                   return [
-                    <div style={{ marginBottom: 20 }}>
+                    <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center' }}>
                       <TextField
                         style={{ width: 312 }}
                         name="dockerFilePath"
                         addonAfter={<Tips helpText="Dockerfile路径为Dockerfile文件相对于代码库根目录所在路径，如docker/Dockerfile或Dockerfile" />}
                       />
-                    </div>,
-                    <div style={{ marginBottom: 20 }}>
                       <TextField
                         className="dockerContextDir"
                         style={{ width: 312 }}
@@ -1303,6 +1301,7 @@ const AddTask = observer(() => {
                           style={{ position: 'absolute', top: '2px', left: '96px' }}
                         />
                       </Tooltip>
+                      <TextField style={{ visibility: 'hidden' }} />
                       <SelectBox
                         name="imageScan"
                         className="c7ncd-addTask-imageScan"
@@ -1320,7 +1319,7 @@ const AddTask = observer(() => {
                         <Icon
                           type="help"
                           className="c7ncd-select-tips-icon"
-                          style={{ position: 'absolute', top: '2px', left: '275px' }}
+                          style={{ position: 'absolute', top: '2px', left: '439px' }}
                         />
                       </Tooltip>
                     </div>,
@@ -1361,7 +1360,7 @@ const AddTask = observer(() => {
                       </p>
                       <div
                         style={{
-                          width: 312,
+                          width: 468,
                           display: 'flex',
                           alignItems: 'flex-start',
                           justifyContent: 'space-between',
