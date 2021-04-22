@@ -897,7 +897,14 @@ export default observer(() => {
         </p>
         <Form dataSet={BaseDeployDataSet} columns={3}>
           <Password autoComplete="new-password" colSpan={1} name={mapping.password.name} />
-          <TextField colSpan={1} name={mapping.virtualIp.name} />
+          {
+            BaseDeployDataSet
+              .current
+              .get(mapping.deployMode.name) === mySqlDeployModeOptionsData[1].value
+            && (
+              <TextField colSpan={1} name={mapping.virtualIp.name} />
+            )
+          }
         </Form>
         <div className="c7ncd-baseDeploy-middle-hostList">
           <div className="c7ncd-baseDeploy-middle-hostList-left">
@@ -908,7 +915,7 @@ export default observer(() => {
                       role="none"
                       style={{
                         cursor: 'pointer',
-                        padding: '10px 0',
+                        padding: '10px 10px 10px 0',
                         display: 'flex',
                         alignItems: 'center',
                         borderTop: i.get(hostMapping.checked.name) ? '2px solid rgba(0, 0, 0, 0.12)' : 'unset',
@@ -937,36 +944,37 @@ export default observer(() => {
                           disabled: getHostNameDisabled(data),
                         })}
                       />
-                      <Button
-                        style={{ flexShrink: 0, margin: '0 5px' }}
-                        icon="delete"
-                        disabled={deleteHostDisabled(BaseDeployDataSet, HostSettingDataSet)}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteHost(i);
-                        }}
-                      />
+                      {/* <Button */}
+                      {/*  style={{ flexShrink: 0, margin: '0 5px' }} */}
+                      {/*  icon="delete" */}
+                      {/*  disabled={deleteHostDisabled(BaseDeployDataSet, HostSettingDataSet)} */}
+                      {/*  onClick={(e) => { */}
+                      {/*    e.stopPropagation(); */}
+                      {/*    handleDeleteHost(i); */}
+                      {/*  }} */}
+                      {/* /> */}
                     </div>
                   </Form>
                 ))
             }
-            <Button
-              icon="add"
-              color="primary"
-              className="c7ncd-baseDeploy-middle-flexButton"
-              disabled={addHostDisabled()}
-              onClick={() => {
-                HostSettingDataSet.create();
-                HostSettingDataSet.records[HostSettingDataSet.records.length - 1].setState('params', new DataSet({
-                  paging: false,
-                  selection: false,
-                  data: BaseComDeployStore.getMysqlParams,
-                  fields: Object.keys(paramsMapping).map((key) => paramsMapping[key]),
-                }));
-              }}
-            >
-              添加主机
-            </Button>
+            {/* <Button */}
+            {/*  icon="add" */}
+            {/*  color="primary" */}
+            {/*  className="c7ncd-baseDeploy-middle-flexButton" */}
+            {/*  disabled={addHostDisabled()} */}
+            {/*  onClick={() => { */}
+            {/*    HostSettingDataSet.create(); */}
+            {/*    HostSettingDataSet.records[HostSettingDataSet
+            .records.length - 1].setState('params', new DataSet({ */}
+            {/*      paging: false, */}
+            {/*      selection: false, */}
+            {/*      data: BaseComDeployStore.getMysqlParams, */}
+            {/*      fields: Object.keys(paramsMapping).map((key) => paramsMapping[key]), */}
+            {/*    })); */}
+            {/*  }} */}
+            {/* > */}
+            {/*  添加主机 */}
+            {/* </Button> */}
           </div>
           <div className="c7ncd-baseDeploy-middle-hostList-right">
             <Form
