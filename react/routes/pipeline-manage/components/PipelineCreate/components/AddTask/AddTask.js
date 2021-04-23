@@ -1312,8 +1312,6 @@ const AddTask = observer(() => {
                       <Tooltip title={
                         <span>
                           开启镜像安全扫描后，此步骤中生成的镜像将会通过Trivy进行漏洞扫描，并在记录中生成报告；
-                          <br />
-                          但注意，该扫描目前暂不支持多阶段构建的镜像。例如：当Dockerfile中存在多个FROM指令时，此时构建出来的镜像便不支持扫描，且任务会被置为失败的状态。
                         </span>
                       }>
                         <Icon
@@ -1327,12 +1325,24 @@ const AddTask = observer(() => {
                       style={{
                         marginBottom: 20,
                         display: AddTaskFormDataSet.current.get('imageScan') ? 'block' : 'none',
+                        position: 'relative',
                       }}
                     >
                       <SelectBox
                         name="securityControl"
                         style={{ width: 312 }}
                       />
+                      <Tooltip title={
+                        <span>
+                          开启镜像发布门禁后，若该步骤中生成的镜像扫描后的结果不满足门禁条件，那么该镜像将不会被推送到镜像仓库。同时该构建任务也会被置为失败状态。
+                        </span>
+                      }>
+                        <Icon
+                          type="help"
+                          className="c7ncd-select-tips-icon"
+                          style={{ position: 'absolute', top: '-17px', left: '121px' }}
+                        />
+                      </Tooltip>
                     </div>,
                     <div
                       style={{
@@ -1349,14 +1359,16 @@ const AddTask = observer(() => {
                         }}
                       >
                         门禁条件
-                        <Icon
-                          style={{
-                            position: 'relative',
-                            bottom: '2px',
-                          }}
-                          type="help"
-                          className="c7ncd-select-tips-icon"
-                        />
+                        <Tooltip title="门禁条件可选择漏洞的严重度与漏洞数量作为基准，若镜像漏洞扫描的结果中存在漏洞严重度比条件中设置的严重度层级更高（严重度层级由高至低：危急>严重>中等>较低）或者同层级严重度的漏洞数量超过了设置的数量时，该镜像均视作不满足门禁条件而不会被推送至镜像仓库。">
+                          <Icon
+                            style={{
+                              position: 'relative',
+                              bottom: '2px',
+                            }}
+                            type="help"
+                            className="c7ncd-select-tips-icon"
+                          />
+                        </Tooltip>
                       </p>
                       <div
                         style={{
