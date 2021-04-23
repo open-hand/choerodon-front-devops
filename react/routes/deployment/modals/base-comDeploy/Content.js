@@ -48,6 +48,7 @@ export default observer(() => {
     AppState: { currentMenuType: { projectId } },
     refresh,
     deployWay,
+    middlewareData,
     ServiceVersionDataSet,
     BaseComDeployStore,
   } = useBaseComDeployStore();
@@ -353,6 +354,9 @@ export default observer(() => {
       HostSettingDataSet.create();
       if (deployWay) {
         BaseDeployDataSet.current.set(mapping.deployWay.name, deployWay);
+      }
+      if (middlewareData) {
+        BaseDeployDataSet.current.set(mapping.middleware.name, middlewareData);
       }
       // 初始化查询mysql 主机的table params
       const result = await BaseComDeployServices.axiosGetParamsSetting('MySQL', 'host', 'master-slave');
@@ -902,7 +906,11 @@ export default observer(() => {
               .current
               .get(mapping.deployMode.name) === mySqlDeployModeOptionsData[1].value
             && (
-              <TextField colSpan={1} name={mapping.virtualIp.name} />
+              <TextField
+                colSpan={1}
+                name={mapping.virtualIp.name}
+                addonAfter={<Tips helpText="对外提供MySQL服务的ip地址" />}
+              />
             )
           }
         </Form>
@@ -1028,12 +1036,13 @@ export default observer(() => {
                 .records.find((i) => i.get(hostMapping.checked.name)).getState('params')}
               rowHeight={60}
             >
-              <Column name={paramMapping.params.name} renderer={renderParams} />
-              <Column name={paramMapping.defaultParams.name} />
-              <Column name={paramMapping.paramsScope.name} renderer={renderParamsScope} />
+              <Column header="参数" name={paramMapping.params.name} renderer={renderParams} />
+              <Column header="参数默认值" name={paramMapping.defaultParams.name} />
+              <Column header="参数范围" name={paramMapping.paramsScope.name} renderer={renderParamsScope} />
               <Column
                 name={paramMapping.paramsRunnigValue.name}
                 renderer={renderParamsRunningValue}
+                header="参数运行值"
               />
               <Column
                 width={60}

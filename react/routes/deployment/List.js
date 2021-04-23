@@ -64,8 +64,8 @@ const Deployment = withRouter(observer((props) => {
   useEffect(() => {
     const { location: { search } } = props;
     const urlQuery = new URLSearchParams(search);
-    if (urlQuery.get('mode')) {
-      openBaseDeploy(urlQuery.get('mode'));
+    if (urlQuery.get('mode') || urlQuery.get('deployType')) {
+      openBaseDeploy(urlQuery.get('mode'), urlQuery.get('deployType'));
       urlQuery.delete('mode');
       window.history.replaceState(null, null, `/#/devops/deployment-operation${urlQuery.toString()}`);
     }
@@ -99,7 +99,7 @@ const Deployment = withRouter(observer((props) => {
     });
   }
 
-  function openBaseDeploy(deployWay) {
+  function openBaseDeploy(deployWay, middleware) {
     Modal.open({
       key: Modal.key(),
       style: modalStyle2,
@@ -110,6 +110,11 @@ const Deployment = withRouter(observer((props) => {
         {
           ...(deployWay ? {
             deployWay,
+          } : {})
+        }
+        {
+          ...(middleware ? {
+            middleware,
           } : {})
         }
         refresh={refresh}
