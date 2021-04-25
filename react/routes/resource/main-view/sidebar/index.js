@@ -151,9 +151,7 @@ const TreeMenu = observer(() => {
   }
 
   const onLoadData = useCallback(async ({ record, key, children }) => {
-    if (!children) {
-      resourceStore.loadMoreRecordData({ key, treeDs });
-    }
+    resourceStore.loadMoreRecordData({ key, treeDs, children });
   }, [projectId]);
 
   const nodeCover = useCallback(({ record }) => {

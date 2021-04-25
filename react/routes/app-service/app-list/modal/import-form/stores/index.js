@@ -4,6 +4,7 @@ import React, {
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
+import some from 'lodash/some';
 import ImportDataSet from './ImportDataSet';
 import ImportTableDataSet from './ImportTableDataSet';
 import selectedDataSet from './SelectedDataSet';
@@ -19,11 +20,13 @@ export function useImportAppServiceStore() {
 export const StoreProvider = injectIntl(inject('AppState')(
   (props) => {
     const {
-      AppState: { currentMenuType: { projectId } },
+      AppState: { currentMenuType: { projectId }, currentServices },
       intl: { formatMessage },
       children,
       intlPrefix,
     } = props;
+
+    const hasMarket = useMemo(() => some(currentServices || [], ['serviceCode', 'market-service']), [currentServices]);
 
     const serviceTypeDs = useMemo(() => new DataSet({
       data: [
@@ -66,6 +69,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       selectedDs,
       importStore,
       marketSelectedDs,
+      hasMarket,
     };
     return (
       <Store.Provider value={value}>

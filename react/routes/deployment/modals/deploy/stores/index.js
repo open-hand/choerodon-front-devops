@@ -37,7 +37,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
 
     const deployUseStore = useStore();
     const hasDevops = useMemo(() => some(categories || [], ['code', 'N_DEVOPS']), [categories]);
-    const hasMarket = useMemo(() => some(currentServices || [], ['serviceCode', 'devops-service']), [currentServices]);
+    const hasMarket = useMemo(() => some(currentServices || [], ['serviceCode', 'market-service']), [currentServices]);
 
     const envOptionsDs = useMemo(() => new DataSet(OptionsDataSet()), []);
     const valueIdOptionsDs = useMemo(() => new DataSet(OptionsDataSet()), []);
@@ -82,7 +82,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
     useEffect(() => {
       envOptionsDs.transport.read.url = `/devops/v1/projects/${projectId}/envs/list_by_active?active=true`;
       envOptionsDs.query();
-      marketAndVersionOptionsDs.query();
+      hasMarket && marketAndVersionOptionsDs.query();
     }, [projectId]);
 
     const value = {
