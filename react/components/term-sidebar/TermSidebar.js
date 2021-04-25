@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Select, Modal } from 'choerodon-ui';
@@ -5,6 +7,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { Content } from '@choerodon/boot';
 import _ from 'lodash';
 import uuidv1 from 'uuid/v1';
+import Cookies from 'universal-cookie';
 import { removeEndsChar } from '../../utils';
 import Term from '../term';
 
@@ -12,6 +15,9 @@ import '../log-siderbar/index.less';
 
 const { Sidebar } = Modal;
 const { Option } = Select;
+
+const cookies = new Cookies();
+const getAccessToken = () => cookies.get('access_token');
 
 @observer
 @injectIntl
@@ -32,6 +38,7 @@ export default class TermSidebar extends Component {
 
   handleChange = (value) => {
     const [logId, containerName] = value.split('+');
+    // eslint-disable-next-line react/destructuring-assignment
     if (logId !== this.state.logId) {
       this.setState({
         containerName,
@@ -41,47 +48,55 @@ export default class TermSidebar extends Component {
   };
 
   render() {
-    const { visible, onClose, record: { namespace, name: podName, containers } } = this.props;
+    const {
+      visible, onClose, record, projectId: propsProjectId, clusterId: propsClusterId,
+    } = this.props;
     const { logId, containerName } = this.state;
-    const clusterId = this.props.clusterId || this.props.record.clusterId;
+    const { namespace, name: podName, containers } = record || {};
+    const clusterId = propsClusterId || record?.clusterId;
+    const projectId = propsProjectId || record?.projectId;
     const wsUrl = removeEndsChar(window._env_.DEVOPS_HOST, '/');
 
-    const authToken = document.cookie.split('=')[1];
+    // const authToken = document.cookie.split('=')[1];
     const key = `cluster:${clusterId}.exec:${uuidv1()}`;
     const secretKey = window._env_.DEVOPS_WEBSOCKET_SECRET_KEY;
-    const url = `${wsUrl}/websocket?key=${key}&group=from_front:${key}&processor=front_exec&secret_key=${secretKey}&env=${namespace}&podName=${podName}&containerName=${containerName}&logId=${logId}&clusterId=${clusterId}`;
+    const url = `${wsUrl}/websocket?key=${key}&group=from_front:${key}&processor=front_exec&secret_key=${secretKey}&env=${namespace}&podName=${podName}&containerName=${containerName}&logId=${logId}&clusterId=${clusterId}&oauthToken=${getAccessToken()}&projectId=${projectId}`;
 
     const containerOptions = _.map(containers, (container) => {
       const { logId: id, name } = container;
-      return (<Option key={logId} value={`${id}+${name}`}>
-        {name}
-      </Option>);
+      return (
+        <Option key={logId} value={`${id}+${name}`}>
+          {name}
+        </Option>
+      );
     });
 
-    return (<Sidebar
-      visible={visible}
-      title={<FormattedMessage id="container.term" />}
-      onOk={onClose}
-      className="c7n-container-sidebar c7n-region"
-      okText={<FormattedMessage id="close" />}
-      okCancel={false}
-    >
-      <Content
-        className="sidebar-content"
+    return (
+      <Sidebar
+        visible={visible}
+        title={<FormattedMessage id="container.term" />}
+        onOk={onClose}
+        className="c7n-container-sidebar c7n-region"
+        okText={<FormattedMessage id="close" />}
+        okCancel={false}
       >
-        <div className="c7n-container-sidebar-content">
-          <div className="c7n-term-title">
-            <FormattedMessage id="container.term.ex" />
+        <Content
+          className="sidebar-content"
+        >
+          <div className="c7n-container-sidebar-content">
+            <div className="c7n-term-title">
+              <FormattedMessage id="container.term.ex" />
             &nbsp;
-            <Select className="c7n-log-siderbar-select" value={containerName} onChange={this.handleChange}>
-              {containerOptions}
-            </Select>
+              <Select className="c7n-log-siderbar-select" value={containerName} onChange={this.handleChange}>
+                {containerOptions}
+              </Select>
+            </div>
+            <div className="c7n-term-wrap">
+              {logId && <Term url={url} id={logId} />}
+            </div>
           </div>
-          <div className="c7n-term-wrap">
-            {logId && <Term url={url} id={logId} />}
-          </div>
-        </div>
-      </Content>
-    </Sidebar>);
+        </Content>
+      </Sidebar>
+    );
   }
 }

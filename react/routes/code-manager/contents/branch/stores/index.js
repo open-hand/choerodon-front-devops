@@ -1,9 +1,11 @@
-import React, { createContext, useContext, useMemo, useEffect } from 'react';
+import React, {
+  createContext, useContext, useMemo, useEffect,
+} from 'react';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
-
+import JSONbig from 'json-bigint';
 import { useCodeManagerStore } from '../../../stores';
 import getTablePostData from '../../../../../utils/getTablePostData';
 import TableDataset from './TableDataSet';
@@ -30,7 +32,9 @@ export const StoreProvider = injectIntl(inject('AppState')(
     const branchStore = useStore();
 
     const appServiceId = selectAppDs.current && selectAppDs.current.get('appServiceId');
-    const tableDs = useMemo(() => new DataSet(TableDataset({ projectId, formatMessage, appServiceId })), []);
+    const tableDs = useMemo(() => new DataSet(TableDataset({
+      projectId, formatMessage, appServiceId,
+    })), []);
 
     useEffect(() => {
       if (appServiceId) {
@@ -38,16 +42,16 @@ export const StoreProvider = injectIntl(inject('AppState')(
           read: ({ data }) => ({
             url: `devops/v1/projects/${projectId}/app_service/${appServiceId}/git/page_branch_by_options`,
             method: 'post',
-            data: JSON.stringify(getTablePostData(data)),
+            data: JSONbig.stringify(getTablePostData(data)),
             transformResponse: (response) => {
               try {
                 if (!response) {
                   branchStore.setIsEmpty(true);
                   return response;
-                } else {
-                  branchStore.setIsEmpty(false);
                 }
-                const result = JSON.parse(response);
+                branchStore.setIsEmpty(false);
+
+                const result = JSONbig.parse(response);
                 return result;
               } catch (e) {
                 return response;
@@ -78,5 +82,5 @@ export const StoreProvider = injectIntl(inject('AppState')(
         {children}
       </Store.Provider>
     );
-  })
+  }),
 ));
