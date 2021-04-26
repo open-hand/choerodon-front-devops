@@ -142,6 +142,11 @@ const DeployModal = observer(() => {
         colSpan={colSpan}
         renderer={renderMarketApp}
         searchMatcher={renderSearchMatcher}
+        addonAfter={(
+          <Tips
+            helpText="此处会显示出应用市场中所有已上线的市场应用及其版本。"
+          />
+        )}
       >
         {getMarketAndVersionContent()}
       </Select>,
@@ -250,11 +255,6 @@ const DeployModal = observer(() => {
                 searchable
                 newLine={record.get('appServiceSource') !== 'market_service'}
                 notFoundContent={<FormattedMessage id={`${intlPrefix}.app.empty`} />}
-                addonAfter={(
-                  <Tips
-                    helpText="此处会显示出应用市场中所有已上线的市场应用及其版本。"
-                  />
-                )}
               >
                 {getAppServiceOptions()}
               </Select>,
