@@ -9,16 +9,16 @@ interface TableProps {
 
 const statusDs = new DataSet({
   data: [{
-    value: 1,
+    value: '1',
     text: '启用',
   }, {
-    value: 0,
+    value: '0',
     text: '停用',
   }, {
-    value: 2,
+    value: '2',
     text: '创建中',
   }, {
-    value: -1,
+    value: '-1',
     text: '失败',
   }],
 });
