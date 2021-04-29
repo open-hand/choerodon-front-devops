@@ -128,7 +128,7 @@ const DeployModal = observer(() => {
   }
 
   function renderSearchMatcher({ record: eachRecord, text, textField }) {
-    return eachRecord.get(textField).indexOf(text) !== -1 || eachRecord.get('group-0').indexOf(text) !== -1;
+    return eachRecord.get(textField)?.indexOf(text) !== -1 || (eachRecord.get('group-0') && eachRecord.get('group-0')?.indexOf(text) !== -1);
   }
 
   function getMarketItem(colSpan = 1) {
@@ -265,6 +265,7 @@ const DeployModal = observer(() => {
                 searchable
                 newLine={record.get('appServiceSource') !== 'market_service'}
                 notFoundContent={<FormattedMessage id={`${intlPrefix}.app.empty`} />}
+                searchMatcher={renderSearchMatcher}
               >
                 {getAppServiceOptions()}
               </Select>,

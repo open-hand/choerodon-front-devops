@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
 import { Choerodon } from '@choerodon/boot';
-import { Form, Password, Select, Spin, TextField, SelectBox } from 'choerodon-ui/pro';
+import {
+  Form, Password, Select, Spin, TextField, SelectBox,
+} from 'choerodon-ui/pro';
 import { filter, forEach, map } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { usePrometheusStore } from './stores';
@@ -45,15 +47,14 @@ export default observer((props) => {
       if (res !== false) {
         refresh();
         return true;
-      } else {
-        return false;
       }
+      return false;
     } catch (e) {
       Choerodon.handleResponseError(e);
       return false;
     }
   });
-  
+
   function handlePvFilter(optionRecord, name) {
     const pvId = optionRecord.get('id');
     const record = formDs.current;
@@ -72,16 +73,15 @@ export default observer((props) => {
     const { name, status } = pvSelectEdit[item];
     if (isModify && record.getPristineValue(name) && record.getPristineValue(item) && record.getPristineValue(status) !== 'Available') {
       return <TextField name={name} key={item} disabled />;
-    } else {
-      return (
-        <Select
-          key={item}
-          name={item}
-          searchable
-          optionsFilter={(optionRecord) => handlePvFilter(optionRecord, item)}
-        />
-      );
     }
+    return (
+      <Select
+        key={item}
+        name={item}
+        searchable
+        optionsFilter={(optionRecord) => handlePvFilter(optionRecord, item)}
+      />
+    );
   }
 
   if (!formDs.current) {
@@ -95,7 +95,10 @@ export default observer((props) => {
         <TextField name="grafanaDomain" autoFocus={isModify} />
       </Form>
       <div className={`${prefixCls}-monitor-create-pv`}>
-        <span>{formatMessage({ id: `${intlPrefix}.monitor.pv` })}</span>
+        <Tips
+          title={formatMessage({ id: `${intlPrefix}.monitor.pv` })}
+          helpText={formatMessage({ id: `${intlPrefix}.monitor.pv.tips` })}
+        />
       </div>
       <Form dataSet={formDs}>
         {map(pvSelect, (item) => getSelectContent(item))}
