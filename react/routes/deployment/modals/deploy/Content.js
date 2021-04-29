@@ -155,6 +155,16 @@ const DeployModal = observer(() => {
         disabled={!record.get('marketAppAndVersion')}
         searchable
         colSpan={colSpan}
+        addonAfter={(
+          <Tips
+            helpText={() => (
+              <>
+                <p> 此处会显示出所选市场应用版本中对应的所有发布了部署包的市场服务及其对应的版本。</p>
+                <p>若想查看所选市场服务及版本中含有的应用服务信息，点击右侧的「查看版本详情」按钮跳转查看即可。</p>
+              </>
+            )}
+          />
+        )}
       />,
       <Button
         className={`${prefixCls}-manual-deploy-market-btn`}
@@ -263,16 +273,6 @@ const DeployModal = observer(() => {
                 searchable
                 searchMatcher="version"
                 disabled={!record.get('appServiceId')}
-                addonAfter={(
-                  <Tips
-                    helpText={() => (
-                      <>
-                        <p> 此处会显示出所选市场应用版本中对应的所有发布了部署包的市场服务及其对应的版本。</p>
-                        <p>若想查看所选市场服务及版本中含有的应用服务信息，点击右侧的「查看版本详情」按钮跳转查看即可。</p>
-                      </>
-                    )}
-                  />
-                )}
               />,
             ])}
             {!envId
