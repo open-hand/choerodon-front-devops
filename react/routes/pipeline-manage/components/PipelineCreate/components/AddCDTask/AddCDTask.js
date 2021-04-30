@@ -1350,7 +1350,7 @@ export default observer(() => {
                 <Icon
                   style={{
                     position: 'absolute',
-                    top: '-18px',
+                    top: '-17px',
                     left: '195px',
                     color: 'rgba(0, 0, 0, 0.36)',
                   }}
