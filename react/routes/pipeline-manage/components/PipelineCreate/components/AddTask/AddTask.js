@@ -10,6 +10,7 @@ import {
   Icon, Spin, Tooltip,
 } from 'choerodon-ui';
 import { Base64 } from 'js-base64';
+import { NewTips } from '@choerodon/components';
 import Tips from '../../../../../../components/new-tips';
 import YamlEditor from '../../../../../../components/yamlEditor';
 import emptyImg from '../../../../../../components/empty-page/image/owner.png';
@@ -484,8 +485,10 @@ const AddTask = observer(() => {
     if (text === 'Docker构建') {
       return (
         <Tooltip title="由于该步骤中Dockerfile内kaniko指令限制，建议此步骤作为同任务中最后一个步骤。">
-          {text}
-          <Icon style={{ position: 'relative', left: '1px', bottom: '1px' }} type="help" />
+          <div style={{display:'flex', alignItems:'center'}}>
+            <span style={{marginRight:'5px'}}>{text}</span>
+            <NewTips />
+          </div>
         </Tooltip>
       );
     }
