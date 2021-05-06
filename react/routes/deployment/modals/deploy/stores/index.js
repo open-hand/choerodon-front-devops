@@ -33,6 +33,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       deployStore,
       envId,
       hasHostDeploy,
+      random,
     } = props;
 
     const deployUseStore = useStore();
@@ -77,6 +78,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       marketAndVersionOptionsDs,
       marketServiceOptionsDs,
       hasDevops,
+      random,
     })), [projectId]);
 
     useEffect(() => {

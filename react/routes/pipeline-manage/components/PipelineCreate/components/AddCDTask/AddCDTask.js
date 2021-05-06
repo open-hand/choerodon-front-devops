@@ -988,62 +988,66 @@ export default observer(() => {
               <Option value={false}>否</Option>
             </SelectBox>
           </div>
-          <TextField
-            name={addCDTaskDataSetMap.threshold}
-            newLine
-            suffix="%"
-            restrict="0-9|."
-            min={0}
-            max={100}
-            addonAfter={(
-              <Tips
-                helpText="即指定一个执行成功率的标准值，若后续在流水线中执行该API测试任务后成功率低于设定值，便会告警通知到指定人员。仅能填入0-100。"
-              />
-            )}
-            onChange={(value) => {
-              if (Number(value) > 100) {
-                ADDCDTaskDataSet.current.set(addCDTaskDataSetMap.threshold, '100');
-              } else if (Number(value) < 0) {
-                ADDCDTaskDataSet.current.set(addCDTaskDataSetMap.threshold, '0');
-              }
-            }}
-          />
-          <Select
-            searchable
-            searchMatcher="param"
-            newLine
-            name={addCDTaskDataSetMap.notifyObject}
-            addonAfter={(
-              <Tips helpText="可选择项目下任意人员作为通知对象。" />
-            )}
-          />
-          <SelectBox newLine name={addCDTaskDataSetMap.notifyWay}>
-            <Option value="sendEmail">邮件</Option>
-            <Option value="sendSiteMessage">站内信</Option>
-          </SelectBox>
-          <div className="addcdTask-whetherBlock" style={{ position: 'relative' }}>
-            <SelectBox name={addCDTaskDataSetMap.whetherBlock}>
-              <Option value>是</Option>
-              <Option value={false}>否</Option>
-            </SelectBox>
-            <Tooltip title={(
-              <>
-                <p>若选择为是，则表示API测试任务执行成功率低于设定值后，后续的阶段与任务将被阻塞，不会执行。</p>
-                <p>若选择为否，则表示无论执行成功率如何，此任务执行完成后，均会继续执行接下来的阶段或任务。</p>
-              </>
-             )}
-            >
-              <Icon
-                style={{
-                  position: 'absolute',
-                  top: '-18px',
-                  right: '70px',
-                  color: 'rgba(0, 0, 0, 0.36)',
+          {
+            ADDCDTaskDataSet.current.get(addCDTaskDataSetMap.alarm) && [
+              <TextField
+                name={addCDTaskDataSetMap.threshold}
+                newLine
+                suffix="%"
+                restrict="0-9|."
+                min={0}
+                max={100}
+                addonAfter={(
+                  <Tips
+                    helpText="即指定一个执行成功率的标准值，若后续在流水线中执行该API测试任务后成功率低于设定值，便会告警通知到指定人员。仅能填入0-100。"
+                  />
+                )}
+                onChange={(value) => {
+                  if (Number(value) > 100) {
+                    ADDCDTaskDataSet.current.set(addCDTaskDataSetMap.threshold, '100');
+                  } else if (Number(value) < 0) {
+                    ADDCDTaskDataSet.current.set(addCDTaskDataSetMap.threshold, '0');
+                  }
                 }}
-                type="help"
-              />
-            </Tooltip>
-          </div>
+              />,
+              <Select
+                searchable
+                searchMatcher="param"
+                newLine
+                name={addCDTaskDataSetMap.notifyObject}
+                addonAfter={(
+                  <Tips helpText="可选择项目下任意人员作为通知对象。" />
+                )}
+              />,
+              <SelectBox newLine name={addCDTaskDataSetMap.notifyWay}>
+                <Option value="sendEmail">邮件</Option>
+                <Option value="sendSiteMessage">站内信</Option>
+              </SelectBox>,
+              <div className="addcdTask-whetherBlock" style={{ position: 'relative' }}>
+                <SelectBox name={addCDTaskDataSetMap.whetherBlock}>
+                  <Option value>是</Option>
+                  <Option value={false}>否</Option>
+                </SelectBox>
+                <Tooltip title={(
+                  <>
+                    <p>若选择为是，则表示API测试任务执行成功率低于设定值后，后续的阶段与任务将被阻塞，不会执行。</p>
+                    <p>若选择为否，则表示无论执行成功率如何，此任务执行完成后，均会继续执行接下来的阶段或任务。</p>
+                  </>
+                )}
+                >
+                  <Icon
+                    style={{
+                      position: 'absolute',
+                      top: '-18px',
+                      right: '70px',
+                      color: 'rgba(0, 0, 0, 0.36)',
+                    }}
+                    type="help"
+                  />
+                </Tooltip>
+              </div>,
+            ]
+          }
         </Form>,
       ],
     };
@@ -1275,7 +1279,7 @@ export default observer(() => {
               addonAfter={<Tips helpText={renderTriggerTypeTips()} />}
               searchMatcher="branchName"
               optionRenderer={({ text }) => renderderBranchs({ text })}
-              maxTagCount={2}
+              maxTagCount={4}
               maxTagPlaceholder={(omittedValues) => (
                 <Tooltip title={omittedValues.join(',')}>
                   {`+${omittedValues.length}`}
@@ -1350,7 +1354,7 @@ export default observer(() => {
                 <Icon
                   style={{
                     position: 'absolute',
-                    top: '-17px',
+                    top: '-18px',
                     left: '195px',
                     color: 'rgba(0, 0, 0, 0.36)',
                   }}
@@ -1369,7 +1373,7 @@ export default observer(() => {
             <Option value="update">替换实例</Option>
           </SelectBox>,
           <p className="addcdTask-text" colSpan={2}>
-            <Icon style={{ color: '#F44336' }} type="error" />
+            <Icon style={{ color: '#F44336', position: 'relative', bottom: '2px' }} type="error" />
             替换实例会更新该实例的镜像及配置信息，请确认要替换的实例选择无误。
           </p>,
           ADDCDTaskDataSet?.current?.get('deployType') === 'create' ? (

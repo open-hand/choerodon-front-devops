@@ -590,7 +590,7 @@ const AddTask = observer(() => {
         steps.length > 0 ? steps.map((s, index) => (
           <div className="AddTask_stepMapContent">
             <div style={{ display: index === 0 ? 'flex' : 'none' }} className="AddTask_stepAdd">
-              <span onClick={() => handleAddStepItem(index)} style={{ fontSize: 20 }}>+</span>
+              <span style={{ position: 'relative', bottom: '1px' }} onClick={() => handleAddStepItem(index)} style={{ fontSize: 20 }}>+</span>
             </div>
             <div className="AddTask_addLine" />
             <div onClick={() => handleClickStepItem(index)} className={s.checked ? 'AddTask_stepItem AddTask_stepItemChecked' : 'AddTask_stepItem'}>
@@ -599,13 +599,13 @@ const AddTask = observer(() => {
             </div>
             <div className="AddTask_addLine" />
             <div className="AddTask_stepAdd">
-              <span onClick={() => handleAddStepItem(index + 1)} style={{ fontSize: 20 }}>+</span>
+              <span style={{ position: 'relative', bottom: '1px' }} onClick={() => handleAddStepItem(index + 1)} style={{ fontSize: 20 }}>+</span>
             </div>
           </div>
         )) : (
           <div className="AddTask_stepMapContent">
             <div className="AddTask_stepAdd">
-              <span onClick={() => handleAddStepItem(0)} style={{ fontSize: 20 }}>+</span>
+              <span style={{ position: 'relative', bottom: '1px' }} onClick={() => handleAddStepItem(0)} style={{ fontSize: 20 }}>+</span>
             </div>
           </div>
         )
@@ -1460,7 +1460,7 @@ const AddTask = observer(() => {
                   addonAfter={<Tips helpText={renderTriggerTypeTips()} />}
                   searchMatcher="branchName"
                   optionRenderer={({ text }) => renderderBranchs({ text })}
-                  maxTagCount={3}
+                  maxTagCount={4}
                   maxTagPlaceholder={(omittedValues) => (
                     <Tooltip title={omittedValues.join(',')}>
                       {`+${omittedValues.length}`}

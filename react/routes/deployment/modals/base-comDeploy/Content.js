@@ -461,7 +461,7 @@ export default observer(() => {
    * @param record
    */
   const renderParamsRunningValue = ({ value, record }) => (
-    <Form>
+    <Form style={{ position: 'relative', bottom: 9 }}>
       <TextField
         required
         value={value}
@@ -488,7 +488,7 @@ export default observer(() => {
    * @returns {*}
    */
   const renderParams = ({ value, record, name }) => (record.get('custom') ? (
-    <Form>
+    <Form style={{ position: 'relative', bottom: 9 }}>
       <TextField
         value={value}
         onChange={(v) => record.set(name, v)}
@@ -504,7 +504,8 @@ export default observer(() => {
               style={{
                 color: 'rgba(0, 0, 0, 0.36)',
                 position: 'relative',
-                bottom: '2px',
+                bottom: '1px',
+                fontSize: '13px',
               }}
               type="help"
             />
@@ -621,7 +622,7 @@ export default observer(() => {
                 style={{
                   position: 'absolute',
                   right: '-20px',
-                  bottom: '25px',
+                  top: '10px',
                 }}
                 onClick={() => handleDeleteHost(record)}
               />
