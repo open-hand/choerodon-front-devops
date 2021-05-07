@@ -228,6 +228,7 @@ const IstModals = injectIntl(observer(() => {
     const record = baseDs.current;
     const status = record ? record.get('status') : '';
     const isMarket = record && ['middleware', 'market'].includes(record.get('source'));
+    const isMiddleware = record?.get('source') === 'middleware';
     const appAvailable = record && record.get('currentVersionAvailable');
     const upgradeAvailable = record && record.get('upgradeAvailable');
     const btnDisabled = !connect || !status || (status !== 'failed' && status !== 'running');
@@ -254,8 +255,8 @@ const IstModals = injectIntl(observer(() => {
       name: formatMessage({ id: 'upgrade' }),
       icon: 'backup_line',
       handler: openMarketUpgradeModal,
-      permissions: [''],
-      display: isMarket,
+      permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.market.upgrade'],
+      display: isMarket && !isMiddleware,
       group: 1,
       disabled: btnDisabled || marketDisable || !upgradeAvailable,
       disabledMessage: !btnDisabled ? formatMessage({ id: `${intlPrefix}.instance.disable.message${appAvailable ? '.upgrade' : ''}` }) : null,

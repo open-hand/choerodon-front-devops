@@ -1,3 +1,5 @@
+import { DataSet } from 'choerodon-ui/pro';
+
 export default (
   PipelineCreateFormDataSet,
   AppServiceOptionsDs,
@@ -138,6 +140,65 @@ export default (
       type: 'boolean',
       label: '是否启用镜像安全扫描',
       defaultValue: false,
+    },
+    {
+      name: 'securityControl',
+      type: 'boolean',
+      label: '是否启用镜像发布门禁',
+      defaultValue: true,
+      textField: 'text',
+      valueField: 'value',
+      options: new DataSet({
+        data: [{
+          text: '是',
+          value: true,
+        }, {
+          text: '否',
+          value: false,
+        }],
+      }),
+    },
+    {
+      name: 'level',
+      type: 'string',
+      label: '漏洞严重度',
+      textField: 'text',
+      valueField: 'value',
+      options: new DataSet({
+        data: [{
+          text: '危急',
+          value: 'CRITICAL',
+        }, {
+          text: '严重',
+          value: 'HIGH',
+        }, {
+          text: '中等',
+          value: 'MEDIUM',
+        }, {
+          text: '较低',
+          value: 'LOW',
+        }],
+      }),
+    },
+    {
+      name: 'symbol',
+      type: 'string',
+      label: '比较符',
+      defaultValue: '<=',
+      textField: 'text',
+      valueField: 'value',
+      options: new DataSet({
+        data: [{
+          text: '小于等于',
+          value: '<=',
+        }],
+      }),
+      disabled: true,
+    },
+    {
+      name: 'condition',
+      type: 'number',
+      label: '漏洞数量',
     },
     {
       name: 'skipDockerTlsVerify',

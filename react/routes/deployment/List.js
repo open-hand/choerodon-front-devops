@@ -64,8 +64,8 @@ const Deployment = withRouter(observer((props) => {
   useEffect(() => {
     const { location: { search } } = props;
     const urlQuery = new URLSearchParams(search);
-    if (urlQuery.get('mode')) {
-      openBaseDeploy(urlQuery.get('mode'));
+    if (urlQuery.get('mode') || urlQuery.get('deployType')) {
+      openBaseDeploy(urlQuery.get('mode'), urlQuery.get('deployType'));
       urlQuery.delete('mode');
       window.history.replaceState(null, null, `/#/devops/deployment-operation${urlQuery.toString()}`);
     }
@@ -100,7 +100,7 @@ const Deployment = withRouter(observer((props) => {
     });
   }
 
-  function openBaseDeploy(deployWay) {
+  function openBaseDeploy(deployWay, middleware) {
     Modal.open({
       key: Modal.key(),
       style: modalStyle2,
@@ -111,6 +111,11 @@ const Deployment = withRouter(observer((props) => {
         {
           ...(deployWay ? {
             deployWay,
+          } : {})
+        }
+        {
+          ...(middleware ? {
+            middleware,
           } : {})
         }
         refresh={refresh}
@@ -206,13 +211,43 @@ const Deployment = withRouter(observer((props) => {
     );
   }
 
-  function renderDeployStatus({ value }) {
+  function renderDeployStatus({ value, record }) {
     return (
-      <StatusTag
-        colorCode={value || ''}
-        name={value ? formatMessage({ id: `${intlPrefix}.status.${value}` }) : 'unKnow'}
-        style={statusTagsStyle}
-      />
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
+        <StatusTag
+          colorCode={value || ''}
+          name={value ? formatMessage({ id: `${intlPrefix}.status.${value}` }) : 'unKnow'}
+          style={statusTagsStyle}
+        />
+        {
+          value === 'failed' && record.get('errorMsg') && (
+            <Tooltip title={(
+              <div
+                style={{
+                  maxHeight: '100vh',
+                  overflow: 'auto',
+                }}
+              >
+                {record.get('errorMsg')}
+              </div>
+            )}
+            >
+              <Icon
+                type="error"
+                style={{
+                  color: 'rgb(247, 103, 118)',
+                }}
+              />
+            </Tooltip>
+          )
+        }
+        <Icon />
+      </div>
     );
   }
 
