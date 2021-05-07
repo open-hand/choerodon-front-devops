@@ -89,6 +89,7 @@ const Deployment = withRouter(observer((props) => {
         intlPrefix={intlPrefix}
         prefixCls={prefixCls}
         hasHostDeploy
+        random={Math.random()}
       />,
       afterClose: () => {
         deployStore.setCertificates([]);

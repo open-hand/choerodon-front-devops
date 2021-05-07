@@ -916,6 +916,7 @@ const emptyPage = {
   'empty.tips.app.owner': '当前项目下无应用服务，请创建',
   'empty.tips.env.owner': '当前项目下无可用环境，请创建',
   'empty.tips.pipeline.owner': '当前项目下无应用流水线，请创建',
+  'empty.tips.pipeline.member': '当前项目下无应用流水线，请创建',
   'empty.tips.app.member':
     '您当前暂无此项目下任何应用服务的权限，若需查看某个应用服务的相关内容，请联系项目所有者添加权限',
   'empty.tips.env.member':
@@ -1480,6 +1481,7 @@ const cluster = {
   'c7ncd.cluster.monitor.password': 'admin密码',
   'c7ncd.cluster.monitor.ingress': '域名地址',
   'c7ncd.cluster.monitor.pv': '选择存储',
+  'c7ncd.cluster.monitor.pv.tips': '此处仅能选择访问模式为：ReadWriteOnce的PV',
   'c7ncd.cluster.monitor.https': '是否安装https',
   'c7ncd.cluster.monitor.https.true': '是',
   'c7ncd.cluster.monitor.https.false': '否',

@@ -445,7 +445,7 @@ const DetailItem = (props) => {
           readableStrategy: true,
         });
         const readableStream = response.body;
-        if (window.WritableStream && readableStream.pipeTo) {
+        if (window.WritableStream && readableStream?.pipeTo) {
           return readableStream.pipeTo(fileStream).then(() => {
             message.success('下载成功');
           });

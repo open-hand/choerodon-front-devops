@@ -134,6 +134,7 @@ export default (({
   marketAndVersionOptionsDs,
   marketServiceOptionsDs,
   hasDevops,
+  random,
 }) => {
   // 如果有该参数 部署方式增加主机部署
   if (hasHostDeploy) {
@@ -435,7 +436,7 @@ export default (({
         valueField: 'id',
         lookupAxiosConfig: () => ({
           method: 'post',
-          url: `/devops/v1/projects/${projectId}/hosts/page_by_options`,
+          url: `/devops/v1/projects/${projectId}/hosts/page_by_options?random=${random}`,
           data: {
             searchParam: {
               type: 'deploy',

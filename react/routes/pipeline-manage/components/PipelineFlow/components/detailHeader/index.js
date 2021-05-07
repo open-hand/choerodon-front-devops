@@ -29,6 +29,7 @@ const detailHeader = ({
         #
         {`${viewId}`}
       </span>
+      {appServiceName && triggerRef && (
       <span>
         (
         <Icon type="widgets_line" />
@@ -45,6 +46,7 @@ const detailHeader = ({
         </span>
         )
       </span>
+      )}
       <StatusTag status={status} size={12} />
     </div>
   );
