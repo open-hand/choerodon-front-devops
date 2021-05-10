@@ -71,7 +71,12 @@ const HeaderButtons = ({ items, children, showClassName = true }) => {
   }, [displayBtn]);
 
   return displayBtn.length ? (
-    <div className={showClassName ? 'c7ncd-header-btns' : ''}>
+    <div
+      className={showClassName ? 'c7ncd-header-btns' : ''}
+      style={{
+        direction: 'rtl',
+      }}
+    >
       {btnNodes}
       {children}
     </div>
