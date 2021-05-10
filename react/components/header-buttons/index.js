@@ -40,7 +40,6 @@ const HeaderButtons = ({ items, children, showClassName = true }) => {
               <Button
                 {...props}
                 disabled={disabled}
-                className="c7ncd-header-btn"
                 onClick={handler}
                 type="primary"
               >

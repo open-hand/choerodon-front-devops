@@ -6,7 +6,7 @@ import { observer } from 'mobx-react-lite';
 import {
   Page, Header, Breadcrumb, Content,
 } from '@choerodon/boot';
-import { Modal } from 'choerodon-ui/pro';
+import { Modal, Button } from 'choerodon-ui/pro';
 import PipelineTree from './components/PipelineTree';
 import PipelineFlow from './components/PipelineFlow';
 import DragBar from '../../components/drag-bar';
