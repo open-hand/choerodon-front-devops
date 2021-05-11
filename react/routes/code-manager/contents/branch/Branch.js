@@ -419,7 +419,7 @@ function Branch(props) {
             </div>
             <div className={styles?.['c7n-branch-theme4-table-column-side-line']}>
               <Icon type="point" />
-              <a href={record.get('commitUrl')}>{ record.get('sha').substring(0, 8) }</a>
+              <a href={record.get('commitUrl')}>{ record.get('sha')?.substring(0, 8) }</a>
               <span className={styles?.['c7n-branch-theme4-table-column-side-line-commitContent']}>{ record.get('commitContent') }</span>
               <img src={record.get('commitUserUrl')} alt=""/>
               <TimePopover
