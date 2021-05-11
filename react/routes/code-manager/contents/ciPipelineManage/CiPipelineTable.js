@@ -212,6 +212,9 @@ export default injectIntl(observer((props) => {
     const commitUserUrl = record.get('commitUserUrl');
     const commitUserLoginName = record.get('commitUserLoginName');
     const commitContent = record.get('commitContent');
+    if (!ref && !commit) {
+      return null;
+    }
     return (
       <div className="c7n-commit">
         <div className="c7n-title-commit">
