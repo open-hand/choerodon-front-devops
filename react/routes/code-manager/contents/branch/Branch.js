@@ -63,8 +63,24 @@ function Branch(props) {
     handleMapStore.setCodeManagerBranch({
       refresh: handleRefresh,
       getSelfToolBar,
+      getSelfToolBarObj,
     });
   }, [projectId, appServiceId]);
+
+  const getSelfToolBarObj = () => {
+    if (!appServiceId) {
+      return {};
+    } else {
+      return ({
+        name: <FormattedMessage id="branch.create" />,
+        icon: 'playlist_add',
+        display: true,
+        permissions: ['choerodon.code.project.develop.code-management.ps.branch.create'],
+        disabled: !(appServiceId && renderEmpty()),
+        handler: openCreateBranchModal,
+      })
+    }
+  }
 
   /**
    * 生成特殊的自定义tool-bar

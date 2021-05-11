@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
-import HeaderButtons from '../../../../../../components/header-buttons';
+import { HeaderButtons } from '@choerodon/boot';
 import EnvDetail from '../../../../../../components/env-detail';
 import HeaderAction from '../../../../../../components/header-action';
 import Permission from '../../../../../resource/main-view/contents/environment/modals/permission';
@@ -67,7 +67,7 @@ const EnvModals = observer(() => {
   } = useDetailStore();
 
   function refresh() {
-    checkEnvExist().then(query => {
+    checkEnvExist().then((query) => {
       if (query) {
         const { getTabKey } = detailStore;
         switch (getTabKey) {
@@ -241,13 +241,15 @@ const EnvModals = observer(() => {
     text: formatMessage({ id: `${currentIntlPrefix}.group.create` }),
   }]), [disabled]);
 
-  return <HeaderButtons items={getButtons()}>
-    <HeaderAction
-      style={actionStyle}
-      items={actionItem}
-      menuClick={handleMenuClick}
-    />
-  </HeaderButtons>;
+  return (
+    <HeaderButtons items={getButtons()}>
+      <HeaderAction
+        style={actionStyle}
+        items={actionItem}
+        menuClick={handleMenuClick}
+      />
+    </HeaderButtons>
+  );
 });
 
 export default EnvModals;

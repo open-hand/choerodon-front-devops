@@ -68,6 +68,7 @@ const RequestPanel = withRouter(observer((props) => {
     refresh: reload,
     select: handleChange,
     getSelfToolBar,
+    getSelfToolBarObj,
   });
 
   useEffect(() => {
@@ -85,6 +86,17 @@ const RequestPanel = withRouter(observer((props) => {
 
   function handleChange() {
     appId && openTableDS.query();
+  }
+
+  function getSelfToolBarObj() {
+    return ({
+      name: formatMessage({ id: 'merge.createMerge' }),
+      icon: 'playlist_add',
+      display: true,
+      disabled: !mergedRequestStore.getUrl,
+      permission: ['choerodon.code.project.develop.code-management.ps.default'],
+      handler: linkToNewMerge,
+    })
   }
 
   function getSelfToolBar() {

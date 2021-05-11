@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Page, Header, Breadcrumb, Content,
+  Page, Header, Breadcrumb, Content, HeaderButtons,
 } from '@choerodon/boot';
 import { Modal, Button } from 'choerodon-ui/pro';
 import PipelineTree from './components/PipelineTree';
@@ -14,7 +14,6 @@ import PipelineCreate from './components/PipelineCreate';
 import RecordDetail from './components/record-detail';
 import EmptyPage from '../../components/empty-page';
 import { usePipelineManageStore } from './stores';
-import HeaderButtons from '../../components/header-buttons';
 import VariableSettings from './components/variable-settings';
 import AuditModal from './components/audit-modal';
 import GitlabRunner from './components/gitlab-runner';
@@ -275,7 +274,6 @@ const PipelineManage = observer(() => {
           group: 2,
         }, {
           permissions: ['choerodon.code.project.develop.ci-pipeline.ps.retry'],
-          name: formatMessage({ id: `${intlPrefix}.execute.retry` }),
           icon: 'refresh',
           handler: () => changeRecordExecute('retry'),
           display: newStatus === 'failed' || newStatus === 'canceled',
@@ -291,7 +289,6 @@ const PipelineManage = observer(() => {
       }
     }
     buttons.push({
-      name: formatMessage({ id: 'refresh' }),
       icon: 'refresh',
       handler: handleRefresh,
       display: true,

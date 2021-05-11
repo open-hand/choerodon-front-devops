@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  Page, Content, Header, Permission, Breadcrumb, Choerodon,
+  Page, Content, Header, Permission, Breadcrumb, Choerodon, HeaderButtons,
 } from '@choerodon/boot';
 import {
   Table, Modal, Select, Icon, Tooltip,
@@ -419,42 +419,32 @@ const Deployment = withRouter(observer((props) => {
       service={['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.default']}
     >
       <Header title={<FormattedMessage id="app.head" />} backPath={getBackPath()}>
-        <Permission
-          service={['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.manual']}
-        >
-          <Button
-            icon="jsfiddle"
-            onClick={openDeploy}
-          >
-            <FormattedMessage id={`${intlPrefix}.manual`} />
-          </Button>
-        </Permission>
-        <Permission
-          service={['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.batch']}
-        >
-          <Button
-            icon="jsfiddle"
-            onClick={openBatchDeploy}
-          >
-            <FormattedMessage id={`${intlPrefix}.batch`} />
-          </Button>
-        </Permission>
-        <Permission
-          service={['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.basedComponent']}
-        >
-          <Button
-            icon="jsfiddle"
-            onClick={() => openBaseDeploy()}
-          >
-            基础组件部署
-          </Button>
-        </Permission>
-        <Button
-          icon="refresh"
-          onClick={() => refresh()}
-        >
-          <FormattedMessage id="refresh" />
-        </Button>
+        <HeaderButtons
+          items={([{
+            name: <FormattedMessage id={`${intlPrefix}.manual`} />,
+            icon: 'jsfiddle',
+            display: true,
+            permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.manual'],
+            handler: openDeploy,
+          }, {
+            name: <FormattedMessage id={`${intlPrefix}.batch`} />,
+            icon: 'jsfiddle',
+            display: true,
+            permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.batch'],
+            handler: openBatchDeploy,
+          }, {
+            name: '基础组件部署',
+            icon: 'jsfiddle',
+            display: true,
+            permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.basedComponent'],
+            handler: openBaseDeploy,
+          }, {
+            icon: 'refresh',
+            display: true,
+            handler: refresh,
+          }])}
+          showClassName={false}
+        />
       </Header>
       <Breadcrumb />
       <Content className={`${prefixCls}-content`}>

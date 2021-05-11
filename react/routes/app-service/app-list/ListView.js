@@ -6,7 +6,7 @@ import { observer } from 'mobx-react-lite';
 import { FormattedMessage } from 'react-intl';
 import { withRouter, Link } from 'react-router-dom';
 import {
-  Page, Content, Header, Permission, Action, Breadcrumb, Choerodon,
+  Page, Content, Header, Permission, Action, Breadcrumb, Choerodon, HeaderButtons
 } from '@choerodon/boot';
 import {
   SagaDetails,
@@ -119,6 +119,36 @@ const ListView = withRouter(observer((props) => {
       search,
     })
   };
+
+  const getItemsButton = () => ([{
+    name: <FormattedMessage id={`${intlPrefix}.create`} />,
+    icon: 'playlist_add',
+    permissions: ['choerodon.code.project.develop.app-service.ps.create'],
+    display: true,
+    handler: openCreate,
+  }, {
+    name: <FormattedMessage id={`${intlPrefix}.import`} />,
+    icon: 'archive',
+    permissions: ['choerodon.code.project.develop.app-service.ps.import'],
+    display: true,
+    handler: openImport,
+  }, {
+    name: '权限管理',
+    icon: 'authority',
+    display: true,
+    permissions: ['choerodon.code.project.develop.app-service.ps.permission.update'],
+    handler: () => {
+      const {
+        history,
+        location,
+      } = props;
+      history.push(`/rducm/code-lib-management/assign${location.search}`);
+    }
+  }, {
+    icon: 'refresh',
+    display: true,
+    handler: refresh,
+  }])
 
   function renderName({ value, record }) {
     const {
@@ -397,54 +427,58 @@ const ListView = withRouter(observer((props) => {
     const disabledMessage = disabled ? formatMessage({ id: `${intlPrefix}.create.disabled` }) : '';
     return (
       <Header title={<FormattedMessage id="app.head" />}>
-        <Permission
-          service={['choerodon.code.project.develop.app-service.ps.create']}
-        >
-          <Tooltip title={disabledMessage} placement="bottom">
-            <Button
-              icon="playlist_add"
-              disabled={disabled}
-              onClick={openCreate}
-            >
-              <FormattedMessage id={`${intlPrefix}.create`} />
-            </Button>
-          </Tooltip>
-        </Permission>
-        <Permission
-          service={['choerodon.code.project.develop.app-service.ps.import']}
-        >
-          <Tooltip title={disabledMessage} placement="bottom">
-            <Button
-              icon="archive"
-              disabled={disabled}
-              onClick={openImport}
-            >
-              <FormattedMessage id={`${intlPrefix}.import`} />
-            </Button>
-          </Tooltip>
-        </Permission>
-        <Permission
-          service={['choerodon.code.project.develop.app-service.ps.permission.update']}
-        >
-          <Button
-            icon="authority"
-            onClick={() => {
-              const {
-                history,
-                location,
-              } = props;
-              history.push(`/rducm/code-lib-management/assign${location.search}`);
-            }}
-          >
-            权限管理
-          </Button>
-        </Permission>
-        <Button
-          icon="refresh"
-          onClick={refresh}
-        >
-          <FormattedMessage id="refresh" />
-        </Button>
+        <HeaderButtons
+          items={getItemsButton()}
+          showClassName={false}
+        />
+        {/*<Permission*/}
+        {/*  service={['choerodon.code.project.develop.app-service.ps.create']}*/}
+        {/*>*/}
+        {/*  <Tooltip title={disabledMessage} placement="bottom">*/}
+        {/*    <Button*/}
+        {/*      icon="playlist_add"*/}
+        {/*      disabled={disabled}*/}
+        {/*      onClick={openCreate}*/}
+        {/*    >*/}
+        {/*      <FormattedMessage id={`${intlPrefix}.create`} />*/}
+        {/*    </Button>*/}
+        {/*  </Tooltip>*/}
+        {/*</Permission>*/}
+        {/*<Permission*/}
+        {/*  service={['choerodon.code.project.develop.app-service.ps.import']}*/}
+        {/*>*/}
+        {/*  <Tooltip title={disabledMessage} placement="bottom">*/}
+        {/*    <Button*/}
+        {/*      icon="archive"*/}
+        {/*      disabled={disabled}*/}
+        {/*      onClick={openImport}*/}
+        {/*    >*/}
+        {/*      <FormattedMessage id={`${intlPrefix}.import`} />*/}
+        {/*    </Button>*/}
+        {/*  </Tooltip>*/}
+        {/*</Permission>*/}
+        {/*<Permission*/}
+        {/*  service={['choerodon.code.project.develop.app-service.ps.permission.update']}*/}
+        {/*>*/}
+        {/*  <Button*/}
+        {/*    icon="authority"*/}
+        {/*    onClick={() => {*/}
+        {/*      const {*/}
+        {/*        history,*/}
+        {/*        location,*/}
+        {/*      } = props;*/}
+        {/*      history.push(`/rducm/code-lib-management/assign${location.search}`);*/}
+        {/*    }}*/}
+        {/*  >*/}
+        {/*    权限管理*/}
+        {/*  </Button>*/}
+        {/*</Permission>*/}
+        {/*<Button*/}
+        {/*  icon="refresh"*/}
+        {/*  onClick={refresh}*/}
+        {/*>*/}
+        {/*  <FormattedMessage id="refresh" />*/}
+        {/*</Button>*/}
       </Header>
     );
   }
