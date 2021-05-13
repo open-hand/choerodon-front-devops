@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  Page, Content, Header, Permission, Breadcrumb, Choerodon,
+  Page, Content, Header, Permission, Breadcrumb, Choerodon, HeaderButtons,
 } from '@choerodon/boot';
 import {
   Table, Modal, Select, Icon, Tooltip,
@@ -64,8 +64,8 @@ const Deployment = withRouter(observer((props) => {
   useEffect(() => {
     const { location: { search } } = props;
     const urlQuery = new URLSearchParams(search);
-    if (urlQuery.get('mode')) {
-      openBaseDeploy(urlQuery.get('mode'));
+    if (urlQuery.get('mode') || urlQuery.get('deployType')) {
+      openBaseDeploy(urlQuery.get('mode'), urlQuery.get('deployType'));
       urlQuery.delete('mode');
       window.history.replaceState(null, null, `/#/devops/deployment-operation${urlQuery.toString()}`);
     }
@@ -100,7 +100,7 @@ const Deployment = withRouter(observer((props) => {
     });
   }
 
-  function openBaseDeploy(deployWay) {
+  function openBaseDeploy(deployWay, middleware) {
     Modal.open({
       key: Modal.key(),
       style: modalStyle2,
@@ -111,6 +111,11 @@ const Deployment = withRouter(observer((props) => {
         {
           ...(deployWay ? {
             deployWay,
+          } : {})
+        }
+        {
+          ...(middleware ? {
+            middleware,
           } : {})
         }
         refresh={refresh}
@@ -206,13 +211,43 @@ const Deployment = withRouter(observer((props) => {
     );
   }
 
-  function renderDeployStatus({ value }) {
+  function renderDeployStatus({ value, record }) {
     return (
-      <StatusTag
-        colorCode={value || ''}
-        name={value ? formatMessage({ id: `${intlPrefix}.status.${value}` }) : 'unKnow'}
-        style={statusTagsStyle}
-      />
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
+        <StatusTag
+          colorCode={value || ''}
+          name={value ? formatMessage({ id: `${intlPrefix}.status.${value}` }) : 'unKnow'}
+          style={statusTagsStyle}
+        />
+        {
+          value === 'failed' && record.get('errorMsg') && (
+            <Tooltip title={(
+              <div
+                style={{
+                  maxHeight: '100vh',
+                  overflow: 'auto',
+                }}
+              >
+                {record.get('errorMsg')}
+              </div>
+            )}
+            >
+              <Icon
+                type="error"
+                style={{
+                  color: 'rgb(247, 103, 118)',
+                }}
+              />
+            </Tooltip>
+          )
+        }
+        <Icon />
+      </div>
     );
   }
 
@@ -384,42 +419,32 @@ const Deployment = withRouter(observer((props) => {
       service={['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.default']}
     >
       <Header title={<FormattedMessage id="app.head" />} backPath={getBackPath()}>
-        <Permission
-          service={['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.manual']}
-        >
-          <Button
-            icon="jsfiddle"
-            onClick={openDeploy}
-          >
-            <FormattedMessage id={`${intlPrefix}.manual`} />
-          </Button>
-        </Permission>
-        <Permission
-          service={['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.batch']}
-        >
-          <Button
-            icon="jsfiddle"
-            onClick={openBatchDeploy}
-          >
-            <FormattedMessage id={`${intlPrefix}.batch`} />
-          </Button>
-        </Permission>
-        <Permission
-          service={['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.basedComponent']}
-        >
-          <Button
-            icon="jsfiddle"
-            onClick={() => openBaseDeploy()}
-          >
-            基础组件部署
-          </Button>
-        </Permission>
-        <Button
-          icon="refresh"
-          onClick={() => refresh()}
-        >
-          <FormattedMessage id="refresh" />
-        </Button>
+        <HeaderButtons
+          items={([{
+            name: <FormattedMessage id={`${intlPrefix}.manual`} />,
+            icon: 'jsfiddle',
+            display: true,
+            permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.manual'],
+            handler: openDeploy,
+          }, {
+            name: <FormattedMessage id={`${intlPrefix}.batch`} />,
+            icon: 'jsfiddle',
+            display: true,
+            permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.batch'],
+            handler: openBatchDeploy,
+          }, {
+            name: '基础组件部署',
+            icon: 'jsfiddle',
+            display: true,
+            permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.basedComponent'],
+            handler: openBaseDeploy,
+          }, {
+            icon: 'refresh',
+            display: true,
+            handler: refresh,
+          }])}
+          showClassName={false}
+        />
       </Header>
       <Breadcrumb />
       <Content className={`${prefixCls}-content`}>

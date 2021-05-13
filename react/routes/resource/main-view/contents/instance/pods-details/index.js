@@ -28,6 +28,7 @@ const PodDetail = memo(() => {
   const {
     prefixCls,
     intlPrefix,
+    AppState: { currentMenuType: { projectId } },
   } = useResourceStore();
   const {
     intl,
@@ -149,18 +150,18 @@ const PodDetail = memo(() => {
   function renderAction({ value, record }) {
     const buttons = [
       {
-        service: [],
+        service: ['choerodon.code.project.deploy.app-deployment.resource.ps.pod.delete'],
         text: intl.formatMessage({ id: 'delete' }),
         action: () => deletePod(),
       },
     ];
     if (record.get('containers')?.length) {
       buttons.unshift({
-        service: [],
+        service: ['choerodon.code.project.deploy.app-deployment.resource.ps.pod.log'],
         text: intl.formatMessage({ id: `${intlPrefix}.instance.log` }),
         action: () => openLog(),
       }, {
-        service: [],
+        service: ['choerodon.code.project.deploy.app-deployment.resource.ps.pod.shell'],
         text: intl.formatMessage({ id: `${intlPrefix}.instance.term` }),
         action: () => openShell(),
       });
@@ -224,6 +225,7 @@ const PodDetail = memo(() => {
           visible={shellVisible}
           onClose={closeShell}
           record={podsDs.current.toData()}
+          projectId={projectId}
         />
         )}
     </>

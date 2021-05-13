@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { withRouter } from 'react-router-dom';
 import { Modal } from 'choerodon-ui/pro';
-import HeaderButtons from '../../../../../../components/header-buttons';
+import { HeaderButtons } from '@choerodon/boot';
 import EnvCreateForm from '../../../modals/env-create';
 import GroupForm from '../../../modals/GroupForm';
 import { useEnvironmentStore } from '../../../../stores';
@@ -88,9 +88,11 @@ const GroupModal = observer((props) => {
     }];
   }
 
-  return (<div>
-    <HeaderButtons items={getButtons()} />
-  </div>);
+  return (
+    <div>
+      <HeaderButtons items={getButtons()} />
+    </div>
+  );
 });
 
 export default withRouter(GroupModal);

@@ -1,4 +1,6 @@
-import { observable, action, computed, set } from 'mobx';
+import {
+  observable, action, computed, set,
+} from 'mobx';
 import { axios, store, stores } from '@choerodon/boot';
 
 @store('HandleMapStore')
@@ -8,7 +10,7 @@ class HandleMapStore {
   @observable CodeManagerBranch;
 
   @observable CodeManagerMergeRequest;
-  
+
   @observable CodeManagerAppTag;
 
   @observable CodeManagerCiPipelineManage;
@@ -18,7 +20,7 @@ class HandleMapStore {
     this.CodeQuality = obj;
   }
 
-  @action 
+  @action
   setCodeManagerBranch(obj) {
     this.CodeManagerBranch = obj;
   }

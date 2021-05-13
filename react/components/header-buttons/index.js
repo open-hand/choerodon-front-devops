@@ -6,7 +6,8 @@ import flatten from 'lodash/flatten';
 import map from 'lodash/map';
 import { Permission, Action } from '@choerodon/boot';
 // import { Button, Tooltip } from 'choerodon-ui/pro';
-import { Button, Tooltip, Divider } from 'choerodon-ui';
+import { Tooltip, Divider } from 'choerodon-ui';
+import { Button } from 'choerodon-ui/pro';
 
 import './index.less';
 
@@ -39,8 +40,6 @@ const HeaderButtons = ({ items, children, showClassName = true }) => {
               <Button
                 {...props}
                 disabled={disabled}
-                className="c7ncd-header-btn"
-                funcType="flat"
                 onClick={handler}
                 type="primary"
               >
@@ -72,7 +71,12 @@ const HeaderButtons = ({ items, children, showClassName = true }) => {
   }, [displayBtn]);
 
   return displayBtn.length ? (
-    <div className={showClassName ? 'c7ncd-header-btns' : ''}>
+    <div
+      className={showClassName ? 'c7ncd-header-btns' : ''}
+      style={{
+        direction: 'rtl',
+      }}
+    >
       {btnNodes}
       {children}
     </div>

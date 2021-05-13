@@ -15,11 +15,14 @@ export default ((formatMessage, projectId, id) => ({
   transport: {
     read: ({ data }) => {
       const postData = getTablePostData(data);
-      return {
-        url: `/devops/v1/projects/${projectId}/app_service_versions/page_by_options?app_service_id=${id}&deploy_only=false&do_page=true`,
-        method: 'post',
-        data: postData,
-      };
+      if (id) {
+        return {
+          url: `/devops/v1/projects/${projectId}/app_service_versions/page_by_options?app_service_id=${id}&deploy_only=false&do_page=true`,
+          method: 'post',
+          data: postData,
+        };
+      }
+      return undefined;
     },
     destroy: ({ data }) => ({
       url: `/devops/v1/projects/${projectId}/app_service_versions/batch?app_service_id=${id}`,

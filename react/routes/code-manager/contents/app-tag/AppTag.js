@@ -40,6 +40,17 @@ export default observer((props) => {
 
   const { styles } = props;
 
+  const getSelfToolBarObj = () => {
+    return ({
+      name: formatMessage({ id: 'apptag.create' }),
+      icon: 'playlist_add',
+      disabled: !selectAppDs.current.get('appServiceId'),
+      display: true,
+      permissions: ['choerodon.code.project.develop.code-management.ps.tag.create'],
+      handler: openCreate,
+    })
+  }
+
   /**
    * 生成特殊的自定义tool-bar
    */
@@ -63,6 +74,7 @@ export default observer((props) => {
     handleMapStore.setCodeManagerAppTag({
       refresh,
       getSelfToolBar,
+      getSelfToolBarObj,
     });
   }, [getSelfToolBar]);
 

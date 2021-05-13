@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useLocalStore } from 'mobx-react-lite';
 import { axios, Choerodon } from '@choerodon/boot';
 import map from 'lodash/map';

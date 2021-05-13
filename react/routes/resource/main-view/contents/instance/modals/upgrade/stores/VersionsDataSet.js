@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import forEach from 'lodash/forEach';
 
-export default ({ formatMessage, intlPrefix, projectId, appServiceId, upgradeStore, versionId }) => {
+export default ({
+  formatMessage, intlPrefix, projectId, appServiceId, upgradeStore, versionId,
+}) => {
   function handleLoad({ dataSet }) {
     if (dataSet.totalCount) {
       const record = dataSet.find((item) => item.get('id') === versionId);

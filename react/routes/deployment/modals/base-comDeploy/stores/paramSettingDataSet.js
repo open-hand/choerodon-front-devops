@@ -1,4 +1,5 @@
 import BaseComDeployApis from '@/routes/deployment/modals/base-comDeploy/apis';
+// eslint-disable-next-line import/no-cycle
 import { mapping as baseMapping } from './baseDeployDataSet';
 
 const mapping = {

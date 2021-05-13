@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { axios } from '@choerodon/boot';
 import includes from 'lodash/includes';
 

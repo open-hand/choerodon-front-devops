@@ -31,8 +31,8 @@ const BatchDeployModal = injectIntl(observer(() => {
 
   const [hasYamlFailed, setHasYamlFailed] = useState(false);
   const [resourceIsExpand, setResourceIsExpand] = useState(false);
-  const [netIsExpand, setNetIsExpand] = useState(false);
-  const [ingressIsExpand, setIngressIsExpand] = useState(false);
+  const [netIsExpand, setNetIsExpand] = useState(true);
+  const [ingressIsExpand, setIngressIsExpand] = useState(true);
   const [showError, setShowError] = useState(false);
 
   useEffect(() => {
