@@ -236,7 +236,7 @@ const TemplateTable = observer(() => {
             icon: 'playlist_add',
             display: 'true',
             permissions: permissionCodes.create,
-            handler: handleCreateAppTemplate,
+            handler: () => handleCreateAppTemplate(),
           }, {
             icon: 'refresh',
             display: true,
