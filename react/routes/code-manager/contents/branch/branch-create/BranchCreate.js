@@ -430,7 +430,7 @@ function BranchCreate(props) {
   }, []);
 
   return (
-    <Content className="sidebar-content c7n-createBranch">
+    <div className="sidebar-content c7n-createBranch">
       <div style={{ width: '75%' }}>
         <Form
           dataSet={formDs}
@@ -512,7 +512,7 @@ function BranchCreate(props) {
           <TextField colSpan={3} prefix={prefixData} name="branchName" />
         </Form>
       </div>
-    </Content>
+    </div>
   );
 }
 export default withRouter(injectIntl(observer(BranchCreate)));
