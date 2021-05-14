@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
-import { HeaderButtons } from '@choerodon/boot';
+import { HeaderButtons } from '@choerodon/master';
 import { Modal } from 'choerodon-ui/pro';
 import EnvDetail from '../../../../../../components/env-detail';
 import LinkService from './link-service';
@@ -327,7 +327,7 @@ const EnvModals = observer(() => {
     }];
   }
 
-  return <HeaderButtons items={getButtons()} />;
+  return <HeaderButtons items={getButtons()} showClassName />;
 });
 
 export default EnvModals;

@@ -91,21 +91,19 @@ const EmptyShown = observer(() => {
       icon: 'playlist_add',
       handler: openCreate,
       display: true,
-      group: 1,
     }, {
       name: formatMessage({ id: `${intlPrefix}.modal.createByHost` }),
       permissions: ['choerodon.code.project.deploy.cluster.cluster-management.ps.createByHost'],
       icon: 'playlist_add',
       handler: openCreateByHost,
       display: true,
-      group: 1,
       disabledMessage: formatMessage({ id: `${intlPrefix}.modal.create.disabled` }),
     }];
   }
 
   return (
     <>
-      <HeaderButtons items={getButtons()} />
+      <HeaderButtons items={getButtons()} showClassName />
       <EmptyPage
         access
         title={formatMessage({ id: 'c7ncd.cluster.empty.title' })}

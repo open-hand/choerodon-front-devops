@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
-import HeaderButtons from '../../../../../../components/header-buttons';
+import { HeaderButtons } from '@choerodon/master';
 import EnvDetail from '../../../../../../components/env-detail';
 import { useResourceStore } from '../../../../stores';
 import { useREStore } from '../stores';
@@ -55,23 +55,19 @@ const REModals = observer(() => {
       icon: 'find_in_page',
       handler: openEnvDetail,
       display: true,
-      group: 1,
     }, {
       name: formatMessage({ id: `${intlPrefix}.environment.config-lab` }),
       icon: 'account_balance',
       handler: linkToConfig,
       display: true,
-      group: 1,
     }, {
-      name: formatMessage({ id: 'refresh' }),
       icon: 'refresh',
       handler: refresh,
       display: true,
-      group: 1,
     }];
   }
 
-  return <HeaderButtons items={getButtons()} />;
+  return <HeaderButtons items={getButtons()} showClassName />;
 });
 
 export default REModals;

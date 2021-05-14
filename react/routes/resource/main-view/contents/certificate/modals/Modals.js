@@ -1,18 +1,13 @@
-import React, { Fragment, useMemo, useCallback, useEffect, useState } from 'react';
+import React, {
+  useEffect, useState,
+} from 'react';
 import { observer } from 'mobx-react-lite';
-import { Modal } from 'choerodon-ui/pro';
-import { Button } from 'choerodon-ui';
-import { FormattedMessage } from 'react-intl';
-import HeaderButtons from '../../../../../../components/header-buttons';
+import { HeaderButtons } from '@choerodon/master';
 import { useResourceStore } from '../../../../stores';
 import { useModalStore } from './stores';
 import { useCertificateStore } from '../stores';
 import FormView from './form-view';
 import { useMainStore } from '../../../stores';
-
-const modalStyle = {
-  width: '26%',
-};
 
 const EnvModals = observer(() => {
   const {
@@ -63,21 +58,18 @@ const EnvModals = observer(() => {
       icon: 'playlist_add',
       handler: openModal,
       display: true,
-      group: 1,
       service: permissions,
       disabled,
     }, {
-      name: formatMessage({ id: 'refresh' }),
       icon: 'refresh',
       handler: refresh,
       display: true,
-      group: 1,
     }]);
   }
 
   return (
-    <Fragment>
-      <HeaderButtons items={getButtons()} />
+    <>
+      <HeaderButtons items={getButtons()} showClassName />
       {showModal && (
         <FormView
           visible={showModal}
@@ -86,7 +78,7 @@ const EnvModals = observer(() => {
           onClose={closeModal}
         />
       )}
-    </Fragment>
+    </>
   );
 });
 

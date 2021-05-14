@@ -24,10 +24,8 @@
     padding-top: .15rem;
 
     &-search {
-      width: 100%;
       display: block;
-      padding: 0 .1rem;
-      margin-bottom: .16rem;
+      margin: 0 .1rem .16rem;
 
       .@{c7n-pro-prefix}-input-prefix {
         left: 0.08rem;
@@ -64,6 +62,13 @@
             border-bottom: 1px solid rgba(216, 220, 235, 1);
           }
         }
+
+        span.@{c7n-prefix}-tree-switcher {
+          margin-left: .06rem;
+        }
+        span.@{c7n-prefix}-tree-switcher.@{c7n-prefix}-tree-switcher-noop {
+          background-color: transparent !important;
+        }
       }
 
       .@{c7n-prefix}-tree-node-content-wrapper {
@@ -77,7 +82,7 @@
         border-left: 4px solid #6887e8;
 
         .@{c7n-prefix}-tree-switcher {
-          margin-left: -4px;
+          margin-left: 0.02rem !important;
         }
 
         .c7ncd-pipelineManage-sidebar-header-node {

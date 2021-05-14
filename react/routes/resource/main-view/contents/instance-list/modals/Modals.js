@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
-import HeaderButtons from '../../../../../../components/header-buttons';
+import { HeaderButtons } from '@choerodon/master';
 import { useResourceStore } from '../../../../stores';
 import { useModalStore } from './stores';
 import { useIstListStore } from '../stores';
@@ -100,7 +100,6 @@ const CustomModals = observer(() => {
       icon: 'jsfiddle',
       handler: openDeploy,
       display: true,
-      group: 1,
     }, {
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.resource-batch'],
       disabled: configDisabled,
@@ -108,17 +107,14 @@ const CustomModals = observer(() => {
       icon: 'jsfiddle',
       handler: openBatchDeploy,
       display: true,
-      group: 1,
     }, {
-      name: formatMessage({ id: 'refresh' }),
       icon: 'refresh',
       handler: refresh,
       display: true,
-      group: 1,
     }];
   }, [formatMessage, refresh]);
 
-  return <HeaderButtons items={buttons} />;
+  return <HeaderButtons items={buttons} showClassName />;
 });
 
 export default CustomModals;

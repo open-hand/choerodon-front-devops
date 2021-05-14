@@ -1,9 +1,7 @@
-import React, { Fragment, useMemo, useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
-import { Button } from 'choerodon-ui';
-import { FormattedMessage } from 'react-intl';
-import HeaderButtons from '../../../../../../components/header-buttons';
+import { HeaderButtons } from '@choerodon/master';
 import { useResourceStore } from '../../../../stores';
 import { useModalStore } from './stores';
 import { useKeyValueStore } from '../stores';
@@ -65,23 +63,16 @@ const KeyValueModals = observer(() => {
       icon: 'playlist_add',
       handler: openModal,
       display: true,
-      group: 1,
       service: permissions,
       disabled,
     }, {
-      name: formatMessage({ id: 'refresh' }),
       icon: 'refresh',
       handler: refresh,
       display: true,
-      group: 1,
     }]);
   }
 
-  return (
-    <Fragment>
-      <HeaderButtons items={getButtons()} />
-    </Fragment>
-  );
+  return <HeaderButtons items={getButtons()} showClassName />;
 });
 
 export default KeyValueModals;
