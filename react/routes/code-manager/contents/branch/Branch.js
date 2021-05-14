@@ -415,7 +415,14 @@ function Branch(props) {
             <div className={styles?.['c7n-branch-theme4-table-column-side-line']}>
               <Icon type="branch" />
               <span className={styles?.['c7n-branch-theme4-table-column-side-line-firstLetter']}>{ record.get('branchName').substring(0, 1).toUpperCase() }</span>
-              <span className={styles?.['c7n-branch-theme4-table-column-side-line-branchName']}>{ record.get('branchName') }</span>
+              <span
+                style={{
+                  color: '#3f51b5',
+                  cursor: 'pointer',
+                }}
+                className={styles?.['c7n-branch-theme4-table-column-side-line-branchName']}
+                onClick={() => openEditIssueModal(record.toData())}
+              >{ record.get('branchName') }</span>
             </div>
             <div className={styles?.['c7n-branch-theme4-table-column-side-line']}>
               <Icon type="point" />

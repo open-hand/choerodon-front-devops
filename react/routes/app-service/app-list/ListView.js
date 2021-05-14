@@ -26,6 +26,7 @@ import StatusTag from '../components/status-tag';
 import { handlePromptError } from '../../../utils';
 
 import './index.less';
+import './theme4.less';
 import ClickText from "../../../components/click-text";
 
 const TabPane = Tabs.TabPane;
@@ -65,12 +66,6 @@ const ListView = withRouter(observer((props) => {
 
   const [isInit, setIsInit] = useState(true);
   const [selectedAppService, setSelectedAppService] = useState(undefined);
-
-  useEffect(() => {
-    if (AppState.getCurrentTheme === 'theme4') {
-      import('./theme4.less');
-    }
-  }, [AppState.getCurrentTheme]);
 
   useEffect(() => {
     // 确定dataset加载完毕后才打开创建框
@@ -583,6 +578,8 @@ const ListView = withRouter(observer((props) => {
               }}
             />
           </div>
+          <div className="c7ncd-theme4-appService-blockTop" />
+          <div className="c7ncd-theme4-appService-blockDown" />
           <div className="c7ncd-theme4-appService-right">
             <ServiceDetail
               cRef={ref}
