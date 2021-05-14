@@ -1,12 +1,16 @@
+/* eslint-disable max-len */
 import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { FormattedMessage } from 'react-intl';
-import { Form, Select, Table } from 'choerodon-ui/pro';
-import { Page, Header, Content, Breadcrumb } from '@choerodon/boot';
-import { Button, Spin } from 'choerodon-ui';
+import {
+  Form, Select, Table, Spin,
+} from 'choerodon-ui/pro';
+import {
+  Page, Header, Content, Breadcrumb,
+} from '@choerodon/boot';
 import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';
 import moment from 'moment';
+import { HeaderButtons } from '@choerodon/master';
 import StatusTags from '../../../components/status-tag';
 import LoadingBar from '../../../components/loading';
 import MouserOverWrapper from '../../../components/MouseOverWrapper';
@@ -415,86 +419,91 @@ const DeployTimes = observer(() => {
 
   const appDom = app.length ? _.map(app, (d) => (<Option key={d.id} value={d.id}>{d.name}</Option>)) : null;
 
-  const content = (envs && envs.length ? <React.Fragment>
-    <div className="c7n-report-screen c7n-report-select">
-      <Form style={{ width: 620, marginRight: 60 }} dataSet={DeployTimesSelectDataSet} columns={3}>
-        <Select
-          searchable
-          name="deployTimeApps"
-          notFoundContent={formatMessage({ id: 'envoverview.noEnv' })}
-          colSpan={2}
-          maxTagCount={3}
-          onChange={handleEnvSelect}
-          maxTagPlaceholder={(omittedValues) => maxTagNode(omittedValues)}
-          optionFilterProp="children"
-          filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-          filter
-        >
-          {envDom}
-        </Select>
-        <Select
-          colSpan={1}
-          searchable
-          name="deployTimeName"
-          notFoundContent={formatMessage({ id: 'report.no.app.tips' })}
-          onChange={handleAppSelect}
-          optionFilterProp="children"
-          filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-          filter
-          clearButton={false}
-        >
-          {appDom}
-          {appDom ? <Option key="all" value="all_appServices">{formatMessage({ id: 'report.all-app' })}</Option> : null}
-        </Select>
-      </Form>
-      <TimePicker
-        startTime={ReportsStore.getStartDate}
-        endTime={ReportsStore.getEndDate}
-        type={dateType}
-        onChange={handleDateChoose}
-        func={loadCharts}
-        store={ReportsStore}
-      />
-    </div>
-    <div className="c7n-report-content">
-      <Spin spinning={echartsLoading}>
-        <ReactEcharts
-          option={getOption()}
-          notMerge
-          lazyUpdate
-          style={{ height: '350px', width: '100%' }}
+  const content = (envs && envs.length ? (
+    <>
+      <div className="c7n-report-screen c7n-report-select">
+        <Form style={{ width: 620, marginRight: 60 }} dataSet={DeployTimesSelectDataSet} columns={3}>
+          <Select
+            searchable
+            name="deployTimeApps"
+            notFoundContent={formatMessage({ id: 'envoverview.noEnv' })}
+            colSpan={2}
+            maxTagCount={3}
+            onChange={handleEnvSelect}
+            maxTagPlaceholder={(omittedValues) => maxTagNode(omittedValues)}
+            optionFilterProp="children"
+            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            filter
+          >
+            {envDom}
+          </Select>
+          <Select
+            colSpan={1}
+            searchable
+            name="deployTimeName"
+            notFoundContent={formatMessage({ id: 'report.no.app.tips' })}
+            onChange={handleAppSelect}
+            optionFilterProp="children"
+            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            filter
+            clearButton={false}
+          >
+            {appDom}
+            {appDom ? <Option key="all" value="all_appServices">{formatMessage({ id: 'report.all-app' })}</Option> : null}
+          </Select>
+        </Form>
+        <TimePicker
+          startTime={ReportsStore.getStartDate}
+          endTime={ReportsStore.getEndDate}
+          type={dateType}
+          onChange={handleDateChoose}
+          func={loadCharts}
+          store={ReportsStore}
         />
-      </Spin>
-    </div>
-    <div className="c7n-report-table">
-      {renderTable()}
-    </div>
-  </React.Fragment> : <NoChart getProRole={ReportsStore.getProRole} type="env" />);
+      </div>
+      <div className="c7n-report-content">
+        <Spin spinning={echartsLoading}>
+          <ReactEcharts
+            option={getOption()}
+            notMerge
+            lazyUpdate
+            style={{ height: '350px', width: '100%' }}
+          />
+        </Spin>
+      </div>
+      <div className="c7n-report-table">
+        {renderTable()}
+      </div>
+    </>
+  ) : <NoChart getProRole={ReportsStore.getProRole} type="env" />);
 
-  return (<Page
-    className="c7n-region"
-    service={['choerodon.code.project.operation.chart.ps.deploy.times']}
-  >
-    <Header
-      title={formatMessage({ id: 'report.deploy-times.head' })}
-      backPath={`${backPath}${search}`}
+  return (
+    <Page
+      className="c7n-region"
+      service={['choerodon.code.project.operation.chart.ps.deploy.times']}
     >
-      <ChartSwitch
-        history={history}
-        current="deploy-times"
-      />
-      <Button
-        icon="refresh"
-        onClick={handleRefresh}
+      <Header
+        title={formatMessage({ id: 'report.deploy-times.head' })}
+        backPath={`${backPath}${search}`}
       >
-        <FormattedMessage id="refresh" />
-      </Button>
-    </Header>
-    <Breadcrumb title={formatMessage({ id: 'report.deploy-times.head' })} />
-    <Content>
-      {isRefresh ? <LoadingBar display={isRefresh} /> : content}
-    </Content>
-  </Page>);
+        <ChartSwitch
+          history={history}
+          current="deploy-times"
+        />
+        <HeaderButtons
+          items={[{
+            icon: 'refresh',
+            handler: handleRefresh,
+            display: true,
+          }]}
+        />
+      </Header>
+      <Breadcrumb title={formatMessage({ id: 'report.deploy-times.head' })} />
+      <Content>
+        {isRefresh ? <LoadingBar display={isRefresh} /> : content}
+      </Content>
+    </Page>
+  );
 });
 
 DeployTimes.name = 'DeployTimes';
