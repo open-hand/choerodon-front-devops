@@ -1,10 +1,16 @@
-import React, { Component, Fragment, useState, useEffect } from 'react';
+import React, {
+  useState, useEffect,
+} from 'react';
 import { observer } from 'mobx-react-lite';
 import { Link, withRouter } from 'react-router-dom';
-import { injectIntl, FormattedMessage } from 'react-intl';
-import { Page, Header, Content, Breadcrumb, Choerodon } from '@choerodon/boot';
+import {
+  Page, Header, Content, Breadcrumb,
+} from '@choerodon/boot';
+import { HeaderButtons } from '@choerodon/master';
 import { Spin, Breadcrumb as Bread } from 'choerodon-ui';
-import { Button, Tooltip, Form, Select } from 'choerodon-ui/pro';
+import {
+  Button, Tooltip, Form, Select,
+} from 'choerodon-ui/pro';
 import ReactEcharts from 'echarts-for-react';
 import map from 'lodash/map';
 import moment from 'moment';
@@ -113,13 +119,13 @@ const CodeQuality = withRouter(observer(() => {
               color,
             },
             data: map(dates, (item, index) => [item, getCodeQuality[objectName][index]]),
-          }
+          },
         );
         legend.push(
           {
             name: formatMessage({ id: `report.code-quality.${name}` }),
             icon: 'line',
-          }
+          },
         );
       }
     });
@@ -251,86 +257,82 @@ const CodeQuality = withRouter(observer(() => {
       getStartDate,
       getEndDate,
     } = ReportsStore;
-    return (appServiceDs.length ? <Fragment>
-      <div className="c7n-codeQuality-select">
-        <Form dataSet={detailDs} columns={2} style={{ width: '5.7rem' }}>
-          <Select
-            name="appServiceId"
-            searchable
-            optionRenderer={renderAppServiceOption}
-            className="c7ncd-codeQuality-select-item"
-            clearButton={false}
+    return (appServiceDs.length ? (
+      <>
+        <div className="c7n-codeQuality-select">
+          <Form dataSet={detailDs} columns={2} style={{ width: '5.7rem' }}>
+            <Select
+              name="appServiceId"
+              searchable
+              optionRenderer={renderAppServiceOption}
+              className="c7ncd-codeQuality-select-item"
+              clearButton={false}
+            />
+            <Select
+              name="objectType"
+              clearButton={false}
+              className="c7ncd-codeQuality-select-item"
+            />
+          </Form>
+          <TimePicker
+            startTime={getStartDate}
+            endTime={getEndDate}
+            func={loadCharts}
+            type={dateType}
+            onChange={handleDateChoose}
+            store={ReportsStore}
           />
-          <Select
-            name="objectType"
-            clearButton={false}
-            className="c7ncd-codeQuality-select-item"
+        </div>
+        <Spin spinning={chartsDs.status === 'loading'}>
+          <ReactEcharts
+            className="c7n-codeQuality-charts"
+            option={getOption()}
+            notMerge
+            lazyUpdate
           />
-        </Form>
-        <TimePicker
-          startTime={getStartDate}
-          endTime={getEndDate}
-          func={loadCharts}
-          type={dateType}
-          onChange={handleDateChoose}
-          store={ReportsStore}
-        />
-      </div>
-      <Spin spinning={chartsDs.status === 'loading'}>
-        <ReactEcharts
-          className="c7n-codeQuality-charts"
-          option={getOption()}
-          notMerge
-          lazyUpdate
-        />
-      </Spin>
-    </Fragment> : <NoChart type="app" getProRole={getProRole} />);
+        </Spin>
+      </>
+    ) : <NoChart type="app" getProRole={getProRole} />);
   }
 
   if (!record) {
     return <LoadingBar display />;
   }
 
-  return (<Page
-    className="c7n-region c7n-report-codeQuality-wrapper"
-    service={permissions}
-  >
-    <Header
-      title={formatMessage({ id: 'report.code-quality.head' })}
-      backPath={(function () {
-        const params = new URLSearchParams(search);
-        if (params.get('from') === 'ci') {
-          params.delete('from');
-          return `/devops/pipeline-manage?${params.toString()}`;
-        } else {
-          return `${backPath}${search}`;
-        }
-      }())}
+  return (
+    <Page
+      className="c7n-region c7n-report-codeQuality-wrapper"
+      service={permissions}
     >
-      <ChartSwitch
-        history={history}
-        current="code-quality"
-      />
-      <Button
-        icon="refresh"
-        onClick={handleRefresh}
+      <Header
+        title={formatMessage({ id: 'report.code-quality.head' })}
+        backPath={(function () {
+          const params = new URLSearchParams(search);
+          if (params.get('from') === 'ci') {
+            params.delete('from');
+            return `/devops/pipeline-manage?${params.toString()}`;
+          }
+          return `${backPath}${search}`;
+        }())}
       >
-        <FormattedMessage id="refresh" />
-      </Button>
-    </Header>
-    <Breadcrumb custom>
-      <Item>{name}</Item>
-      <Item>
-        <Link to={`/charts${search}`}>
-          {formatMessage({ id: 'report.bread.title' })}
-        </Link>
-      </Item>
-      <Item>{formatMessage({ id: 'report.code-quality.head' })}</Item>
-    </Breadcrumb>
-    <Content>
-      {isRefresh ? <LoadingBar display={isRefresh} /> : getContent()}
-    </Content>
-  </Page>);
+        <ChartSwitch
+          history={history}
+          current="code-quality"
+        />
+        <HeaderButtons
+          items={[{
+            icon: 'refresh',
+            handler: handleRefresh,
+            display: true,
+          }]}
+        />
+      </Header>
+      <Breadcrumb title={formatMessage({ id: 'report.code-quality.head' })} />
+      <Content>
+        {isRefresh ? <LoadingBar display={isRefresh} /> : getContent()}
+      </Content>
+    </Page>
+  );
 }));
 
 export default CodeQuality;

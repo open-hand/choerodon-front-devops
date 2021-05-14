@@ -6,10 +6,10 @@ import {
   Page, Header, Content, Breadcrumb,
 } from '@choerodon/boot';
 import { Button, Form, Select } from 'choerodon-ui/pro';
-import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import Loading from '@/components/loading';
 import MaxTagPopover from '@/routes/reports/Component/MaxTagPopover';
+import { HeaderButtons } from '@choerodon/master';
 import TimePicker from '../Component/TimePicker';
 import NoChart from '../Component/NoChart';
 import ChartSwitch from '../Component/ChartSwitch';
@@ -119,9 +119,13 @@ const PipelineTriggerDuration = () => {
           // @ts-ignore
           current="pipeline-duration"
         />
-        <Button icon="refresh" onClick={handleRefresh}>
-          <FormattedMessage id="refresh" />
-        </Button>
+        <HeaderButtons
+          items={[{
+            icon: 'refresh',
+            handler: handleRefresh,
+            display: true,
+          }]}
+        />
       </Header>
       <Breadcrumb
         title={formatMessage({ id: 'report.pipeline-duration.head' })}
