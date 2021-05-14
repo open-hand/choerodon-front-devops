@@ -1,5 +1,5 @@
 import React from 'react';
-import { Page } from '@choerodon/boot';
+import { Page, Content } from '@choerodon/boot';
 import CustomHeader from '../../components/custom-header';
 import MainView from './main-view';
 import { useEnvironmentStore } from './stores';
@@ -7,8 +7,12 @@ import { useEnvironmentStore } from './stores';
 export default function Environment() {
   const { permissions } = useEnvironmentStore();
 
-  return <Page service={['choerodon.code.project.deploy.environment.ps.default']}>
-    <CustomHeader show />
-    <MainView />
-  </Page>;
+  return (
+    <Page service={['choerodon.code.project.deploy.environment.ps.default']}>
+      <CustomHeader show />
+      <Content>
+        <MainView />
+      </Content>
+    </Page>
+  );
 }

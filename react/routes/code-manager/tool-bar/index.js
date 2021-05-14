@@ -72,6 +72,7 @@ const CodeManagerToolBar = injectIntl(inject('AppState')(observer((props) => {
             icon: 'refresh',
             display: true,
             handler: refreshApp,
+            iconOnly: true,
           }])}
           showClassName={false}
         />
