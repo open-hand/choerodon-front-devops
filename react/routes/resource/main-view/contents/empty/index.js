@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from 'react';
+import { HeaderButtons } from '@choerodon/master';
 import checkPermission from '../../../../../utils/checkPermission';
 import EmptyPage from '../../../../../components/empty-page';
 import Loading from '../../../../../components/loading';
-import HeaderButtons from '../../../../../components/header-buttons';
 import { useResourceStore } from '../../../stores';
 
 export default function EmptyShown() {
@@ -44,22 +44,24 @@ export default function EmptyShown() {
 
   function getButtons() {
     return [{
-      name: formatMessage({ id: 'refresh' }),
       icon: 'refresh',
       handler: refresh,
       display: true,
-      group: 1,
     }];
   }
 
-  return <Fragment>
-    <HeaderButtons items={getButtons()} />
-    {!loading ? <EmptyPage
-      title={formatMessage({ id: `empty.title.${access ? 'env' : 'prohibited'}` })}
-      describe={formatMessage({ id: `empty.tips.env.${access ? 'owner' : 'member'}` })}
-      pathname="/devops/environment"
-      access={access}
-      btnText={formatMessage({ id: 'empty.link.env' })}
-    /> : <Loading display />}
-  </Fragment>;
+  return (
+    <>
+      <HeaderButtons items={getButtons()} showClassName />
+      {!loading ? (
+        <EmptyPage
+          title={formatMessage({ id: `empty.title.${access ? 'env' : 'prohibited'}` })}
+          describe={formatMessage({ id: `empty.tips.env.${access ? 'owner' : 'member'}` })}
+          pathname="/devops/environment"
+          access={access}
+          btnText={formatMessage({ id: 'empty.link.env' })}
+        />
+      ) : <Loading display />}
+    </>
+  );
 }

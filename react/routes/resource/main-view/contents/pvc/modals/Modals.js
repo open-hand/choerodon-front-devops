@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
-import HeaderButtons from '../../../../../../components/header-buttons';
+import { HeaderButtons } from '@choerodon/master';
 import { useResourceStore } from '../../../../stores';
 import { useModalStore } from './stores';
 import { usePVCStore } from '../stores';
@@ -39,7 +39,12 @@ const PVCModals = observer(() => {
       style: modalStyle,
       drawer: true,
       title: formatMessage({ id: `${intlPrefix}.create.pvc` }),
-      children: <CreateForm refresh={refresh} envId={parentId} intlPrefix={intlPrefix} prefixCls={prefixCls} />,
+      children: <CreateForm
+        refresh={refresh}
+        envId={parentId}
+        intlPrefix={intlPrefix}
+        prefixCls={prefixCls}
+      />,
       okText: formatMessage({ id: 'create' }),
     });
   }
@@ -55,23 +60,16 @@ const PVCModals = observer(() => {
       icon: 'playlist_add',
       handler: openModal,
       display: true,
-      group: 1,
       service: permissions,
       disabled,
     }, {
-      name: formatMessage({ id: 'refresh' }),
       icon: 'refresh',
       handler: refresh,
       display: true,
-      group: 1,
     }]);
   }
 
-  return (
-    <Fragment>
-      <HeaderButtons items={getButtons()} />
-    </Fragment>
-  );
+  return <HeaderButtons items={getButtons()} showClassName />;
 });
 
 export default PVCModals;
