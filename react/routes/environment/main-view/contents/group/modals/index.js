@@ -80,7 +80,6 @@ const GroupModal = observer((props) => {
       display: true,
       group: 1,
     }, {
-      name: formatMessage({ id: 'refresh' }),
       icon: 'refresh',
       handler: refresh,
       display: true,
@@ -90,7 +89,7 @@ const GroupModal = observer((props) => {
 
   return (
     <div>
-      <HeaderButtons items={getButtons()} />
+      <HeaderButtons items={getButtons()} showClassName />
     </div>
   );
 });

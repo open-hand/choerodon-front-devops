@@ -217,7 +217,6 @@ const EnvModals = observer(() => {
       display: true,
       group: 2,
     }, {
-      name: formatMessage({ id: 'refresh' }),
       icon: 'refresh',
       handler: refresh,
       display: true,
@@ -242,7 +241,7 @@ const EnvModals = observer(() => {
   }]), [disabled]);
 
   return (
-    <HeaderButtons items={getButtons()}>
+    <HeaderButtons items={getButtons()} showClassName>
       <HeaderAction
         style={actionStyle}
         items={actionItem}
