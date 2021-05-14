@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
-import HeaderButtons from '../../../../../components/header-buttons';
+import { HeaderButtons } from '@choerodon/master';
 import GroupForm from '../../modals/GroupForm';
 import { useEnvironmentStore } from '../../../stores';
 import { useMainStore } from '../../stores';
@@ -34,15 +34,15 @@ const EmptyPage = observer(() => {
 
   function getButtons() {
     return [{
+      permissions: ['choerodon.code.project.deploy.environment.ps.group-create'],
       name: formatMessage({ id: `${intlPrefix}.group.create` }),
       icon: 'playlist_add',
       handler: openGroupModal,
       display: true,
-      group: 1,
     }];
   }
 
-  return <HeaderButtons items={getButtons()} />;
+  return <HeaderButtons items={getButtons()} showClassName />;
 });
 
 export default EmptyPage;

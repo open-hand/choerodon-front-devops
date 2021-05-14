@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, Fragment } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
-import HeaderButtons from '../../../../../components/header-buttons';
+import { HeaderButtons } from '@choerodon/master';
 import EmptyPage from '../../../../../components/empty-page';
 import { useClusterStore } from '../../../stores';
 import CreateCluster from '../cluster-content/modals/create-cluster';
