@@ -207,27 +207,41 @@ const ListView = withRouter(observer((props) => {
       detail: {
         service: ['choerodon.code.project.develop.app-service.ps.default'],
         text: formatMessage({ id: `${intlPrefix}.detail`}),
-        action: ref?.current?.openDetail,
+        action: () => {
+          ref?.current?.openDetail();
+        },
       },
       edit: {
         service: ['choerodon.code.project.develop.app-service.ps.update'],
         text: formatMessage({ id: 'edit' }),
-        action: openEdit,
+        action: () => {
+          setSelectedAppService(record.toData());
+          openEdit();
+        },
       },
       stop: {
         service: ['choerodon.code.project.develop.app-service.ps.disable'],
         text: formatMessage({ id: 'stop' }),
-        action: openStop.bind(this, record),
+        action: () => {
+          setSelectedAppService(record.toData());
+          openStop(record);
+        }
       },
       run: {
         service: ['choerodon.code.project.develop.app-service.ps.enable'],
         text: formatMessage({ id: 'active' }),
-        action: () => changeActive(true),
+        action: () => {
+          setSelectedAppService(record.toData());
+          changeActive(true, record);
+        },
       },
       delete: {
         service: ['choerodon.code.project.develop.app-service.ps.delete'],
         text: formatMessage({ id: 'delete' }),
-        action: handleDelete,
+        action: () => {
+          setSelectedAppService(record.toData());
+          handleDelete(record);
+        },
       },
 
     };
@@ -290,7 +304,7 @@ const ListView = withRouter(observer((props) => {
   }
 
   function openEdit() {
-    const appServiceId = listDs.current.get('id');
+    const appServiceId = selectedAppService.id;
 
     Modal.open({
       key: editModalKey,
@@ -320,8 +334,7 @@ const ListView = withRouter(observer((props) => {
     }
   }
 
-  async function handleDelete() {
-    const record = listDs.current;
+  async function handleDelete(record) {
     const appId = record.get('id');
     const modalProps = {
       title: formatMessage({ id: `${intlPrefix}.delete.title` }, { name: record.get('name') }),
@@ -337,24 +350,24 @@ const ListView = withRouter(observer((props) => {
     }
   }
 
-  async function changeActive(active) {
+  async function changeActive(active, record) {
     if (!active) {
       Modal.open({
         key: modalKey3,
         title: formatMessage({ id: `${intlPrefix}.stop` }, { name: listDs.current.get('name') }),
         children: <FormattedMessage id={`${intlPrefix}.stop.tips`} />,
-        onOk: () => handleChangeActive(active),
+        onOk: () => handleChangeActive(active, record),
         okText: formatMessage({ id: 'stop' }),
       });
     } else {
-      handleChangeActive(active);
+      handleChangeActive(active, record);
     }
   }
 
-  async function handleChangeActive(active) {
+  async function handleChangeActive(active, record) {
     try {
-      if (await appServiceStore.changeActive(projectId, listDs.current.get('id'), active)) {
-        checkLocalstorage(listDs.current.get('id'));
+      if (await appServiceStore.changeActive(projectId, record.get('id'), active)) {
+        checkLocalstorage(record.get('id'));
         refresh();
       } else {
         return false;
@@ -394,11 +407,11 @@ const ListView = withRouter(observer((props) => {
         }
 
         const statusObj = {
-          title: status ? formatMessage({ id: `${intlPrefix}.cannot.stop` }, { name: listDs.current.get('name') }) : formatMessage({ id: `${intlPrefix}.stop` }, { name: listDs.current.get('name') }),
+          title: status ? formatMessage({ id: `${intlPrefix}.cannot.stop` }, { name: recordt.get('name') }) : formatMessage({ id: `${intlPrefix}.stop` }, { name: record.get('name') }),
           // eslint-disable-next-line no-nested-ternary
           children: childrenContent,
           okCancel: !status,
-          onOk: () => (status ? stopModal.close() : handleChangeActive(false)),
+          onOk: () => (status ? stopModal.close() : handleChangeActive(false, record)),
           okText: status ? formatMessage({ id: 'iknow' }) : formatMessage({ id: 'stop' }),
           footer: ((okBtn, cancelBtn) => (
             <>

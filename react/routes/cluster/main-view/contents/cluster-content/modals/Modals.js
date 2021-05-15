@@ -255,7 +255,9 @@ const ClusterModals = observer(() => {
     }];
   }
 
-  return <HeaderButtons items={getButtons()} showClassName />;
+  return (
+    <HeaderButtons items={getButtons()} showClassName />
+  );
 });
 
 export default ClusterModals;
