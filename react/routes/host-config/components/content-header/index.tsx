@@ -9,6 +9,8 @@ import {
 import { useHostConfigStore } from '../../stores';
 import HostPick from '../host-pick';
 
+import './index.less';
+
 const ContentHeader: React.FC<any> = observer((): any => {
   const {
     prefixCls,

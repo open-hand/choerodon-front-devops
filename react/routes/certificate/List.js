@@ -1,5 +1,9 @@
-import React, { useState, useEffect, useCallback, Fragment } from 'react';
-import { Page, Content, Header, Permission, Action, Breadcrumb } from '@choerodon/boot';
+import React, {
+  useState, useEffect, useCallback, Fragment,
+} from 'react';
+import {
+  Page, Content, Header, Permission, Action, Breadcrumb, HeaderButtons,
+} from '@choerodon/boot';
 import { Table, Modal } from 'choerodon-ui/pro';
 import { Button } from 'choerodon-ui';
 import { FormattedMessage } from 'react-intl';
@@ -120,22 +124,21 @@ const AppService = withRouter(observer((props) => {
       service={['choerodon.code.project.deploy.cluster.cert-management.ps.default']}
     >
       <Header title={<FormattedMessage id="app.head" />}>
-        <Permission
-          service={['choerodon.code.project.deploy.cluster.cert-management.ps.create']}
-        >
-          <Button
-            icon="playlist_add"
-            onClick={() => openModal('create')}
-          >
-            <FormattedMessage id={`${intlPrefix}.create`} />
-          </Button>
-        </Permission>
-        <Button
-          icon="refresh"
-          onClick={() => refresh()}
-        >
-          <FormattedMessage id="refresh" />
-        </Button>
+        <HeaderButtons
+          showClassName={false}
+          items={([{
+            name: <FormattedMessage id={`${intlPrefix}.create`} />,
+            icon: 'playlist_add',
+            display: true,
+            permissions: ['choerodon.code.project.deploy.cluster.cert-management.ps.create'],
+            handler: () => openModal('create'),
+          }, {
+            icon: 'refresh',
+            display: true,
+            iconOnly: true,
+            handler: () => refresh(),
+          }])}
+        />
       </Header>
       <Breadcrumb />
       <Content className={`${prefixCls}-content`}>
