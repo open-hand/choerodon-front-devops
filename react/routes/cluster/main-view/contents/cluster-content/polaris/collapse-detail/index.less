@@ -26,7 +26,15 @@
 
   .c7n-tabs-nav-container {
     height: auto !important;
+
+    &::after {
+      visibility: hidden !important;
+    }
   }
+
+  //.c7n-tabs-nav-container::after {
+  //  visibility: hidden !important;
+  //}
 
   &-collapse {
     border-top: 0.01rem solid #e0e0e0 !important;

@@ -10,9 +10,7 @@ export default observer(() => {
   return (
     <Page service={['choerodon.code.project.deploy.cluster.cluster-management.ps.default']}>
       <CustomHeader show={!clusterStore.getNoHeader} />
-      <Content>
-        <MainView />
-      </Content>
+      <MainView />
     </Page>
   );
 });

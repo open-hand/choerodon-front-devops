@@ -10,9 +10,7 @@ export default function Environment() {
   return (
     <Page service={['choerodon.code.project.deploy.environment.ps.default']}>
       <CustomHeader show />
-      <Content>
-        <MainView />
-      </Content>
+      <MainView />
     </Page>
   );
 }
