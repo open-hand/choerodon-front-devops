@@ -22,6 +22,7 @@ const SidebarHeader = () => {
   const buttonProps = useMemo(() => ({
     disabled: treeDs.status === 'loading',
     color: 'primary',
+    funcType: 'flat',
   }), [treeDs.status]);
 
   function handleChoose(choose) {
@@ -41,26 +42,28 @@ const SidebarHeader = () => {
     getViewType !== RES_VIEW_TYPE && handleChoose(RES_VIEW_TYPE);
   }
 
-  return <div className={`${prefixCls}-sidebar-head`}>
-    <Button
-      {...buttonProps}
-      onClick={chooseInstance}
-      className={getViewType === IST_VIEW_TYPE ? `${prefixCls}-sidebar-active` : ''}
-    >
-      {formatMessage({ id: `${intlPrefix}.viewer.${IST_VIEW_TYPE}` })}
-    </Button>
-    <Permission
-      service={['choerodon.code.project.deploy.app-deployment.resource.ps.resource']}
-    >
+  return (
+    <div className={`${prefixCls}-sidebar-head`}>
       <Button
         {...buttonProps}
-        onClick={chooseResource}
-        className={getViewType === RES_VIEW_TYPE ? `${prefixCls}-sidebar-active` : ''}
+        onClick={chooseInstance}
+        className={getViewType === IST_VIEW_TYPE ? `${prefixCls}-sidebar-active` : ''}
       >
-        {formatMessage({ id: `${intlPrefix}.viewer.${RES_VIEW_TYPE}` })}
+        {formatMessage({ id: `${intlPrefix}.viewer.${IST_VIEW_TYPE}` })}
       </Button>
-    </Permission>
-  </div>;
+      <Permission
+        service={['choerodon.code.project.deploy.app-deployment.resource.ps.resource']}
+      >
+        <Button
+          {...buttonProps}
+          onClick={chooseResource}
+          className={getViewType === RES_VIEW_TYPE ? `${prefixCls}-sidebar-active` : ''}
+        >
+          {formatMessage({ id: `${intlPrefix}.viewer.${RES_VIEW_TYPE}` })}
+        </Button>
+      </Permission>
+    </div>
+  );
 };
 
 export default SidebarHeader;
