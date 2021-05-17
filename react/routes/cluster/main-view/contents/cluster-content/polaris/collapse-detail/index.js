@@ -1,6 +1,8 @@
-import React, { useState, Fragment, Suspense, useMemo } from 'react';
+import React, {
+  useState, Fragment, Suspense, useMemo,
+} from 'react';
 import { observer } from 'mobx-react-lite';
-import { Tabs, Tooltip } from 'choerodon-ui/pro';
+import { Tabs, Tooltip, Button } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import isEmpty from 'lodash/isEmpty';
 import { Collapse, Progress, Icon } from 'choerodon-ui';
@@ -26,6 +28,7 @@ const collapseDetail = observer(({ loading }) => {
   } = useClusterContentStore();
 
   const [collapseType, setCollapseType] = useState('summary');
+  const [activeTab, setActiveTab] = useState('cluster');
   const clusterSummary = useMemo(() => (['healthCheck', 'imageCheck', 'networkCheck', 'resourceCheck', 'securityCheck']), []);
   const clusterSummaryData = useMemo(() => {
     if (clusterSummaryDs.current) {
@@ -34,13 +37,17 @@ const collapseDetail = observer(({ loading }) => {
     return {};
   }, [clusterSummaryDs.current]);
   const isLoading = useMemo(() => loading || clusterSummaryDs.status === 'loading', [loading, clusterSummaryDs.status]);
+  const buttonProps = useMemo(() => ({
+    color: 'primary',
+    funcType: 'flat',
+  }), []);
 
   function handleRadioChange(value) {
     setCollapseType(value);
   }
 
   function getClusterHeader(item) {
-    const checked = clusterSummaryData.checked;
+    const { checked } = clusterSummaryData;
     const { score, hasErrors } = clusterSummaryData[item] || {};
     return (
       <div className={`${prefixCls}-polaris-tabs-header`}>
@@ -48,7 +55,8 @@ const collapseDetail = observer(({ loading }) => {
           {formatMessage({ id: `${intlPrefix}.polaris.${item}` })}
         </span>
         <span className={`${prefixCls}-polaris-tabs-header-score`}>
-          {formatMessage({ id: `${intlPrefix}.polaris.score` })}:
+          {formatMessage({ id: `${intlPrefix}.polaris.score` })}
+          :
         </span>
         {isLoading ? <Progress type="loading" size="small" /> : <span className={`${prefixCls}-polaris-tabs-header-number-${checked}`}>{checked ? `${score}%` : '-'}</span>}
         {!isLoading && hasErrors && <Icon type="cancel" className={`${prefixCls}-polaris-tabs-header-error`} />}
@@ -61,24 +69,35 @@ const collapseDetail = observer(({ loading }) => {
   }
 
   function getEnvHeader(envRecord) {
-    const { envName, namespace, projectName, hasErrors } = envRecord || {};
+    const {
+      envName, namespace, projectName, hasErrors,
+    } = envRecord || {};
     return (
       <div className={`${prefixCls}-polaris-tabs-header`}>
         {envName && (
           <div className={`${prefixCls}-polaris-tabs-header-item`}>
-            <span className={`${prefixCls}-polaris-tabs-header-text`}>{formatMessage({ id: 'environment' })}:</span>
+            <span className={`${prefixCls}-polaris-tabs-header-text`}>
+              {formatMessage({ id: 'environment' })}
+              :
+            </span>
             <span>{envName}</span>
             {!isLoading && hasErrors && <Icon type="cancel" className={`${prefixCls}-polaris-tabs-header-error`} />}
           </div>
         )}
         <div className={`${prefixCls}-polaris-tabs-header-item${!projectName ? '-external' : ''}`}>
-          <span className={`${prefixCls}-polaris-tabs-header-text`}>{formatMessage({ id: 'envCode' })}:</span>
+          <span className={`${prefixCls}-polaris-tabs-header-text`}>
+            {formatMessage({ id: 'envCode' })}
+            :
+          </span>
           <span>{namespace}</span>
           {!isLoading && !envName && hasErrors && <Icon type="cancel" className={`${prefixCls}-polaris-tabs-header-error`} />}
         </div>
         {projectName && (
           <div className={`${prefixCls}-polaris-tabs-header-item`}>
-            <span className={`${prefixCls}-polaris-tabs-header-text`}>{formatMessage({ id: `${intlPrefix}.belong.project` })}:</span>
+            <span className={`${prefixCls}-polaris-tabs-header-text`}>
+              {formatMessage({ id: `${intlPrefix}.belong.project` })}
+              :
+            </span>
             <Tooltip title={projectName}>
               <span>{projectName}</span>
             </Tooltip>
@@ -89,7 +108,7 @@ const collapseDetail = observer(({ loading }) => {
   }
 
   function getClusterContent(item) {
-    const checked = clusterSummaryData.checked;
+    const { checked } = clusterSummaryData;
     const { detail } = clusterSummaryData[item] || {};
     const list = detail ? JSON.parse(detail) : [];
     if (isLoading) {
@@ -106,7 +125,9 @@ const collapseDetail = observer(({ loading }) => {
         </div>
       );
     }
-    return (map(list, ({ namespace, resourceKind, resourceName, hasErrors, items }, index) => (
+    return (map(list, ({
+      namespace, resourceKind, resourceName, hasErrors, items,
+    }, index) => (
       <div key={`${namespace}-${index}`} className={`${prefixCls}-polaris-tabs-content`}>
         <div className={`${prefixCls}-polaris-tabs-content-title`}>
           <span>{`NameSpace: ${namespace} / ${resourceKind}: ${resourceName}`}</span>
@@ -134,7 +155,9 @@ const collapseDetail = observer(({ loading }) => {
     if (isEmpty(list)) {
       return <span className={`${prefixCls}-polaris-tabs-content`}>{formatMessage({ id: `${intlPrefix}.polaris.check.empty` })}</span>;
     }
-    return (map(list, ({ hasErrors, kind, name, podResult }, index) => {
+    return (map(list, ({
+      hasErrors, kind, name, podResult,
+    }, index) => {
       const containers = podResult ? podResult.containerResults : [];
       const results = podResult ? podResult.results : {};
       return (
@@ -157,22 +180,24 @@ const collapseDetail = observer(({ loading }) => {
               <span>{message}</span>
             </div>
           )))}
-          {map(containers, ({ name: containerName, results: containerResults }) => (<Fragment>
-            <div className={`${prefixCls}-polaris-tabs-content-title`} key={containerName}>
-              <span>{`Container: ${containerName}`}</span>
-            </div>
-            {isEmpty(containerResults) ? (
-              <div className={`${prefixCls}-polaris-tabs-content-env`}>
-                <Icon type="done" className={`${prefixCls}-polaris-tabs-content-icon-success`} />
-                <span>{formatMessage({ id: `${intlPrefix}.polaris.check.success` })}</span>
+          {map(containers, ({ name: containerName, results: containerResults }) => (
+            <>
+              <div className={`${prefixCls}-polaris-tabs-content-title`} key={containerName}>
+                <span>{`Container: ${containerName}`}</span>
               </div>
-            ) : (map(containerResults, ({ message, type, severity }, containerIndex) => (
-              <div key={`${type}-${containerIndex}`} className={`${prefixCls}-polaris-tabs-content-des`}>
-                <Icon type={severity === 'warning' ? 'priority_high' : 'close'} className={`${prefixCls}-polaris-tabs-content-icon-${severity}`} />
-                <span>{message}</span>
-              </div>
-            )))}
-          </Fragment>))}
+              {isEmpty(containerResults) ? (
+                <div className={`${prefixCls}-polaris-tabs-content-env`}>
+                  <Icon type="done" className={`${prefixCls}-polaris-tabs-content-icon-success`} />
+                  <span>{formatMessage({ id: `${intlPrefix}.polaris.check.success` })}</span>
+                </div>
+              ) : (map(containerResults, ({ message, type, severity }, containerIndex) => (
+                <div key={`${type}-${containerIndex}`} className={`${prefixCls}-polaris-tabs-content-des`}>
+                  <Icon type={severity === 'warning' ? 'priority_high' : 'close'} className={`${prefixCls}-polaris-tabs-content-icon-${severity}`} />
+                  <span>{message}</span>
+                </div>
+              )))}
+            </>
+          ))}
         </div>
       );
     }));
@@ -180,52 +205,56 @@ const collapseDetail = observer(({ loading }) => {
 
   return (
     <div className={`${prefixCls}-polaris-wrap-collapse`}>
-      <Tabs
-        type="card"
-        tabBarGutter={0}
-        className={`${prefixCls}-polaris-tabs`}
-      >
-        <TabPane
-          tab={formatMessage({ id: `${intlPrefix}.polaris.cluster` })}
-          className={`${prefixCls}-polaris-tabs-item`}
-          key="cluster"
+      <div className={`${prefixCls}-polaris-tabs-btns`}>
+        <Button
+          {...buttonProps}
+          onClick={() => setActiveTab('cluster')}
+          className={`${prefixCls}-polaris-tabs-btns-btn ${activeTab === 'cluster' ? `${prefixCls}-polaris-tabs-btns-btn-active` : ''}`}
         >
-          <Collapse bordered={false} className={`${prefixCls}-polaris-tabs-collapse-mgt`}>
-            {map(clusterSummary, (item) => (
-              <Panel header={getClusterHeader(item)} key={item}>
-                {getClusterContent(item)}
+          {formatMessage({ id: `${intlPrefix}.polaris.cluster` })}
+        </Button>
+        <Button
+          {...buttonProps}
+          onClick={() => setActiveTab('env')}
+          className={`${prefixCls}-polaris-tabs-btns-btn ${activeTab === 'env' ? `${prefixCls}-polaris-tabs-btns-btn-active` : ''}`}
+        >
+          {formatMessage({ id: `${intlPrefix}.polaris.env` })}
+        </Button>
+      </div>
+      {activeTab === 'cluster' ? (
+        <Collapse bordered={false} className={`${prefixCls}-polaris-tabs-collapse-mgt`}>
+          {map(clusterSummary, (item) => (
+            <Panel header={getClusterHeader(item)} key={item}>
+              {getClusterContent(item)}
+            </Panel>
+          ))}
+        </Collapse>
+      ) : ([
+        <div className={`${prefixCls}-polaris-tabs-collapse-title`}>
+          {formatMessage({ id: `${intlPrefix}.env.internal` })}
+        </div>,
+        envDetailDs.current && !isEmpty(envDetailDs.current.get('internal')) ? (
+          <Collapse bordered={false} className={`${prefixCls}-polaris-tabs-collapse`}>
+            {map(envDetailDs.current.get('internal'), (envRecord) => (
+              <Panel header={getEnvHeader(envRecord)} key={envRecord.id}>
+                {getEnvContent(envRecord)}
               </Panel>
             ))}
           </Collapse>
-        </TabPane>
-        <TabPane
-          tab={formatMessage({ id: `${intlPrefix}.polaris.env` })}
-          key="environment"
-        >
-          <div className={`${prefixCls}-polaris-tabs-collapse-title`}>
-            {formatMessage({ id: `${intlPrefix}.env.internal` })}
-          </div>
-          {envDetailDs.current && !isEmpty(envDetailDs.current.get('internal')) ? (
-            <Collapse bordered={false} className={`${prefixCls}-polaris-tabs-collapse`}>
-              {map(envDetailDs.current.get('internal'), (envRecord) => (
-                <Panel header={getEnvHeader(envRecord)} key={envRecord.id}>
-                  {getEnvContent(envRecord)}
-                </Panel>
-              ))}
-            </Collapse>) : <span className={`${prefixCls}-polaris-empty-text`}>{formatMessage({ id: 'empty.title.env' })}</span>}
-          <div className={`${prefixCls}-polaris-tabs-collapse-title`}>
-            {formatMessage({ id: `${intlPrefix}.env.external` })}
-          </div>
-          {envDetailDs.current && !isEmpty(envDetailDs.current.get('external')) ? (
-            <Collapse bordered={false} className={`${prefixCls}-polaris-tabs-collapse`}>
-              {map(envDetailDs.current.get('external'), (envRecord, index) => (
-                <Panel header={getEnvHeader(envRecord)} key={`${envRecord.namespace}-${index}`}>
-                  {getEnvContent(envRecord)}
-                </Panel>
-              ))}
-            </Collapse>) : <span className={`${prefixCls}-polaris-empty-text`}>{formatMessage({ id: 'empty.title.env' })}</span>}
-        </TabPane>
-      </Tabs>
+        ) : <span className={`${prefixCls}-polaris-empty-text`}>{formatMessage({ id: 'empty.title.env' })}</span>,
+        <div className={`${prefixCls}-polaris-tabs-collapse-title`}>
+          {formatMessage({ id: `${intlPrefix}.env.external` })}
+        </div>,
+        envDetailDs.current && !isEmpty(envDetailDs.current.get('external')) ? (
+          <Collapse bordered={false} className={`${prefixCls}-polaris-tabs-collapse`}>
+            {map(envDetailDs.current.get('external'), (envRecord, index) => (
+              <Panel header={getEnvHeader(envRecord)} key={`${envRecord.namespace}-${index}`}>
+                {getEnvContent(envRecord)}
+              </Panel>
+            ))}
+          </Collapse>
+        ) : <span className={`${prefixCls}-polaris-empty-text`}>{formatMessage({ id: 'empty.title.env' })}</span>,
+      ])}
     </div>
   );
 });

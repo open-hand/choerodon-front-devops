@@ -1,40 +1,20 @@
 .c7ncd-cluster-polaris-tabs {
   margin-top: .16rem;
 
-  .c7n-tabs-nav {
+  &-btns {
+    background: #fff;
     box-shadow: 0 2px 6px 0 rgba(48, 63, 159, 0.2);
-    margin-bottom: .1rem;
     border-radius: 6px;
-    margin-left: 0.04rem;
+    width: max-content;
 
-    .c7n-tabs-tab .c7n-ripple {
-      background: none;
+    &-btn {
+      margin: 0 !important;
+
+      &-active {
+        background-color: rgba(140, 158, 255, 0.16) !important;
+      }
     }
   }
-
-  .c7n-tabs-bar,
-  .c7n-tabs-tab {
-    background: #fff !important;
-    border: none !important;
-    color: #5266d4 !important;
-    height: .36rem !important;
-    border-radius: 6px !important;
-  }
-  .c7n-tabs-tab-active {
-    background: rgba(140, 158, 255, 0.16) !important;
-  }
-
-  .c7n-tabs-nav-container {
-    height: auto !important;
-
-    &::after {
-      visibility: hidden !important;
-    }
-  }
-
-  //.c7n-tabs-nav-container::after {
-  //  visibility: hidden !important;
-  //}
 
   &-collapse {
     border-top: 0.01rem solid #e0e0e0 !important;
