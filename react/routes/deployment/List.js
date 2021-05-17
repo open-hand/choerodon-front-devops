@@ -15,9 +15,9 @@ import { observer } from 'mobx-react-lite';
 import app from '@/images/app.svg';
 import image from '@/images/image.svg';
 import jar from '@/images/jar.svg';
+import { StatusTag } from '@choerodon/components';
 import { mapping } from './stores/ListDataSet';
 import { useDeployStore } from './stores';
-import StatusTag from '../../components/status-tag';
 import TimePopover from '../../components/timePopover/TimePopover';
 import UserInfo from '../../components/userInfo';
 import Deploy from './modals/deploy';
@@ -29,22 +29,14 @@ import StatusDot from '../../components/status-dot';
 import './index.less';
 
 const { Column } = Table;
-const modalKey1 = Modal.key();
-const modalKey2 = Modal.key();
-const modalKey3 = Modal.key();
 const modalKey4 = Modal.key();
 const batchDeployModalKey = Modal.key();
-const modalStyle1 = {
-  width: 380,
-};
 const modalStyle2 = {
   width: 'calc(100vw - 3.52rem)',
 };
 const statusTagsStyle = {
-  minWidth: 40,
   marginRight: 8,
 };
-const STATUS = ['success', 'failed', 'deleted', 'pendingcheck', 'stop', 'running'];
 
 const Deployment = withRouter(observer((props) => {
   const {
@@ -52,11 +44,8 @@ const Deployment = withRouter(observer((props) => {
     AppState: { currentMenuType: { id, projectId } },
     intlPrefix,
     prefixCls,
-    permissions,
     listDs,
-    detailDs,
     deployStore,
-    pipelineStore,
     envOptionsDs,
     pipelineOptionsDs,
   } = useDeployStore();
@@ -206,13 +195,26 @@ const Deployment = withRouter(observer((props) => {
     );
   }
 
-  function renderDeployStatus({ value }) {
+  function renderDeployStatus({ value, record }) {
+    const errMsg = record.get('errorMessage');
     return (
-      <StatusTag
-        colorCode={value || ''}
-        name={value ? formatMessage({ id: `${intlPrefix}.status.${value}` }) : 'unKnow'}
-        style={statusTagsStyle}
-      />
+      <>
+        <StatusTag
+          colorCode={value || ''}
+          name={value ? formatMessage({ id: `${intlPrefix}.status.${value}` }) : 'unKnow'}
+          style={statusTagsStyle}
+        />
+        {errMsg && (
+        <Tooltip title={errMsg}>
+          <Icon
+            type="info"
+            style={{
+              color: 'rgb(247, 103, 118)',
+            }}
+          />
+        </Tooltip>
+        )}
+      </>
     );
   }
 
@@ -252,31 +254,6 @@ const Deployment = withRouter(observer((props) => {
           {value || ''}
         </span>
       </Tooltip>
-    );
-  }
-
-  function renderEnv({ value, record }) {
-    return (
-      <>
-        <StatusDot
-          synchronize
-          connect={record.get('connect')}
-          size="small"
-        />
-        <span className={`${prefixCls}-content-table-env`}>{value}</span>
-      </>
-    );
-  }
-
-  function renderAppService({ value, record }) {
-    return (
-      <>
-        <span className={`${prefixCls}-content-table-appService`}>{value || '应用服务名称'}</span>
-        <span className={`${prefixCls}-content-table-version`}>
-          版本：
-          {record.get('appServiceVersion') || '版本名称'}
-        </span>
-      </>
     );
   }
 
@@ -425,9 +402,7 @@ const Deployment = withRouter(observer((props) => {
       <Content className={`${prefixCls}-content`}>
         <Table
           dataSet={listDs}
-          // queryBar="advancedBar"
           className={`${prefixCls}-content-table`}
-          // queryFieldsLimit={4}
           rowHeight="auto"
         >
           <Column
@@ -470,8 +445,6 @@ const Deployment = withRouter(observer((props) => {
               />
           )}
           />
-          {/* <Column name="envName" renderer={renderEnv} /> */}
-          {/* <Column name="appServiceName" renderer={renderAppService} /> */}
           <Column name="executeUser" renderer={renderExecutor} />
         </Table>
       </Content>
