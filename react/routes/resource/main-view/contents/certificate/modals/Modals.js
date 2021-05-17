@@ -1,8 +1,10 @@
 import React, {
   useEffect, useState,
 } from 'react';
+import { Modal } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import { HeaderButtons } from '@choerodon/master';
+import { FormattedMessage } from 'react-intl';
 import { useResourceStore } from '../../../../stores';
 import { useModalStore } from './stores';
 import { useCertificateStore } from '../stores';
@@ -40,6 +42,25 @@ const EnvModals = observer(() => {
 
   function openModal() {
     setShowModal(true);
+    Modal.open({
+      title: <FormattedMessage id="ctf.sidebar.create" />,
+      key: Modal.key(),
+      style: {
+        width: 380,
+      },
+      drawer: true,
+      okText: <FormattedMessage id="create" />,
+      cancelText: <FormattedMessage id="cancel" />,
+      children: (
+        <FormView
+          pro
+          visible={showModal}
+          store={certStore}
+          envId={parentId}
+          onClose={closeModal}
+        />
+      ),
+    });
   }
 
   function closeModal(isLoad) {
@@ -59,7 +80,7 @@ const EnvModals = observer(() => {
       handler: openModal,
       display: true,
       service: permissions,
-      disabled,
+      // disabled,
     }, {
       icon: 'refresh',
       handler: refresh,
@@ -70,14 +91,14 @@ const EnvModals = observer(() => {
   return (
     <>
       <HeaderButtons items={getButtons()} showClassName />
-      {showModal && (
-        <FormView
-          visible={showModal}
-          store={certStore}
-          envId={parentId}
-          onClose={closeModal}
-        />
-      )}
+      {/* {showModal && ( */}
+      {/*  <FormView */}
+      {/*    visible={showModal} */}
+      {/*    store={certStore} */}
+      {/*    envId={parentId} */}
+      {/*    onClose={closeModal} */}
+      {/*  /> */}
+      {/* )} */}
     </>
   );
 });
