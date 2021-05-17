@@ -249,7 +249,7 @@ const TemplateTable = observer(() => {
       <Content>
         <Table dataSet={tableDs} className="table-default-color">
           <Column name={mapping.appTemplate.name} renderer={renderName} />
-          <Column renderer={renderAction} width={50} />
+          <Column renderer={renderAction} width={60} />
           <Column name={mapping.temCode.name} />
           <Column name={mapping.repo.name} renderer={renderUrl} />
           <Column name={mapping.source.name} renderer={renderSource} width={100} />

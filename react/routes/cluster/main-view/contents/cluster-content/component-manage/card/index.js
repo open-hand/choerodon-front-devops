@@ -79,7 +79,6 @@ export default ({
           >
             <Button
               className={`${prefixCls}-card-wrap-footer-button`}
-              color="primary"
               onClick={onClick}
               loading={loading}
               disabled={disabled}
