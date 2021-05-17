@@ -622,7 +622,7 @@ const ListView = withRouter(observer((props) => {
             extraNode: (
               <TextField
                 className="theme4-c7n-member-search"
-                placeholder="搜索成员"
+                placeholder="搜索应用服务"
                 style={{ marginLeft: 32 }}
                 suffix={(
                   <Icon type="search" />

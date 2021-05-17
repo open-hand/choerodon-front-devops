@@ -453,7 +453,7 @@ const Deployment = withRouter(observer((props) => {
           // queryBar="advancedBar"
           className={`${prefixCls}-content-table`}
           // queryFieldsLimit={4}
-          rowHeight="auto"
+          // rowHeight="auto"
         >
           <Column
             name="deployId"

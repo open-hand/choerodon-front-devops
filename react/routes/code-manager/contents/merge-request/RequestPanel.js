@@ -226,7 +226,7 @@ const RequestPanel = withRouter(observer((props) => {
             activecKey={getTabKey}
             onChange={tabChange}
             animated={false}
-            className="c7n-merge-tabs"
+            // className="c7n-merge-tabs"
             type="card"
             size="small"
             tabBarStyle={{ marginRight: '0' }}
