@@ -56,7 +56,7 @@ const Deployment = withRouter(observer((props) => {
     if (urlQuery.get('mode')) {
       openBaseDeploy(urlQuery.get('mode'));
       urlQuery.delete('mode');
-      window.history.replaceState(null, null, `/#/devops/deployment-operation${urlQuery.toString()}`);
+      window.history.replaceState(null, null, `/#/devops/deployment-operation?${urlQuery.toString()}`);
     }
   }, []);
 
