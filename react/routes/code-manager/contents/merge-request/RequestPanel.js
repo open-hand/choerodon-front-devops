@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useEffect, Fragment, useMemo } from 'react';
-import { Icon, Tooltip } from 'choerodon-ui';
+import { Icon, Tooltip, Radio } from 'choerodon-ui';
 import { Table, Button, Tabs } from 'choerodon-ui/pro';
 import { withRouter } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
@@ -75,7 +75,8 @@ const RequestPanel = withRouter(observer((props) => {
     mergedRequestStore.loadUser();
   }, []);
 
-  function tabChange(key) {
+  function tabChange(e) {
+    const key = e.target.value;
     setTabKey(key);
     openTableDS.query();
   }
@@ -214,6 +215,10 @@ const RequestPanel = withRouter(observer((props) => {
     );
   }
 
+  const renderContent = (key) => {
+    return renderTable(key);
+  }
+
   return (
     <Page
       className={classNames('c7n-region page-container', 'c7n-merge-wrapper', styles?.['c7n-branch-theme4-page'])}
@@ -222,32 +227,51 @@ const RequestPanel = withRouter(observer((props) => {
       {appServiceDs.status !== 'ready' || !appId
         ? <Loading display />
         : (!mergedRequestStore.getIsEmpty ? (<Fragment>
-          <Tabs
-            activecKey={getTabKey}
+          <Radio.Group
+            className="c7ncd-merge-radio"
+            value={getTabKey}
             onChange={tabChange}
-            animated={false}
-            // className="c7n-merge-tabs"
-            type="card"
-            size="small"
-            tabBarStyle={{ marginRight: '0' }}
           >
-            {map(tabPaneList, ({ key, count }) => (
-              <TabPane
-                tab={`${formatMessage({ id: `merge.tab.${key}` })}(${count})`}
-                key={key}
-              >
-                {renderTable(key)}
-              </TabPane>
-            ))}
+            {
+              map(tabPaneList, ({ key, count }) => (
+                <Radio.Button value={key}>{`${formatMessage({ id: `merge.tab.${key}` })}(${count})`}</Radio.Button>
+              ))
+            }
             {auditCount > 0 && (
-              <TabPane
-                tab={`${formatMessage({ id: 'merge.tab.assignee' })}(${auditCount || 0})`}
-                key="assignee"
+              <Radio.Button
+                value="assignee"
               >
-                {renderTable('assignee')}
-              </TabPane>
+                {`${formatMessage({ id: 'merge.tab.assignee' })}(${auditCount || 0})`}
+              </Radio.Button>
             )}
-          </Tabs>
+          </Radio.Group>
+          {renderContent(getTabKey)}
+          {/*<Tabs*/}
+          {/*  activecKey={getTabKey}*/}
+          {/*  onChange={tabChange}*/}
+          {/*  animated={false}*/}
+          {/*  // className="c7n-merge-tabs"*/}
+          {/*  type="card"*/}
+          {/*  size="small"*/}
+          {/*  tabBarStyle={{ marginRight: '0' }}*/}
+          {/*>*/}
+          {/*  {map(tabPaneList, ({ key, count }) => (*/}
+          {/*    <TabPane*/}
+          {/*      tab={`${formatMessage({ id: `merge.tab.${key}` })}(${count})`}*/}
+          {/*      key={key}*/}
+          {/*    >*/}
+          {/*      {renderTable(key)}*/}
+          {/*    </TabPane>*/}
+          {/*  ))}*/}
+          {/*  {auditCount > 0 && (*/}
+          {/*    <TabPane*/}
+          {/*      tab={`${formatMessage({ id: 'merge.tab.assignee' })}(${auditCount || 0})`}*/}
+          {/*      key="assignee"*/}
+          {/*    >*/}
+          {/*      {renderTable('assignee')}*/}
+          {/*    </TabPane>*/}
+          {/*  )}*/}
+          {/*</Tabs>*/}
         </Fragment>) : (
           <EmptyPage
             title={formatMessage({ id: 'empty.title.prohibited' })}

@@ -7,12 +7,15 @@ body[data-theme=theme4] {
     p {
       margin: 0;
     }
+    .c7n-tabs-line .c7n-tabs-nav-container::after {
+      display: none;
+    }
     &-left {
       width: 63%;
       background: white;
       height: 100%;
-      padding: 12px 16px;
       overflow: auto;
+      padding-right: 16px;
       position: relative;
     }
     &-blockTop {
@@ -54,7 +57,7 @@ body[data-theme=theme4] {
     }
     .c7ncd-appService-item {
       position: relative;
-      padding: 16px;
+      padding: 12px;
       border-bottom: 1px solid #d9e6f2;
       display: flex;
       align-items: center;
@@ -79,6 +82,7 @@ body[data-theme=theme4] {
         &-line {
           display: flex;
           align-items: center;
+          justify-content: flex-end;
           time {
             font-size: 12px;
             font-family: PingFangSC-Regular, PingFang SC, sans-serif;

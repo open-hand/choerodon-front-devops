@@ -1,10 +1,13 @@
 import React, {
   Fragment, useCallback, useState, useEffect, useMemo,
 } from 'react';
-import { Table, Modal, Select } from 'choerodon-ui/pro';
+import {
+  Table, Modal, Select, Button,
+} from 'choerodon-ui/pro';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
-import { Button, Icon, Tooltip } from 'choerodon-ui';
+import { Icon, Tooltip } from 'choerodon-ui';
+
 import SourceTable from './SourceTable';
 import MarketSourceTable from './components/market-table';
 import Tips from '../../../../../components/new-tips';
