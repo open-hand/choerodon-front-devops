@@ -287,8 +287,9 @@ const PipelineCreate = observer(() => {
         appServiceType={getAppServiceData().type || editBlockStore.getMainData?.appServiceType}
         dataSource={dataSource}
       />
+      {/* TODO 替换成组件的Alert组件 */}
       <p className="pipeline_createInfo">
-        <Icon style={{ color: 'rgba(247, 103, 118, 1)', verticalAlign: 'text-bottom' }} type="error" />
+        <Icon className="pipeline_createInfo-icon" type="error" />
         此页面定义了CI阶段或其中的任务后，GitLab仓库中的.gitlab-ci.yml文件也会同步修改。
       </p>
     </div>
