@@ -365,7 +365,7 @@ export default injectIntl(observer((props) => {
           >
             <Column name="status" renderer={renderStatus} width={100} />
             <Column name="pipelineId" renderer={renderSign} />
-            <Column name="gitlabProjectId" renderer={renderAction} width={50} />
+            <Column name="gitlabProjectId" renderer={renderAction} width={60} />
             <Column name="commit" renderer={renderCommit} />
             <Column name="stages" renderer={renderStages} />
             <Column name="pipelineTime" renderer={renderTimeSpan} width={120} />
