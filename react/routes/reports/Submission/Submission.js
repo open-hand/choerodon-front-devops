@@ -227,11 +227,8 @@ const Submission = observer(() => {
             searchable
             placeholder={formatMessage({ id: 'report.app.noselect' })}
             maxTagCount={3}
-            // value={appId || []}
             maxTagPlaceholder={(omittedValues) => maxTagNode(getAllApps, omittedValues)}
             onChange={handleSelect}
-            // optionFilterProp="children"
-            // filter
           >
             {options}
           </Select>
