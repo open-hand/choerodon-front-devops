@@ -1,18 +1,17 @@
 /* eslint-disable */
 import React, { useEffect, useState, Fragment, useRef } from 'react';
 import { Table, Modal, TextField, Pagination } from 'choerodon-ui/pro';
-import { Tabs } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { FormattedMessage } from 'react-intl';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import {
-  Page, Content, Header, Permission, Action, Breadcrumb, Choerodon, HeaderButtons
+  Page, Content, Header, Action, Breadcrumb, Choerodon, HeaderButtons
 } from '@choerodon/boot';
 import {
   SagaDetails,
 } from '@choerodon/master';
 import {
-  Button, Spin, Tooltip, Icon,
+  Spin, Tooltip, Icon,
 } from 'choerodon-ui';
 import pick from 'lodash/pick';
 import ServiceDetail from "@/routes/app-service/service-detail";
@@ -22,14 +21,12 @@ import { useAppServiceStore } from './stores';
 import CreateForm from '../modals/creat-form';
 import EditForm from '../modals/edit-form';
 import ImportForm from './modal/import-form';
-import StatusTag from '../components/status-tag';
+import { StatusTag } from '@choerodon/components';
 import { handlePromptError } from '../../../utils';
 
 import './index.less';
 import './theme4.less';
 import ClickText from "../../../components/click-text";
-
-const TabPane = Tabs.TabPane;
 
 const { Column } = Table;
 const modalKey1 = Modal.key();
@@ -192,12 +189,28 @@ const ListView = withRouter(observer((props) => {
     );
   }
 
-  function renderStatus({ value, record }) {
+  function renderStatus({ value:active, record }) {
+    const isSynchro = record.get('synchro');
+    const isFailed = record.get('fail');
+    let colorCode;
+    if(isSynchro){
+      if(isFailed){
+        colorCode = 'failed' 
+      }else if(active){
+        colorCode = 'active'
+      }else{
+        colorCode = 'stop'
+      }
+    } else {
+      colorCode = 'operating'
+    }
     return (
       <StatusTag
-        active={value}
-        fail={record.get('fail')}
-        synchro={record.get('synchro')}
+        colorCode={colorCode}
+        style={{
+          marginRight: '5px'
+        }}
+        name={formatMessage({id:colorCode})}
       />
     );
   }
@@ -261,15 +274,6 @@ const ListView = withRouter(observer((props) => {
       delete actionItems.detail;
     }
     return <Action data={Object.values(actionItems)} />;
-  }
-
-  function handleCancel(dataSet) {
-    const { current } = dataSet;
-    if (current.status === 'add') {
-      dataSet.remove(current);
-    } else {
-      current.reset();
-    }
   }
 
   function openCreate() {
@@ -431,62 +435,12 @@ const ListView = withRouter(observer((props) => {
   }
 
   function getHeader() {
-    const disabled = !appListStore.getCanCreate;
-    const disabledMessage = disabled ? formatMessage({ id: `${intlPrefix}.create.disabled` }) : '';
     return (
       <Header title={<FormattedMessage id="app.head" />}>
         <HeaderButtons
           items={getItemsButton()}
           showClassName={false}
         />
-        {/*<Permission*/}
-        {/*  service={['choerodon.code.project.develop.app-service.ps.create']}*/}
-        {/*>*/}
-        {/*  <Tooltip title={disabledMessage} placement="bottom">*/}
-        {/*    <Button*/}
-        {/*      icon="playlist_add"*/}
-        {/*      disabled={disabled}*/}
-        {/*      onClick={openCreate}*/}
-        {/*    >*/}
-        {/*      <FormattedMessage id={`${intlPrefix}.create`} />*/}
-        {/*    </Button>*/}
-        {/*  </Tooltip>*/}
-        {/*</Permission>*/}
-        {/*<Permission*/}
-        {/*  service={['choerodon.code.project.develop.app-service.ps.import']}*/}
-        {/*>*/}
-        {/*  <Tooltip title={disabledMessage} placement="bottom">*/}
-        {/*    <Button*/}
-        {/*      icon="archive"*/}
-        {/*      disabled={disabled}*/}
-        {/*      onClick={openImport}*/}
-        {/*    >*/}
-        {/*      <FormattedMessage id={`${intlPrefix}.import`} />*/}
-        {/*    </Button>*/}
-        {/*  </Tooltip>*/}
-        {/*</Permission>*/}
-        {/*<Permission*/}
-        {/*  service={['choerodon.code.project.develop.app-service.ps.permission.update']}*/}
-        {/*>*/}
-        {/*  <Button*/}
-        {/*    icon="authority"*/}
-        {/*    onClick={() => {*/}
-        {/*      const {*/}
-        {/*        history,*/}
-        {/*        location,*/}
-        {/*      } = props;*/}
-        {/*      history.push(`/rducm/code-lib-management/assign${location.search}`);*/}
-        {/*    }}*/}
-        {/*  >*/}
-        {/*    权限管理*/}
-        {/*  </Button>*/}
-        {/*</Permission>*/}
-        {/*<Button*/}
-        {/*  icon="refresh"*/}
-        {/*  onClick={refresh}*/}
-        {/*>*/}
-        {/*  <FormattedMessage id="refresh" />*/}
-        {/*</Button>*/}
       </Header>
     );
   }
@@ -523,11 +477,19 @@ const ListView = withRouter(observer((props) => {
                     <div className="c7ncd-appService-item-center">
                       <div className="c7ncd-appService-item-center-line">
                         <span className="c7ncd-appService-item-center-line-name">{record.get('name')}</span>
-                        <StatusTag
-                          active={record.get('active')}
-                          fail={record.get('fail')}
-                          synchro={record.get('synchro')}
-                        />
+                        {
+                          renderStatus({value:record.get('active'), record})
+                        }
+                        {record.get('errorMessage') && <Tooltip title={record.get('errorMessage')}>
+                          <Icon 
+                            type="info"
+                            style={{
+                              color: '#f76776',
+                              marginRight: '5px'
+                            }}
+                          />
+                        </Tooltip> 
+                        }
                         <span className="c7ncd-appService-item-center-line-type">
                       <FormattedMessage id={`${intlPrefix}.type.${record.get('type')}`} />
                     </span>
