@@ -97,7 +97,7 @@ const FormView = observer(() => {
     let error = false;
     // eslint-disable-next-line no-plusplus
     for (let i = 0, len = values.length; i < len; i++) {
-      if (typeof values[i] !== 'string' || values[i] === '') {
+      if (typeof values[i] !== 'string' || (title === 'cipher' && values[i] === '')) {
         error = true;
         break;
       }
@@ -121,7 +121,7 @@ const FormView = observer(() => {
     const _data = dataCurrent || dataSource;
     const hasKey = _data.filter(({ key }) => !_.isEmpty(key));
     const onlyHasValue = _data.filter(({ key, value }) => _.isEmpty(key) && !_.isEmpty(value));
-    const onlyHasKey = hasKey.filter(({ value }) => _.isEmpty(value));
+    const onlyHasKey = title === 'cipher' && hasKey.filter(({ value }) => _.isEmpty(value));
     const hasErrorItem = onlyHasKey.length || onlyHasValue.length;
     const hasRepeatKey = hasKey.length !== _.uniqBy(hasKey, 'key').length;
     const hasEmptyKey = title === 'cipher' && (_.isEmpty(hasKey) || hasKey.length !== _data.length);
@@ -236,30 +236,26 @@ const FormView = observer(() => {
   };
 
   const getDataSourceMapFormItem = () => KeyValueDataSet.data.map((record) => (
-    <Form record={record} key={record.id}>
-      <div className="c7n-config-container">
-        <TextField
-          style={{
-            width: 190,
-          }}
-          name="key"
-          onBlur={() => checkErrorData(null, false)}
-          placeholder="键"
-        />
-        <span className="c7n-config-equal">=</span>
-        <TextArea
-          className="c7n-config-value"
-          name="value"
-          rows={1}
-          placeholder="值"
-          onBlur={() => checkErrorData(null, false)}
-        />
-        <Icon
-          className="del-btn"
-          type="delete"
-          onClick={() => handleDelete(record)}
-        />
-      </div>
+    <Form record={record} key={record.id} columns={18} className="c7n-config-container">
+      <TextField
+        name="key"
+        onBlur={() => checkErrorData(null, false)}
+        colSpan={5}
+      />
+      <span className="c7n-config-equal">=</span>
+      <TextArea
+        className="c7n-config-value"
+        name="value"
+        autoSize={{ minRows: 1 }}
+        resize="vertical"
+        onBlur={() => checkErrorData(null, false)}
+        colSpan={11}
+      />
+      <Icon
+        className="del-btn"
+        type="delete"
+        onClick={() => handleDelete(record)}
+      />
     </Form>
   ));
 
