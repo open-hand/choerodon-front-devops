@@ -92,22 +92,23 @@
   }
 
   .c7n-config-container {
-    display: flex;
-    margin-bottom: 10px;
-    .c7n-config-value {
-      flex: 1;
-    }
+
     .c7n-config-equal {
-      margin: 0 10px;
       font-size: 28px;
       color: rgba(0, 0, 0, 0.54);
+      line-height: .48rem;
+      text-align: center;
     }
     .del-btn {
-      line-height: 1.5;
+      line-height: .48rem;
       font-size: 18px;
       position: relative;
       cursor: pointer;
-      margin: auto auto auto 13px;
+      text-align: center;
+    }
+
+    .@{c7n-pro-prefix}-textarea-float-label textarea.@{c7n-pro-prefix}-textarea {
+      min-height: .48rem !important;
     }
   }
 }
