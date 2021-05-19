@@ -152,6 +152,11 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
     return '';
   }
 
+  function renderSearchMatcher({ record, text }) {
+    const tempRecord = appServiceDs.find((appServiceRecord) => appServiceRecord.get('id') === record.get('value'));
+    return tempRecord.get('code').indexOf(text) !== -1 || tempRecord.get('name').indexOf(text) !== -1;
+  }
+
   return (
     <div style={{ paddingLeft: 24, display: 'flex', alignItems: 'center' }}>
       <Form
@@ -173,6 +178,7 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
           dataSet={selectAppDs}
           notFoundContent={appServiceDs.length === 0 ? formatMessage({ id: 'ist.noApp' }) : '未找到应用服务'}
           searchable
+          searchMatcher={renderSearchMatcher}
           name="appServiceId"
           clearButton={false}
           disabled={appServiceDs.status !== 'ready' || appServiceDs.length === 0}

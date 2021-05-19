@@ -215,14 +215,14 @@ const DeployModal = observer(() => {
     return (record.get('appServiceSource') === 'normal_service' ? (
       map(deployStore.getAppService[0]
         && deployStore.getAppService[0].appServiceList, ({ id, name, code }) => (
-          <Option value={`${id}**${code}`} key={id}>{name}</Option>
+          <Option value={`${id}**${code}`} key={id}>{`${name}(${code})`}</Option>
       ))
     ) : (
       map(deployStore.getAppService,
         ({ id: groupId, name: groupName, appServiceList }) => (
           <OptGroup label={groupName} key={groupId}>
             {map(appServiceList, ({ id, name, code }) => (
-              <Option value={`${id}**${code}`} key={id}>{name}</Option>
+              <Option value={`${id}**${code}`} key={id}>{`${name}(${code})`}</Option>
             ))}
           </OptGroup>
         ))
