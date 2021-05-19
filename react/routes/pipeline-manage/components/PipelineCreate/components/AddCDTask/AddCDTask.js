@@ -407,7 +407,7 @@ export default observer(() => {
       }
     }
     initBranchs();
-  }, [ADDCDTaskDataSet, getBranchsList]);
+  }, [currentSize, ADDCDTaskDataSet.current.get('triggerType')]);
 
   const getTestDom = () => {
     const res = {
