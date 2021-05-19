@@ -7,7 +7,7 @@ import TimePopover from '../../../../../components/timePopover/TimePopover';
 import { useResourceStore } from '../../../stores';
 import { useKeyValueStore } from './stores';
 import Modals from './modals';
-import KeyValueModal from '../application/modals/key-value';
+import KeyValueModal from '../application/modals/key-value/KeyValueProIndex';
 import { useMainStore } from '../../stores';
 import ResourceListTitle from '../../components/resource-list-title';
 import StatusIcon from '../../../../../components/StatusIcon';
@@ -104,7 +104,7 @@ const ConfigMap = observer((props) => {
       title: formatMessage({ id: `${intlPrefix}.configMap.edit` }),
       children: <KeyValueModal
         modeSwitch
-        title="configMap"
+        title="mapping"
         id={ConfigMapTableDs.current.get('id')}
         envId={parentId}
         store={formStore}
