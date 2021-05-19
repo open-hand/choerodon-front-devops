@@ -1301,7 +1301,7 @@ const AddTask = observer(() => {
                         <Icon
                           type="help"
                           className="c7ncd-select-tips-icon"
-                          style={{ position: 'absolute', top: '2px', left: '96px' }}
+                          style={{ position: 'absolute', top: '2px', left: '476px' }}
                         />
                       </Tooltip>
                       <TextField style={{ visibility: 'hidden' }} />
@@ -1320,7 +1320,7 @@ const AddTask = observer(() => {
                         <Icon
                           type="help"
                           className="c7ncd-select-tips-icon"
-                          style={{ position: 'absolute', top: '2px', left: '439px' }}
+                          style={{ position: 'absolute', top: '2px', left: '476px' }}
                         />
                       </Tooltip>
                     </div>,
@@ -1361,8 +1361,12 @@ const AddTask = observer(() => {
                           fontWeight: 500,
                         }}
                       >
-                        门禁条件
-                        <Tooltip title="门禁条件可选择漏洞的严重度与漏洞数量作为基准，若镜像漏洞扫描的结果中存在漏洞严重度比条件中设置的严重度层级更高（严重度层级由高至低：危急>严重>中等>较低）或者同层级严重度的漏洞数量超过了设置的数量时，该镜像均视作不满足门禁条件而不会被推送至镜像仓库。">
+                        门禁限制
+                        <Tooltip title={(<>
+                          <p>门禁限制可选择漏洞的严重度与漏洞数量作为基准。且只有满足限制时，才可通过设置的门禁。</p>
+                          <p>若镜像漏洞扫描的结果中存在漏洞严重度比限制中设置的严重度层级更高（严重度层级由高至低：危急>严重>中等>较低）或者同层级严重度的漏洞数量超过了设置的数量时，该镜像均视作不满足门禁限制而不会被推送至镜像仓库。</p>
+                        </>
+                        )}>
                           <Icon
                             style={{
                               position: 'relative',
