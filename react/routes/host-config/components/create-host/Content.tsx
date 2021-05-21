@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 import {
   Form, Password, SelectBox, Spin, TextField,
 } from 'choerodon-ui/pro';
+import { Alert, Tabs, Divider } from 'choerodon-ui';
 import pick from 'lodash/pick';
 import Tips from '@/components/new-tips';
 import HostConfigApis from '@/routes/host-config/apis';
@@ -10,6 +11,8 @@ import YamlEditor from '@/components/yamlEditor';
 import { useCreateHostStore } from './stores';
 import JmeterGuide from './components/jmeter-guide';
 import TestConnect from './components/test-connect';
+
+const { TabPane } = Tabs;
 
 const CreateHost: React.FC<any> = observer((): any => {
   const {
@@ -26,6 +29,10 @@ const CreateHost: React.FC<any> = observer((): any => {
 
   modal.handleOk(async () => {
     try {
+      const record = formDs.current;
+      if (record && !(record.get('hostIp') || record.get('sshPort') || record.get('privateIp') || record.get('privatePort'))) {
+        return false;
+      }
       const res = await formDs.submit();
       if (res) {
         refresh();
@@ -97,17 +104,37 @@ const CreateHost: React.FC<any> = observer((): any => {
       <Form dataSet={formDs} className={`${prefixCls}-form`}>
         {showTestTab && <SelectBox name="type" disabled={!!hostId} />}
         <TextField name="name" style={{ marginTop: '-10px' }} />
-        <TextField name="hostIp" />
-        <TextField name="sshPort" />
-        {formDs && formDs.current && formDs.current.get('type') === 'deploy' && ([
-          <TextField name="privateIp" />,
-          <TextField name="privatePort" />,
-        ])}
-        <Tips
-          title={formatMessage({ id: `${intlPrefix}.account` })}
-          className={`${prefixCls}-module-title ${prefixCls}-module-title-radio`}
-          showHelp={false}
-        />
+      </Form>
+      {formDs && formDs.current && formDs.current.get('type') === 'deploy' ? ([
+        <Divider className={`${prefixCls}-divider`} />,
+        <Alert
+          type="info"
+          showIcon
+          message="外部SSH认证与内部SSH认证至少填写一个模块"
+          className={`${prefixCls}-alert`}
+        />,
+        <Tabs defaultActiveKey="external">
+          <TabPane tab="外部SSH认证" key="external">
+            <Form dataSet={formDs} className={`${prefixCls}-form`}>
+              <TextField name="hostIp" />
+              <TextField name="sshPort" />
+            </Form>
+          </TabPane>
+          <TabPane tab="内部SSH认证" key="internal">
+            <Form dataSet={formDs} className={`${prefixCls}-form`}>
+              <TextField name="privateIp" />
+              <TextField name="privatePort" />
+            </Form>
+          </TabPane>
+        </Tabs>,
+      ]) : (
+        <Form dataSet={formDs} className={`${prefixCls}-form`}>
+          <TextField name="hostIp" />
+          <TextField name="sshPort" />
+        </Form>
+      )}
+      <Divider className={`${prefixCls}-divider`} />
+      <Form dataSet={formDs} className={`${prefixCls}-form`}>
         <SelectBox name="authType" />
         <TextField name="username" style={{ marginTop: '-10px' }} />
         {formDs && formDs.current && formDs.current.get('authType') === 'publickey' ? ([
@@ -126,16 +153,17 @@ const CreateHost: React.FC<any> = observer((): any => {
             </span>
           ) : null,
         ]) : <Password name="password" reveal={false} />}
-        {formDs && formDs.current && formDs.current.get('type') === 'distribute_test' && ([
-          <Tips
-            title={formatMessage({ id: `${intlPrefix}.jmeter` })}
-            className={`${prefixCls}-module-title`}
-            showHelp={false}
-          />,
-          <TextField name="jmeterPort" />,
-          <TextField name="jmeterPath" />,
-        ])}
       </Form>
+      {formDs && formDs.current && formDs.current.get('type') === 'distribute_test' && ([
+        <div>
+          <Divider className={`${prefixCls}-divider`} />
+          <span>{formatMessage({ id: `${intlPrefix}.jmeter` })}</span>
+        </div>,
+        <Form dataSet={formDs} className={`${prefixCls}-form`}>
+          <TextField name="jmeterPort" />
+          <TextField name="jmeterPath" />
+        </Form>,
+      ])}
       {formDs && formDs.current && formDs.current.get('type') === 'distribute_test' && (
         <JmeterGuide />
       )}

@@ -9,7 +9,8 @@ import some from 'lodash/some';
 import FormDataSet from './FormDataSet';
 
 // @ts-ignore
-const HAS_BASE_PRO = C7NHasModule('@choerodon/base-business');
+// const HAS_BASE_PRO = C7NHasModule('@choerodon/base-business');
+const HAS_BASE_PRO = true;
 
 interface ContextProps {
   prefixCls: string,
