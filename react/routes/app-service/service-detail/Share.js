@@ -3,7 +3,7 @@ import {
   TabPage, Content, Permission, Breadcrumb, Action,
 } from '@choerodon/boot';
 import {
-  Table, Modal, TextField, Pagination,
+  Table, Modal, TextField, Pagination, Button as ProButton,
 } from 'choerodon-ui/pro';
 import {
   Button, Icon, Tooltip, Spin,
@@ -142,6 +142,35 @@ const Share = withRouter((props) => {
     history.push(`/rducm/code-lib-management/assign${location.search}&appServiceIds=${appServiceIds}`);
   }
 
+  const renderShareButton = () => {
+    const isStop = detailDs.current && !detailDs.current.get('active');
+    return (
+      <Permission
+        service={['choerodon.code.project.develop.app-service.ps.share.add']}
+      >
+        <div style={{
+          position: 'absolute',
+          zIndex: 100,
+          right: 0,
+        }}
+        >
+          <Tooltip
+            title={isStop ? <FormattedMessage id={`${intlPrefix}.button.disabled`} /> : ''}
+            placement="bottom"
+          >
+            <ProButton
+              icon="playlist_add"
+              onClick={() => openModal('add')}
+              disabled={isStop}
+            >
+              <FormattedMessage id={`${intlPrefix}.share.rule.add`} />
+            </ProButton>
+          </Tooltip>
+        </div>
+      </Permission>
+    );
+  };
+
   function renderButtons() {
     const isStop = detailDs.current && !detailDs.current.get('active');
     return [
@@ -198,6 +227,7 @@ const Share = withRouter((props) => {
   function renderTheme4Share() {
     return (
       <Spin spinning={shareDs.status !== 'ready'}>
+        {renderShareButton()}
         <div className="c7ncd-theme4-version">
           <TextField
             placeholder="搜索共享设置"

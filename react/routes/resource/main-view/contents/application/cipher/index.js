@@ -4,12 +4,10 @@ import { Action } from '@choerodon/boot';
 import { Modal, Table } from 'choerodon-ui/pro';
 import keys from 'lodash/keys';
 import MouserOverWrapper from '../../../../../../components/MouseOverWrapper/MouserOverWrapper';
-import StatusTags from '../../../../../../components/status-tag';
 import TimePopover from '../../../../../../components/timePopover/TimePopover';
-import KeyValueModal from '../modals/key-value';
+import KeyValueModal from '../modals/key-value/KeyValueProIndex';
 import { useResourceStore } from '../../../../stores';
 import { useApplicationStore } from '../stores';
-import ClickText from '../../../../../../components/click-text';
 import { useMainStore } from '../../../stores';
 
 import '../configs/index.less';
@@ -29,7 +27,13 @@ const Cipher = observer(() => {
     resourceStore: { getSelectedMenu: { id, parentId } },
     treeDs,
   } = useResourceStore();
-  const { cipherStore, cipherDs } = useApplicationStore();
+  const {
+    cipherStore,
+    cipherDs,
+    tabs: {
+      CIPHER_TAB,
+    },
+  } = useApplicationStore();
   const { mainStore: { openDeleteModal } } = useMainStore();
   const statusStyle = useMemo(() => ({ marginRight: '0.08rem' }), []);
 
@@ -52,7 +56,7 @@ const Cipher = observer(() => {
       title: formatMessage({ id: `${intlPrefix}.cipher.edit` }),
       children: <KeyValueModal
         intlPrefix={intlPrefix}
-        title="cipher"
+        title={CIPHER_TAB}
         id={record.get('id')}
         envId={parentId}
         appId={id}

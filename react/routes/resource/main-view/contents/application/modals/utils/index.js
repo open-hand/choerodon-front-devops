@@ -77,7 +77,7 @@ function takeObject(data) {
   for (let i = 0, len = data.length; i < len; i++) {
     const { key, value } = data[i];
     if (key) {
-      _value[key] = value;
+      _value[key] = value || '';
     }
   }
 

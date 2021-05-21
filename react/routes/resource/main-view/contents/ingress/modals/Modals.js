@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
-import HeaderButtons from '../../../../../../components/header-buttons';
+import { HeaderButtons } from '@choerodon/master';
 import { useResourceStore } from '../../../../stores';
 import { useModalStore } from './stores';
 import { useIngressStore } from '../stores';
@@ -61,23 +61,16 @@ const EnvModals = observer(() => {
       icon: 'playlist_add',
       handler: openModal,
       display: true,
-      group: 1,
       service: permissions,
       disabled,
     }, {
-      name: formatMessage({ id: 'refresh' }),
       icon: 'refresh',
       handler: refresh,
       display: true,
-      group: 1,
     }]);
   }
 
-  return (
-    <Fragment>
-      <HeaderButtons items={getButtons()} />
-    </Fragment>
-  );
+  return <HeaderButtons items={getButtons()} showClassName />;
 });
 
 export default EnvModals;

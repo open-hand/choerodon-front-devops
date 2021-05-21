@@ -1,7 +1,7 @@
 import React, { useImperativeHandle } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Button, Form, Icon, Select, SelectBox, TextField,
+  Button, Form, TextArea, Select, SelectBox, TextField,
 } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import { useManualDeployStore } from './stores';
@@ -104,10 +104,21 @@ export default observer(({ cRef, envId: otherEnvId }) => {
         Annotations
       </div>
       {map(annotationDs.data, (annotationRecord) => (
-        <Form columns={14} record={annotationRecord} style={{ width: '103.3%' }} key={annotationRecord.id}>
+        <Form
+          columns={14}
+          record={annotationRecord}
+          style={{ width: '103.3%' }}
+          key={annotationRecord.id}
+          className={`${prefixCls}-resource-domain-annotation`}
+        >
           <TextField colSpan={6} name="key" />
           <span className={`${prefixCls}-resource-domain-annotation-equal`}>=</span>
-          <TextField colSpan={6} name="value" />
+          <TextArea
+            colSpan={6}
+            name="value"
+            autoSize={{ minRows: 1 }}
+            resize="vertical"
+          />
           {annotationDs.length > 1 ? (
             <Button
               funcType="flat"

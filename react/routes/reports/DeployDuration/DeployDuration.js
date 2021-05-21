@@ -1,12 +1,16 @@
 import React, { Component, useState, useEffect } from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
-import { Page, Header, Content, Breadcrumb } from '@choerodon/boot';
-import { Select, Button, Table, Spin, Form } from 'choerodon-ui/pro';
+import {
+  Page, Header, Content, Breadcrumb,
+} from '@choerodon/boot';
+import {
+  Select, Button, Table, Spin, Form,
+} from 'choerodon-ui/pro';
 import ReactEcharts from 'echarts-for-react';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
 import filter from 'lodash/filter';
 import moment from 'moment';
+import { HeaderButtons } from '@choerodon/master';
 import StatusTags from '../../../components/status-tag';
 import LoadingBar from '../../../components/loading';
 import MouserOverWrapper from '../../../components/MouseOverWrapper';
@@ -262,84 +266,89 @@ const DeployDuration = observer(() => {
   function getContent() {
     const envData = envDs.toData();
     const envs = filter(envData, ['permission', true]);
-    return (envs && envs.length ? <React.Fragment>
-      <div className="c7n-report-screen c7n-report-select">
-        <Form dataSet={detailDs} columns={3} style={{ paddingRight: '.2rem' }}>
-          <Select
-            name="envId"
-            searchable
-            colSpan={1}
-            clearButton={false}
+    return (envs && envs.length ? (
+      <>
+        <div className="c7n-report-screen c7n-report-select">
+          <Form dataSet={detailDs} columns={3} style={{ paddingRight: '.2rem' }}>
+            <Select
+              name="envId"
+              searchable
+              colSpan={1}
+              clearButton={false}
+            />
+            <Select
+              name="appServiceIds"
+              searchable
+              maxTagCount={3}
+              maxTagPlaceholder={maxTagNode}
+              showCheckAll={false}
+              colSpan={2}
+            />
+          </Form>
+          <TimePicker
+            startTime={ReportsStore.getStartDate}
+            endTime={ReportsStore.getEndDate}
+            func={loadData}
+            type={dateType}
+            onChange={handleDateChoose}
+            store={ReportsStore}
           />
-          <Select
-            name="appServiceIds"
-            searchable
-            maxTagCount={3}
-            maxTagPlaceholder={maxTagNode}
-            showCheckAll={false}
-            colSpan={2}
-          />
-        </Form>
-        <TimePicker
-          startTime={ReportsStore.getStartDate}
-          endTime={ReportsStore.getEndDate}
-          func={loadData}
-          type={dateType}
-          onChange={handleDateChoose}
-          store={ReportsStore}
-        />
-      </div>
-      <div className="c7n-report-content">
-        <Spin spinning={chartsDs.status === 'loading'}>
-          <ReactEcharts
-            option={getOption()}
-            notMerge
-            lazyUpdate
-            style={{ height: '350px', width: '100%' }}
-          />
-        </Spin>
-      </div>
-      <div className="c7n-report-table">
-        <Table dataSet={tableDs} queryBar="none">
-          <Column name="status" renderer={renderTableStatus} />
-          <Column name="creationDate" />
-          <Column name="appServiceInstanceCode" renderer={renderText} />
-          <Column name="appServiceName" renderer={renderText} />
-          <Column name="appServiceVersion" renderer={renderText} />
-          <Column name="lastUpdatedName" />
-        </Table>
-      </div>
-    </React.Fragment> : <NoChart type="env" getProRole={getProRole} />);
+        </div>
+        <div className="c7n-report-content">
+          <Spin spinning={chartsDs.status === 'loading'}>
+            <ReactEcharts
+              option={getOption()}
+              notMerge
+              lazyUpdate
+              style={{ height: '350px', width: '100%' }}
+            />
+          </Spin>
+        </div>
+        <div className="c7n-report-table">
+          <Table dataSet={tableDs} queryBar="none">
+            <Column name="status" renderer={renderTableStatus} />
+            <Column name="creationDate" />
+            <Column name="appServiceInstanceCode" renderer={renderText} />
+            <Column name="appServiceName" renderer={renderText} />
+            <Column name="appServiceVersion" renderer={renderText} />
+            <Column name="lastUpdatedName" />
+          </Table>
+        </div>
+      </>
+    ) : <NoChart type="env" getProRole={getProRole} />);
   }
 
   if (!detailDs.current) {
     return <LoadingBar display />;
   }
 
-  return (<Page
-    className="c7n-region"
-    service={permissions}
-  >
-    <Header
-      title={formatMessage({ id: 'report.deploy-duration.head' })}
-      backPath={`/charts${search}`}
+  return (
+    <Page
+      className="c7n-region"
+      service={permissions}
     >
-      <ChartSwitch
-        history={history}
-        current="deploy-duration"
-      />
-      <Button
-        icon="refresh"
-        onClick={handleRefresh}
+      <Header
+        title={formatMessage({ id: 'report.deploy-duration.head' })}
+        backPath={`/charts${search}`}
       >
-        <FormattedMessage id="refresh" />
-      </Button>
-    </Header>
-    <Breadcrumb title={formatMessage({ id: 'report.deploy-duration.head' })} />
-    <Content>
-      {isRefresh ? <LoadingBar display={isRefresh} /> : getContent()}
-    </Content>
-  </Page>);
+        <ChartSwitch
+          history={history}
+          current="deploy-duration"
+        />
+        <HeaderButtons
+          items={[{
+            icon: 'refresh',
+            handler: handleRefresh,
+            display: true,
+          }]}
+        />
+      </Header>
+      <Breadcrumb title={formatMessage({ id: 'report.deploy-duration.head' })} />
+      <Content>
+        {isRefresh ? <LoadingBar display={isRefresh} /> : getContent()}
+      </Content>
+    </Page>
+  );
 });
 
 export default DeployDuration;

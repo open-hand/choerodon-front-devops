@@ -173,7 +173,6 @@ const MarketSourceTable = observer(() => {
                     <Button
                       icon={eachRecord.get('expand') ? 'expand_less' : 'navigate_next'}
                       onClick={() => handleVersionExpand(eachRecord)}
-                      color={'primary' as ButtonColor}
                     />
                   </span>
                 </div>

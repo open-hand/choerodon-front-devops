@@ -1,20 +1,34 @@
-import React, { useMemo, useEffect, useRef } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import classNames from 'classnames';
 import {
-  Select, Form, SelectBox, TextField, Button, Table, Tooltip, message, Password, NumberField,
+  Select,
+  Form,
+  SelectBox,
+  TextField,
+  Button,
+  Table,
+  Tooltip,
+  message,
+  Password,
+  NumberField,
+  DataSet,
 } from 'choerodon-ui/pro';
 import { Icon } from 'choerodon-ui';
-import YamlEditor from '@/components/yamlEditor';
 import StatusDot from '@/components/status-dot';
 import BaseComDeployServices from '@/routes/deployment/modals/base-comDeploy/services';
 import Tips from '@/components/new-tips';
 import ResourceSetting from './components/resource-setting';
 import {
-  mapping, deployWayOptionsData, deployModeOptionsData, middleWareData, mapping as baseMapping,
+  mapping,
+  deployWayOptionsData,
+  deployModeOptionsData,
+  middleWareData,
+  mapping as baseMapping,
+  mySqlDeployModeOptionsData,
 } from './stores/baseDeployDataSet';
 import { mapping as hostMapping } from './stores/hostSettingDataSet';
-import paramSettingDataSet, { mapping as paramMapping } from './stores/paramSettingDataSet';
+import paramSettingDataSet, { mapping as paramsMapping, mapping as paramMapping } from './stores/paramSettingDataSet';
 import { useBaseComDeployStore } from './stores';
 import redis from './images/redis.png';
 import mysql from './images/mysql.png';
@@ -34,16 +48,65 @@ export default observer(() => {
     AppState: { currentMenuType: { projectId } },
     refresh,
     deployWay,
+    middlewareData,
+    ServiceVersionDataSet,
+    BaseComDeployStore,
   } = useBaseComDeployStore();
-
-  const networkRef = useRef();
-  const domainRef = useRef();
 
   modal.handleOk(async () => {
     const middleWare = BaseDeployDataSet.current.get(mapping.middleware.name);
     let pass;
-    let axiosData;
+    let axiosData = {};
     let flag = false;
+    function setFlagBaseOnParamsSetting(f, ad = {}, isHostInside = false) {
+      let resultData = ad;
+      function setFlag(ds) {
+        for (let i = 0; i < ds.records.length; i += 1) {
+          const result = handleValidParamsRunningValue(ds
+            .records[i].get(paramMapping.paramsRunnigValue.name), ds.records[i]);
+          if (result !== true) {
+            // eslint-disable-next-line no-param-reassign
+            f = true;
+            break;
+          }
+        }
+      }
+      // if param's setting is outside of item of hosts
+      if (!isHostInside) {
+        setFlag(ParamSettingDataSet);
+      } else {
+        // inside
+        for (let i = 0; i < HostSettingDataSet.records.length; i += 1) {
+          const ds = HostSettingDataSet.records[i].getState('params');
+          setFlag(ds);
+        }
+      }
+      if (!f) {
+        const configuration = {};
+        if (!isHostInside) {
+          ParamSettingDataSet.records.forEach((i) => {
+            configuration[i.get(paramMapping.params.name)] = i
+              .get(paramMapping.paramsRunnigValue.name);
+          });
+          // eslint-disable-next-line no-param-reassign
+          resultData = {
+            ...resultData,
+            configuration,
+          };
+        } else {
+          HostSettingDataSet.records.forEach((i) => {
+            const item = {};
+            i.getState('params').forEach((j) => {
+              item[j.get(paramMapping.params.name)] = j
+                .get(paramMapping.paramsRunnigValue.name);
+            });
+            configuration[i.get(hostMapping.hostId.name)] = item;
+          });
+          resultData = configuration;
+        }
+      }
+      return { f, resultData };
+    }
     // redis
     if (middleWare === middleWareData[0].value) {
       // 环境部署
@@ -175,25 +238,9 @@ export default observer(() => {
           return false;
         }
       }
-      for (let i = 0; i < ParamSettingDataSet.records.length; i += 1) {
-        const result = handleValidParamsRunningValue(ParamSettingDataSet
-          .records[i].get(paramMapping.paramsRunnigValue.name), ParamSettingDataSet.records[i]);
-        if (result !== true) {
-          flag = true;
-          break;
-        }
-      }
-      if (!flag) {
-        const configuration = {};
-        ParamSettingDataSet.records.forEach((i) => {
-          configuration[i.get(paramMapping.params.name)] = i
-            .get(paramMapping.paramsRunnigValue.name);
-        });
-        axiosData = {
-          ...axiosData,
-          configuration,
-        };
-      }
+      const result = setFlagBaseOnParamsSetting(flag, axiosData);
+      flag = result.f;
+      axiosData = result.resultData;
       if (!flag) {
         try {
           if (BaseDeployDataSet
@@ -202,37 +249,147 @@ export default observer(() => {
           } else {
             await BaseComDeployServices.axiosPostDeployHost(projectId, axiosData);
           }
+          BaseDeployDataSet.reset();
           refresh();
           return true;
         } catch (e) {
           return false;
         }
       }
+    } else {
+      //  mysql
+      const record = BaseDeployDataSet.current;
+      // 容器部署
+      if (record.get(mapping.deployWay.name) === deployWayOptionsData[0].value) {
+        const flagBase = await BaseDeployDataSet.validate();
+        let flagParams = false;
+        const result = setFlagBaseOnParamsSetting(flagParams, axiosData);
+        flagParams = result.f;
+        axiosData = result.resultData;
+        if (flagBase && !flagParams) {
+          axiosData = {
+            ...axiosData,
+            [mapping.serviceVersion.name]: BaseDeployDataSet
+              .toData()[0][mapping.serviceVersion.name],
+            [mapping.deployWay.name]: BaseDeployDataSet
+              .toData()[0][mapping.deployWay.name],
+            [mapping.env.name]: BaseDeployDataSet
+              .toData()[0][mapping.env.name],
+            [mapping.instance.name]: BaseDeployDataSet
+              .toData()[0][mapping.instance.name],
+            [mapping.password.name]: BaseDeployDataSet
+              .toData()[0][mapping.password.name],
+            [mapping.pvc.name]: BaseDeployDataSet
+              .toData()[0][mapping.pvc.name],
+          };
+          try {
+            await BaseComDeployServices.axiosPostBaseDeployMySqlEnvApi(projectId, axiosData);
+            BaseDeployDataSet.reset();
+            refresh();
+            return true;
+          } catch (e) {
+            return false;
+          }
+        }
+      } else {
+        // 主机部署
+        const baseValid = await BaseDeployDataSet.validate();
+        const hostValid = await HostSettingDataSet.validate();
+        if (baseValid && hostValid) {
+          // if exist un-connect host
+          if (HostSettingDataSet.records.filter((i) => !i.isRemoved).some((i) => !i.get('status'))) {
+            const testResult = await handleTestConnect();
+            if (!testResult) {
+              return false;
+            }
+          }
+          const result = setFlagBaseOnParamsSetting(flag, {}, true);
+          if (!result.f) {
+            axiosData = {
+              [mapping.serviceVersion.name]: BaseDeployDataSet
+                .toData()[0][mapping.serviceVersion.name],
+              [mapping.deployWay.name]: BaseDeployDataSet
+                .toData()[0][mapping.deployWay.name],
+              [mapping.deployMode.name]: BaseDeployDataSet.current.get(mapping.deployMode.name),
+              [mapping.env.name]: BaseDeployDataSet
+                .toData()[0][mapping.env.name],
+              [mapping.password.name]: BaseDeployDataSet
+                .toData()[0][mapping.password.name],
+              [mapping.virtualIp.name]: BaseDeployDataSet
+                .toData()[0][mapping.virtualIp.name],
+              hostIds: HostSettingDataSet.records.map((i) => i.get(hostMapping.hostId.name)),
+              configuration: result.resultData,
+              name: BaseDeployDataSet.current.get(mapping.resourceName.name),
+            };
+            try {
+              await BaseComDeployServices.axiosPostBaseDeployMySqlHostApi(projectId, axiosData);
+              BaseDeployDataSet.reset();
+              refresh();
+              return true;
+            } catch (e) {
+              return false;
+            }
+          }
+        }
+      }
     }
     return false;
   });
 
+  /**
+   * 初始化服务版本options
+   */
+  const getServiceVersionAndSetInit = (name) => {
+    BaseComDeployServices.axiosGetServiceVersion(name).then((res) => {
+      ServiceVersionDataSet.loadData(res);
+      BaseDeployDataSet.current.set(mapping.serviceVersion.name, res[0].versionNumber);
+    });
+  };
+
   useEffect(() => {
-    // 初始化为哨兵模式 初始化三个record
-    HostSettingDataSet.create();
-    HostSettingDataSet.create();
-    if (deployWay) {
-      BaseDeployDataSet.current.set(mapping.deployWay.name, deployWay);
+    init();
+    async function init() {
+      // 初始化为哨兵模式 初始化三个record
+      HostSettingDataSet.create();
+      HostSettingDataSet.create();
+      if (deployWay) {
+        BaseDeployDataSet.current.set(mapping.deployWay.name, deployWay);
+      }
+      if (middlewareData) {
+        BaseDeployDataSet.current.set(mapping.middleware.name, middlewareData);
+      }
+      // 初始化查询mysql 主机的table params
+      const result = await BaseComDeployServices.axiosGetParamsSetting('MySQL', 'host', 'master-slave');
+      result.middlewareConfigVOS.forEach((item) => {
+        // eslint-disable-next-line no-param-reassign
+        item.paramsRunningValue = item.paramDefaultValue;
+      });
+      BaseComDeployStore.setMysqlParams(result.middlewareConfigVOS);
+      BaseDeployDataSet
+        .current.getField(mapping.deployMode.name).options.loadData(deployModeOptionsData);
+      BaseDeployDataSet.current.set(mapping.deployMode.name, deployModeOptionsData[1].value);
     }
   }, []);
 
   useEffect(() => {
+    getServiceVersionAndSetInit(BaseDeployDataSet.current.get(mapping.middleware.name));
+  }, [BaseDeployDataSet.current.get(mapping.middleware.name)]);
+
+  useEffect(() => {
     const middleware = BaseDeployDataSet.current.get(mapping.middleware.name);
     const deployWary = BaseDeployDataSet.current.get(mapping.deployWay.name);
-    HostSettingDataSet.getField(hostMapping.hostName.name).set('required', (middleware === middleWareData[0].value) && (deployWary === deployWayOptionsData[1].value));
+    HostSettingDataSet.getField(hostMapping.hostName.name).set('required', (deployWary === deployWayOptionsData[1].value));
 
-    // 中间件 部署方式 部署模式改变 重新查询table数据
-    ParamSettingDataSet.setQueryParameter('queryParams', {
-      middleware: BaseDeployDataSet.current.get(baseMapping.middleware.name),
-      deployWay: BaseDeployDataSet.current.get(baseMapping.deployWay.name),
-      deployMode: BaseDeployDataSet.current.get(baseMapping.deployMode.name),
-    });
-    ParamSettingDataSet.query();
+    // 如果不是mysql + 主机部署 则要重查paramsetting
+    if (!(middleware === middleWareData[1].value && deployWary === deployWayOptionsData[1].value)) {
+      // 中间件 部署方式 部署模式改变 重新查询table数据
+      ParamSettingDataSet.setQueryParameter('queryParams', {
+        middleware: BaseDeployDataSet.current.get(baseMapping.middleware.name),
+        deployWay: BaseDeployDataSet.current.get(baseMapping.deployWay.name),
+        deployMode: BaseDeployDataSet.current.get(baseMapping.deployMode.name),
+      });
+      ParamSettingDataSet.query();
+    }
   }, [
     BaseDeployDataSet.current.get(mapping.middleware.name),
     BaseDeployDataSet.current.get(mapping.deployWay.name),
@@ -258,9 +415,10 @@ export default observer(() => {
   const getHostNameDisabled = (data) => {
     if (HostSettingDataSet.records.find((i) => i.get(hostMapping.hostName.name) === data.record.get('id'))) {
       return true;
-    } if (BaseDeployDataSet
+    } if ([deployModeOptionsData[1].value,
+      mySqlDeployModeOptionsData[1].value].includes(BaseDeployDataSet
       .current
-      .get(mapping.deployMode.name) === deployModeOptionsData[1].value) {
+      .get(mapping.deployMode.name))) {
       //  如果是哨兵模式
       if (data.record.get('privateIp')) {
         return false;
@@ -268,6 +426,21 @@ export default observer(() => {
       return true;
     }
     return false;
+  };
+
+  /**
+   * 点击mysql 下单个主机事件
+   */
+  const handleClickItemHost = ({ record, ds }) => {
+    if (!record.get(hostMapping.checked.name)) {
+      ds.records.forEach((i) => {
+        if (i.id === record.id) {
+          i.set(hostMapping.checked.name, true);
+        } else {
+          i.set(hostMapping.checked.name, false);
+        }
+      });
+    }
   };
 
   /**
@@ -329,17 +502,36 @@ export default observer(() => {
     });
   }
 
-  const renderDomBaseOnDeployWay = useMemo(() => (
-    BaseDeployDataSet.current
-      .get(mapping.deployWay.name) === deployWayOptionsData[1].value ? [
+  /**
+   * 渲染主机部署右侧dom
+   */
+  const renderHostDeployRight = () => {
+    const record = BaseDeployDataSet.current;
+    // redis
+    if (record.get(mapping.middleware.name) === middleWareData[0].name) {
+      return [
         <TextField style={{ visibility: 'hidden' }} colSpan={1} />,
         <SelectBox
           colSpan={1}
           name={mapping.deployMode.name}
         />,
         <TextField newLine colSpan={1} name={mapping.resourceName.name} />,
-      ] : [
-        <SelectBox colSpan={1} name={mapping.deployMode.name} />,
+      ];
+    }
+    //  mysql
+    return [
+      <SelectBox
+        colSpan={1}
+        name={mapping.deployMode.name}
+      />,
+      <TextField colSpan={1} name={mapping.resourceName.name} />,
+    ];
+  };
+
+  const renderDomBaseOnDeployWay = useMemo(() => (
+    BaseDeployDataSet.current
+      .get(mapping.deployWay.name) === deployWayOptionsData[1].value ? renderHostDeployRight() : [
+        BaseDeployDataSet.current.get(mapping.middleware.name) === middleWareData[0].value ? <SelectBox colSpan={1} name={mapping.deployMode.name} /> : '',
         <Select
           newLine
           colSpan={1}
@@ -355,7 +547,7 @@ export default observer(() => {
         // />,
       ]
   ), [BaseDeployDataSet.current
-    .get(mapping.deployWay.name)]);
+    .get(mapping.deployWay.name), BaseDeployDataSet.current.get(mapping.middleware.name)]);
 
   /**
    * 删除host
@@ -368,7 +560,25 @@ export default observer(() => {
   /**
    * 测试连接
    */
-  const handleTestConnect = async () => {
+  const handleTestConnect = async (id) => {
+    // 单个
+    if (id) {
+      const result = await BaseComDeployServices.axiosPostTestHost(projectId, [id]);
+      if (result) {
+        const record = HostSettingDataSet
+          .records.find((i) => i.get(hostMapping.hostName.name) === id);
+        if (result.includes(record.get(hostMapping.hostId.name))) {
+          record.set(hostMapping.status.name, 'failed');
+        } else {
+          record.set(hostMapping.status.name, 'success');
+        }
+        if (!result || result.length === 0) {
+          return true;
+        }
+      }
+      return false;
+    }
+    // 全部测试
     const valid = await HostSettingDataSet.validate();
     if (valid) {
       const ids = HostSettingDataSet
@@ -395,7 +605,7 @@ export default observer(() => {
   };
 
   const renderItemHostStatus = (record) => {
-    if (record.get) {
+    if (record && record.get) {
       switch (record?.get(hostMapping.status.name)) {
         case 'success': {
           return (
@@ -474,9 +684,19 @@ export default observer(() => {
   /**
    * table操作列
    */
-  const renderOperation = ({ record }) => record.get('custom') && (
+  const renderOperation = ({ record, isHostInside = true }) => record.get('custom') && (
     <Button
-      onClick={() => ParamSettingDataSet.remove(record)}
+      onClick={() => {
+        if (isHostInside) {
+          const ds = HostSettingDataSet
+            .records.find((i) => i.get(hostMapping.checked.name)).getState('params');
+          ds.remove(record);
+          HostSettingDataSet
+            .records.find((i) => i.get(hostMapping.checked.name)).setState('params', ds);
+        } else {
+          ParamSettingDataSet.remove(record);
+        }
+      }}
       icon="delete"
     />
   );
@@ -578,132 +798,326 @@ export default observer(() => {
     return true;
   };
 
-  const renderBottomDomBaseOnDeployWay = () => (
-    BaseDeployDataSet.current.get(mapping.deployWay.name) === deployWayOptionsData[1].value ? (
+  /**
+   * 主机部署的主机设置部分
+   */
+  const rennderHostDeployCotent = () => {
+    const recordd = BaseDeployDataSet.current;
+    // redis
+    if (recordd.get(mapping.middleware.name) === middleWareData[0].value) {
+      return (
+        <>
+          <p className="c7ncd-baseDeploy-middle-deploySetting">
+            主机设置
+            <Icon type="expand_less" />
+          </p>
+          {
+            HostSettingDataSet.records.filter((i) => !i.isRemoved).map((record) => (
+              <div style={{ position: 'relative', width: '80%' }}>
+                <Form
+                  columns={
+                    BaseDeployDataSet
+                      .current
+                      .get(mapping.deployMode.name) === deployModeOptionsData[0].value ? 3 : 5
+                  }
+                  style={{ width: '100%' }}
+                  record={record}
+                >
+                  <Select
+                    colSpan={1}
+                    name={hostMapping.hostName.name}
+                    onOption={(data) => ({
+                      disabled: getHostNameDisabled(data),
+                    })}
+                  />
+                  <TextField colSpan={1} name={hostMapping.ip.name} />
+                  <TextField colSpan={1} name={hostMapping.port.name} />
+                  {
+                    BaseDeployDataSet
+                      .current
+                      .get(mapping.deployMode.name) === deployModeOptionsData[1].value && [
+                        <TextField colSpan={1} name={hostMapping.privateIp.name} />,
+                        <TextField colSpan={1} name={hostMapping.privatePort.name} />,
+                    ]
+                  }
+
+                </Form>
+                <Button
+                  disabled={deleteHostDisabled(BaseDeployDataSet, HostSettingDataSet)}
+                  icon="delete"
+                  style={{
+                    position: 'absolute',
+                    right: '-20px',
+                    bottom: '25px',
+                  }}
+                  onClick={() => handleDeleteHost(record)}
+                />
+                {renderItemHostStatus(record)}
+              </div>
+            ))
+          }
+          <Button
+            icon="add"
+            color="primary"
+            className="c7ncd-baseDeploy-middle-flexButton"
+            disabled={addHostDisabled()}
+            onClick={handleAddHost}
+          >
+            添加主机
+          </Button>
+          <div
+            className="c7ncd-baseDeploy-middle-testButton"
+          >
+            <Button
+              funcType="raised"
+              color="blue"
+              disabled={HostSettingDataSet
+                .records.filter((i) => !i.isRemoved)
+                .every((i) => !i.get(hostMapping.hostName.name))}
+              onClick={() => handleTestConnect()}
+            >
+              测试连接
+            </Button>
+            {
+              renderHostResult()
+            }
+
+          </div>
+          <p style={{ marginTop: 30 }} className="c7ncd-baseDeploy-middle-deploySetting">
+            参数配置
+            <Icon type="expand_less" />
+          </p>
+          <Form columns={3} style={{ width: '80%', marginTop: 16 }} dataSet={BaseDeployDataSet}>
+            <Password autoComplete="new-password" colSpan={1} name={mapping.password.name} />
+          </Form>
+        </>
+      );
+    }
+    // mysql
+    return (
       <>
         <p className="c7ncd-baseDeploy-middle-deploySetting">
           主机设置
           <Icon type="expand_less" />
         </p>
-        {
-          HostSettingDataSet.records.filter((i) => !i.isRemoved).map((record) => (
-            <div style={{ position: 'relative', width: '80%' }}>
-              <Form
-                columns={
-                  BaseDeployDataSet
-                    .current
-                    .get(mapping.deployMode.name) === deployModeOptionsData[0].value ? 3 : 5
-                }
-                style={{ width: '100%' }}
-                record={record}
-              >
-                <Select
-                  colSpan={1}
-                  name={hostMapping.hostName.name}
-                  onOption={(data) => ({
-                    disabled: getHostNameDisabled(data),
-                  })}
-                />
-                <TextField colSpan={1} name={hostMapping.ip.name} />
-                <TextField colSpan={1} name={hostMapping.port.name} />
-                {
-                  BaseDeployDataSet
-                    .current
-                    .get(mapping.deployMode.name) === deployModeOptionsData[1].value && [
-                      <TextField colSpan={1} name={hostMapping.privateIp.name} />,
-                      <TextField colSpan={1} name={hostMapping.privatePort.name} />,
-                  ]
-                }
-
-              </Form>
-              <Button
-                disabled={deleteHostDisabled(BaseDeployDataSet, HostSettingDataSet)}
-                icon="delete"
-                style={{
-                  position: 'absolute',
-                  right: '-20px',
-                  top: '10px',
-                }}
-                onClick={() => handleDeleteHost(record)}
-              />
-              {renderItemHostStatus(record)}
-            </div>
-          ))
-        }
-        <Button
-          icon="add"
-          color="primary"
-          disabled={addHostDisabled()}
-          onClick={handleAddHost}
-        >
-          添加主机
-        </Button>
-        <div
-          className="c7ncd-baseDeploy-middle-testButton"
-        >
-          <Button
-            funcType="raised"
-            color="blue"
-            disabled={HostSettingDataSet
-              .records.filter((i) => !i.isRemoved).every((i) => !i.get(hostMapping.hostName.name))}
-            onClick={handleTestConnect}
-          >
-            测试连接
-          </Button>
-          {
-            renderHostResult()
-          }
-
-        </div>
-        <p style={{ marginTop: 30 }} className="c7ncd-baseDeploy-middle-deploySetting">
-          参数配置
-          <Icon type="expand_less" />
-        </p>
-        <Form columns={3} style={{ width: '80%', marginTop: 16 }} dataSet={BaseDeployDataSet}>
+        <Form dataSet={BaseDeployDataSet} columns={3}>
           <Password autoComplete="new-password" colSpan={1} name={mapping.password.name} />
-        </Form>
-      </>
-    ) : [
-      <p className="c7ncd-baseDeploy-middle-deploySetting">
-        参数配置
-        <Icon type="expand_less" />
-      </p>,
-      <Form columns={3} style={{ width: '80%', marginTop: 16 }} dataSet={BaseDeployDataSet}>
-        <Password
-          autoComplete="new-password"
-          colSpan={1}
-          name={mapping.password.name}
-          addonAfter={<Tips helpText="访问redis服务的密码" />}
-        />
-        <Select
-          colSpan={1}
-          name={mapping.sysctlImage.name}
-          addonAfter={<Tips helpText="此处指：是否启用内核参数优化。比如优化redis连接数、内存使用等等。" />}
-        >
-          <Option value>true</Option>
-          <Option value={false}>false</Option>
-        </Select>
-        {
-          BaseDeployDataSet.current
-            .get(mapping.deployMode.name) === deployModeOptionsData[0].value ? (
-              <Select
-                combo
+          {
+            BaseDeployDataSet
+              .current
+              .get(mapping.deployMode.name) === mySqlDeployModeOptionsData[1].value
+            && (
+              <TextField
                 colSpan={1}
-                name={mapping.pvc.name}
-                addonAfter={<Tips helpText="此项填值，redis将使用对应的PVC进行数据持久化" />}
-              />
-            ) : (
-              <NumberField
-                newLine
-                colSpan={1}
-                name={mapping.slaveCount.name}
-                addonAfter={<Tips helpText="哨兵节点数量。最小是3" />}
+                name={mapping.virtualIp.name}
+                addonAfter={<Tips helpText="对外提供MySQL服务的ip地址" />}
               />
             )
+          }
+        </Form>
+        <div className="c7ncd-baseDeploy-middle-hostList">
+          <div className="c7ncd-baseDeploy-middle-hostList-left">
+            {
+                HostSettingDataSet.records.filter((i) => !i.isRemoved).map((i) => (
+                  <Form record={i}>
+                    <div
+                      role="none"
+                      style={{
+                        cursor: 'pointer',
+                        padding: '10px 10px 10px 0',
+                        display: 'flex',
+                        alignItems: 'center',
+                        borderTop: i.get(hostMapping.checked.name) ? '2px solid rgba(0, 0, 0, 0.12)' : 'unset',
+                        borderBottom: i.get(hostMapping.checked.name) ? '2px solid rgba(0, 0, 0, 0.12)' : 'unset',
+                        position: 'relative',
+                        bottom: '1px',
+                      }}
+                      onClick={() => handleClickItemHost({ record: i, ds: HostSettingDataSet })}
+                    >
+                      <div
+                        className="c7ncd-baseDeploy-middle-hostList-left-checkedLine"
+                        style={{
+                          visibility: i.get(hostMapping.checked.name) ? 'visible' : 'hidden',
+                        }}
+                      />
+                      <div
+                        className="c7ncd-baseDeploy-middle-hostList-left-whiteline"
+                        style={{
+                          visibility: i.get(hostMapping.checked.name) ? 'visible' : 'hidden',
+                        }}
+                      />
+                      <Select
+                        onClick={(e) => e.stopPropagation()}
+                        name={hostMapping.hostName.name}
+                        onOption={(data) => ({
+                          disabled: getHostNameDisabled(data),
+                        })}
+                      />
+                      {/* <Button */}
+                      {/*  style={{ flexShrink: 0, margin: '0 5px' }} */}
+                      {/*  icon="delete" */}
+                      {/*  disabled={deleteHostDisabled(BaseDeployDataSet, HostSettingDataSet)} */}
+                      {/*  onClick={(e) => { */}
+                      {/*    e.stopPropagation(); */}
+                      {/*    handleDeleteHost(i); */}
+                      {/*  }} */}
+                      {/* /> */}
+                    </div>
+                  </Form>
+                ))
+            }
+            {/* <Button */}
+            {/*  icon="add" */}
+            {/*  color="primary" */}
+            {/*  className="c7ncd-baseDeploy-middle-flexButton" */}
+            {/*  disabled={addHostDisabled()} */}
+            {/*  onClick={() => { */}
+            {/*    HostSettingDataSet.create(); */}
+            {/*    HostSettingDataSet.records[HostSettingDataSet
+            .records.length - 1].setState('params', new DataSet({ */}
+            {/*      paging: false, */}
+            {/*      selection: false, */}
+            {/*      data: BaseComDeployStore.getMysqlParams, */}
+            {/*      fields: Object.keys(paramsMapping).map((key) => paramsMapping[key]), */}
+            {/*    })); */}
+            {/*  }} */}
+            {/* > */}
+            {/*  添加主机 */}
+            {/* </Button> */}
+          </div>
+          <div className="c7ncd-baseDeploy-middle-hostList-right">
+            <Form
+              columns={5}
+              record={HostSettingDataSet.records.find((i) => i.get(hostMapping.checked.name))}
+              style={{
+                position: 'relative',
+              }}
+            >
+              <TextField colSpan={1} name={hostMapping.ip.name} />
+              <TextField colSpan={1} name={hostMapping.port.name} />
+              <TextField colSpan={1} name={hostMapping.privateIp.name} />
+              <TextField colSpan={1} name={hostMapping.privatePort.name} />
+              {renderItemHostStatus(HostSettingDataSet
+                .records.find((i) => i.get(hostMapping.checked.name)))}
+            </Form>
+            <div
+              className="c7ncd-baseDeploy-middle-testButton"
+              style={{
+                marginTop: 'unset',
+              }}
+            >
+              <Button
+                funcType="raised"
+                color="blue"
+                disabled={!HostSettingDataSet
+                  .records.find((i) => i
+                    .get(hostMapping.checked.name)).get(hostMapping.hostName.name)}
+                onClick={() => handleTestConnect(HostSettingDataSet
+                  .records.find((i) => i
+                    .get(hostMapping.checked.name)).get(hostMapping.hostName.name))}
+              >
+                测试连接
+              </Button>
+            </div>
+            <Button
+              icon="add"
+              color="primary"
+              style={{
+                position: 'relative',
+                left: 'calc(100% - 100px)',
+              }}
+              onClick={() => handleAddParams(true)}
+            >
+              添加参数
+            </Button>
+            <Table
+              style={{ marginTop: 20 }}
+              queryBar="none"
+              dataSet={HostSettingDataSet
+                .records.find((i) => i.get(hostMapping.checked.name)).getState('params')}
+              rowHeight={60}
+            >
+              <Column header="参数" name={paramMapping.params.name} renderer={renderParams} />
+              <Column header="参数默认值" name={paramMapping.defaultParams.name} />
+              <Column header="参数范围" name={paramMapping.paramsScope.name} renderer={renderParamsScope} />
+              <Column
+                name={paramMapping.paramsRunnigValue.name}
+                renderer={renderParamsRunningValue}
+                header="参数运行值"
+              />
+              <Column
+                width={60}
+                renderer={({ record }) => renderOperation({ record, isHostInside: true })}
+              />
+            </Table>
+          </div>
+        </div>
+      </>
+    );
+  };
+
+  const renderBottomDomBaseOnDeployWay = () => (
+    BaseDeployDataSet
+      .current
+      .get(mapping.deployWay.name) === deployWayOptionsData[1].value
+      ? rennderHostDeployCotent() : [
+        <p className="c7ncd-baseDeploy-middle-deploySetting">
+          参数配置
+          <Icon type="expand_less" />
+        </p>,
+        <Form columns={3} style={{ width: '80%', marginTop: 16 }} dataSet={BaseDeployDataSet}>
+          {
+          BaseDeployDataSet.current.get(mapping.middleware.name) === middleWareData[1].value ? [
+            <Password
+              autoComplete="new-password"
+              colSpan={1}
+              name={mapping.password.name}
+              addonAfter={<Tips helpText="访问redis服务的密码" />}
+            />,
+            <Select
+              combo
+              colSpan={1}
+              name={mapping.pvc.name}
+              addonAfter={<Tips helpText="此项填值，redis将使用对应的PVC进行数据持久化" />}
+            />,
+          ] : [
+            <Password
+              autoComplete="new-password"
+              colSpan={1}
+              name={mapping.password.name}
+              addonAfter={<Tips helpText="访问redis服务的密码" />}
+            />,
+            <Select
+              colSpan={1}
+              name={mapping.sysctlImage.name}
+              addonAfter={<Tips helpText="此处指：是否启用内核参数优化。比如优化redis连接数、内存使用等等。" />}
+            >
+              <Option value>true</Option>
+              <Option value={false}>false</Option>
+            </Select>,
+            BaseDeployDataSet.current
+              .get(mapping.deployMode.name) === deployModeOptionsData[0].value ? (
+                <Select
+                  combo
+                  colSpan={1}
+                  name={mapping.pvc.name}
+                  addonAfter={<Tips helpText="此项填值，redis将使用对应的PVC进行数据持久化" />}
+                />
+              ) : (
+                <NumberField
+                  newLine
+                  colSpan={1}
+                  name={mapping.slaveCount.name}
+                  addonAfter={<Tips helpText="哨兵节点数量。最小是3" />}
+                />
+              ),
+          ]
         }
-      </Form>,
-      BaseDeployDataSet.current
-        .get(mapping.deployMode.name) === deployModeOptionsData[0].value ? '' : [
+        </Form>,
+        (BaseDeployDataSet.current
+          .get(mapping.deployMode.name) === deployModeOptionsData[0].value) || (
+          BaseDeployDataSet.current.get(mapping.middleware.name) === middleWareData[1].value
+        ) ? '' : [
           <p className="c7ncd-baseDeploy-middle-deploySetting">
             PV标签
             <Icon type="expand_less" />
@@ -722,7 +1136,7 @@ export default observer(() => {
               <Form style={{ width: '80%' }} record={item} columns={3}>
                 <div className="c7ncd-base-pvlabels" colSpan={1}>
                   <div>
-                    <TextField name="key" />
+                    <Select combo name="key" />
                   </div>
                   <span style={{ margin: '0 10px' }}>=</span>
                   <div>
@@ -745,12 +1159,15 @@ export default observer(() => {
             color="primary"
             style={{
               display: 'block',
+              flexShrink: 0,
+              flexGrow: 0,
+              width: 'max-content',
             }}
             onClick={() => PVLabelsDataSet.create()}
           >
             添加PV标签
           </Button>,
-        ],
+          ],
       // <YamlEditor
       //   readOnly={false}
       //   value={BaseDeployDataSet.current.get(mapping.values.name)}
@@ -764,20 +1181,34 @@ export default observer(() => {
       //     marginTop: 30,
       //   }}
       // />,
-    ]
+      ]
   );
 
   /**
    * 添加table 一行参数
    */
-  const handleAddParams = () => {
-    ParamSettingDataSet.create({
-      [paramMapping.params.name]: '',
-      [paramMapping.defaultParams.name]: '——',
-      [paramMapping.paramsScope.name]: '——',
-      [paramMapping.paramsRunnigValue.name]: '',
-      custom: 'true',
-    }, 0);
+  const handleAddParams = (isHostInside = false) => {
+    if (isHostInside) {
+      const ds = HostSettingDataSet
+        .records.find((i) => i.get(hostMapping.checked.name)).getState('params');
+      ds.create({
+        [paramMapping.params.name]: '',
+        [paramMapping.defaultParams.name]: '——',
+        [paramMapping.paramsScope.name]: '——',
+        [paramMapping.paramsRunnigValue.name]: '',
+        custom: 'true',
+      }, 0);
+      HostSettingDataSet
+        .records.find((i) => i.get(hostMapping.checked.name)).setState('params', ds);
+    } else {
+      ParamSettingDataSet.create({
+        [paramMapping.params.name]: '',
+        [paramMapping.defaultParams.name]: '——',
+        [paramMapping.paramsScope.name]: '——',
+        [paramMapping.paramsRunnigValue.name]: '',
+        custom: 'true',
+      }, 0);
+    }
   };
 
   /**
@@ -785,16 +1216,30 @@ export default observer(() => {
    */
   const deleteHostDisabled = (baseDataSet, hostDataSet) => {
     const deployMode = baseDataSet.current.get(mapping.deployMode.name);
-    // 哨兵
-    if (deployMode === deployModeOptionsData[1].value) {
-      if (hostDataSet.records.length <= 3) {
+    // redis
+    if (baseDataSet.current.get(mapping.middleware.name) === middleWareData[0].value) {
+      // 哨兵
+      if (deployMode === deployModeOptionsData[1].value) {
+        if (hostDataSet.records.length <= 3) {
+          return true;
+        }
+        return false;
+      }
+      //  单机
+      if (hostDataSet.records.length <= 1) {
         return true;
       }
-      return false;
-    }
-    //  单机
-    if (hostDataSet.records.length <= 1) {
-      return true;
+    } else {
+      // mysql
+      // eslint-disable-next-line no-lonely-if
+      if (deployMode === deployModeOptionsData[0].value) {
+        // 单机
+        return true;
+      }
+      // 主备
+      if (hostDataSet.records.length <= 2) {
+        return true;
+      }
     }
     return false;
   };
@@ -822,32 +1267,30 @@ export default observer(() => {
             )
           }
         </span>
-        {/* <span */}
-        {/*  style={{ */}
-        {/*    cursor: 'not-allowed', */}
-        {/*  }} */}
-        {/*  role="none" */}
-        {/*  // onClick={() => { */}
-        {/*  //   BaseDeployDataSet.current.set(
-        mapping.middleware.name, middleWareData[1].value); */}
-        {/*  // }} */}
-        {/* > */}
-        {/*  <img */}
-        {/*    style={{ marginLeft: 20 }} */}
-        {/*    src={mysql} */}
-        {/*    alt="" */}
-        {/*    className={classNames({ */}
-        {/*      'c7ncd-baseDeploy-middle-img-checked':
-        BaseDeployDataSet.current.get(mapping.middleware.name) === middleWareData[1].value, */}
-        {/*    })} */}
-        {/*  /> */}
-        {/*  { */}
-        {/*    BaseDeployDataSet.current.get(mapping.middleware.name)
-        === middleWareData[1].value && ( */}
-        {/*      <Icon type="check_circle" /> */}
-        {/*    ) */}
-        {/*  } */}
-        {/* </span> */}
+        <span
+          role="none"
+          onClick={() => {
+            BaseDeployDataSet.current.set(
+              mapping.middleware.name, middleWareData[1].value,
+            );
+          }}
+        >
+          <img
+            style={{ marginLeft: 20 }}
+            src={mysql}
+            alt=""
+            className={classNames({
+              'c7ncd-baseDeploy-middle-img-checked':
+        BaseDeployDataSet.current.get(mapping.middleware.name) === middleWareData[1].value,
+            })}
+          />
+          {
+            BaseDeployDataSet.current.get(mapping.middleware.name)
+        === middleWareData[1].value && (
+        <Icon type="check_circle" />
+            )
+          }
+        </span>
       </div>
       <Form columns={2} style={{ width: '80%', marginTop: 25 }} dataSet={BaseDeployDataSet}>
         <Select colSpan={1} name={mapping.serviceVersion.name} />
@@ -863,29 +1306,45 @@ export default observer(() => {
       {
         renderBottomDomBaseOnDeployWay()
       }
-      <Button
-        icon="add"
-        color="primary"
-        style={{
-          position: 'relative',
-          left: 'calc(100% - 100px)',
-        }}
-        onClick={handleAddParams}
-      >
-        添加参数
-      </Button>
-      <Table
-        style={{ marginTop: 20 }}
-        queryBar="none"
-        dataSet={ParamSettingDataSet}
-        rowHeight={60}
-      >
-        <Column name={paramMapping.params.name} renderer={renderParams} />
-        <Column name={paramMapping.defaultParams.name} />
-        <Column name={paramMapping.paramsScope.name} renderer={renderParamsScope} />
-        <Column name={paramMapping.paramsRunnigValue.name} renderer={renderParamsRunningValue} />
-        <Column width={60} renderer={renderOperation} />
-      </Table>
+      {
+        (BaseDeployDataSet.current.get(mapping.middleware.name) === middleWareData[1].value
+          && BaseDeployDataSet
+            .current.get(mapping.deployWay.name) === deployWayOptionsData[1].value)
+          ? '' : (
+            <>
+              <Table
+                style={{ marginTop: 20 }}
+                queryBar="none"
+                dataSet={ParamSettingDataSet}
+                rowHeight={60}
+              >
+                <Column name={paramMapping.params.name} renderer={renderParams} />
+                <Column name={paramMapping.defaultParams.name} />
+                <Column name={paramMapping.paramsScope.name} renderer={renderParamsScope} />
+                <Column
+                  name={paramMapping.paramsRunnigValue.name}
+                  renderer={renderParamsRunningValue}
+                />
+                <Column width={60} renderer={renderOperation} />
+              </Table>
+              <Button
+                icon="add"
+                color="primary"
+                style={{
+                  margin: '20px 0',
+                  position: 'relative',
+                  flexShrink: 0,
+                  flexGrow: 0,
+                  width: 'max-content',
+                }}
+                onClick={handleAddParams}
+              >
+                添加参数
+              </Button>
+            </>
+          )
+      }
+
     </div>
   );
 });

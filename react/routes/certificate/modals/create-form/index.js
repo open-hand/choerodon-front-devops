@@ -3,9 +3,9 @@ import { observer } from 'mobx-react-lite';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Choerodon } from '@choerodon/boot';
 import {
-  Form,
   Input,
   Button,
+  Form,
 } from 'choerodon-ui';
 import debounce from 'lodash/debounce';
 import forEach from 'lodash/forEach';
@@ -28,7 +28,9 @@ const formItemLayout = {
   },
 };
 
-const CreateForm = ({ certId, intl: { formatMessage }, form, store, projectId, modal, refresh, intlPrefix, prefixCls }) => {
+const CreateForm = ({
+  certId, intl: { formatMessage }, form, store, projectId, modal, refresh, intlPrefix, prefixCls,
+}) => {
   const [uploadMode, setUploadMode] = useState(false);
   const { getFieldDecorator, validateFieldsAndScroll } = form;
 
@@ -37,14 +39,14 @@ const CreateForm = ({ certId, intl: { formatMessage }, form, store, projectId, m
       const { name } = store.getCert || {};
       if (value && value !== name) {
         store.checkCertName(projectId, encodeURIComponent(value))
-          .then(res => {
+          .then((res) => {
             if ((res && res.failed) || !res) {
               callback(formatMessage({ id: 'checkNameExist' }));
             } else {
               callback();
             }
           })
-          .catch(e => {
+          .catch((e) => {
             callback(formatMessage({ id: 'checkNameFailed' }));
           });
       } else {
@@ -110,6 +112,7 @@ const CreateForm = ({ certId, intl: { formatMessage }, form, store, projectId, m
     });
   }
 
+  // eslint-disable-next-line consistent-return
   modal.handleOk(async () => {
     const formData = await formValidate();
 
@@ -136,7 +139,7 @@ const CreateForm = ({ certId, intl: { formatMessage }, form, store, projectId, m
 
   return (
     <div className={`${prefixCls}-create-wrap`}>
-      <Form layout="vertical">
+      <Form layout="float">
         <FormItem {...formItemLayout}>
           {getFieldDecorator('name', {
             rules: [

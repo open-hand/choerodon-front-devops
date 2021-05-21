@@ -2,11 +2,13 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Page, Header, Content, Breadcrumb } from '@choerodon/boot';
+import {
+  Page, Header, Content, Breadcrumb,
+} from '@choerodon/boot';
 import { Select, Button, Form } from 'choerodon-ui/pro';
-// import { Select, Button } from 'choerodon-ui';
 import _ from 'lodash';
 import moment from 'moment';
+import { HeaderButtons } from '@choerodon/master';
 import ChartSwitch from '../Component/ChartSwitch';
 import LineChart from './LineChart';
 import CommitHistory from './CommitHistory';
@@ -19,13 +21,11 @@ import LoadingBar from '../../../components/loading';
 import { useReportsStore } from '../stores';
 import { useSubmissionStore } from './stores';
 
-
 /**
  * 将数据转为图表可用格式
  * @param data
  * @returns {{total, user: Array}}
  */
-
 
 const { Option } = Select;
 
@@ -93,7 +93,9 @@ const Submission = observer(() => {
       total.items = totalCommitsDate.slice();
       total.count = totalCommitsDate.length;
       _.forEach(commitFormUserVOList, (item) => {
-        const { name, imgUrl, commitDates, id } = item;
+        const {
+          name, imgUrl, commitDates, id,
+        } = item;
         const userTotal = {
           name,
           avatar: imgUrl,
@@ -175,7 +177,6 @@ const Submission = observer(() => {
     loadCommitsRecord(projectId, startTime, endTime, appId, index);
   }
 
-
   /**
    * 选择今天、近7天和近30天的选项，当使用DatePick的时候清空type
    * @param type 时间范围类型
@@ -189,7 +190,9 @@ const Submission = observer(() => {
   );
 
   const backPath = state && state.backPath;
-  const { id, name, type, organizationId } = AppState.currentMenuType;
+  const {
+    id, name, type, organizationId,
+  } = AppState.currentMenuType;
   const { total, user } = formatData(getCommits);
   const options = _.map(getAllApps, (item) => (
     <Option key={item.id} value={item.id}>
@@ -213,7 +216,7 @@ const Submission = observer(() => {
   ));
 
   const content = getAllApps.length ? (
-    <Fragment>
+    <>
       <div className="c7n-report-control c7n-report-select">
         <Form
           dataSet={SubmissionSelectDataSet}
@@ -224,11 +227,8 @@ const Submission = observer(() => {
             searchable
             placeholder={formatMessage({ id: 'report.app.noselect' })}
             maxTagCount={3}
-            // value={appId || []}
             maxTagPlaceholder={(omittedValues) => maxTagNode(getAllApps, omittedValues)}
             onChange={handleSelect}
-            // optionFilterProp="children"
-            // filter
           >
             {options}
           </Select>
@@ -267,7 +267,7 @@ const Submission = observer(() => {
         </div>
       </div>
       <div className="c7n-report-submission-wrap clearfix">{personChart}</div>
-    </Fragment>
+    </>
   ) : (
     <NoChart getProRole={getProRole} type="app" />
   );
@@ -285,9 +285,13 @@ const Submission = observer(() => {
         }
       >
         <ChartSwitch history={history} current="submission" />
-        <Button icon="refresh" onClick={handleRefresh}>
-          <FormattedMessage id="refresh" />
-        </Button>
+        <HeaderButtons
+          items={[{
+            icon: 'refresh',
+            handler: handleRefresh,
+            display: true,
+          }]}
+        />
       </Header>
       <Breadcrumb title={formatMessage({ id: 'report.submission.head' })} />
       <Content>

@@ -99,7 +99,9 @@ export default class CertificateCreate extends Component {
 
   // eslint-disable-next-line react/sort-comp
   handleSubmit = (e) => {
-    e.preventDefault();
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
     const {
       form,
       store,
@@ -384,7 +386,12 @@ export default class CertificateCreate extends Component {
           name: menuName,
         },
       },
+      modal,
     } = this.props;
+
+    modal.handleOk(this.handleSubmit.bind(this));
+
+    modal.handleCancel(this.handleClose.bind(this, false));
 
     const {
       submitting,
@@ -444,7 +451,91 @@ export default class CertificateCreate extends Component {
       </div>
     ));
 
-    return (
+    return this.props.pro ? (
+      <div>
+        <Form layout="vertical">
+          <FormItem {...formItemLayout}>
+            {getFieldDecorator('certName', {
+              rules: [
+                {
+                  required: true,
+                  message: formatMessage({ id: 'required' }),
+                },
+                {
+                  validator: this.checkName,
+                },
+              ],
+            })(
+              <Input
+                autoFocus
+                maxLength={40}
+                type="text"
+                label={<FormattedMessage id="ctf.name" />}
+              />,
+            )}
+          </FormItem>
+          <div className="c7n-creation-title">
+            <Icon type="settings" />
+            <FormattedMessage id="ctf.config" />
+          </div>
+          <FormItem
+            label={<FormattedMessage id="ctf.target.type" />}
+            {...formItemLayout}
+          >
+            {getFieldDecorator('type', {
+              initialValue: CERT_TYPE_REQUEST,
+            })(
+              <RadioGroup name="type" onChange={this.handleTypeChange}>
+                <Radio value={CERT_TYPE_REQUEST}>
+                  <FormattedMessage id="ctf.apply" />
+                </Radio>
+                <Radio value={CERT_TYPE_UPLOAD}>
+                  <FormattedMessage id="ctf.upload" />
+                </Radio>
+                <Radio value={CERT_TYPE_CHOOSE}>
+                  <FormattedMessage id="ctf.choose" />
+                </Radio>
+              </RadioGroup>,
+            )}
+          </FormItem>
+          <div className="c7n-creation-panel">
+            {type === 'choose' && this.getChooseContent}
+            {domainItems}
+            <FormItem
+              className="creation-panel-button"
+              {...formItemLayout}
+            >
+              <Button
+                type="primary"
+                funcType="flat"
+                onClick={this.addDomain}
+                icon="add"
+              >
+                <FormattedMessage id="ctf.config.add" />
+              </Button>
+            </FormItem>
+            {type === CERT_TYPE_UPLOAD && <Fragment>
+              <div className="ctf-upload-head">
+                <Tips
+                  type="title"
+                  data="certificate.file.add"
+                  help={!uploadMode}
+                />
+                <Button
+                  type="primary"
+                  funcType="flat"
+                  onClick={this.changeUploadMode}
+                >
+                  <FormattedMessage id="ctf.upload.mode" />
+                </Button>
+              </div>
+              {CertConfig(uploadMode, form, formatMessage)}
+            </Fragment>}
+          </div>
+        </Form>
+        <InterceptMask visible={submitting} />
+      </div>
+    ) : (
       <div className="c7n-region">
         <Sidebar
           destroyOnClose
@@ -459,91 +550,7 @@ export default class CertificateCreate extends Component {
           width={380}
           className="c7ncd-addcerModal"
         >
-          <Content
-            className="c7ncd-deployment-ctf-create sidebar-content"
-          >
-            <Form layout="vertical">
-              <FormItem {...formItemLayout}>
-                {getFieldDecorator('certName', {
-                  rules: [
-                    {
-                      required: true,
-                      message: formatMessage({ id: 'required' }),
-                    },
-                    {
-                      validator: this.checkName,
-                    },
-                  ],
-                })(
-                  <Input
-                    autoFocus
-                    maxLength={40}
-                    type="text"
-                    label={<FormattedMessage id="ctf.name" />}
-                  />,
-                )}
-              </FormItem>
-              <div className="c7n-creation-title">
-                <Icon type="settings" />
-                <FormattedMessage id="ctf.config" />
-              </div>
-              <FormItem
-                label={<FormattedMessage id="ctf.target.type" />}
-                {...formItemLayout}
-              >
-                {getFieldDecorator('type', {
-                  initialValue: CERT_TYPE_REQUEST,
-                })(
-                  <RadioGroup name="type" onChange={this.handleTypeChange}>
-                    <Radio value={CERT_TYPE_REQUEST}>
-                      <FormattedMessage id="ctf.apply" />
-                    </Radio>
-                    <Radio value={CERT_TYPE_UPLOAD}>
-                      <FormattedMessage id="ctf.upload" />
-                    </Radio>
-                    <Radio value={CERT_TYPE_CHOOSE}>
-                      <FormattedMessage id="ctf.choose" />
-                    </Radio>
-                  </RadioGroup>,
-                )}
-              </FormItem>
-              <div className="c7n-creation-panel">
-                {type === 'choose' && this.getChooseContent}
-                {domainItems}
-                <FormItem
-                  className="creation-panel-button"
-                  {...formItemLayout}
-                >
-                  <Button
-                    type="primary"
-                    funcType="flat"
-                    onClick={this.addDomain}
-                    icon="add"
-                  >
-                    <FormattedMessage id="ctf.config.add" />
-                  </Button>
-                </FormItem>
-                {type === CERT_TYPE_UPLOAD && <Fragment>
-                  <div className="ctf-upload-head">
-                    <Tips
-                      type="title"
-                      data="certificate.file.add"
-                      help={!uploadMode}
-                    />
-                    <Button
-                      type="primary"
-                      funcType="flat"
-                      onClick={this.changeUploadMode}
-                    >
-                      <FormattedMessage id="ctf.upload.mode" />
-                    </Button>
-                  </div>
-                  {CertConfig(uploadMode, form, formatMessage)}
-                </Fragment>}
-              </div>
-            </Form>
-            <InterceptMask visible={submitting} />
-          </Content>
+
         </Sidebar>
       </div>
     );

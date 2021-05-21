@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import {
-  Page, Header, Breadcrumb, Content, Permission, Action, Choerodon,
+  Page, Header, Breadcrumb, Content, Permission, Action, Choerodon, HeaderButtons,
 } from '@choerodon/boot';
 import { Table, Modal } from 'choerodon-ui/pro';
 import { Button } from 'choerodon-ui';
@@ -230,26 +230,26 @@ const TemplateTable = observer(() => {
   return (
     <Page>
       <Header>
-        <Permission service={permissionCodes.create}>
-          <Button
-            icon="playlist_add"
-            onClick={() => handleCreateAppTemplate()}
-          >
-            {formatMessage({ id: `${intlPrefix}.title.create` })}
-          </Button>
-        </Permission>
-        <Button
-          icon="refresh"
-          onClick={refresh}
-        >
-          {formatMessage({ id: 'refresh' })}
-        </Button>
+        <HeaderButtons
+          items={([{
+            name: formatMessage({ id: `${intlPrefix}.title.create` }),
+            icon: 'playlist_add',
+            display: 'true',
+            permissions: permissionCodes.create,
+            handler: () => handleCreateAppTemplate(),
+          }, {
+            icon: 'refresh',
+            display: true,
+            handler: refresh,
+          }])}
+          showClassName={false}
+        />
       </Header>
       <Breadcrumb />
       <Content>
         <Table dataSet={tableDs} className="table-default-color">
           <Column name={mapping.appTemplate.name} renderer={renderName} />
-          <Column renderer={renderAction} width={50} />
+          <Column renderer={renderAction} width={60} />
           <Column name={mapping.temCode.name} />
           <Column name={mapping.repo.name} renderer={renderUrl} />
           <Column name={mapping.source.name} renderer={renderSource} width={100} />

@@ -1,18 +1,17 @@
 /* eslint-disable */
 import React, { useEffect, useState, Fragment, useRef } from 'react';
 import { Table, Modal, TextField, Pagination } from 'choerodon-ui/pro';
-import { Tabs } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { FormattedMessage } from 'react-intl';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import {
-  Page, Content, Header, Permission, Action, Breadcrumb, Choerodon,
+  Page, Content, Header, Action, Breadcrumb, Choerodon, HeaderButtons
 } from '@choerodon/boot';
 import {
   SagaDetails,
 } from '@choerodon/master';
 import {
-  Button, Spin, Tooltip, Icon,
+  Spin, Tooltip, Icon,
 } from 'choerodon-ui';
 import pick from 'lodash/pick';
 import ServiceDetail from "@/routes/app-service/service-detail";
@@ -22,13 +21,12 @@ import { useAppServiceStore } from './stores';
 import CreateForm from '../modals/creat-form';
 import EditForm from '../modals/edit-form';
 import ImportForm from './modal/import-form';
-import StatusTag from '../components/status-tag';
+import { StatusTag } from '@choerodon/components';
 import { handlePromptError } from '../../../utils';
 
 import './index.less';
+import './theme4.less';
 import ClickText from "../../../components/click-text";
-
-const TabPane = Tabs.TabPane;
 
 const { Column } = Table;
 const modalKey1 = Modal.key();
@@ -65,12 +63,6 @@ const ListView = withRouter(observer((props) => {
 
   const [isInit, setIsInit] = useState(true);
   const [selectedAppService, setSelectedAppService] = useState(undefined);
-
-  useEffect(() => {
-    if (AppState.getCurrentTheme === 'theme4') {
-      import('./theme4.less');
-    }
-  }, [AppState.getCurrentTheme]);
 
   useEffect(() => {
     // 确定dataset加载完毕后才打开创建框
@@ -120,6 +112,36 @@ const ListView = withRouter(observer((props) => {
     })
   };
 
+  const getItemsButton = () => ([{
+    name: <FormattedMessage id={`${intlPrefix}.create`} />,
+    icon: 'playlist_add',
+    permissions: ['choerodon.code.project.develop.app-service.ps.create'],
+    display: true,
+    handler: openCreate,
+  }, {
+    name: <FormattedMessage id={`${intlPrefix}.import`} />,
+    icon: 'archive',
+    permissions: ['choerodon.code.project.develop.app-service.ps.import'],
+    display: true,
+    handler: openImport,
+  }, {
+    name: '权限管理',
+    icon: 'authority',
+    display: true,
+    permissions: ['choerodon.code.project.develop.app-service.ps.permission.update'],
+    handler: () => {
+      const {
+        history,
+        location,
+      } = props;
+      history.push(`/rducm/code-lib-management/assign${location.search}`);
+    }
+  }, {
+    icon: 'refresh',
+    display: true,
+    handler: refresh,
+  }])
+
   function renderName({ value, record }) {
     const {
       location: {
@@ -167,12 +189,28 @@ const ListView = withRouter(observer((props) => {
     );
   }
 
-  function renderStatus({ value, record }) {
+  function renderStatus({ value:active, record }) {
+    const isSynchro = record.get('synchro');
+    const isFailed = record.get('fail');
+    let colorCode;
+    if(isSynchro){
+      if(isFailed){
+        colorCode = 'failed' 
+      }else if(active){
+        colorCode = 'active'
+      }else{
+        colorCode = 'stop'
+      }
+    } else {
+      colorCode = 'operating'
+    }
     return (
       <StatusTag
-        active={value}
-        fail={record.get('fail')}
-        synchro={record.get('synchro')}
+        colorCode={colorCode}
+        style={{
+          marginRight: '5px'
+        }}
+        name={formatMessage({id:colorCode})}
       />
     );
   }
@@ -182,27 +220,41 @@ const ListView = withRouter(observer((props) => {
       detail: {
         service: ['choerodon.code.project.develop.app-service.ps.default'],
         text: formatMessage({ id: `${intlPrefix}.detail`}),
-        action: ref?.current?.openDetail,
+        action: () => {
+          ref?.current?.openDetail();
+        },
       },
       edit: {
         service: ['choerodon.code.project.develop.app-service.ps.update'],
         text: formatMessage({ id: 'edit' }),
-        action: openEdit,
+        action: () => {
+          setSelectedAppService(record.toData());
+          openEdit();
+        },
       },
       stop: {
         service: ['choerodon.code.project.develop.app-service.ps.disable'],
         text: formatMessage({ id: 'stop' }),
-        action: openStop.bind(this, record),
+        action: () => {
+          setSelectedAppService(record.toData());
+          openStop(record);
+        }
       },
       run: {
         service: ['choerodon.code.project.develop.app-service.ps.enable'],
         text: formatMessage({ id: 'active' }),
-        action: () => changeActive(true),
+        action: () => {
+          setSelectedAppService(record.toData());
+          changeActive(true, record);
+        },
       },
       delete: {
         service: ['choerodon.code.project.develop.app-service.ps.delete'],
         text: formatMessage({ id: 'delete' }),
-        action: handleDelete,
+        action: () => {
+          setSelectedAppService(record.toData());
+          handleDelete(record);
+        },
       },
 
     };
@@ -222,15 +274,6 @@ const ListView = withRouter(observer((props) => {
       delete actionItems.detail;
     }
     return <Action data={Object.values(actionItems)} />;
-  }
-
-  function handleCancel(dataSet) {
-    const { current } = dataSet;
-    if (current.status === 'add') {
-      dataSet.remove(current);
-    } else {
-      current.reset();
-    }
   }
 
   function openCreate() {
@@ -265,7 +308,7 @@ const ListView = withRouter(observer((props) => {
   }
 
   function openEdit() {
-    const appServiceId = listDs.current.get('id');
+    const appServiceId = selectedAppService.id;
 
     Modal.open({
       key: editModalKey,
@@ -295,8 +338,7 @@ const ListView = withRouter(observer((props) => {
     }
   }
 
-  async function handleDelete() {
-    const record = listDs.current;
+  async function handleDelete(record) {
     const appId = record.get('id');
     const modalProps = {
       title: formatMessage({ id: `${intlPrefix}.delete.title` }, { name: record.get('name') }),
@@ -312,24 +354,24 @@ const ListView = withRouter(observer((props) => {
     }
   }
 
-  async function changeActive(active) {
+  async function changeActive(active, record) {
     if (!active) {
       Modal.open({
         key: modalKey3,
         title: formatMessage({ id: `${intlPrefix}.stop` }, { name: listDs.current.get('name') }),
         children: <FormattedMessage id={`${intlPrefix}.stop.tips`} />,
-        onOk: () => handleChangeActive(active),
+        onOk: () => handleChangeActive(active, record),
         okText: formatMessage({ id: 'stop' }),
       });
     } else {
-      handleChangeActive(active);
+      handleChangeActive(active, record);
     }
   }
 
-  async function handleChangeActive(active) {
+  async function handleChangeActive(active, record) {
     try {
-      if (await appServiceStore.changeActive(projectId, listDs.current.get('id'), active)) {
-        checkLocalstorage(listDs.current.get('id'));
+      if (await appServiceStore.changeActive(projectId, record.get('id'), active)) {
+        checkLocalstorage(record.get('id'));
         refresh();
       } else {
         return false;
@@ -369,11 +411,11 @@ const ListView = withRouter(observer((props) => {
         }
 
         const statusObj = {
-          title: status ? formatMessage({ id: `${intlPrefix}.cannot.stop` }, { name: listDs.current.get('name') }) : formatMessage({ id: `${intlPrefix}.stop` }, { name: listDs.current.get('name') }),
+          title: status ? formatMessage({ id: `${intlPrefix}.cannot.stop` }, { name: recordt.get('name') }) : formatMessage({ id: `${intlPrefix}.stop` }, { name: record.get('name') }),
           // eslint-disable-next-line no-nested-ternary
           children: childrenContent,
           okCancel: !status,
-          onOk: () => (status ? stopModal.close() : handleChangeActive(false)),
+          onOk: () => (status ? stopModal.close() : handleChangeActive(false, record)),
           okText: status ? formatMessage({ id: 'iknow' }) : formatMessage({ id: 'stop' }),
           footer: ((okBtn, cancelBtn) => (
             <>
@@ -393,58 +435,12 @@ const ListView = withRouter(observer((props) => {
   }
 
   function getHeader() {
-    const disabled = !appListStore.getCanCreate;
-    const disabledMessage = disabled ? formatMessage({ id: `${intlPrefix}.create.disabled` }) : '';
     return (
       <Header title={<FormattedMessage id="app.head" />}>
-        <Permission
-          service={['choerodon.code.project.develop.app-service.ps.create']}
-        >
-          <Tooltip title={disabledMessage} placement="bottom">
-            <Button
-              icon="playlist_add"
-              disabled={disabled}
-              onClick={openCreate}
-            >
-              <FormattedMessage id={`${intlPrefix}.create`} />
-            </Button>
-          </Tooltip>
-        </Permission>
-        <Permission
-          service={['choerodon.code.project.develop.app-service.ps.import']}
-        >
-          <Tooltip title={disabledMessage} placement="bottom">
-            <Button
-              icon="archive"
-              disabled={disabled}
-              onClick={openImport}
-            >
-              <FormattedMessage id={`${intlPrefix}.import`} />
-            </Button>
-          </Tooltip>
-        </Permission>
-        <Permission
-          service={['choerodon.code.project.develop.app-service.ps.permission.update']}
-        >
-          <Button
-            icon="authority"
-            onClick={() => {
-              const {
-                history,
-                location,
-              } = props;
-              history.push(`/rducm/code-lib-management/assign${location.search}`);
-            }}
-          >
-            权限管理
-          </Button>
-        </Permission>
-        <Button
-          icon="refresh"
-          onClick={refresh}
-        >
-          <FormattedMessage id="refresh" />
-        </Button>
+        <HeaderButtons
+          items={getItemsButton()}
+          showClassName={false}
+        />
       </Header>
     );
   }
@@ -481,11 +477,19 @@ const ListView = withRouter(observer((props) => {
                     <div className="c7ncd-appService-item-center">
                       <div className="c7ncd-appService-item-center-line">
                         <span className="c7ncd-appService-item-center-line-name">{record.get('name')}</span>
-                        <StatusTag
-                          active={record.get('active')}
-                          fail={record.get('fail')}
-                          synchro={record.get('synchro')}
-                        />
+                        {
+                          renderStatus({value:record.get('active'), record})
+                        }
+                        {record.get('errorMessage') && <Tooltip title={record.get('errorMessage')}>
+                          <Icon 
+                            type="info"
+                            style={{
+                              color: '#f76776',
+                              marginRight: '5px'
+                            }}
+                          />
+                        </Tooltip> 
+                        }
                         <span className="c7ncd-appService-item-center-line-type">
                       <FormattedMessage id={`${intlPrefix}.type.${record.get('type')}`} />
                     </span>
@@ -549,6 +553,8 @@ const ListView = withRouter(observer((props) => {
               }}
             />
           </div>
+          <div className="c7ncd-theme4-appService-blockTop" />
+          <div className="c7ncd-theme4-appService-blockDown" />
           <div className="c7ncd-theme4-appService-right">
             <ServiceDetail
               cRef={ref}
@@ -578,7 +584,7 @@ const ListView = withRouter(observer((props) => {
             extraNode: (
               <TextField
                 className="theme4-c7n-member-search"
-                placeholder="搜索成员"
+                placeholder="搜索应用服务"
                 style={{ marginLeft: 32 }}
                 suffix={(
                   <Icon type="search" />

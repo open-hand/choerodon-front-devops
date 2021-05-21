@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import {
   Form, TextField, Select, Tooltip, SelectBox, Spin,
 } from 'choerodon-ui/pro';
@@ -121,6 +121,13 @@ const CreateForm = injectIntl(observer((props) => {
     ));
   }
 
+  const renderTemplateOption = useCallback(({ value, text, record: optionRecord }) => {
+    if (optionRecord?.get('remark')) {
+      return <Tips title={text} helpText={optionRecord?.get('remark')} />;
+    }
+    return text;
+  }, []);
+
   return (
     <div className={`${prefixCls}-create-wrap`}>
       <div
@@ -196,6 +203,7 @@ const CreateForm = injectIntl(observer((props) => {
             searchable
             searchMatcher="param"
             addonAfter={<Tips helpText={formatMessage({ id: 'c7ncd.template.tips' })} />}
+            optionRenderer={renderTemplateOption}
           />
         )
       }

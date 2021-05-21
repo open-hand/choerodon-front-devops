@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
+import { HeaderButtons } from '@choerodon/master';
 import { Modal } from 'choerodon-ui/pro';
-import HeaderButtons from '../../../../../../components/header-buttons';
 import EnvDetail from '../../../../../../components/env-detail';
 import LinkService from './link-service';
 import PermissionPage from './permission';
@@ -320,7 +320,6 @@ const EnvModals = observer(() => {
       display: true,
       group: 2,
     }, {
-      name: formatMessage({ id: 'refresh' }),
       icon: 'refresh',
       handler: refresh,
       display: true,
@@ -328,7 +327,7 @@ const EnvModals = observer(() => {
     }];
   }
 
-  return <HeaderButtons items={getButtons()} />;
+  return <HeaderButtons items={getButtons()} showClassName />;
 });
 
 export default EnvModals;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Page, Header, Breadcrumb, Content, Permission,
+  Page, Header, Breadcrumb, Content, Permission, HeaderButtons,
 } from '@choerodon/boot';
 import {
   Button, Modal,
@@ -68,31 +68,26 @@ const HostConfig: React.FC<any> = observer((): any => {
   return (
     <Page service={['choerodon.code.project.deploy.host.ps.default']}>
       <Header>
-        <Permission service={['choerodon.code.project.deploy.host.ps.create']}>
-          <Button
-            color={'primary' as ButtonColor}
-            icon="playlist_add"
-            onClick={handleAdd}
-          >
-            {formatMessage({ id: `${intlPrefix}.add` })}
-          </Button>
-        </Permission>
-        <Permission service={['choerodon.code.project.deploy.host.ps.correct']}>
-          <Button
-            color={'primary' as ButtonColor}
-            icon="refresh"
-            onClick={handleAdjustment}
-          >
-            {formatMessage({ id: `${intlPrefix}.adjustment` })}
-          </Button>
-        </Permission>
-        <Button
-          color={'primary' as ButtonColor}
-          icon="refresh"
-          onClick={refresh}
-        >
-          {formatMessage({ id: 'refresh' })}
-        </Button>
+        <HeaderButtons
+          items={([{
+            name: formatMessage({ id: `${intlPrefix}.add` }),
+            icon: 'playlist_add',
+            display: true,
+            permissions: ['choerodon.code.project.deploy.host.ps.create'],
+            handler: handleAdd,
+          }, {
+            name: formatMessage({ id: `${intlPrefix}.adjustment` }),
+            icon: 'refresh',
+            display: true,
+            permissions: ['choerodon.code.project.deploy.host.ps.correct'],
+            handler: handleAdjustment,
+          }, {
+            icon: 'refresh',
+            display: true,
+            handler: refresh,
+          }])}
+          showClassName={false}
+        />
       </Header>
       <Breadcrumb />
       <Content className={`${prefixCls}-content`}>

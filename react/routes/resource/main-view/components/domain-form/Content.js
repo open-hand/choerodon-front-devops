@@ -1,6 +1,8 @@
 import React, { Fragment, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Form, Select, TextField, SelectBox, Button, Icon, Tooltip, Spin } from 'choerodon-ui/pro';
+import {
+  Form, Select, TextField, SelectBox, Button, Icon, Tooltip, Spin, TextArea,
+} from 'choerodon-ui/pro';
 import { Choerodon } from '@choerodon/boot';
 import map from 'lodash/map';
 import { useDomainFormStore } from './stores';
@@ -50,12 +52,10 @@ export default observer(() => {
         if (await formDs.submit() !== false) {
           refresh();
           return true;
-        } else {
-          return false;
         }
-      } else {
         return false;
       }
+      return false;
     } catch (e) {
       Choerodon.handleResponseError(e);
       return false;
@@ -82,7 +82,7 @@ export default observer(() => {
     const status = serviceRecord.get('status');
     const serviceError = serviceRecord.get('serviceError');
     return (
-      <Fragment>
+      <>
         <Tooltip title={text}>
           <span className={`${prefixCls}-domain-form-network-text`}>{text}</span>
         </Tooltip>
@@ -91,7 +91,7 @@ export default observer(() => {
             <Icon type="error" className={`${prefixCls}-domain-form-network-status-icon`} />
           </Tooltip>
         )}
-      </Fragment>
+      </>
     );
   }
 
@@ -99,15 +99,14 @@ export default observer(() => {
     const content = renderService({ serviceRecord, text });
     return content;
   }
-  
+
   function serviceRender({ text, value }) {
     const serviceRecord = serviceDs.find((eachRecord) => eachRecord.get('id') === value);
     if (!serviceRecord) {
       return text;
-    } else {
-      const content = renderService({ serviceRecord, text });
-      return content;
     }
+    const content = renderService({ serviceRecord, text });
+    return content;
   }
 
   return (
@@ -160,10 +159,21 @@ export default observer(() => {
         Annotations
       </div>
       {map(annotationDs.data, (annotationRecord) => (
-        <Form columns={14} record={annotationRecord} style={{ width: '103.3%' }} key={annotationRecord.id}>
+        <Form
+          columns={14}
+          record={annotationRecord}
+          style={{ width: '103.3%' }}
+          key={annotationRecord.id}
+          className={`${prefixCls}-domain-form-annotation`}
+        >
           <TextField colSpan={6} name="key" />
           <span className={`${prefixCls}-domain-form-annotation-equal`}>=</span>
-          <TextField colSpan={6} name="value" />
+          <TextArea
+            colSpan={6}
+            name="value"
+            autoSize={{ minRows: 1 }}
+            resize="vertical"
+          />
           {annotationDs.length > 1 ? (
             <Button
               funcType="flat"

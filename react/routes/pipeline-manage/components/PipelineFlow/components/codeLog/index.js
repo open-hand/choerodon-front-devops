@@ -71,6 +71,25 @@ export default observer((props) => {
       {type === 'build' && (
         <div className={`${prefixCls}-btn`}>
           <Button
+            icon="refresh"
+            onClick={() => {
+              const joblog = document.getElementById('jobLog');
+              joblog.parentNode.removeChild(joblog);
+              const parent = document.querySelector('.c7n-pro-modal-body');
+              const child = document.createElement('div');
+              child.setAttribute('id', 'jobLog');
+              child.setAttribute('class', `${prefixCls} ${type === 'build' ? `${prefixCls}-hasBtn` : ''}`);
+              parent.appendChild(child);
+              term.clear();
+              loadData();
+              term.open(document.getElementById('jobLog'));
+              fit(term);
+              // term.open(document.getElementById('jobLog'));
+              // term.writeln('空');
+              // loadData();
+            }}
+          />
+          <Button
             icon="get_app-o"
             color="primary"
             onClick={handleDownload}

@@ -40,9 +40,8 @@ const issueDetailModalStyle = {
 function Branch(props) {
   const {
     tableDs,
-    projectId,
     intl,
-    AppState,
+    AppState: { currentMenuType: { organizationId, projectId } },
     appServiceDs,
     appServiceId,
     formatMessage,
@@ -64,8 +63,24 @@ function Branch(props) {
     handleMapStore.setCodeManagerBranch({
       refresh: handleRefresh,
       getSelfToolBar,
+      getSelfToolBarObj,
     });
   }, [projectId, appServiceId]);
+
+  const getSelfToolBarObj = () => {
+    if (!appServiceId) {
+      return {};
+    } else {
+      return ({
+        name: <FormattedMessage id="branch.create" />,
+        icon: 'playlist_add',
+        display: true,
+        permissions: ['choerodon.code.project.develop.code-management.ps.branch.create'],
+        disabled: !(appServiceId && renderEmpty()),
+        handler: openCreateBranchModal,
+      })
+    }
+  }
 
   /**
    * 生成特殊的自定义tool-bar
@@ -152,6 +167,8 @@ function Branch(props) {
       issueCode: issueNum,
       issueName: summary,
       typeCode,
+      projectName: sourceProjectName,
+      issueProjectId: sourceProjectId,
     } = recordData || {};
     const initIssue = {
       issueId,
@@ -172,6 +189,7 @@ function Branch(props) {
         issueId={showDefaultIssue && issueId}
         initIssue={showDefaultIssue && initIssue}
         handleRefresh={handleRefresh}
+        initProject={sourceProjectId ? { id: sourceProjectId, name: sourceProjectName } : null}
       />,
       style: branchCreateModalStyle,
       okText: <FormattedMessage id="save" />,
@@ -309,7 +327,7 @@ function Branch(props) {
     return (
       <div>
         {record.get('typeCode') ? getOptionContent(record) : null}
-        <a onClick={() => openIssueDetail(record.get('issueId'), record.get('branchName'))} role="none">
+        <a onClick={() => openIssueDetail(record.get('issueId'), record.get('branchName'), record.get('issueProjectId'))} role="none">
           <Tooltip
             title={text}
           >
@@ -361,9 +379,8 @@ function Branch(props) {
     );
   };
 
-  function openIssueDetail(id, name) {
-    const orgId = AppState.currentMenuType.organizationId;
-    const projId = AppState.currentMenuType.projectId;
+  function openIssueDetail(id, name, issueProjectId) {
+    const newProjectId = issueProjectId || projectId;
     ProModal.open({
       key: issueDetailModalKey,
       title: <FormattedMessage
@@ -373,7 +390,7 @@ function Branch(props) {
         }}
       />,
       drawer: true,
-      children: <IssueDetail intl={intl} projectId={projId} issueId={id} orgId={orgId} />,
+      children: <IssueDetail intl={intl} projectId={newProjectId} issueId={id} orgId={organizationId} />,
       style: issueDetailModalStyle,
       okCancel: false,
       okText: <FormattedMessage id="envPl.close" />,
@@ -398,11 +415,18 @@ function Branch(props) {
             <div className={styles?.['c7n-branch-theme4-table-column-side-line']}>
               <Icon type="branch" />
               <span className={styles?.['c7n-branch-theme4-table-column-side-line-firstLetter']}>{ record.get('branchName').substring(0, 1).toUpperCase() }</span>
-              <span className={styles?.['c7n-branch-theme4-table-column-side-line-branchName']}>{ record.get('branchName') }</span>
+              <span
+                style={{
+                  color: '#3f51b5',
+                  cursor: 'pointer',
+                }}
+                className={styles?.['c7n-branch-theme4-table-column-side-line-branchName']}
+                onClick={() => openEditIssueModal(record.toData())}
+              >{ record.get('branchName') }</span>
             </div>
             <div className={styles?.['c7n-branch-theme4-table-column-side-line']}>
               <Icon type="point" />
-              <a href={record.get('commitUrl')}>{ record.get('sha').substring(0, 8) }</a>
+              <a href={record.get('commitUrl')}>{ record.get('sha')?.substring(0, 8) }</a>
               <span className={styles?.['c7n-branch-theme4-table-column-side-line-commitContent']}>{ record.get('commitContent') }</span>
               <img src={record.get('commitUserUrl')} alt=""/>
               <TimePopover

@@ -1,12 +1,15 @@
+/* eslint-disable max-len */
 import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Page, Header, Content, Breadcrumb } from '@choerodon/boot';
-import { Form, Select } from 'choerodon-ui/pro';
-import { Button, Tooltip, Spin } from 'choerodon-ui';
+import {
+  Page, Header, Content, Breadcrumb,
+} from '@choerodon/boot';
+import { Form, Select, Spin } from 'choerodon-ui/pro';
 import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';
 import moment from 'moment';
+import { HeaderButtons } from '@choerodon/master';
 import LoadingBar from '../../../components/loading';
 import ChartSwitch from '../Component/ChartSwitch';
 import TimePicker from '../Component/TimePicker';
@@ -16,9 +19,7 @@ import './BuildDuration.less';
 import { useReportsStore } from '../stores';
 import { useBuildDurationStore } from './stores';
 
-
 const { Option } = Select;
-const HEIGHT = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
 const BuildDuration = observer(() => {
   const {
@@ -96,7 +97,9 @@ const BuildDuration = observer(() => {
    * 图表函数
    */
   function getOption() {
-    const { pipelineTime, refs, versions, createDates } = ReportsStore.getBuildDuration;
+    const {
+      pipelineTime, refs, versions, createDates,
+    } = ReportsStore.getBuildDuration;
     const averageDuration = [];
     averageDuration.length = pipelineTime && pipelineTime.length ? pipelineTime.length : 0;
     const ava = pipelineTime && pipelineTime.length ? ((_.reduce(pipelineTime, (sum, n) => sum + parseFloat(n), 0)) / pipelineTime.length) : 0;
@@ -249,28 +252,32 @@ const BuildDuration = observer(() => {
     setDateType(type);
   };
 
-  const { id, name, type, organizationId } = AppState.currentMenuType;
-  const { getAllApps, appId, echartsLoading, isRefresh } = ReportsStore;
+  const {
+    id, name, type, organizationId,
+  } = AppState.currentMenuType;
+  const {
+    getAllApps, appId, echartsLoading, isRefresh,
+  } = ReportsStore;
 
-  const content = (getAllApps && getAllApps.length ? <React.Fragment>
-    <div className="c7n-buildDuration-select">
-      <Form
-        dataSet={BuildDurationSelectDataSet}
-        className="c7n-app-select_247"
-
-      >
-        <Select
-          name="buildDurationApps"
+  const content = (getAllApps && getAllApps.length ? (
+    <>
+      <div className="c7n-buildDuration-select">
+        <Form
+          dataSet={BuildDurationSelectDataSet}
+          className="c7n-app-select_247"
+        >
+          <Select
+            name="buildDurationApps"
           // defaultValue={appId}
           // value={appId}
-          searchable
-          optionFilterProp="children"
-          filterOption={(input, option) => option.props.children.props.children.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-          filter
-          onChange={handleAppSelect}
-          clearButton={false}
-        >
-          {
+            searchable
+            optionFilterProp="children"
+            filterOption={(input, option) => option.props.children.props.children.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            filter
+            onChange={handleAppSelect}
+            clearButton={false}
+          >
+            {
             _.map(getAllApps, (app, index) => (
               <Option value={app.id} key={index}>
                 {app.name}
@@ -279,49 +286,54 @@ const BuildDuration = observer(() => {
                 {/*  */}
                 {/* </span> */}
                 {/* </Tooltip> */}
-              </Option>))
+              </Option>
+            ))
           }
-        </Select>
-      </Form>
-      <TimePicker
-        startTime={ReportsStore.getStartDate}
-        endTime={ReportsStore.getEndDate}
-        func={loadCharts}
-        type={dateType}
-        onChange={handleDateChoose}
-        store={ReportsStore}
-      />
-    </div>
-    <Spin spinning={echartsLoading}>
-      <ReactEcharts className="c7n-buildDuration-echarts" option={getOption()} />
-    </Spin>
-    <BuildTable />
-  </React.Fragment> : <NoChart getProRole={ReportsStore.getProRole} type="app" />);
+          </Select>
+        </Form>
+        <TimePicker
+          startTime={ReportsStore.getStartDate}
+          endTime={ReportsStore.getEndDate}
+          func={loadCharts}
+          type={dateType}
+          onChange={handleDateChoose}
+          store={ReportsStore}
+        />
+      </div>
+      <Spin spinning={echartsLoading}>
+        <ReactEcharts className="c7n-buildDuration-echarts" option={getOption()} />
+      </Spin>
+      <BuildTable />
+    </>
+  ) : <NoChart getProRole={ReportsStore.getProRole} type="app" />);
 
-  return (<Page
-    className="c7n-region c7n-ciPipeline"
-    service={['choerodon.code.project.operation.chart.ps.build.duration']}
-  >
-    <Header
-      title={formatMessage({ id: 'report.build-duration.head' })}
-      backPath={`/charts${search}`}
+  return (
+    <Page
+      className="c7n-region c7n-ciPipeline"
+      service={['choerodon.code.project.operation.chart.ps.build.duration']}
     >
-      <ChartSwitch
-        history={history}
-        current="build-duration"
-      />
-      <Button
-        icon="refresh"
-        onClick={handleRefresh}
+      <Header
+        title={formatMessage({ id: 'report.build-duration.head' })}
+        backPath={`/charts${search}`}
       >
-        <FormattedMessage id="refresh" />
-      </Button>
-    </Header>
-    <Breadcrumb title={formatMessage({ id: 'report.build-duration.head' })} />
-    <Content className="c7n-buildDuration-content">
-      {isRefresh ? <LoadingBar display={isRefresh} /> : content}
-    </Content>
-  </Page>);
+        <ChartSwitch
+          history={history}
+          current="build-duration"
+        />
+        <HeaderButtons
+          items={[{
+            icon: 'refresh',
+            handler: handleRefresh,
+            display: true,
+          }]}
+        />
+      </Header>
+      <Breadcrumb title={formatMessage({ id: 'report.build-duration.head' })} />
+      <Content className="c7n-buildDuration-content">
+        {isRefresh ? <LoadingBar display={isRefresh} /> : content}
+      </Content>
+    </Page>
+  );
 });
 
 export default injectIntl(BuildDuration);

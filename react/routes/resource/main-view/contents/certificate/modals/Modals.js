@@ -1,18 +1,15 @@
-import React, { Fragment, useMemo, useCallback, useEffect, useState } from 'react';
-import { observer } from 'mobx-react-lite';
+import React, {
+  useEffect, useState,
+} from 'react';
 import { Modal } from 'choerodon-ui/pro';
-import { Button } from 'choerodon-ui';
+import { observer } from 'mobx-react-lite';
+import { HeaderButtons } from '@choerodon/master';
 import { FormattedMessage } from 'react-intl';
-import HeaderButtons from '../../../../../../components/header-buttons';
 import { useResourceStore } from '../../../../stores';
 import { useModalStore } from './stores';
 import { useCertificateStore } from '../stores';
 import FormView from './form-view';
 import { useMainStore } from '../../../stores';
-
-const modalStyle = {
-  width: '26%',
-};
 
 const EnvModals = observer(() => {
   const {
@@ -45,6 +42,25 @@ const EnvModals = observer(() => {
 
   function openModal() {
     setShowModal(true);
+    Modal.open({
+      title: <FormattedMessage id="ctf.sidebar.create" />,
+      key: Modal.key(),
+      style: {
+        width: 380,
+      },
+      drawer: true,
+      okText: <FormattedMessage id="create" />,
+      cancelText: <FormattedMessage id="cancel" />,
+      children: (
+        <FormView
+          pro
+          visible={showModal}
+          store={certStore}
+          envId={parentId}
+          onClose={closeModal}
+        />
+      ),
+    });
   }
 
   function closeModal(isLoad) {
@@ -63,30 +79,27 @@ const EnvModals = observer(() => {
       icon: 'playlist_add',
       handler: openModal,
       display: true,
-      group: 1,
       service: permissions,
-      disabled,
+      // disabled,
     }, {
-      name: formatMessage({ id: 'refresh' }),
       icon: 'refresh',
       handler: refresh,
       display: true,
-      group: 1,
     }]);
   }
 
   return (
-    <Fragment>
-      <HeaderButtons items={getButtons()} />
-      {showModal && (
-        <FormView
-          visible={showModal}
-          store={certStore}
-          envId={parentId}
-          onClose={closeModal}
-        />
-      )}
-    </Fragment>
+    <>
+      <HeaderButtons items={getButtons()} showClassName />
+      {/* {showModal && ( */}
+      {/*  <FormView */}
+      {/*    visible={showModal} */}
+      {/*    store={certStore} */}
+      {/*    envId={parentId} */}
+      {/*    onClose={closeModal} */}
+      {/*  /> */}
+      {/* )} */}
+    </>
   );
 });
 

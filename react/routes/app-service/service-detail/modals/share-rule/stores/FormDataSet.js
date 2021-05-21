@@ -31,7 +31,9 @@ async function handleUpdate({ name, record }) {
   }
 }
 
-export default (({ intlPrefix, formatMessage, projectId, appServiceId, shareId }) => {
+export default (({
+  intlPrefix, formatMessage, projectId, appServiceId, shareId,
+}) => {
   function handleLoad({ dataSet }) {
     const record = dataSet.current;
     if (record.get('shareLevel') === 'organization') {
@@ -122,7 +124,9 @@ export default (({ intlPrefix, formatMessage, projectId, appServiceId, shareId }
           },
         }),
       },
-      { name: 'hasFailed', type: 'boolean', defaultValue: false, ignore: 'always' },
+      {
+        name: 'hasFailed', type: 'boolean', defaultValue: false, ignore: 'always',
+      },
     ],
     events: {
       load: handleLoad,

@@ -1,10 +1,15 @@
+/* eslint-disable max-len */
 import React, { useState, useEffect, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
-import { FormattedMessage } from 'react-intl';
-import { Page, Header, Content, Breadcrumb } from '@choerodon/boot';
-import { Form, Select, Button, Tooltip } from 'choerodon-ui/pro';
+import {
+  Page, Header, Content, Breadcrumb,
+} from '@choerodon/boot';
+import {
+  Form, Select,
+} from 'choerodon-ui/pro';
 import _ from 'lodash';
 import moment from 'moment';
+import { HeaderButtons } from '@choerodon/master';
 import ChartSwitch from '../Component/ChartSwitch';
 import './BuildNumber.less';
 import TimePicker from '../Component/TimePicker';
@@ -16,7 +21,6 @@ import { useReportsStore } from '../stores';
 import { useBuildNumberStore } from './stores';
 
 const { Option } = Select;
-const HEIGHT = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
 const BuildNumber = observer(() => {
   const {
@@ -136,27 +140,30 @@ const BuildNumber = observer(() => {
     setDateType(type);
   };
 
-  const { id, name, type, organizationId } = AppState.currentMenuType;
+  const {
+    id, name, type, organizationId,
+  } = AppState.currentMenuType;
   const backPath = state && state.backPath ? state.backPath : 'reports';
 
-  const content = (getAllApps.length ? <React.Fragment>
-    <div className="c7n-buildNumber-select">
-      <Form
-        dataSet={BuildNumberSelectDataSet}
-        className="c7n-app-select_247"
-      >
-        <Select
-          name="buildNumberApps"
+  const content = (getAllApps.length ? (
+    <>
+      <div className="c7n-buildNumber-select">
+        <Form
+          dataSet={BuildNumberSelectDataSet}
+          className="c7n-app-select_247"
+        >
+          <Select
+            name="buildNumberApps"
           // defaultValue={appId}
           // value={appId}
-          optionFilterProp="children"
-          filterOption={(input, option) => option.props.children.props.children.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-          filter
-          searchable
-          onChange={handleAppSelect}
-          clearButton={false}
-        >
-          {
+            optionFilterProp="children"
+            filterOption={(input, option) => option.props.children.props.children.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            filter
+            searchable
+            onChange={handleAppSelect}
+            clearButton={false}
+          >
+            {
             _.map(getAllApps, (app, index) => (
 
               <Option value={app.id} key={index}>
@@ -167,46 +174,51 @@ const BuildNumber = observer(() => {
                 {/*    {app.name} */}
                 {/*  </span> */}
                 {/* </Tooltip> */}
-              </Option>))
+              </Option>
+            ))
           }
-        </Select>
-      </Form>
-      <TimePicker
-        startTime={ReportsStore.getStartDate}
-        endTime={ReportsStore.getEndDate}
-        func={loadCharts}
-        type={dateType}
-        onChange={handleDateChoose}
-        store={ReportsStore}
-      />
-    </div>
-    <BuildChart ReportsStore={ReportsStore} echartsLoading={echartsLoading} height="400px" top="15%" languageType="report" />
-    <BuildTable />
-  </React.Fragment> : <NoChart getProRole={getProRole} type="app" />);
+          </Select>
+        </Form>
+        <TimePicker
+          startTime={ReportsStore.getStartDate}
+          endTime={ReportsStore.getEndDate}
+          func={loadCharts}
+          type={dateType}
+          onChange={handleDateChoose}
+          store={ReportsStore}
+        />
+      </div>
+      <BuildChart ReportsStore={ReportsStore} echartsLoading={echartsLoading} height="400px" top="15%" languageType="report" />
+      <BuildTable />
+    </>
+  ) : <NoChart getProRole={getProRole} type="app" />);
 
-  return (<Page
-    className="c7n-region c7n-ciPipeline"
-    service={['choerodon.code.project.operation.chart.ps.build.times']}
-  >
-    <Header
-      title={formatMessage({ id: 'report.build-number.head' })}
-      backPath={`/charts${search}`}
+  return (
+    <Page
+      className="c7n-region c7n-ciPipeline"
+      service={['choerodon.code.project.operation.chart.ps.build.times']}
     >
-      <ChartSwitch
-        history={history}
-        current="build-number"
-      />
-      <Button
-        icon="refresh"
-        onClick={handleRefresh}
+      <Header
+        title={formatMessage({ id: 'report.build-number.head' })}
+        backPath={`/charts${search}`}
       >
-        <FormattedMessage id="refresh" />
-      </Button>
-    </Header>
-    <Breadcrumb title={formatMessage({ id: 'report.build-number.head' })} />
-    <Content className="c7n-buildNumber-content">
-      {isRefresh ? <LoadingBar display={isRefresh} /> : content}
-    </Content>
-  </Page>);
+        <ChartSwitch
+          history={history}
+          current="build-number"
+        />
+        <HeaderButtons
+          items={[{
+            icon: 'refresh',
+            handler: handleRefresh,
+            display: true,
+          }]}
+        />
+      </Header>
+      <Breadcrumb title={formatMessage({ id: 'report.build-number.head' })} />
+      <Content className="c7n-buildNumber-content">
+        {isRefresh ? <LoadingBar display={isRefresh} /> : content}
+      </Content>
+    </Page>
+  );
 });
 export default BuildNumber;

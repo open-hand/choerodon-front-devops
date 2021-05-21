@@ -2,7 +2,7 @@ import React, { useEffect, useState, Fragment } from 'react';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
-import { Header, Choerodon } from '@choerodon/boot';
+import { Header, Choerodon, HeaderButtons } from '@choerodon/boot';
 import {
   Button, Select, Form, Menu, Dropdown, Icon, UrlField, TextField,
 } from 'choerodon-ui/pro';
@@ -28,6 +28,12 @@ const CodeManagerToolBar = injectIntl(inject('AppState')(observer((props) => {
     const obj = handleMapStore[name]
       && handleMapStore[name].getSelfToolBar
       && handleMapStore[name].getSelfToolBar();
+    return obj || null;
+  };
+  const getSelfToolBarObj = () => {
+    const obj = handleMapStore[name]
+      && handleMapStore[name].getSelfToolBarObj
+      && handleMapStore[name].getSelfToolBarObj();
     return obj || null;
   };
   /**
@@ -59,13 +65,24 @@ const CodeManagerToolBar = injectIntl(inject('AppState')(observer((props) => {
   ] : (
     <>
       <Header>
-        {getSelfToolBar()}
-        <Button
-          onClick={refreshApp}
-          icon="refresh"
-        >
-          {formatMessage({ id: 'refresh' })}
-        </Button>
+        <HeaderButtons
+          items={([{
+            ...getSelfToolBarObj(),
+          }, {
+            icon: 'refresh',
+            display: true,
+            handler: refreshApp,
+            iconOnly: true,
+          }])}
+          showClassName={false}
+        />
+        {/* {getSelfToolBar()} */}
+        {/* <Button */}
+        {/*  onClick={refreshApp} */}
+        {/*  icon="refresh" */}
+        {/* > */}
+        {/*  {formatMessage({ id: 'refresh' })} */}
+        {/* </Button> */}
       </Header>
     </>
   );
@@ -135,6 +152,11 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
     return '';
   }
 
+  function renderSearchMatcher({ record, text }) {
+    const tempRecord = appServiceDs.find((appServiceRecord) => appServiceRecord.get('id') === record.get('value'));
+    return tempRecord.get('code').indexOf(text) !== -1 || tempRecord.get('name').indexOf(text) !== -1;
+  }
+
   return (
     <div style={{ paddingLeft: 24, display: 'flex', alignItems: 'center' }}>
       <Form
@@ -156,6 +178,7 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
           dataSet={selectAppDs}
           notFoundContent={appServiceDs.length === 0 ? formatMessage({ id: 'ist.noApp' }) : '未找到应用服务'}
           searchable
+          searchMatcher={renderSearchMatcher}
           name="appServiceId"
           clearButton={false}
           disabled={appServiceDs.status !== 'ready' || appServiceDs.length === 0}
@@ -210,7 +233,7 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
             <span className="c7ncd-copyBtn-span">
               {formatMessage({ id: 'repository.copyUrl' })}
               <Icon
-                style={{ marginLeft: '.18rem' }}
+                style={{ marginLeft: '.18rem', marginTop: 0 }}
                 type="arrow_drop_down"
               />
             </span>

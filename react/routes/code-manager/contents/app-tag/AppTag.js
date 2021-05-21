@@ -40,6 +40,17 @@ export default observer((props) => {
 
   const { styles } = props;
 
+  const getSelfToolBarObj = () => {
+    return ({
+      name: formatMessage({ id: 'apptag.create' }),
+      icon: 'playlist_add',
+      disabled: !selectAppDs.current.get('appServiceId'),
+      display: true,
+      permissions: ['choerodon.code.project.develop.code-management.ps.tag.create'],
+      handler: openCreate,
+    })
+  }
+
   /**
    * 生成特殊的自定义tool-bar
    */
@@ -63,6 +74,7 @@ export default observer((props) => {
     handleMapStore.setCodeManagerAppTag({
       refresh,
       getSelfToolBar,
+      getSelfToolBarObj,
     });
   }, [getSelfToolBar]);
 
@@ -79,9 +91,15 @@ export default observer((props) => {
     appTagCreateDs.reset();
   }
   async function handleRemove(tag) {
-    const res = await tagStore.deleteTag(projectId, tag, appServiceId);
-    if (handlePromptError(res, false)) {
-      refresh();
+    try {
+      const res = await tagStore.deleteTag(projectId, tag, appServiceId);
+      if (handlePromptError(res, false)) {
+        refresh();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
   }
 
@@ -89,16 +107,21 @@ export default observer((props) => {
    * 打开删除确认框
    * @param tag
    */
-  function openRemove(tag) {
-    Modal.open({
-      key: deleteKey,
-      title: formatMessage({ id: 'apptag.action.delete.title' }, { name: tag }),
-      children: formatMessage({ id: 'apptag.delete.tooltip' }),
-      onOk: async () => { handleRemove(tag); },
-      okText: formatMessage({ id: 'delete' }),
-      okProps: { color: 'red' },
-      cancelProps: { color: 'dark' },
-    });
+  async function openRemove(tag) {
+    try {
+      await tagStore.checkCreate(projectId, appServiceId, 'TAG_DELETE');
+      Modal.open({
+        key: deleteKey,
+        title: formatMessage({ id: 'apptag.action.delete.title' }, { name: tag }),
+        children: formatMessage({ id: 'apptag.delete.tooltip' }),
+        onOk: () => handleRemove(tag),
+        okText: formatMessage({ id: 'delete' }),
+        okProps: { color: 'red' },
+        cancelProps: { color: 'dark' },
+      });
+    } catch (e) {
+      // return;
+    }
   }
 
   const openCreate = async () => {

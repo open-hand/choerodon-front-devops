@@ -3,7 +3,15 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import { axios } from '@choerodon/boot';
 import {
-  Form, Select, TextField, Modal, SelectBox, Button, Password, message,
+  Form,
+  Select,
+  TextField,
+  Modal,
+  SelectBox,
+  Button,
+  Password,
+  message,
+  NumberField,
 } from 'choerodon-ui/pro';
 import _ from 'lodash';
 import {
@@ -90,6 +98,24 @@ const AddTask = observer(() => {
   const [branchsList, setBranchsList] = useState(originBranchs);
 
   useEffect(() => {
+    // 有docker步骤设置必填项
+    function setRequiredExistDocker(stepsParams, ds) {
+      // 如果有docker步骤
+      if (stepsParams.find(i => i.type === 'docker')) {
+        const { imageScan, securityControl } = ds.current.toData();
+        // 如果镜像安全扫描和发布门禁都为是
+        if (imageScan && securityControl) {
+          ds.getField('level').set('required', true);
+          ds.getField('condition').set('required', true);
+        } else {
+          ds.getField('level').set('required', false);
+          ds.getField('condition').set('required', false);
+        }
+      } else {
+        ds.getField('level').set('required', false);
+        ds.getField('condition').set('required', false);
+      }
+    }
     if (steps.length > 0) {
       const old = AddTaskFormDataSet.current.get('private');
       if (steps.find((s) => s.checked).repo) {
@@ -107,11 +133,16 @@ const AddTask = observer(() => {
       AddTaskFormDataSet.getField('uploadArtifactFileName').set('required', steps.some((s) => s.type === 'upload'));
       AddTaskFormDataSet.getField('zpk').set('required', steps.some((s) => s.type === 'maven_deploy'));
       AddTaskFormDataSet.getField('jar_zpk').set('required', steps.some((s) => s.type === 'upload_jar'));
+      setRequiredExistDocker(steps, AddTaskFormDataSet);
     }
     if (AddTaskFormDataSet.current.get('type') === 'build') {
       AddTaskFormDataSet.getField('bzmc').set('required', steps.length > 0)
     }
-  }, [steps]);
+  }, [
+    steps,
+    AddTaskFormDataSet.current.get('imageScan'),
+    AddTaskFormDataSet.current.get('securityControl'),
+  ]);
 
   function decode(base64) {
     const decodeStr = atob(base64);
@@ -161,8 +192,12 @@ const AddTask = observer(() => {
           let dockerFilePath;
           let uploadArtifactFileName;
           let dockerArtifactFileName;
-          let skipDockerTlsVerify = false;
-          let imageScan = false;
+          let skipDockerTlsVerify;
+          let imageScan;
+          let securityControl = true;
+          let level;
+          let symbol = '<=';
+          let condition;
           const share = [];
           let nexusMavenRepoIds;
           let zpk;
@@ -188,6 +223,16 @@ const AddTask = observer(() => {
               skipDockerTlsVerify = c.skipDockerTlsVerify || false;
               imageScan = c.imageScan || false;
               dockerArtifactFileName = c.artifactFileName;
+              if (!(_.isUndefined(c.securityControl) || _.isNull(c.securityControl))) {
+                securityControl = c.securityControl;
+              } else {
+                securityControl = false;
+              }
+              if (c.securityCondition) {
+                level = c.securityCondition.level;
+                symbol = c.securityCondition.symbol;
+                condition = c.securityCondition.condition;
+              }
             } else if (c.type === 'Maven') {
               if (c.nexusMavenRepoIds) {
                 nexusMavenRepoIds = c.nexusMavenRepoIds;
@@ -225,6 +270,10 @@ const AddTask = observer(() => {
             jar_zpk: jarZpk,
             skipDockerTlsVerify,
             imageScan,
+            securityControl,
+            level,
+            symbol,
+            condition,
             scannerType,
             sources,
             skipTests,
@@ -362,6 +411,12 @@ const AddTask = observer(() => {
                   s.imageScan = data.imageScan;
                   if (data.dockerArtifactFileName) {
                     s.artifactFileName = data.dockerArtifactFileName;
+                  }
+                  s.securityControl = data.securityControl;
+                  s.securityCondition = {
+                    level: data.level,
+                    symbol: data.symbol,
+                    condition: data.condition,
                   }
                 }
                 if (data.zpk && s.type === 'maven_deploy') {
@@ -988,7 +1043,7 @@ const AddTask = observer(() => {
                   }));
                 }}
                 style={{
-                  width: 339,
+                  width: 312,
                   marginTop: 30,
                   marginBottom: AddTaskFormDataSet.current.getField('bzmc').isValid() ? 20 : 40,
                   marginRight: 8,
@@ -1206,14 +1261,12 @@ const AddTask = observer(() => {
                   ];
                 } if (type === 'docker') {
                   return [
-                    <div style={{ marginBottom: 20 }}>
+                    <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center' }}>
                       <TextField
                         style={{ width: 312 }}
                         name="dockerFilePath"
                         addonAfter={<Tips helpText="Dockerfile路径为Dockerfile文件相对于代码库根目录所在路径，如docker/Dockerfile或Dockerfile" />}
                       />
-                    </div>,
-                    <div style={{ marginBottom: 20 }}>
                       <TextField
                         className="dockerContextDir"
                         style={{ width: 312 }}
@@ -1233,7 +1286,7 @@ const AddTask = observer(() => {
                         }}
                       />
                     </div>,
-                    <div style={{ position: 'relative' }}>
+                    <div style={{ position: 'relative', marginBottom: 20 }}>
                       <SelectBox
                         style={{
                           marginTop: 20,
@@ -1248,9 +1301,10 @@ const AddTask = observer(() => {
                         <Icon
                           type="help"
                           className="c7ncd-select-tips-icon"
-                          style={{ position: 'absolute', top: '2px', left: '96px' }}
+                          style={{ position: 'absolute', top: '2px', left: '476px' }}
                         />
                       </Tooltip>
+                      <TextField style={{ visibility: 'hidden' }} />
                       <SelectBox
                         name="imageScan"
                         className="c7ncd-addTask-imageScan"
@@ -1261,17 +1315,107 @@ const AddTask = observer(() => {
                       <Tooltip title={
                         <span>
                           开启镜像安全扫描后，此步骤中生成的镜像将会通过Trivy进行漏洞扫描，并在记录中生成报告；
-                          <br />
-                          但注意，该扫描目前暂不支持多阶段构建的镜像。例如：当Dockerfile中存在多个FROM指令时，此时构建出来的镜像便不支持扫描，且任务会被置为失败的状态。
                         </span>
                       }>
                         <Icon
                           type="help"
                           className="c7ncd-select-tips-icon"
-                          style={{ position: 'absolute', top: '2px', left: '275px' }}
+                          style={{ position: 'absolute', top: '2px', left: '476px' }}
                         />
                       </Tooltip>
                     </div>,
+                    <div
+                      style={{
+                        marginBottom: 20,
+                        display: AddTaskFormDataSet.current.get('imageScan') ? 'block' : 'none',
+                        position: 'relative',
+                      }}
+                    >
+                      <SelectBox
+                        name="securityControl"
+                        style={{ width: 312 }}
+                      />
+                      <Tooltip title={
+                        <span>
+                          开启镜像发布门禁后，若该步骤中生成的镜像扫描后的结果不满足门禁条件，那么该镜像将不会被推送到镜像仓库。同时该构建任务也会被置为失败状态。
+                        </span>
+                      }>
+                        <Icon
+                          type="help"
+                          className="c7ncd-select-tips-icon"
+                          style={{ position: 'absolute', top: '-17px', left: '121px' }}
+                        />
+                      </Tooltip>
+                    </div>,
+                    <div
+                      style={{
+                        marginBottom: 20,
+                        display:
+                          AddTaskFormDataSet.current.get('securityControl')
+                          && AddTaskFormDataSet.current.get('imageScan') ? 'block' : 'none',
+                      }}
+                    >
+                      <p
+                        style={{
+                          color: 'rgba(0, 0, 0, 0.6)',
+                          fontWeight: 500,
+                        }}
+                      >
+                        门禁限制
+                        <Tooltip title={(<>
+                          <p>门禁限制可选择漏洞的严重度与漏洞数量作为基准。且只有满足限制时，才可通过设置的门禁。</p>
+                          <p>若镜像漏洞扫描的结果中存在漏洞严重度比限制中设置的严重度层级更高（严重度层级由高至低：危急>严重>中等>较低）或者同层级严重度的漏洞数量超过了设置的数量时，该镜像均视作不满足门禁限制而不会被推送至镜像仓库。</p>
+                        </>
+                        )}>
+                          <Icon
+                            style={{
+                              position: 'relative',
+                              bottom: '2px',
+                            }}
+                            type="help"
+                            className="c7ncd-select-tips-icon"
+                          />
+                        </Tooltip>
+                      </p>
+                      <div
+                        style={{
+                          width: 468,
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: '33%'
+                          }}
+                        >
+                          <Select
+                            name="level"
+                          />
+                        </div>
+                        <div
+                          style={{
+                            width: '33%'
+                          }}
+                        >
+                          <Select
+                            name="symbol"
+                          />
+                        </div>
+                        <div
+                          style={{
+                            width: '33%'
+                          }}
+                        >
+                          <NumberField
+                            min={0}
+                            name='condition'
+                            step={1}
+                          />
+                        </div>
+                      </div>
+                    </div>
                   ];
                 }
               }

@@ -9,7 +9,7 @@ import TimePopover from '../../../../../components/timePopover/TimePopover';
 import { useResourceStore } from '../../../stores';
 import { useKeyValueStore } from './stores';
 import Modals from './modals';
-import KeyValueModal from '../application/modals/key-value';
+import KeyValueModal from '../application/modals/key-value/KeyValueProIndex';
 import { useMainStore } from '../../stores';
 import ResourceListTitle from '../../components/resource-list-title';
 import StatusIcon from '../../../../../components/StatusIcon';
@@ -52,7 +52,7 @@ const ConfigMap = observer((props) => {
     const commandStatus = record.get('commandStatus');
     const disabled = getEnvIsNotRunning() || commandStatus === 'operating';
     const error = record.get('error');
-    
+
     return (
       <div className={`${prefixCls}-keyValue-name`}>
         <StatusIcon

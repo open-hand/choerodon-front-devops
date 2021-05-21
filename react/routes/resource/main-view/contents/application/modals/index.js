@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { observer } from 'mobx-react-lite';
+import { HeaderButtons } from '@choerodon/master';
 import { Modal } from 'choerodon-ui/pro';
-import HeaderButtons from '../../../../../../components/header-buttons';
 import { useResourceStore } from '../../../../stores';
 import { useApplicationStore } from '../stores';
 import Detail from './detail';
@@ -210,7 +210,6 @@ const AppModals = observer(() => {
       display: true,
       group: 2,
     }, {
-      name: formatMessage({ id: 'refresh' }),
       icon: 'refresh',
       handler: refresh,
       display: true,
@@ -220,7 +219,7 @@ const AppModals = observer(() => {
 
   return (
     <div>
-      <HeaderButtons items={getButtons()} />
+      <HeaderButtons items={getButtons()} showClassName />
     </div>
   );
 });

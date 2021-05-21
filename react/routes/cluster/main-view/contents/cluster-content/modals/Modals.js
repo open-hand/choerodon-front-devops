@@ -2,7 +2,7 @@
 import React, { useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
-import HeaderButtons from '../../../../../../components/header-buttons';
+import { HeaderButtons } from '@choerodon/master';
 import { useClusterContentStore } from '../stores';
 import { useClusterStore } from '../../../../stores';
 import { useClusterMainStore } from '../../../stores';
@@ -214,6 +214,10 @@ const ClusterModals = observer(() => {
       display: true,
       group: 1,
       disabled: !getCanCreate,
+      tooltipsConfig: {
+        title: !getCanCreate ? formatMessage({ id: `${intlPrefix}.modal.create.disabled` }) : '',
+        placement: 'bottom',
+      },
       disabledMessage: formatMessage({ id: `${intlPrefix}.modal.create.disabled` }),
     }, {
       name: formatMessage({ id: `${intlPrefix}.modal.createByHost` }),
@@ -223,6 +227,10 @@ const ClusterModals = observer(() => {
       display: true,
       group: 1,
       disabled: !getCanCreate,
+      tooltipsConfig: {
+        title: !getCanCreate ? formatMessage({ id: `${intlPrefix}.modal.create.disabled` }) : '',
+        placement: 'bottom',
+      },
       disabledMessage: formatMessage({ id: `${intlPrefix}.modal.create.disabled` }),
     }, {
       name: formatMessage({ id: `${intlPrefix}.modal.permission` }),
@@ -240,7 +248,6 @@ const ClusterModals = observer(() => {
       permissions: ['choerodon.code.project.deploy.cluster.cluster-management.ps.createNodes'],
       group: 2,
     }, {
-      name: formatMessage({ id: 'refresh' }),
       icon: 'refresh',
       handler: refresh,
       display: true,
@@ -248,7 +255,9 @@ const ClusterModals = observer(() => {
     }];
   }
 
-  return <HeaderButtons items={getButtons()} />;
+  return (
+    <HeaderButtons items={getButtons()} showClassName />
+  );
 });
 
 export default ClusterModals;

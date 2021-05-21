@@ -6,7 +6,7 @@ import { observer } from 'mobx-react-lite';
 import { FormattedMessage } from 'react-intl';
 import { Icon } from 'choerodon-ui';
 import { Button, Select, Table, Spin, Modal } from 'choerodon-ui/pro';
-import { Permission, Content, Header, Page, Action, Breadcrumb, Choerodon } from '@choerodon/boot';
+import { Permission, Content, Header, Page, Action, Breadcrumb, Choerodon, HeaderButtons } from '@choerodon/boot';
 import { usePiplineStore } from './stores';
 import { handlePromptError } from '../../utils';
 
@@ -331,24 +331,21 @@ const PiplelineTable = withRouter(observer((props) => {
       ]}
     >
       <Header title={<FormattedMessage id="pipeline.head" />}>
-        <Permission
-          service={['choerodon.code.project.deploy.app-deployment.pipeline.ps.create']}
-        >
-          <Button
-            funcType="flat"
-            icon="playlist_add"
-            disabled
-            onClick={showCreate}
-          >
-            <FormattedMessage id="pipeline.header.create" />
-          </Button>
-        </Permission>
-        <Button
-          icon="refresh"
-          onClick={handleRefresh}
-        >
-          <FormattedMessage id="refresh" />
-        </Button>
+        <HeaderButtons
+          showClassName={false}
+          items={([{
+            name: <FormattedMessage id="pipeline.header.create" />,
+            icon: 'playlist_add',
+            display: true,
+            disabled: true,
+            permissions: ['choerodon.code.project.deploy.app-deployment.pipeline.ps.create'],
+            handler: showCreate
+          }, {
+            icon: 'refresh',
+            display: true,
+            handler: handleRefresh,
+          }])}
+        />
       </Header>
       <div className="c7ncd-tips">
         <p>

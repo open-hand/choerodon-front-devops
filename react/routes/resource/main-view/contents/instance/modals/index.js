@@ -3,8 +3,8 @@ import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Choerodon } from '@choerodon/boot';
+import { HeaderButtons } from '@choerodon/master';
 import { handlePromptError } from '../../../../../../utils';
-import HeaderButtons from '../../../../../../components/header-buttons';
 import DetailsModal from './details';
 import ValueModalContent from './values/Config';
 import UpgradeModalContent from './upgrade';
@@ -228,6 +228,7 @@ const IstModals = injectIntl(observer(() => {
     const record = baseDs.current;
     const status = record ? record.get('status') : '';
     const isMarket = record && ['middleware', 'market'].includes(record.get('source'));
+    const isMiddleware = record?.get('source') === 'middleware';
     const appAvailable = record && record.get('currentVersionAvailable');
     const upgradeAvailable = record && record.get('upgradeAvailable');
     const btnDisabled = !connect || !status || (status !== 'failed' && status !== 'running');
@@ -241,6 +242,10 @@ const IstModals = injectIntl(observer(() => {
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.values'],
       group: 1,
       disabled: btnDisabled || marketDisable,
+      tooltipsConfig: {
+        placement: 'bottom',
+        title: !btnDisabled ? formatMessage({ id: `${intlPrefix}.instance.disable.message` }) : '',
+      },
       disabledMessage: !btnDisabled ? formatMessage({ id: `${intlPrefix}.instance.disable.message` }) : null,
     }, {
       name: formatMessage({ id: `${intlPrefix}.modal.modify` }),
@@ -254,10 +259,14 @@ const IstModals = injectIntl(observer(() => {
       name: formatMessage({ id: 'upgrade' }),
       icon: 'backup_line',
       handler: openMarketUpgradeModal,
-      permissions: [''],
-      display: isMarket,
+      permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.market.upgrade'],
+      display: isMarket && !isMiddleware,
       group: 1,
       disabled: btnDisabled || marketDisable || !upgradeAvailable,
+      tooltipsConfig: {
+        placement: 'bottom',
+        title: !btnDisabled ? formatMessage({ id: `${intlPrefix}.instance.disable.message${appAvailable ? '.upgrade' : ''}` }) : '',
+      },
       disabledMessage: !btnDisabled ? formatMessage({ id: `${intlPrefix}.instance.disable.message${appAvailable ? '.upgrade' : ''}` }) : null,
     }, {
       name: formatMessage({ id: `${intlPrefix}.modal.redeploy` }),
@@ -267,16 +276,19 @@ const IstModals = injectIntl(observer(() => {
       display: true,
       group: 1,
       disabled: btnDisabled || marketDisable,
+      tooltipsConfig: {
+        title: !btnDisabled ? formatMessage({ id: `${intlPrefix}.instance.disable.message` }) : '',
+        placement: 'bottom',
+      },
       disabledMessage: !btnDisabled ? formatMessage({ id: `${intlPrefix}.instance.disable.message` }) : null,
     }, {
-      name: formatMessage({ id: 'refresh' }),
       icon: 'refresh',
       handler: refresh,
       display: true,
       group: 2,
     }];
 
-    return <HeaderButtons items={buttons} />;
+    return <HeaderButtons items={buttons} showClassName />;
   }
 
   return getHeader();
