@@ -890,6 +890,10 @@ const hostConfig = {
   'c7ncd.host.config.type.test': '测试主机',
   'c7ncd.host.config.type.deploy': '部署主机',
   'c7ncd.host.config.port': 'SSH端口',
+  'c7ncd.host.config.port.distribute_test': 'SSH端口',
+  'c7ncd.host.config.port.deploy': '外部SSH认证端口',
+  'c7ncd.host.config.ip.distribute_test': 'IP',
+  'c7ncd.host.config.ip.deploy': '外部SSH认证IP',
   'c7ncd.host.config.account': '账号配置',
   'c7ncd.host.config.account.password': '用户名与密码',
   'c7ncd.host.config.account.token': '用户名与密钥',
@@ -903,8 +907,8 @@ const hostConfig = {
   'c7ncd.host.config.batch.correct.title': '批量校准状态',
   'c7ncd.host.config.batch.correct.des': '确定对页面中所有的主机执行测试连接的操作吗？',
   'c7ncd.host.config.batch.correct': '校准',
-  'c7ncd.host.config.ip.private': '内网IP',
-  'c7ncd.host.config.port.private': '内网端口',
+  'c7ncd.host.config.ip.private': '内部SSH认证IP',
+  'c7ncd.host.config.port.private': '内部SSH认证端口',
 };
 
 const emptyPage = {

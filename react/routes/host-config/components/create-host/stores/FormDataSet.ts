@@ -204,16 +204,21 @@ export default ({
       {
         name: 'hostIp',
         type: 'string' as FieldType,
-        required: true,
         // @ts-ignore
         validator: checkIP,
-        label: 'IP',
+        dynamicProps: {
+          required: ({ record }: RecordObjectProps) => record.get('type') === 'distribute_test' || record.get('sshPort'),
+          label: ({ record }: RecordObjectProps) => formatMessage({ id: `${intlPrefix}.ip.${record.get('type')}` }),
+        },
       },
       {
         name: 'sshPort',
-        required: true,
         validator: checkPort,
         label: formatMessage({ id: `${intlPrefix}.port` }),
+        dynamicProps: {
+          required: ({ record }: RecordObjectProps) => record.get('type') === 'distribute_test' || record.get('hostIp'),
+          label: ({ record }: RecordObjectProps) => formatMessage({ id: `${intlPrefix}.port.${record.get('type')}` }),
+        },
       },
       {
         name: 'username',
@@ -237,6 +242,7 @@ export default ({
         required: true,
         defaultValue: 'accountPassword',
         options: accountDs,
+        label: formatMessage({ id: `${intlPrefix}.account` }),
       },
       {
         name: 'jmeterPort',
