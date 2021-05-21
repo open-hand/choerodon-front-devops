@@ -18,11 +18,15 @@ import { useCodeQualityStore } from './stores';
 import './index.less';
 
 export default withRouter(observer((props) => {
-  const { formatMessage, codeQuality, appServiceId } = useCodeQualityStore();
+  const {
+    formatMessage, codeQuality, appServiceId, modal,
+  } = useCodeQualityStore();
 
-  const { location: {
-    search,
-  } } = props;
+  const {
+    location: {
+      search,
+    },
+  } = props;
 
   function getDetail() {
     const { date, status, sonarContents } = codeQuality.data || {};
@@ -46,38 +50,48 @@ export default withRouter(observer((props) => {
           <div className="c7n-codeQuality-content-head">
             <span className="codeQuality-head-title">{formatMessage({ id: 'codeQuality.content.title' })}</span>
             <span className={`codeQuality-head-status codeQuality-head-status-${status}`}>{formatMessage({ id: `codeQuality.status.${status}` })}</span>
-            <span className="codeQuality-head-date">执行时间：{date.split('+')[0].replace(/T/g, ' ')}</span>
+            <span className="codeQuality-head-date">
+              执行时间：
+              {date.split('+')[0].replace(/T/g, ' ')}
+            </span>
           </div>
           {_.map(quality, (value, objKey) => (
             <div className="c7n-codeQuality-detail" key={objKey}>
               <div className="codeQuality-detail-title">{formatMessage({ id: `codeQuality.detail.${objKey}` })}</div>
               <div className="codeQuality-detail-content">
                 {
-                  _.map(value, ({ icon, key, hasReport, isPercent, value: innerValue, rate, url }) => (
+                  _.map(value, ({
+                    icon, key, hasReport, isPercent, value: innerValue, rate, url,
+                  }) => (
                     <div className="detail-content-block" key={key}>
                       <Icon type={icon} />
-                      <span className="detail-content-block-title">{formatMessage({ id: `codeQuality.${key}` })}：</span>
+                      <span className="detail-content-block-title">
+                        {formatMessage({ id: `codeQuality.${key}` })}
+                        ：
+                      </span>
                       {url ? (
                         <a href={url} target="_blank" rel="nofollow me noopener noreferrer">
                           <span className="block-number-link">{innerValue.match(/\d+(\.\d+)?/g)}</span>
                           <span className="block-number-percentage">{innerValue.replace(/\d+(\.\d+)?/g, '')}</span>
                           {isPercent && <span className="block-number-percentage">%</span>}
-                        </a>) : (
-                          <span className={`block-number ${!innerValue && 'block-number-noValue'}`}>{innerValue || formatMessage({ id: 'nodata' })}</span>
+                        </a>
+                      ) : (
+                        <span className={`block-number ${!innerValue && 'block-number-noValue'}`}>{innerValue || formatMessage({ id: 'nodata' })}</span>
                       )}
                       {rate && key !== 'duplicated_lines_density' && <Rating rating={rate} />}
                       {key === 'coverage' && <Percentage data={Number(innerValue)} />}
                       {key === 'duplicated_lines_density' && <Rating rating={rate} size="18px" type="pie" />}
                       {hasReport && (
-                        <Link
-                          to={{
-                            pathname: '/devops/reports/code-quality',
-                            search: `${search}&from=ci`,
-                            state: { appId: appServiceId, type: OBJECT_TYPE[objKey] },
-                          }}
-                        >
-                          <Icon type="timeline" className="reports-icon" />
-                        </Link>
+                      <Link
+                        onClick={() => modal.close()}
+                        to={() => ({
+                          pathname: '/devops/reports/code-quality',
+                          search: `${search}&from=ci`,
+                          state: { appId: appServiceId, type: OBJECT_TYPE[objKey] },
+                        })}
+                      >
+                        <Icon type="timeline" className="reports-icon" />
+                      </Link>
                       )}
                     </div>
                   ))
