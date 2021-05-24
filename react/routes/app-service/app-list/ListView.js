@@ -195,7 +195,7 @@ const ListView = withRouter(observer((props) => {
     let colorCode;
     if(isSynchro){
       if(isFailed){
-        colorCode = 'failed' 
+        colorCode = 'failed'
       }else if(active){
         colorCode = 'active'
       }else{
@@ -411,7 +411,7 @@ const ListView = withRouter(observer((props) => {
         }
 
         const statusObj = {
-          title: status ? formatMessage({ id: `${intlPrefix}.cannot.stop` }, { name: recordt.get('name') }) : formatMessage({ id: `${intlPrefix}.stop` }, { name: record.get('name') }),
+          title: status ? formatMessage({ id: `${intlPrefix}.cannot.stop` }, { name: record.get('name') }) : formatMessage({ id: `${intlPrefix}.stop` }, { name: record.get('name') }),
           // eslint-disable-next-line no-nested-ternary
           children: childrenContent,
           okCancel: !status,
@@ -481,14 +481,14 @@ const ListView = withRouter(observer((props) => {
                           renderStatus({value:record.get('active'), record})
                         }
                         {record.get('errorMessage') && <Tooltip title={record.get('errorMessage')}>
-                          <Icon 
+                          <Icon
                             type="info"
                             style={{
                               color: '#f76776',
                               marginRight: '5px'
                             }}
                           />
-                        </Tooltip> 
+                        </Tooltip>
                         }
                         <span className="c7ncd-appService-item-center-line-type">
                       <FormattedMessage id={`${intlPrefix}.type.${record.get('type')}`} />
