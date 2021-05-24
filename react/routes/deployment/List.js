@@ -384,7 +384,7 @@ const Deployment = withRouter(observer((props) => {
             icon: 'jsfiddle',
             display: true,
             permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.basedComponent'],
-            handler: openBaseDeploy,
+            handler: () => openBaseDeploy(),
           }, {
             icon: 'refresh',
             display: true,

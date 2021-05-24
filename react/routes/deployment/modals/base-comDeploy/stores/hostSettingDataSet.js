@@ -26,25 +26,25 @@ const mapping = {
   ip: {
     name: 'ip',
     type: 'string',
-    label: 'IP',
+    label: '外部SSH认证IP',
     disabled: true,
   },
   port: {
     name: 'port',
     type: 'string',
-    label: '端口',
+    label: '外部SSH认证端口',
     disabled: true,
   },
   privateIp: {
     name: 'privateIp',
     type: 'string',
-    label: '内网IP',
+    label: '内部SSH认证IP',
     disabled: true,
   },
   privatePort: {
     name: 'privatePort',
     type: 'number',
-    label: '内网端口',
+    label: '内部SSH认证端口',
     disabled: true,
   },
 };
