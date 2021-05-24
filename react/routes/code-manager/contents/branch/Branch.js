@@ -155,7 +155,7 @@ function Branch(props) {
     } else {
       type = 'custom';
     }
-    return <span className={`c7n-branch-icon icon-${type}`}>{type.slice(0, 1).toUpperCase()}</span>;
+    return <span style={{ marginLeft: 10 }} className={`c7n-branch-icon icon-${type}`}>{type.slice(0, 1).toUpperCase()}</span>;
   };
 
   // 打开修改问题模态框
@@ -414,7 +414,8 @@ function Branch(props) {
           <div style={{ marginRight: 30 }}>
             <div className={styles?.['c7n-branch-theme4-table-column-side-line']}>
               <Icon type="branch" />
-              <span className={styles?.['c7n-branch-theme4-table-column-side-line-firstLetter']}>{ record.get('branchName').substring(0, 1).toUpperCase() }</span>
+              {getIcon(record.get('branchName'))}
+              {/*<span className={styles?.['c7n-branch-theme4-table-column-side-line-firstLetter']}>{ record.get('branchName').substring(0, 1).toUpperCase() }</span>*/}
               <span
                 style={{
                   color: '#3f51b5',
