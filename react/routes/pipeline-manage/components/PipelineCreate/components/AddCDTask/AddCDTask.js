@@ -785,7 +785,15 @@ export default observer(() => {
             <Select colSpan={3} name="artifactId" />
           ),
           currentDepoySource === 'matchDeploy' && (
-            <TextField colSpan={6} name="versionRegular" />
+            <TextField
+              colSpan={6}
+              name="versionRegular"
+              addonAfter={(
+                <Tips
+                  helpText="正则表达式匹配版本名，默认值^*master*$，参考demo如下：^*master*$:模糊匹配版本名包含master，^hotfix-0.21.1$：精确匹配版本名为hotfix-0.21.1"
+                />
+              )}
+            />
           ),
           <TextField
             addonAfter={(
