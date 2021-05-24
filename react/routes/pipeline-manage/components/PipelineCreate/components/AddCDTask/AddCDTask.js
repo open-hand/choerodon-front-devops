@@ -1187,7 +1187,11 @@ export default observer(() => {
     </span>
   );
 
-  const optionRenderer = ({ record, text, value }) => renderer({ record, text, value });
+  const optionRenderer = ({ record, text, value }) => (
+    <Tooltip title={!record.get('connected') && '未连接'}>
+      {renderer({ record, text, value })}
+    </Tooltip>
+  );
 
   /**
    * 渲染关联部署任务options
