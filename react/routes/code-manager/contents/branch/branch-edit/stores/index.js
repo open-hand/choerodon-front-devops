@@ -22,38 +22,34 @@ export const StoreProvider = injectIntl(inject('AppState')(
         getUserId,
       },
       intl: { formatMessage },
-      issueId,
       branchName,
       appServiceId,
       objectVersionNumber,
       children,
       intlPrefix,
-      initIssue,
-      initProject,
+      initIssues,
     } = props;
-
-    const currentProjectData = useMemo(() => (initProject ?? {
-      id: projectId,
-      name: projectName,
-    }), [projectId, projectName, initProject]);
 
     const projectOptionsDs = useMemo(() => new DataSet(ProjectOptionsDataSet({
       organizationId, userId: getUserId, projectId,
     })), [organizationId]);
     const selectDs = useMemo(() => new DataSet(SelectDataSet({
       projectId,
-      issueId,
       formatMessage,
       appServiceId,
       objectVersionNumber,
       branchName,
       projectOptionsDs,
-      currentProjectData,
+      initIssues,
     }), [projectId]));
 
     useEffect(() => {
-      issueId && selectDs.current.init('issue', initIssue);
-    }, []);
+      if (initIssues && initIssues.length) {
+        selectDs.loadData(initIssues);
+      } else {
+        selectDs.create();
+      }
+    }, [initIssues]);
 
     const value = {
       ...props,

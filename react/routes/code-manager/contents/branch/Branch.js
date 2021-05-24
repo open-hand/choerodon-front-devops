@@ -3,10 +3,14 @@ import React, { Fragment, useEffect, useState } from 'react';
 import {
   Modal as ProModal, Table, Tooltip, Button, Icon,
 } from 'choerodon-ui/pro';
+import { Popover } from 'choerodon-ui';
 import {
   Page, Permission, stores, Action,
 } from '@choerodon/boot';
 import classNames from 'classnames';
+import map from 'lodash/map';
+import forEach from 'lodash/forEach';
+import isEmpty from 'lodash/isEmpty';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { SagaDetails } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
@@ -46,6 +50,7 @@ function Branch(props) {
     appServiceId,
     formatMessage,
     branchStore,
+    prefixCls,
   } = useTableStore();
 
   const { styles, columnsRender } = props;
@@ -80,7 +85,7 @@ function Branch(props) {
         handler: openCreateBranchModal,
       })
     }
-  }
+  };
 
   /**
    * 生成特殊的自定义tool-bar
@@ -161,22 +166,28 @@ function Branch(props) {
   // 打开修改问题模态框
   function openEditIssueModal(recordData) {
     const {
-      issueId,
       objectVersionNumber,
       branchName,
-      issueCode: issueNum,
-      issueName: summary,
-      typeCode,
-      projectName: sourceProjectName,
-      issueProjectId: sourceProjectId,
+      issueInfoList,
     } = recordData || {};
-    const initIssue = {
-      issueId,
-      issueNum,
-      summary,
-      typeCode,
-    };
-    const showDefaultIssue = issueId && issueNum && summary;
+    const initIssues = [];
+    forEach(issueInfoList || [], (issue) => {
+      const { issueId, issueCode, issueName, issueProjectId, projectName, typeCode } = issue || {};
+      if (issueId && issueCode && issueName) {
+        initIssues.push({
+          issue: {
+            issueId,
+            issueNum: issueCode,
+            summary: issueName,
+            typeCode,
+          },
+          project: {
+            id: issueProjectId,
+            name: projectName,
+          }
+        })
+      }
+    });
     ProModal.open({
       key: branchEditModalKey,
       title: <FormattedMessage id="branch.edit" />,
@@ -186,10 +197,8 @@ function Branch(props) {
         appServiceId={appServiceId}
         objectVersionNumber={objectVersionNumber}
         branchName={branchName}
-        issueId={showDefaultIssue && issueId}
-        initIssue={showDefaultIssue && initIssue}
         handleRefresh={handleRefresh}
-        initProject={sourceProjectId ? { id: sourceProjectId, name: sourceProjectName } : null}
+        initIssues={initIssues}
       />,
       style: branchCreateModalStyle,
       okText: <FormattedMessage id="save" />,
@@ -324,29 +333,52 @@ function Branch(props) {
   }
   // 问题名称渲染函数
   function issueNameRender({ record, text }) {
+    const issueContent = map(record.get('issueInfoList') || [], (issueItem) => {
+      const { typeCode, issueId, issueProjectId, issueCode, projectName, issueName } = issueItem || {};
+      return (
+        <div className={`${prefixCls}-issue-item`}>
+          <div>
+            {typeCode ? getOptionContent(typeCode) : null}
+            <a onClick={() => openIssueDetail(issueId, record.get('branchName'), issueProjectId)} role="none">
+              <Tooltip
+                title={`${issueCode} ${issueName}`}
+              >
+                {`${issueCode} ${issueName}`}
+              </Tooltip>
+            </a>
+          </div>
+          <div className={`${prefixCls}-issue-item-project`}><span>{projectName}</span></div>
+        </div>
+      );
+    });
     return (
-      <div>
-        {record.get('typeCode') ? getOptionContent(record) : null}
-        <a onClick={() => openIssueDetail(record.get('issueId'), record.get('branchName'), record.get('issueProjectId'))} role="none">
-          <Tooltip
-            title={text}
+      <div className={`${prefixCls}-issue`}>
+        <span className={`${prefixCls}-issue-label`}>关联：</span>
+        {issueContent ? issueContent[0] : null}
+        {issueContent && issueContent.length > 1 ? (
+          <Popover
+            trigger="click"
+            placement="bottom"
+            content={issueContent}
+            overlayClassName={`${prefixCls}-issue-popover`}
+            arrowPointAtCenter
           >
-            {record.get('issueCode')}
-          </Tooltip>
-        </a>
+            <Icon type="expand_more" className={`${prefixCls}-issue-expand`} />
+          </Popover>
+        ) : null}
       </div>
-    );
+    )
   }
   /**
    * 获取issue的options
    * @param s
    * @returns {*}
    */
-  const getOptionContent = (s) => {
+  const getOptionContent = (typeCode) => {
     let mes = '';
     let icon = '';
     let color = '';
-    switch (s.get('typeCode')) {
+    switch (typeCode) {
       case 'story':
         mes = formatMessage({ id: 'branch.issue.story' });
         icon = 'agile_story';
@@ -415,12 +447,7 @@ function Branch(props) {
             <div className={styles?.['c7n-branch-theme4-table-column-side-line']}>
               <Icon type="branch" />
               {getIcon(record.get('branchName'))}
-              {/*<span className={styles?.['c7n-branch-theme4-table-column-side-line-firstLetter']}>{ record.get('branchName').substring(0, 1).toUpperCase() }</span>*/}
               <span
-                style={{
-                  color: '#3f51b5',
-                  cursor: 'pointer',
-                }}
                 className={styles?.['c7n-branch-theme4-table-column-side-line-branchName']}
                 onClick={() => openEditIssueModal(record.toData())}
               >{ record.get('branchName') }</span>
@@ -428,36 +455,30 @@ function Branch(props) {
             <div className={styles?.['c7n-branch-theme4-table-column-side-line']}>
               <Icon type="point" />
               <a href={record.get('commitUrl')}>{ record.get('sha')?.substring(0, 8) }</a>
-              <span className={styles?.['c7n-branch-theme4-table-column-side-line-commitContent']}>{ record.get('commitContent') }</span>
-              <img src={record.get('commitUserUrl')} alt=""/>
-              <TimePopover
-                content={record.get('commitDate')}
-                style={{
-                  color: 'rgba(15, 19, 88, 0.65)',
-                }}
+              {record.get('commitUserRealName') && (
+                <UserInfo
+                  name={record.get('commitUserRealName')}
+                  id={record.get('commitUserName')}
+                  avatar={record.get('commitUrl')}
+                  showName={false}
+                />
+              )}
+              <span className={styles?.['c7n-branch-theme4-table-column-side-line-commitContent']}>{ record.get('commitContent') }&nbsp;·&nbsp;</span>
+              <UserInfo
+                name={record.get('createUserRealName')}
+                id={record.get('createUserName')}
+                avatar={record.get('createUserUrl')}
+                showName={false}
               />
+              <span>创建于</span>
+              <TimePopover content={record.get('creationDate')}/>
             </div>
           </div>
-          {actionRender({ record })}
         </div>
-        <div
-          className={styles?.['c7n-branch-theme4-table-column-side']}
-        >
-          <div className={styles?.['c7n-branch-theme4-table-column-side-line']}>
-            <img src={record.get('createUserUrl')} alt=""/>
-            <span className={styles?.['c7n-branch-theme4-table-column-side-line-userIssue']}>
-              {record.get('createUserRealName')}
-              <span>创建
-                {
-                  record.get('typeCode') && '、关联问题'
-                }
-              </span>
-            </span>
-            {
-              record.get('typeCode') && issueNameRender({ record, text })
-            }
-          </div>
-        </div>
+        {actionRender({ record })}
+        {
+          !isEmpty(record.get('issueInfoList')) && issueNameRender({ record, text })
+        }
       </div>
     )
   }
@@ -503,3 +524,4 @@ function Branch(props) {
   );
 }
 export default injectIntl(observer(Branch));
+

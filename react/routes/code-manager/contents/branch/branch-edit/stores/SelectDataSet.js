@@ -1,10 +1,13 @@
+import map from 'lodash/map';
+import compact from 'lodash/compact';
+import uniq from 'lodash/uniq';
 import CodeManagerApis from '@/routes/code-manager/apis';
 
 export default ({
-  projectId, issueId, formatMessage, appServiceId, objectVersionNumber,
-  branchName, projectOptionsDs, currentProjectData,
+  projectId, formatMessage, appServiceId, objectVersionNumber,
+  branchName, projectOptionsDs,
 }) => ({
-  autoCreate: true,
+  autoCreate: false,
   autoQuery: false,
   selection: 'single',
   paging: false,
@@ -17,7 +20,9 @@ export default ({
       label: formatMessage({ id: 'branch.issueName' }),
       lookupAxiosConfig: ({ record }) => {
         const project = record?.get('project');
+        const issue = record?.get('issue');
         const selectedProjectId = project?.id ?? projectId;
+        const issueId = issue?.issueId ?? projectId;
         return {
           url: CodeManagerApis.loadSummaryData(selectedProjectId),
           method: 'get',
@@ -30,20 +35,20 @@ export default ({
       type: 'object',
       textField: 'name',
       valueField: 'id',
-      defaultValue: currentProjectData,
       label: formatMessage({ id: 'branch.issue.source' }),
       options: projectOptionsDs,
     },
   ],
   transport: {
-    create: ({ data: [data] }) => ({
+    create: ({ dataSet }) => ({
       url: `/devops/v1/projects/${projectId}/app_service/${appServiceId}/git/update_branch_issue`,
       method: 'put',
       transformRequest: () => {
-        const { issueId: currentIssueId } = data.issue || {};
+        const issueIds = dataSet.map((record) => (record?.get('issue')?.issueId));
+        const newIssueIds = uniq(compact(issueIds || []) || []);
         const postData = {
           appServiceId,
-          issueId: currentIssueId,
+          issueIds: newIssueIds,
           objectVersionNumber,
           branchName,
         };
