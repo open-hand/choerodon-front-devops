@@ -1,11 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Form, Password, SelectBox, Spin, TextField,
+  Form, Password, SelectBox, Spin, TextField, message,
 } from 'choerodon-ui/pro';
 import { Alert, Tabs, Divider } from 'choerodon-ui';
 import pick from 'lodash/pick';
-import Tips from '@/components/new-tips';
 import HostConfigApis from '@/routes/host-config/apis';
 import YamlEditor from '@/components/yamlEditor';
 import { useCreateHostStore } from './stores';
@@ -31,6 +30,7 @@ const CreateHost: React.FC<any> = observer((): any => {
     try {
       const record = formDs.current;
       if (record && !(record.get('hostIp') || record.get('sshPort') || record.get('privateIp') || record.get('privatePort'))) {
+        message.error('外部SSH认证与内部SSH认证至少填写一个模块');
         return false;
       }
       const res = await formDs.submit();

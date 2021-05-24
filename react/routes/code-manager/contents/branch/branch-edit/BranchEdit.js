@@ -1,7 +1,7 @@
 import React, {
   useCallback, useMemo, useState,
 } from 'react';
-import { Form, Select } from 'choerodon-ui/pro';
+import { Form, Select, Button } from 'choerodon-ui/pro';
 import { injectIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import debounce from 'lodash/debounce';
@@ -155,28 +155,52 @@ function BranchEdit() {
     );
   };
 
+  const handleDeleteRecord = useCallback((record) => {
+    selectDs.remove(record);
+  }, [selectDs]);
+
+  const handleAddRecord = useCallback(() => {
+    selectDs.create();
+  }, [selectDs]);
+
   return (
-    <div style={{ width: '75%' }}>
-      <Form dataSet={selectDs}>
-        <Select
-          name="project"
-          searchable
-          searchMatcher={() => true}
-          onInput={handleSearch}
-          optionRenderer={renderProjectOption}
-          renderer={renderProject}
-          onBlur={handleBlur}
-          clearButton={false}
-          pagingOptionContent={<span className="c7ncd-select-load-more-text">加载更多</span>}
-        />
-        <Select
-          name="issue"
-          optionRenderer={issueNameOptionRender}
-          renderer={issueNameRender}
-          searchable
-          searchMatcher="content"
-        />
-      </Form>
+    <div>
+      {selectDs.map((record) => (
+        <Form record={record} columns={11}>
+          <Select
+            name="project"
+            searchable
+            searchMatcher={() => true}
+            onInput={handleSearch}
+            optionRenderer={renderProjectOption}
+            renderer={renderProject}
+            onBlur={handleBlur}
+            clearButton={false}
+            pagingOptionContent={<span className="c7ncd-select-load-more-text">加载更多</span>}
+            colSpan={5}
+          />
+          <Select
+            name="issue"
+            optionRenderer={issueNameOptionRender}
+            renderer={issueNameRender}
+            searchable
+            searchMatcher="content"
+            colSpan={5}
+          />
+          <Button
+            icon="delete"
+            funcType="flat"
+            onClick={() => handleDeleteRecord(record)}
+          />
+        </Form>
+      ))}
+      <Button
+        icon="add"
+        funcType="flat"
+        onClick={handleAddRecord}
+      >
+        添加关联问题
+      </Button>
     </div>
   );
 }

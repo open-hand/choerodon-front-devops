@@ -69,6 +69,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
 
     const value = {
       ...props,
+      prefixCls: 'c7ncd-branch',
       projectId,
       formatMessage,
       intlPrefix,

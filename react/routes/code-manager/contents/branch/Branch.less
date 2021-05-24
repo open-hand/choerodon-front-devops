@@ -208,3 +208,38 @@
   line-height: 20px;
   display: inline-block;
 }
+
+.c7ncd-branch-issue {
+  display: flex;
+  color: var(--text-color3);
+  padding-right: .06rem;
+  margin-left: .32rem;
+
+  &-label {
+    line-height: .25rem;
+  }
+
+  &-item {
+    color: var(--table-click-color);
+    line-height: .20rem;
+
+    &-project {
+      padding-top: .08rem;
+    }
+
+    & + & {
+      border-top: 1px solid var(--divider);
+      margin-top: .12rem;
+      padding-top: .12rem;
+    }
+  }
+
+  &-expand {
+    cursor: pointer;
+    margin-left: .04rem;
+    font-size: .2rem;
+    color: var(--primary-color);
+    height: 0.25rem;
+    line-height: 0.25rem;
+  }
+}
