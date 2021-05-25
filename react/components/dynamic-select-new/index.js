@@ -183,6 +183,7 @@ const DynamicSelect = injectIntl(observer((props) => {
           <Button
             icon="delete"
             shape="circle"
+            funcType="flat"
             onClick={() => handleDelete(createdRecord)}
             disabled={selectDataSet.created.length === 1}
             className="dynamic-select-form-button"
@@ -192,6 +193,7 @@ const DynamicSelect = injectIntl(observer((props) => {
       <Button
         icon="add"
         color="primary"
+        funcType="flat"
         onClick={handleCreate}
       >
         {addText}

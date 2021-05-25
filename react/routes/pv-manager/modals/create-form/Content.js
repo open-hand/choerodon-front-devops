@@ -143,6 +143,7 @@ const CreateForm = () => {
               funcType="flat"
               icon="delete"
               onClick={() => handleRemoveLabel(labelRecord)}
+              className={`${prefixCls}-create-wrap-delete-btn`}
             />
           ) : <span />}
         </Form>
@@ -175,6 +176,7 @@ const CreateForm = () => {
       <>
         <Button
           color="primary"
+          funcType="flat"
           icon="add"
           onClick={openAddPermission}
           className={`${prefixCls}-permission-wrap-button`}
