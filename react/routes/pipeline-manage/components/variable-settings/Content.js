@@ -1,6 +1,8 @@
 import React, { useState, Fragment } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Form, Modal, Spin, Icon, TextField, Button, Tooltip, TextArea } from 'choerodon-ui/pro';
+import {
+  Form, Modal, Spin, Icon, TextField, Button, Tooltip, TextArea,
+} from 'choerodon-ui/pro';
 import { useRecordDetailStore } from './stores';
 
 import './index.less';
@@ -22,9 +24,8 @@ export default observer(() => {
       const res = await formDs.submit();
       if (res !== false) {
         return true;
-      } else {
-        return false;
       }
+      return false;
     } catch (e) {
       return false;
     }
@@ -56,52 +57,57 @@ export default observer(() => {
     }
   }
 
-  return (<div className={`${prefixCls}`}>
-    <Form style={{ width: '70%' }}>
-      {appServiceId ? <TextField
-        value={appServiceName}
-        label="关联应用服务"
-        disabled
-      /> : null}
-    </Form>
-    <Button
-      funcType="flat"
-      color="primary"
-      className={`${prefixCls}-reveal`}
-      onClick={() => changeShowRevealValues(!showRevealValues)}
-    >
-      {formatMessage({ id: `${intlPrefix}.settings.values.${showRevealValues ? 'hide' : 'reveal'}` })}
-    </Button>
-    {formDs.map((eachRecord) => (
-      <Form record={eachRecord} columns={14} key={eachRecord.id}>
-        <TextField colSpan={5} name="key" />
-        <span className={`${prefixCls}-equal`}>=</span>
-        <TextArea
-          colSpan={7}
-          name="value"
-          renderer={renderValue}
-          resize="vertical"
-          autoSize={{ minRows: 1 }}
-        />
-        {formDs.length > 1 ? (
-          <Tooltip title={formatMessage({ id: 'delete' })}>
-            <Button
-              funcType="flat"
-              icon="delete"
-              onClick={() => handleRemove(eachRecord)}
-            />
-          </Tooltip>
-        ) : <span />}
+  return (
+    <div className={`${prefixCls}`}>
+      <Form style={{ width: '70%' }}>
+        {appServiceId ? (
+          <TextField
+            value={appServiceName}
+            label="关联应用服务"
+            disabled
+          />
+        ) : null}
       </Form>
-    ))}
-    <Button
-      funcType="flat"
-      color="primary"
-      icon="add"
-      onClick={handleAdd}
-      className={`${prefixCls}-add-btn`}
-    >
-      {formatMessage({ id: `${intlPrefix}.settings.add` })}
-    </Button>
-  </div>);
+      <Button
+        funcType="flat"
+        color="primary"
+        className={`${prefixCls}-reveal`}
+        onClick={() => changeShowRevealValues(!showRevealValues)}
+      >
+        {formatMessage({ id: `${intlPrefix}.settings.values.${showRevealValues ? 'hide' : 'reveal'}` })}
+      </Button>
+      {formDs.map((eachRecord) => (
+        <Form record={eachRecord} columns={14} key={eachRecord.id}>
+          <TextField colSpan={5} name="key" />
+          <span className={`${prefixCls}-equal`}>=</span>
+          <TextArea
+            colSpan={7}
+            name="value"
+            renderer={renderValue}
+            resize="vertical"
+            autoSize={{ minRows: 1 }}
+          />
+          {formDs.length > 1 ? (
+            <Tooltip title={formatMessage({ id: 'delete' })}>
+              <Button
+                funcType="flat"
+                icon="delete"
+                onClick={() => handleRemove(eachRecord)}
+                className="c7ncd-form-record-delete-btn"
+              />
+            </Tooltip>
+          ) : <span />}
+        </Form>
+      ))}
+      <Button
+        funcType="flat"
+        color="primary"
+        icon="add"
+        onClick={handleAdd}
+        className={`${prefixCls}-add-btn`}
+      >
+        {formatMessage({ id: `${intlPrefix}.settings.add` })}
+      </Button>
+    </div>
+  );
 });
