@@ -1,5 +1,8 @@
 import React, { Fragment } from 'react';
-import { Form, TextField, Select, SelectBox, UrlField, Password, EmailField, Icon, Button } from 'choerodon-ui/pro';
+import {
+  Form, TextField, Select, SelectBox, UrlField, Password, EmailField, Icon, Button,
+} from 'choerodon-ui/pro';
+import { Divider } from 'choerodon-ui';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import Tips from '../../../../components/new-tips';
@@ -16,21 +19,20 @@ const Settings = injectIntl(observer(({ record, handleTestChart }) => {
   function renderOption({ record: optionRecord, value, text }) {
     if (optionRecord.get('type') === 'DEFAULT_REPO') {
       return `${text} (默认Docker仓库)`;
-    } else {
-      return text;
     }
+    return text;
   }
 
   function renderInput({ value, text }) {
     if (value && value.type === 'DEFAULT_REPO') {
       return `${text} (默认Docker仓库)`;
-    } else {
-      return text;
     }
+    return text;
   }
 
   return (
     <div className="content-settings">
+      <Divider className="c7ncd-form-divider" />
       <div className="content-settings-title">
         <Tips
           helpText={formatMessage({ id: `${intlPrefix}.setting.tips` })}

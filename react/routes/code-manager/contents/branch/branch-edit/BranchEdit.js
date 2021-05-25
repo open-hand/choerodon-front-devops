@@ -191,6 +191,7 @@ function BranchEdit() {
             icon="delete"
             funcType="flat"
             onClick={() => handleDeleteRecord(record)}
+            className="c7ncd-form-record-delete-btn"
           />
         </Form>
       ))}
