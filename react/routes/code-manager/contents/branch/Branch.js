@@ -276,7 +276,7 @@ function Branch(props) {
     ];
     // 分支如果是master  禁止创建合并请求 否认：会造成跳转到 gitlab，gailab页面报错的问题
     if (record.get('branchName') === 'master' || record.get('status') === 'operating') {
-      return null;
+      return <div style={{ width: 24 }} />;
     }
     return (<Action data={action} />);
   }
@@ -440,9 +440,10 @@ function Branch(props) {
         <div
           className={styles?.['c7n-branch-theme4-table-column-side']}
           style={{
-            width: '500px',
+            width: '600px',
             display: 'flex',
             alignItems: 'center',
+            overflow: 'hidden',
           }}
         >
           <div style={{ marginRight: 30 }}>
