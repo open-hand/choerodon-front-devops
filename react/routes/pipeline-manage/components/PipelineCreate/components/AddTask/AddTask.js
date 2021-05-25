@@ -86,6 +86,7 @@ const AddTask = observer(() => {
     PipelineCreateFormDataSet,
     image,
     intl: { formatMessage },
+    stageName,
   } = useAddTaskStore();
 
   const [steps, setSteps] = useState([]);
@@ -166,7 +167,14 @@ const AddTask = observer(() => {
     }));
   }, [currentSize]);
 
+  // 通过传入的stageName 替换自定义的yaml
+  const initCustomYaml = (stage, yaml, setYaml) => {
+    const newYaml = yaml.replace('{stageName}', stage || 'build');
+    setYaml(newYaml);
+  }
+
   useEffect(() => {
+    initCustomYaml(stageName, customYaml, setCustomYaml);
     async function initBranchs() {
       const value = AddTaskFormDataSet.current.get('triggerType');
       if (value && !value.includes('exact')) {

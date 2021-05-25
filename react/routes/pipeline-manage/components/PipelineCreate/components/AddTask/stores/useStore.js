@@ -79,7 +79,7 @@ cp -r src/main/resources/lib $CI_PROJECT_DIR/docker/lib`,
 # job名称（与任务名称保持一致）
 job_1:
   # job所属阶段名称，与创建阶段时保持一致
-  stage: build
+  stage: {stageName}
   # job执行内容
   script:
     - echo "hello world!"
