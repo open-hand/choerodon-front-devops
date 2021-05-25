@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
+import { Button } from 'choerodon-ui/pro';
 import _ from 'lodash';
 import './Codemirror.less';
 
@@ -151,9 +152,9 @@ class CodeMirror extends React.Component {
     if (canChangeMode) {
       const { viewMode } = this.state;
       editor = <div className="c7ncd-editor-tools">
-        <button className="c7ncd-editor-mode" onClick={this.handleChangeView}>
+        <Button funcType="flat" onClick={this.handleChangeView}>
           <FormattedMessage id="editor.mode.changer" />
-        </button>
+        </Button>
         {viewMode === 'diff' ? (
           <div className="c7ncd-editor-legend">{this.getLegends}</div>
         ) : null}

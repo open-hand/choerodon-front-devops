@@ -244,7 +244,7 @@ const IstModals = injectIntl(observer(() => {
       disabled: btnDisabled || marketDisable,
       tooltipsConfig: {
         placement: 'bottom',
-        title: !btnDisabled ? formatMessage({ id: `${intlPrefix}.instance.disable.message` }) : '',
+        title: !btnDisabled && marketDisable ? formatMessage({ id: `${intlPrefix}.instance.disable.message` }) : '',
       },
       disabledMessage: !btnDisabled ? formatMessage({ id: `${intlPrefix}.instance.disable.message` }) : null,
     }, {
@@ -265,7 +265,7 @@ const IstModals = injectIntl(observer(() => {
       disabled: btnDisabled || marketDisable || !upgradeAvailable,
       tooltipsConfig: {
         placement: 'bottom',
-        title: !btnDisabled ? formatMessage({ id: `${intlPrefix}.instance.disable.message${appAvailable ? '.upgrade' : ''}` }) : '',
+        title: !btnDisabled && (marketDisable || !upgradeAvailable) ? formatMessage({ id: `${intlPrefix}.instance.disable.message${appAvailable ? '.upgrade' : ''}` }) : '',
       },
       disabledMessage: !btnDisabled ? formatMessage({ id: `${intlPrefix}.instance.disable.message${appAvailable ? '.upgrade' : ''}` }) : null,
     }, {
@@ -277,7 +277,7 @@ const IstModals = injectIntl(observer(() => {
       group: 1,
       disabled: btnDisabled || marketDisable,
       tooltipsConfig: {
-        title: !btnDisabled ? formatMessage({ id: `${intlPrefix}.instance.disable.message` }) : '',
+        title: !btnDisabled && marketDisable ? formatMessage({ id: `${intlPrefix}.instance.disable.message` }) : '',
         placement: 'bottom',
       },
       disabledMessage: !btnDisabled ? formatMessage({ id: `${intlPrefix}.instance.disable.message` }) : null,

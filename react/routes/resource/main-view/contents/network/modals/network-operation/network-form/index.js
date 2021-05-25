@@ -175,10 +175,10 @@ function FormContent() {
             <Select name="value" combo optionRenderer={labelOptionRenderer} optionsFilter={clearInputOption} />
             {
             targetLabelsDs.created.length > 1 ? (
-              <Icon
-                colSpan={1}
-                className="delete-icon-target"
-                type="delete"
+              <Button
+                colSpan={3}
+                funcType="flat"
+                icon="delete"
                 onClick={removeTargetLabelGroup.bind(this, record)}
               />
             ) : <span colSpan={1} />
@@ -206,10 +206,10 @@ function FormContent() {
                 <TextField record={record} name="targetPort" maxLength={5} />
                 {
                 endPointsDs.created.length > 1 ? (
-                  <Icon
+                  <Button
                     colSpan={3}
-                    className="delete-icon"
-                    type="delete"
+                    funcType="flat"
+                    icon="delete"
                     onClick={removeEndPointGroup.bind(this, record)}
                   />
                 ) : <span colSpan={3} />
@@ -222,6 +222,7 @@ function FormContent() {
             funcType="flat"
             onClick={createEndPointGroup}
             icon="add"
+            className="endpoints-form-add"
           >
             {formatMessage({ id: 'network.config.addport' })}
           </Button>
@@ -300,10 +301,11 @@ function FormContent() {
               }
                 {
                 portDs.created.length > 1 ? (
-                  <Icon
+                  <Button
                     colSpan={3}
-                    className="delete-icon"
-                    type="delete"
+                    funcType="flat"
+                    icon="delete"
+                    className="c7ncd-form-record-delete-btn"
                     onClick={removePortGroup.bind(this, record)}
                   />
                 ) : <span colSpan={3} />
