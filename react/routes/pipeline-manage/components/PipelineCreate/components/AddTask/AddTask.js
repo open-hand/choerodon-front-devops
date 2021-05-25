@@ -1137,7 +1137,7 @@ const AddTask = observer(() => {
                   marginLeft: '-16px',
                   height: '1px',
                   width: 'calc(100% + 32px)',
-                  background: '#d8d8d8',
+                  background: 'var(--divider)',
                 }}
                 />,
                 <div
@@ -1238,7 +1238,7 @@ const AddTask = observer(() => {
                       marginLeft: '-16px',
                       height: '1px',
                       width: 'calc(100% + 32px)',
-                      background: '#d8d8d8',
+                      background: 'var(--divider)',
                     }}
                     />,
                     (
@@ -1328,7 +1328,7 @@ const AddTask = observer(() => {
                         <Icon
                           type="help"
                           className="c7ncd-select-tips-icon"
-                          style={{ position: 'absolute', top: '2px', left: '476px' }}
+                          style={{ position: 'absolute', top: '25px', left: '485px' }}
                         />
                       </Tooltip>
                     </div>,

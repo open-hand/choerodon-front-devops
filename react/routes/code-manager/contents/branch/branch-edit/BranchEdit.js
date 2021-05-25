@@ -6,7 +6,6 @@ import { injectIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import debounce from 'lodash/debounce';
 import get from 'lodash/get';
-import some from 'lodash/some';
 import MouserOverWrapper from '../../../../../components/MouseOverWrapper';
 import IssueType from '../../../components/issue-type';
 import { useSelectStore } from './stores';
