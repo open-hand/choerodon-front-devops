@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { PageWrap, PageTab, Page } from '@choerodon/boot';
 import { Spin } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
+import { CustomTabs } from '@choerodon/components';
 import { useAppTopStore } from '../stores';
 import { useServiceDetailStore } from './stores';
 import Version from './Version';
@@ -31,38 +32,41 @@ const DetailContent = observer(() => {
     versionDs,
   } = useServiceDetailStore();
 
+  const [tabValue, setTabValue] = useState('Version');
+
+  const [tabData, setTabData] = useState([{
+    name: formatMessage({ id: `${intlPrefix}.version` }),
+    value: 'Version',
+  }]);
+
+  useEffect(() => {
+    let newTabData = tabData;
+    if (accessShare && detailDs.current && detailDs.current.get('type') === 'normal') {
+      if (!tabData.find((i) => i.value === 'Share')) {
+        newTabData = [
+          ...tabData,
+          {
+            name: formatMessage({ id: `${intlPrefix}.share` }),
+            value: 'Share',
+          },
+        ];
+        setTabData(newTabData);
+      }
+    }
+  }, [accessShare, detailDs.current]);
+
   return (
     <Page
       service={detailPermissions}
     >
-      <PageWrap noHeader={[]} cache>
-        <PageTab
-          title={formatMessage({ id: `${intlPrefix}.version` })}
-          tabKey="Version"
-          component={Version}
-          alwaysShow
-        />
-        {/* <PageTab */}
-        {/*  title={<Tips */}
-        {/*    helpText={formatMessage({ id: `${intlPrefix}.detail.permission.tips` })} */}
-        {/*    title={formatMessage({ id: `${intlPrefix}.permission` })} */}
-        {/*  />} */}
-        {/*  tabKey="Allocation" */}
-        {/*  component={Allocation} */}
-        {/*  alwaysShow={accessPermission} */}
-        {/* /> */}
-        <PageTab
-          title={(
-            <Tips
-              helpText={formatMessage({ id: `${intlPrefix}.detail.share.tips` })}
-              title={formatMessage({ id: `${intlPrefix}.share` })}
-            />
-            )}
-          tabKey="Share"
-          component={Share}
-          alwaysShow={accessShare && detailDs.current && detailDs.current.get('type') === 'normal'}
-        />
-      </PageWrap>
+      <p className="c7ncd-serviceDetail-title">{detailDs?.current?.get('name') || ''}</p>
+      <CustomTabs
+        data={tabData}
+        onChange={(e, name, value) => setTabValue(value)}
+      />
+      {
+        tabValue === 'Version' ? <Version /> : <Share />
+      }
     </Page>
   );
 });

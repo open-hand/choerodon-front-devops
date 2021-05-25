@@ -154,7 +154,7 @@ const Version = withRouter(observer((props) => {
           style={{
             width: '100%',
           }}
-          suffix={(
+          prefix={(
             <Icon type="search" />
           )}
           onEnterDown={(e) => handleChangeSearch(e.target.value)}
@@ -162,16 +162,34 @@ const Version = withRouter(observer((props) => {
         />
         {
           versionDs.map((version) => (
-            <div className="c7ncd-theme4-version-item">
-              <div className="c7ncd-theme4-version-item-side">
-                <span className="c7ncd-theme4-version-item-version">{version.get('version')}</span>
-                <Action data={renderVersionAction()} />
+            <>
+              <div className="c7ncd-theme4-version-item">
+                <div className="c7ncd-theme4-version-item-side">
+                  <Icon
+                    className="c7ncd-theme4-version-item-side-drop"
+                    type={
+                      version.get('unfold') ? 'baseline-arrow_drop_up' : 'baseline-arrow_drop_down'
+                    }
+                    onClick={() => {
+                      version.set('unfold', version.get('unfold') ? !version.get('unfold') : true);
+                    }}
+                  />
+                  <span className="c7ncd-theme4-version-item-version">{version.get('version')}</span>
+                  <Action data={renderVersionAction()} />
+                </div>
+                <div style={{ justifyContent: 'flex-end' }} className="c7ncd-theme4-version-item-side">
+                  <span className="c7ncd-theme4-version-item-text">创建于</span>
+                  <TimePopover content={version.get('creationDate')} />
+                </div>
               </div>
-              <div style={{ justifyContent: 'flex-end' }} className="c7ncd-theme4-version-item-side">
-                <span className="c7ncd-theme4-version-item-text">创建于</span>
-                <TimePopover content={version.get('creationDate')} />
-              </div>
-            </div>
+              {
+                version?.get('unfold') && (
+                  <div className="c7ncd-theme4-version-unfold">
+                    <p className="c7ncd-theme4-version-unfold-list">关联制品清单</p>
+                  </div>
+                )
+              }
+            </>
           ))
         }
         <Pagination

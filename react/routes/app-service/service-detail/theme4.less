@@ -1,8 +1,19 @@
 .c7ncd-theme4-version {
-  position: relative;
-  top: 50px;
+  margin-top: 16px;
+  &-unfold {
+    border-left: 1px solid var(--divider);
+    border-right: 1px solid var(--divider);
+    border-bottom: 1px solid var(--divider);
+    padding: 8px 16px;
+    &-list {
+      color: var(--text-color);
+      font-size: 13px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+    }
+  }
   &-item {
-    padding: 10px 12px;
+    padding: 10px 6px;
     background: #f5f6fa;
     border-radius: 4px;
     margin-top: 14px;
@@ -13,6 +24,10 @@
       display: flex;
       align-items: center;
       color: #0f1358;
+      &-drop {
+        font-size: 24px;
+        cursor: pointer;
+      }
     }
     &-version {
       font-size: 13px;

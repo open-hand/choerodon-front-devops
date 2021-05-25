@@ -208,7 +208,7 @@ const ListView = withRouter(observer((props) => {
       <StatusTag
         colorCode={colorCode}
         style={{
-          marginRight: '5px'
+          marginRight: '7px'
         }}
         name={formatMessage({id:colorCode})}
       />
@@ -464,18 +464,18 @@ const ListView = withRouter(observer((props) => {
                     }}
                     onClick={() => setSelectedAppService(record.toData())}
                   >
-                <span
-                  className="c7ncd-appService-item-icon"
-                  style={{
-                    backgroundImage: record.get('imgUrl') ? `url(${record.get('imgUrl')})` : 'unset',
-                  }}
-                >
-                  {
-                    !record.get('imgUrl') && record.get('name').substring(0,1).toUpperCase()
-                  }
-                </span>
+                {/*<span*/}
+                {/*  className="c7ncd-appService-item-icon"*/}
+                {/*  style={{*/}
+                {/*    backgroundImage: record.get('imgUrl') ? `url(${record.get('imgUrl')})` : 'unset',*/}
+                {/*  }}*/}
+                {/*>*/}
+                {/*  {*/}
+                {/*    !record.get('imgUrl') && record.get('name').substring(0,1).toUpperCase()*/}
+                {/*  }*/}
+                {/*</span>*/}
                     <div className="c7ncd-appService-item-center">
-                      <div className="c7ncd-appService-item-center-line">
+                      <div className="c7ncd-appService-item-center-line" style={{ justifyContent: 'flex-start' }}>
                         <span className="c7ncd-appService-item-center-line-name">{record.get('name')}</span>
                         {
                           renderStatus({value:record.get('active'), record})
@@ -495,7 +495,7 @@ const ListView = withRouter(observer((props) => {
                     </span>
                         {renderActions({record})}
                       </div>
-                      <div className="c7ncd-appService-item-center-line">
+                      <div className="c7ncd-appService-item-center-line" style={{ justifyContent: 'flex-start' }}>
                         <p className="c7ncd-appService-item-center-line-code">{record.get('code')}</p>
                       </div>
                     </div>
@@ -507,7 +507,7 @@ const ListView = withRouter(observer((props) => {
                         width: 'unset',
                       }}
                     >
-                      <div className="c7ncd-appService-item-center-line">
+                      <div className="c7ncd-appService-item-center-line" style={{ justifyContent: 'flex-end' }}>
                         <p className="c7ncd-appService-item-center-line-url">
                           {
                             record.get('repoUrl') && (
@@ -553,8 +553,7 @@ const ListView = withRouter(observer((props) => {
               }}
             />
           </div>
-          <div className="c7ncd-theme4-appService-blockTop" />
-          <div className="c7ncd-theme4-appService-blockDown" />
+          <div className="c7ncd-theme4-appService-divided" />
           <div className="c7ncd-theme4-appService-right">
             <ServiceDetail
               cRef={ref}

@@ -152,6 +152,7 @@ const Share = withRouter((props) => {
           position: 'absolute',
           zIndex: 100,
           right: 0,
+          top: '-32px',
         }}
         >
           <Tooltip
@@ -159,6 +160,7 @@ const Share = withRouter((props) => {
             placement="bottom"
           >
             <ProButton
+              funcType="flat"
               icon="playlist_add"
               onClick={() => openModal('add')}
               disabled={isStop}
