@@ -83,7 +83,7 @@ export default observer(({ cRef, envId }) => {
                 funcType="flat"
                 icon="delete"
                 onClick={() => handleRemovePort(portRecord)}
-                className={`${prefixCls}-resource-delete-btn`}
+                className={`${prefixCls}-resource-delete-btn c7ncd-form-record-delete-btn`}
                 colSpan={3}
               />
             ) : <span colSpan={3} />
