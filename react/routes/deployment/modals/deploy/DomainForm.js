@@ -86,7 +86,7 @@ export default observer(({ cRef, envId: otherEnvId }) => {
             <Button
               funcType="flat"
               icon="delete"
-              className={`${prefixCls}-domain-form-delete`}
+              className={`${prefixCls}-domain-form-delete c7ncd-form-record-delete-btn`}
               onClick={() => handleRemovePath(pathRecord)}
             />
           ) : <span />}
@@ -124,6 +124,7 @@ export default observer(({ cRef, envId: otherEnvId }) => {
               funcType="flat"
               icon="delete"
               onClick={() => handleRemoveAnnotation(annotationRecord)}
+              className="c7ncd-form-record-delete-btn"
             />
           ) : <span />}
         </Form>

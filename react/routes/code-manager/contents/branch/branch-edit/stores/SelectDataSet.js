@@ -40,7 +40,7 @@ export default ({
     },
   ],
   transport: {
-    create: ({ dataSet }) => ({
+    submit: ({ dataSet }) => ({
       url: `/devops/v1/projects/${projectId}/app_service/${appServiceId}/git/update_branch_issue`,
       method: 'put',
       transformRequest: () => {

@@ -6,6 +6,7 @@ import { injectIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import debounce from 'lodash/debounce';
 import get from 'lodash/get';
+import some from 'lodash/some';
 import MouserOverWrapper from '../../../../../components/MouseOverWrapper';
 import IssueType from '../../../components/issue-type';
 import { useSelectStore } from './stores';
@@ -163,6 +164,12 @@ function BranchEdit() {
     selectDs.create();
   }, [selectDs]);
 
+  const handleIssueFilter = useCallback((record) => {
+    const issueId = record.get('issueId');
+    const selectedIssueIds = selectDs.map((selectedRecord) => selectedRecord.get('issue')?.issueId) || [];
+    return selectedIssueIds.indexOf(issueId) === -1;
+  });
+
   return (
     <div>
       {selectDs.map((record) => (
@@ -186,6 +193,7 @@ function BranchEdit() {
             searchable
             searchMatcher="content"
             colSpan={5}
+            optionsFilter={handleIssueFilter}
           />
           <Button
             icon="delete"
