@@ -433,6 +433,8 @@ function Branch(props) {
    * theme4主题 table column渲染
    */
   function theme4RenderColumn({ record, text }) {
+    const status = record.get('status');
+    const errorMessage = record.get('errorMessage');
     return (
       <div className={styles?.['c7n-branch-theme4-table-column']}>
         <div
@@ -447,10 +449,20 @@ function Branch(props) {
             <div className={styles?.['c7n-branch-theme4-table-column-side-line']}>
               <Icon type="branch" />
               {getIcon(record.get('branchName'))}
-              <span
-                className={styles?.['c7n-branch-theme4-table-column-side-line-branchName']}
+              <StatusIcon
+                status={status}
+                error={errorMessage}
+                name={text}
+                width={0.17}
+                clickAble={(status !== 'operating') && !isOPERATIONS}
                 onClick={() => openEditIssueModal(record.toData())}
-              >{ record.get('branchName') }</span>
+                record={text}
+                permissionCode={['choerodon.code.project.develop.code-management.ps.branch.update']}
+              />
+              {/*<span*/}
+              {/*  className={styles?.['c7n-branch-theme4-table-column-side-line-branchName']}*/}
+              {/*  onClick={() => openEditIssueModal(record.toData())}*/}
+              {/*>{ record.get('branchName') }</span>*/}
             </div>
             <div className={styles?.['c7n-branch-theme4-table-column-side-line']}>
               <Icon type="point" />

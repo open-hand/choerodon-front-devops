@@ -378,6 +378,7 @@ export default observer(() => {
   useEffect(() => {
     const middleware = BaseDeployDataSet.current.get(mapping.middleware.name);
     const deployWary = BaseDeployDataSet.current.get(mapping.deployWay.name);
+    const deployMode = BaseDeployDataSet.current.get(mapping.deployMode.name);
     HostSettingDataSet.getField(hostMapping.hostName.name).set('required', (deployWary === deployWayOptionsData[1].value));
 
     // 如果不是mysql + 主机部署 则要重查paramsetting
@@ -389,6 +390,21 @@ export default observer(() => {
         deployMode: BaseDeployDataSet.current.get(baseMapping.deployMode.name),
       });
       ParamSettingDataSet.query();
+    }
+    // 根据选择部署方式不同 修改ip和端口的label字段
+    if (middleware === middleWareData[0].value
+      && deployWary === deployWayOptionsData[1].value
+      && deployMode === deployModeOptionsData[0].value
+    ) {
+      HostSettingDataSet.getField(hostMapping.ip.name).set('label', 'ip');
+      HostSettingDataSet.getField(hostMapping.port.name).set('label', '端口');
+      HostSettingDataSet.getField(hostMapping.privateIp.name).set('label', '内部IP');
+      HostSettingDataSet.getField(hostMapping.privatePort.name).set('label', '内部端口');
+    } else {
+      HostSettingDataSet.getField(hostMapping.ip.name).set('label', '外部SSH认证IP');
+      HostSettingDataSet.getField(hostMapping.port.name).set('label', '外部SSH认证端口');
+      HostSettingDataSet.getField(hostMapping.privateIp.name).set('label', '内部SSH认证IP');
+      HostSettingDataSet.getField(hostMapping.privatePort.name).set('label', '内部SSH认证端口');
     }
   }, [
     BaseDeployDataSet.current.get(mapping.middleware.name),
