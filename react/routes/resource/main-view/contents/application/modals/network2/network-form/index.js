@@ -150,10 +150,11 @@ function FormContent() {
                         <Select name="value" combo optionRenderer={labelOptionRenderer} optionsFilter={clearInputOption} />
                         {
                         targetLabelsDs.created.length > 1 ? (
-                          <Icon
-                            colSpan={1}
-                            className="delete-icon-target"
-                            type="delete"
+                          <Button
+                            funcType="flat"
+                            colSpan={3}
+                            className="c7ncd-form-record-delete-btn"
+                            icon="delete"
                             onClick={() => removeTargetLabelGroup(record)}
                           />
                         ) : <span colSpan={1} />
@@ -215,10 +216,11 @@ function FormContent() {
               }
                 {
                 portDs.created.length > 1 ? (
-                  <Icon
+                  <Button
+                    funcType="flat"
                     colSpan={3}
-                    className="delete-icon"
-                    type="delete"
+                    className="c7ncd-form-record-delete-btn"
+                    icon="delete"
                     onClick={() => removePortGroup(record)}
                   />
                 ) : <span colSpan={3} />

@@ -251,9 +251,10 @@ const FormView = observer(() => {
         onBlur={() => checkErrorData(null, false)}
         colSpan={11}
       />
-      <Icon
-        className="del-btn"
-        type="delete"
+      <Button
+        funcType="flat"
+        icon="delete"
+        className="c7ncd-form-record-delete-btn"
         onClick={() => handleDelete(record)}
       />
     </Form>

@@ -141,7 +141,7 @@ export default observer(() => {
             <Button
               funcType="flat"
               icon="delete"
-              className={`${prefixCls}-domain-form-delete`}
+              className="c7ncd-form-record-delete-btn"
               onClick={() => handleRemovePath(pathRecord)}
             />
           ) : <span />}
@@ -179,6 +179,7 @@ export default observer(() => {
               funcType="flat"
               icon="delete"
               onClick={() => handleRemoveAnnotation(annotationRecord)}
+              className="c7ncd-form-record-delete-btn"
             />
           ) : <span />}
         </Form>

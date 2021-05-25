@@ -4,7 +4,8 @@ import React, { Component, Fragment } from 'react';
 import _ from 'lodash';
 import { observer, inject } from 'mobx-react';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Modal, Button, Select } from 'choerodon-ui';
+import { Modal, Select } from 'choerodon-ui';
+import { Button } from 'choerodon-ui/pro';
 import { Content } from '@choerodon/boot';
 import ReactCodeMirror from 'react-codemirror';
 import uuidv1 from 'uuid/v1';
@@ -274,7 +275,7 @@ export default class LogSidebar extends Component {
               </Select>
               <Button
                 className="c7n-term-fullscreen"
-                type="primary"
+                color="primary"
                 funcType="flat"
                 shape="circle"
                 icon="fullscreen"
