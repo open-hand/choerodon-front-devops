@@ -177,6 +177,7 @@ export default observer((props) => {
       },
       okText,
       children: <AddStage
+        stageName={name}
         projectId={projectId}
         curType={curType}
         optType={optType}
@@ -228,6 +229,7 @@ export default observer((props) => {
           handleOk={hanleStepCreateOk}
           appServiceId={appServiceName}
           appServiceName={appServiceName}
+          stageName={name}
           image={image}
           columnIndex={columnIndex + 1}
           witchColumnJobIndex={witchColumnJobIndex + 1}
@@ -237,6 +239,7 @@ export default observer((props) => {
       modalChildren = (
         <AddCDTask
           random={Math.random()}
+          stageName={name}
           appServiceId={appServiceName}
           appServiceName={appServiceName}
           appServiceCode={appServiceCode}
