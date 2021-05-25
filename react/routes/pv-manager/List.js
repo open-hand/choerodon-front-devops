@@ -1,6 +1,6 @@
 import React, { useCallback, Fragment } from 'react';
 import {
-  Page, Content, Header, Permission, Action, Breadcrumb, Choerodon,
+  Page, Content, Header, Permission, Action, Breadcrumb, Choerodon, HeaderButtons,
 } from '@choerodon/boot';
 import {
   Table, Modal, Spin, Tooltip,
@@ -210,22 +210,21 @@ const AppService = withRouter(observer((props) => {
       service={['choerodon.code.project.deploy.cluster.pv-management.ps.default']}
     >
       <Header>
-        <Permission
-          service={['choerodon.code.project.deploy.cluster.pv-management.ps.create']}
-        >
-          <Button
-            icon="playlist_add"
-            onClick={openCreate}
-          >
-            <FormattedMessage id={`${intlPrefix}.create`} />
-          </Button>
-        </Permission>
-        <Button
-          icon="refresh"
-          onClick={refresh}
-        >
-          <FormattedMessage id="refresh" />
-        </Button>
+        <HeaderButtons
+          showClassName={false}
+          items={([{
+            name: <FormattedMessage id={`${intlPrefix}.create`} />,
+            icon: 'playlist_add',
+            display: true,
+            permissions: ['choerodon.code.project.deploy.cluster.pv-management.ps.create'],
+            handler: openCreate,
+          }, {
+            icon: 'refresh',
+            display: true,
+            iconOnly: true,
+            handler: refresh,
+          }])}
+        />
       </Header>
       <Breadcrumb />
       <Content className={`${prefixCls}-content`}>

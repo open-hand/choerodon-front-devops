@@ -459,7 +459,7 @@ function Branch(props) {
                 <UserInfo
                   name={record.get('commitUserRealName')}
                   id={record.get('commitUserName')}
-                  avatar={record.get('commitUrl')}
+                  avatar={record.get('commitUserUrl')}
                   showName={false}
                 />
               )}
