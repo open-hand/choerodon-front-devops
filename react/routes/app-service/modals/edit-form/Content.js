@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Form, TextField, Select } from 'choerodon-ui/pro';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
-import { Icon, Input } from 'choerodon-ui';
+import { Icon, Input, Divider } from 'choerodon-ui';
 import { axios, Choerodon } from '@choerodon/boot';
 import includes from 'lodash/includes';
 import { handlePromptError } from '../../../../utils';
@@ -36,9 +36,9 @@ const CreateForm = injectIntl(observer((props) => {
       const chartTestFailed = record.get('chartType') === 'custom' && !record.get('chartStatus') && !await handleTestChart();
       if (!chartTestFailed && (await formDs.submit()) !== false) {
         refresh();
-      } else {
-        return false;
+        return true;
       }
+      return false;
     } catch (e) {
       return false;
     }
@@ -94,47 +94,58 @@ const CreateForm = injectIntl(observer((props) => {
       if (handlePromptError(res, false)) {
         record.set('chartStatus', 'success');
         return true;
-      } else {
-        record.set('chartStatus', 'failed');
-        return false;
       }
+      record.set('chartStatus', 'failed');
+      return false;
     } catch (e) {
       record.set('chartStatus', 'failed');
       return false;
     }
   }
 
-  return (<div className={`${prefixCls}-create-wrap`}>
-    <div
-      style={{
-        backgroundImage: record.get('imgUrl') ? `url('${record.get('imgUrl')}')` : '',
-      }}
-      className={`${prefixCls}-create-img`}
-      onClick={triggerFileBtn}
-      role="none"
-    >
-      <div className="'edit-img-mask">
-        <Icon type="photo_camera" className="edit-img-icon" />
+  return (
+    <div className={`${prefixCls}-create-wrap`}>
+      <div
+        style={{
+          backgroundImage: record.get('imgUrl') ? `url('${record.get('imgUrl')}')` : '',
+        }}
+        className={`${prefixCls}-create-img`}
+        onClick={triggerFileBtn}
+        role="none"
+      >
+        <div className="'edit-img-mask">
+          <Icon type="photo_camera" className="edit-img-icon" />
+        </div>
+        {!record.get('imgUrl') && (
+        <div className="edit-avatar">
+          <span>{record.get('name') && record.get('name').slice(0, 1)}</span>
+        </div>
+        )}
+        <Input
+          id="file"
+          type="file"
+          accept={FILE_TYPE}
+          onChange={selectFile}
+          style={{ display: 'none' }}
+        />
       </div>
-      {!record.get('imgUrl') && <div className="edit-avatar">
-        <span>{record.get('name') && record.get('name').slice(0, 1)}</span>
-      </div>}
-      <Input
-        id="file"
-        type="file"
-        accept={FILE_TYPE}
-        onChange={selectFile}
-        style={{ display: 'none' }}
-      />
+      <div className={`${prefixCls}-create-text`}>
+        <FormattedMessage id={`${intlPrefix}.icon`} />
+      </div>
+      <Form record={record}>
+        <TextField name="name" autoFocus />
+      </Form>
+      <Settings record={record} handleTestChart={handleTestChart} />
+      <Divider className="c7ncd-form-divider" />
+      <div className="content-settings-title">
+        <span>POM信息</span>
+      </div>
+      <Form record={record}>
+        <TextField name="artifactId" />
+        <TextField name="groupId" />
+      </Form>
     </div>
-    <div className={`${prefixCls}-create-text`}>
-      <FormattedMessage id={`${intlPrefix}.icon`} />
-    </div>
-    <Form record={record}>
-      <TextField name="name" autoFocus />
-    </Form>
-    <Settings record={record} handleTestChart={handleTestChart} />
-  </div>);
+  );
 }));
 
 export default CreateForm;
