@@ -318,6 +318,7 @@ const CodeQuality = withRouter(observer(() => {
         <ChartSwitch
           history={history}
           current="code-quality"
+          reportType="develop"
         />
         <HeaderButtons
           items={[{

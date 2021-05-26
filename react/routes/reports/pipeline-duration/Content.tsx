@@ -118,6 +118,8 @@ const PipelineTriggerDuration = () => {
           history={history}
           // @ts-ignore
           current="pipeline-duration"
+          // @ts-ignore
+          reportType="develop"
         />
         <HeaderButtons
           items={[{

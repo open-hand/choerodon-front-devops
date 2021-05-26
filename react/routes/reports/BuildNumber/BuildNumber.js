@@ -205,6 +205,7 @@ const BuildNumber = observer(() => {
         <ChartSwitch
           history={history}
           current="build-number"
+          reportType="develop"
         />
         <HeaderButtons
           items={[{

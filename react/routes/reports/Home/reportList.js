@@ -1,4 +1,16 @@
-export default [
+const deployReportList = [
+  {
+    key: 'deploy-times',
+    link: '/devops/reports/deploy-times',
+    pic: 'number',
+  }, {
+    key: 'deploy-duration',
+    link: '/devops/reports/deploy-duration',
+    pic: 'deploy-duration',
+  },
+];
+
+const developReportList = [
   {
     key: 'submission',
     link: '/devops/reports/submission',
@@ -16,14 +28,6 @@ export default [
     link: '/devops/reports/build-duration',
     pic: 'build-duration',
   }, {
-    key: 'deploy-times',
-    link: '/devops/reports/deploy-times',
-    pic: 'number',
-  }, {
-    key: 'deploy-duration',
-    link: '/devops/reports/deploy-duration',
-    pic: 'deploy-duration',
-  }, {
     key: 'pipelineTrigger-number',
     link: '/devops/reports/pipelineTrigger-number',
     pic: 'pipelineTrigger-number',
@@ -33,3 +37,14 @@ export default [
     pic: 'pipeline-duration',
   },
 ];
+
+const reportListMap = {
+  deploy: deployReportList,
+  develop: developReportList,
+};
+
+export {
+  deployReportList,
+  developReportList,
+  reportListMap,
+};

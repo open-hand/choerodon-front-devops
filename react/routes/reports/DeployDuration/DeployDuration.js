@@ -334,6 +334,7 @@ const DeployDuration = observer(() => {
         <ChartSwitch
           history={history}
           current="deploy-duration"
+          reportType="deploy"
         />
         <HeaderButtons
           items={[{
