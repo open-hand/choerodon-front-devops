@@ -138,12 +138,12 @@ const TemplateTable = observer(() => {
   const renderName = useCallback(({ value, record }) => {
     // type 为P：预定义；C: 自定义
     if (record.get('type') === 'P' || record.get('status') !== 'S' || !record.get('enable')) {
-      return <span style={{ color: 'rgba(0, 0, 0, 0.65)' }}>{value}</span>;
+      return <span>{value}</span>;
     }
     return (
       <Permission
         service={permissionCodes.edit}
-        defaultChildren={(<span style={{ color: 'rgba(0, 0, 0, 0.65)' }}>{value}</span>)}
+        defaultChildren={(<span>{value}</span>)}
       >
         <span
           role="none"

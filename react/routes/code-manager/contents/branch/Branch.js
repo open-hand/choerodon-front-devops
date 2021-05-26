@@ -307,7 +307,7 @@ function Branch(props) {
           />
           <TimePopover
             content={record.get('commitDate')}
-            style={{ display: 'inline-block', color: 'rgba(0, 0, 0, 0.65)' }}
+            style={{ display: 'inline-block', color: 'var(--text-color3)' }}
           />
         </div>
         {record.get('commitUserUrl') && record.get('commitUserName') ? (
