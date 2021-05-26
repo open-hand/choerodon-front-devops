@@ -124,7 +124,7 @@ const AppConfigs = observer(() => {
           <Column name="name" sortable header={formatMessage({ id: `${intlPrefix}.application.tabs.mapping` })} renderer={renderName} />
           <Column renderer={renderAction} width="0.7rem" />
           <Column name="key" renderer={renderKey} />
-          <Column name="lastUpdateDate" renderer={renderDate} width="1rem" sortable />
+          <Column name="lastUpdateDate" renderer={renderDate} width={105} sortable />
         </Table>
       </div>
     </div>

@@ -1,6 +1,8 @@
 import React, { useMemo, Fragment } from 'react';
 import { Action, Choerodon } from '@choerodon/boot';
-import { Table, Modal, Tooltip, Spin } from 'choerodon-ui/pro';
+import {
+  Table, Modal, Tooltip, Spin,
+} from 'choerodon-ui/pro';
 import TimePopover from '../../../../../components/time-popover';
 import UserInfo from '../../../../../components/userInfo';
 import ClickText from '../../../../../components/click-text';
@@ -60,7 +62,10 @@ export default function DeployConfig() {
           okProps: { color: 'red' },
           cancelProps: { color: 'dark' },
           footer: ((okBtn, cancelBtn) => (
-            <Fragment>{okBtn}{cancelBtn}</Fragment>
+            <>
+              {okBtn}
+              {cancelBtn}
+            </>
           )),
         };
         deleteModal.update(modalProps);
@@ -70,9 +75,9 @@ export default function DeployConfig() {
           okCancel: false,
           okText: formatMessage({ id: 'iknow' }),
           footer: ((OkBtn) => (
-            <Fragment>
+            <>
               {OkBtn}
-            </Fragment>
+            </>
           )),
         });
       } else {
@@ -89,9 +94,9 @@ export default function DeployConfig() {
       const res = await detailStore.deleteRecord(projectId, record.get('id'));
       if (handlePromptError(res, false)) {
         refresh();
-      } else {
-        return false;
+        return true;
       }
+      return false;
     } catch (err) {
       Choerodon.handleResponseError(err);
       return false;
@@ -168,18 +173,20 @@ export default function DeployConfig() {
     return value ? <TimePopover datetime={value} /> : null;
   }
 
-  return (<div className="c7ncd-tab-table">
-    <Table
-      dataSet={configDs}
-      border={false}
-    >
-      <Column name="name" sortable renderer={renderName} />
-      {!disabled && <Column renderer={renderActions} width={70} />}
-      <Column name="description" renderer={renderDescription} />
-      <Column name="appServiceName" sortable />
-      <Column name="envName" sortable />
-      <Column name="createUserRealName" renderer={renderUser} />
-      <Column name="lastUpdateDate" renderer={renderDate} width={100} sortable />
-    </Table>
-  </div>);
+  return (
+    <div className="c7ncd-tab-table">
+      <Table
+        dataSet={configDs}
+        border={false}
+      >
+        <Column name="name" sortable renderer={renderName} />
+        {!disabled && <Column renderer={renderActions} width={70} />}
+        <Column name="description" renderer={renderDescription} />
+        <Column name="appServiceName" sortable />
+        <Column name="envName" sortable />
+        <Column name="createUserRealName" renderer={renderUser} />
+        <Column name="lastUpdateDate" renderer={renderDate} width={105} sortable />
+      </Table>
+    </div>
+  );
 }

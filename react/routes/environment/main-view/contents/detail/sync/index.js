@@ -19,33 +19,39 @@ export default function Situation() {
   } = useDetailStore();
 
   function renderMsg({ value }) {
-    return (<Tooltip title={value} placement="topLeft">
-      {value}
-    </Tooltip>);
+    return (
+      <Tooltip title={value} placement="topLeft">
+        {value}
+      </Tooltip>
+    );
   }
 
   function renderFileLink({ record }) {
     const url = record.get('fileUrl');
     const path = record.get('filePath');
-    return <a
-      href={url}
-      target="_blank"
-      rel="nofollow me noopener noreferrer"
-    >
-      <span>{path}</span>
-    </a>;
+    return (
+      <a
+        href={url}
+        target="_blank"
+        rel="nofollow me noopener noreferrer"
+      >
+        <span>{path}</span>
+      </a>
+    );
   }
 
   function renderCommit({ record }) {
     const url = record.get('commitUrl');
     const commit = record.get('commit');
-    return <a
-      href={url}
-      target="_blank"
-      rel="nofollow me noopener noreferrer"
-    >
-      <span>{commit}</span>
-    </a>;
+    return (
+      <a
+        href={url}
+        target="_blank"
+        rel="nofollow me noopener noreferrer"
+      >
+        <span>{commit}</span>
+      </a>
+    );
   }
 
   function renderTime({ value }) {
@@ -72,7 +78,7 @@ export default function Situation() {
         <Column name="error" renderer={renderMsg} />
         <Column name="filePath" renderer={renderFileLink} />
         <Column name="commit" renderer={renderCommit} />
-        <Column name="lastUpdateDate" sortable renderer={renderTime} width={100} />
+        <Column name="lastUpdateDate" sortable renderer={renderTime} width={105} />
       </Table>
     </div>
   );

@@ -128,7 +128,7 @@ const Cipher = observer(() => {
           <Column sortable name="name" header={formatMessage({ id: `${intlPrefix}.application.tabs.cipher` })} renderer={renderName} />
           <Column renderer={renderAction} width="0.7rem" />
           <Column name="key" renderer={renderKey} />
-          <Column sortable name="lastUpdateDate" renderer={renderDate} width="1rem" />
+          <Column sortable name="lastUpdateDate" renderer={renderDate} width={105} />
         </Table>
       </div>
     </div>

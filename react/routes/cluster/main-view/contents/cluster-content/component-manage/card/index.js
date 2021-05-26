@@ -82,6 +82,7 @@ export default ({
               onClick={onClick}
               loading={loading}
               disabled={disabled}
+              funcType="flat"
             >
               {text}
             </Button>

@@ -4,34 +4,34 @@
 .c7ncd-root {
   // 表格名称可点击列样式
   .table-link {
-    color: @primary-color;
+    color: var(--table-click-color);
     cursor: pointer;
 
     &:hover {
-      color: @primary-color;
+      color: var(--table-click-color);
       text-decoration: underline;
     }
   }
 
-  .@{c7n-pro-prefix}-table {
-    .@{c7n-pro-prefix}-table-tbody {
-      color: @TABLE_FONT_COLOR;
-
-      .c7ncd-userinfo-name {
-        color: @TABLE_FONT_COLOR;
-      }
-    }
-  }
-
-  .@{c7n-prefix}-table-body {
-    .@{c7n-prefix}-table-tbody {
-      color: @TABLE_FONT_COLOR;
-
-      .c7ncd-userinfo-name {
-        color: @TABLE_FONT_COLOR;
-      }
-    }
-  }
+  //.@{c7n-pro-prefix}-table {
+  //  .@{c7n-pro-prefix}-table-tbody {
+  //    color: @TABLE_FONT_COLOR;
+  //
+  //    .c7ncd-userinfo-name {
+  //      color: @TABLE_FONT_COLOR;
+  //    }
+  //  }
+  //}
+  //
+  //.@{c7n-prefix}-table-body {
+  //  .@{c7n-prefix}-table-tbody {
+  //    color: @TABLE_FONT_COLOR;
+  //
+  //    .c7ncd-userinfo-name {
+  //      color: @TABLE_FONT_COLOR;
+  //    }
+  //  }
+  //}
 
   .c7ncd-tab-table {
     margin-top: -.16rem;
@@ -66,7 +66,7 @@
 // 设置Select组件分页加载更多样式
 .c7ncd-select-load-more-text {
   text-align: left;
-  color: #3f51b5;
+  color: var(--primary-color);
   display: block;
 }
 

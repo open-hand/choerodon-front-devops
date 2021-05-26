@@ -122,7 +122,7 @@ const CustomContent = observer(() => {
         <Column name="name" renderer={renderName} sortable />
         <Column renderer={renderAction} width="0.7rem" />
         <Column name="k8sKind" />
-        <Column name="lastUpdateDate" renderer={renderTime} width="1rem" sortable />
+        <Column name="lastUpdateDate" renderer={renderTime} width={105} sortable />
       </Table>
     </div>
   );
