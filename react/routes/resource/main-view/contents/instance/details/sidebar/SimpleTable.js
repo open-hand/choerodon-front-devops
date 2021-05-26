@@ -26,7 +26,7 @@ class SimpleTable extends PureComponent {
       padding: 8px 2px !important;
       font-weight: normal !important;
       font-size: 13px;
-      color: rgba(0, 0, 0, 0.65);
+      color: var(--text-color3);
       border-bottom: 1px solid rgba(0, 0, 0, 0.36);
     `;
 

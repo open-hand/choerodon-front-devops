@@ -852,7 +852,7 @@ export default observer(() => {
                 fontSize: '12px',
                 fontFamily: 'PingFangSC-Regular, PingFang SC',
                 fontWeight: 400,
-                color: 'rgba(0, 0, 0, 0.65)',
+                color: 'var(--text-color3)',
                 lineHeight: '20px',
               }}
             >
