@@ -453,11 +453,11 @@ function Branch(props) {
               <StatusIcon
                 status={status}
                 error={errorMessage}
-                name={text}
+                name={record.get('branchName')}
                 width={0.17}
                 clickAble={(status !== 'operating') && !isOPERATIONS}
                 onClick={() => openEditIssueModal(record.toData())}
-                record={text}
+                record={record.get('branchName')}
                 permissionCode={['choerodon.code.project.develop.code-management.ps.branch.update']}
               />
               {/*<span*/}

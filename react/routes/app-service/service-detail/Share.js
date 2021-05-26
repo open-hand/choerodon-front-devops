@@ -10,6 +10,7 @@ import {
 } from 'choerodon-ui';
 import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
+import NoData from '@/routes/app-service/service-detail/images/nodata.png';
 import { useAppTopStore } from '../stores';
 import { useServiceDetailStore } from './stores';
 import HeaderButtons from './HeaderButtons';
@@ -243,47 +244,56 @@ const Share = withRouter((props) => {
             onChange={handleChangeSearch}
           />
           {
-            shareDs.map((share) => (
-              <div className="c7ncd-theme4-version-item">
-                <div className="c7ncd-theme4-version-item-line">
-                  <div>
-                    <p>
-                      <span className="c7ncd-theme4-version-item-line-viewId">{`#${share.get('viewId')}`}</span>
-                      <span className="c7ncd-theme4-version-item-line-around">
-                        (共享范围:
-                        {renderProjectName({ value: share.get('projectName'), record: share })}
-                        )
-                      </span>
-                    </p>
-                    <p style={{ marginTop: 6 }}>
-                      <span
-                        className="c7ncd-theme4-version-item-line-versionType"
-                        style={{
-                          color: versionTypeStyleMaps[share.get('versionType')]?.color || '#5365EA',
-                          background: versionTypeStyleMaps[share.get('versionType')]?.background || '#F0F5FF',
-                          border: `1px solid ${versionTypeStyleMaps[share.get('versionType')]?.border || '#ADC6FF'}`,
-                        }}
-                      >
-                        {share.get('versionType') || '未指定'}
-                      </span>
-                      <span className="c7ncd-theme4-version-item-line-versionType">{share.get('version')}</span>
-                    </p>
-                  </div>
-                  {renderAction()}
-                </div>
-              </div>
-            ))
+            shareDs.records && shareDs.records.length > 0 ? (
+              <>
+                {
+                  shareDs.records.map((share) => (
+                    <div className="c7ncd-theme4-version-item">
+                      <div className="c7ncd-theme4-version-item-line">
+                        <div>
+                          <p>
+                            <span className="c7ncd-theme4-version-item-line-viewId">{`#${share.get('viewId')}`}</span>
+                            <span className="c7ncd-theme4-version-item-line-around">
+                              (共享范围:
+                              {renderProjectName({ value: share.get('projectName'), record: share })}
+                              )
+                            </span>
+                          </p>
+                          <p style={{ marginTop: 6 }}>
+                            <span
+                              className="c7ncd-theme4-version-item-line-versionType"
+                              style={{
+                                color: versionTypeStyleMaps[share.get('versionType')]?.color || '#5365EA',
+                                background: versionTypeStyleMaps[share.get('versionType')]?.background || '#F0F5FF',
+                                border: `1px solid ${versionTypeStyleMaps[share.get('versionType')]?.border || '#ADC6FF'}`,
+                              }}
+                            >
+                              {share.get('versionType') || '未指定'}
+                            </span>
+                            <span className="c7ncd-theme4-version-item-line-versionType">{share.get('version')}</span>
+                          </p>
+                        </div>
+                        {renderAction()}
+                      </div>
+                    </div>
+                  ))
+                }
+                <Pagination
+                  total={shareDs.totalCount}
+                  pageSize={shareDs.pageSize}
+                  page={shareDs.currentPage}
+                  onChange={handleChangeListPage}
+                  style={{
+                    marginTop: '17px',
+                    float: 'right',
+                  }}
+                />
+              </>
+            ) : [
+              <img className="c7ncd-theme4-version-item-nodata" src={NoData} alt="" />,
+              <p className="c7ncd-theme4-version-item-nodataText">暂无共享设置</p>,
+            ]
           }
-          <Pagination
-            total={shareDs.totalCount}
-            pageSize={shareDs.pageSize}
-            page={shareDs.currentPage}
-            onChange={handleChangeListPage}
-            style={{
-              marginTop: '17px',
-              float: 'right',
-            }}
-          />
         </div>
       </Spin>
     );

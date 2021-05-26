@@ -15,6 +15,7 @@ import { useServiceDetailStore } from './stores';
 import HeaderButtons from './HeaderButtons';
 import TimePopover from '../../../components/timePopover/TimePopover';
 import Tips from '../../../components/new-tips';
+import NoData from './images/nodata.png';
 
 import './index.less';
 
@@ -146,8 +147,30 @@ const Version = withRouter(observer((props) => {
     versionDs.query();
   }
 
+  function renderVersionButton() {
+    return (
+      <Permission
+        service={['choerodon.code.project.develop.app-service.ps.version.delete']}
+      >
+        <Button
+          style={{
+            position: 'absolute',
+            zIndex: 100,
+            right: 0,
+            top: '-32px',
+          }}
+          funcType="flat"
+          icon="delete"
+        >
+          删除版本
+        </Button>
+      </Permission>
+    );
+  }
+
   const renderTheme4Version = () => (
     <Spin spinning={versionDs.status !== 'ready'}>
+      {renderVersionButton()}
       <div className="c7ncd-theme4-version">
         <TextField
           placeholder="搜索服务版本"
@@ -161,47 +184,57 @@ const Version = withRouter(observer((props) => {
           onChange={handleChangeSearch}
         />
         {
-          versionDs.map((version) => (
+          versionDs.records && versionDs.records.length > 0 ? (
             <>
-              <div className="c7ncd-theme4-version-item">
-                <div className="c7ncd-theme4-version-item-side">
-                  <Icon
-                    className="c7ncd-theme4-version-item-side-drop"
-                    type={
-                      version.get('unfold') ? 'baseline-arrow_drop_up' : 'baseline-arrow_drop_down'
-                    }
-                    onClick={() => {
-                      version.set('unfold', version.get('unfold') ? !version.get('unfold') : true);
-                    }}
-                  />
-                  <span className="c7ncd-theme4-version-item-version">{version.get('version')}</span>
-                  <Action data={renderVersionAction()} />
-                </div>
-                <div style={{ justifyContent: 'flex-end' }} className="c7ncd-theme4-version-item-side">
-                  <span className="c7ncd-theme4-version-item-text">创建于</span>
-                  <TimePopover content={version.get('creationDate')} />
-                </div>
-              </div>
               {
-                version?.get('unfold') && (
-                  <div className="c7ncd-theme4-version-unfold">
-                    <p className="c7ncd-theme4-version-unfold-list">关联制品清单</p>
-                  </div>
-                )
+                versionDs.records.map((version) => (
+                  <>
+                    <div className="c7ncd-theme4-version-item">
+                      <div className="c7ncd-theme4-version-item-side">
+                        <CheckBox style={{ marginRight: 5 }} value={version.get('checked')} />
+                        <Icon
+                          className="c7ncd-theme4-version-item-side-drop"
+                          type={
+                            version.get('unfold') ? 'baseline-arrow_drop_up' : 'baseline-arrow_drop_down'
+                          }
+                          onClick={() => {
+                            version.set('unfold', version.get('unfold') ? !version.get('unfold') : true);
+                          }}
+                        />
+                        <span className="c7ncd-theme4-version-item-version">{version.get('version')}</span>
+                        <Action data={renderVersionAction()} />
+                      </div>
+                      <div style={{ justifyContent: 'flex-end' }} className="c7ncd-theme4-version-item-side">
+                        <span className="c7ncd-theme4-version-item-text">创建于</span>
+                        <TimePopover content={version.get('creationDate')} />
+                      </div>
+                    </div>
+                    {
+                      version?.get('unfold') && (
+                        <div className="c7ncd-theme4-version-unfold">
+                          <p className="c7ncd-theme4-version-unfold-list">关联制品清单</p>
+                        </div>
+                      )
+                    }
+                  </>
+                ))
               }
+              <Pagination
+                total={versionDs.totalCount}
+                pageSize={versionDs.pageSize}
+                page={versionDs.currentPage}
+                onChange={handleChangeListPage}
+                style={{
+                  marginTop: '17px',
+                  float: 'right',
+                }}
+              />
             </>
-          ))
+          ) : [
+            <img className="c7ncd-theme4-version-item-nodata" src={NoData} alt="" />,
+            <p className="c7ncd-theme4-version-item-nodataText">暂无服务版本</p>,
+          ]
         }
-        <Pagination
-          total={versionDs.totalCount}
-          pageSize={versionDs.pageSize}
-          page={versionDs.currentPage}
-          onChange={handleChangeListPage}
-          style={{
-            marginTop: '17px',
-            float: 'right',
-          }}
-        />
       </div>
     </Spin>
   );
