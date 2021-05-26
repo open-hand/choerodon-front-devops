@@ -127,7 +127,7 @@ const ConfigMap = observer((props) => {
         <Column name="name" sortable header={formatMessage({ id: `${intlPrefix}.configMap` })} renderer={renderName} />
         <Column renderer={renderAction} width="0.7rem" />
         <Column name="key" renderer={renderKey} />
-        <Column name="lastUpdateDate" sortable renderer={renderDate} width="1rem" />
+        <Column name="lastUpdateDate" sortable renderer={renderDate} width={105} />
       </Table>
     </div>
   );
