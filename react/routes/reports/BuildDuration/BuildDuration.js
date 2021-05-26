@@ -319,6 +319,7 @@ const BuildDuration = observer(() => {
         <ChartSwitch
           history={history}
           current="build-duration"
+          reportType="develop"
         />
         <HeaderButtons
           items={[{

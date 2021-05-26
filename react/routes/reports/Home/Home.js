@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Page, Header, Content, stores } from '@choerodon/boot';
+import {
+  Page, Header, Content, stores,
+} from '@choerodon/boot';
 import _ from 'lodash';
-import reportList from './reportList';
+import { deployReportList, developReportList } from './reportList';
 import './Home.less';
 
 const { AppState } = stores;
@@ -20,7 +22,7 @@ class Home extends Component {
         <Header title={<FormattedMessage id="report.head" />} />
         <Content>
           <div className="c7n-reports-wrapper">
-            {_.map(reportList, (item) => (
+            {_.map(developReportList.concat(deployReportList), (item) => (
               <div
                 role="none"
                 className="c7n-devops-report"

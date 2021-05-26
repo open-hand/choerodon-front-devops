@@ -1,17 +1,21 @@
-import React, { Component } from 'react';
+import React, { Component, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router-dom';
 import { inject } from 'mobx-react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { stores } from '@choerodon/boot';
-import { Dropdown, Button, Menu, Icon } from 'choerodon-ui';
-import reportList from '../Home/reportList';
+import {
+  Dropdown, Button, Menu, Icon,
+} from 'choerodon-ui';
+import { developReportList, reportListMap } from '../Home/reportList';
 
 const { Item: MenuItem } = Menu;
 
 const ChartSwitch = withRouter(inject('AppState')((props) => {
-  const { current, history, location: { search }, AppState } = props;
+  const {
+    current, history, location: { search }, AppState, reportType,
+  } = props;
+  const reportList = useMemo(() => reportListMap[reportType] || developReportList, [reportType]);
   const handleClick = (e) => {
     const nextReport = _.find(reportList, ['key', e.key]);
     if (nextReport) {
@@ -43,7 +47,7 @@ const ChartSwitch = withRouter(inject('AppState')((props) => {
 
 ChartSwitch.propTypes = {
   current: PropTypes.string.isRequired,
+  reportType: PropTypes.string.isRequired,
 };
-
 
 export default ChartSwitch;

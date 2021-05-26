@@ -284,7 +284,7 @@ const Submission = observer(() => {
           || `/charts${search}`
         }
       >
-        <ChartSwitch history={history} current="submission" />
+        <ChartSwitch history={history} current="submission" reportType="develop" />
         <HeaderButtons
           items={[{
             icon: 'refresh',

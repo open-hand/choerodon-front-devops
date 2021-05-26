@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { inject } from 'mobx-react';
 import { asyncRouter, asyncLocaleProvider, nomatch } from '@choerodon/boot';
-import { PermissionRoute } from '@choerodon/master';
+import { PermissionRoute, Charts } from '@choerodon/master';
 import { ModalContainer } from 'choerodon-ui/pro';
 
 import './style/index.less';
@@ -53,6 +53,14 @@ function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
             service={['choerodon.code.site.manager.application-template.ps.default']}
             path={`${match.url}/application-template`}
             component={SiteTemplate}
+          />
+          <PermissionRoute
+            path={`${match.url}/charts/develop`}
+            component={() => <Charts reportType="develop" />}
+          />
+          <PermissionRoute
+            path={`${match.url}/charts/deploy`}
+            component={() => <Charts reportType="deploy" />}
           />
           <Route path="*" component={nomatch} />
         </Switch>

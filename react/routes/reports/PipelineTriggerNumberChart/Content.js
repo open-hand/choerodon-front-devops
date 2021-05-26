@@ -112,7 +112,7 @@ const PipelineTriggerNumber = () => {
         title={formatMessage({ id: 'report.pipelineTrigger-number.head' })}
         backPath={`/charts${search}`}
       >
-        <ChartSwitch history={history} current="pipelineTrigger-number" />
+        <ChartSwitch history={history} current="pipelineTrigger-number" reportType="develop" />
         <HeaderButtons
           items={[{
             icon: 'refresh',
