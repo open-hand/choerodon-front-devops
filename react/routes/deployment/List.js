@@ -369,19 +369,19 @@ const Deployment = withRouter(observer((props) => {
         <HeaderButtons
           items={([{
             name: <FormattedMessage id={`${intlPrefix}.manual`} />,
-            icon: 'jsfiddle',
+            icon: 'cloud_done-o',
             display: true,
             permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.manual'],
             handler: openDeploy,
           }, {
             name: <FormattedMessage id={`${intlPrefix}.batch`} />,
-            icon: 'jsfiddle',
+            icon: 'cloud_done-o',
             display: true,
             permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.batch'],
             handler: openBatchDeploy,
           }, {
             name: '基础组件部署',
-            icon: 'jsfiddle',
+            icon: 'cloud_done-o',
             display: true,
             permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.basedComponent'],
             handler: () => openBaseDeploy(),

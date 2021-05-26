@@ -120,13 +120,13 @@ const ListView = withRouter(observer((props) => {
     handler: openCreate,
   }, {
     name: <FormattedMessage id={`${intlPrefix}.import`} />,
-    icon: 'archive',
+    icon: 'archive-o',
     permissions: ['choerodon.code.project.develop.app-service.ps.import'],
     display: true,
     handler: openImport,
   }, {
     name: '权限管理',
-    icon: 'authority',
+    icon: 'settings-o',
     display: true,
     permissions: ['choerodon.code.project.develop.app-service.ps.permission.update'],
     handler: () => {
@@ -140,7 +140,7 @@ const ListView = withRouter(observer((props) => {
     icon: 'refresh',
     display: true,
     handler: refresh,
-  }])
+  }]);
 
   function renderName({ value, record }) {
     const {

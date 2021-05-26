@@ -52,7 +52,7 @@ const ServiceModals = observer(() => {
 
   const buttons = useMemo(() => ([{
     name: formatMessage({ id: `${intlPrefix}.net.detail` }),
-    icon: 'find_in_page',
+    icon: 'find_in_page-o',
     handler: openDetail,
     display: true,
     service: permissions,

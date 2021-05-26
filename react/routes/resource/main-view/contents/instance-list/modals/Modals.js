@@ -97,14 +97,14 @@ const CustomModals = observer(() => {
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.resource-deploy'],
       disabled: configDisabled,
       name: formatMessage({ id: `${intlPrefixDeploy}.manual` }),
-      icon: 'jsfiddle',
+      icon: 'cloud_done-o',
       handler: openDeploy,
       display: true,
     }, {
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.resource-batch'],
       disabled: configDisabled,
       name: formatMessage({ id: `${intlPrefixDeploy}.batch` }),
-      icon: 'jsfiddle',
+      icon: 'cloud_done-o',
       handler: openBatchDeploy,
       display: true,
     }, {
