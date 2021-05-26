@@ -244,7 +244,7 @@ const PipelineManage = observer(() => {
         buttons.push({
           permissions: ['choerodon.code.project.develop.ci-pipeline.ps.update'],
           name: formatMessage({ id: 'edit' }),
-          icon: 'mode_edit',
+          icon: 'edit-o',
           handler: openEditModal,
           display: true,
           group: 2,
@@ -274,6 +274,7 @@ const PipelineManage = observer(() => {
           group: 2,
         }, {
           permissions: ['choerodon.code.project.develop.ci-pipeline.ps.retry'],
+          name: formatMessage({ id: `${intlPrefix}.execute.retry` }),
           icon: 'refresh',
           handler: () => changeRecordExecute('retry'),
           display: newStatus === 'failed' || newStatus === 'canceled',

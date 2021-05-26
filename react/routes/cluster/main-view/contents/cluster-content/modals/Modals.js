@@ -235,7 +235,7 @@ const ClusterModals = observer(() => {
     }, {
       name: formatMessage({ id: `${intlPrefix}.modal.permission` }),
       permissions: ['choerodon.code.project.deploy.cluster.cluster-management.ps.permission-manage'],
-      icon: 'authority',
+      icon: 'settings-o',
       handler: openPermission,
       display: true,
       group: 1,

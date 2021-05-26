@@ -53,7 +53,7 @@ const CustomModals = observer(() => {
 
   const buttons = useMemo(() => ([{
     name: formatMessage({ id: `${intlPrefix}.config-map.detail` }),
-    icon: 'find_in_page',
+    icon: 'find_in_page-o',
     handler: openDetail,
     display: true,
     service: permissions,

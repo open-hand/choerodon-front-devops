@@ -205,7 +205,7 @@ const AppModals = observer(() => {
     }, {
       disabled: notReady,
       name: formatMessage({ id: `${intlPrefix}.service.detail` }),
-      icon: 'find_in_page',
+      icon: 'find_in_page-o',
       handler: openDetail,
       display: true,
       group: 2,

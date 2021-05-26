@@ -52,7 +52,7 @@ const REModals = observer(() => {
   function getButtons() {
     return [{
       name: formatMessage({ id: `${intlPrefix}.modal.env-detail` }),
-      icon: 'find_in_page',
+      icon: 'find_in_page-o',
       handler: openEnvDetail,
       display: true,
     }, {
