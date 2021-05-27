@@ -1,4 +1,4 @@
-import React, { useMemo, useImperativeHandle } from 'react';
+import React, { useMemo, useImperativeHandle, useState } from 'react';
 import {
   TabPage, Content, Breadcrumb, Permission, Action,
 } from '@choerodon/boot';
@@ -29,6 +29,8 @@ const Version = withRouter(observer((props) => {
     intl: { formatMessage },
     AppState,
   } = useServiceDetailStore();
+
+  const [selectedVersionList, setSelectedVersionList] = useState([]);
 
   const selectedRecordLength = useMemo(
     () => versionDs.selected && versionDs.selected.length, [versionDs.selected],
@@ -78,8 +80,8 @@ const Version = withRouter(observer((props) => {
     // });
   }
 
-  function handleDelete() {
-    const selectedRecords = versionDs.selected;
+  function handleDelete(list) {
+    const selectedRecords = list;
     const version = selectedRecords[0] ? selectedRecords[0].get('version') : '';
     const modalProps = {
       title: formatMessage({ id: `${intlPrefix}.version.delete.title` }),
@@ -147,23 +149,40 @@ const Version = withRouter(observer((props) => {
     versionDs.query();
   }
 
+  const handleChangeSelectedVersionList = (v, record) => {
+    record.set('checked', v);
+    // 如果选中
+    if (v) {
+      setSelectedVersionList([
+        ...selectedVersionList,
+        record,
+      ]);
+    } else {
+      setSelectedVersionList(selectedVersionList.filter((i) => i.get('id') !== record.get('id')));
+    }
+  };
+
   function renderVersionButton() {
     return (
       <Permission
         service={['choerodon.code.project.develop.app-service.ps.version.delete']}
       >
-        <Button
-          style={{
-            position: 'absolute',
-            zIndex: 100,
-            right: 0,
-            top: '-32px',
-          }}
-          funcType="flat"
-          icon="delete"
-        >
-          删除版本
-        </Button>
+        <Tooltip title={selectedVersionList.length === 0 && '请在下方列表中选择服务版本'}>
+          <Button
+            disabled={selectedVersionList.length === 0}
+            onClick={() => handleDelete(selectedVersionList)}
+            style={{
+              position: 'absolute',
+              zIndex: 100,
+              right: 0,
+              top: '-32px',
+            }}
+            funcType="flat"
+            icon="delete"
+          >
+            删除版本
+          </Button>
+        </Tooltip>
       </Permission>
     );
   }
@@ -191,15 +210,10 @@ const Version = withRouter(observer((props) => {
                   <>
                     <div className="c7ncd-theme4-version-item">
                       <div className="c7ncd-theme4-version-item-side">
-                        <CheckBox style={{ marginRight: 5 }} value={version.get('checked')} />
-                        <Icon
-                          className="c7ncd-theme4-version-item-side-drop"
-                          type={
-                            version.get('unfold') ? 'baseline-arrow_drop_up' : 'baseline-arrow_drop_down'
-                          }
-                          onClick={() => {
-                            version.set('unfold', version.get('unfold') ? !version.get('unfold') : true);
-                          }}
+                        <CheckBox
+                          style={{ marginRight: 5 }}
+                          checked={version.get('checked')}
+                          onChange={(value) => handleChangeSelectedVersionList(value, version)}
                         />
                         <span className="c7ncd-theme4-version-item-version">{version.get('version')}</span>
                         <Action data={renderVersionAction()} />

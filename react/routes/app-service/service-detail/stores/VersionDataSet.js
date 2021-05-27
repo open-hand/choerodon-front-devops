@@ -20,6 +20,19 @@ export default ((formatMessage, projectId, id) => ({
           url: `/devops/v1/projects/${projectId}/app_service_versions/page_by_options?app_service_id=${id}&deploy_only=false&do_page=true`,
           method: 'post',
           data: postData,
+          transformResponse: (res) => {
+            let newRes = res;
+            try {
+              newRes = JSON.parse(newRes);
+              newRes = newRes.map((i) => ({
+                ...i,
+                checked: false,
+              }));
+              return newRes;
+            } catch (e) {
+              return newRes;
+            }
+          },
         };
       }
       return undefined;

@@ -520,16 +520,28 @@ const ListView = withRouter(observer((props) => {
                         </p>
                       </div>
                       <div className="c7ncd-appService-item-center-line">
-                    <span className="c7ncd-appService-item-center-line-updateUserName">
-                      {record.get('updateUserName')?.substring(0,1)?.toUpperCase()}
+                    <span
+                      className="c7ncd-appService-item-center-line-updateUserName"
+                      style={{
+                        backgroundImage: `url(${record.get('updateUserImage')})`
+                      }}
+                    >
+                      {!record.get('updateUserImage') && record.get('updateUserName')?.substring(0,1)?.toUpperCase()}
                     </span>
                         <span className="c7ncd-appService-item-center-line-gxy">更新于</span>
                         {
                           record.get('lastUpdateDate') &&
                           <TimePopover content={record.get('lastUpdateDate')} />
                         }
-                        <span style={{ marginLeft: 31 }} className="c7ncd-appService-item-center-line-updateUserName">
-                      {record.get('createUserName')?.substring(0,1)?.toUpperCase()}
+                        <span
+                          style={{
+                            marginLeft: 31,
+                            backgroundImage: `url(${record.get('createUserImage')})`
+                          }}
+                          className="c7ncd-appService-item-center-line-updateUserName"
+
+                        >
+                      {!record.get('createUserImage') && record.get('createUserName')?.substring(0,1)?.toUpperCase()}
                     </span>
                         <span className="c7ncd-appService-item-center-line-gxy">创建于</span>
                         {
