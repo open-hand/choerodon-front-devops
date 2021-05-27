@@ -226,19 +226,17 @@ const PipelineManage = observer(() => {
       display: true,
       group: 1,
     }, {
-      permissions: ['choerodon.code.project.develop.ci-pipeline.ps.runner'],
-      display: true,
+      name: '更多操作',
       group: 1,
-      actions: {
-        data: [
-          {
-            text: formatMessage({ id: `${intlPrefix}.gitlab.runner` }),
-            service: ['choerodon.code.project.develop.ci-pipeline.ps.runner'],
-            action: openRunnerModal,
-          },
-        ],
-      },
-    }];
+      groupBtnItems: [
+        {
+          name: formatMessage({ id: `${intlPrefix}.gitlab.runner` }),
+          service: ['choerodon.code.project.develop.ci-pipeline.ps.runner'],
+          handler: openRunnerModal,
+        },
+      ],
+    },
+    ];
     if (treeDs.length && treeDs.status === 'ready') {
       if (!parentId) {
         buttons.push({
