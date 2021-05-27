@@ -282,20 +282,21 @@ const EnvModals = observer(() => {
       display: true,
       group: 1,
     }, {
-      permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.manual'],
-      disabled: configDisabled,
-      name: formatMessage({ id: `${intlPrefixDeploy}.manual` }),
+      name: '部署',
       icon: 'cloud_done-o',
-      handler: openDeploy,
-      display: true,
-      group: 1,
-    }, {
-      permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.batch'],
-      disabled: configDisabled,
-      name: formatMessage({ id: `${intlPrefixDeploy}.batch` }),
-      icon: 'cloud_done-o',
-      handler: openBatchDeploy,
-      display: true,
+      groupBtnItems: [
+        {
+          permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.manual'],
+          disabled: configDisabled,
+          name: formatMessage({ id: `${intlPrefixDeploy}.manual` }),
+          handler: openDeploy,
+        }, {
+          permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.batch'],
+          disabled: configDisabled,
+          name: formatMessage({ id: `${intlPrefixDeploy}.batch` }),
+          handler: openBatchDeploy,
+        },
+      ],
       group: 1,
     }, {
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.permission'],

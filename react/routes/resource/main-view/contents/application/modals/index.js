@@ -171,48 +171,41 @@ const AppModals = observer(() => {
     const disabled = !connect || notReady;
 
     return [{
-      permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.network'],
-      disabled,
-      name: formatMessage({ id: `${intlPrefix}.create.network` }),
+      name: '创建资源',
       icon: 'playlist_add',
-      handler: openNetWork,
-      display: true,
       group: 1,
-    }, {
-      permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.domain'],
-      disabled,
-      name: formatMessage({ id: `${intlPrefix}.create.ingress` }),
-      icon: 'playlist_add',
-      handler: openDomain,
-      display: true,
-      group: 1,
-    }, {
-      permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.configmap'],
-      disabled,
-      name: formatMessage({ id: `${intlPrefix}.create.configMap` }),
-      icon: 'playlist_add',
-      handler: () => openKeyValue(MAPPING_TAB),
-      display: true,
-      group: 1,
-    }, {
-      permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.cipher'],
-      disabled,
-      name: formatMessage({ id: `${intlPrefix}.create.cipher` }),
-      icon: 'playlist_add',
-      handler: () => openKeyValue(CIPHER_TAB),
-      display: true,
-      group: 1,
+      groupBtnItems: [
+        {
+          permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.network'],
+          disabled,
+          name: formatMessage({ id: `${intlPrefix}.create.network` }),
+          handler: openNetWork,
+        }, {
+          permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.domain'],
+          disabled,
+          name: formatMessage({ id: `${intlPrefix}.create.ingress` }),
+          handler: openDomain,
+        }, {
+          permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.configmap'],
+          disabled,
+          name: formatMessage({ id: `${intlPrefix}.create.configMap` }),
+          handler: () => openKeyValue(MAPPING_TAB),
+        }, {
+          permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.cipher'],
+          disabled,
+          name: formatMessage({ id: `${intlPrefix}.create.cipher` }),
+          handler: () => openKeyValue(CIPHER_TAB),
+        },
+      ],
     }, {
       disabled: notReady,
       name: formatMessage({ id: `${intlPrefix}.service.detail` }),
       icon: 'find_in_page-o',
       handler: openDetail,
-      display: true,
       group: 2,
     }, {
       icon: 'refresh',
       handler: refresh,
-      display: true,
       group: 2,
     }];
   }
