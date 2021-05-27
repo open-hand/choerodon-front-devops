@@ -357,7 +357,6 @@ function Branch(props) {
         {issueContent ? issueContent[0] : null}
         {issueContent && issueContent.length > 1 ? (
           <Popover
-            trigger="click"
             placement="bottom"
             content={issueContent}
             overlayClassName={`${prefixCls}-issue-popover`}
