@@ -212,7 +212,6 @@ const ClusterModals = observer(() => {
       icon: 'link',
       handler: openCreate,
       display: true,
-      group: 1,
       disabled: !getCanCreate,
       tooltipsConfig: {
         title: !getCanCreate ? formatMessage({ id: `${intlPrefix}.modal.create.disabled` }) : '',
@@ -225,7 +224,6 @@ const ClusterModals = observer(() => {
       icon: 'playlist_add',
       handler: openCreateByHost,
       display: true,
-      group: 1,
       disabled: !getCanCreate,
       tooltipsConfig: {
         title: !getCanCreate ? formatMessage({ id: `${intlPrefix}.modal.create.disabled` }) : '',
@@ -238,20 +236,19 @@ const ClusterModals = observer(() => {
       icon: 'settings-o',
       handler: openPermission,
       display: true,
-      group: 1,
-    }, clusterStore.getSelectedMenu.type === 'created' && clusterStore.getSelectedMenu.status !== 'failed' && {
+    }, {
       name: formatMessage({ id: `${intlPrefix}.modal.createByNodes` }),
       icon: 'playlist_add',
       handler: openCreateByNodes,
-      display: true,
+      display: (clusterStore.getSelectedMenu.type === 'created' && clusterStore.getSelectedMenu.status !== 'failed'),
       disabled: !getCanCreate,
       permissions: ['choerodon.code.project.deploy.cluster.cluster-management.ps.createNodes'],
-      group: 2,
+      group: 1,
     }, {
       icon: 'refresh',
       handler: refresh,
       display: true,
-      group: 2,
+      group: 1,
     }];
   }
 

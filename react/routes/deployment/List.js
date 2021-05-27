@@ -7,7 +7,6 @@ import {
 import {
   Table, Modal, Select, Icon, Tooltip,
 } from 'choerodon-ui/pro';
-import { Button } from 'choerodon-ui';
 import { FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
@@ -24,7 +23,6 @@ import Deploy from './modals/deploy';
 import BaseComDeploy from './modals/base-comDeploy';
 import BatchDeploy from './modals/batch-deploy';
 import Tips from '../../components/new-tips';
-import StatusDot from '../../components/status-dot';
 
 import './index.less';
 
@@ -367,29 +365,36 @@ const Deployment = withRouter(observer((props) => {
     >
       <Header title={<FormattedMessage id="app.head" />} backPath={getBackPath()}>
         <HeaderButtons
-          items={([{
-            name: <FormattedMessage id={`${intlPrefix}.manual`} />,
-            icon: 'cloud_done-o',
-            display: true,
-            permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.manual'],
-            handler: openDeploy,
-          }, {
-            name: <FormattedMessage id={`${intlPrefix}.batch`} />,
-            icon: 'cloud_done-o',
-            display: true,
-            permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.batch'],
-            handler: openBatchDeploy,
-          }, {
-            name: '基础组件部署',
-            icon: 'cloud_done-o',
-            display: true,
-            permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.basedComponent'],
-            handler: () => openBaseDeploy(),
-          }, {
-            icon: 'refresh',
-            display: true,
-            handler: refresh,
-          }])}
+          items={([
+            {
+              name: '部署',
+              icon: 'cloud_done-o',
+              groupBtnItems: [
+                {
+                  name: <FormattedMessage id={`${intlPrefix}.manual`} />,
+                  permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.manual'],
+                  handler: openDeploy,
+                },
+                {
+                  name: <FormattedMessage id={`${intlPrefix}.batch`} />,
+                  permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.batch'],
+                  handler: openBatchDeploy,
+                },
+              ],
+            },
+            {
+              name: '基础组件部署',
+              icon: 'cloud_done-o',
+              display: true,
+              permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.basedComponent'],
+              handler: () => openBaseDeploy(),
+            },
+            {
+              icon: 'refresh',
+              display: true,
+              handler: refresh,
+            },
+          ])}
           showClassName={false}
         />
       </Header>
