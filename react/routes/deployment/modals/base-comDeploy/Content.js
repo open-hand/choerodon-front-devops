@@ -687,14 +687,12 @@ export default observer(() => {
    * @param record
    */
   const renderParamsRunningValue = ({ value, record }) => (
-    <Form style={{ position: 'relative', bottom: 9 }}>
-      <TextField
-        required
-        value={value}
-        onChange={(text) => record.set(paramMapping.paramsRunnigValue.name, text)}
-        validator={(values) => handleValidParamsRunningValue(values, record)}
-      />
-    </Form>
+    <TextField
+      required
+      value={value}
+      onChange={(text) => record.set(paramMapping.paramsRunnigValue.name, text)}
+      validator={(values) => handleValidParamsRunningValue(values, record)}
+    />
   );
 
   /**
@@ -724,12 +722,10 @@ export default observer(() => {
    * @returns {*}
    */
   const renderParams = ({ value, record, name }) => (record.get('custom') ? (
-    <Form style={{ position: 'relative', bottom: 9 }}>
-      <TextField
-        value={value}
-        onChange={(v) => record.set(name, v)}
-      />
-    </Form>
+    <TextField
+      value={value}
+      onChange={(v) => record.set(name, v)}
+    />
   ) : (
     <span>
       {value}
@@ -1047,6 +1043,7 @@ export default observer(() => {
               添加参数
             </Button>
             <Table
+              editMode="inline"
               style={{ marginTop: 20 }}
               queryBar="none"
               dataSet={HostSettingDataSet
@@ -1121,7 +1118,6 @@ export default observer(() => {
                 />
               ) : (
                 <NumberField
-                  newLine
                   colSpan={1}
                   name={mapping.slaveCount.name}
                   addonAfter={<Tips helpText="哨兵节点数量。最小是3" />}
@@ -1150,13 +1146,13 @@ export default observer(() => {
           PVLabelsDataSet.records.filter((item) => !item.isRemoved).map((item) => (
             <>
               <Form style={{ width: '80%' }} record={item} columns={3}>
-                <div className="c7ncd-base-pvlabels" colSpan={1}>
+                <div className="c7ncd-base-pvlabels" colSpan={2}>
                   <div>
-                    <Select combo name="key" />
+                    <Select style={{ width: 219 }} combo name="key" />
                   </div>
-                  <span style={{ margin: '0 10px' }}>=</span>
+                  <span style={{ margin: '0 6px' }}>=</span>
                   <div>
-                    <TextField name="value" />
+                    <TextField style={{ width: 219 }} name="value" />
                   </div>
                   <Button
                     style={{
@@ -1173,6 +1169,7 @@ export default observer(() => {
           <Button
             icon="add"
             color="primary"
+            funcType="flat"
             style={{
               display: 'block',
               flexShrink: 0,
@@ -1344,6 +1341,7 @@ export default observer(() => {
                 <Column width={60} renderer={renderOperation} />
               </Table>
               <Button
+                funcType="flat"
                 icon="add"
                 color="primary"
                 style={{
@@ -1353,7 +1351,7 @@ export default observer(() => {
                   flexGrow: 0,
                   width: 'max-content',
                 }}
-                onClick={handleAddParams}
+                onClick={() => handleAddParams()}
               >
                 添加参数
               </Button>

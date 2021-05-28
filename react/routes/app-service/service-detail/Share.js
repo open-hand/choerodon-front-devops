@@ -8,6 +8,7 @@ import {
 import {
   Button, Icon, Tooltip, Spin,
 } from 'choerodon-ui';
+import { observer } from 'mobx-react-lite';
 import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import NoData from '@/routes/app-service/service-detail/images/nodata.png';
@@ -52,7 +53,7 @@ const modalStyle = {
   width: 380,
 };
 
-const Share = withRouter((props) => {
+const Share = withRouter(observer((props) => {
   const {
     intlPrefix,
     prefixCls,
@@ -324,6 +325,6 @@ const Share = withRouter((props) => {
       </Content>
     </TabPage>
   );
-});
+}));
 
 export default Share;
