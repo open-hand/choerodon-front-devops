@@ -9,7 +9,7 @@ import {
 } from 'choerodon-ui/pro';
 import _ from 'lodash';
 import moment from 'moment';
-import { HeaderButtons } from '@choerodon/master';
+import HeaderButtons from '../Component/HeaderButtons';
 import ChartSwitch from '../Component/ChartSwitch';
 import './BuildNumber.less';
 import TimePicker from '../Component/TimePicker';
@@ -200,19 +200,11 @@ const BuildNumber = observer(() => {
     >
       <Header
         title={formatMessage({ id: 'report.build-number.head' })}
-        backPath={`/charts${search}`}
       >
-        <ChartSwitch
-          history={history}
-          current="build-number"
-          reportType="develop"
-        />
         <HeaderButtons
-          items={[{
-            icon: 'refresh',
-            handler: handleRefresh,
-            display: true,
-          }]}
+          refresh={handleRefresh}
+          reportKey="build-number"
+          reportType="develop"
         />
       </Header>
       <Breadcrumb title={formatMessage({ id: 'report.build-number.head' })} />

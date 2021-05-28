@@ -10,11 +10,10 @@ import {
 import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';
 import moment from 'moment';
-import { HeaderButtons } from '@choerodon/master';
 import StatusTags from '../../../components/status-tag';
 import LoadingBar from '../../../components/loading';
 import MouserOverWrapper from '../../../components/MouseOverWrapper';
-import ChartSwitch from '../Component/ChartSwitch';
+import HeaderButtons from '../Component/HeaderButtons';
 import TimePicker from '../Component/TimePicker';
 import NoChart from '../Component/NoChart';
 import '../DeployDuration/DeployDuration.less';
@@ -413,7 +412,7 @@ const DeployTimes = observer(() => {
   const isRefresh = ReportsStore.getIsRefresh;
   const backPath = search.includes('deploy-overview')
     ? '/devops/deploy-overview'
-    : '/charts';
+    : '/devops/charts/deploy';
 
   const envDom = env.length ? _.map(env, (d) => (<Option key={d.id} value={d.id}>{d.name}</Option>)) : null;
 
@@ -484,19 +483,12 @@ const DeployTimes = observer(() => {
     >
       <Header
         title={formatMessage({ id: 'report.deploy-times.head' })}
-        backPath={`${backPath}${search}`}
       >
-        <ChartSwitch
-          history={history}
-          current="deploy-times"
-          reportType="deploy"
-        />
         <HeaderButtons
-          items={[{
-            icon: 'refresh',
-            handler: handleRefresh,
-            display: true,
-          }]}
+          refresh={handleRefresh}
+          backPath={backPath}
+          reportKey="deploy-times"
+          reportType="deploy"
         />
       </Header>
       <Breadcrumb title={formatMessage({ id: 'report.deploy-times.head' })} />

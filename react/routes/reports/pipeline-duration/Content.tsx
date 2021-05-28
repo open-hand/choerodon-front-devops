@@ -9,10 +9,9 @@ import { Button, Form, Select } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import Loading from '@/components/loading';
 import MaxTagPopover from '@/routes/reports/Component/MaxTagPopover';
-import { HeaderButtons } from '@choerodon/master';
 import TimePicker from '../Component/TimePicker';
 import NoChart from '../Component/NoChart';
-import ChartSwitch from '../Component/ChartSwitch';
+import HeaderButtons from '../Component/HeaderButtons';
 import PipelineTable from './components/table';
 import { usePipelineDurationStore } from './stores';
 import { useReportsStore } from '../stores';
@@ -111,22 +110,11 @@ const PipelineTriggerDuration = () => {
     >
       <Header
         title={formatMessage({ id: `${intlPrefix}.title` })}
-        backPath={`/charts${search}`}
       >
-        <ChartSwitch
-          // @ts-ignore
-          history={history}
-          // @ts-ignore
-          current="pipeline-duration"
-          // @ts-ignore
-          reportType="develop"
-        />
         <HeaderButtons
-          items={[{
-            icon: 'refresh',
-            handler: handleRefresh,
-            display: true,
-          }]}
+          refresh={handleRefresh}
+          reportKey="pipeline-duration"
+          reportType="develop"
         />
       </Header>
       <Breadcrumb

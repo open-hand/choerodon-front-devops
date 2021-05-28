@@ -10,11 +10,10 @@ import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
 import filter from 'lodash/filter';
 import moment from 'moment';
-import { HeaderButtons } from '@choerodon/master';
 import StatusTags from '../../../components/status-tag';
 import LoadingBar from '../../../components/loading';
 import MouserOverWrapper from '../../../components/MouseOverWrapper';
-import ChartSwitch from '../Component/ChartSwitch';
+import HeaderButtons from '../Component/HeaderButtons';
 import TimePicker from '../Component/TimePicker';
 import NoChart from '../Component/NoChart';
 import MaxTagPopover from '../Component/MaxTagPopover';
@@ -329,19 +328,11 @@ const DeployDuration = observer(() => {
     >
       <Header
         title={formatMessage({ id: 'report.deploy-duration.head' })}
-        backPath={`/charts${search}`}
       >
-        <ChartSwitch
-          history={history}
-          current="deploy-duration"
-          reportType="deploy"
-        />
         <HeaderButtons
-          items={[{
-            icon: 'refresh',
-            handler: handleRefresh,
-            display: true,
-          }]}
+          refresh={handleRefresh}
+          reportKey="deploy-duration"
+          reportType="deploy"
         />
       </Header>
       <Breadcrumb title={formatMessage({ id: 'report.deploy-duration.head' })} />
