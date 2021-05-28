@@ -1,17 +1,20 @@
 import getTablePostData from '../../../../utils/getTablePostData';
 
 export default ((intlPrefix, formatMessage, projectId, id, organizationId) => ({
-  autoQuery: false,
+  autoQuery: true,
   selection: false,
   pageSize: 10,
   transport: {
     read: ({ data }) => {
       const postData = getTablePostData(data);
-      return {
-        url: `/devops/v1/projects/${projectId}/app_service_share/page_by_options?app_service_id=${id}`,
-        method: 'post',
-        data: postData,
-      };
+      if (id) {
+        return {
+          url: `/devops/v1/projects/${projectId}/app_service_share/page_by_options?app_service_id=${id}`,
+          method: 'post',
+          data: postData,
+        };
+      }
+      return undefined;
     },
     destroy: ({ data: [data] }) => ({
       url: `/devops/v1/projects/${projectId}/app_service_share/${data.id}`,
