@@ -129,7 +129,7 @@ const mapping = {
     label: '部署模式',
     textField: 'text',
     valueField: 'value',
-    defaultValue: deployModeOptionsData[1].value,
+    defaultValue: deployModeOptionsData[0].value,
     options: new DataSet({
       data: deployModeOptionsData,
     }),

@@ -698,7 +698,7 @@ export default observer(() => {
   /**
    * table操作列
    */
-  const renderOperation = ({ record, isHostInside = true }) => record.get('custom') && (
+  const renderOperation = ({ record, isHostInside = true }) => !record.get('id') && (
     <Button
       onClick={() => {
         if (isHostInside) {
@@ -1338,7 +1338,10 @@ export default observer(() => {
                   name={paramMapping.paramsRunnigValue.name}
                   renderer={renderParamsRunningValue}
                 />
-                <Column width={60} renderer={renderOperation} />
+                <Column
+                  width={60}
+                  renderer={({ record }) => renderOperation({ record, isHostInside: false })}
+                />
               </Table>
               <Button
                 funcType="flat"
