@@ -9,9 +9,8 @@ import { Form, Select, Spin } from 'choerodon-ui/pro';
 import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';
 import moment from 'moment';
-import { HeaderButtons } from '@choerodon/master';
 import LoadingBar from '../../../components/loading';
-import ChartSwitch from '../Component/ChartSwitch';
+import HeaderButtons from '../Component/HeaderButtons';
 import TimePicker from '../Component/TimePicker';
 import NoChart from '../Component/NoChart';
 import BuildTable from '../BuildNumber/BuildTable/BuildTable';
@@ -314,19 +313,11 @@ const BuildDuration = observer(() => {
     >
       <Header
         title={formatMessage({ id: 'report.build-duration.head' })}
-        backPath={`/charts${search}`}
       >
-        <ChartSwitch
-          history={history}
-          current="build-duration"
-          reportType="develop"
-        />
         <HeaderButtons
-          items={[{
-            icon: 'refresh',
-            handler: handleRefresh,
-            display: true,
-          }]}
+          refresh={handleRefresh}
+          reportKey="build-duration"
+          reportType="develop"
         />
       </Header>
       <Breadcrumb title={formatMessage({ id: 'report.build-duration.head' })} />

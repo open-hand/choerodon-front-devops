@@ -7,10 +7,9 @@ import { Button, Form, Select } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import Loading from '@/components/loading';
 import PipelineTable from '@/routes/reports/pipeline-duration/components/table';
-import { HeaderButtons } from '@choerodon/master';
 import TimePicker from '../Component/TimePicker';
 import NoChart from '../Component/NoChart';
-import ChartSwitch from '../Component/ChartSwitch';
+import HeaderButtons from '../Component/HeaderButtons';
 import { usePipelineTriggerNumberStore } from './stores';
 import { useReportsStore } from '../stores';
 import Chart from './components/Chart';
@@ -110,15 +109,11 @@ const PipelineTriggerNumber = () => {
     >
       <Header
         title={formatMessage({ id: 'report.pipelineTrigger-number.head' })}
-        backPath={`/charts${search}`}
       >
-        <ChartSwitch history={history} current="pipelineTrigger-number" reportType="develop" />
         <HeaderButtons
-          items={[{
-            icon: 'refresh',
-            handler: handleRefresh,
-            display: true,
-          }]}
+          refresh={handleRefresh}
+          reportKey="pipelineTrigger-number"
+          reportType="develop"
         />
       </Header>
       <Breadcrumb

@@ -1,4 +1,6 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, {
+  Fragment, useState, useEffect, useCallback,
+} from 'react';
 import { withRouter } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { injectIntl, FormattedMessage } from 'react-intl';
@@ -8,7 +10,7 @@ import {
 import { Select, Button, Form } from 'choerodon-ui/pro';
 import _ from 'lodash';
 import moment from 'moment';
-import { HeaderButtons } from '@choerodon/master';
+import HeaderButtons from '../Component/HeaderButtons';
 import ChartSwitch from '../Component/ChartSwitch';
 import LineChart from './LineChart';
 import CommitHistory from './CommitHistory';
@@ -83,6 +85,10 @@ const Submission = observer(() => {
   }, [appId]);
 
   const handleRefresh = () => loadData();
+
+  const handleBack = useCallback(() => {
+    history.push(backPath || `/devops/charts/develop${search}`);
+  }, [backPath, search]);
 
   function formatData(data) {
     const { totalCommitsDate, commitFormUserVOList } = data;
@@ -279,18 +285,12 @@ const Submission = observer(() => {
     >
       <Header
         title={formatMessage({ id: 'report.submission.head' })}
-        backPath={
-          backPath
-          || `/charts${search}`
-        }
       >
-        <ChartSwitch history={history} current="submission" reportType="develop" />
         <HeaderButtons
-          items={[{
-            icon: 'refresh',
-            handler: handleRefresh,
-            display: true,
-          }]}
+          refresh={handleRefresh}
+          backPath={backPath}
+          reportKey="submission"
+          reportType="develop"
         />
       </Header>
       <Breadcrumb title={formatMessage({ id: 'report.submission.head' })} />

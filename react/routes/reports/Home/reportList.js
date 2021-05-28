@@ -1,3 +1,5 @@
+import { has, get } from '@choerodon/inject';
+
 const deployReportList = [
   {
     key: 'deploy-times',
@@ -10,15 +12,11 @@ const deployReportList = [
   },
 ];
 
-const developReportList = [
+const devopsDevelopReportList = [
   {
     key: 'submission',
     link: '/devops/reports/submission',
     pic: 'submission',
-  }, {
-    key: 'code-quality',
-    link: '/devops/reports/code-quality',
-    pic: 'code-quality',
   }, {
     key: 'build-number',
     link: '/devops/reports/build-number',
@@ -37,6 +35,10 @@ const developReportList = [
     pic: 'pipeline-duration',
   },
 ];
+
+const developReportList = has('rdqam:reportList')
+  ? devopsDevelopReportList.splice(1, 0, get('rdqam:reportList'))
+  : devopsDevelopReportList;
 
 const reportListMap = {
   deploy: deployReportList,
