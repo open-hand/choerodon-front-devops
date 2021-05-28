@@ -147,6 +147,9 @@ function CreateNodesForm() {
                         icon="delete"
                         shape="circle"
                         colSpan={2}
+                        style={{
+                          marginTop: '8px',
+                        }}
                         className={`${prefixCls}-nodesCreate-left-item-selected-btn`}
                         onClick={(e) => {
                           e.stopPropagation();
