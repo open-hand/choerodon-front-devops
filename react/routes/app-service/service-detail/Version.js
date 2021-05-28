@@ -1,4 +1,6 @@
-import React, { useMemo, useImperativeHandle, useState } from 'react';
+import React, {
+  useMemo, useImperativeHandle, useState, useEffect,
+} from 'react';
 import {
   TabPage, Content, Breadcrumb, Permission, Action,
 } from '@choerodon/boot';
@@ -10,6 +12,7 @@ import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import filter from 'lodash/filter';
 import { Icon, Spin } from 'choerodon-ui';
+import AppServiceServices from '@/routes/app-service/services';
 import { useAppTopStore } from '../stores';
 import { useServiceDetailStore } from './stores';
 import HeaderButtons from './HeaderButtons';
@@ -32,9 +35,18 @@ const Version = withRouter(observer((props) => {
 
   const [selectedVersionList, setSelectedVersionList] = useState([]);
 
+  const [isProjectOwner, setIsProjectOwner] = useState(false);
+
   const selectedRecordLength = useMemo(
     () => versionDs.selected && versionDs.selected.length, [versionDs.selected],
   );
+
+  useEffect(() => {
+    AppServiceServices
+      .axiosGetCheckAdminPermission(AppState.currentMenuType.projectId).then((res) => {
+        setIsProjectOwner(res);
+      });
+  }, []);
 
   function refresh() {
     versionDs.query();
@@ -210,11 +222,15 @@ const Version = withRouter(observer((props) => {
                   <>
                     <div className="c7ncd-theme4-version-item">
                       <div className="c7ncd-theme4-version-item-side">
-                        <CheckBox
-                          style={{ marginRight: 5 }}
-                          checked={version.get('checked')}
-                          onChange={(value) => handleChangeSelectedVersionList(value, version)}
-                        />
+                        {
+                          isProjectOwner && (
+                            <CheckBox
+                              style={{ marginRight: 5 }}
+                              checked={version.get('checked')}
+                              onChange={(value) => handleChangeSelectedVersionList(value, version)}
+                            />
+                          )
+                        }
                         <span className="c7ncd-theme4-version-item-version">{version.get('version')}</span>
                         <Action data={renderVersionAction()} />
                       </div>
