@@ -190,7 +190,7 @@ const Version = withRouter(observer((props) => {
               top: '-32px',
             }}
             funcType="flat"
-            icon="delete"
+            icon="delete_sweep-o"
           >
             删除版本
           </Button>

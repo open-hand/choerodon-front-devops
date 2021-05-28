@@ -13,10 +13,11 @@ body[data-theme=theme4] {
     &-left {
       width: 63%;
       background: white;
-      height: 100%;
+      height: calc(100% + 60px);
       overflow: auto;
       padding-right: 16px;
       position: relative;
+      padding-bottom: 60px;
     }
     &-blockTop {
       position: absolute;
@@ -51,6 +52,9 @@ body[data-theme=theme4] {
         .c7n-spin-spinning {
           height: 100%;
         }
+      }
+      .c7n-spin-container {
+        padding-bottom: 60px;
       }
       .c7n-tabs-bar {
         top: 0 !important;
