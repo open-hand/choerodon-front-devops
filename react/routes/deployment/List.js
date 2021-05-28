@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  Page, Content, Header, Permission, Breadcrumb, Choerodon, HeaderButtons,
+  Page, Content, Header, Permission, Breadcrumb, Choerodon, HeaderButtons, Action,
 } from '@choerodon/boot';
 import {
   Table, Modal, Select, Icon, Tooltip,
@@ -15,6 +15,8 @@ import app from '@/images/app.svg';
 import image from '@/images/image.svg';
 import jar from '@/images/jar.svg';
 import { StatusTag } from '@choerodon/components';
+import { SMALL } from '@/utils/getModalWidth';
+import YamlEditor from '@/components/yamlEditor';
 import { mapping } from './stores/ListDataSet';
 import { useDeployStore } from './stores';
 import TimePopover from '../../components/timePopover/TimePopover';
@@ -29,6 +31,7 @@ import './index.less';
 const { Column } = Table;
 const modalKey4 = Modal.key();
 const batchDeployModalKey = Modal.key();
+const commandModalKey = Modal.key();
 const modalStyle2 = {
   width: 'calc(100vw - 3.52rem)',
 };
@@ -359,6 +362,36 @@ const Deployment = withRouter(observer((props) => {
     );
   }, []);
 
+  const openCommandModal = useCallback((log) => {
+    Modal.open({
+      key: commandModalKey,
+      title: '查看指令',
+      style: { width: SMALL },
+      children: <YamlEditor
+        readOnly={false}
+        value={log || ''}
+        originValue={log || ''}
+        modeChange={false}
+      />,
+      okText: formatMessage({ id: 'close' }),
+      okCancel: false,
+      drawer: true,
+    });
+  }, []);
+
+  const renderAction = useCallback(({ record }) => {
+    if (record.get('log')) {
+      return (
+        <Action data={[{
+          text: '查看指令',
+          action: () => openCommandModal(record.get('log')),
+        }]}
+        />
+      );
+    }
+    return null;
+  }, []);
+
   return (
     <Page
       service={['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.default']}
@@ -417,6 +450,7 @@ const Deployment = withRouter(observer((props) => {
             )}
             width={150}
           />
+          <Column renderer={renderAction} width={60} />
           <Column
             header={(
               <Tips
@@ -431,7 +465,7 @@ const Deployment = withRouter(observer((props) => {
             name="deployResult"
             renderer={renderDeployStatus}
             header="执行结果"
-            width={80}
+            width={90}
           />
           <Column name="instanceName" renderer={renderInstance} />
           <Column name="deploySourceVO" renderer={renderDeploySource} />
