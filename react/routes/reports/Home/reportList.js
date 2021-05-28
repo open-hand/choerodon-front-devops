@@ -37,7 +37,7 @@ const devopsDevelopReportList = [
 ];
 
 const developReportList = has('rdqam:reportList')
-  ? devopsDevelopReportList.splice(1, 0, get('rdqam:reportList'))
+  ? devopsDevelopReportList.splice(1, 0, ...get('rdqam:reportList'))
   : devopsDevelopReportList;
 
 const reportListMap = {
