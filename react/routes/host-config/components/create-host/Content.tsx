@@ -7,6 +7,7 @@ import { Alert, Tabs, Divider } from 'choerodon-ui';
 import pick from 'lodash/pick';
 import HostConfigApis from '@/routes/host-config/apis';
 import YamlEditor from '@/components/yamlEditor';
+import Tips from '@/components/new-tips';
 import { useCreateHostStore } from './stores';
 import JmeterGuide from './components/jmeter-guide';
 import TestConnect from './components/test-connect';
@@ -101,6 +102,13 @@ const CreateHost: React.FC<any> = observer((): any => {
 
   return (
     <div className={`${prefixCls}`}>
+      {showTestTab && (
+        <Tips
+          title={formatMessage({ id: `${intlPrefix}.type` })}
+          helpText="测试主机可用于执行性能测试时使用；部署主机则用于主机部署操作时使用。"
+          className={`${prefixCls}-type-tips`}
+        />
+      )}
       <Form dataSet={formDs} className={`${prefixCls}-form`}>
         {showTestTab && <SelectBox name="type" disabled={!!hostId} />}
         <TextField name="name" style={{ marginTop: '-10px' }} />
@@ -114,13 +122,34 @@ const CreateHost: React.FC<any> = observer((): any => {
           className={`${prefixCls}-alert`}
         />,
         <Tabs defaultActiveKey="external">
-          <TabPane tab="外部SSH认证" key="external">
+          <TabPane
+            tab={(
+              <>
+                <span className={`${prefixCls}-tab-text`}>外部SSH认证</span>
+                <Tips
+                  helpText="外部SSH认证用于连通Choerodon与当前主机；设置后，Choerodon才能访问到该主机。"
+                  className={`${prefixCls}-tab-tips`}
+                />
+              </>
+            )}
+            key="external"
+          >
             <Form dataSet={formDs} className={`${prefixCls}-form`}>
               <TextField name="hostIp" />
               <TextField name="sshPort" />
             </Form>
           </TabPane>
-          <TabPane tab="内部SSH认证" key="internal">
+          <TabPane
+            tab={(
+              <>
+                <span className={`${prefixCls}-tab-text`}>内部SSH认证</span>
+                <Tips
+                  helpText="内部SSH认证用于实现内部主机之间的连通；设置后，相应的主机之间便能实现相互连通。"
+                />
+              </>
+            )}
+            key="internal"
+          >
             <Form dataSet={formDs} className={`${prefixCls}-form`}>
               <TextField name="privateIp" />
               <TextField name="privatePort" />

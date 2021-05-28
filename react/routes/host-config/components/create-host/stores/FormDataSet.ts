@@ -191,7 +191,7 @@ export default ({
         valueField: 'value',
         defaultValue: showTestTab ? 'distribute_test' : 'deploy',
         options: typeDs,
-        label: formatMessage({ id: `${intlPrefix}.type` }),
+        // label: formatMessage({ id: `${intlPrefix}.type` }),
       },
       {
         name: 'name',
