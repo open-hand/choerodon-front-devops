@@ -253,7 +253,7 @@ const MarketSourceTable = observer(() => {
           name="checked"
           renderer={renderCheckBox}
           // header={renderCheckBoxHeader}
-          width={40}
+          width={45}
         />
         <Column name="name" />
         <Column name="sourceProject" />
