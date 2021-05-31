@@ -12,7 +12,7 @@ const deployReportList = [
   },
 ];
 
-const devopsDevelopReportList = [
+const developReportList = [
   {
     key: 'submission',
     link: '/devops/reports/submission',
@@ -36,9 +36,7 @@ const devopsDevelopReportList = [
   },
 ];
 
-const developReportList = has('rdqam:reportList')
-  ? devopsDevelopReportList.splice(1, 0, ...get('rdqam:reportList'))
-  : devopsDevelopReportList;
+has('rdqam:reportList') && developReportList.splice(1, 0, get('rdqam:reportList'));
 
 const reportListMap = {
   deploy: deployReportList,

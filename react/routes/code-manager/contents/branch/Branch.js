@@ -45,7 +45,7 @@ function Branch(props) {
   const {
     tableDs,
     intl,
-    AppState: { currentMenuType: { organizationId, projectId } },
+    AppState: { currentMenuType: { organizationId, projectId, name: currentProjectName } },
     appServiceDs,
     appServiceId,
     formatMessage,
@@ -183,7 +183,7 @@ function Branch(props) {
           },
           project: {
             id: issueProjectId,
-            name: projectName,
+            name: String(issueProjectId) === String(projectId) ? currentProjectName : projectName,
           }
         })
       }

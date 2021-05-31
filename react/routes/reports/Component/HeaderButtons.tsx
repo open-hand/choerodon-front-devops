@@ -2,6 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { injectIntl } from 'react-intl';
 import { HeaderButtons } from '@choerodon/master';
+import { itemsProps } from '@choerodon/master/lib/containers/components/c7n/tools/header-btns'
 import map from 'lodash/map';
 import filter from 'lodash/filter';
 import { developReportList, reportListMap } from '../Home/reportList';
@@ -13,10 +14,12 @@ interface ReportHeaderButtonsProps {
   reportType: 'develop' | 'deploy',
   reportKey: string,
   intl: { formatMessage(arg1: any): string }
+  // eslint-disable-next-line react/require-default-props
+  extraItems?: Array<itemsProps>,
 }
 
 const ReportsHeaderButtons = ({
-  refresh, backPath, reportType, reportKey, intl: { formatMessage },
+  refresh, backPath, reportType, reportKey, intl: { formatMessage }, extraItems = [],
 }: ReportHeaderButtonsProps) => {
   const history = useHistory();
   const { search } = useLocation();
@@ -59,7 +62,7 @@ const ReportsHeaderButtons = ({
         name: '切换报表',
         groupBtnItems,
         display: true,
-      }, {
+      }, ...extraItems || [], {
         icon: 'arrow_back',
         handler: handleBack,
         display: true,
