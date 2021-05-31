@@ -36,7 +36,7 @@ const ReportsHeaderButtons = ({
     map(filter(reportList, (item) => item?.key !== reportKey), (reportItem) => (
       {
         // @ts-ignore
-        name: reportItem?.title || formatMessage({ id: `report.${reportItem?.key}.head` }),
+        name: reportItem?.title || '',
         handler: () => handleClick(reportItem?.link),
       }
     ))
