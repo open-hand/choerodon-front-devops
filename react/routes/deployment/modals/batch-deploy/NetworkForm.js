@@ -1,6 +1,8 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Button, Form, Icon, Select, SelectBox, TextField } from 'choerodon-ui/pro';
+import {
+  Button, Form, Icon, Select, SelectBox, TextField,
+} from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import { useBatchDeployStore } from './stores';
 
@@ -41,30 +43,32 @@ export default observer(() => {
             <span className={`${prefixCls}-resource-radio`}>NodePort</span>
           </Option>
           <Option value="LoadBalancer">
-            <span className={`${prefixCls}-resource-radio`}>LoadBalancer</span></Option>
+            <span className={`${prefixCls}-resource-radio`}>LoadBalancer</span>
+          </Option>
         </SelectBox>
         {record.get('type') === 'ClusterIP' && <TextField name="externalIp" />}
       </Form>
       {map(portsDs.data, (portRecord) => (
-        <Form record={portRecord} key={portRecord.id} columns={5}>
+        <Form record={portRecord} key={portRecord.id} columns={13}>
           {
             record.get('type') !== 'ClusterIP'
-            && <TextField name="nodePort" />
+            && <TextField name="nodePort" colSpan={3} />
           }
-          <TextField name="port" />
-          <TextField name="targetPort" />
+          <TextField name="port" colSpan={3} />
+          <TextField name="targetPort" colSpan={3} />
           {
             record.get('type') === 'NodePort'
-            && <Select name="protocol" />
+            && <Select name="protocol" colSpan={3} />
           }
           {
-            portsDs.length > 1 ? <Button
-              funcType="flat"
-              icon="delete"
-              onClick={() => handleRemovePort(portRecord)}
-              className={`${prefixCls}-resource-delete-btn`}
-              colSpan={3}
-            /> : <span colSpan={3} />
+            portsDs.length > 1 ? (
+              <Button
+                funcType="flat"
+                icon="delete"
+                onClick={() => handleRemovePort(portRecord)}
+                className={`${prefixCls}-resource-delete-btn`}
+              />
+            ) : <span />
           }
         </Form>
       ))}
