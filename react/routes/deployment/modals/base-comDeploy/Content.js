@@ -700,6 +700,7 @@ export default observer(() => {
    */
   const renderOperation = ({ record, isHostInside = true }) => !record.get('id') && (
     <Button
+      funcType="flat"
       onClick={() => {
         if (isHostInside) {
           const ds = HostSettingDataSet
@@ -855,6 +856,7 @@ export default observer(() => {
 
                 </Form>
                 <Button
+                  funcType="flat"
                   disabled={deleteHostDisabled(BaseDeployDataSet, HostSettingDataSet)}
                   icon="delete"
                   style={{
@@ -871,6 +873,7 @@ export default observer(() => {
           <Button
             icon="add"
             color="primary"
+            funcType="flat"
             className="c7ncd-baseDeploy-middle-flexButton"
             disabled={addHostDisabled()}
             onClick={handleAddHost}
@@ -881,8 +884,7 @@ export default observer(() => {
             className="c7ncd-baseDeploy-middle-testButton"
           >
             <Button
-              funcType="raised"
-              color="blue"
+              funcType="flat"
               disabled={HostSettingDataSet
                 .records.filter((i) => !i.isRemoved)
                 .every((i) => !i.get(hostMapping.hostName.name))}
@@ -1019,7 +1021,7 @@ export default observer(() => {
               }}
             >
               <Button
-                funcType="raised"
+                funcType="flat"
                 color="blue"
                 disabled={!HostSettingDataSet
                   .records.find((i) => i
@@ -1155,6 +1157,7 @@ export default observer(() => {
                     <TextField style={{ width: 219 }} name="value" />
                   </div>
                   <Button
+                    funcType="flat"
                     style={{
                       flexShrink: 0,
                       marginLeft: 10,
@@ -1343,21 +1346,23 @@ export default observer(() => {
                   renderer={({ record }) => renderOperation({ record, isHostInside: false })}
                 />
               </Table>
-              <Button
-                funcType="flat"
-                icon="add"
-                color="primary"
-                style={{
-                  margin: '20px 0',
-                  position: 'relative',
-                  flexShrink: 0,
-                  flexGrow: 0,
-                  width: 'max-content',
-                }}
-                onClick={() => handleAddParams()}
-              >
-                添加参数
-              </Button>
+              <div>
+                <Button
+                  funcType="flat"
+                  icon="add"
+                  color="primary"
+                  style={{
+                    margin: '20px 0',
+                    position: 'relative',
+                    flexShrink: 0,
+                    flexGrow: 0,
+                    width: 'max-content',
+                  }}
+                  onClick={() => handleAddParams()}
+                >
+                  添加参数
+                </Button>
+              </div>
             </>
           )
       }
