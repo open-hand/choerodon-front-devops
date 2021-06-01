@@ -76,13 +76,6 @@ const CodeManagerToolBar = injectIntl(inject('AppState')(observer((props) => {
           }])}
           showClassName={false}
         />
-        {/* {getSelfToolBar()} */}
-        {/* <Button */}
-        {/*  onClick={refreshApp} */}
-        {/*  icon="refresh" */}
-        {/* > */}
-        {/*  {formatMessage({ id: 'refresh' })} */}
-        {/* </Button> */}
       </Header>
     </>
   );

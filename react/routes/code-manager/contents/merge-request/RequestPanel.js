@@ -246,32 +246,6 @@ const RequestPanel = withRouter(observer((props) => {
             )}
           </Radio.Group>
           {renderContent(getTabKey)}
-          {/*<Tabs*/}
-          {/*  activecKey={getTabKey}*/}
-          {/*  onChange={tabChange}*/}
-          {/*  animated={false}*/}
-          {/*  // className="c7n-merge-tabs"*/}
-          {/*  type="card"*/}
-          {/*  size="small"*/}
-          {/*  tabBarStyle={{ marginRight: '0' }}*/}
-          {/*>*/}
-          {/*  {map(tabPaneList, ({ key, count }) => (*/}
-          {/*    <TabPane*/}
-          {/*      tab={`${formatMessage({ id: `merge.tab.${key}` })}(${count})`}*/}
-          {/*      key={key}*/}
-          {/*    >*/}
-          {/*      {renderTable(key)}*/}
-          {/*    </TabPane>*/}
-          {/*  ))}*/}
-          {/*  {auditCount > 0 && (*/}
-          {/*    <TabPane*/}
-          {/*      tab={`${formatMessage({ id: 'merge.tab.assignee' })}(${auditCount || 0})`}*/}
-          {/*      key="assignee"*/}
-          {/*    >*/}
-          {/*      {renderTable('assignee')}*/}
-          {/*    </TabPane>*/}
-          {/*  )}*/}
-          {/*</Tabs>*/}
         </Fragment>) : (
           <EmptyPage
             title={formatMessage({ id: 'empty.title.prohibited' })}
