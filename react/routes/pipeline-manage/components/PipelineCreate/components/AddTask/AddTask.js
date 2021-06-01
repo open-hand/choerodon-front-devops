@@ -1298,7 +1298,7 @@ const AddTask = observer(() => {
                       <SelectBox
                         style={{
                           marginTop: 20,
-                          width: 150,
+                          width: 300,
                         }}
                         name="skipDockerTlsVerify"
                       >
@@ -1309,7 +1309,7 @@ const AddTask = observer(() => {
                         <Icon
                           type="help"
                           className="c7ncd-select-tips-icon"
-                          style={{ position: 'absolute', top: '2px', left: '476px' }}
+                          style={{ position: 'absolute', top: '27px', left: '100px' }}
                         />
                       </Tooltip>
                       <TextField style={{ visibility: 'hidden' }} />
@@ -1328,7 +1328,7 @@ const AddTask = observer(() => {
                         <Icon
                           type="help"
                           className="c7ncd-select-tips-icon"
-                          style={{ position: 'absolute', top: '25px', left: '485px' }}
+                          style={{ position: 'absolute', top: '25px', right: '15px' }}
                         />
                       </Tooltip>
                     </div>,
@@ -1351,7 +1351,7 @@ const AddTask = observer(() => {
                         <Icon
                           type="help"
                           className="c7ncd-select-tips-icon"
-                          style={{ position: 'absolute', top: '-17px', left: '121px' }}
+                          style={{ position: 'absolute', top: '8px', left: '123px' }}
                         />
                       </Tooltip>
                     </div>,
@@ -1612,7 +1612,7 @@ const AddTask = observer(() => {
                   addonAfter={<Tips helpText={renderTriggerTypeTips()} />}
                   searchMatcher="branchName"
                   optionRenderer={({ text }) => renderderBranchs({ text })}
-                  maxTagCount={4}
+                  maxTagCount={3}
                   maxTagPlaceholder={(omittedValues) => (
                     <Tooltip title={omittedValues.join(',')}>
                       {`+${omittedValues.length}`}

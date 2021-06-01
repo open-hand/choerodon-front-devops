@@ -205,13 +205,17 @@ const ListView = withRouter(observer((props) => {
       colorCode = 'operating'
     }
     return (
-      <StatusTag
-        colorCode={colorCode}
-        style={{
-          marginRight: '7px'
-        }}
-        name={formatMessage({id:colorCode})}
-      />
+      <Tooltip title={formatMessage({id:colorCode})}>
+        <div style={{ display: 'inline-block' }}>
+          <StatusTag
+            colorCode={colorCode}
+            style={{
+              marginRight: '7px'
+            }}
+            name={formatMessage({id:colorCode})}
+          />
+        </div>
+      </Tooltip>
     );
   }
 
@@ -480,7 +484,7 @@ const ListView = withRouter(observer((props) => {
                         {
                           renderStatus({value:record.get('active'), record})
                         }
-                        {record.get('errorMessage') && <Tooltip title={record.get('errorMessage')}>
+                        {record.get('errorMessage') && <Tooltip overlayStyle={{ maxHeight: 500, overflow: 'auto' }} title={record.get('errorMessage')}>
                           <Icon
                             type="info"
                             style={{

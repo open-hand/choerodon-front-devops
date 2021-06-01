@@ -859,8 +859,8 @@ export default observer(() => {
                   icon="delete"
                   style={{
                     position: 'absolute',
-                    right: '-20px',
-                    bottom: '25px',
+                    right: '-36px',
+                    bottom: '30px',
                   }}
                   onClick={() => handleDeleteHost(record)}
                 />

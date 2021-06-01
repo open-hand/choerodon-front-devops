@@ -48,7 +48,13 @@ const NodeList = () => {
         {
           operatingStatus === 'failed'
           && (
-          <Tooltip title={errorMsg}>
+          <Tooltip
+            title={errorMsg}
+            overlayStyle={{
+              maxHeight: 500,
+              overflow: 'auto',
+            }}
+          >
             <Icon
               type="info"
               style={{

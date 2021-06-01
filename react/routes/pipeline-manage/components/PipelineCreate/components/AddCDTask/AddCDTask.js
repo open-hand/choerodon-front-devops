@@ -1046,7 +1046,7 @@ export default observer(() => {
                   <Icon
                     style={{
                       position: 'absolute',
-                      top: '-18px',
+                      top: '5px',
                       right: '70px',
                       color: 'rgba(0, 0, 0, 0.36)',
                     }}
@@ -1242,6 +1242,8 @@ export default observer(() => {
               [addCDTaskDataSetMap.hostSource]: addCDTaskDataSetMap.alreadyhost,
               workingPath: './',
               name: ADDCDTaskDataSet.current.get('name') || undefined,
+              [addCDTaskDataSetMap.alarm]: false,
+              [addCDTaskDataSetMap.whetherBlock]: true,
             };
             if (data === 'cdHost' && relatedJobOpts
               && relatedJobOpts.length === 1) {
@@ -1291,7 +1293,7 @@ export default observer(() => {
               addonAfter={<Tips helpText={renderTriggerTypeTips()} />}
               searchMatcher="branchName"
               optionRenderer={({ text }) => renderderBranchs({ text })}
-              maxTagCount={4}
+              maxTagCount={3}
               maxTagPlaceholder={(omittedValues) => (
                 <Tooltip title={omittedValues.join(',')}>
                   {`+${omittedValues.length}`}
