@@ -30,7 +30,7 @@ export default observer((props) => {
 
   async function loadData() {
     try {
-      if (['cdHost', 'cdExternalApproval'].includes(type)) {
+      if (['cdHost', 'cdDeploy', 'cdExternalApproval'].includes(type)) {
         const res = await axios.get(`/devops/v1/projects/${projectId}/pipeline_records/${cdRecordId}/stage_records/${stageRecordId}/job_records/log/${jobRecordId}`);
         if (res && !res.failed) {
           const newRes = res.split(/\n/);
