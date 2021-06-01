@@ -94,7 +94,7 @@ const Platform = injectIntl(observer(({ checkData }) => {
   function renderAction() {
     return (
       <Tooltip title={formatMessage({ id: 'delete' })}>
-        <Button shape="circle" icon="delete" onClick={handleDelete} />
+        <Button shape="circle" icon="delete" funcType="flat" onClick={handleDelete} />
       </Tooltip>
     );
   }

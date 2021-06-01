@@ -1,8 +1,9 @@
 import React, { Fragment, useEffect } from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
-import { SelectBox, Select, Form, UrlField, Icon, TextField, Password } from 'choerodon-ui/pro';
-import { Button } from 'choerodon-ui/pro';
+import {
+  SelectBox, Select, Form, UrlField, Icon, TextField, Password, Button,
+} from 'choerodon-ui/pro';
 import { withRouter } from 'react-router-dom';
 import { handlePromptError } from '../../../utils';
 
@@ -32,9 +33,9 @@ export default withRouter(injectIntl(observer(({
     const chartTestFailed = record.get('chartCustom') === 'custom' && !record.get('chartStatus') && !await handleTestChart();
     if (!chartTestFailed && await dataSet.submit() !== false) {
       refresh();
-    } else {
-      return false;
+      return true;
     }
+    return false;
   }
 
   async function handleTestChart() {
@@ -51,10 +52,9 @@ export default withRouter(injectIntl(observer(({
       if (handlePromptError(res)) {
         record.set('chartStatus', 'success');
         return true;
-      } else {
-        record.set('chartStatus', 'failed');
-        return false;
       }
+      record.set('chartStatus', 'failed');
+      return false;
     } catch (e) {
       record.set('chartStatus', 'failed');
       return false;
@@ -90,33 +90,36 @@ export default withRouter(injectIntl(observer(({
 
   return (
     <div className={`${prefixCls}-form-wrap`}>
+      {/* TODO 使用Alert组件 */}
       <div className={`${prefixCls}-form-info`}>
         <Icon type="info" className={`${prefixCls}-form-info-icon`} />
         <FormattedMessage id={`${intlPrefix}.info`} />
       </div>
-      {isProject ? (<div>
-        <span className={`${prefixCls}-form-config-title`}>
-          {formatMessage({ id: `${intlPrefix}.harbor.config` })}
-        </span>
-        <div className={`${prefixCls}-empty-page`}>
-          <div className={`${prefixCls}-empty-page-image`} />
-          <div className={`${prefixCls}-empty-page-text`}>
-            <div className={`${prefixCls}-empty-page-title`}>
-              {formatMessage({ id: `${intlPrefix}.empty.title` })}
+      {isProject ? (
+        <div>
+          <span className={`${prefixCls}-form-config-title`}>
+            {formatMessage({ id: `${intlPrefix}.harbor.config` })}
+          </span>
+          <div className={`${prefixCls}-empty-page`}>
+            <div className={`${prefixCls}-empty-page-image`} />
+            <div className={`${prefixCls}-empty-page-text`}>
+              <div className={`${prefixCls}-empty-page-title`}>
+                {formatMessage({ id: `${intlPrefix}.empty.title` })}
+              </div>
+              <div className={`${prefixCls}-empty-page-des`}>
+                {formatMessage({ id: `${intlPrefix}.empty.des` })}
+              </div>
+              <Button
+                color="primary"
+                onClick={handleLink}
+                funcType="raised"
+              >
+                {formatMessage({ id: `${intlPrefix}.empty.link` })}
+              </Button>
             </div>
-            <div className={`${prefixCls}-empty-page-des`}>
-              {formatMessage({ id: `${intlPrefix}.empty.des` })}
-            </div>
-            <Button
-              color="primary"
-              onClick={handleLink}
-              funcType="raised"
-            >
-              {formatMessage({ id: `${intlPrefix}.empty.link` })}
-            </Button>
           </div>
         </div>
-      </div>) : null}
+      ) : null}
       <div className={`${prefixCls}-form`}>
         <span className={`${prefixCls}-form-config-title`}>
           {formatMessage({ id: `${intlPrefix}.chart.config` })}
@@ -140,7 +143,9 @@ export default withRouter(injectIntl(observer(({
           funcType="raised"
           onClick={handleSave}
           style={{ marginRight: '.12rem' }}
-        >{formatMessage({ id: 'save' })}</Button>
+        >
+          {formatMessage({ id: 'save' })}
+        </Button>
         <Button
           funcType="raised"
           onClick={refresh}
