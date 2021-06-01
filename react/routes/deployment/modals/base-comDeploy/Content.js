@@ -1087,7 +1087,7 @@ export default observer(() => {
               autoComplete="new-password"
               colSpan={1}
               name={mapping.password.name}
-              addonAfter={<Tips helpText="访问redis服务的密码" />}
+              addonAfter={<Tips helpText="访问MySQL服务的密码" />}
             />,
             <Select
               combo
