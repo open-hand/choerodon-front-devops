@@ -95,26 +95,6 @@ const DetailItem = (props) => {
     });
   }
 
-  function openCdLog() {
-    const logData = {
-      projectId,
-      cdRecordId,
-      stageId,
-      jobRecordId,
-    };
-    Modal.open({
-      title: `查看${jobTypesMappings[itemType]}日志`,
-      key: Modal.key(),
-      style: {
-        width: 'calc(100vw - 3.52rem)',
-      },
-      children: <DepolyLog {...logData} />,
-      drawer: true,
-      okText: '关闭',
-      footer: (okbtn) => <>{okbtn}</>,
-    });
-  }
-
   function openCodequalityModal() {
     Modal.open({
       title: '代码质量',
@@ -414,10 +394,6 @@ const DetailItem = (props) => {
   };
 
   const renderCheckLogFun = () => {
-    if (itemType === 'cdDeploy') {
-      openCdLog();
-      return;
-    }
     openDescModal(itemType);
   };
 
