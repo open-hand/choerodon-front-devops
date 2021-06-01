@@ -338,16 +338,25 @@ const Deployment = withRouter(observer((props) => {
     if (!type) {
       return null;
     }
+    const hasMarketInfo = type === 'market' && marketServiceName;
     return (
       <>
-        <span className={`${prefixCls}-content-source`}>
-          {formatMessage({ id: `${intlPrefix}.source.deploy.${type}` })}
-        </span>
-        {type === 'share' && (
-          <span className={`${prefixCls}-content-source-text`}>{projectName}</span>
-        )}
-        {type === 'market' && marketServiceName && ([
-          <span className={`${prefixCls}-content-source-text`}>{marketAppName}</span>,
+        <div className={`${prefixCls}-content-source-wrap`}>
+          <span className={`${prefixCls}-content-source`}>
+            {formatMessage({ id: `${intlPrefix}.source.deploy.${type}` })}
+          </span>
+          {type === 'share' && (
+            <Tooltip title={projectName} placement="top">
+              <span className={`${prefixCls}-content-source-text`}>{projectName}</span>
+            </Tooltip>
+          )}
+          {hasMarketInfo && (
+            <Tooltip title={marketAppName} placement="top">
+              <span className={`${prefixCls}-content-source-text`}>{marketAppName}</span>
+            </Tooltip>
+          )}
+        </div>
+        {hasMarketInfo && (
           <div className={`${prefixCls}-content-source-market`}>
             <span>
               {formatMessage({ id: `${intlPrefix}.marketService` })}
@@ -356,8 +365,8 @@ const Deployment = withRouter(observer((props) => {
             <Tooltip title={marketServiceName}>
               <span>{marketServiceName}</span>
             </Tooltip>
-          </div>,
-        ])}
+          </div>
+        )}
       </>
     );
   }, []);
