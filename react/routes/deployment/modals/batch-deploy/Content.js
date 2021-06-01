@@ -1,5 +1,11 @@
-import React, { Fragment, useEffect, useState, useMemo } from 'react';
-import { Button, Form, Icon, Select, SelectBox, TextField } from 'choerodon-ui/pro';
+/* eslint-disable jsx-a11y/click-events-have-key-events,max-len, jsx-a11y/no-static-element-interactions */
+
+import React, {
+  Fragment, useEffect, useState, useMemo,
+} from 'react';
+import {
+  Button, Form, Icon, Select, SelectBox, TextField,
+} from 'choerodon-ui/pro';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
@@ -59,10 +65,10 @@ const BatchDeployModal = injectIntl(observer(() => {
       const res = await batchDeployDs.submit();
       if (res !== false) {
         refresh(res.list ? res.list[0] : {}, 'resource');
-      } else {
-        setShowError(true);
-        return false;
+        return true;
       }
+      setShowError(true);
+      return false;
     } catch (e) {
       return false;
     }
@@ -78,15 +84,17 @@ const BatchDeployModal = injectIntl(observer(() => {
 
   function renderEnvOption({ record: envRecord, text, value }) {
     return (
-      <Fragment>
-        {value && (<StatusDot
+      <>
+        {value && (
+        <StatusDot
           connect={envRecord.get('connect')}
           synchronize={envRecord.get('synchro')}
           active={envRecord.get('active')}
           size="small"
-        />)}
+        />
+        )}
         <span className={`${prefixCls}-select-option-text`}>{text}</span>
-      </Fragment>
+      </>
     );
   }
 
@@ -117,7 +125,8 @@ const BatchDeployModal = injectIntl(observer(() => {
 
   return (
     <div className={`${prefixCls}-batch-deploy`}>
-      {!envId && <Form record={batchDeployDs.current} columns={2}>
+      {!envId && (
+      <Form record={batchDeployDs.current} columns={2}>
         <Select
           name="environmentId"
           searchable
@@ -127,14 +136,16 @@ const BatchDeployModal = injectIntl(observer(() => {
           onOption={renderOptionProperty}
         />
         <span colSpan={1} />
-      </Form>}
+      </Form>
+      )}
       <div className={`${prefixCls}-batch-deploy-content`}>
         <div className={`${prefixCls}-batch-deploy-content-app`}>
           {map(batchDeployDs.data, (formRecord) => {
             if (formRecord.get('appServiceSource') === 'normal_service') {
               return (
                 <div
-                  className={batchDeployDs.current === formRecord ? `${prefixCls}-batch-deploy-content-app-active` : ''}
+                  className={`${prefixCls}-batch-deploy-content-app-item ${batchDeployDs.current === formRecord ? `${prefixCls}-batch-deploy-content-app-active` : ''}`}
+                  key={formRecord.id}
                 >
                   <Form record={formRecord} columns={8}>
                     <Select
@@ -144,9 +155,10 @@ const BatchDeployModal = injectIntl(observer(() => {
                       notFoundContent={<FormattedMessage id={`${intlPrefix}.app.empty`} />}
                       onClick={() => handleClickAppService(formRecord)}
                     >
-                      {map(deployStore.getAppService[0] && deployStore.getAppService[0].appServiceList, ({ id, name, code }) => (
-                        <Option value={`${id}**${code}`} key={id}>{name}</Option>
-                      ))}
+                      {map(deployStore.getAppService[0] && deployStore.getAppService[0].appServiceList,
+                        ({ id, name, code }) => (
+                          <Option value={`${id}**${code}`} key={id}>{name}</Option>
+                        ))}
                     </Select>
                     {batchDeployDs.data.length > 1 ? (
                       <Button
@@ -164,6 +176,7 @@ const BatchDeployModal = injectIntl(observer(() => {
                 </div>
               );
             }
+            return null;
           })}
           <Button
             funcType="flat"
@@ -179,7 +192,8 @@ const BatchDeployModal = injectIntl(observer(() => {
             if (formRecord.get('appServiceSource') === 'share_service') {
               return (
                 <div
-                  className={batchDeployDs.current === formRecord ? `${prefixCls}-batch-deploy-content-app-active` : ''}
+                  className={`${prefixCls}-batch-deploy-content-app-item ${batchDeployDs.current === formRecord ? `${prefixCls}-batch-deploy-content-app-active` : ''}`}
+                  key={formRecord.id}
                 >
                   <Form record={formRecord} columns={8}>
                     <Select
@@ -213,6 +227,7 @@ const BatchDeployModal = injectIntl(observer(() => {
                 </div>
               );
             }
+            return null;
           })}
           <Button
             funcType="flat"
@@ -224,9 +239,11 @@ const BatchDeployModal = injectIntl(observer(() => {
           >
             {formatMessage({ id: `${intlPrefix}.add.appService.share` })}
           </Button>
-          {showError && <div className={`${prefixCls}-batch-deploy-error`}>
+          {showError && (
+          <div className={`${prefixCls}-batch-deploy-error`}>
             {formatMessage({ id: `${intlPrefix}.batch.deploy.error` })}
-          </div>}
+          </div>
+          )}
         </div>
         <div className={`${prefixCls}-batch-deploy-content-form`}>
           <Form record={batchDeployDs.current} columns={3}>

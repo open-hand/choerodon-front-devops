@@ -14,6 +14,10 @@
       overflow-y: scroll;
       overflow-x: hidden;
 
+      &-item {
+        padding-top: .2rem;
+      }
+
       &-active {
         background: #fff;
         margin-left: -0.24rem;
@@ -34,6 +38,7 @@
 
       .appService-delete-btn {
         width: .32rem;
+        margin-top: .08rem;
       }
 
       .appService-error-icon {
@@ -44,8 +49,12 @@
 
       .appService-add-btn {
         margin-left: 0;
-        margin-bottom: .24rem;
+        margin-top: .24rem;
         display: block;
+
+        &:last-child {
+          margin-bottom: .24rem;
+        }
       }
     }
 
@@ -107,6 +116,8 @@
 
   .c7ncd-deploy-resource-delete-btn {
     width: .32rem;
+    margin-left: -0.1rem;
+    margin-top: .08rem;
   }
 
   .c7ncd-deploy-resource-mgt-12 {
@@ -134,6 +145,7 @@
       font-size: 24px;
       color: var(--text-color4);
       text-align: center;
+      line-height: .48rem;
     }
 
     .@{c7n-pro-prefix}-textarea-float-label textarea.@{c7n-pro-prefix}-textarea {

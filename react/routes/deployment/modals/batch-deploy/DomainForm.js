@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Button, Form, Icon, Select, SelectBox, TextField, TextArea } from 'choerodon-ui/pro';
+import {
+  Button, Form, Icon, Select, SelectBox, TextField, TextArea,
+} from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import { useBatchDeployStore } from './stores';
 import Tips from '../../../../components/new-tips';
@@ -51,17 +53,17 @@ export default observer(() => {
         {!record.get('isNormal') && <Select name="certId" disabled={batchDeployDs.current && !batchDeployDs.current.get('environmentId')} searchable />}
       </Form>
       {map(pathListDs.data, (pathRecord) => (
-        <Form record={pathRecord} columns={6} style={{ width: '115%' }} key={pathRecord.id}>
-          <TextField name="path" colSpan={2} disabled={!record.get('domain')} />
-          <TextField name="serviceName" colSpan={2} disabled />
-          <Select name="servicePort" disabled={!pathRecord.get('serviceName')}>
+        <Form record={pathRecord} columns={14} key={pathRecord.id}>
+          <TextField name="path" colSpan={5} disabled={!record.get('domain')} />
+          <TextField name="serviceName" colSpan={5} disabled />
+          <Select name="servicePort" disabled={!pathRecord.get('serviceName')} colSpan={3}>
             {map(pathRecord.get('ports'), (port) => <Option value={port} key={port}>{port}</Option>)}
           </Select>
           {pathListDs.length > 1 ? (
             <Button
               funcType="flat"
               icon="delete"
-              className={`${prefixCls}-domain-form-delete`}
+              className={`${prefixCls}-resource-delete-btn`}
               onClick={() => handleRemovePath(pathRecord)}
             />
           ) : <span />}
@@ -82,7 +84,6 @@ export default observer(() => {
         <Form
           columns={14}
           record={annotationRecord}
-          style={{ width: '103.3%' }}
           key={annotationRecord.id}
           className={`${prefixCls}-resource-domain-annotation`}
         >
@@ -99,6 +100,7 @@ export default observer(() => {
               funcType="flat"
               icon="delete"
               onClick={() => handleRemoveAnnotation(annotationRecord)}
+              className={`${prefixCls}-resource-delete-btn`}
             />
           ) : <span />}
         </Form>
