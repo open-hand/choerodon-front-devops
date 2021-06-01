@@ -143,7 +143,7 @@ const TemplateTable = observer(() => {
     return (
       <Permission
         service={permissionCodes.edit}
-        defaultChildren={(<span>{value}</span>)}
+        defaultChildren={(<span className="table-unClick">{value}</span>)}
       >
         <span
           role="none"
