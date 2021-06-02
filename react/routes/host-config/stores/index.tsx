@@ -11,7 +11,7 @@ import some from 'lodash/some';
 import useStore from './useStore';
 
 // @ts-ignore
-const HAS_BASE_PRO = C7NHasModule('@choerodon/base-business');
+const HAS_BASE_PRO = C7NHasModule('@choerodon/testmanager-pro');
 
 interface ContextProps {
   prefixCls: string,

@@ -70,7 +70,13 @@ const ContentHeader: React.FC<any> = observer((): any => {
 
   return (
     <div className={`${prefixCls}-content-search`}>
-      {showTestTab && <HostPick onChange={handleChange} hostTabKeys={hostTabKeys} />}
+      {showTestTab && (
+        <HostPick
+          onChange={handleChange}
+          hostTabKeys={hostTabKeys}
+          activeKey={mainStore.getCurrentTabKey}
+        />
+      )}
       <div style={{
         display: 'flex',
         alignItems: 'center',
