@@ -3,11 +3,12 @@ import { observer } from 'mobx-react-lite';
 import {
   Button, Form, Icon, Select, TextField, DataSet,
 } from 'choerodon-ui/pro';
+import { CustomTabs } from '@choerodon/components';
+import map from 'lodash/map';
 import {
   ButtonColor, FuncType, LabelLayoutType,
 } from '../../../../interface';
 import { useHostConfigStore } from '../../stores';
-import HostPick from '../host-pick';
 
 import './index.less';
 
@@ -71,10 +72,16 @@ const ContentHeader: React.FC<any> = observer((): any => {
   return (
     <div className={`${prefixCls}-content-search`}>
       {showTestTab && (
-        <HostPick
-          onChange={handleChange}
-          hostTabKeys={hostTabKeys}
-          activeKey={mainStore.getCurrentTabKey}
+        <CustomTabs
+          onChange={(
+            e: React.MouseEvent<HTMLDivElement, MouseEvent>, tabName: string, tabKey: string,
+          ) => handleChange(tabKey)}
+          data={map(hostTabKeys, (item) => ({
+            name: item?.text,
+            value: item?.key,
+          }))}
+          selectedTabValue={mainStore.getCurrentTabKey}
+          className={`${prefixCls}-content-search-tab`}
         />
       )}
       <div style={{
