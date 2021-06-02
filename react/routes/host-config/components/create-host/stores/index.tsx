@@ -18,7 +18,7 @@ interface ContextProps {
   projectId: number,
   formDs: DataSet,
   modal: any,
-  refresh(): void,
+  refresh(tabKey?: string): void,
   hostId?: string,
   showTestTab: boolean,
 }

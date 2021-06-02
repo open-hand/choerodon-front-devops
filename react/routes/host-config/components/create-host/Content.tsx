@@ -30,13 +30,14 @@ const CreateHost: React.FC<any> = observer((): any => {
   modal.handleOk(async () => {
     try {
       const record = formDs.current;
+      const selectedTabKey = record?.get('type');
       if (record && !(record.get('hostIp') || record.get('sshPort') || record.get('privateIp') || record.get('privatePort'))) {
         message.error('外部SSH认证与内部SSH认证至少填写一个模块');
         return false;
       }
       const res = await formDs.submit();
       if (res) {
-        refresh();
+        refresh(selectedTabKey);
         return true;
       }
       return false;

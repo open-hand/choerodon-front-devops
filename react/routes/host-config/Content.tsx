@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Page, Header, Breadcrumb, Content, Permission, HeaderButtons,
@@ -23,7 +23,19 @@ const HostConfig: React.FC<any> = observer((): any => {
     listDs,
     projectId,
     mainStore,
+    searchDs,
   } = useHostConfigStore();
+
+  const afterCreate = useCallback((selectedTabKey?: string) => {
+    if (selectedTabKey && selectedTabKey !== mainStore.getCurrentTabKey) {
+      searchDs.reset();
+      listDs.setQueryParameter('type', selectedTabKey);
+      listDs.setQueryParameter('params', '');
+      listDs.setQueryParameter('status', '');
+      mainStore.setCurrentTabKey(selectedTabKey);
+    }
+    refresh();
+  }, [mainStore.getCurrentTabKey]);
 
   const handleCorrect = async ():Promise<boolean> => {
     try {
@@ -60,7 +72,7 @@ const HostConfig: React.FC<any> = observer((): any => {
         width: 380,
       },
       drawer: true,
-      children: <CreateHost refresh={refresh} />,
+      children: <CreateHost refresh={afterCreate} />,
       okText: formatMessage({ id: 'create' }),
     });
   };
