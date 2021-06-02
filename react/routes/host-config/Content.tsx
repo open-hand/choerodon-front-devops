@@ -35,7 +35,7 @@ const HostConfig: React.FC<any> = observer((): any => {
       mainStore.setCurrentTabKey(selectedTabKey);
     }
     refresh();
-  }, []);
+  }, [mainStore.getCurrentTabKey]);
 
   const handleCorrect = async ():Promise<boolean> => {
     try {
