@@ -92,12 +92,12 @@ const Version = withRouter(observer((props) => {
     // });
   }
 
-  function handleDelete(list) {
-    const selectedRecords = list;
+  function handleDelete(list, item) {
+    const selectedRecords = list || [item];
     const version = selectedRecords[0] ? selectedRecords[0].get('version') : '';
     const modalProps = {
       title: formatMessage({ id: `${intlPrefix}.version.delete.title` }),
-      children: selectedRecords.length > 1
+      children: selectedRecords && selectedRecords.length > 1
         ? formatMessage({ id: `${intlPrefix}.version.delete.des` }, { version, length: selectedRecordLength })
         : formatMessage({ id: `${intlPrefix}.version.delete.des.single` }, { version }),
       okText: formatMessage({ id: 'delete' }),
@@ -144,10 +144,10 @@ const Version = withRouter(observer((props) => {
     );
   }
 
-  const renderVersionAction = () => ([{
+  const renderVersionAction = (record) => ([{
     service: ['choerodon.code.project.develop.app-service.ps.version.delete'],
     text: formatMessage({ id: `${intlPrefix}.version.delete` }),
-    action: handleDelete,
+    action: () => handleDelete(null, record),
     disabled: !selectedRecordLength,
   }]);
 
@@ -232,7 +232,7 @@ const Version = withRouter(observer((props) => {
                           )
                         }
                         <span className="c7ncd-theme4-version-item-version">{version.get('version')}</span>
-                        <Action data={renderVersionAction()} />
+                        <Action data={renderVersionAction(version)} />
                       </div>
                       <div style={{ justifyContent: 'flex-end' }} className="c7ncd-theme4-version-item-side">
                         <span className="c7ncd-theme4-version-item-text">创建于</span>

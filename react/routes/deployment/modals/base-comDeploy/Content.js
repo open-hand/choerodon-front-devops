@@ -1213,7 +1213,7 @@ export default observer(() => {
         [paramMapping.paramsScope.name]: '——',
         [paramMapping.paramsRunnigValue.name]: '',
         custom: 'true',
-      }, 0);
+      }, ds.records.length);
       HostSettingDataSet
         .records.find((i) => i.get(hostMapping.checked.name)).setState('params', ds);
     } else {
@@ -1223,7 +1223,7 @@ export default observer(() => {
         [paramMapping.paramsScope.name]: '——',
         [paramMapping.paramsRunnigValue.name]: '',
         custom: 'true',
-      }, 0);
+      }, ParamSettingDataSet.records.length);
     }
   };
 

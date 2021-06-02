@@ -1312,10 +1312,12 @@ const AddTask = observer(() => {
                           style={{ position: 'absolute', top: '27px', left: '100px' }}
                         />
                       </Tooltip>
-                      <TextField style={{ visibility: 'hidden' }} />
                       <SelectBox
                         name="imageScan"
-                        className="c7ncd-addTask-imageScan"
+                        style={{
+                          width: 300,
+                        }}
+                        // className="c7ncd-addTask-imageScan"
                       >
                         <Option value>是</Option>
                         <Option value={false}>否</Option>
@@ -1328,7 +1330,7 @@ const AddTask = observer(() => {
                         <Icon
                           type="help"
                           className="c7ncd-select-tips-icon"
-                          style={{ position: 'absolute', top: '25px', right: '15px' }}
+                          style={{ position: 'absolute', top: '27px', right: '215px' }}
                         />
                       </Tooltip>
                     </div>,

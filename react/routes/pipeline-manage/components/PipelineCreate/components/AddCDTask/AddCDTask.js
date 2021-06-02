@@ -1047,7 +1047,7 @@ export default observer(() => {
                     style={{
                       position: 'absolute',
                       top: '5px',
-                      right: '70px',
+                      right: '150px',
                       color: 'rgba(0, 0, 0, 0.36)',
                     }}
                     type="help"

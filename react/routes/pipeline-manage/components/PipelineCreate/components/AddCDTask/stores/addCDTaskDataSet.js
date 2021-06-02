@@ -636,7 +636,7 @@ export default (
     {
       name: addCDTaskDataSetMap.whetherBlock,
       type: 'boolean',
-      label: '执行成功率低于阈值后是否阻塞后续阶段与任务',
+      label: '执行成功率低于阈值后是否阻塞',
       defaultValue: true,
     },
     {
