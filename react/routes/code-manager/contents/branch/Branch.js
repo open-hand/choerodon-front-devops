@@ -333,7 +333,7 @@ function Branch(props) {
   }
   // 问题名称渲染函数
   function issueNameRender({ record, text }) {
-    const issueContent = map(record.get('issueInfoList') || [], (issueItem) => {
+    const issueContent = map(record.get('issueInfoList') || [], (issueItem, index) => {
       const { typeCode, issueId, issueProjectId, issueCode, projectName, issueName } = issueItem || {};
       return (
         <div className={`${prefixCls}-issue-item`}>
@@ -347,7 +347,10 @@ function Branch(props) {
               </Tooltip>
             </a>
           </div>
-          <div className={`${prefixCls}-issue-item-project`}><span>{projectName}</span></div>
+          <div className={`${prefixCls}-issue-item-project`}>
+            <Icon type="project_line" className={`${prefixCls}-issue-item-project-icon`} />
+            <span>{projectName}</span>
+          </div>
         </div>
       );
     });

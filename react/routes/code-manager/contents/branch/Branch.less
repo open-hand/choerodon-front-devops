@@ -226,6 +226,13 @@
     &-project {
       padding-top: .08rem;
       color: var(--text-color3);
+
+      &-icon {
+        margin-right: 6px;
+        font-size: 0.2rem;
+        width: .24rem;
+        text-align: center;
+      }
     }
 
     & + & {
@@ -242,5 +249,11 @@
     color: var(--primary-color);
     height: 0.25rem;
     line-height: 0.25rem;
+  }
+
+  &-popover {
+    .c7ncd-branch-issue-item-project-icon {
+      visibility: hidden;
+    }
   }
 }
