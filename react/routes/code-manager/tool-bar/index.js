@@ -66,14 +66,26 @@ const CodeManagerToolBar = injectIntl(inject('AppState')(observer((props) => {
     <>
       <Header>
         <HeaderButtons
-          items={([{
-            ...getSelfToolBarObj(),
-          }, {
-            icon: 'refresh',
-            display: true,
-            handler: refreshApp,
-            iconOnly: true,
-          }])}
+          items={(function () {
+            const item = getSelfToolBarObj();
+            const res = [{
+              icon: 'refresh',
+              display: true,
+              handler: refreshApp,
+              iconOnly: true,
+            }];
+            if (item) {
+              return [{
+                ...getSelfToolBarObj(),
+              }, {
+                icon: 'refresh',
+                display: true,
+                handler: refreshApp,
+                iconOnly: true,
+              }];
+            }
+            return res;
+          }())}
           showClassName={false}
         />
       </Header>
