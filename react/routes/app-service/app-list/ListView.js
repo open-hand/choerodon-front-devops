@@ -480,7 +480,9 @@ const ListView = withRouter(observer((props) => {
                 {/*</span>*/}
                     <div className="c7ncd-appService-item-center">
                       <div className="c7ncd-appService-item-center-line" style={{ justifyContent: 'flex-start' }}>
-                        <span className="c7ncd-appService-item-center-line-name">{record.get('name')}</span>
+                        <Tooltip title={record.get('name')}>
+                          <span className="c7ncd-appService-item-center-line-name">{record.get('name')}</span>
+                        </Tooltip>
                         {
                           renderStatus({value:record.get('active'), record})
                         }
