@@ -1,25 +1,33 @@
 import { axios } from '@choerodon/boot';
 import React from 'react';
 
-export default ({ formatMessage, intlPrefix, projectId, groupOptionDs, clusterOptionDs }) => {
+export default ({
+  formatMessage, intlPrefix, projectId, groupOptionDs, clusterOptionDs,
+}) => {
   const codeValidator = async (value, name, record) => {
     const clusterId = record.get('clusterId');
     const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
-    if (value && pa.test(value)) {
+    if (!value) {
+      return true;
+    }
+    if (pa.test(value)) {
       try {
         const res = await axios.get(`/devops/v1/projects/${projectId}/envs/check_code?cluster_id=${clusterId}&code=${value}`);
         if (!res) {
           return formatMessage({ id: 'checkCodeExist' });
-        } else {
-          return true;
         }
+        return true;
       } catch (err) {
         return '环境编码校验失败，请稍后再试';
       }
+    } else {
+      return formatMessage({ id: 'checkCodeReg' });
     }
   };
 
-  const update = ({ record, name, value, oldValue }) => {
+  const update = ({
+    record, name, value, oldValue,
+  }) => {
     if (name === 'clusterId' && value !== oldValue) {
       const code = record.get('code');
       value && code && codeValidator(code, 'code', record);
