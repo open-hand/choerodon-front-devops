@@ -214,6 +214,7 @@
   color: var(--text-color3);
   padding-right: .06rem;
   margin-left: .32rem;
+  overflow: hidden;
 
   &-label {
     line-height: .25rem;
@@ -222,6 +223,18 @@
   &-item {
     color: var(--table-click-color);
     line-height: .20rem;
+    overflow: hidden;
+
+    &-title {
+      display: flex;
+      align-items: center;
+
+      &-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
 
     &-project {
       padding-top: .08rem;
@@ -249,11 +262,23 @@
     color: var(--primary-color);
     height: 0.25rem;
     line-height: 0.25rem;
+    flex-shrink: 0;
   }
 
   &-popover {
     .c7ncd-branch-issue-item-project-icon {
       visibility: hidden;
     }
+  }
+}
+
+.c7ncd-branch-item {
+
+  &-action {
+    flex-shrink: 0;
+  }
+
+  &-branchName {
+    color: var(--text-color);
   }
 }

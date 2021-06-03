@@ -274,11 +274,28 @@ function Branch(props) {
         action: () => openRemove(record.get('branchName')),
       },
     ];
+    const editAction = ({
+      service: ['choerodon.code.project.develop.code-management.ps.branch.update'],
+      text: formatMessage({ id: 'edit' }),
+      action: () => openEditIssueModal(record.toData()),
+    });
+    if (!isOPERATIONS) {
+      action.unshift({
+        service: ['choerodon.code.project.develop.code-management.ps.branch.update'],
+        text: formatMessage({ id: 'edit' }),
+        action: () => openEditIssueModal(record.toData()),
+      });
+    }
     // 分支如果是master  禁止创建合并请求 否认：会造成跳转到 gitlab，gailab页面报错的问题
-    if (record.get('branchName') === 'master' || record.get('status') === 'operating') {
+    if (record.get('status') === 'operating') {
       return <div style={{ width: 24 }} />;
     }
-    return (<Action data={action} />);
+    return (
+      <Action
+        data={record.get('branchName') === 'master' ? [editAction] : action}
+        className={`${prefixCls}-item-action`}
+      />
+    );
   }
   // 打开删除框
   const openRemove = (name) => {
@@ -337,15 +354,29 @@ function Branch(props) {
       const { typeCode, issueId, issueProjectId, issueCode, projectName, issueName } = issueItem || {};
       return (
         <div className={`${prefixCls}-issue-item`}>
-          <div>
+          <div className={`${prefixCls}-issue-item-title`}>
             {typeCode ? getOptionContent(typeCode) : null}
-            <a onClick={() => openIssueDetail(issueId, record.get('branchName'), issueProjectId)} role="none">
+            <a
+              onClick={() => openIssueDetail(issueId, record.get('branchName'), issueProjectId)}
+              role="none"
+              className={`${prefixCls}-issue-item-title-name`}
+            >
               <Tooltip
                 title={`${issueCode} ${issueName}`}
               >
                 {`${issueCode} ${issueName}`}
               </Tooltip>
             </a>
+            {record.get('issueInfoList')?.length > 1 && !index ? (
+              <Popover
+                placement="bottom"
+                content={issueContent}
+                overlayClassName={`${prefixCls}-issue-popover`}
+                arrowPointAtCenter
+              >
+                <Icon type="expand_more" className={`${prefixCls}-issue-expand`} />
+              </Popover>
+            ) : null}
           </div>
           <div className={`${prefixCls}-issue-item-project`}>
             <Icon type="project_line" className={`${prefixCls}-issue-item-project-icon`} />
@@ -358,16 +389,6 @@ function Branch(props) {
       <div className={`${prefixCls}-issue`}>
         <span className={`${prefixCls}-issue-label`}>关联：</span>
         {issueContent ? issueContent[0] : null}
-        {issueContent && issueContent.length > 1 ? (
-          <Popover
-            placement="bottom"
-            content={issueContent}
-            overlayClassName={`${prefixCls}-issue-popover`}
-            arrowPointAtCenter
-          >
-            <Icon type="expand_more" className={`${prefixCls}-issue-expand`} />
-          </Popover>
-        ) : null}
       </div>
     )
   }
@@ -446,6 +467,7 @@ function Branch(props) {
             display: 'flex',
             alignItems: 'center',
             overflow: 'hidden',
+            flexShrink: 0
           }}
         >
           <div style={{ marginRight: 30 }}>
@@ -457,15 +479,9 @@ function Branch(props) {
                 error={errorMessage}
                 name={record.get('branchName')}
                 width={0.17}
-                clickAble={(status !== 'operating') && !isOPERATIONS}
-                onClick={() => openEditIssueModal(record.toData())}
                 record={record.get('branchName')}
-                permissionCode={['choerodon.code.project.develop.code-management.ps.branch.update']}
+                className={`${prefixCls}-item-branchName`}
               />
-              {/*<span*/}
-              {/*  className={styles?.['c7n-branch-theme4-table-column-side-line-branchName']}*/}
-              {/*  onClick={() => openEditIssueModal(record.toData())}*/}
-              {/*>{ record.get('branchName') }</span>*/}
             </div>
             <div className={styles?.['c7n-branch-theme4-table-column-side-line']}>
               <Icon type="point" />
