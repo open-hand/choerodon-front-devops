@@ -452,7 +452,7 @@ export default class CertificateCreate extends Component {
     ));
 
     return this.props.pro ? (
-      <div>
+      <div className="c7ncd-deployment-ctf-create sidebar-content">
         <Form layout="vertical">
           <FormItem {...formItemLayout}>
             {getFieldDecorator('certName', {
