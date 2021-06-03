@@ -56,16 +56,13 @@ const IngressContent = observer(() => {
     const error = record.get('error');
     const disabled = getEnvIsNotRunning() || status === 'operating';
     return (
-      <Fragment>
+      <>
         <StatusIcon
           name={name}
           status={status || ''}
           error={error || ''}
-          clickAble={!disabled}
-          onClick={openModal}
-          permissionCode={['choerodon.code.project.deploy.app-deployment.resource.ps.update.domain']}
         />
-      </Fragment>
+      </>
     );
   }
 
@@ -87,7 +84,9 @@ const IngressContent = observer(() => {
 
   function renderService({ record }) {
     return (
-      map(record.get('pathList'), ({ serviceStatus, serviceName, serviceError, serviceId }) => (
+      map(record.get('pathList'), ({
+        serviceStatus, serviceName, serviceError, serviceId,
+      }) => (
         <div
           className="c7n-network-service"
           key={serviceId}
@@ -100,9 +99,9 @@ const IngressContent = observer(() => {
             <span className={serviceStatus === 'deleted' ? 'c7n-status-deleted' : ''}>{serviceName}</span>
           </MouserOverWrapper>
           {(serviceStatus === 'deleted' || serviceStatus === 'failed') && (
-            <Tooltip title={serviceError ? `failed: ${serviceError}` : formatMessage({ id: serviceStatus })}>
-              <Icon type="error" className="c7n-status-failed" />
-            </Tooltip>
+          <Tooltip title={serviceError ? `failed: ${serviceError}` : formatMessage({ id: serviceStatus })}>
+            <Icon type="error" className="c7n-status-failed" />
+          </Tooltip>
           )}
         </div>
       ))
@@ -118,6 +117,11 @@ const IngressContent = observer(() => {
     const id = record.get('id');
     const name = record.get('name');
     const buttons = [
+      {
+        service: ['choerodon.code.project.deploy.app-deployment.resource.ps.update.domain'],
+        text: formatMessage({ id: 'edit' }),
+        action: openModal,
+      },
       {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-domain'],
         text: formatMessage({ id: 'delete' }),
@@ -156,7 +160,7 @@ const IngressContent = observer(() => {
         rowHeight="auto"
       >
         <Column name="name" renderer={renderName} sortable />
-        <Column renderer={renderAction} width="0.7rem" />
+        <Column renderer={renderAction} width={60} />
         <Column name="domain" renderer={renderDomain} />
         <Column name="pathList" renderer={renderPath} />
         <Column renderer={renderService} header={formatMessage({ id: 'network' })} />

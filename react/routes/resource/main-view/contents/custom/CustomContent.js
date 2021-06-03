@@ -47,15 +47,11 @@ const CustomContent = observer(() => {
   function renderName({ value, record }) {
     const commandStatus = record.get('commandStatus');
     const error = record.get('commandErrors');
-    const disabled = getEnvIsNotRunning() || commandStatus === 'operating';
     return (
       <StatusIcon
         status={commandStatus}
         name={value}
         error={error}
-        clickAble={!disabled}
-        onClick={openShow}
-        permissionCode={['choerodon.code.project.deploy.app-deployment.resource.ps.custome-resource.update']}
       />
     );
   }
@@ -71,6 +67,11 @@ const CustomContent = observer(() => {
       return null;
     }
     const buttons = [
+      {
+        service: ['choerodon.code.project.deploy.app-deployment.resource.ps.custome-resource.update'],
+        text: formatMessage({ id: 'edit' }),
+        action: openShow,
+      },
       {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.custom-resource.delete'],
         text: formatMessage({ id: 'delete' }),
@@ -120,7 +121,7 @@ const CustomContent = observer(() => {
         queryBar="bar"
       >
         <Column name="name" renderer={renderName} sortable />
-        <Column renderer={renderAction} width="0.7rem" />
+        <Column renderer={renderAction} width={60} />
         <Column name="k8sKind" />
         <Column name="lastUpdateDate" renderer={renderTime} width={105} sortable />
       </Table>

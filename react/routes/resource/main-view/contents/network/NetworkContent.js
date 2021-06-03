@@ -57,15 +57,11 @@ const NetworkContent = observer(() => {
     const name = record.get('name');
     const status = record.get('status');
     const error = record.get('error');
-    const disabled = getEnvIsNotRunning() || status === 'operating';
     return (
       <StatusIcon
         name={name}
         status={status || ''}
         error={error || ''}
-        clickAble={!disabled}
-        onClick={openModal}
-        permissionCode={['choerodon.code.project.deploy.app-deployment.resource.ps.update-net']}
       />
     );
   }
@@ -86,7 +82,9 @@ const NetworkContent = observer(() => {
   }
 
   function renderTarget({ record }) {
-    const { instances, selectors, endPoints, targetAppServiceName, targetAppServiceId } = record.get('target') || {};
+    const {
+      instances, selectors, endPoints, targetAppServiceName, targetAppServiceId,
+    } = record.get('target') || {};
     const node = [];
     const port = [];
     const len = endPoints ? 2 : 1;
@@ -94,7 +92,7 @@ const NetworkContent = observer(() => {
       node.push(
         <div className="net-target-item">
           <span>{targetAppServiceName}</span>
-        </div>
+        </div>,
       );
     } else if (instances && instances.length) {
       _.forEach(instances, ({ id: itemId, code, status }) => {
@@ -119,7 +117,9 @@ const NetworkContent = observer(() => {
     if (!_.isEmpty(selectors)) {
       _.forEach(selectors, (value, key) => node.push(
         <div className="net-target-item" key={key}>
-          <span>{key}</span>=<span>{value}</span>
+          <span>{key}</span>
+          =
+          <span>{value}</span>
         </div>,
       ));
     }
@@ -140,7 +140,7 @@ const NetworkContent = observer(() => {
       });
     }
     return (
-      <Fragment>
+      <>
         {
           _.map([node, port], (item, index) => {
             if (item.length) {
@@ -152,7 +152,7 @@ const NetworkContent = observer(() => {
                     <Popover
                       arrowPointAtCenter
                       placement="bottomRight"
-                      content={<Fragment>{item}</Fragment>}
+                      content={<>{item}</>}
                       overlayClassName={`${prefixCls}-network-table`}
                     >
                       <Icon type="expand_more" className="net-expend-icon" />
@@ -163,7 +163,7 @@ const NetworkContent = observer(() => {
             }
           })
         }
-      </Fragment>
+      </>
     );
   }
 
@@ -186,7 +186,11 @@ const NetworkContent = observer(() => {
       _.forEach(ports, ({ nodePort, port, targetPort }) => {
         portArr.push(
           <div key={port} className="net-config-item">
-            {nodePort || (type !== 'ClusterIP' && formatMessage({ id: 'null' }))} {port} {targetPort}
+            {nodePort || (type !== 'ClusterIP' && formatMessage({ id: 'null' }))}
+            {' '}
+            {port}
+            {' '}
+            {targetPort}
           </div>,
         );
       });
@@ -196,7 +200,7 @@ const NetworkContent = observer(() => {
     switch (type) {
       case 'ClusterIP':
         content = (
-          <Fragment>
+          <>
             <div className="net-config-wrap">
               <div className="net-type-title">
                 <FormattedMessage id={`${intlPrefix}.application.net.ip`} />
@@ -209,22 +213,22 @@ const NetworkContent = observer(() => {
               </div>
               <div>{portArr}</div>
             </div>
-          </Fragment>
+          </>
         );
         break;
       case 'NodePort':
         content = (
-          <Fragment>
+          <>
             <div className="net-config-item">
               <FormattedMessage id={`${intlPrefix}.application.net.nport`} />
             </div>
             <div>{portArr}</div>
-          </Fragment>
+          </>
         );
         break;
       case 'LoadBalancer':
         content = (
-          <Fragment>
+          <>
             <div className="net-config-wrap">
               <div className="net-type-title">
                 <FormattedMessage id={`${intlPrefix}.application.net.nport`} />
@@ -239,7 +243,7 @@ const NetworkContent = observer(() => {
                 <div>{loadBalanceIp}</div>
               </div>
             )}
-          </Fragment>
+          </>
         );
         break;
       default:
@@ -269,6 +273,11 @@ const NetworkContent = observer(() => {
     const id = record.get('id');
     const name = record.get('name');
     const buttons = [
+      {
+        service: ['choerodon.code.project.deploy.app-deployment.resource.ps.update-net'],
+        text: formatMessage({ id: 'edit' }),
+        action: openModal,
+      },
       {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-net'],
         text: formatMessage({ id: 'delete' }),
@@ -307,7 +316,7 @@ const NetworkContent = observer(() => {
         queryBar="bar"
       >
         <Column name="name" renderer={renderName} sortable />
-        <Column renderer={renderAction} width="0.7rem" />
+        <Column renderer={renderAction} width={60} />
         <Column renderer={renderTargetType} header={formatMessage({ id: `${intlPrefix}.application.net.targetType` })} width="1.2rem" />
         <Column renderer={renderTarget} header={formatMessage({ id: `${intlPrefix}.application.net.target` })} />
         <Column name="type" renderer={renderConfigType} width="1.5rem" />

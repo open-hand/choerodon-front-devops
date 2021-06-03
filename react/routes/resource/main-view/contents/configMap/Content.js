@@ -49,18 +49,14 @@ const ConfigMap = observer((props) => {
   function renderName({ value, record }) {
     const commandStatus = record.get('commandStatus');
     const error = record.get('error');
-    const disabled = getEnvIsNotRunning() || commandStatus === 'operating';
 
     return (
       <div className={`${prefixCls}-keyValue-name`}>
         <StatusIcon
           width={0.4}
           name={value}
-          clickAble={!disabled}
-          onClick={openModal}
           status={commandStatus || ''}
           error={error || ''}
-          permissionCode={permissions.edit}
         />
       </div>
     );
@@ -87,6 +83,11 @@ const ConfigMap = observer((props) => {
     const id = record.get('id');
     const name = record.get('name');
     const buttons = [
+      {
+        service: permissions.edit,
+        text: formatMessage({ id: 'edit' }),
+        action: openModal,
+      },
       {
         service: permissions.delete,
         text: formatMessage({ id: 'delete' }),
@@ -125,7 +126,7 @@ const ConfigMap = observer((props) => {
         queryBar="bar"
       >
         <Column name="name" sortable header={formatMessage({ id: `${intlPrefix}.configMap` })} renderer={renderName} />
-        <Column renderer={renderAction} width="0.7rem" />
+        <Column renderer={renderAction} width={60} />
         <Column name="key" renderer={renderKey} />
         <Column name="lastUpdateDate" sortable renderer={renderDate} width={105} />
       </Table>

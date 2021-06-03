@@ -1,7 +1,7 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
-import { Tooltip, Progress, Icon } from 'choerodon-ui';
+import { Tooltip, Progress, Icon } from 'choerodon-ui/pro';
 import classnames from 'classnames';
 import MouseOverWrapper from '../MouseOverWrapper';
 import './StatusIcon.less';
@@ -19,9 +19,10 @@ function StatusIcon(props) {
     onClick,
     record,
     permissionCode,
+    className,
   } = props;
   let statusDom = null;
-  const statusClass = classnames({
+  const statusClass = classnames(className, {
     'c7n-status-deleted': status === 'deleted',
     'c7n-status-unset': handleAtagClick,
   });
@@ -63,7 +64,7 @@ function StatusIcon(props) {
   };
 
   return (
-    <React.Fragment>
+    <>
       <MouseOverWrapper
         text={name}
         width={width || 0.15}
@@ -76,10 +77,11 @@ function StatusIcon(props) {
             onClick={onClick}
             record={record}
             permissionCode={permissionCode}
-          />) : <span className={statusClass}>{name}</span>}
+          />
+        ) : <span className={statusClass}>{name}</span>}
       </MouseOverWrapper>
       {statusDom}
-    </React.Fragment>
+    </>
   );
 }
 
@@ -95,6 +97,7 @@ StatusIcon.propTypes = {
   onClick: PropTypes.func,
   record: PropTypes.any,
   permissionCode: PropTypes.array,
+  className: PropTypes.string,
 };
 
 StatusIcon.defaultProps = {

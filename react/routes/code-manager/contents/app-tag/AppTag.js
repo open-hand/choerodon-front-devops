@@ -190,15 +190,15 @@ export default observer((props) => {
             <div className="c7n-tag-panel-name">
               <Icon type="local_offer" />
               <div className="c7n-tag-name">
-                <Permission
-                  service={['choerodon.code.project.develop.code-management.ps.tag.update']}
-                  defaultChildren={<span className="c7n-tag-name-text">{release.tagName}</span>}
-                >
-                  <span className="c7n-tag-name-text" onClick={(e) => { stopPropagation(e); openEdit(release.tagName, release.description !== 'empty' ? release.description : formatMessage({ id: 'apptag.release.empty' })); }}>{release.tagName}</span>
-                </Permission>
+                <span className="c7n-tag-name-text">{release.tagName}</span>
               </div>
               <div className="c7n-tag-action" onClick={stopPropagation}>
                 <Action data={[
+                  {
+                    service: ['choerodon.code.project.develop.code-management.ps.tag.update'],
+                    text: formatMessage({ id: 'edit' }),
+                    action: () => { openEdit(release.tagName, release.description !== 'empty' ? release.description : formatMessage({ id: 'apptag.release.empty' })); },
+                  },
                   {
                     service: [
                       // 'choerodon.code.project.develop.code-management.ps.tag.delete',
