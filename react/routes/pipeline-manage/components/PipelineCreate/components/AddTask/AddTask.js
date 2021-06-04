@@ -1454,7 +1454,8 @@ const AddTask = observer(() => {
         name="scannerType"
         colSpan={2}
         addonAfter={
-          <Tips helpText="SonarScanner支持扫描任意类型的project，SonarMaven只支持扫描Maven类型的project" />
+          <Tips helpText="SonarMaven: 用于扫描Maven项目的特定扫描器
+          SonarScanner: 对于没有特定扫描器的项目，可以使用SonarScanner扫描" />
         }
       >
         <Option value="SonarScanner">SonarScanner</Option>
