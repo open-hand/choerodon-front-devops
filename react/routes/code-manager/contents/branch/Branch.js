@@ -367,16 +367,6 @@ function Branch(props) {
                 {`${issueCode} ${issueName}`}
               </Tooltip>
             </a>
-            {record.get('issueInfoList')?.length > 1 && !index ? (
-              <Popover
-                placement="bottom"
-                content={issueContent}
-                overlayClassName={`${prefixCls}-issue-popover`}
-                arrowPointAtCenter
-              >
-                <Icon type="expand_more" className={`${prefixCls}-issue-expand`} />
-              </Popover>
-            ) : null}
           </div>
           <div className={`${prefixCls}-issue-item-project`}>
             <Icon type="project_line" className={`${prefixCls}-issue-item-project-icon`} />
@@ -389,6 +379,16 @@ function Branch(props) {
       <div className={`${prefixCls}-issue`}>
         <span className={`${prefixCls}-issue-label`}>关联：</span>
         {issueContent ? issueContent[0] : null}
+        {issueContent?.length > 1 ? (
+          <Popover
+            placement="bottom"
+            content={issueContent}
+            overlayClassName={`${prefixCls}-issue-popover`}
+            arrowPointAtCenter
+          >
+            <Icon type="expand_more" className={`${prefixCls}-issue-expand`} />
+          </Popover>
+        ) : null}
       </div>
     )
   }
