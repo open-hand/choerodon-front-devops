@@ -1,7 +1,9 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { runInAction } from 'mobx';
 import { Button } from 'choerodon-ui/pro';
 import { Permission } from '@choerodon/boot';
+import { observer } from 'mobx-react-lite';
+import { C7NTabs } from '@choerodon/components';
 import { useResourceStore } from '../../../stores';
 
 import './index.less';
@@ -18,7 +20,6 @@ const SidebarHeader = () => {
     resourceStore,
     treeDs,
   } = useResourceStore();
-  const { getViewType } = resourceStore;
   const buttonProps = useMemo(() => ({
     disabled: treeDs.status === 'loading',
     color: 'primary',
@@ -35,33 +36,54 @@ const SidebarHeader = () => {
   }
 
   function chooseInstance() {
-    getViewType !== IST_VIEW_TYPE && handleChoose(IST_VIEW_TYPE);
+    resourceStore.getViewType !== IST_VIEW_TYPE && handleChoose(IST_VIEW_TYPE);
   }
 
   function chooseResource() {
-    getViewType !== RES_VIEW_TYPE && handleChoose(RES_VIEW_TYPE);
+    resourceStore.getViewType !== RES_VIEW_TYPE && handleChoose(RES_VIEW_TYPE);
   }
+
+  const handleChangeTabs = (key) => {
+    if (key === IST_VIEW_TYPE) {
+      chooseInstance();
+    } else {
+      chooseResource();
+    }
+  };
 
   return (
     <div className={`${prefixCls}-sidebar-head`}>
-      <Button
-        {...buttonProps}
-        onClick={chooseInstance}
-        className={getViewType === IST_VIEW_TYPE ? `${prefixCls}-sidebar-active` : ''}
-      >
-        {formatMessage({ id: `${intlPrefix}.viewer.${IST_VIEW_TYPE}` })}
-      </Button>
-      <Permission
-        service={['choerodon.code.project.deploy.app-deployment.resource.ps.resource']}
-      >
-        <Button
-          {...buttonProps}
-          onClick={chooseResource}
-          className={getViewType === RES_VIEW_TYPE ? `${prefixCls}-sidebar-active` : ''}
-        >
-          {formatMessage({ id: `${intlPrefix}.viewer.${RES_VIEW_TYPE}` })}
-        </Button>
-      </Permission>
+      <div style={{ position: 'relative', bottom: 11 }}>
+        <C7NTabs
+          driveRouteKey="activeKey"
+          onChange={handleChangeTabs}
+          tabs={[{
+            tab: formatMessage({ id: `${intlPrefix}.viewer.${IST_VIEW_TYPE}` }),
+            key: IST_VIEW_TYPE,
+          }, {
+            tab: formatMessage({ id: `${intlPrefix}.viewer.${RES_VIEW_TYPE}` }),
+            key: RES_VIEW_TYPE,
+          }]}
+        />
+      </div>
+      {/* <Button */}
+      {/*  {...buttonProps} */}
+      {/*  onClick={chooseInstance} */}
+      {/*  className={getViewType === IST_VIEW_TYPE ? `${prefixCls}-sidebar-active` : ''} */}
+      {/* > */}
+      {/*  {formatMessage({ id: `${intlPrefix}.viewer.${IST_VIEW_TYPE}` })} */}
+      {/* </Button> */}
+      {/* <Permission */}
+      {/*  service={['choerodon.code.project.deploy.app-deployment.resource.ps.resource']} */}
+      {/* > */}
+      {/*  <Button */}
+      {/*    {...buttonProps} */}
+      {/*    onClick={chooseResource} */}
+      {/*    className={getViewType === RES_VIEW_TYPE ? `${prefixCls}-sidebar-active` : ''} */}
+      {/*  > */}
+      {/*    {formatMessage({ id: `${intlPrefix}.viewer.${RES_VIEW_TYPE}` })} */}
+      {/*  </Button> */}
+      {/* </Permission> */}
     </div>
   );
 };

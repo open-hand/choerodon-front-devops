@@ -29,8 +29,9 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
     const viewTypeMemo = useMemo(() => viewTypeMappings, []);
     const itemTypes = useMemo(() => itemTypeMappings, []);
     const {
-      viewType: newViewType = viewTypeMemo.IST_VIEW_TYPE,
+      activeKey,
     } = state || queryString.parse(search) || {};
+    const newViewType = activeKey || '';
     const resourceStore = useStore(newViewType);
     const viewType = resourceStore.getViewType;
     const treeDs = useMemo(() => new DataSet(TreeDataSet({
