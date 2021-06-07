@@ -74,6 +74,7 @@ export default observer(() => {
     pipelineStageMainSource,
     columnIndex,
     witchColumnJobIndex,
+    index: taskIndex,
   } = useAddCDTaskStore();
 
   const [branchsList, setBranchsList] = useState([]);
@@ -1214,7 +1215,7 @@ export default observer(() => {
           lists = [...lists, ...i.jobList];
         } else {
           //  如果遍历列是当切列
-          lists = [...lists, ...i.jobList.splice(0, witchColumnJobIndex - 1)];
+          lists = [...lists, ...i.jobList.splice(0, taskIndex)];
         }
       }
     });
