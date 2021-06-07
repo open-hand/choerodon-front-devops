@@ -272,7 +272,6 @@ const EnvModals = observer(() => {
       handler: openLinkService,
       display: true,
       disabled: notReady,
-      group: 1,
     }, {
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.deploy-config'],
       disabled: notReady,
@@ -280,7 +279,6 @@ const EnvModals = observer(() => {
       icon: 'playlist_add',
       handler: openConfigModal,
       display: true,
-      group: 1,
     }, {
       name: '部署',
       icon: 'cloud_done-o',
@@ -297,7 +295,6 @@ const EnvModals = observer(() => {
           handler: openBatchDeploy,
         },
       ],
-      group: 1,
     }, {
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.permission'],
       name: formatMessage({ id: `${intlPrefix}.modal.permission` }),
@@ -305,26 +302,22 @@ const EnvModals = observer(() => {
       handler: openPermission,
       display: true,
       disabled: notReady,
-      group: 1,
     }, {
       disabled: notReady,
       name: formatMessage({ id: `${intlPrefix}.modal.env-detail` }),
       icon: 'find_in_page-o',
       handler: openEnvDetail,
       display: true,
-      group: 2,
     }, {
       disabled: notReady,
       name: formatMessage({ id: `${intlPrefix}.environment.config-lab` }),
       icon: 'account_balance',
       handler: linkToConfig,
       display: true,
-      group: 2,
     }, {
       icon: 'refresh',
       handler: refresh,
       display: true,
-      group: 2,
     }];
   }
 

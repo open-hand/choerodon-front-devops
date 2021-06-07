@@ -173,7 +173,6 @@ const AppModals = observer(() => {
     return [{
       name: '创建资源',
       icon: 'playlist_add',
-      group: 1,
       groupBtnItems: [
         {
           permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.network'],
@@ -202,11 +201,9 @@ const AppModals = observer(() => {
       name: formatMessage({ id: `${intlPrefix}.service.detail` }),
       icon: 'find_in_page-o',
       handler: openDetail,
-      group: 2,
     }, {
       icon: 'refresh',
       handler: refresh,
-      group: 2,
     }];
   }
 

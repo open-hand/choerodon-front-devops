@@ -240,7 +240,6 @@ const IstModals = injectIntl(observer(() => {
       handler: openValueModal,
       display: true,
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.values'],
-      group: 1,
       disabled: btnDisabled || marketDisable,
       tooltipsConfig: {
         placement: 'bottom',
@@ -253,7 +252,6 @@ const IstModals = injectIntl(observer(() => {
       handler: openUpgradeModal,
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.example'],
       display: !isMarket,
-      group: 1,
       disabled: btnDisabled,
     }, {
       name: formatMessage({ id: 'upgrade' }),
@@ -261,7 +259,6 @@ const IstModals = injectIntl(observer(() => {
       handler: openMarketUpgradeModal,
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.market.upgrade'],
       display: isMarket && !isMiddleware,
-      group: 1,
       disabled: btnDisabled || marketDisable || !upgradeAvailable,
       tooltipsConfig: {
         placement: 'bottom',
@@ -273,19 +270,15 @@ const IstModals = injectIntl(observer(() => {
       icon: 'redeploy_line',
       handler: openRedeploy,
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.redeploy'],
-      display: true,
-      group: 1,
       disabled: btnDisabled || marketDisable,
       tooltipsConfig: {
         title: !btnDisabled && marketDisable ? formatMessage({ id: `${intlPrefix}.instance.disable.message` }) : '',
         placement: 'bottom',
       },
-      disabledMessage: !btnDisabled ? formatMessage({ id: `${intlPrefix}.instance.disable.message` }) : null,
     }, {
       icon: 'refresh',
       handler: refresh,
       display: true,
-      group: 2,
     }];
 
     return <HeaderButtons items={buttons} showClassName />;

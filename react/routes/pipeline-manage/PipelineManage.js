@@ -217,17 +217,14 @@ const PipelineManage = observer(() => {
       icon: 'playlist_add',
       handler: handleCreatePipeline,
       display: true,
-      group: 1,
     }, {
       permissions: ['choerodon.code.project.develop.ci-pipeline.ps.variable.project'],
       name: formatMessage({ id: `${intlPrefix}.settings.global` }),
       icon: 'settings-o',
       handler: () => openSettingsModal('global'),
       display: true,
-      group: 1,
     }, {
       name: '更多操作',
-      group: 1,
       groupBtnItems: [
         {
           name: formatMessage({ id: `${intlPrefix}.gitlab.runner` }),
@@ -245,14 +242,12 @@ const PipelineManage = observer(() => {
           icon: 'edit-o',
           handler: openEditModal,
           display: true,
-          group: 2,
         }, {
           permissions: ['choerodon.code.project.develop.ci-pipeline.ps.variable.app'],
           name: formatMessage({ id: `${intlPrefix}.settings.local` }),
           icon: 'settings-o',
           handler: () => openSettingsModal('local'),
           display: true,
-          group: 2,
         });
       } else {
         const newStatus = status || detailStatus;
@@ -262,28 +257,24 @@ const PipelineManage = observer(() => {
           icon: 'find_in_page-o',
           handler: openRecordDetail,
           display: true,
-          group: 2,
         }, {
           permissions: ['choerodon.code.project.develop.ci-pipeline.ps.cancel'],
           name: formatMessage({ id: `${intlPrefix}.execute.cancel` }),
           icon: 'power_settings_new',
           handler: () => changeRecordExecute('cancel'),
           display: newStatus === 'pending' || newStatus === 'running',
-          group: 2,
         }, {
           permissions: ['choerodon.code.project.develop.ci-pipeline.ps.retry'],
           name: formatMessage({ id: `${intlPrefix}.execute.retry` }),
           icon: 'refresh',
           handler: () => changeRecordExecute('retry'),
           display: newStatus === 'failed' || newStatus === 'canceled',
-          group: 2,
         }, {
           permissions: ['choerodon.code.project.develop.ci-pipeline.ps.audit'],
           name: formatMessage({ id: `${intlPrefix}.execute.audit` }),
           icon: 'authorize',
           handler: openAuditModal,
           display: newStatus === 'not_audit' && newDevopsCdPipelineDeatilVO && newDevopsCdPipelineDeatilVO.execute,
-          group: 2,
         });
       }
     }
@@ -291,7 +282,6 @@ const PipelineManage = observer(() => {
       icon: 'refresh',
       handler: handleRefresh,
       display: true,
-      group: 2,
     });
     return buttons;
   }
