@@ -53,7 +53,7 @@
     "simplebar-react": "^1.2.1",
     "streamsaver": "^2.0.5",
     "styled-components": "5.2.0",
-    "timeago-react": "^2.0.0",
+    "timeago-react": "^3.0.0",
     "uuid": "^3.3.3",
     "web-streams-polyfill": "^3.0.2",
     "xterm": "^3.12.0"
