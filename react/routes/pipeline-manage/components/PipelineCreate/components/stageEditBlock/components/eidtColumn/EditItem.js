@@ -77,6 +77,8 @@ const EditItem = (props) => {
           image={image}
           columnIndex={columnIndex}
           witchColumnJobIndex={witchColumnJobIndex}
+          sequence={sequence}
+          index={index}
         />
       ) : (
         <AddCDTask
@@ -89,6 +91,8 @@ const EditItem = (props) => {
           handleOk={handleEditOk}
           columnIndex={columnIndex}
           witchColumnJobIndex={witchColumnJobIndex}
+          sequence={sequence}
+          index={index}
         />
       ),
 
