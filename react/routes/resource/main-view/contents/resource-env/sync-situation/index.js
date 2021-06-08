@@ -73,7 +73,7 @@ export default function Situation() {
         <Column name="error" renderer={renderMsg} />
         <Column name="filePath" renderer={renderFileLink} />
         <Column name="commit" renderer={renderCommit} />
-        <Column name="lastUpdateDate" sortable renderer={renderTime} width={100} />
+        <Column name="lastUpdateDate" sortable renderer={renderTime} width={105} />
       </Table>
     </div>
   );
