@@ -18,6 +18,7 @@ import { Icon } from 'choerodon-ui';
 import StatusDot from '@/components/status-dot';
 import BaseComDeployServices from '@/routes/deployment/modals/base-comDeploy/services';
 import Tips from '@/components/new-tips';
+import { NewTips } from '@choerodon/components';
 import ResourceSetting from './components/resource-setting';
 import {
   mapping,
@@ -912,10 +913,23 @@ export default observer(() => {
       <>
         <p className="c7ncd-baseDeploy-middle-deploySetting">
           主机设置
+          <NewTips
+            helpText="配置部署MySQL服务的主机信息以及MySQL的运行时配置。"
+            style={{
+              marginLeft: 5,
+              position: 'relative',
+              bottom: 2,
+            }}
+          />
           <Icon type="expand_less" />
         </p>
         <Form dataSet={BaseDeployDataSet} columns={3}>
-          <Password autoComplete="new-password" colSpan={1} name={mapping.password.name} />
+          <Password
+            autoComplete="new-password"
+            colSpan={1}
+            name={mapping.password.name}
+            addonAfter={<Tips helpText="默认密码为Changeit!123。修改密码需满足以下要求：1、长度最短8位 2、至少包含一个数字 3、至少包含一个大写字母 4、至少包含一个小写字母 5、至少包含一个特殊符号" />}
+          />
           {
             BaseDeployDataSet
               .current
