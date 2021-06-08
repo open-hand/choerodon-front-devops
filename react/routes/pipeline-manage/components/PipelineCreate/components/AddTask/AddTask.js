@@ -1269,30 +1269,36 @@ const AddTask = observer(() => {
                   ];
                 } if (type === 'docker') {
                   return [
-                    <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center' }}>
-                      <TextField
-                        style={{ width: 312 }}
-                        name="dockerFilePath"
-                        addonAfter={<Tips helpText="Dockerfile路径为Dockerfile文件相对于代码库根目录所在路径，如docker/Dockerfile或Dockerfile" />}
-                      />
-                      <TextField
-                        className="dockerContextDir"
-                        style={{ width: 312 }}
-                        name="dockerContextDir"
-                        addonAfter={<Tips helpText="ContextPath为docker build命令执行上下文路径。填写相对于代码根目录的路径，如docker" />}
-                        onFocus={() => {
-                          let res;
-                          const value = AddTaskFormDataSet.current.get('dockerFilePath');
-                          const arrValue = value.split('');
-                          const lastIndex = _.findLastIndex(arrValue, (o) => o === '/');
-                          if (lastIndex !== -1) {
-                            res = arrValue.slice(0, lastIndex).join('');
-                          } else {
-                            res = '.';
-                          }
-                          AddTaskFormDataSet.current.set('dockerContextDir', res);
-                        }}
-                      />
+                    <div style={{ marginBottom: 20, display: 'flex', alignItems: 'flex-start' }}>
+                      <div style={{ width: 326 }}>
+                        <TextField
+                          style={{ width: 312 }}
+                          name="dockerFilePath"
+                          addonAfter={<Tips helpText="Dockerfile路径为Dockerfile文件相对于代码库根目录所在路径，如docker/Dockerfile或Dockerfile" />}
+                        />
+                      </div>
+                      <div
+                        style={{ width: 326 }}
+                      >
+                        <TextField
+                          className="dockerContextDir"
+                          style={{ width: 312 }}
+                          name="dockerContextDir"
+                          addonAfter={<Tips helpText="ContextPath为docker build命令执行上下文路径。填写相对于代码根目录的路径，如docker" />}
+                          onFocus={() => {
+                            let res;
+                            const value = AddTaskFormDataSet.current.get('dockerFilePath');
+                            const arrValue = value.split('');
+                            const lastIndex = _.findLastIndex(arrValue, (o) => o === '/');
+                            if (lastIndex !== -1) {
+                              res = arrValue.slice(0, lastIndex).join('');
+                            } else {
+                              res = '.';
+                            }
+                            AddTaskFormDataSet.current.set('dockerContextDir', res);
+                          }}
+                        />
+                      </div>
                     </div>,
                     <div style={{ position: 'relative', marginBottom: 20 }}>
                       <SelectBox
