@@ -196,6 +196,7 @@ const commonField = {
   secrets: '密文',
   customResources: '自定义资源',
   pvcs: 'PVC',
+  workload: '工作负载',
 };
 
 const deployment = {
@@ -447,6 +448,13 @@ const deployment = {
   'c7ncd.deployment.market.version.currentVersion': '当前版本',
   'c7ncd.deployment.market.version.lastVersion': '最新版本',
   'c7ncd.deployment.market.version.fixVersion': '修复版本',
+  'c7ncd.deployment.workload.resource': '来源',
+  'c7ncd.deployment.workload.resource.deploy': '应用部署',
+  'c7ncd.deployment.workload.resource.manual': '手动添加',
+  'c7ncd.deployment.workload.create': '创建{name}',
+  'c7ncd.deployment.workload.create.type': '选择添加方式',
+  'c7ncd.deployment.workload.create.type.upload': '直接上传YAML文件',
+  'c7ncd.deployment.workload.create.type.copy': '粘贴YAML内容添加',
 
 };
 
