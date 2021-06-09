@@ -733,17 +733,13 @@ export default observer(() => {
       {value}
       {
         record.get(paramMapping.tooltip.name) && (
-          <Tooltip title={(<span style={{ whiteSpace: 'pre-line' }}>{record.get(paramMapping.tooltip.name)}</span>)}>
-            <Icon
-              style={{
-                color: 'rgba(0, 0, 0, 0.36)',
-                position: 'relative',
-                bottom: '1px',
-                fontSize: '13px',
-              }}
-              type="help"
-            />
-          </Tooltip>
+          <NewTips
+            helpText={record.get(paramMapping.tooltip.name)}
+            style={{
+              position: 'relative',
+              bottom: 1,
+            }}
+          />
         )
       }
     </span>
