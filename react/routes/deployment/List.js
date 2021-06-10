@@ -17,6 +17,7 @@ import jar from '@/images/jar.svg';
 import { StatusTag } from '@choerodon/components';
 import { SMALL } from '@/utils/getModalWidth';
 import YamlEditor from '@/components/yamlEditor';
+import ReactCodeMirror from 'react-codemirror';
 import { mapping } from './stores/ListDataSet';
 import { useDeployStore } from './stores';
 import TimePopover from '../../components/timePopover/TimePopover';
@@ -26,6 +27,8 @@ import BaseComDeploy from './modals/base-comDeploy';
 import BatchDeploy from './modals/batch-deploy';
 import Tips from '../../components/new-tips';
 
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/theme/base16-dark.css';
 import './index.less';
 
 const { Column } = Table;
@@ -37,6 +40,14 @@ const modalStyle2 = {
 };
 const statusTagsStyle = {
   marginRight: 8,
+};
+
+const logOptions = {
+  theme: 'base16-dark',
+  mode: 'shell',
+  readOnly: true,
+  lineNumbers: false,
+  lineWrapping: true,
 };
 
 const Deployment = withRouter(observer((props) => {
@@ -376,11 +387,10 @@ const Deployment = withRouter(observer((props) => {
       key: commandModalKey,
       title: '查看指令',
       style: { width: SMALL },
-      children: <YamlEditor
-        readOnly={false}
+      children: <ReactCodeMirror
         value={log || ''}
-        originValue={log || ''}
-        modeChange={false}
+        options={logOptions}
+        className={`${prefixCls}-content-command`}
       />,
       okText: formatMessage({ id: 'close' }),
       okCancel: false,
