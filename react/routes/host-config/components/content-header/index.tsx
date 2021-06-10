@@ -114,8 +114,6 @@ const ContentHeader: React.FC<any> = observer((): any => {
           />
         </Form>
         <Button
-          funcType={'flat' as FuncType}
-          color={'primary' as ButtonColor}
           onClick={handleSearch}
           className={`${prefixCls}-content-search-btn`}
           disabled={listDs.status === 'loading'}
