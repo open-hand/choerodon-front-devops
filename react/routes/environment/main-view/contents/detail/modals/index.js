@@ -217,6 +217,15 @@ const EnvModals = observer(() => {
       display: true,
       group: 2,
     }, {
+      name: '更多操作',
+      groupBtnItems: [
+        {
+          name: formatMessage({ id: `${currentIntlPrefix}.group.create` }),
+          handler: openGroupModal,
+        },
+      ],
+      group: 2,
+    }, {
       icon: 'refresh',
       handler: refresh,
       display: true,
@@ -224,30 +233,8 @@ const EnvModals = observer(() => {
     }];
   }
 
-  function handleMenuClick(e) {
-    e.domEvent.stopPropagation();
-    const handlerMapping = {
-      [ITEM_GROUP]: openGroupModal,
-    };
-
-    const handler = handlerMapping[e.key];
-    handler && handler();
-  }
-
-  const actionItem = useMemo(() => ([{
-    display: true,
-    key: ITEM_GROUP,
-    text: formatMessage({ id: `${currentIntlPrefix}.group.create` }),
-  }]), [disabled]);
-
   return (
-    <HeaderButtons items={getButtons()} showClassName>
-      <HeaderAction
-        style={actionStyle}
-        items={actionItem}
-        menuClick={handleMenuClick}
-      />
-    </HeaderButtons>
+    <HeaderButtons items={getButtons()} showClassName />
   );
 });
 
