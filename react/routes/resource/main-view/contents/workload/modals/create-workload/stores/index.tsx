@@ -15,6 +15,8 @@ interface ContentProps {
   formDs: DataSetProps,
   envName: string,
   modal: any,
+  refresh(): void,
+  workloadId?: string,
 }
 
 const Store = createContext({} as ContentProps);

@@ -46,25 +46,25 @@ export const StoreProvider = injectIntl(observer((props: any) => {
   }), []);
 
   const workloadStore = useStore(tabs);
-  const resourceDs = useMemo(() => new DataSet({
+  const sourceDs = useMemo(() => new DataSet({
     data: [{
-      text: formatMessage({ id: `${intlPrefix}.workload.resource.deploy` }),
-      value: 'deploy',
+      text: formatMessage({ id: `${intlPrefix}.workload.source.deploy` }),
+      value: 'true',
     }, {
-      text: formatMessage({ id: `${intlPrefix}.workload.resource.manual` }),
-      value: 'manual',
+      text: formatMessage({ id: `${intlPrefix}.workload.source.manual` }),
+      value: 'false',
     }],
     selection: 'single' as DataSetSelection,
   }), []);
   const tableDs = useMemo(() => new DataSet(TableDataSet({
-    formatMessage, projectId, intlPrefix, resourceDs,
+    formatMessage, projectId, intlPrefix, sourceDs,
   })), [projectId]);
 
   useEffect(() => {
-    // if (parentId) {
-    //   tableDs.setQueryParameter('envId', parentId);
-    //   tableDs.query();
-    // }
+    if (parentId) {
+      tableDs.setQueryParameter('env_id', parentId);
+      tableDs.query();
+    }
   }, [parentId]);
 
   const value = {

@@ -31,11 +31,13 @@ const CustomModals = observer(() => {
   ), [workloadStore.getTabKey]);
 
   const refresh = useCallback(() => {
-    treeDs.query();
-    tableDs.query();
+    // treeDs.query();
+    // tableDs.query();
   }, []);
 
   const openCreateModal = useCallback(() => {
+    const envRecord = treeDs.find((record: Record) => record.get('key') === parentId);
+    const envName = envRecord && envRecord.get('name');
     Modal.open({
       key: createModalKey,
       style: {
@@ -47,6 +49,8 @@ const CustomModals = observer(() => {
         resourceStore={resourceStore}
         intlPrefix={intlPrefix}
         prefixCls={prefixCls}
+        refresh={refresh}
+        envName={envName}
       />,
       okText: formatMessage({ id: 'create' }),
     });
