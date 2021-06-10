@@ -479,26 +479,28 @@ const ListView = withRouter(observer((props) => {
                 {/*  }*/}
                 {/*</span>*/}
                     <div className="c7ncd-appService-item-center">
-                      <div className="c7ncd-appService-item-center-line" style={{ justifyContent: 'flex-start' }}>
-                        <Tooltip title={record.get('name')}>
-                          <span className="c7ncd-appService-item-center-line-name">{record.get('name')}</span>
-                        </Tooltip>
-                        {
-                          renderStatus({value:record.get('active'), record})
-                        }
-                        {record.get('errorMessage') && <Tooltip overlayStyle={{ maxHeight: 500, overflow: 'auto' }} title={record.get('errorMessage')}>
-                          <Icon
-                            type="info"
-                            style={{
-                              color: '#f76776',
-                              marginRight: '5px'
-                            }}
-                          />
-                        </Tooltip>
-                        }
-                        <span className="c7ncd-appService-item-center-line-type">
-                      <FormattedMessage id={`${intlPrefix}.type.${record.get('type')}`} />
-                    </span>
+                      <div className="c7ncd-appService-item-center-line" style={{ justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <Tooltip title={record.get('name')}>
+                            <span className="c7ncd-appService-item-center-line-name">{record.get('name')}</span>
+                          </Tooltip>
+                          {
+                            renderStatus({value:record.get('active'), record})
+                          }
+                          {record.get('errorMessage') && <Tooltip overlayStyle={{ maxHeight: 500, overflow: 'auto' }} title={record.get('errorMessage')}>
+                            <Icon
+                              type="info"
+                              style={{
+                                color: '#f76776',
+                                marginRight: '5px'
+                              }}
+                            />
+                          </Tooltip>
+                          }
+                          <span className="c7ncd-appService-item-center-line-type">
+                            <FormattedMessage id={`${intlPrefix}.type.${record.get('type')}`} />
+                          </span>
+                        </div>
                         {renderActions({record})}
                       </div>
                       <div className="c7ncd-appService-item-center-line" style={{ justifyContent: 'flex-start' }}>
