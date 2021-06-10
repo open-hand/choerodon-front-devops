@@ -677,7 +677,7 @@ export default observer(() => {
    * @returns {*}
    */
   const renderParamsScope = ({ value }) => (
-    <Tooltip title={value}>
+    <Tooltip placement="topLeft" title={value}>
       {value}
     </Tooltip>
   );
@@ -736,6 +736,7 @@ export default observer(() => {
           <NewTips
             helpText={record.get(paramMapping.tooltip.name)}
             style={{
+              marginLeft: 5,
               position: 'relative',
               bottom: 1,
             }}
@@ -951,8 +952,8 @@ export default observer(() => {
                         padding: '10px 10px 10px 0',
                         display: 'flex',
                         alignItems: 'center',
-                        borderTop: i.get(hostMapping.checked.name) ? '2px solid rgba(0, 0, 0, 0.12)' : 'unset',
-                        borderBottom: i.get(hostMapping.checked.name) ? '2px solid rgba(0, 0, 0, 0.12)' : 'unset',
+                        borderTop: i.get(hostMapping.checked.name) ? '1px solid rgba(0, 0, 0, 0.12)' : 'unset',
+                        borderBottom: i.get(hostMapping.checked.name) ? '1px solid rgba(0, 0, 0, 0.12)' : 'unset',
                         position: 'relative',
                         bottom: '1px',
                       }}
@@ -1145,15 +1146,7 @@ export default observer(() => {
           <p className="c7ncd-baseDeploy-middle-deploySetting">
             PV标签
             <Icon type="expand_less" />
-            <Tooltip title="此处输入的PV标签用于定位对应的PV，此处需保证匹配得到的PV数量应大于等于slaveCount的数量">
-              <Icon
-                style={{
-                  color: 'rgba(15, 19, 88, 0.35)',
-                  fontSize: '16px',
-                }}
-                type="help"
-              />
-            </Tooltip>
+            <NewTips helpText="此处输入的PV标签用于定位对应的PV，此处需保证匹配得到的PV数量应大于等于slaveCount的数量" />
           </p>,
           PVLabelsDataSet.records.filter((item) => !item.isRemoved).map((item) => (
             <>
