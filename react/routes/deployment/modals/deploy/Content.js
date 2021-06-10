@@ -237,7 +237,7 @@ const DeployModal = observer(() => {
             helpText={formatMessage({ id: `${intlPrefix}.source.tips` })}
             title={formatMessage({ id: `${intlPrefix}.source` })}
           />
-          <Form record={record} columns={3}>
+          <Form className="c7ncd-deploy-content-appService" record={record} columns={3}>
             <SelectBox name="appServiceSource" colSpan={1} onOption={handleOptionProps}>
               <Option value="normal_service">
                 <Tooltip title={hasDevops ? '' : '仅【DevOps流程】项目类型支持部署本项目应用服务'}>
