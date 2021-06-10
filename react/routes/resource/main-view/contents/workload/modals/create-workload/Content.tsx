@@ -6,7 +6,6 @@ import {
 import { Upload } from 'choerodon-ui';
 import YamlEditor from '@/components/yamlEditor/YamlEditor';
 import classnames from 'classnames';
-import { Choerodon } from '@choerodon/master';
 import { UploadFile } from '@/interface';
 import { useCreateWorkloadStore } from './stores';
 
@@ -19,6 +18,8 @@ const CreateWorkloadContent = observer(() => {
     intlPrefix,
     intl: { formatMessage },
     modal,
+    refresh,
+    workloadId,
   } = useCreateWorkloadStore();
 
   const [hasEditorError, setHasEditorError] = useState(false);
@@ -33,9 +34,8 @@ const CreateWorkloadContent = observer(() => {
 
   const record = useMemo(() => formDs.current, [formDs.current]);
 
-  modal.handleOk(() => {
+  modal.handleOk(async () => {
     const isUpload = record?.get('type') === 'upload';
-    const formData = new FormData();
     if (isUpload) {
       if (errorMessage) {
         return false;
@@ -52,6 +52,16 @@ const CreateWorkloadContent = observer(() => {
         message.error(formatMessage({ id: 'contentCanNotBeEmpty' }));
         return false;
       }
+    }
+    try {
+      const res = await formDs.submit();
+      if (res && res.failed) {
+        return false;
+      }
+      refresh();
+      return true;
+    } catch (e) {
+      return false;
     }
     return true;
   });
@@ -98,10 +108,12 @@ const CreateWorkloadContent = observer(() => {
 
   return (
     <div className={prefixCls}>
-      <Form dataSet={formDs} columns={2}>
-        <SelectBox name="type" onChange={handleTypeChange} />
-        <TextField name="envName" disabled />
-      </Form>
+      {!workloadId ? (
+        <Form dataSet={formDs} columns={6}>
+          <SelectBox name="type" onChange={handleTypeChange} colSpan={3} />
+          <TextField name="envName" disabled colSpan={2} />
+        </Form>
+      ) : null}
       {record?.get('type') === 'paste' ? (
         // @ts-ignore
         <YamlEditor

@@ -1,30 +1,24 @@
 import { DataSetProps, FieldType, DataSet } from '@/interface';
 import WorkloadApis from '@/routes/resource/apis/WorkloadApis';
-import getTablePostData from '@/utils/getTablePostData';
 
 interface TableProps {
   intlPrefix: string,
   formatMessage(arg0: object): string,
   projectId: number,
-  resourceDs: DataSet,
+  sourceDs: DataSet,
 }
 
 export default ({
-  intlPrefix, formatMessage, projectId, resourceDs,
+  intlPrefix, formatMessage, projectId, sourceDs,
 }: TableProps): DataSetProps => ({
   autoCreate: false,
   autoQuery: false,
   selection: false,
   pageSize: 10,
   transport: {
-    read: ({ data }) => {
-      const postData = getTablePostData(data);
-      const { envId } = data || {};
-      return ({
-        url: WorkloadApis.getTableData(projectId, envId),
-        method: 'post',
-        data: postData,
-      });
+    read: {
+      url: WorkloadApis.getTableData(projectId),
+      method: 'get',
     },
     destroy: ({ data: [data] }) => ({
       url: '',
@@ -38,23 +32,26 @@ export default ({
     name: 'pod',
     label: 'Pod',
   }, {
-    name: 'label',
+    name: 'labels',
     label: formatMessage({ id: 'label' }),
   }, {
-    name: 'port',
+    name: 'ports',
     label: formatMessage({ id: 'port' }),
   }, {
-    name: 'lastUpdateDate',
+    name: 'age',
     type: 'string' as FieldType,
     label: formatMessage({ id: 'updateDate' }),
   }, {
-    name: 'resource',
-    label: formatMessage(({ id: `${intlPrefix}.workload.resource` })),
+    name: 'source',
+    label: formatMessage(({ id: `${intlPrefix}.workload.source` })),
   }],
   queryFields: [{
     name: 'name',
     label: formatMessage({ id: 'name' }),
-    options: resourceDs,
+  }, {
+    name: 'from_instance',
+    label: formatMessage(({ id: `${intlPrefix}.workload.source` })),
+    options: sourceDs,
     textField: 'text',
     valueField: 'value',
   }],

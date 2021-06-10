@@ -24,14 +24,27 @@ export default ({
       url: workloadId ? WorkloadApis.getWorkloadDetail(projectId, workloadId) : '',
       method: 'get',
     },
-    create: ({ data: [data] }: any) => ({
-      url: WorkloadApis.createWorkload(projectId, envId),
-      method: 'post',
-    }),
-    update: ({ data: [data] }: any) => ({
-      url: workloadId ? WorkloadApis.updateWorkload(projectId, workloadId) : '',
-      method: 'put',
-    }),
+    submit: ({ data: [data] }: any) => {
+      const formData = new FormData();
+      formData.append('envId', envId);
+      if (data.type === 'paste') {
+        formData.append('content', data.value);
+      } else {
+        formData.append('contentFile', data.file);
+      }
+      if (workloadId) {
+        formData.append('operateType', 'update');
+        formData.append('resourceId', workloadId);
+      } else {
+        formData.append('operateType', 'create');
+      }
+      return ({
+        url: WorkloadApis.createWorkload(projectId),
+        method: 'post',
+        data: formData,
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+    },
   },
   fields: [{
     name: 'type',
@@ -46,4 +59,10 @@ export default ({
     defaultValue: envName,
     ignore: 'always' as FieldIgnore,
   }],
+  events: {
+    load: ({ dataSet }: { dataSet: DataSet }) => {
+      const record = dataSet.current;
+      record?.init('type', 'paste');
+    },
+  },
 });
