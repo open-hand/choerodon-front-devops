@@ -2,7 +2,9 @@ import React, { useEffect, useState, Fragment } from 'react';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
-import { Header, Choerodon, HeaderButtons } from '@choerodon/boot';
+import {
+  Header, Choerodon, HeaderButtons, ButtonGroup,
+} from '@choerodon/boot';
 import {
   Button, Select, Form, Menu, Dropdown, Icon, UrlField, TextField,
 } from 'choerodon-ui/pro';
@@ -221,29 +223,10 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
           </OptGroup>
 
         </Select>
-        <Dropdown
-          trigger={['click', 'focus']}
-          overlay={copyMenu}
-          placement="bottomRight"
-          colSpan={1}
-        >
-          <Button
-            funcType="raised"
-            disabled={!(currentApp && currentApp.repoUrl)}
-            className="c7ncd-copyBtn"
-            style={{
-              marginLeft: theme4 ? 16 : 'unset',
-            }}
-          >
-            <span className="c7ncd-copyBtn-span">
-              {formatMessage({ id: 'repository.copyUrl' })}
-              <Icon
-                style={{ marginLeft: '.18rem', marginTop: 0 }}
-                type="arrow_drop_down"
-              />
-            </span>
-          </Button>
-        </Dropdown>
+        <ButtonGroup
+          name={formatMessage({ id: 'repository.copyUrl' })}
+          renderCustomDropDownPanel={(setvisib) => copyMenu}
+        />
       </Form>
 
     </div>
