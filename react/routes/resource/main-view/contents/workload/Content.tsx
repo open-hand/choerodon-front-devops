@@ -60,7 +60,6 @@ const WorkloadContent = observer(() => {
   }, []);
 
   const openDetailModal = useCallback((record: Record) => {
-    const podName = record.get('name');
     Modal.open({
       key: detailModalKey,
       style: {
@@ -70,11 +69,11 @@ const WorkloadContent = observer(() => {
       title: formatMessage({ id: `${intlPrefix}.workload.detail` }, { type: workloadStore.getTabKey, name: record.get('name') }),
       okText: formatMessage({ id: 'close' }),
       okCancel: false,
-      children: <PodDetail podName={podName} envId={envId} />,
     });
-  }, [envId, formatMessage, intlPrefix, workloadStore.getTabKey]);
+  }, [formatMessage, intlPrefix, workloadStore.getTabKey]);
 
   const openPodDetailModal = useCallback((record: Record) => {
+    const podName = record.get('name');
     Modal.open({
       key: podDetailModalKey,
       style: {
@@ -82,11 +81,11 @@ const WorkloadContent = observer(() => {
       },
       drawer: true,
       title: formatMessage({ id: `${intlPrefix}.workload.pod.detail` }),
-      children: '关联Pod详情',
       okText: formatMessage({ id: 'close' }),
       okCancel: false,
+      children: <PodDetail podName={podName} envId={envId} />,
     });
-  }, []);
+  }, [envId, formatMessage, intlPrefix]);
 
   const openEditModal = useCallback((record: Record) => {
     const envRecord = treeDs.find((treeRecord: Record) => treeRecord.get('key') === selectedKey);
