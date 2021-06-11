@@ -17,6 +17,7 @@ import CreateWorkloadContent from '@/routes/resource/main-view/contents/workload
 import { useWorkloadStore } from './stores';
 import { useResourceStore } from '../../../stores';
 import Modals from './modals';
+import PodContent from './components/pod';
 
 import './index.less';
 import PodDetail from './components/pod-details';
@@ -48,8 +49,9 @@ const WorkloadContent = observer(() => {
     resourceStore,
     treeDs,
     intl: { formatMessage },
+    AppState: { currentMenuType: { projectId } },
   } = useResourceStore();
-  const { getSelectedMenu: { key: selectedKey } } = resourceStore;
+  const { getSelectedMenu: { parentId } } = resourceStore;
 
   const refresh = useCallback(() => {
     tableDs.query();
@@ -88,7 +90,7 @@ const WorkloadContent = observer(() => {
   }, [envId, formatMessage, intlPrefix]);
 
   const openEditModal = useCallback((record: Record) => {
-    const envRecord = treeDs.find((treeRecord: Record) => treeRecord.get('key') === selectedKey);
+    const envRecord = treeDs.find((treeRecord: Record) => treeRecord.get('key') === parentId);
     const envName = envRecord && envRecord.get('name');
     Modal.open({
       key: editModalKey,
@@ -132,6 +134,23 @@ const WorkloadContent = observer(() => {
         onClick={() => openDetailModal(record)}
         permissionCode={[]}
         error={error}
+      />
+    );
+  }, []);
+
+  const renderPod = useCallback(({ record }: RecordObjectProps) => {
+    const envRecord = treeDs.find((treeRecord: Record) => treeRecord.get('key') === parentId);
+    const connect = envRecord && envRecord.get('connect');
+    return (
+      <PodContent
+        podCount={record.get('desired')}
+        podRunningCount={record.get('available')}
+        store={workloadStore}
+        projectId={projectId}
+        envId={parentId}
+        refresh={refresh}
+        showBtn={['Deployment', 'StatefulSet'].includes(workloadStore.getTabKey)}
+        btnDisabled={!connect || record.get('commandStatus') === 'operating'}
       />
     );
   }, []);
@@ -189,7 +208,9 @@ const WorkloadContent = observer(() => {
   ), []);
 
   const renderAction = useCallback(({ record }: RecordObjectProps) => {
-    if (record.get('instanceId') || record.get('commandStatus') === 'operating') {
+    const envRecord = treeDs.find((treeRecord: Record) => treeRecord.get('key') === parentId);
+    const connect = envRecord && envRecord.get('connect');
+    if (!connect || record.get('instanceId') || record.get('commandStatus') === 'operating') {
       return null;
     }
     const actionData = [
@@ -228,10 +249,13 @@ const WorkloadContent = observer(() => {
         ))}
       </Tabs>
       <div className="c7ncd-tab-table">
-        <Table dataSet={tableDs}>
+        <Table
+          dataSet={tableDs}
+          rowHeight="auto"
+        >
           <Column name="name" renderer={renderName} />
           <Column renderer={renderAction} width={60} />
-          <Column name="pod" />
+          <Column name="pod" renderer={renderPod} />
           <Column name="labels" renderer={renderLabels} />
           <Column name="ports" renderer={renderPorts} />
           <Column name="source" renderer={renderResource} width={100} />

@@ -1,0 +1,36 @@
+.c7ncd-deployment-workload-pod {
+  display: flex;
+  align-items: center;
+
+  &-circle-wrap {
+    flex-shrink: 0;
+  }
+
+  &-circle {
+    transform: rotate(-90deg);
+    transform-origin: center;
+  }
+
+  &-num {
+    text-anchor: middle;
+    font-size: 16px;
+    stroke: var(--text-color);
+  }
+
+  &-text {
+    text-anchor: middle;
+    font-size: 12px;
+    color: var(--text-color4);
+  }
+
+  &-btn-wrap {
+    margin-left: .06rem;
+
+    &-item {
+      width: .2rem !important;
+      height: .2rem !important;
+      margin: 0 !important;
+      display: block !important;
+    }
+  }
+}
