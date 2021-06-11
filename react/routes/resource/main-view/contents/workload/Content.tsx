@@ -34,13 +34,14 @@ const WorkloadContent = observer(() => {
     tabs: {
       DAEMONSET_TAB,
       DEPLOYMENT_TAB,
-      STATEFULSET,
+      STATEFULSET_TAB,
       JOB_TAB,
       CRONJOB_TAB,
     },
     workloadStore,
     tableDs,
     envId,
+    urlTypes,
   } = useWorkloadStore();
 
   const {
@@ -107,6 +108,8 @@ const WorkloadContent = observer(() => {
         envName={envName}
         workloadId={record.get('id')}
         workloadType={workloadStore.getTabKey}
+        // @ts-ignore
+        urlType={urlTypes[workloadStore.getTabKey] || 'deployments'}
       />,
       okText: formatMessage({ id: 'save' }),
     });
@@ -149,7 +152,7 @@ const WorkloadContent = observer(() => {
         projectId={projectId}
         envId={parentId}
         refresh={refresh}
-        showBtn={['Deployment', 'StatefulSet'].includes(workloadStore.getTabKey)}
+        showBtn={[DEPLOYMENT_TAB, STATEFULSET_TAB].includes(workloadStore.getTabKey)}
         name={record.get('name')}
         btnDisabled={!connect || record.get('commandStatus') !== 'success'}
       />
@@ -158,7 +161,7 @@ const WorkloadContent = observer(() => {
 
   const renderLabels = useCallback(({ value }: { value: object }) => {
     const labels = map(value || [], (label: string, key: string) => (
-      <Tooltip title={`${key}/${label}`}>
+      <Tooltip title={`${key}/${label}`} key={key}>
         <span className={`${prefixCls}-workload-tag`}>
           {key}
           /
@@ -183,7 +186,7 @@ const WorkloadContent = observer(() => {
 
   const renderPorts = useCallback(({ value }: { value: Array<number | string> }) => {
     const ports = map(value || [], (port: number | string) => (
-      <span className={`${prefixCls}-workload-tag`}>{port}</span>
+      <span className={`${prefixCls}-workload-tag`} key={port}>{port}</span>
     ));
     if (isEmpty(ports)) {
       return null;
@@ -242,12 +245,13 @@ const WorkloadContent = observer(() => {
         activeKey={workloadStore.getTabKey}
         onChange={handleTabChange}
       >
-        {map([DEPLOYMENT_TAB, DAEMONSET_TAB, STATEFULSET, JOB_TAB, CRONJOB_TAB], (item: string) => (
-          <TabPane
-            key={item}
-            tab={item}
-          />
-        ))}
+        {map([DEPLOYMENT_TAB, DAEMONSET_TAB, STATEFULSET_TAB, JOB_TAB, CRONJOB_TAB],
+          (item: string) => (
+            <TabPane
+              key={item}
+              tab={item}
+            />
+          ))}
       </Tabs>
       <div className="c7ncd-tab-table">
         <Table

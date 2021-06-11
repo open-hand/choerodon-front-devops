@@ -6,15 +6,19 @@ export interface OperateProps {
 }
 
 export default class WorkloadApis {
-  static getTableData(projectId: number) {
-    return `/devops/v1/projects/${projectId}/deployments/paging`;
+  static getTableData(projectId: number, urlType: string) {
+    return `/devops/v1/projects/${projectId}/${urlType}/paging`;
   }
 
   static getWorkloadDetail(projectId: number) {
     return `/devops/v1/projects/${projectId}/resources/yaml`;
   }
 
-  static createWorkload(projectId: number) {
+  static createWorkload(projectId: number, urlType: string) {
+    return `/devops/v1/projects/${projectId}/${urlType}`;
+  }
+
+  static deleteWorkload(projectId: number) {
     return `/devops/v1/projects/${projectId}/deployments`;
   }
 

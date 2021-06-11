@@ -14,10 +14,17 @@ interface ContentProps {
   tabs: {
     DEPLOYMENT_TAB: 'Deployment',
     DAEMONSET_TAB: 'DaemonSet',
-    STATEFULSET: 'StatefulSet',
+    STATEFULSET_TAB: 'StatefulSet',
     JOB_TAB: 'Job',
     CRONJOB_TAB: 'CronJob',
   },
+  urlTypes: {
+    Deployment: 'deployments',
+    DaemonSet: 'daemon_sets',
+    StatefulSet: 'stateful_sets',
+    Job: 'jobs',
+    CronJob: 'cron_jobs',
+  }
   envId:string,
   tableDs: DataSetProps,
 }
@@ -43,9 +50,17 @@ export const StoreProvider = injectIntl(observer((props: any) => {
   const tabs = useMemo(() => ({
     DEPLOYMENT_TAB: 'Deployment',
     DAEMONSET_TAB: 'DaemonSet',
-    STATEFULSET: 'StatefulSet',
+    STATEFULSET_TAB: 'StatefulSet',
     JOB_TAB: 'Job',
     CRONJOB_TAB: 'CronJob',
+  }), []);
+
+  const urlTypes = useMemo(() => ({
+    Deployment: 'deployments',
+    DaemonSet: 'daemon_sets',
+    StatefulSet: 'stateful_sets',
+    Job: 'jobs',
+    CronJob: 'cron_jobs',
   }), []);
 
   const workloadStore = useStore(tabs);
@@ -64,11 +79,13 @@ export const StoreProvider = injectIntl(observer((props: any) => {
   })), [projectId]);
 
   useEffect(() => {
-    if (parentId) {
+    if (parentId && workloadStore.getTabKey) {
       tableDs.setQueryParameter('env_id', parentId);
+      // @ts-ignore
+      tableDs.setQueryParameter('type', urlTypes[workloadStore.getTabKey] || 'deployments');
       tableDs.query();
     }
-  }, [parentId]);
+  }, [parentId, workloadStore.getTabKey]);
 
   const value = {
     ...props,
@@ -76,6 +93,7 @@ export const StoreProvider = injectIntl(observer((props: any) => {
     workloadStore,
     tableDs,
     envId: parentId,
+    urlTypes,
   };
   return (
     <Store.Provider value={value}>

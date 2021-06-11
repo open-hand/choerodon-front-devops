@@ -36,6 +36,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     workloadId,
     envName,
     workloadType,
+    urlType,
   } = props;
   const {
     getSelectedMenu: { parentId },
@@ -60,6 +61,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     createTypeDs,
     envName,
     workloadType,
+    urlType,
   })), [projectId, parentId]);
 
   useEffect(() => {

@@ -16,12 +16,15 @@ export default ({
   selection: false,
   pageSize: 10,
   transport: {
-    read: {
-      url: WorkloadApis.getTableData(projectId),
-      method: 'get',
+    read: ({ data }) => {
+      const { type } = data || {};
+      return ({
+        url: WorkloadApis.getTableData(projectId, type),
+        method: 'get',
+      });
     },
     destroy: ({ data: [data] }) => ({
-      url: WorkloadApis.createWorkload(projectId),
+      url: WorkloadApis.deleteWorkload(projectId),
       method: 'delete',
       params: {
         id: data.id,
