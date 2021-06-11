@@ -24,6 +24,7 @@ const CustomModals = observer(() => {
   const {
     tableDs,
     workloadStore,
+    urlTypes,
   } = useWorkloadStore();
 
   const title = useMemo(() => (
@@ -52,6 +53,8 @@ const CustomModals = observer(() => {
         refresh={refresh}
         envName={envName}
         workloadType={workloadStore.getTabKey}
+        // @ts-ignore
+        urlType={urlTypes[workloadStore.getTabKey] || 'deployments'}
       />,
       okText: formatMessage({ id: 'create' }),
     });

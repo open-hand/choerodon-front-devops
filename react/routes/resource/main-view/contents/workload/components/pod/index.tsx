@@ -1,9 +1,11 @@
 /* eslint-disable react/require-default-props */
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { Button, Tooltip } from 'choerodon-ui/pro';
-import { useDebounce } from 'ahooks';
-import { FuncType } from '@/interface';
+import { injectIntl } from 'react-intl';
+import { Tooltip } from 'choerodon-ui/pro';
+import { Button } from 'choerodon-ui';
+import { useDebounceFn } from 'ahooks';
+import { FuncType, Size } from '@/interface';
 import { StoreProps } from '@/routes/resource/main-view/contents/workload/stores/useStore';
 
 import './index.less';
@@ -19,11 +21,14 @@ interface PodProps {
   projectId?: number,
   envId?: string,
   refresh?(): void,
+  intl: { formatMessage(arg0: object): string },
+  name?: string,
 }
 
-const PodContent = ({
+const PodContent = injectIntl(({
   size = 40, podCount = 0, podRunningCount = 0, strokeWidth = 2,
   showBtn = false, btnDisabled = false, store, projectId, envId, refresh,
+  intl: { formatMessage }, name = 'Deployment',
 }: PodProps) => {
   const prefixCls = useMemo(() => 'c7ncd-deployment-workload-pod', []);
   const cx = useMemo(() => size / 2, [size]);
@@ -41,25 +46,27 @@ const PodContent = ({
   }, [realPodCount]);
 
   const handleDecrease = useCallback(() => {
+    const count = realPodCount - 1;
+    setRealPodCount(count);
+    operatePodCount(count);
+  }, [realPodCount]);
 
-  }, []);
-
-  const operatePodCount = useDebounce(async (count: number) => {
-    // if (!projectId || !envId) {
-    //   return;
-    // }
-    // try {
-    //   const res = await store?.operatePodCount({
-    //     projectId, envId, name: 'Deployment', count,
-    //   });
-    //   if (res && res.failed) {
-    //     setRealPodCount(podCount);
-    //   } else {
-    //     refresh && refresh();
-    //   }
-    // } catch (e) {
-    //   setRealPodCount(podCount);
-    // }
+  const { run: operatePodCount } = useDebounceFn(async (count: number) => {
+    if (!projectId || !envId || !name) {
+      return;
+    }
+    try {
+      const res = await store?.operatePodCount({
+        projectId, envId, name, count,
+      });
+      if (res && res.failed) {
+        setRealPodCount(podCount);
+      } else {
+        refresh && refresh();
+      }
+    } catch (e) {
+      setRealPodCount(podCount);
+    }
   }, { wait: 600 });
 
   return (
@@ -100,18 +107,25 @@ const PodContent = ({
             icon="expand_less"
             onClick={handleIncrease}
             funcType={'flat' as FuncType}
+            size={'small' as Size}
           />
-          <Button
-            disabled={btnDisabled || realPodCount <= 1}
-            className={`${prefixCls}-btn-wrap-item`}
-            icon="expand_more"
-            onClick={handleDecrease}
-            funcType={'flat' as FuncType}
-          />
+          <Tooltip
+            title={!btnDisabled && realPodCount === 1 ? formatMessage({ id: 'c7ncd.deployment.pod.disabled.tops' }) : ''}
+            placement="bottom"
+          >
+            <Button
+              disabled={btnDisabled || realPodCount <= 1}
+              className={`${prefixCls}-btn-wrap-item`}
+              icon="expand_more"
+              onClick={handleDecrease}
+              funcType={'flat' as FuncType}
+              size={'small' as Size}
+            />
+          </Tooltip>
         </div>
       )}
     </div>
   );
-};
+});
 
 export default PodContent;

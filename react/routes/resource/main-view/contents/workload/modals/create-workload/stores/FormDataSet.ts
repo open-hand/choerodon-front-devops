@@ -10,10 +10,12 @@ interface FormProps {
   createTypeDs: DataSet,
   envName: string,
   workloadType: string,
+  urlType: string,
 }
 
 export default ({
-  projectId, envId, workloadId, formatMessage, intlPrefix, createTypeDs, envName, workloadType,
+  projectId, envId, workloadId, formatMessage, intlPrefix,
+  createTypeDs, envName, workloadType, urlType,
 }: FormProps): DataSetProps => ({
   autoCreate: false,
   autoQuery: false,
@@ -56,7 +58,7 @@ export default ({
         formData.append('operateType', 'create');
       }
       return ({
-        url: WorkloadApis.createWorkload(projectId),
+        url: WorkloadApis.createWorkload(projectId, urlType),
         method: 'post',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
