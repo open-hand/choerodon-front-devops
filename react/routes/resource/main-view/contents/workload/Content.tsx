@@ -24,6 +24,8 @@ const { TabPane } = Tabs;
 const { Column } = Table;
 
 const editModalKey = Modal.key();
+const detailModalKey = Modal.key();
+const podDetailModalKey = Modal.key();
 
 const WorkloadContent = observer(() => {
   const {
@@ -46,10 +48,6 @@ const WorkloadContent = observer(() => {
   } = useResourceStore();
   const { getSelectedMenu: { key: selectedKey } } = resourceStore;
 
-  const title = useMemo(() => (
-    formatMessage({ id: `${intlPrefix}.workload.edit` }, { name: workloadStore.getTabKey })
-  ), [workloadStore.getTabKey]);
-
   const refresh = useCallback(() => {
     tableDs.query();
   }, []);
@@ -58,12 +56,32 @@ const WorkloadContent = observer(() => {
     workloadStore.setTabKey(tabKey);
   }, []);
 
-  const openDetailModal = useCallback((record) => {
-
-  }, []);
+  const openDetailModal = useCallback((record: Record) => {
+    Modal.open({
+      key: detailModalKey,
+      style: {
+        width: LARGE,
+      },
+      drawer: true,
+      title: formatMessage({ id: `${intlPrefix}.workload.detail` }, { type: workloadStore.getTabKey, name: record.get('name') }),
+      children: 'Deployment详情',
+      okText: formatMessage({ id: 'close' }),
+      okCancel: false,
+    });
+  }, [workloadStore.getTabKey]);
 
   const openPodDetailModal = useCallback((record: Record) => {
-
+    Modal.open({
+      key: podDetailModalKey,
+      style: {
+        width: LARGE,
+      },
+      drawer: true,
+      title: formatMessage({ id: `${intlPrefix}.workload.pod.detail` }),
+      children: '关联Pod详情',
+      okText: formatMessage({ id: 'close' }),
+      okCancel: false,
+    });
   }, []);
 
   const openEditModal = useCallback((record: Record) => {
@@ -75,7 +93,7 @@ const WorkloadContent = observer(() => {
         width: LARGE,
       },
       drawer: true,
-      title,
+      title: formatMessage({ id: `${intlPrefix}.workload.edit` }, { name: workloadStore.getTabKey }),
       children: <CreateWorkloadContent
         resourceStore={resourceStore}
         intlPrefix={intlPrefix}
@@ -83,10 +101,11 @@ const WorkloadContent = observer(() => {
         refresh={refresh}
         envName={envName}
         workloadId={record.get('id')}
+        workloadType={workloadStore.getTabKey}
       />,
       okText: formatMessage({ id: 'save' }),
     });
-  }, []);
+  }, [workloadStore.getTabKey]);
 
   const openDeleteModal = useCallback((record: Record) => {
     const modalProps = {
@@ -107,7 +126,7 @@ const WorkloadContent = observer(() => {
         name={value}
         status={status}
         clickAble={status !== 'operating'}
-        onClick={openDetailModal}
+        onClick={() => openDetailModal(record)}
         permissionCode={[]}
         error={error}
       />

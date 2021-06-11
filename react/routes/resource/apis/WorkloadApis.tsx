@@ -3,8 +3,8 @@ export default class WorkloadApis {
     return `/devops/v1/projects/${projectId}/deployments/paging`;
   }
 
-  static getWorkloadDetail(projectId: number, workloadId: string) {
-    return `/devops/v1/projects/${projectId}/`;
+  static getWorkloadDetail(projectId: number) {
+    return `/devops/v1/projects/${projectId}/resources/yaml`;
   }
 
   static createWorkload(projectId: number) {

@@ -32,7 +32,7 @@ const CustomModals = observer(() => {
 
   const refresh = useCallback(() => {
     // treeDs.query();
-    // tableDs.query();
+    tableDs.query();
   }, []);
 
   const openCreateModal = useCallback(() => {
@@ -51,6 +51,7 @@ const CustomModals = observer(() => {
         prefixCls={prefixCls}
         refresh={refresh}
         envName={envName}
+        workloadType={workloadStore.getTabKey}
       />,
       okText: formatMessage({ id: 'create' }),
     });

@@ -35,6 +35,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     prefixCls,
     workloadId,
     envName,
+    workloadType,
   } = props;
   const {
     getSelectedMenu: { parentId },
@@ -51,7 +52,14 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     selection: 'single' as DataSetSelection,
   }), []);
   const formDs = useMemo(() => new DataSet(FormDataSet({
-    projectId, envId: parentId, workloadId, formatMessage, intlPrefix, createTypeDs, envName,
+    projectId,
+    envId: parentId,
+    workloadId,
+    formatMessage,
+    intlPrefix,
+    createTypeDs,
+    envName,
+    workloadType,
   })), [projectId, parentId]);
 
   useEffect(() => {
