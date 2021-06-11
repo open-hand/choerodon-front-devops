@@ -18,6 +18,7 @@ interface ContentProps {
     JOB_TAB: 'Job',
     CRONJOB_TAB: 'CronJob',
   },
+  envId:string,
   tableDs: DataSetProps,
 }
 
@@ -34,9 +35,11 @@ export const StoreProvider = injectIntl(observer((props: any) => {
     resourceStore,
     intlPrefix,
   } = useResourceStore();
+
   const {
     getSelectedMenu: { parentId },
   } = resourceStore;
+
   const tabs = useMemo(() => ({
     DEPLOYMENT_TAB: 'Deployment',
     DAEMONSET_TAB: 'DaemonSet',
@@ -72,6 +75,7 @@ export const StoreProvider = injectIntl(observer((props: any) => {
     tabs,
     workloadStore,
     tableDs,
+    envId: parentId,
   };
   return (
     <Store.Provider value={value}>

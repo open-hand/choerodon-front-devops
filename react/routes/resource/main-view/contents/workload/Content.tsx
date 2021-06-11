@@ -19,6 +19,7 @@ import { useResourceStore } from '../../../stores';
 import Modals from './modals';
 
 import './index.less';
+import PodDetail from './components/pod-details';
 
 const { TabPane } = Tabs;
 const { Column } = Table;
@@ -38,7 +39,9 @@ const WorkloadContent = observer(() => {
     },
     workloadStore,
     tableDs,
+    envId,
   } = useWorkloadStore();
+
   const {
     prefixCls,
     intlPrefix,
@@ -57,6 +60,7 @@ const WorkloadContent = observer(() => {
   }, []);
 
   const openDetailModal = useCallback((record: Record) => {
+    const podName = record.get('name');
     Modal.open({
       key: detailModalKey,
       style: {
@@ -64,11 +68,11 @@ const WorkloadContent = observer(() => {
       },
       drawer: true,
       title: formatMessage({ id: `${intlPrefix}.workload.detail` }, { type: workloadStore.getTabKey, name: record.get('name') }),
-      children: 'Deployment详情',
       okText: formatMessage({ id: 'close' }),
       okCancel: false,
+      children: <PodDetail podName={podName} envId={envId} />,
     });
-  }, [workloadStore.getTabKey]);
+  }, [envId, formatMessage, intlPrefix, workloadStore.getTabKey]);
 
   const openPodDetailModal = useCallback((record: Record) => {
     Modal.open({
