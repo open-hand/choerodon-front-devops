@@ -1,8 +1,10 @@
 import React, {
-  lazy, Suspense, memo, useEffect, useCallback,
+  lazy, Suspense, memo, useEffect, useCallback, useMemo,
 } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Table, Icon, Tooltip } from 'choerodon-ui/pro';
+import {
+  Table, Icon, Tooltip, Modal,
+} from 'choerodon-ui/pro';
 import { Tabs, Popover } from 'choerodon-ui';
 import { map, isEmpty } from 'lodash';
 import { Action } from '@choerodon/master';
@@ -10,6 +12,8 @@ import ResourceListTitle from '@/routes/resource/main-view/components/resource-l
 import { RecordObjectProps, Record } from '@/interface';
 import TimePopover from '@/components/timePopover';
 import StatusIcon from '@/components/StatusIcon/StatusIcon';
+import { LARGE } from '@/utils/getModalWidth';
+import CreateWorkloadContent from '@/routes/resource/main-view/contents/workload/modals/create-workload';
 import { useWorkloadStore } from './stores';
 import { useResourceStore } from '../../../stores';
 import Modals from './modals';
@@ -18,6 +22,8 @@ import './index.less';
 
 const { TabPane } = Tabs;
 const { Column } = Table;
+
+const editModalKey = Modal.key();
 
 const WorkloadContent = observer(() => {
   const {
@@ -40,34 +46,67 @@ const WorkloadContent = observer(() => {
   } = useResourceStore();
   const { getSelectedMenu: { key: selectedKey } } = resourceStore;
 
+  const title = useMemo(() => (
+    formatMessage({ id: `${intlPrefix}.workload.edit` }, { name: workloadStore.getTabKey })
+  ), [workloadStore.getTabKey]);
+
+  const refresh = useCallback(() => {
+    tableDs.query();
+  }, []);
+
   const handleTabChange = useCallback((tabKey: string) => {
     workloadStore.setTabKey(tabKey);
   }, []);
 
-  const openDetailModal = useCallback(() => {
+  const openDetailModal = useCallback((record) => {
 
   }, []);
 
-  const openPodDetailModal = useCallback(() => {
+  const openPodDetailModal = useCallback((record: Record) => {
 
   }, []);
 
-  const openEditModal = useCallback(() => {
-
+  const openEditModal = useCallback((record: Record) => {
+    const envRecord = treeDs.find((treeRecord: Record) => treeRecord.get('key') === selectedKey);
+    const envName = envRecord && envRecord.get('name');
+    Modal.open({
+      key: editModalKey,
+      style: {
+        width: LARGE,
+      },
+      drawer: true,
+      title,
+      children: <CreateWorkloadContent
+        resourceStore={resourceStore}
+        intlPrefix={intlPrefix}
+        prefixCls={prefixCls}
+        refresh={refresh}
+        envName={envName}
+        workloadId={record.get('id')}
+      />,
+      okText: formatMessage({ id: 'save' }),
+    });
   }, []);
 
-  const openDeleteModal = useCallback(() => {
-
-  }, []);
+  const openDeleteModal = useCallback((record: Record) => {
+    const modalProps = {
+      title: formatMessage({ id: `${intlPrefix}.workload.delete.title` }, { type: workloadStore.getTabKey }),
+      children: formatMessage({ id: `${intlPrefix}.workload.delete.des` }, { type: workloadStore.getTabKey, name: record.get('name') }),
+      okText: formatMessage({ id: 'delete' }),
+      okProps: { color: 'red' },
+      cancelProps: { color: 'dark' },
+    };
+    tableDs.delete(record, modalProps);
+  }, [workloadStore.getTabKey]);
 
   const renderName = useCallback(({ value, record }: { value: string, record: Record }) => {
-    const status = record.get('status');
-    const error = record.get('errorMessage');
+    const status = record.get('commandStatus');
+    const error = record.get('error');
     return (
       <StatusIcon
         name={value}
         status={status}
-        clickAble
+        clickAble={status !== 'operating'}
         onClick={openDetailModal}
         permissionCode={[]}
         error={error}
@@ -128,7 +167,7 @@ const WorkloadContent = observer(() => {
   ), []);
 
   const renderAction = useCallback(({ record }: RecordObjectProps) => {
-    if (record.get('status') === 'operating') {
+    if (record.get('instanceId') || record.get('commandStatus') === 'operating') {
       return null;
     }
     const actionData = [
