@@ -9,20 +9,37 @@ interface FormProps {
   workloadId?: string,
   createTypeDs: DataSet,
   envName: string,
+  workloadType: string,
 }
 
 export default ({
-  projectId, envId, workloadId, formatMessage, intlPrefix, createTypeDs, envName,
+  projectId, envId, workloadId, formatMessage, intlPrefix, createTypeDs, envName, workloadType,
 }: FormProps): DataSetProps => ({
   autoCreate: false,
   autoQuery: false,
   selection: false,
   autoQueryAfterSubmit: false,
   paging: false,
+  dataKey: 'null',
   transport: {
     read: {
-      url: workloadId ? WorkloadApis.getWorkloadDetail(projectId, workloadId) : '',
+      url: workloadId ? WorkloadApis.getWorkloadDetail(projectId) : '',
       method: 'get',
+      params: {
+        env_id: envId,
+        type: workloadType,
+        workload_id: workloadId,
+      },
+      transformResponse: (response) => {
+        try {
+          if (response && response.failed) {
+            return response;
+          }
+          return { value: response, type: 'paste' };
+        } catch (e) {
+          return response;
+        }
+      },
     },
     submit: ({ data: [data] }: any) => {
       const formData = new FormData();
@@ -59,10 +76,4 @@ export default ({
     defaultValue: envName,
     ignore: 'always' as FieldIgnore,
   }],
-  events: {
-    load: ({ dataSet }: { dataSet: DataSet }) => {
-      const record = dataSet.current;
-      record?.init('type', 'paste');
-    },
-  },
 });

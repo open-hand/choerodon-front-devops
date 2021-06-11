@@ -21,8 +21,11 @@ export default ({
       method: 'get',
     },
     destroy: ({ data: [data] }) => ({
-      url: '',
+      url: WorkloadApis.createWorkload(projectId),
       method: 'delete',
+      params: {
+        id: data.id,
+      },
     }),
   },
   fields: [{
