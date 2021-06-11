@@ -150,7 +150,8 @@ const WorkloadContent = observer(() => {
         envId={parentId}
         refresh={refresh}
         showBtn={['Deployment', 'StatefulSet'].includes(workloadStore.getTabKey)}
-        btnDisabled={!connect || record.get('commandStatus') === 'operating'}
+        name={record.get('name')}
+        btnDisabled={!connect || record.get('commandStatus') !== 'success'}
       />
     );
   }, []);
