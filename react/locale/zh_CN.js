@@ -452,10 +452,13 @@ const deployment = {
   'c7ncd.deployment.workload.source.deploy': '应用部署',
   'c7ncd.deployment.workload.source.manual': '手动添加',
   'c7ncd.deployment.workload.create': '创建{name}',
+  'c7ncd.deployment.workload.edit': '修改{name}',
   'c7ncd.deployment.workload.create.type': '选择添加方式',
   'c7ncd.deployment.workload.create.type.upload': '直接上传YAML文件',
   'c7ncd.deployment.workload.create.type.copy': '粘贴YAML内容添加',
   'c7ncd.deployment.workload.pod.detail': '关联Pod详情',
+  'c7ncd.deployment.workload.delete.title': '删除{type}',
+  'c7ncd.deployment.workload.delete.des': '确定删除{type}“{name}”吗？',
 
 };
 
