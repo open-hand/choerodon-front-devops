@@ -20,7 +20,6 @@ const modalStyle = {
 function NetworkItem({
   record,
   name,
-  instanceId,
   intlPrefix,
   intl: { formatMessage },
 }) {
@@ -123,7 +122,7 @@ function NetworkItem({
     <>
       <Icon type="router" />
       {name}
-      {instanceId && (
+      {record.get('instanceId') && (
       <StatusTag
         style={{
           marginLeft: '5px',
