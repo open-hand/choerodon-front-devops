@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import React, {
-  lazy, Suspense, memo, useEffect, useCallback, useMemo,
+  lazy, Suspense, memo, useEffect, useCallback, useMemo, useState,
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
@@ -14,7 +14,10 @@ import { RecordObjectProps, Record } from '@/interface';
 import TimePopover from '@/components/timePopover';
 import StatusIcon from '@/components/StatusIcon/StatusIcon';
 import { LARGE } from '@/utils/getModalWidth';
+import ResourceServices from '@/routes/resource/services';
 import CreateWorkloadContent from '@/routes/resource/main-view/contents/workload/modals/create-workload';
+import DetailsSidebar from '@/routes/resource/main-view/contents/instance/details/sidebar';
+import DetailsStore from '@/routes/resource/main-view/contents/instance/stores/DetailsStore';
 import { useWorkloadStore } from './stores';
 import { useResourceStore } from '../../../stores';
 import Modals from './modals';
@@ -61,6 +64,15 @@ const WorkloadContent = observer(() => {
     [JOB_TAB]: ['active', 'completions'],
     [CRONJOB_TAB]: ['available', 'desired'],
   }), []);
+  const [workloadDetail, setWorkloadDetail] = useState<{
+    visible: boolean,
+    json: string | null,
+    yaml: string | null,
+  }>({
+    visible: false,
+    json: null,
+    yaml: null,
+  });
 
   const refresh = useCallback(() => {
     tableDs.query();
@@ -70,18 +82,33 @@ const WorkloadContent = observer(() => {
     workloadStore.setTabKey(tabKey);
   }, []);
 
-  const openDetailModal = useCallback((record: Record) => {
-    Modal.open({
-      key: detailModalKey,
-      style: {
-        width: LARGE,
-      },
-      drawer: true,
-      title: formatMessage({ id: `${intlPrefix}.workload.detail` }, { type: workloadStore.getTabKey, name: record.get('name') }),
-      okText: formatMessage({ id: 'close' }),
-      okCancel: false,
+  const openDetailModal = useCallback(async (record: Record) => {
+    const res = await ResourceServices.getWorkLoadJson(
+      projectId,
+      parentId,
+      workloadStore.getTabKey,
+      record.get('name'),
+    );
+    const yaml = await ResourceServices.getWorkLoadYaml(
+      projectId,
+      parentId,
+      workloadStore.getTabKey,
+      record.get('name'),
+    );
+    setWorkloadDetail({
+      visible: true,
+      json: res,
+      yaml,
     });
   }, [formatMessage, intlPrefix, workloadStore.getTabKey]);
+
+  const handleClose = () => {
+    setWorkloadDetail({
+      visible: false,
+      json: null,
+      yaml: null,
+    });
+  };
 
   const openPodDetailModal = useCallback((record: Record) => {
     const podName = record.get('name');
@@ -296,6 +323,16 @@ const WorkloadContent = observer(() => {
           </Table>
         )}
       </div>
+      {workloadDetail.visible && (
+      <DetailsSidebar
+        visible={workloadDetail.visible}
+        json={workloadDetail.json}
+        yaml={workloadDetail.yaml}
+        formatMessage={formatMessage}
+        withoutStore
+        onClose={handleClose}
+      />
+      )}
     </div>
   );
 });
