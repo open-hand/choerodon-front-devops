@@ -51,6 +51,7 @@ const MainView = injectIntl(observer((props) => {
               helpText={popoverContent}
               title={formatMessage({ id: 'code-management.branch' })}
               popoverClassName="branch-popover"
+              placement="bottomLeft"
             />
 )}
           tabKey="key1"
