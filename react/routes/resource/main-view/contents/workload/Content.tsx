@@ -267,18 +267,34 @@ const WorkloadContent = observer(() => {
           ))}
       </Tabs>
       <div className="c7ncd-tab-table">
-        <Table
-          dataSet={tableDs}
-          rowHeight="auto"
-        >
-          <Column name="name" renderer={renderName} />
-          <Column renderer={renderAction} width={60} />
-          <Column name="pod" renderer={renderPod} />
-          <Column name="labels" renderer={renderLabels} />
-          <Column name="ports" renderer={renderPorts} />
-          <Column name="source" renderer={renderResource} width={100} />
-          <Column name="age" renderer={renderUpdateDate} width={110} />
-        </Table>
+        {workloadStore.getTabKey === CRONJOB_TAB ? (
+          <Table
+            dataSet={tableDs}
+          >
+            <Column name="name" renderer={renderName} />
+            <Column renderer={renderAction} width={60} />
+            <Column name="labels" renderer={renderLabels} />
+            <Column name="schedule" />
+            <Column name="suspend" renderer={({ value }) => (value ? '是' : '否')} width={80} />
+            <Column name="active" renderer={({ value }) => (`${value}个`)} width={70} />
+            <Column name="source" renderer={renderResource} width={100} />
+            <Column name="lastScheduleTime" renderer={renderUpdateDate} width={110} />
+            <Column name="creationTimestamp" renderer={renderUpdateDate} width={110} />
+          </Table>
+        ) : (
+          <Table
+            dataSet={tableDs}
+            rowHeight="auto"
+          >
+            <Column name="name" renderer={renderName} />
+            <Column renderer={renderAction} width={60} />
+            <Column name="pod" renderer={renderPod} />
+            <Column name="labels" renderer={renderLabels} />
+            <Column name="ports" renderer={renderPorts} />
+            <Column name="source" renderer={renderResource} width={100} />
+            <Column name="age" renderer={renderUpdateDate} width={110} />
+          </Table>
+        )}
       </div>
     </div>
   );

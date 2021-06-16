@@ -50,6 +50,21 @@ export default ({
   }, {
     name: 'source',
     label: formatMessage(({ id: `${intlPrefix}.workload.source` })),
+  }, {
+    name: 'schedule',
+    label: formatMessage(({ id: `${intlPrefix}.workload.plan` })),
+  }, {
+    name: 'active',
+    label: formatMessage(({ id: `${intlPrefix}.workload.active` })),
+  }, {
+    name: 'suspend',
+    label: formatMessage(({ id: `${intlPrefix}.workload.suspend` })),
+  }, {
+    name: 'lastScheduleTime',
+    label: formatMessage(({ id: `${intlPrefix}.workload.lastScheduleTime` })),
+  }, {
+    name: 'creationTimestamp',
+    label: formatMessage(({ id: 'createDate' })),
   }],
   queryFields: [{
     name: 'name',
