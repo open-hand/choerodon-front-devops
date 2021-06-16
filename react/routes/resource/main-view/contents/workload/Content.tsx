@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, {
   lazy, Suspense, memo, useEffect, useCallback, useMemo,
 } from 'react';
@@ -86,9 +87,9 @@ const WorkloadContent = observer(() => {
       title: formatMessage({ id: `${intlPrefix}.workload.pod.detail` }),
       okText: formatMessage({ id: 'close' }),
       okCancel: false,
-      children: <PodDetail podName={podName} envId={envId} />,
+      children: <PodDetail activeTabkey={workloadStore.getTabKey} podName={podName} envId={envId} />,
     });
-  }, [envId, formatMessage, intlPrefix]);
+  }, [envId, formatMessage, intlPrefix, workloadStore.getTabKey]);
 
   const openEditModal = useCallback((record: Record) => {
     const envRecord = treeDs.find((treeRecord: Record) => treeRecord.get('key') === parentId);
