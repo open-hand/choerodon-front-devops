@@ -34,6 +34,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     },
     envId,
     podName,
+    activeTabkey,
   } = props;
 
   const intlPrefix = 'c7ncd.deployment';
@@ -41,8 +42,8 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const podDetailStore = useStore();
 
   const podsDs = useMemo(() => new DataSet(PodDetailsDataset({
-    formatMessage, intlPrefix, projectId, envId, podName,
-  })), [envId, podName, projectId]);
+    formatMessage, intlPrefix, projectId, envId, podName, activeTabkey,
+  })), [envId, podName, projectId, activeTabkey]);
 
   const value = {
     ...props,
