@@ -65,7 +65,7 @@ const CustomModals = observer(() => {
     const connect = envRecord && envRecord.get('connect');
     const configDisabled = !connect;
     return [{
-      permissions: [],
+      permissions: [`choerodon.code.project.deploy.app-deployment.resource.ps.workload.create.${workloadStore.getTabKey}`],
       disabled: configDisabled,
       name: title,
       icon: 'playlist_add',
@@ -76,7 +76,7 @@ const CustomModals = observer(() => {
       handler: refresh,
       display: true,
     }];
-  }, [refresh, title, parentId, openCreateModal]);
+  }, [refresh, title, parentId, openCreateModal, workloadStore.getTabKey]);
 
   return <HeaderButtons items={buttons} showClassName />;
 });
