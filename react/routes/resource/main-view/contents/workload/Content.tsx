@@ -172,7 +172,7 @@ const WorkloadContent = observer(() => {
         status={status}
         clickAble={status !== 'operating'}
         onClick={() => openDetailModal(record)}
-        permissionCode={[]}
+        permissionCode={['choerodon.code.project.deploy.app-deployment.resource.ps.workload.detail']}
         error={error}
       />
     );
@@ -259,21 +259,21 @@ const WorkloadContent = observer(() => {
     }
     const actionData = [
       {
-        service: [],
+        service: ['choerodon.code.project.deploy.app-deployment.resource.ps.workload.pod'],
         text: formatMessage({ id: `${intlPrefix}.workload.pod.detail` }),
         action: () => openPodDetailModal(record),
       }, {
-        service: [],
+        service: [`choerodon.code.project.deploy.app-deployment.resource.ps.workload.create.${workloadStore.getTabKey}`],
         text: formatMessage({ id: 'edit' }),
         action: () => openEditModal(record),
       }, {
-        service: [],
+        service: [`choerodon.code.project.deploy.app-deployment.resource.ps.workload.delete.${workloadStore.getTabKey}`],
         text: formatMessage({ id: 'delete' }),
         action: () => openDeleteModal(record),
       },
     ];
     return <Action data={actionData} />;
-  }, [parentId, openPodDetailModal, openEditModal, openDeleteModal]);
+  }, [parentId, openPodDetailModal, openEditModal, openDeleteModal, workloadStore.getTabKey]);
 
   return (
     <div className={`${prefixCls}-workload`}>
