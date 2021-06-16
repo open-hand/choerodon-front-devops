@@ -56,11 +56,11 @@ function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
           />
           <PermissionRoute
             path={`${match.url}/charts/develop`}
-            component={() => <Charts reportType="develop" />}
+            component={() => <Charts reportType="develop" service={['choerodon.code.project.develop.chart.ps.default']} />}
           />
           <PermissionRoute
             path={`${match.url}/charts/deploy`}
-            component={() => <Charts reportType="deploy" />}
+            component={() => <Charts reportType="deploy" service={['choerodon.code.project.deploy.chart.ps.default']} />}
           />
           <Route path="*" component={nomatch} />
         </Switch>
