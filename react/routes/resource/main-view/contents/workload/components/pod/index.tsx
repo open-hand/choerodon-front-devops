@@ -23,18 +23,19 @@ interface PodProps {
   refresh?(): void,
   intl: { formatMessage(arg0: object): string },
   name?: string,
+  kind?: string,
 }
 
 const PodContent = injectIntl(({
   size = 40, podCount = 0, podRunningCount = 0, strokeWidth = 2,
   showBtn = false, btnDisabled = false, store, projectId, envId, refresh,
-  intl: { formatMessage }, name = 'Deployment',
+  intl: { formatMessage }, name = 'Deployment', kind = 'Deployment',
 }: PodProps) => {
   const prefixCls = useMemo(() => 'c7ncd-deployment-workload-pod', []);
   const cx = useMemo(() => size / 2, [size]);
   const radius = useMemo(() => (size - strokeWidth) / 2, [size, strokeWidth]);
   const correct = useMemo(() => (
-    (podRunningCount / podCount) * Math.PI * radius * 2
+    podCount > 0 ? (podRunningCount / podCount) * Math.PI * radius * 2 : 0
   ), [radius, podCount, podRunningCount]);
 
   const [realPodCount, setRealPodCount] = useState(podCount);
@@ -52,12 +53,12 @@ const PodContent = injectIntl(({
   }, [realPodCount]);
 
   const { run: operatePodCount } = useDebounceFn(async (count: number) => {
-    if (!projectId || !envId || !name) {
+    if (!projectId || !envId || !name || !kind) {
       return;
     }
     try {
       const res = await store?.operatePodCount({
-        projectId, envId, name, count,
+        projectId, envId, name, count, kind,
       });
       if (res && res.failed) {
         setRealPodCount(podCount);

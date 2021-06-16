@@ -24,7 +24,7 @@ export default ({
       });
     },
     destroy: ({ data: [data] }) => ({
-      url: WorkloadApis.deleteWorkload(projectId),
+      url: WorkloadApis.deleteWorkload(projectId, data.urlType),
       method: 'delete',
       params: {
         id: data.id,

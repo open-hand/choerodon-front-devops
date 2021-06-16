@@ -1,6 +1,14 @@
 import { useLocalStore } from 'mobx-react-lite';
 import { axios } from '@choerodon/master';
-import WorkloadApis, { OperateProps } from '@/routes/resource/apis/WorkloadApis';
+import WorkloadApis from '@/routes/resource/apis/WorkloadApis';
+
+interface OperateProps {
+  projectId: number,
+  envId: string,
+  name: string,
+  count: number,
+  kind: string,
+}
 
 export default function useStore({ DEPLOYMENT_TAB }: { DEPLOYMENT_TAB: string }) {
   return useLocalStore(() => ({
@@ -14,11 +22,18 @@ export default function useStore({ DEPLOYMENT_TAB }: { DEPLOYMENT_TAB: string })
     },
 
     operatePodCount({
-      projectId, envId, name, count,
+      projectId, envId, name, count, kind,
     }: OperateProps) {
-      return axios.put(WorkloadApis.operatePodCount({
-        projectId, envId, name, count,
-      }));
+      return axios({
+        method: 'put',
+        url: WorkloadApis.operatePodCount(projectId),
+        params: {
+          envId,
+          name,
+          count,
+          kind,
+        },
+      });
     },
   }));
 }

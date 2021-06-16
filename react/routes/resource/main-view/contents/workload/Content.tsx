@@ -19,9 +19,9 @@ import { useWorkloadStore } from './stores';
 import { useResourceStore } from '../../../stores';
 import Modals from './modals';
 import PodContent from './components/pod';
+import PodDetail from './components/pod-details';
 
 import './index.less';
-import PodDetail from './components/pod-details';
 
 const { TabPane } = Tabs;
 const { Column } = Table;
@@ -41,7 +41,6 @@ const WorkloadContent = observer(() => {
     },
     workloadStore,
     tableDs,
-    envId,
     urlTypes,
   } = useWorkloadStore();
 
@@ -54,6 +53,14 @@ const WorkloadContent = observer(() => {
     AppState: { currentMenuType: { projectId } },
   } = useResourceStore();
   const { getSelectedMenu: { parentId } } = resourceStore;
+
+  const podCountName = useMemo(() => ({
+    [DEPLOYMENT_TAB]: ['available', 'desired'],
+    [DAEMONSET_TAB]: ['numberReady', 'desiredScheduled'],
+    [STATEFULSET_TAB]: ['readyReplicas', 'desiredReplicas'],
+    [JOB_TAB]: ['active', 'completions'],
+    [CRONJOB_TAB]: ['available', 'desired'],
+  }), []);
 
   const refresh = useCallback(() => {
     tableDs.query();
@@ -87,9 +94,9 @@ const WorkloadContent = observer(() => {
       title: formatMessage({ id: `${intlPrefix}.workload.pod.detail` }),
       okText: formatMessage({ id: 'close' }),
       okCancel: false,
-      children: <PodDetail activeTabkey={workloadStore.getTabKey} podName={podName} envId={envId} />,
+      children: <PodDetail activeTabkey={workloadStore.getTabKey} podName={podName} envId={parentId} />,
     });
-  }, [envId, formatMessage, intlPrefix, workloadStore.getTabKey]);
+  }, [parentId, workloadStore.getTabKey]);
 
   const openEditModal = useCallback((record: Record) => {
     const envRecord = treeDs.find((treeRecord: Record) => treeRecord.get('key') === parentId);
@@ -114,7 +121,7 @@ const WorkloadContent = observer(() => {
       />,
       okText: formatMessage({ id: 'save' }),
     });
-  }, [workloadStore.getTabKey]);
+  }, [workloadStore.getTabKey, parentId]);
 
   const openDeleteModal = useCallback((record: Record) => {
     const modalProps = {
@@ -124,6 +131,8 @@ const WorkloadContent = observer(() => {
       okProps: { color: 'red' },
       cancelProps: { color: 'dark' },
     };
+    // @ts-ignore
+    record.set('urlType', urlTypes[workloadStore.getTabKey] || 'deployments');
     tableDs.delete(record, modalProps);
   }, [workloadStore.getTabKey]);
 
@@ -145,10 +154,12 @@ const WorkloadContent = observer(() => {
   const renderPod = useCallback(({ record }: RecordObjectProps) => {
     const envRecord = treeDs.find((treeRecord: Record) => treeRecord.get('key') === parentId);
     const connect = envRecord && envRecord.get('connect');
+    // @ts-ignore
+    const [podRunningCountName, podAllCountName] = podCountName[workloadStore.getTabKey] || ['available', 'desired'];
     return (
       <PodContent
-        podCount={record.get('desired')}
-        podRunningCount={record.get('available')}
+        podCount={record.get(podAllCountName) || 0}
+        podRunningCount={record.get(podRunningCountName) || 0}
         store={workloadStore}
         projectId={projectId}
         envId={parentId}
@@ -156,9 +167,10 @@ const WorkloadContent = observer(() => {
         showBtn={[DEPLOYMENT_TAB, STATEFULSET_TAB].includes(workloadStore.getTabKey)}
         name={record.get('name')}
         btnDisabled={!connect || record.get('commandStatus') !== 'success'}
+        kind={workloadStore.getTabKey}
       />
     );
-  }, []);
+  }, [parentId, workloadStore.getTabKey]);
 
   const renderLabels = useCallback(({ value }: { value: object }) => {
     const labels = map(value || [], (label: string, key: string) => (
@@ -234,7 +246,7 @@ const WorkloadContent = observer(() => {
       },
     ];
     return <Action data={actionData} />;
-  }, []);
+  }, [parentId]);
 
   return (
     <div className={`${prefixCls}-workload`}>
