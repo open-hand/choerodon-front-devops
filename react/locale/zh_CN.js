@@ -460,6 +460,10 @@ const deployment = {
   'c7ncd.deployment.workload.pod.detail': '关联Pod详情',
   'c7ncd.deployment.workload.delete.title': '删除{type}',
   'c7ncd.deployment.workload.delete.des': '确定删除{type}“{name}”吗？',
+  'c7ncd.deployment.workload.lastScheduleTime': '最后调度时间',
+  'c7ncd.deployment.workload.active': '活跃中',
+  'c7ncd.deployment.workload.suspend': '是否挂起',
+  'c7ncd.deployment.workload.plan': '活跃中',
 
 };
 
