@@ -130,7 +130,7 @@ function IngressItem({
         name="Chart资源"
       />
       )}
-      {getSuffix()}
+      {!record.get('instanceId') && getSuffix()}
     </>
   );
 }

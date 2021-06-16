@@ -285,7 +285,7 @@ const NetworkContent = observer(() => {
   function renderAction({ record }) {
     const status = record.get('status');
     const disabled = getEnvIsNotRunning() || status === 'operating';
-    if (disabled) {
+    if (disabled || record.get('instanceId')) {
       return null;
     }
     const id = record.get('id');
