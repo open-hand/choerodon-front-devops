@@ -58,7 +58,7 @@ const CustomModals = observer(() => {
       />,
       okText: formatMessage({ id: 'create' }),
     });
-  }, [workloadStore.getTabKey]);
+  }, [workloadStore.getTabKey, parentId]);
 
   const buttons = useMemo(() => {
     const envRecord = treeDs.find((record: Record) => record.get('key') === parentId);
@@ -76,7 +76,7 @@ const CustomModals = observer(() => {
       handler: refresh,
       display: true,
     }];
-  }, [formatMessage, refresh, title, parentId]);
+  }, [refresh, title, parentId, openCreateModal]);
 
   return <HeaderButtons items={buttons} showClassName />;
 });

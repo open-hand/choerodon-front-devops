@@ -273,7 +273,7 @@ const WorkloadContent = observer(() => {
       },
     ];
     return <Action data={actionData} />;
-  }, [parentId]);
+  }, [parentId, openPodDetailModal, openEditModal, openDeleteModal]);
 
   return (
     <div className={`${prefixCls}-workload`}>
