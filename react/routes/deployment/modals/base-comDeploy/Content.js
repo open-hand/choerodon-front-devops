@@ -900,7 +900,12 @@ export default observer(() => {
             <Icon type="expand_less" />
           </p>
           <Form columns={3} style={{ width: '80%', marginTop: 16 }} dataSet={BaseDeployDataSet}>
-            <Password autoComplete="new-password" colSpan={1} name={mapping.password.name} />
+            <Password
+              autoComplete="new-password"
+              colSpan={1}
+              name={mapping.password.name}
+              addonAfter={<NewTips helpText="配置主机的SSH信息以及MySQL配置信息。默认密码为Changeit!123。修改密码需满足以下要求：1、长度最短8位 2、至少包含一个数字 3、至少包含一个大写字母 4、至少包含一个小写字母 5、至少包含一个特殊符号" />}
+            />
           </Form>
         </>
       );
@@ -925,7 +930,7 @@ export default observer(() => {
             autoComplete="new-password"
             colSpan={1}
             name={mapping.password.name}
-            addonAfter={<Tips helpText="默认密码为Changeit!123。修改密码需满足以下要求：1、长度最短8位 2、至少包含一个数字 3、至少包含一个大写字母 4、至少包含一个小写字母 5、至少包含一个特殊符号" />}
+            addonAfter={<Tips helpText="配置主机的SSH信息以及MySQL配置信息。默认密码为Changeit!123。修改密码需满足以下要求：1、长度最短8位 2、至少包含一个数字 3、至少包含一个大写字母 4、至少包含一个小写字母 5、至少包含一个特殊符号" />}
           />
           {
             BaseDeployDataSet
@@ -1098,7 +1103,7 @@ export default observer(() => {
               autoComplete="new-password"
               colSpan={1}
               name={mapping.password.name}
-              addonAfter={<Tips helpText="访问MySQL服务的密码" />}
+              addonAfter={<Tips helpText="访问MySQL服务的密码。默认密码为Changeit!123。修改密码需满足以下要求：1、长度最短8位 2、至少包含一个数字 3、至少包含一个大写字母 4、至少包含一个小写字母 5、至少包含一个特殊符号。" />}
             />,
             <Select
               combo
@@ -1111,7 +1116,7 @@ export default observer(() => {
               autoComplete="new-password"
               colSpan={1}
               name={mapping.password.name}
-              addonAfter={<Tips helpText="访问redis服务的密码" />}
+              addonAfter={<Tips helpText="访问redis服务的密码。默认密码为Changeit!123。修改密码需满足以下要求：1、长度最短8位 2、至少包含一个数字 3、至少包含一个大写字母 4、至少包含一个小写字母 5、至少包含一个特殊符号。" />}
             />,
             <Select
               colSpan={1}
