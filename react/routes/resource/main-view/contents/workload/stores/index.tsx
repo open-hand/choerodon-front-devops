@@ -92,7 +92,6 @@ export const StoreProvider = injectIntl(observer((props: any) => {
     tabs,
     workloadStore,
     tableDs,
-    envId: parentId,
     urlTypes,
   };
   return (
