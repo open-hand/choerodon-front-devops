@@ -24,6 +24,18 @@ export default ({
       };
     },
   },
+  queryFields: [
+    {
+      name: 'name',
+      type: 'string',
+      label: formatMessage({ id: `${intlPrefix}.instance.pod` }),
+    },
+    {
+      name: 'containers',
+      type: 'object',
+      label: formatMessage({ id: 'container' }),
+    },
+  ],
   fields: [
     {
       name: 'status',
