@@ -210,10 +210,10 @@ const PodDetail = memo(() => {
           className={`${prefixCls}-instance-pods`}
         >
           <Column name="name" renderer={renderName} />
-          <Column renderer={renderAction} width="0.7rem" />
+          <Column renderer={renderAction} width={60} />
           <Column name="containers" renderer={renderContainers} />
           <Column name="ip" width="1.2rem" />
-          <Column name="creationDate" sortable renderer={renderDate} width="1rem" />
+          <Column name="creationDate" sortable renderer={renderDate} width={105} />
           <Column name="status" renderer={renderStatus} width="1rem" />
         </Table>
       </div>

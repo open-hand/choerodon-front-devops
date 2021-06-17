@@ -105,29 +105,29 @@ export default observer(({ cRef, envId: otherEnvId }) => {
       </div>
       {map(annotationDs.data, (annotationRecord) => (
         <Form
-          columns={14}
+          columns={29}
           record={annotationRecord}
           style={{ width: '103.3%' }}
           key={annotationRecord.id}
           className={`${prefixCls}-resource-domain-annotation`}
         >
-          <div colSpan={14} style={{ display: 'flex', alignItems: 'center' }}>
-            <TextField name="key" />
-            <span className={`${prefixCls}-resource-domain-annotation-equal`}>=</span>
-            <TextArea
-              name="value"
-              autoSize={{ minRows: 1 }}
-              resize="vertical"
+          <TextField name="key" colSpan={13} />
+          <span className={`${prefixCls}-resource-domain-annotation-equal`}>=</span>
+          <TextArea
+            name="value"
+            autoSize={{ minRows: 1 }}
+            resize="vertical"
+            colSpan={13}
+          />
+          {annotationDs.length > 1 ? (
+            <Button
+              funcType="flat"
+              icon="delete"
+              onClick={() => handleRemoveAnnotation(annotationRecord)}
+              className="c7ncd-form-record-delete-btn"
+              colSpan={2}
             />
-            {annotationDs.length > 1 ? (
-              <Button
-                funcType="flat"
-                icon="delete"
-                onClick={() => handleRemoveAnnotation(annotationRecord)}
-                className="c7ncd-form-record-delete-btn"
-              />
-            ) : <span />}
-          </div>
+          ) : <span colSpan={2} />}
         </Form>
       ))}
       <Button
