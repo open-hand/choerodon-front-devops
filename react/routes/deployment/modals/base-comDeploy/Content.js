@@ -820,7 +820,7 @@ export default observer(() => {
         <>
           <p className="c7ncd-baseDeploy-middle-deploySetting">
             主机设置
-            <Icon type="expand_less" />
+            {/* <Icon type="expand_less" /> */}
           </p>
           {
             HostSettingDataSet.records.filter((i) => !i.isRemoved).map((record) => (
@@ -897,7 +897,7 @@ export default observer(() => {
           </div>
           <p style={{ marginTop: 30 }} className="c7ncd-baseDeploy-middle-deploySetting">
             参数配置
-            <Icon type="expand_less" />
+            {/* <Icon type="expand_less" /> */}
           </p>
           <Form columns={3} style={{ width: '80%', marginTop: 16 }} dataSet={BaseDeployDataSet}>
             <Password
@@ -923,7 +923,7 @@ export default observer(() => {
               bottom: 2,
             }}
           />
-          <Icon type="expand_less" />
+          {/* <Icon type="expand_less" /> */}
         </p>
         <Form dataSet={BaseDeployDataSet} columns={3}>
           <Password
@@ -1094,7 +1094,7 @@ export default observer(() => {
       ? rennderHostDeployCotent() : [
         <p className="c7ncd-baseDeploy-middle-deploySetting">
           参数配置
-          <Icon type="expand_less" />
+          {/* <Icon type="expand_less" /> */}
         </p>,
         <Form columns={3} style={{ width: '80%', marginTop: 16 }} dataSet={BaseDeployDataSet}>
           {
@@ -1150,7 +1150,7 @@ export default observer(() => {
         ) ? '' : [
           <p className="c7ncd-baseDeploy-middle-deploySetting">
             PV标签
-            <Icon type="expand_less" />
+            {/* <Icon type="expand_less" /> */}
             <NewTips helpText="此处输入的PV标签用于定位对应的PV，此处需保证匹配得到的PV数量应大于等于slaveCount的数量" />
           </p>,
           PVLabelsDataSet.records.filter((item) => !item.isRemoved).map((item) => (
@@ -1321,7 +1321,7 @@ export default observer(() => {
       </Form>
       <p className="c7ncd-baseDeploy-middle-deploySetting">
         部署设置
-        <Icon type="expand_less" />
+        {/* <Icon type="expand_less" /> */}
       </p>
       <Form columns={3} style={{ width: '80%', marginTop: 16 }} dataSet={BaseDeployDataSet}>
         <SelectBox colSpan={1} name={mapping.deployWay.name} />

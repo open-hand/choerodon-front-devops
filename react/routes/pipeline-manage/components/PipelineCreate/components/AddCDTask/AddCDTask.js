@@ -1355,7 +1355,6 @@ export default observer(() => {
               className="addcdTask-whetherBlock addcdTask-triggersTasks"
               style={{
                 position: 'relative',
-                top: '12px',
               }}
               colSpan={2}
             >
@@ -1369,7 +1368,7 @@ export default observer(() => {
                 <Icon
                   style={{
                     position: 'absolute',
-                    top: '-18px',
+                    top: '5px',
                     left: '195px',
                     color: 'rgba(0, 0, 0, 0.36)',
                   }}
