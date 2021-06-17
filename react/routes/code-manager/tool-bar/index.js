@@ -106,7 +106,7 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
 
   const handleCopy = () => { Choerodon.prompt('复制成功'); };
   const copyMenu = (
-    <div role="none" className="c7ncd-copyMenu" onClick={(e) => e.stopPropagation()}>
+    <div role="none" className="c7ncd-copyMenu c7n-pro-form-float" onClick={(e) => e.stopPropagation()}>
       <Form>
         <TextField
           disabled
