@@ -463,7 +463,7 @@ const deployment = {
   'c7ncd.deployment.workload.lastScheduleTime': '最后调度时间',
   'c7ncd.deployment.workload.active': '活跃中',
   'c7ncd.deployment.workload.suspend': '是否挂起',
-  'c7ncd.deployment.workload.plan': '活跃中',
+  'c7ncd.deployment.workload.plan': '计划',
 
 };
 
