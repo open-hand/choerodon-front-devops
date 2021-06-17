@@ -32,6 +32,7 @@ export default function useStore({ DEPLOYMENT_TAB }: { DEPLOYMENT_TAB: string })
           name,
           count,
           kind,
+          workload: true,
         },
       });
     },
