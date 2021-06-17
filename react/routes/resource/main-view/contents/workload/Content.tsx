@@ -80,6 +80,7 @@ const WorkloadContent = observer(() => {
 
   const handleTabChange = useCallback((tabKey: string) => {
     workloadStore.setTabKey(tabKey);
+    tableDs.queryDataSet?.reset();
   }, []);
 
   const openDetailModal = useCallback(async (record: Record) => {
@@ -191,7 +192,7 @@ const WorkloadContent = observer(() => {
         projectId={projectId}
         envId={parentId}
         refresh={refresh}
-        showBtn={[DEPLOYMENT_TAB, STATEFULSET_TAB].includes(workloadStore.getTabKey)}
+        showBtn={!record.get('instanceId') && [DEPLOYMENT_TAB, STATEFULSET_TAB].includes(workloadStore.getTabKey)}
         name={record.get('name')}
         btnDisabled={!connect || record.get('commandStatus') !== 'success'}
         kind={workloadStore.getTabKey}
