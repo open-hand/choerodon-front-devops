@@ -51,14 +51,14 @@ const mapping = {
 
 export { mapping };
 
-export default (projectId, BaseComDeployStore) => ({
+export default (projectId, BaseComDeployStore, random) => ({
   paging: false,
   autoCreate: true,
   fields: Object.keys(mapping).map((key) => {
     const item = mapping[key];
     if (key === 'hostName') {
       item.lookupAxiosConfig = () => ({
-        url: BaseComDeployApis.getHostListApi(projectId),
+        url: BaseComDeployApis.getHostListApi(projectId, random),
         method: 'post',
         data: {
           params: [],

@@ -644,6 +644,7 @@ export default observer(() => {
     let tempValues = valueIdValues;
     Modal.open({
       key: Modal.key(),
+      drawer: true,
       title: '修改部署配置""的配置信息',
       children: (
         <div
