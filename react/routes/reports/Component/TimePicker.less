@@ -24,7 +24,16 @@
 
     .c7n-calendar-picker-input {
       margin-bottom: 0.03rem;
-      padding-left: 0.24rem;
+      padding-left: 0.3rem;
+    }
+
+    .@{c7n-prefix}-input-has-border.@{c7n-prefix}-input-wrapper {
+      &::before {
+        border: 0.01rem solid rgb(217, 230, 242);
+      }
+      &:hover::before {
+        border-color: rgb(217, 230, 242);
+      }
     }
 
     .c7n-calendar-range-picker-input {

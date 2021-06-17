@@ -113,13 +113,13 @@ const ListView = withRouter(observer((props) => {
   };
 
   const getItemsButton = () => ([{
-    name: <FormattedMessage id={`${intlPrefix}.create`} />,
+    name: formatMessage({ id: `${intlPrefix}.create` }),
     icon: 'playlist_add',
     permissions: ['choerodon.code.project.develop.app-service.ps.create'],
     display: true,
     handler: openCreate,
   }, {
-    name: <FormattedMessage id={`${intlPrefix}.import`} />,
+    name: formatMessage({ id: `${intlPrefix}.import` }),
     icon: 'archive-o',
     permissions: ['choerodon.code.project.develop.app-service.ps.import'],
     display: true,
