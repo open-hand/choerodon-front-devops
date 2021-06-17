@@ -1699,7 +1699,7 @@ const zhCN = {
   'ist.deploy.health.timeoutSeconds': '超时时间(秒)',
   'ist.deploy.security': '安全/主机设置',
   'ist.deploy.security.describe':
-    '容器监听端口到主机公用IP地址端口的映射关系。',
+    '授予或限制容器影响所运行主机的能力。',
 
   'ist.deploy.security.imagePullPolicy': '镜像拉取',
   'ist.deploy.security.privileged': '特权模式',
