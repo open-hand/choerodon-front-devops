@@ -80,7 +80,7 @@ const EnvModals = observer(() => {
       handler: openModal,
       display: true,
       service: permissions,
-      // disabled,
+      disabled,
     }, {
       icon: 'refresh',
       handler: refresh,
