@@ -15,6 +15,7 @@ import app from '@/images/app.svg';
 import image from '@/images/image.svg';
 import jar from '@/images/jar.svg';
 import { StatusTag } from '@choerodon/components';
+import { TabCode } from '@choerodon/master';
 import { SMALL } from '@/utils/getModalWidth';
 import YamlEditor from '@/components/yamlEditor';
 import ReactCodeMirror from 'react-codemirror';
@@ -155,7 +156,7 @@ const Deployment = withRouter(observer((props) => {
       const envId = record.get('envId');
       history.push({
         pathname: '/devops/resource',
-        search,
+        search: `${search}&activeKey=${TabCode.get('/devops/resource').tabCodes[0]}`,
         state: {
           instanceId,
           appServiceId,
@@ -173,7 +174,7 @@ const Deployment = withRouter(observer((props) => {
     } else {
       history.push({
         pathname: '/devops/resource',
-        search,
+        search: `${search}&activeKey=${TabCode.get('/devops/resource').tabCodes[0]}`,
         state: {
           instanceId: instance.id,
           appServiceId: instance.appServiceId,

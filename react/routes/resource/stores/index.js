@@ -4,8 +4,10 @@ import React, {
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { withRouter } from 'react-router-dom';
+import { TabCode } from '@choerodon/master';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
+import { useQueryString } from '@choerodon/components';
 import queryString from 'query-string';
 import { viewTypeMappings, itemTypeMappings } from './mappings';
 import TreeDataSet from './TreeDataSet';
@@ -28,9 +30,12 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
     } = props;
     const viewTypeMemo = useMemo(() => viewTypeMappings, []);
     const itemTypes = useMemo(() => itemTypeMappings, []);
-    const {
+    let {
       activeKey,
     } = state || queryString.parse(search) || {};
+    if (!activeKey) {
+      activeKey = useQueryString().activeKey;
+    }
     const newViewType = activeKey || '';
     const resourceStore = useStore(newViewType);
     const viewType = resourceStore.getViewType;
