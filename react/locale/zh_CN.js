@@ -933,6 +933,7 @@ const emptyPage = {
   'empty.link.code': '跳转至代码库管理',
   'empty.link.pipeline': '跳转至应用流水线',
   'empty.title.code': '当前用户在该应用服务的GitLab权限为Guest，无法查看此页面。若想执行对应操作，请转至代码库管理界面申请更高的GitLab权限。',
+  'empty.tips.app-list.des.owner': '当前项目下无应用服务，',
 };
 
 const prompt = {

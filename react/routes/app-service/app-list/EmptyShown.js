@@ -1,29 +1,34 @@
 import React, { Fragment } from 'react';
-import { Header, Content, Breadcrumb } from '@choerodon/boot';
+import {
+  Header, Content, Breadcrumb, HeaderButtons,
+} from '@choerodon/boot';
 import { Button } from 'choerodon-ui';
-import EmptyPage from '../../../components/empty-page';
+import { EmptyPage } from '@choerodon/components';
 import Loading from '../../../components/loading';
 import { useAppTopStore } from '../stores';
+import emptyImage from '../images/empty.svg';
 
 export function EmptyLoading({ formatMessage }) {
-  return <Fragment>
-    <Header>
-      <Button
-        icon="refresh"
-        type="primary"
-        funcType="flat"
-      >
-        {formatMessage({ id: 'refresh' })}
-      </Button>
-    </Header>
-    <Breadcrumb />
-    <Content>
-      <Loading display />
-    </Content>
-  </Fragment>;
+  return (
+    <>
+      <Header>
+        <Button
+          icon="refresh"
+          type="primary"
+          funcType="flat"
+        >
+          {formatMessage({ id: 'refresh' })}
+        </Button>
+      </Header>
+      <Breadcrumb />
+      <Content>
+        <Loading display />
+      </Content>
+    </>
+  );
 }
 
-export default function EmptyShown() {
+export default function EmptyShown({ access, onClick }) {
   const {
     intl: { formatMessage },
     AppState: {
@@ -32,29 +37,44 @@ export default function EmptyShown() {
       },
     },
     appServiceStore,
+    intlPrefix,
   } = useAppTopStore();
 
   function refresh() {
     appServiceStore.checkHasApp(projectId);
   }
 
-  return <Fragment>
-    <Header>
-      <Button
-        icon="refresh"
-        type="primary"
-        funcType="flat"
-        onClick={refresh}
-      >
-        {formatMessage({ id: 'refresh' })}
-      </Button>
-    </Header>
-    <Breadcrumb />
-    <Content>
-      <EmptyPage
-        title={formatMessage({ id: 'empty.title.prohibited' })}
-        describe={formatMessage({ id: 'empty.tips.app.member' })}
-      />
-    </Content>
-  </Fragment>;
+  return (
+    <>
+      <Header>
+        <HeaderButtons
+          items={[{
+            name: formatMessage({ id: `${intlPrefix}.create` }),
+            icon: 'playlist_add',
+            permissions: ['choerodon.code.project.develop.app-service.ps.create'],
+            display: true,
+            handler: onClick,
+          }, {
+            icon: 'refresh',
+            display: true,
+            handler: refresh,
+          }]}
+        />
+      </Header>
+      <Breadcrumb />
+      <Content>
+        <EmptyPage
+          image={emptyImage}
+          description={access ? (
+            <>
+              {formatMessage({ id: 'empty.tips.app-list.des.owner' })}
+              <EmptyPage.Button onClick={onClick}>
+                请创建
+              </EmptyPage.Button>
+            </>
+          ) : formatMessage({ id: 'empty.tips.app.member' })}
+        />
+      </Content>
+    </>
+  );
 }
