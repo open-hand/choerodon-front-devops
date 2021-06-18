@@ -30,6 +30,7 @@ const DetailContent = observer(() => {
       accessShare,
     },
     versionDs,
+    shareDs,
   } = useServiceDetailStore();
 
   const [tabValue, setTabValue] = useState('Version');
@@ -44,6 +45,7 @@ const DetailContent = observer(() => {
     let flag = false;
     if (accessShare && detailDs.current && detailDs.current.get('type') === 'normal') {
       flag = true;
+      shareDs.query();
       if (!tabData.find((i) => i.value === 'Share')) {
         newTabData = [
           ...tabData,
