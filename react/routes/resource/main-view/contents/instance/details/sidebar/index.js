@@ -448,10 +448,13 @@ export default class DetailsSidebar extends Component {
           <Button
             className="c7ncd-deploy-detail-type-btn"
             onClick={this.handleChangeType}
+            style={{
+              display: ['Job', 'CronJob'].includes(detail.kind) ? 'none' : 'block',
+            }}
           >
             <FormattedMessage id={`ist.deploy.type.${isJson ? 'yaml' : 'json'}`} />
           </Button>
-          {isJson && (
+          {isJson && !['Job', 'CronJob'].includes(detail.kind) && (
           <Button
             className="c7ncd-expand-btn"
             onClick={this.handleExpandAll}
@@ -460,7 +463,7 @@ export default class DetailsSidebar extends Component {
           </Button>
           )}
         </div>
-        {isJson ? (
+        {isJson && !['Job', 'CronJob'].includes(detail.kind) ? (
           <Collapse
             bordered={false}
             activeKey={activeKey}

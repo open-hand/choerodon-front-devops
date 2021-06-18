@@ -1670,6 +1670,8 @@ const zhCN = {
   'ist.deploy.Deployment.detail': '查看实例Deployment详情',
   'ist.deploy.StatefulSet.detail': '查看实例Stateful Set详情',
   'ist.deploy.DaemonSet.detail': '查看实例Daemon Set详情',
+  'ist.deploy.Job.detail': '查看实例Job详情',
+  'ist.deploy.CronJob.detail': '查看实例CronJob详情',
   'ist.deploy.title': '查看实例“{name}”的Deployment详情',
   'ist.deploy.type.json': '列表格式查看',
   'ist.deploy.type.yaml': 'YAML格式查看',
