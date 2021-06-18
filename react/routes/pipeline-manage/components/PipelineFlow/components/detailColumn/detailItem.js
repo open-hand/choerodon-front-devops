@@ -16,6 +16,7 @@ import { get } from 'lodash';
 import renderDuration from '@/utils/getDuration';
 import { handlePromptError } from '@/utils';
 import { MIDDLE } from '@/utils/getModalWidth';
+import { TabCode } from '@choerodon/master';
 import StatusTag from '../StatusTag';
 import DepolyLog from '../deployLog';
 import StatusDot from '../statusDot';
@@ -155,6 +156,7 @@ const DetailItem = (props) => {
             instanceId,
             appServiceId,
             envId,
+            activeKey: TabCode.get('/devops/resource').tabCodes[0],
           },
         });
       } else {
