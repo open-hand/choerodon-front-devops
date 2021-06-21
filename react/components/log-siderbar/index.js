@@ -268,7 +268,7 @@ export default class LogSidebar extends Component {
 
           <div className={fullScreen ? 'c7n-container-sidebar-content_full' : 'c7n-container-sidebar-content'}>
             <div className="c7n-term-title">
-              <FormattedMessage id="container.term.log" />
+              <FormattedMessage id="container" />
             &nbsp;
               <Select className="c7n-log-siderbar-select" value={containerName} onChange={this.handleChange}>
                 {containerOptions}
