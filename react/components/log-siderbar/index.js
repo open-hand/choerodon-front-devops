@@ -159,7 +159,7 @@ export default class LogSidebar extends Component {
     } = this.props;
     const { namespace, name, podName: recordPodName } = record || {};
     const clusterId = propsClusterId || record?.clusterId;
-    const projectId = propsProjectId || record?.projectId || currentProjectId;
+    const projectId = propsProjectId || currentProjectId || record?.projectId;
     const podName = name || recordPodName;
     const { logId, containerName, following } = this.state;
     const wsUrl = removeEndsChar(window._env_.DEVOPS_HOST, '/');
