@@ -159,7 +159,7 @@ export default class LogSidebar extends Component {
     } = this.props;
     const { namespace, name, podName: recordPodName } = record || {};
     const clusterId = propsClusterId || record?.clusterId;
-    const projectId = propsProjectId || record?.projectId || currentProjectId;
+    const projectId = propsProjectId || currentProjectId || record?.projectId;
     const podName = name || recordPodName;
     const { logId, containerName, following } = this.state;
     const wsUrl = removeEndsChar(window._env_.DEVOPS_HOST, '/');
@@ -268,7 +268,7 @@ export default class LogSidebar extends Component {
 
           <div className={fullScreen ? 'c7n-container-sidebar-content_full' : 'c7n-container-sidebar-content'}>
             <div className="c7n-term-title">
-              <FormattedMessage id="container.term.log" />
+              <FormattedMessage id="container" />
             &nbsp;
               <Select className="c7n-log-siderbar-select" value={containerName} onChange={this.handleChange}>
                 {containerOptions}
