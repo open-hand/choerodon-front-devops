@@ -218,7 +218,14 @@ const PodDetail = memo(() => {
         </Table>
       </div>
       {visible
-        && <LogSiderbar visible={visible} onClose={closeLog} record={podsDs.current.toData()} />}
+        && (
+        <LogSiderbar
+          visible={visible}
+          onClose={closeLog}
+          record={podsDs.current.toData()}
+          projectId={projectId}
+        />
+        )}
       {shellVisible
         && (
         <TermSiderbar
