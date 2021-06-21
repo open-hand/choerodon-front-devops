@@ -55,7 +55,7 @@ export default observer(() => {
   } = useBaseComDeployStore();
 
   modal.handleOk(async () => {
-    const middleWare = BaseDeployDataSet.current.get(mapping.middleware.name);
+    const middleWare = BaseDeployDataSet.current.get(mapping.middlewarce.name);
     let pass;
     let axiosData = {};
     let flag = false;
