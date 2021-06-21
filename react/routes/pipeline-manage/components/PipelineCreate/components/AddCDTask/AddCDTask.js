@@ -13,6 +13,7 @@ import {
   Modal,
   TextArea,
 } from 'choerodon-ui/pro';
+import { NewTips } from '@choerodon/components';
 import { Icon, Spin } from 'choerodon-ui';
 import { axios, Choerodon } from '@choerodon/boot';
 import { Base64 } from 'js-base64';
@@ -1282,7 +1283,7 @@ export default observer(() => {
               className="addcdTask-triggerValue"
               name="triggerValue"
               addonAfter={
-                <Tips helpText="您可在此输入正则表达式来配置触发分支；例：若想匹配以 feature 开头的分支，可以输入 ^feature.*。更多表达式，详见用户手册。若不填写，则默认为所有分支和tag" />
+                <NewTips helpText="您可在此输入正则表达式来配置触发分支；例：若想匹配以 feature 开头的分支，可以输入 ^feature.*。更多表达式，详见用户手册。若不填写，则默认为所有分支和tag" />
               }
             />
           ) : (
@@ -1365,17 +1366,14 @@ export default observer(() => {
                 <Option value={addCDTaskDataSetMap.triggersTasks.values[0]}>是</Option>
                 <Option value={addCDTaskDataSetMap.triggersTasks.values[1]}>否</Option>
               </SelectBox>
-              <Tooltip title="此处仅项目所有者可以设置；默认为是，即触发用户在没有该部署任务的环境权限时，将会直接使用管理员账户触发部署；若选择为否，触发成员在没有环境权限时，将会直接跳过此部署任务。">
-                <Icon
-                  style={{
-                    position: 'absolute',
-                    top: '5px',
-                    left: '195px',
-                    color: 'rgba(0, 0, 0, 0.36)',
-                  }}
-                  type="help"
-                />
-              </Tooltip>
+              <NewTips
+                helpText="此处仅项目所有者可以设置；默认为是，即触发用户在没有该部署任务的环境权限时，将会直接使用管理员账户触发部署；若选择为否，触发成员在没有环境权限时，将会直接跳过此部署任务。"
+                style={{
+                  position: 'absolute',
+                  top: '7px',
+                  left: '195px',
+                }}
+              />
             </div>
           ),
           <SelectBox
