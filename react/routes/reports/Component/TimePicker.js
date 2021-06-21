@@ -10,7 +10,9 @@ const { RangePicker } = DatePicker;
 const ButtonGroup = Button.Group;
 
 function TimePicker(props) {
-  const { startTime, endTime, store, func, type, onChange, unlimit } = props;
+  const {
+    startTime, endTime, store, func, type, onChange, unlimit,
+  } = props;
   const handleClick = (val) => {
     store.setEndTime(moment());
     store.setStartDate(null);
@@ -69,7 +71,6 @@ function TimePicker(props) {
       </div>
       <div
         className="c7n-report-time-pick"
-        style={{ backgroundColor: type === '' ? 'rgba(0,0,0,.08)' : '' }}
       >
         <RangePicker
           disabledDate={disabledDate}

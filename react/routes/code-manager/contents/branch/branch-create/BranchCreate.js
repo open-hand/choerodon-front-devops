@@ -11,6 +11,7 @@ import { injectIntl } from 'react-intl';
 import _ from 'lodash';
 import debounce from 'lodash/debounce';
 import get from 'lodash/get';
+import some from 'lodash/some';
 import MouserOverWrapper from '../../../../../components/MouseOverWrapper';
 import { useFormStore } from './stores';
 import { handlePromptError } from '../../../../../utils';
@@ -32,6 +33,7 @@ function BranchCreate(props) {
     appServiceId,
     intl: { formatMessage },
     projectOptionsDs,
+    AppState: { currentMenuType: { categories } },
   } = useFormStore();
 
   const [branchPageSize, setBranchPageSize] = useState(3);
@@ -49,11 +51,8 @@ function BranchCreate(props) {
   const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
-    const pattern = new URLSearchParams(window.location.hash);
-    if (pattern.get('category') === 'OPERATIONS') {
-      setIsOPERATIONS(true);
-    }
-  }, []);
+    setIsOPERATIONS(!some(categories || [], ['code', 'N_AGILE']));
+  }, [categories]);
 
   useEffect(() => {
     loadBranchData(branchPageSize);
@@ -509,7 +508,7 @@ function BranchCreate(props) {
               ),
             )}
           </Select>
-          <TextField colSpan={3} prefix={prefixData} name="branchName" />
+          <TextField colSpan={3} name="branchName" renderer={({ value }) => (value ? `${prefixData || ''}${value}` : value)} />
         </Form>
       </div>
     </div>

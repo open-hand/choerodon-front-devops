@@ -3,6 +3,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
 import { Collapse } from 'choerodon-ui';
+import { TabCode } from '@choerodon/master';
 import { useBatchDetailStore } from './stores';
 import MouserOverWrapper from '../../../../components/MouseOverWrapper';
 
@@ -38,7 +39,7 @@ export default injectIntl(observer((props) => {
       const envId = record.get('envId');
       history.push({
         pathname: '/devops/resource',
-        search,
+        search: `${search}&activeKey=${TabCode.get('/devops/resource').tabCodes[0]}`,
         state: {
           instanceId,
           appServiceId,
@@ -73,14 +74,19 @@ export default injectIntl(observer((props) => {
                 <span className={`${prefixCls}-detail-batch-text`}>
                   {formatMessage({ id: `${intlPrefix}.instance` })}
                 </span>
-                {record.get('deleted') ? (<span>
-                  {formatMessage({ id: 'deleted' })}
-                </span>) : (<span
-                  onClick={() => linkToInstance(record)}
-                  className={`${prefixCls}-detail-batch-instance`}
-                >
-                  {record.get('instanceName')}
-                </span>)}
+                {record.get('deleted') ? (
+                  <span>
+                    {formatMessage({ id: 'deleted' })}
+                  </span>
+                ) : (
+                  <span
+                    role="none"
+                    onClick={() => linkToInstance(record)}
+                    className={`${prefixCls}-detail-batch-instance`}
+                  >
+                    {record.get('instanceName')}
+                  </span>
+                )}
               </li>
             </ul>
           </Panel>

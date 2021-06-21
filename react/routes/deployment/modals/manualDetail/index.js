@@ -1,6 +1,7 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { withRouter } from 'react-router-dom';
+import { TabCode } from '@choerodon/master';
 import MouserOverWrapper from '../../../../components/MouseOverWrapper';
 
 import './index.less';
@@ -20,7 +21,7 @@ export default withRouter(injectIntl(({
       const envId = record.get('envId');
       history.push({
         pathname: '/devops/resource',
-        search,
+        search: `${search}&activeKey=${TabCode.get('/devops/resource').tabCodes[0]}`,
         state: {
           instanceId,
           appServiceId,
@@ -30,7 +31,7 @@ export default withRouter(injectIntl(({
     }
     history.push(`/devops/resource${search}`);
   }
-  
+
   return (
     <ul className={`${prefixCls}-detail-manual`}>
       <li className={`${prefixCls}-detail-manual-item`}>
@@ -58,6 +59,7 @@ export default withRouter(injectIntl(({
           {formatMessage({ id: `${intlPrefix}.instance` })}
         </span>
         <span
+          role="none"
           onClick={linkToInstance}
           className={`${prefixCls}-detail-manual-instance`}
         >

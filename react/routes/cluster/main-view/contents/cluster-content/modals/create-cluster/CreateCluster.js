@@ -1,6 +1,8 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { TextField, TextArea, Form, Modal } from 'choerodon-ui/pro';
+import {
+  TextField, TextArea, Form, Modal,
+} from 'choerodon-ui/pro';
 import { useFormStore } from './stores';
 import ActivateCluster from '../activate-cluster';
 
@@ -42,20 +44,21 @@ function CreateClusterForm() {
         }
         afterOk();
         return true;
-      } else {
-        return false;
       }
+      return false;
     } catch (e) {
       return false;
     }
   }
 
   modal.handleOk(handleSubmit);
-  return <Form dataSet={formDs}>
-    <TextField name="name" />
-    <TextField name="code" disabled={isEdit} />
-    <TextArea name="description" resize="vertical" />
-  </Form>;
+  return (
+    <Form dataSet={formDs}>
+      <TextField name="name" />
+      <TextField name="code" disabled={isEdit} />
+      <TextArea name="description" newLine resize="vertical" />
+    </Form>
+  );
 }
 
 export default observer(CreateClusterForm);

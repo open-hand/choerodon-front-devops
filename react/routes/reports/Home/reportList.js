@@ -39,7 +39,7 @@ const developReportList = [
     key: 'pipeline-duration',
     link: '/devops/reports/pipeline-duration',
     pic: 'pipeline-duration',
-    title: '流水线触发时长图',
+    title: '流水线执行时长图',
   },
 ];
 

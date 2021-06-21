@@ -22,7 +22,7 @@ export default ({
         const project = record?.get('project');
         const issue = record?.get('issue');
         const selectedProjectId = project?.id ?? projectId;
-        const issueId = issue?.issueId ?? projectId;
+        const issueId = issue?.issueId;
         return {
           url: CodeManagerApis.loadSummaryData(selectedProjectId),
           method: 'get',

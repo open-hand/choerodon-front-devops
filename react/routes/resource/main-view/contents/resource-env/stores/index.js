@@ -1,4 +1,6 @@
-import React, { createContext, useMemo, useContext, useEffect } from 'react';
+import React, {
+  createContext, useMemo, useContext, useEffect,
+} from 'react';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
@@ -27,7 +29,10 @@ export const StoreProvider = injectIntl(inject('AppState')(
     const { baseInfoDs } = useMainStore();
 
     const resourceCountDs = useMemo(() => new DataSet(ResourceCountDataSet()), []);
-    const gitopsLogDs = useMemo(() => new DataSet(GitopsLogDataSet({ formatMessage, intlPrefix })), []);
+    const gitopsLogDs = useMemo(() => new DataSet(GitopsLogDataSet({
+      formatMessage,
+      intlPrefix,
+    })), []);
     const gitopsSyncDs = useMemo(() => new DataSet(GitopsSyncDataSet()), []);
     const retryDs = useMemo(() => new DataSet(RetryDataSet()), []);
 
@@ -35,6 +40,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       resourceCountDs.transport.read.url = `/devops/v1/projects/${projectId}/envs/${id}/resource_count`;
       gitopsLogDs.transport.read.url = `/devops/v1/projects/${projectId}/envs/${id}/error_file/page_by_env`;
       gitopsSyncDs.transport.read.url = `/devops/v1/projects/${projectId}/envs/${id}/status`;
+      retryDs.transport.read.url = `/devops/v1/projects/${projectId}/envs/${id}/retry`;
       resourceCountDs.query();
       gitopsSyncDs.query();
       gitopsLogDs.query();
@@ -53,5 +59,5 @@ export const StoreProvider = injectIntl(inject('AppState')(
         {children}
       </Store.Provider>
     );
-  })
+  }),
 ));

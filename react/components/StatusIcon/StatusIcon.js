@@ -1,7 +1,7 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
-import { Tooltip, Progress, Icon } from 'choerodon-ui/pro';
+import { Tooltip, Spin, Icon } from 'choerodon-ui/pro';
 import classnames from 'classnames';
 import MouseOverWrapper from '../MouseOverWrapper';
 import './StatusIcon.less';
@@ -39,11 +39,12 @@ function StatusIcon(props) {
     case 'operating':
       statusDom = (
         <Tooltip title={formatMessage({ id: 'ist_operating' })}>
-          <Progress
-            className="c7ncd-status-progress"
-            type="loading"
-            size="small"
-            width={15}
+          <Spin
+            className="c7ncd-status-progress-span"
+            // type="loading"
+            // size="small"
+            // width={15}
+            spinning
           />
         </Tooltip>
       );

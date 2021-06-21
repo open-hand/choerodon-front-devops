@@ -55,7 +55,7 @@ const SidebarHeader = () => {
     <div className={`${prefixCls}-sidebar-head`}>
       <div style={{ position: 'relative', bottom: 11 }}>
         <C7NTabs
-          driveRouteKey="activeKey"
+          driveRouteKey
           onChange={handleChangeTabs}
           tabs={[{
             tab: formatMessage({ id: `${intlPrefix}.viewer.${IST_VIEW_TYPE}` }),

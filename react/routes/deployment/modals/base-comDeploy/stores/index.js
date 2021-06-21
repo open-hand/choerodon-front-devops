@@ -28,7 +28,13 @@ export const StoreProvider = inject('AppState')(
     const BaseComDeployStore = useStore();
 
     const HostSettingDataSet = useMemo(
-      () => new DataSet(hostSettingDataSet(projectId, BaseComDeployStore)), [projectId],
+      () => new DataSet(
+        hostSettingDataSet(
+          projectId,
+          BaseComDeployStore,
+          random,
+        ),
+      ), [projectId, random],
     );
     const ServiceVersionDataSet = useMemo(() => new DataSet(serviceVersionDataSet()), []);
     const BaseDeployDataSet = useMemo(

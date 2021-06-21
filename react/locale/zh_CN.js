@@ -950,6 +950,7 @@ const emptyPage = {
   'empty.link.code': '跳转至代码库管理',
   'empty.link.pipeline': '跳转至应用流水线',
   'empty.title.code': '当前用户在该应用服务的GitLab权限为Guest，无法查看此页面。若想执行对应操作，请转至代码库管理界面申请更高的GitLab权限。',
+  'empty.tips.app-list.des.owner': '当前项目下无应用服务，',
 };
 
 const prompt = {
@@ -1718,7 +1719,7 @@ const zhCN = {
   'ist.deploy.health.timeoutSeconds': '超时时间(秒)',
   'ist.deploy.security': '安全/主机设置',
   'ist.deploy.security.describe':
-    '容器监听端口到主机公用IP地址端口的映射关系。',
+    '授予或限制容器影响所运行主机的能力。',
 
   'ist.deploy.security.imagePullPolicy': '镜像拉取',
   'ist.deploy.security.privileged': '特权模式',

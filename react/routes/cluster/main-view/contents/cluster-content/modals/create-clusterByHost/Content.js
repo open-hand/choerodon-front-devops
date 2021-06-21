@@ -272,7 +272,7 @@ function CreateClusterHostForm() {
           <Form dataSet={formDs} columns={6}>
             <TextField name="name" colSpan={2} />
             <TextField name="code" disabled={isEdit} colSpan={2} />
-            <TextArea className={`${prefixCls}-createByHost-headerForm-desc`} name="description" resize="vertical" colSpan={2} />
+            <TextArea newLine colSpan={4} className={`${prefixCls}-createByHost-headerForm-desc`} name="description" resize="vertical" />
           </Form>
         </div>
         <div className={`${prefixCls}-createByHost-section`}>

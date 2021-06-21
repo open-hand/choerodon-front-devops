@@ -11,6 +11,7 @@ import classNames from 'classnames';
 import map from 'lodash/map';
 import forEach from 'lodash/forEach';
 import isEmpty from 'lodash/isEmpty';
+import some from 'lodash/some';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { SagaDetails } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
@@ -45,7 +46,7 @@ function Branch(props) {
   const {
     tableDs,
     intl,
-    AppState: { currentMenuType: { organizationId, projectId, name: currentProjectName } },
+    AppState: { currentMenuType: { organizationId, projectId, name: currentProjectName, categories } },
     appServiceDs,
     appServiceId,
     formatMessage,
@@ -58,11 +59,8 @@ function Branch(props) {
   const [isOPERATIONS, setIsOPERATIONS] = useState(false);
 
   useEffect(() => {
-    const pattern = new URLSearchParams(window.location.hash);
-    if (pattern.get('category') === 'OPERATIONS') {
-      setIsOPERATIONS(true);
-    }
-  }, []);
+    setIsOPERATIONS(!some(categories || [], ['code', 'N_AGILE']));
+  }, [categories]);
 
   useEffect(() => {
     handleMapStore.setCodeManagerBranch({
@@ -280,14 +278,10 @@ function Branch(props) {
       action: () => openEditIssueModal(record.toData()),
     });
     if (!isOPERATIONS) {
-      action.unshift({
-        service: ['choerodon.code.project.develop.code-management.ps.branch.update'],
-        text: formatMessage({ id: 'edit' }),
-        action: () => openEditIssueModal(record.toData()),
-      });
+      action.unshift(editAction);
     }
-    // 分支如果是master  禁止创建合并请求 否认：会造成跳转到 gitlab，gailab页面报错的问题
-    if (record.get('status') === 'operating') {
+    // 分支如果是master  禁止创建合并请求 否则会造成跳转到 gitlab，gailab页面报错的问题
+    if (record.get('status') === 'operating' || (record.get('branchName') === 'master' && isOPERATIONS)) {
       return <div style={{ width: 24 }} />;
     }
     return (
