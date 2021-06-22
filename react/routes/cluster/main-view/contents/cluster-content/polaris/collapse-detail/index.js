@@ -5,7 +5,9 @@ import { observer } from 'mobx-react-lite';
 import { Tabs, Tooltip, Button } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import isEmpty from 'lodash/isEmpty';
-import { Collapse, Progress, Icon } from 'choerodon-ui';
+import {
+  Collapse, Progress, Icon, Spin,
+} from 'choerodon-ui';
 import { useClusterMainStore } from '../../../../stores';
 import { useClusterContentStore } from '../../stores';
 import ProgressBar from '../components/Progress';
@@ -58,7 +60,7 @@ const collapseDetail = observer(({ loading }) => {
           {formatMessage({ id: `${intlPrefix}.polaris.score` })}
           :
         </span>
-        {isLoading ? <Progress type="loading" size="small" /> : <span className={`${prefixCls}-polaris-tabs-header-number-${checked}`}>{checked ? `${score}%` : '-'}</span>}
+        {isLoading ? <Spin spinning className={`${prefixCls}-polaris-tabs-header-spin`} /> : <span className={`${prefixCls}-polaris-tabs-header-number-${checked}`}>{checked ? `${score}%` : '-'}</span>}
         {!isLoading && hasErrors && <Icon type="cancel" className={`${prefixCls}-polaris-tabs-header-error`} />}
         <ProgressBar
           loading={isLoading}

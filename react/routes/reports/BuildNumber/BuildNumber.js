@@ -196,7 +196,6 @@ const BuildNumber = observer(() => {
   return (
     <Page
       className="c7n-region c7n-ciPipeline"
-      service={['choerodon.code.project.operation.chart.ps.build.times']}
     >
       <Header
         title={formatMessage({ id: 'report.build-number.head' })}

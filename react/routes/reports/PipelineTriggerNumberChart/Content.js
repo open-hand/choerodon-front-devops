@@ -103,9 +103,6 @@ const PipelineTriggerNumber = () => {
   return (
     <Page
       className={prefixCls}
-      service={[
-        'choerodon.code.project.operation.chart.ps.pipeline.times',
-      ]}
     >
       <Header
         title={formatMessage({ id: 'report.pipelineTrigger-number.head' })}
