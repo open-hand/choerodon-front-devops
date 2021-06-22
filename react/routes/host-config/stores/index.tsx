@@ -13,8 +13,7 @@ import { DataSet as DataSetProps, DataSetSelection } from '@/interface';
 import useStore, { StoreProps } from './useStore';
 
 // @ts-ignore
-// const HAS_BASE_PRO = C7NHasModule('@choerodon/testmanager-pro');
-const HAS_BASE_PRO = true;
+const HAS_BASE_PRO = C7NHasModule('@choerodon/testmanager-pro');
 
 interface ContextProps {
   prefixCls: string,

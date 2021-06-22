@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Page, Header, Breadcrumb, Content, Permission, HeaderButtons,
@@ -12,6 +12,8 @@ import ContentList from '@/routes/host-config/components/content-list';
 import CreateHost from '@/routes/host-config/components/create-host';
 import HostConfigApis from '@/routes/host-config/apis';
 import ResourceContent from '@/routes/host-config/components/resource-content';
+import EmptyPage from '@/components/empty-page';
+import Loading from '@/components/loading';
 import { ButtonColor } from '../../interface';
 import { useHostConfigStore } from './stores';
 
@@ -27,7 +29,7 @@ const HostConfig: React.FC<any> = observer((): any => {
     searchDs,
     tabKey: {
       DEPLOY_TAB,
-    }
+    },
   } = useHostConfigStore();
 
   const afterCreate = useCallback((selectedTabKey?: string) => {
@@ -81,6 +83,22 @@ const HostConfig: React.FC<any> = observer((): any => {
     });
   };
 
+  const getContent = useMemo(() => {
+    if (listDs.status === 'loading' || !listDs) {
+      return <Loading display />;
+    }
+    if (listDs && !listDs.length) {
+      // @ts-ignore
+      return <EmptyPage title="暂无主机" describe="项目下暂无主机，请创建" />;
+    }
+    return (
+      <div className={`${prefixCls}-content-wrap`}>
+        <ContentList />
+        {mainStore.getCurrentTabKey === DEPLOY_TAB && <ResourceContent />}
+      </div>
+    );
+  }, [listDs, listDs.length, mainStore.getCurrentTabKey]);
+
   return (
     <Page service={['choerodon.code.project.deploy.host.ps.default']}>
       <Header>
@@ -108,10 +126,7 @@ const HostConfig: React.FC<any> = observer((): any => {
       <Breadcrumb />
       <Content className={`${prefixCls}-content`}>
         <ContentHeader />
-        <div className={`${prefixCls}-content-wrap`}>
-          <ContentList />
-          {mainStore.getCurrentTabKey === DEPLOY_TAB && <ResourceContent />}
-        </div>
+        {getContent}
       </Content>
     </Page>
   );
