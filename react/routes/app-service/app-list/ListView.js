@@ -595,7 +595,7 @@ const ListView = withRouter(observer((props) => {
   }
 
   return (
-    <Page service={listPermissions}>
+    <Page>
       {getHeader()}
       <Breadcrumb
         {
