@@ -11,6 +11,7 @@ import ContentHeader from '@/routes/host-config/components/content-header';
 import ContentList from '@/routes/host-config/components/content-list';
 import CreateHost from '@/routes/host-config/components/create-host';
 import HostConfigApis from '@/routes/host-config/apis';
+import ResourceContent from '@/routes/host-config/components/resource-content';
 import { ButtonColor } from '../../interface';
 import { useHostConfigStore } from './stores';
 
@@ -24,6 +25,9 @@ const HostConfig: React.FC<any> = observer((): any => {
     projectId,
     mainStore,
     searchDs,
+    tabKey: {
+      DEPLOY_TAB,
+    }
   } = useHostConfigStore();
 
   const afterCreate = useCallback((selectedTabKey?: string) => {
@@ -104,7 +108,10 @@ const HostConfig: React.FC<any> = observer((): any => {
       <Breadcrumb />
       <Content className={`${prefixCls}-content`}>
         <ContentHeader />
-        <ContentList />
+        <div className={`${prefixCls}-content-wrap`}>
+          <ContentList />
+          {mainStore.getCurrentTabKey === DEPLOY_TAB && <ResourceContent />}
+        </div>
       </Content>
     </Page>
   );

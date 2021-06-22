@@ -4,6 +4,8 @@ import { Action } from '@choerodon/boot';
 import UserInfo from '@/components/userInfo';
 import TimePopover from '@/components/timePopover';
 import { Tooltip, Modal } from 'choerodon-ui/pro';
+import classnames from 'classnames';
+import { observer } from 'mobx-react-lite';
 import StatusTagOutLine from '../../components/statusTagOutLine';
 import eventStopProp from '../../../../../../utils/eventStopProp';
 import { useHostConfigStore } from '../../../../stores';
@@ -11,7 +13,7 @@ import CreateHost from '../../../create-host';
 import DeleteCheck from '../deleteCheck';
 import apis from '../../../../apis';
 
-const HostsItem:React.FC<any> = ({
+const HostsItem:React.FC<any> = observer(({
   sshPort, // 主机ssh的端口
   hostStatus, // 主机状态
   hostIp, // 主机ip
@@ -35,15 +37,29 @@ const HostsItem:React.FC<any> = ({
     refresh,
     projectId,
     mainStore,
+    tabKey: {
+      TEST_TAB,
+      DEPLOY_TAB,
+    },
   } = useHostConfigStore();
 
   const type = mainStore.getCurrentTabKey; // 主机类型 deploy / distribute_test
+  const isDeploy = useMemo(() => (
+    mainStore.getCurrentTabKey === DEPLOY_TAB
+  ), [mainStore.getCurrentTabKey]);
+
+  const itemClassName = useMemo(() => classnames({
+    [`${prefixCls}-content-list-item`]: isDeploy,
+    [`${prefixCls}-content-list-item-test`]: !isDeploy,
+    [`${prefixCls}-content-list-item-selected`]: isDeploy && mainStore.getSelectedHost?.id === id,
+    [`${prefixCls}-content-list-item-disabled`]: isDeploy && hostStatus !== 'success',
+  }), [hostStatus, mainStore.getSelectedHost, isDeploy, id]);
 
   const getMainStatus = useMemo(() => {
-    if (type === 'deploy') {
+    if (isDeploy) {
       return hostStatus;
     }
-    if (type === 'distribute_test') {
+    if (type === TEST_TAB) {
       if (jmeterStatus === 'occupied') {
         return 'occupied';
       }
@@ -111,6 +127,12 @@ const HostsItem:React.FC<any> = ({
     });
   }
 
+  const handleSelect = useCallback(() => {
+    if (isDeploy && hostStatus === 'success' && mainStore.getSelectedHost?.id !== id) {
+      mainStore.setSelectedHost(record.toData());
+    }
+  }, [isDeploy, hostStatus, record, id, mainStore.getSelectedHost]);
+
   const getActionData = useCallback(() => (getMainStatus !== 'operating' || getMainStatus !== 'occupied' ? [
     {
       service: ['choerodon.code.project.deploy.host.ps.correct'],
@@ -130,7 +152,7 @@ const HostsItem:React.FC<any> = ({
   ] : []), [getMainStatus, handleCorrect, handleDelete, handleModify]);
 
   return (
-    <div className={`${prefixCls}-content-list-item`}>
+    <div className={itemClassName} onClick={handleSelect}>
       <div className={`${prefixCls}-content-list-item-header`}>
         <div className={`${prefixCls}-content-list-item-header-left`}>
           <div className={`${prefixCls}-content-list-item-header-left-top`}>
@@ -155,9 +177,8 @@ const HostsItem:React.FC<any> = ({
                 style={{
                   marginLeft: '4px',
                   fontSize: '12px',
-                  fontFamily: 'PingFangSC-Regular, PingFang SC',
                   fontWeight: 400,
-                  color: 'rgba(58, 52, 95, 0.65)',
+                  color: 'var(--text-color4)',
                 }}
                 content={lastUpdateDate}
               />
@@ -211,6 +232,6 @@ const HostsItem:React.FC<any> = ({
       </main>
     </div>
   );
-};
+});
 
 export default HostsItem;

@@ -9,5 +9,15 @@ export default function useStore() {
     get getCurrentTabKey() {
       return this.currentTabKey;
     },
+
+    selectedHost: {},
+    setSelectedHost(data: object) {
+      this.selectedHost = data;
+    },
+    get getSelectedHost() {
+      return this.selectedHost;
+    },
   }));
 }
+
+export type StoreProps = ReturnType<typeof useStore>;
