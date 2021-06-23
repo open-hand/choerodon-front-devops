@@ -643,10 +643,11 @@ export default observer(() => {
    */
   const handleChangeValueIdValues = () => {
     let tempValues = valueIdValues;
+    const { name } = ADDCDTaskUseStore.getValueIdList.find((i) => String(i.id) === String(ADDCDTaskDataSet.current.get('valueId')));
     Modal.open({
       key: Modal.key(),
       drawer: true,
-      title: '修改部署配置""的配置信息',
+      title: `修改部署配置${name}的配置信息`,
       children: (
         <div
           style={{
