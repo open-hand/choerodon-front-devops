@@ -275,7 +275,6 @@ export default class LogSidebar extends Component {
       };
 
       ws.onmessage = (e) => {
-        console.log(e);
         if (e.data.size) {
           const reader = new FileReader();
           reader.readAsText(e.data, 'utf-8');
