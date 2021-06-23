@@ -6,9 +6,11 @@ import { inject } from 'mobx-react';
 import { DataSet } from 'choerodon-ui/pro';
 import ListDataSet from '@/routes/host-config/stores/ListDataSet';
 import SearchDataSet from '@/routes/host-config/stores/SearchDataSet';
-import { DataSetSelection } from 'choerodon-ui/pro/lib/data-set/enum';
 import some from 'lodash/some';
-import useStore from './useStore';
+import MirrorTableDataSet from '@/routes/host-config/stores/MirrorTableDataSet';
+import JarTableDataSet from '@/routes/host-config/stores/JarTableDataSet';
+import { DataSet as DataSetProps, DataSetSelection } from '@/interface';
+import useStore, { StoreProps } from './useStore';
 
 // @ts-ignore
 const HAS_BASE_PRO = C7NHasModule('@choerodon/testmanager-pro');
@@ -25,9 +27,15 @@ interface ContextProps {
     text:string,
   }[],
   refresh():void,
-  mainStore:any,
+  mainStore:StoreProps,
   showTestTab: boolean,
-  statusDs:DataSet,
+  statusDs: DataSetProps,
+  tabKey: {
+    DEPLOY_TAB: 'deploy',
+    TEST_TAB: 'distribute_test',
+  },
+  mirrorTableDs: DataSetProps,
+  jarTableDs: DataSetProps,
 }
 
 const Store = createContext({} as ContextProps);
@@ -43,14 +51,18 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     AppState: { currentMenuType: { projectId, categories } },
   } = props;
   const intlPrefix = 'c7ncd.host.config';
+  const tabKey = useMemo(() => ({
+    DEPLOY_TAB: 'deploy',
+    TEST_TAB: 'distribute_test',
+  }), []);
 
   const hostTabKeys = useMemo(() => [
     {
-      key: 'distribute_test',
+      key: tabKey.TEST_TAB,
       text: '测试主机',
     },
     {
-      key: 'deploy',
+      key: tabKey.DEPLOY_TAB,
       text: '部署主机',
     },
   ], []);
@@ -66,6 +78,16 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
 
   const listDs = useMemo(() => new DataSet(ListDataSet({ projectId, showTestTab })), [projectId]);
   const searchDs = useMemo(() => new DataSet(SearchDataSet({ projectId })), [projectId]);
+  const mirrorTableDs = useMemo(() => new DataSet(MirrorTableDataSet({
+    projectId,
+    formatMessage,
+    intlPrefix,
+  })), [projectId]);
+  const jarTableDs = useMemo(() => new DataSet(JarTableDataSet({
+    projectId,
+    formatMessage,
+    intlPrefix,
+  })), [projectId]);
 
   const refresh = useCallback(async (callback?:CallableFunction) => {
     await listDs.query();
@@ -74,7 +96,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
 
   useEffect(() => {
     if (!showTestTab) {
-      mainStore.setCurrentTabKey('deploy');
+      mainStore.setCurrentTabKey(tabKey.DEPLOY_TAB);
     }
   }, []);
 
@@ -91,6 +113,9 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     projectId,
     showTestTab,
     statusDs,
+    tabKey,
+    mirrorTableDs,
+    jarTableDs,
   };
   return (
     <Store.Provider value={value}>

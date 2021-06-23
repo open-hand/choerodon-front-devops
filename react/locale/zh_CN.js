@@ -927,6 +927,14 @@ const hostConfig = {
   'c7ncd.host.config.batch.correct': '校准',
   'c7ncd.host.config.ip.private': '内部SSH认证IP',
   'c7ncd.host.config.port.private': '内部SSH认证端口',
+  'c7ncd.host.config.usage.cpu': 'CPU使用率',
+  'c7ncd.host.config.usage.ram': '内存使用率',
+  'c7ncd.host.config.usage.root': '根分区使用率',
+  'c7ncd.host.config.usage.data': '数据分区使用率',
+  'c7ncd.host.config.deployer': '部署者',
+  'c7ncd.host.config.deploy.date': '部署时间',
+  'c7ncd.host.config.process': '进程号',
+  'c7ncd.host.config.port.occupied': '占用端口',
 };
 
 const emptyPage = {

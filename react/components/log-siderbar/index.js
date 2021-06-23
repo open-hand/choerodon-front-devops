@@ -4,12 +4,13 @@ import React, { Component, Fragment } from 'react';
 import _ from 'lodash';
 import { observer, inject } from 'mobx-react';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Modal, Select } from 'choerodon-ui';
+import { Modal, Select, message } from 'choerodon-ui';
 import { Button } from 'choerodon-ui/pro';
 import { Content } from '@choerodon/boot';
 import ReactCodeMirror from 'react-codemirror';
 import uuidv1 from 'uuid/v1';
 import Cookies from 'universal-cookie';
+import { saveAs } from 'file-saver';
 import { removeEndsChar } from '../../utils';
 
 import 'codemirror/lib/codemirror.css';
@@ -40,6 +41,8 @@ export default class LogSidebar extends Component {
       fullScreen: false,
       containerName: '',
       logId: null,
+      isDownload: false,
+      logDataString: '',
     };
     this.timer = null;
     this.socket = null;
@@ -241,9 +244,62 @@ export default class LogSidebar extends Component {
     }
   };
 
+  handleDownload = () => {
+    const {
+      record, clusterId: propsClusterId, projectId: propsProjectId,
+      AppState: { currentMenuType: { projectId: currentProjectId } },
+    } = this.props;
+    const { namespace, name, podName: recordPodName } = record || {};
+    const clusterId = propsClusterId || record?.clusterId;
+    const projectId = propsProjectId || currentProjectId || record?.projectId;
+    const podName = name || recordPodName;
+    const { logId, containerName, logDataString } = this.state;
+    const wsUrl = removeEndsChar(window._env_.DEVOPS_HOST, '/');
+    const secretKey = window._env_.DEVOPS_WEBSOCKET_SECRET_KEY;
+    const key = `cluster:${clusterId}.log:${uuidv1()}`;
+    const url = `${wsUrl}/websocket?key=${key}&group=from_front:${key}&processor=front_download_log&secret_key=${secretKey}&env=${namespace}&podName=${podName}&containerName=${containerName}&logId=${logId}&clusterId=${clusterId}&oauthToken=${getAccessToken()}&projectId=${projectId}`;
+    const ws = new WebSocket(url);
+    const logData = [];
+    try {
+      ws.onopen = () => {
+        this.setState({ isDownload: true });
+      };
+      ws.onerror = (e) => {
+        message.error('连接出错');
+        this.setState({ isDownload: false });
+      };
+      ws.onclose = () => {
+        const blob = new Blob([logDataString], { type: 'text/plain' });
+        const filename = '容器日志.log';
+        saveAs(blob, filename);
+        this.setState({ isDownload: false });
+      };
+
+      ws.onmessage = (e) => {
+        if (e.data.size) {
+          const reader = new FileReader();
+          reader.readAsText(e.data, 'utf-8');
+          reader.onload = () => {
+            if (reader.result !== '') {
+              logData.push(reader.result);
+            }
+          };
+        }
+        if (!logData.length) {
+          const logString = _.join(logData, '');
+          this.setState({ logDataString: logString });
+        }
+      };
+    } catch (e) {
+      message.error('连接出错');
+    }
+  };
+
   render() {
     const { visible, onClose, record: { containers } } = this.props;
-    const { following, fullScreen, containerName } = this.state;
+    const {
+      following, fullScreen, containerName, isDownload,
+    } = this.state;
     const containerOptions = _.map(containers, (container) => {
       const { logId, name } = container;
       return (
@@ -273,6 +329,14 @@ export default class LogSidebar extends Component {
               <Select className="c7n-log-siderbar-select" value={containerName} onChange={this.handleChange}>
                 {containerOptions}
               </Select>
+              <Button
+                icon="get_app"
+                funcType="flat"
+                onClick={this.handleDownload}
+                loading={isDownload}
+              >
+                下载容器日志
+              </Button>
               <Button
                 className="c7n-term-fullscreen"
                 color="primary"
