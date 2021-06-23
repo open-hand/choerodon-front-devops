@@ -647,7 +647,7 @@ export default observer(() => {
     Modal.open({
       key: Modal.key(),
       drawer: true,
-      title: `修改部署配置${name}的配置信息`,
+      title: `修改部署配置"${name}"的配置信息`,
       children: (
         <div
           style={{
