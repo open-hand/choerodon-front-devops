@@ -42,7 +42,6 @@ export default class LogSidebar extends Component {
       containerName: '',
       logId: null,
       isDownload: false,
-      logDataString: '',
     };
     this.timer = null;
     this.socket = null;
@@ -253,7 +252,7 @@ export default class LogSidebar extends Component {
     const clusterId = propsClusterId || record?.clusterId;
     const projectId = propsProjectId || currentProjectId || record?.projectId;
     const podName = name || recordPodName;
-    const { logId, containerName, logDataString } = this.state;
+    const { logId, containerName } = this.state;
     const wsUrl = removeEndsChar(window._env_.DEVOPS_HOST, '/');
     const secretKey = window._env_.DEVOPS_WEBSOCKET_SECRET_KEY;
     const key = `cluster:${clusterId}.log:${uuidv1()}`;
@@ -269,13 +268,14 @@ export default class LogSidebar extends Component {
         this.setState({ isDownload: false });
       };
       ws.onclose = () => {
-        const blob = new Blob([logDataString], { type: 'text/plain' });
+        const blob = new Blob([logData.length ? _.join(logData, '') : ''], { type: 'text/plain' });
         const filename = '容器日志.log';
         saveAs(blob, filename);
         this.setState({ isDownload: false });
       };
 
       ws.onmessage = (e) => {
+        console.log(e);
         if (e.data.size) {
           const reader = new FileReader();
           reader.readAsText(e.data, 'utf-8');
@@ -284,10 +284,6 @@ export default class LogSidebar extends Component {
               logData.push(reader.result);
             }
           };
-        }
-        if (!logData.length) {
-          const logString = _.join(logData, '');
-          this.setState({ logDataString: logString });
         }
       };
     } catch (e) {
@@ -330,6 +326,7 @@ export default class LogSidebar extends Component {
                 {containerOptions}
               </Select>
               <Button
+                className="c7ncd-container-log-download"
                 icon="get_app"
                 funcType="flat"
                 onClick={this.handleDownload}
