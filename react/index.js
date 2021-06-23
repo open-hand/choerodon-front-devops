@@ -7,23 +7,23 @@ import { ModalContainer } from 'choerodon-ui/pro';
 
 import './style/index.less';
 
-const AppService = asyncRouter(() => import('./routes/app-service'));
-const Code = asyncRouter(() => import('./routes/code-manager'));
-const Resource = asyncRouter(() => import('./routes/resource'));
-const Deployment = asyncRouter(() => import('./routes/deployment'));
-const Pipeline = asyncRouter(() => import('./routes/pipeline'));
-const Certificate = asyncRouter(() => import('./routes/certificate'));
-const Cluster = asyncRouter(() => import('./routes/cluster'));
-const Environment = asyncRouter(() => import('./routes/environment'));
-const DeployReports = asyncRouter(() => import('./routes/reports/DeployReportsIndex'));
-const DevelopReports = asyncRouter(() => import('./routes/reports/ReportsIndex'));
-const Repository = asyncRouter(() => import('./routes/repository'));
-const ProRepository = asyncRouter(() => import('./routes/pro-repository'));
-const PVManager = asyncRouter(() => import('./routes/pv-manager'));
-const PipelineManage = asyncRouter(() => import('./routes/pipeline-manage'));
-const HostConfig = asyncRouter(() => import('./routes/host-config'));
-const OrgTemplate = asyncRouter(() => import('./routes/app-template/OrgIndex'));
-const SiteTemplate = asyncRouter(() => import('./routes/app-template/SiteIndex'));
+const AppService = React.lazy(() => import('./routes/app-service'));
+const Code = React.lazy(() => import('./routes/code-manager'));
+const Resource = React.lazy(() => import('./routes/resource'));
+const Deployment = React.lazy(() => import('./routes/deployment'));
+const Pipeline = React.lazy(() => import('./routes/pipeline'));
+const Certificate = React.lazy(() => import('./routes/certificate'));
+const Cluster = React.lazy(() => import('./routes/cluster'));
+const Environment = React.lazy(() => import('./routes/environment'));
+const DeployReports = React.lazy(() => import('./routes/reports/DeployReportsIndex'));
+const DevelopReports = React.lazy(() => import('./routes/reports/ReportsIndex'));
+const Repository = React.lazy(() => import('./routes/repository'));
+const ProRepository = React.lazy(() => import('./routes/pro-repository'));
+const PVManager = React.lazy(() => import('./routes/pv-manager'));
+const PipelineManage = React.lazy(() => import('./routes/pipeline-manage'));
+const HostConfig = React.lazy(() => import('./routes/host-config'));
+const OrgTemplate = React.lazy(() => import('./routes/app-template/OrgIndex'));
+const SiteTemplate = React.lazy(() => import('./routes/app-template/SiteIndex'));
 
 function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
   const IntlProviderAsync = asyncLocaleProvider(language, () => import(`./locale/${language}`));
