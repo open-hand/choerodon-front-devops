@@ -97,6 +97,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
         },
       };
       setLocalStorage(value);
+      localSet('selectAppId', value);
       Object.keys(handleMapStore)
         .forEach((key) => {
           if (key.indexOf('Code') !== -1) {
@@ -126,8 +127,10 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
     };
 
     const appServiceDs = useMemo(() => new DataSet(AppServiceDs({ projectId })), []);
-    const selectAppDs = useMemo(() => new DataSet(SelectAppDataSet({ handleDataSetChange })), []);
     const codeManagerStore = useStore();
+    const selectAppDs = useMemo(
+      () => new DataSet(SelectAppDataSet({ handleDataSetChange, codeManagerStore })), [],
+    );
     const permissions = useMemo(() => (['choerodon.code.project.develop.code-management.ps.default']), []);
 
     useEffect(() => {
@@ -155,9 +158,11 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
             return;
           }
           if (recentAppList !== null && !isEmpty(recentAppList[projectId])) {
-            newAppServiceId = recentAppList[projectId][0]?.id;
+            const cacheId = recentAppList[projectId].find((i) => String(i.id) === String(localGet('selectAppId')));
+            newAppServiceId = (cacheId && localGet('selectAppId')) || recentAppList[projectId][0]?.id;
           } else {
-            newAppServiceId = res[0]?.id;
+            const cacheId = res.find((i) => String(i.id) === String(localGet('selectAppId')));
+            newAppServiceId = (cacheId && localGet('selectAppId')) || res[0]?.id;
           }
           selectAppDs.current.set('appServiceId', newAppServiceId);
         }
