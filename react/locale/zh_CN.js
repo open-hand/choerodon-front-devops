@@ -196,6 +196,7 @@ const commonField = {
   secrets: '密文',
   customResources: '自定义资源',
   pvcs: 'PVC',
+  workload: '工作负载',
 };
 
 const deployment = {
@@ -447,6 +448,22 @@ const deployment = {
   'c7ncd.deployment.market.version.currentVersion': '当前版本',
   'c7ncd.deployment.market.version.lastVersion': '最新版本',
   'c7ncd.deployment.market.version.fixVersion': '修复版本',
+  'c7ncd.deployment.workload.source': '来源',
+  'c7ncd.deployment.workload.source.deploy': '应用部署',
+  'c7ncd.deployment.workload.source.manual': '手动添加',
+  'c7ncd.deployment.workload.create': '创建{name}',
+  'c7ncd.deployment.workload.edit': '修改{name}',
+  'c7ncd.deployment.workload.detail': '{type}“{name}”的详情',
+  'c7ncd.deployment.workload.create.type': '选择添加方式',
+  'c7ncd.deployment.workload.create.type.upload': '直接上传YAML文件',
+  'c7ncd.deployment.workload.create.type.copy': '粘贴YAML内容添加',
+  'c7ncd.deployment.workload.pod.detail': '关联Pod详情',
+  'c7ncd.deployment.workload.delete.title': '删除{type}',
+  'c7ncd.deployment.workload.delete.des': '确定删除{type}“{name}”吗？',
+  'c7ncd.deployment.workload.lastScheduleTime': '最后调度时间',
+  'c7ncd.deployment.workload.active': '活跃中',
+  'c7ncd.deployment.workload.suspend': '是否挂起',
+  'c7ncd.deployment.workload.plan': '计划',
 
 };
 
@@ -910,6 +927,14 @@ const hostConfig = {
   'c7ncd.host.config.batch.correct': '校准',
   'c7ncd.host.config.ip.private': '内部SSH认证IP',
   'c7ncd.host.config.port.private': '内部SSH认证端口',
+  'c7ncd.host.config.usage.cpu': 'CPU使用率',
+  'c7ncd.host.config.usage.ram': '内存使用率',
+  'c7ncd.host.config.usage.root': '根分区使用率',
+  'c7ncd.host.config.usage.data': '数据分区使用率',
+  'c7ncd.host.config.deployer': '部署者',
+  'c7ncd.host.config.deploy.date': '部署时间',
+  'c7ncd.host.config.process': '进程号',
+  'c7ncd.host.config.port.occupied': '占用端口',
 };
 
 const emptyPage = {
@@ -1654,6 +1679,8 @@ const zhCN = {
   'ist.deploy.Deployment.detail': '查看实例Deployment详情',
   'ist.deploy.StatefulSet.detail': '查看实例Stateful Set详情',
   'ist.deploy.DaemonSet.detail': '查看实例Daemon Set详情',
+  'ist.deploy.Job.detail': '查看实例Job详情',
+  'ist.deploy.CronJob.detail': '查看实例CronJob详情',
   'ist.deploy.title': '查看实例“{name}”的Deployment详情',
   'ist.deploy.type.json': '列表格式查看',
   'ist.deploy.type.yaml': 'YAML格式查看',

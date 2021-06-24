@@ -92,7 +92,7 @@ const MainView = injectIntl(observer((props) => {
     ) : <EmptyShown />;
   }
   return (
-    <Page service={permissions}>
+    <Page>
       <div
         className={classNames({
           'c7n-code-managerment-tab-list': true,
