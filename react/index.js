@@ -8,7 +8,6 @@ import { ModalContainer } from 'choerodon-ui/pro';
 import './style/index.less';
 
 const AppService = React.lazy(() => import('./routes/app-service'));
-// const AppService = asyncRouter(() => import('./routes/app-service'));
 const Code = React.lazy(() => import('./routes/code-manager'));
 const Resource = React.lazy(() => import('./routes/resource'));
 const Deployment = React.lazy(() => import('./routes/deployment'));
@@ -16,7 +15,8 @@ const Pipeline = React.lazy(() => import('./routes/pipeline'));
 const Certificate = React.lazy(() => import('./routes/certificate'));
 const Cluster = React.lazy(() => import('./routes/cluster'));
 const Environment = React.lazy(() => import('./routes/environment'));
-const Reports = React.lazy(() => import('./routes/reports'));
+const DeployReports = React.lazy(() => import('./routes/reports/DeployReportsIndex'));
+const DevelopReports = React.lazy(() => import('./routes/reports/ReportsIndex'));
 const Repository = React.lazy(() => import('./routes/repository'));
 const ProRepository = React.lazy(() => import('./routes/pro-repository'));
 const PVManager = React.lazy(() => import('./routes/pv-manager'));
@@ -42,7 +42,6 @@ function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
           <PermissionRoute path={`${match.url}/cluster-management`} component={Cluster} service={['choerodon.code.project.deploy.cluster.cluster-management.ps.default']} />
           <PermissionRoute path={`${match.url}/repository`} component={Repository} service={['choerodon.code.organization.setting.repository.ps.default']} />
           <PermissionRoute path={`${match.url}/project-repository`} component={ProRepository} service={['choerodon.code.project.setting.setting-repository.ps.default']} />
-          <Route path={`${match.url}/reports`} component={Reports} />
           <PermissionRoute path={`${match.url}/pv-management`} component={PVManager} service={['choerodon.code.project.deploy.cluster.pv-management.ps.default']} />
           <PermissionRoute path={`${match.url}/host-config`} component={HostConfig} service={['choerodon.code.project.deploy.host.ps.default']} />
           <PermissionRoute
@@ -56,12 +55,14 @@ function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
             component={SiteTemplate}
           />
           <PermissionRoute
+            service={['choerodon.code.project.develop.chart.ps.default']}
             path={`${match.url}/charts/develop`}
-            component={() => <Charts reportType="develop" service={['choerodon.code.project.develop.chart.ps.default']} />}
+            component={DevelopReports}
           />
           <PermissionRoute
+            service={['choerodon.code.project.deploy.chart.ps.default']}
             path={`${match.url}/charts/deploy`}
-            component={() => <Charts reportType="deploy" service={['choerodon.code.project.deploy.chart.ps.default']} />}
+            component={DeployReports}
           />
           <Route path="*" component={nomatch} />
         </Switch>

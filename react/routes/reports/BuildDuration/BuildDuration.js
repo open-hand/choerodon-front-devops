@@ -309,7 +309,6 @@ const BuildDuration = observer(() => {
   return (
     <Page
       className="c7n-region c7n-ciPipeline"
-      service={['choerodon.code.project.operation.chart.ps.build.duration']}
     >
       <Header
         title={formatMessage({ id: 'report.build-duration.head' })}

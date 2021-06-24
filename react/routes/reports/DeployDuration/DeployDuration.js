@@ -324,7 +324,6 @@ const DeployDuration = observer(() => {
   return (
     <Page
       className="c7n-region"
-      service={permissions}
     >
       <Header
         title={formatMessage({ id: 'report.deploy-duration.head' })}

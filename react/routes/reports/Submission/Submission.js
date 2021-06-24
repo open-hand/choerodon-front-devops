@@ -281,7 +281,6 @@ const Submission = observer(() => {
   return (
     <Page
       className="c7n-region"
-      service={['choerodon.code.project.operation.chart.ps.commit']}
     >
       <Header
         title={formatMessage({ id: 'report.submission.head' })}
