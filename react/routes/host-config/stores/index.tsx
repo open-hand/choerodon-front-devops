@@ -13,7 +13,8 @@ import { DataSet as DataSetProps, DataSetSelection } from '@/interface';
 import useStore, { StoreProps } from './useStore';
 
 // @ts-ignore
-const HAS_BASE_PRO = C7NHasModule('@choerodon/testmanager-pro');
+// const HAS_BASE_PRO = C7NHasModule('@choerodon/testmanager-pro');
+const HAS_BASE_PRO = true;
 
 interface ContextProps {
   prefixCls: string,
@@ -58,12 +59,12 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
 
   const hostTabKeys = useMemo(() => [
     {
-      key: tabKey.TEST_TAB,
-      text: '测试主机',
-    },
-    {
       key: tabKey.DEPLOY_TAB,
       text: '部署主机',
+    },
+    {
+      key: tabKey.TEST_TAB,
+      text: '测试主机',
     },
   ], []);
 
@@ -73,10 +74,11 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   }), []);
 
   const showTestTab = useMemo(() => HAS_BASE_PRO && some(categories, ['code', 'N_TEST']), [categories, HAS_BASE_PRO]);
+  const defaultTabKey = useMemo(() => tabKey.DEPLOY_TAB, []);
 
-  const mainStore = useStore();
+  const mainStore = useStore({ defaultTabKey });
 
-  const listDs = useMemo(() => new DataSet(ListDataSet({ projectId, showTestTab })), [projectId]);
+  const listDs = useMemo(() => new DataSet(ListDataSet({ projectId, defaultTabKey })), [projectId]);
   const searchDs = useMemo(() => new DataSet(SearchDataSet({ projectId })), [projectId]);
   const mirrorTableDs = useMemo(() => new DataSet(MirrorTableDataSet({
     projectId,
@@ -93,12 +95,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     await listDs.query();
     typeof callback === 'function' && callback();
   }, [listDs]);
-
-  useEffect(() => {
-    if (!showTestTab) {
-      mainStore.setCurrentTabKey(tabKey.DEPLOY_TAB);
-    }
-  }, []);
 
   const value = {
     ...props,

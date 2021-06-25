@@ -4,10 +4,10 @@ import apis from '../apis';
 
 interface ListProps {
   projectId: number,
-  showTestTab: boolean,
+  defaultTabKey: string,
 }
 
-export default ({ projectId, showTestTab }: ListProps): DataSetProps => ({
+export default ({ projectId, defaultTabKey }: ListProps): DataSetProps => ({
   autoCreate: false,
   autoQuery: true,
   selection: false,
@@ -16,7 +16,7 @@ export default ({ projectId, showTestTab }: ListProps): DataSetProps => ({
   transport: {
     read: ({ data }) => {
       const { type, params, status } = data;
-      const newType = type || (showTestTab ? 'distribute_test' : 'deploy');
+      const newType = type || defaultTabKey;
       return {
         url: apis.getLoadHostsDetailsUrl(projectId, newType),
         method: 'post',
