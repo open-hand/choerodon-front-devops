@@ -192,10 +192,11 @@ const WorkloadContent = observer(() => {
         projectId={projectId}
         envId={parentId}
         refresh={refresh}
-        showBtn={!record.get('instanceId') && [DEPLOYMENT_TAB, STATEFULSET_TAB].includes(workloadStore.getTabKey)}
+        showBtn={[DEPLOYMENT_TAB, STATEFULSET_TAB].includes(workloadStore.getTabKey)}
         name={record.get('name')}
         btnDisabled={!connect || record.get('commandStatus') !== 'success'}
         kind={workloadStore.getTabKey}
+        minPodCount={record.get('instanceId') ? 2 : 1}
       />
     );
   }, [parentId, workloadStore.getTabKey]);
@@ -303,8 +304,8 @@ const WorkloadContent = observer(() => {
             <Column renderer={renderAction} width={60} />
             <Column name="labels" renderer={renderLabels} />
             <Column name="schedule" />
-            <Column name="suspend" renderer={({ value }) => (value ? '是' : '否')} width={80} />
-            <Column name="active" renderer={({ value }) => (`${value}个`)} width={70} />
+            <Column name="suspend" renderer={({ value }: { value: boolean }) => (value ? '是' : '否')} width={80} />
+            <Column name="active" renderer={({ value }: { value: number }) => (`${value}个`)} width={70} />
             <Column name="source" renderer={renderResource} width={100} />
             <Column name="lastScheduleTime" renderer={renderUpdateDate} width={110} />
             <Column name="creationTimestamp" renderer={renderUpdateDate} width={110} />
