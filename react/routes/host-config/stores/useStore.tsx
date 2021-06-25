@@ -1,8 +1,8 @@
 import { useLocalStore } from 'mobx-react-lite';
 
-export default function useStore() {
+export default function useStore({ defaultTabKey }: { defaultTabKey: string }) {
   return useLocalStore(() => ({
-    currentTabKey: 'distribute_test',
+    currentTabKey: defaultTabKey,
     setCurrentTabKey(key:string) {
       this.currentTabKey = key;
     },

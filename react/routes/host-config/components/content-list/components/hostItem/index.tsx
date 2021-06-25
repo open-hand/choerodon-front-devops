@@ -141,7 +141,7 @@ const HostsItem:React.FC<any> = observer(({
     },
     {
       service: ['choerodon.code.project.deploy.host.ps.edit'],
-      text: '修改',
+      text: formatMessage({ id: 'edit' }),
       action: handleModify,
     },
     {
@@ -152,7 +152,7 @@ const HostsItem:React.FC<any> = observer(({
   ] : []), [getMainStatus, handleCorrect, handleDelete, handleModify]);
 
   return (
-    <div className={itemClassName} onClick={handleSelect}>
+    <div className={itemClassName} onClick={handleSelect} role="none">
       <div className={`${prefixCls}-content-list-item-header`}>
         <div className={`${prefixCls}-content-list-item-header-left`}>
           <div className={`${prefixCls}-content-list-item-header-left-top`}>
