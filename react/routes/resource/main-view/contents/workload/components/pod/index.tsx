@@ -24,12 +24,13 @@ interface PodProps {
   intl: { formatMessage(arg0: object): string },
   name?: string,
   kind?: string,
+  minPodCount?: number,
 }
 
 const PodContent = injectIntl(({
   size = 40, podCount = 0, podRunningCount = 0, strokeWidth = 2,
   showBtn = false, btnDisabled = false, store, projectId, envId, refresh,
-  intl: { formatMessage }, name = 'Deployment', kind = 'Deployment',
+  intl: { formatMessage }, name = 'Deployment', kind = 'Deployment', minPodCount = 1,
 }: PodProps) => {
   const prefixCls = useMemo(() => 'c7ncd-deployment-workload-pod', []);
   const cx = useMemo(() => size / 2, [size]);
@@ -111,7 +112,7 @@ const PodContent = injectIntl(({
             size={'small' as Size}
           />
           <Button
-            disabled={btnDisabled || realPodCount < 1}
+            disabled={btnDisabled || realPodCount < (minPodCount ?? 1)}
             className={`${prefixCls}-btn-wrap-item`}
             icon="expand_more"
             onClick={handleDecrease}
