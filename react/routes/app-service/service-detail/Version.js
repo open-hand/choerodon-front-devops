@@ -38,10 +38,27 @@ const Version = withRouter(observer((props) => {
   const [isProjectOwner, setIsProjectOwner] = useState(false);
 
   const selectedRecordLength = useMemo(
-    () => versionDs.selected && versionDs.selected.length, [versionDs.selected],
+    () => selectedVersionList.length, [selectedVersionList],
   );
 
   useEffect(() => {
+    // 左侧详情变更后 重置选中list
+    if (selectedVersionList && selectedVersionList.length && selectedVersionList.length > 0) {
+      setSelectedVersionList([]);
+    }
+  }, [detailDs.current]);
+
+  console.log(selectedRecordLength);
+
+  useEffect(() => {
+    // 初始化如果有records 设置默认选中为false 防止切换tab 造成数据错误
+    if (versionDs && versionDs.records && versionDs.records.length > 0) {
+      versionDs.records.forEach((i) => {
+        if (i.get('checked')) {
+          i.set('checked', false);
+        }
+      });
+    }
     AppServiceServices
       .axiosGetCheckAdminPermission(AppState.currentMenuType.projectId).then((res) => {
         setIsProjectOwner(res);
@@ -98,7 +115,7 @@ const Version = withRouter(observer((props) => {
     const modalProps = {
       title: formatMessage({ id: `${intlPrefix}.version.delete.title` }),
       children: selectedRecords && selectedRecords.length > 1
-        ? formatMessage({ id: `${intlPrefix}.version.delete.des` }, { version, length: selectedRecordLength })
+        ? formatMessage({ id: `${intlPrefix}.version.delete.des` }, { version, length: selectedRecords.length })
         : formatMessage({ id: `${intlPrefix}.version.delete.des.single` }, { version }),
       okText: formatMessage({ id: 'delete' }),
       okProps: { color: 'red' },
