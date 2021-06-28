@@ -398,7 +398,7 @@ const DetailItem = (props) => {
     openDescModal(itemType);
   };
 
-  const logCheckDisabeldCondition = ['created', 'skipped'].includes(jobStatus) || (['cdDeploy', 'cdHost'].includes(itemType) && jobStatus === 'failed');
+  const logCheckDisabeldCondition = jobStatus === 'created';
 
   const renderRetryBtnFn = ['cdDeploy', 'cdHost', 'cdAudit', 'cdExternalApproval'].includes(itemType)
     ? handleCdJobRetry
