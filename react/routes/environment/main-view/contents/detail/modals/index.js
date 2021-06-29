@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
 import { HeaderButtons } from '@choerodon/boot';
@@ -11,11 +11,12 @@ import { useDetailStore } from '../stores';
 import useStore from './useStore';
 import EnvCreateForm from '../../../modals/env-create';
 import GroupForm from '../../../modals/GroupForm';
-import DeployConfigForm from './deploy-config';
+import DeployConfigForm from '../../../../../app-center/app-detail/deploy-config/create-from';
 import { isNotRunning } from '../../../../util';
 import Tips from '../../../../../../components/new-tips';
 
 import '../../../../../../components/dynamic-select/style/index.less';
+import { LARGE } from '../../../../../../utils/getModalWidth';
 
 const detailKey = Modal.key();
 const envKey = Modal.key();
@@ -186,6 +187,20 @@ const EnvModals = observer(() => {
     });
   }
 
+  const openCreateModal = () => {
+    const { id } = getSelectedMenu;
+    Modal.open({
+      key: configKey,
+      style: { width: LARGE },
+      title: formatMessage({ id: `${currentIntlPrefix}.create.config` }),
+      drawer: true,
+      children: <DeployConfigForm
+        envId={id}
+        refresh={refresh}
+      />,
+    });
+  };
+
   function getButtons() {
     return [{
       permissions: ['choerodon.code.project.deploy.environment.ps.detail-create-env'],
@@ -199,7 +214,7 @@ const EnvModals = observer(() => {
       disabled,
       name: formatMessage({ id: `${currentIntlPrefix}.create.config` }),
       icon: 'playlist_add',
-      handler: openConfigModal,
+      handler: openCreateModal,
       display: true,
       group: 1,
     }, {

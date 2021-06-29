@@ -15,6 +15,7 @@ import DataSet from 'choerodon-ui/pro/lib/data-set';
 import { ShowHelp } from 'choerodon-ui/pro/lib/field/enum';
 
 import { UploadFile } from 'choerodon-ui/pro/lib/upload/interface';
+import { ResizeType } from 'choerodon-ui/pro/lib/text-area/enum';
 
 interface UserDTOProps {
   realName: string,
@@ -47,4 +48,5 @@ export {
   RecordObjectProps,
   ShowHelp,
   UploadFile,
+  ResizeType,
 };

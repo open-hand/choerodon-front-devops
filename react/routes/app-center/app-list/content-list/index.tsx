@@ -39,7 +39,7 @@ const ContentList = () => {
       version,
     };
     return map(infoData, (value: string, key: string) => (value ? (
-      <div className={`${newPrefixCls}-info-item`}>
+      <div className={`${newPrefixCls}-info-item`} key={key}>
         <span className={`${newPrefixCls}-info-label`}>
           {formatMessage({ id: `${intlPrefix}.label.${key}` })}
           ：
@@ -62,7 +62,7 @@ const ContentList = () => {
     <>
       <div className={newPrefixCls}>
         {listDs.map((record) => (
-          <div className={`${newPrefixCls}-item`}>
+          <div className={`${newPrefixCls}-item`} key={record.id}>
             <div className={`${newPrefixCls}-header`}>
               <AppTypeLogo type={record.get('type') || 'project'} />
               <span

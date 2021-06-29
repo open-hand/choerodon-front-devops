@@ -1,5 +1,5 @@
 import React, {
-  createContext, useMemo, useContext, useEffect,
+  createContext, useMemo, useContext, useEffect, useCallback,
 } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
@@ -26,6 +26,7 @@ interface ContextProps {
   detailDs: DataSetProps,
   searchDs: DataSetProps,
   appServiceType: 'project' | 'share' | 'market',
+  appServiceId: string,
 }
 
 const Store = createContext({} as ContextProps);
@@ -67,6 +68,13 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const envDs = useMemo(() => new DataSet(EnvOptionsDataSet({ projectId })), [projectId]);
   const searchDs = useMemo(() => new DataSet(SearchDataSet({ envDs })), []);
 
+  const loadEnvData = useCallback(async () => {
+    await envDs.query();
+    const envRecord = envDs.get(0);
+    if (envRecord) {
+      searchDs.current?.set('env', envRecord.toData());
+    }
+  }, []);
   useEffect(() => {
     detailDs.loadData([{
       id: 'asfds',
@@ -76,6 +84,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
       version: '1.0.0',
       gitlab: 'https://...service-demo.git',
     }]);
+    loadEnvData();
   }, []);
 
   const value = {
@@ -86,6 +95,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     tabKeys,
     mainStore,
     detailDs,
+    appServiceId,
     appServiceType,
     envDs,
     searchDs,

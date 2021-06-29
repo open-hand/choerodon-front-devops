@@ -4,8 +4,9 @@ import React, {
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
-import { useAppCenterStore } from '@/routes/app-center/stores';
 import { DataSet as DataSetProps } from '@/interface';
+import { useAppCenterDetailStore } from '@/routes/app-center/app-detail/stores';
+import { observer } from 'mobx-react-lite';
 import TableDataSet from './TableDataSet';
 
 interface ContextProps {
@@ -21,7 +22,7 @@ export function useDeployConfigStore() {
   return useContext(Store);
 }
 
-export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
+export const StoreProvider = injectIntl(inject('AppState')(observer((props: any) => {
   const {
     children,
     AppState: { currentMenuType: { projectId } },
@@ -31,9 +32,23 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     prefixCls,
     intlPrefix,
     formatMessage,
-  } = useAppCenterStore();
+    appServiceId,
+    mainStore,
+  } = useAppCenterDetailStore();
 
-  const tableDs = useMemo(() => new DataSet(TableDataSet({ formatMessage })), []);
+  const tableDs = useMemo(() => new DataSet(TableDataSet({
+    formatMessage,
+    projectId,
+    appServiceId,
+  })), [projectId, appServiceId]);
+
+  useEffect(() => {
+    const { id: envId } = mainStore.getSelectedEnv || {};
+    if (envId) {
+      tableDs.setQueryParameter('env_id', envId);
+      tableDs.query();
+    }
+  }, [mainStore.getSelectedEnv]);
 
   const value = {
     ...props,
@@ -47,4 +62,4 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
       {children}
     </Store.Provider>
   );
-}));
+})));

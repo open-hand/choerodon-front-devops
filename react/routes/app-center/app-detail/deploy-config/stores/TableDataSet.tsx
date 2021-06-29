@@ -1,13 +1,24 @@
-import { DataSetProps } from '@/interface';
+import { DataSetProps, DataSet } from '@/interface';
+import AppCenterApi from '@/routes/app-center/apis';
 
 interface TableProps {
   formatMessage(arg0: object, arg1?: object): string,
+  projectId: number,
+  appServiceId: string,
 }
 
-export default ({ formatMessage }: TableProps): DataSetProps => ({
+export default ({
+  formatMessage, projectId, appServiceId,
+}: TableProps): DataSetProps => ({
+  autoQuery: false,
   selection: false,
   pageSize: 10,
-  transport: {},
+  transport: {
+    read: {
+      url: AppCenterApi.getDeployConfigList(projectId, appServiceId),
+      method: 'get',
+    },
+  },
   fields: [
     {
       name: 'name',
