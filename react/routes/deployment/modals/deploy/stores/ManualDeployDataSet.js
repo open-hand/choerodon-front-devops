@@ -90,7 +90,7 @@ const mapping = {
 
 function getRandomName(prefix = '') {
   const randomString = uuidV1();
-  const realPrefix = prefix.split('_')[1] || prefix.split('_')[0];
+  const realPrefix = prefix?.split('_')[1] || prefix?.split('_')[0];
 
   return realPrefix
     ? `${realPrefix.substring(0, 24)}-${randomString.substring(0, 5)}`
@@ -187,7 +187,7 @@ export default (({
             url: `/devops/v1/projects/${projectId}/app_service_versions/page_by_options?app_service_id=${value.split('**')[0]}&deploy_only=true&do_page=true&page=1&size=40`,
             method: 'post',
           });
-          record.set('instanceName', getRandomName(value.split('**')[1]));
+          record.set('instanceName', getRandomName(value.split('**')[1]) || '');
         }
         loadValueList(record);
         break;
@@ -216,9 +216,9 @@ export default (({
       case 'marketService':
         if (value && !isEmpty(value.marketServiceDeployObjectVO)) {
           const {
-            id: deployObjectId, devopsAppServiceCode,
+            id: deployObjectId, devopsAppServiceCode, hzeroServiceCode,
           } = value.marketServiceDeployObjectVO;
-          record.set('instanceName', getRandomName(devopsAppServiceCode));
+          record.set('instanceName', getRandomName(devopsAppServiceCode || hzeroServiceCode || ''));
           record.get(mapping.deployWay.value) === mapping.deployWay.options[0].value
           && deployStore.loadMarketDeployValue(projectId, deployObjectId);
         } else {

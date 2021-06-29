@@ -22,6 +22,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
     mainStore,
     showTestTab,
     statusDs,
+    tabKey: { TEST_TAB },
   } = useHostConfigStore();
 
   const searchArr = useMemo(() => ([
@@ -44,7 +45,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
   ]), []);
 
   const getSearchArr = ():object[] => {
-    const isTest = mainStore.getCurrentTabKey === 'distribute_test';
+    const isTest = mainStore.getCurrentTabKey === TEST_TAB;
     return isTest ? searchArr : searchArr.slice(0, searchArr.length - 1);
   };
 

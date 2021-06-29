@@ -31,7 +31,7 @@ function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
     <IntlProviderAsync>
       <div className="c7ncd-root">
         <Switch>
-          <PermissionRoute path={`${match.url}/app-service`} component={AppService} service={['choerodon.code.project.develop.app-service.ps.default']} />
+          <PermissionRoute path={`${match.url}/app-service`} service={['choerodon.code.project.develop.app-service.ps.default']} component={AppService} />
           <PermissionRoute path={`${match.url}/code-management`} component={Code} service={['choerodon.code.project.develop.code-management.ps.default']} />
           <PermissionRoute path={`${match.url}/resource`} component={Resource} service={['choerodon.code.project.deploy.app-deployment.resource.ps.default']} />
           <PermissionRoute path={`${match.url}/deployment-operation`} component={Deployment} service={['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.default']} />

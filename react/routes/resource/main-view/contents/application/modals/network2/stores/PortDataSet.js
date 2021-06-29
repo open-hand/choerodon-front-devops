@@ -1,6 +1,9 @@
+/* eslint-disable */
 import { map } from 'lodash';
 
-export default ({ formatMessage, projectId, envId, appId }) => {
+export default ({
+  formatMessage, projectId, envId, appId,
+}) => {
   /**
    * 验证端口号
    * @param value
@@ -39,34 +42,31 @@ export default ({ formatMessage, projectId, envId, appId }) => {
       ) {
         if (!isRepeat) {
           return true;
-        } else {
-          return formatMessage({ id: data.typeMsg });
         }
-      } else {
-        return formatMessage({ id: data.failedMsg });
+        return formatMessage({ id: data.typeMsg });
       }
+      return formatMessage({ id: data.failedMsg });
     }
   }
-
 
   return {
     fields: [
       {
         name: 'nodePort',
-        type: 'string', 
+        type: 'string',
         label: formatMessage({ id: 'network.config.nodePort' }),
         validator: checkPort,
       },
       {
         name: 'port',
-        type: 'string', 
+        type: 'string',
         label: formatMessage({ id: 'network.config.port' }),
         required: true,
         validator: checkPort,
       },
       {
         name: 'targetPort',
-        type: 'string', 
+        type: 'string',
         label: formatMessage({ id: 'network.config.targetPort' }),
         required: true,
         validator: checkPort,
@@ -80,12 +80,11 @@ export default ({ formatMessage, projectId, envId, appId }) => {
               const data = JSON.parse(resp);
               if (data && data.failed) {
                 return data;
-              } else {
-                return map(data, (item, index) => ({
-                  ...item,
-                  codePort: `${item.resourceName}: ${item.portValue}`,
-                }));
               }
+              return map(data, (item, index) => ({
+                ...item,
+                codePort: `${item.resourceName}: ${item.portValue}`,
+              }));
             } catch (e) {
               return resp;
             }
@@ -94,7 +93,7 @@ export default ({ formatMessage, projectId, envId, appId }) => {
       },
       {
         name: 'protocol',
-        type: 'string', 
+        type: 'string',
         label: formatMessage({ id: 'ist.deploy.ports.protocol' }),
         dynamicProps: {
           required: ({ dataSet, record, name }) => {
@@ -110,7 +109,9 @@ export default ({ formatMessage, projectId, envId, appId }) => {
   };
 };
 
-function updateEventHandler({ dataSet, record, name, value, oldValue }) {
+function updateEventHandler({
+  dataSet, record, name, value, oldValue,
+}) {
   if (name === 'targetPort') {
     if (value && value.indexOf(':') >= 0) {
       record.set(name, value.slice(value.indexOf(':') + 2));

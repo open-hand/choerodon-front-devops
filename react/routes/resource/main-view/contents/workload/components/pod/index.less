@@ -1,0 +1,42 @@
+.c7ncd-deployment-workload-pod {
+  display: flex;
+  align-items: center;
+
+  &-circle-wrap {
+    flex-shrink: 0;
+  }
+
+  &-circle {
+    transform: rotate(-90deg);
+    transform-origin: center;
+  }
+
+  &-num {
+    text-anchor: middle;
+    font-weight: 500;
+    fill: var(--text-color);
+  }
+
+  &-text {
+    text-anchor: middle;
+    font-size: 12px;
+    fill: var(--text-color4);
+  }
+
+  &-btn-wrap {
+    margin-left: .06rem;
+    display: flex;
+    flex-direction: column;
+
+    &-item {
+      width: .2rem !important;
+      height: .2rem !important;
+      line-height: .2rem !important;
+    }
+    .c7n-btn-disabled-wrapper {
+      background-color: transparent !important;
+      border-color: transparent !important;
+      color: rgba(15, 19, 88, 0.25) !important;
+    }
+  }
+}

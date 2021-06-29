@@ -17,6 +17,7 @@ const itemTypeMappings = {
   IST_GROUP: 'group_instances',
   PVC_ITEM: 'pvcs',
   PVC_GROUP: 'group_pvcs',
+  WORKLOAD_GROUP: 'group_workload',
 };
 
 const viewTypeMappings = {
@@ -24,7 +25,7 @@ const viewTypeMappings = {
   RES_VIEW_TYPE: 'resource',
 };
 
-const RES_TYPES = ['instances', 'services', 'ingresses', 'certifications', 'configMaps', 'secrets', 'customResources', 'pvcs'];
+const RES_TYPES = ['instances', 'workload', 'services', 'ingresses', 'certifications', 'configMaps', 'secrets', 'customResources', 'pvcs'];
 
 const ENV_KEYS = ['id', 'name', 'connect', 'code'];
 

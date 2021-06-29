@@ -121,10 +121,10 @@ export default class InstanceDetails {
     }
   }
 
-  operatePodCount(projectId, envId, name, num) {
+  operatePodCount(projectId, envId, name, num, kind) {
     return axios
       .put(
-        `devops/v1/projects/${projectId}/app_service_instances/operate_pod_count?envId=${envId}&name=${name}&count=${num}`,
+        `devops/v1/projects/${projectId}/app_service_instances/operate_pod_count?envId=${envId}&name=${name}&count=${num}&kind=${kind}`,
       );
   }
 
