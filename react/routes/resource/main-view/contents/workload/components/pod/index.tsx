@@ -111,14 +111,16 @@ const PodContent = injectIntl(({
             funcType={'flat' as FuncType}
             size={'small' as Size}
           />
-          <Button
-            disabled={btnDisabled || realPodCount < (minPodCount ?? 1)}
-            className={`${prefixCls}-btn-wrap-item`}
-            icon="expand_more"
-            onClick={handleDecrease}
-            funcType={'flat' as FuncType}
-            size={'small' as Size}
-          />
+          <Tooltip title={minPodCount === 2 ? formatMessage({ id: 'c7ncd.deployment.pod.disabled.tips' }) : ''}>
+            <Button
+              disabled={btnDisabled || realPodCount < (minPodCount ?? 1)}
+              className={`${prefixCls}-btn-wrap-item`}
+              icon="expand_more"
+              onClick={handleDecrease}
+              funcType={'flat' as FuncType}
+              size={'small' as Size}
+            />
+          </Tooltip>
         </div>
       )}
     </div>
