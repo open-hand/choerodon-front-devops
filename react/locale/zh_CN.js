@@ -1009,6 +1009,23 @@ const appTemplate = {
   'c7ncd.template.tips': '此处仅默认查出20个应用模板，您可通过模糊搜索查询到其他的模板',
 };
 
+const appCenter = {
+  'c7ncd.appCenter.list.tab.ALL_TAB': '全部应用',
+  'c7ncd.appCenter.list.tab.PROJECT_TAB': '项目应用',
+  'c7ncd.appCenter.list.tab.SHARE_TAB': '共享应用',
+  'c7ncd.appCenter.list.tab.MARKET_TAB': '市场应用',
+  'c7ncd.appCenter.detail.tab.INSTANCE_TAB': '实例',
+  'c7ncd.appCenter.detail.tab.DEPLOYCONFIG_TAB': '部署配置',
+  'c7ncd.appCenter.detail.tab.SERVICEANDINGRESS_TAB': '网络与域名',
+  'c7ncd.appCenter.detail.tab.CONFIGMAP_TAB': '配置映射',
+  'c7ncd.appCenter.detail.tab.SECRET_TAB': '密文',
+  'c7ncd.appCenter.label.code': '服务编码',
+  'c7ncd.appCenter.label.gitlab': '仓库地址',
+  'c7ncd.appCenter.label.source': '来源',
+  'c7ncd.appCenter.label.sourceProject': '来源项目',
+  'c7ncd.appCenter.label.version': '最新版本',
+};
+
 // 文档地址前缀
 const docServer = 'http://v0-18.choerodon.io/zh/docs';
 // 界面标题描述统一管理
@@ -3067,6 +3084,7 @@ const zhCN = {
   ...hostConfig,
   ...reports,
   ...appTemplate,
+  ...appCenter,
 };
 
 export default zhCN;
