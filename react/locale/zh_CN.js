@@ -449,7 +449,7 @@ const deployment = {
   'c7ncd.deployment.choose.version': '选择版本',
   'c7ncd.deployment.polaris.empty.des': '当前环境下暂无实例，无法执行健康检查。',
   'c7ncd.deployment.polaris.check.empty': '该实例为空',
-  'c7ncd.deployment.pod.disabled.tops': '若想降至0，请直接点击“停用实例',
+  'c7ncd.deployment.pod.disabled.tops': '若想降至0，请直接点击“停用实例”',
   'c7ncd.deployment.marketApp': '市场应用',
   'c7ncd.deployment.marketApp.version': '应用版本',
   'c7ncd.deployment.marketService': '市场服务',
@@ -475,6 +475,7 @@ const deployment = {
   'c7ncd.deployment.workload.active': '活跃中',
   'c7ncd.deployment.workload.suspend': '是否挂起',
   'c7ncd.deployment.workload.plan': '计划',
+  'c7ncd.deployment.pod.disabled.tips': '若想将Pod数降至0，请前往停用对应的实例',
 
 };
 
