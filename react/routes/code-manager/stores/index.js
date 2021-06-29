@@ -4,7 +4,7 @@ import React, {
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
-import { withRouter } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { isEmpty, includes, filter } from 'lodash';
 import useStore from './useStore';
 import AppServiceDs from './AppServiceDataSet';
@@ -17,15 +17,18 @@ export function useCodeManagerStore() {
   return useContext(Store);
 }
 
-export const StoreProvider = withRouter(injectIntl(inject('AppState')(
+export const StoreProvider = injectIntl(inject('AppState')(
   (props) => {
     const {
       children,
       AppState: {
         currentMenuType: { id: projectId },
       },
-      location: { state, search },
     } = props;
+
+    const {
+      search, state,
+    } = useLocation();
 
     const searchParams = new URLSearchParams(search);
     const urlAppServiceId = searchParams.get('appServiceId');
@@ -189,4 +192,4 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       </Store.Provider>
     );
   },
-)));
+));

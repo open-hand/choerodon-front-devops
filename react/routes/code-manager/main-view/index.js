@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { PageWrap, PageTab, Page } from '@choerodon/boot';
 import { injectIntl, FormattedMessage } from 'react-intl';
@@ -59,7 +59,7 @@ const MainView = injectIntl(observer((props) => {
               popoverClassName="branch-popover"
               placement="bottomLeft"
             />
-    )}
+          )}
           tabKey={tabCodes[0]}
           component={CodeManagerBranch}
           alwaysShow

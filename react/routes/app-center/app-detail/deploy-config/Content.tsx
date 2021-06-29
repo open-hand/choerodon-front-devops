@@ -88,7 +88,7 @@ const DeployConfig = () => {
     // }
   }
 
-  const handleDelete = (record) => {
+  const handleDelete = (record: any) => {
     // try {
     //   const res = await envStore.deleteRecord(projectId, record.get('id'));
     //   if (handlePromptError(res, false)) {
@@ -102,7 +102,7 @@ const DeployConfig = () => {
     // }
   };
 
-  const openModifyModal = (record) => {
+  const openModifyModal = (record: any) => {
     Modal.open({
       drawer: true,
       key: modifyModalKey,
