@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { inject } from 'mobx-react';
-import { asyncRouter, asyncLocaleProvider, nomatch } from '@choerodon/boot';
+import { asyncLocaleProvider, nomatch } from '@choerodon/boot';
 import { PermissionRoute, Charts } from '@choerodon/master';
 import { ModalContainer } from 'choerodon-ui/pro';
 
@@ -24,8 +24,9 @@ const PipelineManage = React.lazy(() => import('./routes/pipeline-manage'));
 const HostConfig = React.lazy(() => import('./routes/host-config'));
 const OrgTemplate = React.lazy(() => import('./routes/app-template/OrgIndex'));
 const SiteTemplate = React.lazy(() => import('./routes/app-template/SiteIndex'));
+const AppCenter = React.lazy(() => import('./routes/app-center'));
 
-function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
+function DEVOPSIndex({ match, AppState: { currentLanguage: language }, location }) {
   const IntlProviderAsync = asyncLocaleProvider(language, () => import(`./locale/${language}`));
   return (
     <IntlProviderAsync>
@@ -64,9 +65,14 @@ function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
             path={`${match.url}/charts/deploy`}
             component={DeployReports}
           />
+          <PermissionRoute
+            service={[]}
+            path={`${match.url}/application-center`}
+            component={AppCenter}
+          />
           <Route path="*" component={nomatch} />
         </Switch>
-        <ModalContainer />
+        <ModalContainer location={location} />
       </div>
     </IntlProviderAsync>
   );
