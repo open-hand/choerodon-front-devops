@@ -5,23 +5,22 @@ import { Record } from '@/interface';
 import './index.less';
 
 interface props {
-  record: Record,
+  record?: Record,
+  connect?: boolean,
   text: string,
 }
 
-const EnvOption: React.FC<props> = memo(({ record, text }) => {
+const EnvOption: React.FC<props> = memo(({ record, text, connect = false }) => {
   const prefixCls = 'c7ncd-app-center-env-option';
   return (
     <>
-      {record && (
-        <StatusDot
-          // @ts-ignore
-          connect={record?.get('connect')}
-          synchronize={record?.get('synchro')}
-          active={record?.get('active')}
-          size="small"
-        />
-      )}
+      <StatusDot
+        // @ts-ignore
+        connect={record?.get('connect') || connect}
+        synchronize
+        active
+        size="small"
+      />
       <span className={`${prefixCls}-text`}>{text}</span>
     </>
   );

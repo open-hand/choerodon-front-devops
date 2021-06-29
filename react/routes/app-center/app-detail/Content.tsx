@@ -1,7 +1,7 @@
 import React, { Suspense, useCallback, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Breadcrumb, Content, Header, HeaderButtons, Page,
+  Breadcrumb, Content, Page,
 } from '@choerodon/boot';
 import {
   Modal, Spin, Form, Select, Tabs,
@@ -11,14 +11,11 @@ import omit from 'lodash/omit';
 import { useAppCenterDetailStore } from '@/routes/app-center/app-detail/stores';
 import AppTypeLogo from '@/routes/app-center/components/type-logo';
 import EnvOption from '@/routes/app-center/components/env-option';
+import { EnvDataProps } from '@/routes/app-center/app-detail/stores/useStore';
 
 import './index.less';
 
 const DeployConfig = React.lazy(() => import('./deploy-config'));
-
-const linkServiceKey = Modal.key();
-const deployKey = Modal.key();
-const batchDeployKey = Modal.key();
 
 const { TabPane } = Tabs;
 
@@ -52,19 +49,19 @@ const AppCenterDetailContent = () => {
   ), [appServiceType]);
 
   const refresh = useCallback(() => {
-
+    detailDs.query();
   }, []);
 
-  const handleTabChange = useCallback((tabKey) => {
+  const handleTabChange = useCallback((tabKey: string) => {
     mainStore.setCurrentTabKey(tabKey);
   }, []);
 
-  const handleSearch = useCallback(() => {
-
+  const handleSearch = useCallback((value: EnvDataProps) => {
+    mainStore.setSelectedEnv(value);
   }, []);
 
-  const renderEnvOption = useCallback(({ record: envRecord, text }) => (
-    <EnvOption record={envRecord} text={text} />
+  const renderEnvOption = useCallback(({ value, text, record: envRecord }) => (
+    <EnvOption connect={value?.connect || envRecord.get('connect')} text={text} />
   ), []);
 
   if (!record) {
@@ -93,6 +90,7 @@ const AppCenterDetailContent = () => {
             placeholder="请选择"
             searchable
             optionRenderer={renderEnvOption}
+            renderer={renderEnvOption}
             onChange={handleSearch}
           />
         </Form>

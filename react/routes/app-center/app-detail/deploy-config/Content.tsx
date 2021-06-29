@@ -11,8 +11,10 @@ import TimePopover from '@/components/time-popover';
 import UserInfo from '@/components/userInfo';
 import ClickText from '@/components/click-text';
 import { useDeployConfigStore } from '@/routes/app-center/app-detail/deploy-config/stores';
+import DeployConfigForm from './create-from/index';
 
 const { Column } = Table;
+const createModalKey = Modal.key();
 const deleteModalKey = Modal.key();
 const modifyModalKey = Modal.key();
 
@@ -22,20 +24,35 @@ const DeployConfig = () => {
     prefixCls,
     intlPrefix,
     detailDs,
+    mainStore,
+    appServiceId,
   } = useAppCenterDetailStore();
 
   const {
     tableDs,
   } = useDeployConfigStore();
 
-  const disabled = useMemo(() => {
-    const record = detailDs.current;
-    return !record;
-  }, [detailDs.current]);
-
   const refresh = useCallback(() => {
-
+    tableDs.query();
   }, []);
+
+  const openCreateModal = useCallback((record?: Record) => {
+    const { id: envId } = mainStore.getSelectedEnv || {};
+    Modal.open({
+      key: createModalKey,
+      style: { width: LARGE },
+      title: '创建部署配置',
+      drawer: true,
+      children: <DeployConfigForm
+        envId={envId}
+        appServiceId={appServiceId}
+        deployConfigId={record?.get('id')}
+        refresh={refresh}
+        appSelectDisabled
+        appServiceName={detailDs.current?.get('name')}
+      />,
+    });
+  }, [mainStore.getSelectedEnv, appServiceId, detailDs.current]);
 
   async function checkDelete() {
     // const record = configDs.current;
@@ -102,37 +119,12 @@ const DeployConfig = () => {
     // }
   };
 
-  const openModifyModal = (record: any) => {
-    Modal.open({
-      drawer: true,
-      key: modifyModalKey,
-      style: { width: LARGE },
-      title: '创建部署配置',
-      // children: <DeployConfigForm
-      //   isModify
-      //   store={envStore}
-      //   dataSet={configFormDs}
-      //   refresh={refresh}
-      //   envId={envId}
-      //   intlPrefix={intlPrefix}
-      //   prefixCls={prefixCls}
-      // />,
-      children: '创建部署配置',
-      // afterClose: () => {
-      //   configFormDs.transport.read = null;
-      //   configFormDs.reset();
-      //   envStore.setValue('');
-      // },
-      okText: formatMessage({ id: 'save' }),
-    });
-  };
-
   const renderName = ({ value, record }: { value: string, record: Record }) => (
     <ClickText
       permissionCode={['choerodon.code.project.deploy.app-deployment.resource.ps.update-deploy-config']}
-      clickAble={!disabled}
+      clickAble
       value={value}
-      onClick={openModifyModal}
+      onClick={openCreateModal}
       record={record}
       showToolTip
     />
@@ -161,10 +153,9 @@ const DeployConfig = () => {
         className={`${prefixCls}-detail-headerButton`}
         items={[{
           permissions: [],
-          disabled,
           name: '创建部署配置',
           icon: 'playlist_add',
-          handler: () => {},
+          handler: () => openCreateModal(),
           display: true,
         }, {
           icon: 'refresh',
@@ -178,10 +169,10 @@ const DeployConfig = () => {
         className="c7ncd-tab-table"
       >
         <Column name="name" sortable renderer={renderName} />
-        {!disabled && <Column renderer={renderActions} width={60} />}
+        <Column renderer={renderActions} width={60} />
         <Column name="description" tooltip={'overflow' as TableColumnTooltip} />
         <Column name="appServiceName" sortable />
-        <Column name="envName" sortable />
+        <Column name="envName" />
         <Column name="createUserRealName" renderer={renderUser} />
         <Column name="lastUpdateDate" renderer={renderDate} sortable />
       </Table>

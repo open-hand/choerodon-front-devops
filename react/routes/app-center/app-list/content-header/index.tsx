@@ -8,9 +8,9 @@ import StatusDot from '@/components/status-dot';
 import map from 'lodash/map';
 import { LabelLayoutType } from '@/interface';
 import { useAppCenterListStore } from '@/routes/app-center/app-list/stores';
+import EnvOption from '@/routes/app-center/components/env-option';
 
 import './index.less';
-import EnvOption from "@/routes/app-center/components/env-option";
 
 const ContentHeader: React.FC<any> = observer((): any => {
   const {
@@ -24,11 +24,6 @@ const ContentHeader: React.FC<any> = observer((): any => {
   } = useAppCenterListStore();
 
   const newPrefixCls = useMemo(() => `${prefixCls}-list-search`, []);
-
-  const tabList = useMemo(() => map(tabKeys, (key: string) => ({
-    text: formatMessage({ id: `${intlPrefix}.tab.${key}` }),
-    value: key,
-  })), []);
 
   const refresh = useCallback(() => {
     listDs.query();

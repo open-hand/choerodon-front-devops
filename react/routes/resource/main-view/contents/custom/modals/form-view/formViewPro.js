@@ -11,6 +11,7 @@ import {
   // Radio,
   Upload,
   Icon,
+  Alert,
 } from 'choerodon-ui';
 import _ from 'lodash';
 import classnames from 'classnames';
@@ -193,13 +194,14 @@ const ResourceSidebar = injectIntl(inject('AppState')(observer((props) => {
 
   return (
     <div className="c7n-region c7ncd-deployment-resource-sidebar">
-      <div className="c7ncd-deployment-resource-info">
-        <span>
-          平台已经支持创建与管理工作负载（Deployment、StatefulSet、DaemonSet、CronJob、Job）、
+      <Alert
+        className="c7ncd-deployment-resource-info"
+        message="平台已经支持创建与管理工作负载（Deployment、StatefulSet、DaemonSet、CronJob、Job）、
           网络（Service）、域名（Ingress）、配置映射（ConfigMap）、密文（Secret）等资源。
-          若想添加以上类型的资源，请到对应的资源界面进行创建。自定义资源中将不支持添加以上类型的资源。
-        </span>
-      </div>
+          若想添加以上类型的资源，请到对应的资源界面进行创建。自定义资源中将不支持添加以上类型的资源。"
+        type="info"
+        showIcon
+      />
       <Form layout="vertical">
         {type === 'create' && (
         <>
