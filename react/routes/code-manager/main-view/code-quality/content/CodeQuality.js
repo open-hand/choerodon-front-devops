@@ -94,7 +94,7 @@ export default withRouter(observer((props) => {
                       {hasReport && (
                       <Link
                         to={{
-                          pathname: '/devops/reports/code-quality',
+                          pathname: '/rdqam/report/code-quality-workplace',
                           search,
                           state: { appId: appServiceId, type: OBJECT_TYPE[objKey] },
                         }}

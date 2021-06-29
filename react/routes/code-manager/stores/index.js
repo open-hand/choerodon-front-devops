@@ -158,11 +158,11 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
             return;
           }
           if (recentAppList !== null && !isEmpty(recentAppList[projectId])) {
-            const cacheId = recentAppList[projectId].find((i) => String(i.id) === String(localGet('selectAppId')));
-            newAppServiceId = (cacheId && localGet('selectAppId')) || recentAppList[projectId][0]?.id;
+            const cacheId = recentAppList[projectId].find((i) => String(i.id) === String(localStorage.getItem('selectAppId')));
+            newAppServiceId = (cacheId && localStorage.getItem('selectAppId')) || recentAppList[projectId][0]?.id;
           } else {
-            const cacheId = res.find((i) => String(i.id) === String(localGet('selectAppId')));
-            newAppServiceId = (cacheId && localGet('selectAppId')) || res[0]?.id;
+            const cacheId = res.find((i) => String(i.id) === String(localStorage.getItem('selectAppId')));
+            newAppServiceId = (cacheId && localStorage.getItem('selectAppId')) || res[0]?.id;
           }
           selectAppDs.current.set('appServiceId', newAppServiceId);
         }

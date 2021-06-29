@@ -85,7 +85,7 @@ export default withRouter(observer((props) => {
                       <Link
                         onClick={() => modal.close()}
                         to={() => ({
-                          pathname: '/devops/reports/code-quality',
+                          pathname: '/rdqam/report/code-quality-workplace',
                           search: `${search}&from=ci`,
                           state: { appId: appServiceId, type: OBJECT_TYPE[objKey] },
                         })}

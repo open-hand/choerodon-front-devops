@@ -24,9 +24,8 @@ export default ({
         const selectedProjectId = project?.id ?? projectId;
         const issueId = issue?.issueId;
         return {
-          url: CodeManagerApis.loadSummaryData(selectedProjectId),
+          url: CodeManagerApis.loadSummaryData(selectedProjectId, issueId ?? ''),
           method: 'get',
-          params: { onlyActiveSprint: false, self: true, issueId: issueId ?? '' },
         };
       },
     },

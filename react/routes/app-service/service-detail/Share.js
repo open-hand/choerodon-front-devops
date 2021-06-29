@@ -92,12 +92,12 @@ const Share = withRouter(observer((props) => {
     );
   }
 
-  function renderAction() {
+  function renderAction(record) {
     const actionData = [
       {
         service: ['choerodon.code.project.develop.app-service.ps.share.delete'],
         text: formatMessage({ id: 'delete' }),
-        action: handleDelete,
+        action: () => handleDelete(record),
       },
     ];
 
@@ -124,8 +124,8 @@ const Share = withRouter(observer((props) => {
     });
   }
 
-  function handleDelete() {
-    const record = shareDs.current;
+  function handleDelete(selfRecord) {
+    const record = selfRecord || shareDs.current;
     const modalProps = {
       title: formatMessage({ id: `${intlPrefix}.rule.delete.title` }),
       children: formatMessage({ id: `${intlPrefix}.rule.delete.des` }),
@@ -274,7 +274,7 @@ const Share = withRouter(observer((props) => {
                             <span className="c7ncd-theme4-version-item-line-versionType">{share.get('version')}</span>
                           </p>
                         </div>
-                        {renderAction()}
+                        {renderAction(share)}
                       </div>
                     </div>
                   ))

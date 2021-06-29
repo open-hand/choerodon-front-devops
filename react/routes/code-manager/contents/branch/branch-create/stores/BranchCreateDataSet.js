@@ -46,7 +46,6 @@ export default ({
           return {
             url: CodeManagerApis.loadSummaryData(selectedProjectId),
             method: 'get',
-            params: { onlyActiveSprint: false, self: true },
           };
         },
       },
