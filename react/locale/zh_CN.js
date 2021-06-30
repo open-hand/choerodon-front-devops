@@ -1025,6 +1025,8 @@ const appCenter = {
   'c7ncd.appCenter.label.source': '来源',
   'c7ncd.appCenter.label.sourceProject': '来源项目',
   'c7ncd.appCenter.label.version': '最新版本',
+  'c7ncd.appCenter.configMap': '配置映射',
+  'c7ncd.appCenter.create.configMap': '创建配置映射',
 };
 
 // 文档地址前缀
