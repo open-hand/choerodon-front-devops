@@ -53,8 +53,10 @@
         flex-grow: 1;
 
         &-item {
-          & + & {
-            margin-top: .12rem;
+          margin-top: .12rem;
+
+          &:first-child {
+            margin-top: 0;
           }
         }
 

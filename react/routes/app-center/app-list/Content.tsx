@@ -10,7 +10,7 @@ import ContentHeader from '@/routes/app-center/app-list/content-header';
 import Deploy from '@/routes/deployment/modals/deploy';
 import BatchDeploy from '@/routes/deployment/modals/batch-deploy';
 import Tips from '@/components/new-tips';
-import LinkService from '@/routes/resource/main-view/contents/environment/modals/link-service';
+import LinkService from '@/routes/app-center/app-list/components/link-service';
 import ContentList from '@/routes/app-center/app-list/content-list';
 import { useAppCenterListStore } from '@/routes/app-center/app-list/stores';
 
@@ -47,7 +47,10 @@ const AppCenterContent = () => {
       style: { width: SMALL },
       drawer: true,
       className: 'c7ncd-modal-wrapper',
-      children: '关联应用服务',
+      children: <LinkService
+        showEnvSelect
+        refresh={refresh}
+      />,
     });
   }, []);
 

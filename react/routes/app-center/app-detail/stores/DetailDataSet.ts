@@ -11,6 +11,7 @@ export default ({ projectId, appServiceId, appServiceType }: SearchProps): DataS
   autoCreate: false,
   autoQuery: true,
   selection: false,
+  paging: false,
   transport: {
     read: {
       url: appServiceType === 'market'

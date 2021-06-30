@@ -13,6 +13,7 @@ import AppTypeLogo from '@/routes/app-center/components/type-logo';
 import EnvOption from '@/routes/app-center/components/env-option';
 import { EnvDataProps } from '@/routes/app-center/app-detail/stores/useStore';
 import Loading from '@/components/loading';
+import { RecordObjectProps } from '@/interface';
 
 import './index.less';
 
@@ -67,6 +68,10 @@ const AppCenterDetailContent = () => {
     <EnvOption connect={value?.connect || envRecord.get('connect')} text={text} />
   ), []);
 
+  const renderOptionProperty = useCallback(({ record: envRecord }: RecordObjectProps) => ({
+    disabled: !envRecord.get('permission'),
+  }), []);
+
   if (!record) {
     return <Loading display />;
   }
@@ -97,6 +102,7 @@ const AppCenterDetailContent = () => {
             optionRenderer={renderEnvOption}
             renderer={renderEnvOption}
             onChange={handleSearch}
+            onOption={renderOptionProperty}
           />
         </Form>
         <Tabs
