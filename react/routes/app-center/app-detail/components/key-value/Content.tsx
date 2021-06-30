@@ -15,10 +15,10 @@ import { handlePromptError } from '@/utils';
 import YamlEditor from '@/components/yamlEditor';
 import {
   objToYaml, yamlToObj, takeObject, ConfigNode, makePostData,
-} from '../../utils';
+} from './utils';
 import { useKeyValueStore } from './stores';
 
-import '../../../../../../main.less';
+import '../../../../main.less';
 import './index.less';
 
 const FormView = observer(() => {

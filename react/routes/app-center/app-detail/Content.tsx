@@ -18,6 +18,7 @@ import './index.less';
 
 const DeployConfig = React.lazy(() => import('./deploy-config'));
 const ConfigMap = React.lazy(() => import('./components/config-map'));
+const Secrets = React.lazy(() => import('./components/secrets'));
 
 const { TabPane } = Tabs;
 
@@ -43,7 +44,7 @@ const AppCenterDetailContent = () => {
     [DEPLOYCONFIG_TAB]: <DeployConfig />,
     [SERVICEANDINGRESS_TAB]: <div>网络与域名</div>,
     [CONFIGMAP_TAB]: <ConfigMap />,
-    [SECRET_TAB]: <div>密文</div>,
+    [SECRET_TAB]: <Secrets />,
   }), []);
 
   const realTabKeys = useMemo(() => (

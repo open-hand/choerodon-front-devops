@@ -1,45 +1,62 @@
-import React from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { Action } from '@choerodon/boot';
-import { Table, Modal } from 'choerodon-ui/pro';
-import { TimePopover } from '@choerodon/components';
+import { Modal, Table } from 'choerodon-ui/pro';
+import { keys } from 'lodash';
 import { TableQueryBarType } from '@/interface';
 import { HeaderButtons } from '@choerodon/master';
-import MouserOverWrapper from '../../../../../components/MouseOverWrapper/MouserOverWrapper';
+import { TimePopover } from '@choerodon/components';
+import MouserOverWrapper from '@/components/MouseOverWrapper/MouserOverWrapper';
+// import { useResourceStore } from '../../../stores';
+import StatusIcon from '@/components/StatusIcon';
+import { useSecretsStore } from './stores';
 import KeyValueModal from '../key-value';
-import StatusIcon from '../../../../../components/StatusIcon';
-import { useConfigMapStore } from './stores';
+// import { useMainStore } from '../../stores';
 
 import './index.less';
 
 const { Column } = Table;
-
 const modalKey = Modal.key();
-
 const modalStyle = {
   width: 'calc(100vw - 3.52rem)',
 };
 
 const ConfigMap = observer((props) => {
   const {
-    intl: { formatMessage },
-    permissions,
-    formStore,
     prefixCls,
-    subPrefixCls,
     intlPrefix,
-    ConfigMapTableDs,
-    connect,
     envId,
-  } = useConfigMapStore();
+    connect,
+    permissions,
+    formatMessage,
+    SecretTableDs,
+    formStore,
+  } = useSecretsStore();
+  // const {
+  //   prefixCls,
+  //   intlPrefix,
+  //   resourceStore: { getSelectedMenu: { parentId } },
+  //   treeDs,
+  // } = useResourceStore();
+
+  // const {
+  //   intl: { formatMessage },
+  //   permissions,
+  //   formStore,
+  //   SecretTableDs,
+  // } = useKeyValueStore();
+
+  // const { mainStore: { openDeleteModal } } = useMainStore();
 
   function refresh() {
-    ConfigMapTableDs.query();
+    SecretTableDs.query();
   }
 
   function renderName({ value, record }:any) {
     const commandStatus = record.get('commandStatus');
     const error = record.get('error');
+
     return (
       <div style={{
         display: 'flex',
@@ -56,10 +73,11 @@ const ConfigMap = observer((props) => {
     );
   }
 
-  function renderKey({ value = [], record }:any) {
+  function renderValue({ value = [] }) {
+    const keyArr = keys(value);
     return (
       <MouserOverWrapper width={0.5}>
-        {value.join(',')}
+        {keyArr && keyArr.join(',')}
       </MouserOverWrapper>
     );
   }
@@ -85,7 +103,7 @@ const ConfigMap = observer((props) => {
       {
         service: permissions.delete,
         text: formatMessage({ id: 'delete' }),
-        // action: () => openDeleteModal(envId, id, name, 'configMap', refresh),
+        // action: () => openDeleteModal(envId, id, name, 'secret', refresh),
       },
     ];
     return <Action data={buttons} />;
@@ -96,11 +114,10 @@ const ConfigMap = observer((props) => {
       key: modalKey,
       style: modalStyle,
       drawer: true,
-      title: id ? formatMessage({ id: `${intlPrefix}.edit.configMap` }) : formatMessage({ id: `${intlPrefix}.create.configMap` }),
+      title: id ? formatMessage({ id: `${intlPrefix}.cipher.edit` }) : formatMessage({ id: `${intlPrefix}.cipher.create` }),
       children: <KeyValueModal
+        title="cipher"
         id={id}
-        modeSwitch
-        title="mapping"
         envId={envId}
         store={formStore}
         intlPrefix={intlPrefix}
@@ -111,8 +128,8 @@ const ConfigMap = observer((props) => {
   }
 
   const renderBtnsItems = () => [{
-    permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.configmap'],
-    name: formatMessage({ id: `${intlPrefix}.create.configMap` }),
+    permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.cipher'],
+    name: formatMessage({ id: `${intlPrefix}.cipher.create` }),
     icon: 'playlist_add',
     handler: () => openModal(),
     display: true,
@@ -132,13 +149,14 @@ const ConfigMap = observer((props) => {
         showClassName
       />
       <Table
-        dataSet={ConfigMapTableDs}
+        dataSet={SecretTableDs}
+        border={false}
         queryBar={'bar' as TableQueryBarType}
         className="c7ncd-tab-table"
       >
-        <Column name="name" sortable header={formatMessage({ id: `${intlPrefix}.configMap` })} renderer={renderName} />
+        <Column name="name" sortable header={formatMessage({ id: `${intlPrefix}.cipher` })} renderer={renderName} />
         <Column renderer={renderAction} width={60} />
-        <Column name="key" renderer={renderKey} />
+        <Column name="value" renderer={renderValue} header={formatMessage({ id: 'key' })} />
         <Column name="lastUpdateDate" sortable renderer={renderDate} width={105} />
       </Table>
     </>
