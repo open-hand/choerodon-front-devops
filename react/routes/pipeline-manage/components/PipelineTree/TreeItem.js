@@ -20,7 +20,7 @@ import { usePipelineTreeStore } from './stores';
 import CopyPipeline from './components/copy-pipeline';
 import StatusTag from '../PipelineFlow/components/StatusTag';
 import AuditModal from '../audit-modal';
-import Tips from "@/components/new-tips";
+import { NewTips } from "@choerodon/components";
 
 const executeKey = Modal.key();
 const stopKey = Modal.key();
@@ -293,7 +293,7 @@ const TreeItem = observer(({ record, search }) => {
       },
       {
         service: ['choerodon.code.project.develop.ci-pipeline.ps.create'],
-        text: '复制',
+        text: <NewTips title="复制" helpText="此操作将复制出该流水线中的CI阶段及其任务至目标应用服务" />,
         action: handleCopy,
       },
       {
