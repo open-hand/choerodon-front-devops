@@ -42,4 +42,12 @@ export default class AppCenterApi {
   static deleteDeployConfig(projectId: number, valueId: string) {
     return `/devops/v1/projects/${projectId}/deploy_value?value_id=${valueId}`;
   }
+
+  static getNonRelatedAppService(projectId: number) {
+    return `/devops/v1/projects/${projectId}/env/app_services/non_related_app_service`;
+  }
+
+  static createRelatedAppService(projectId: number) {
+    return `/devops/v1/projects/${projectId}/env/app_services/batch_create`;
+  }
 }

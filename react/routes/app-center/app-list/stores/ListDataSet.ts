@@ -8,7 +8,7 @@ interface ListProps {
 
 export default ({ projectId, searchDs }: ListProps): DataSetProps => ({
   autoCreate: false,
-  autoQuery: false,
+  autoQuery: true,
   selection: false,
   paging: true,
   pageSize: 6,

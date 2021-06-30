@@ -69,30 +69,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     listDs.setQueryParameter('type', defaultTabKey);
   }, []);
 
-  useEffect(() => {
-    listDs.loadData([{
-      id: '160033760358584320',
-      name: 'Go服务',
-      type: 'project',
-      code: 'go-terminated',
-      version: '1.0.0',
-      gitlab: 'http://.../go-terminated.git',
-    }, {
-      id: 'asfdsaaa',
-      name: '共享应用服务',
-      type: 'share',
-      code: 'share-service',
-      version: '1.0.0',
-      sourceProject: 'C7N敏捷',
-    }, {
-      id: '195867298169098240',
-      name: 'demo1',
-      type: 'market',
-      source: '平台预置',
-      version: '1.0.0',
-    }]);
-  }, []);
-
   const value = {
     ...props,
     prefixCls,

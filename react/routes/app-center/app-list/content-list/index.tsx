@@ -12,7 +12,7 @@ import './index.less';
 
 const ContentList = () => {
   const {
-    prefixCls, intlPrefix, formatMessage, listDs, mainStore,
+    prefixCls, intlPrefix, formatMessage, listDs, mainStore, tabKeys: { MARKET_TAB },
   } = useAppCenterListStore();
 
   const history = useHistory();
@@ -22,21 +22,21 @@ const ContentList = () => {
 
   const handleLinkDetail = useCallback((record) => {
     history.push({
-      pathname: `${pathname}/detail/${record.get('id')}/${record.get('type')}`,
+      pathname: `${pathname}/detail/${record.get('id')}/${record.get('source')}`,
       search,
     });
   }, [search]);
 
   const getInfoContent = useCallback((record: Record) => {
     const {
-      code, source, gitlab, version, sourceProject,
+      serviceCode, source, gitlab, latestVersion, sourceProject,
     } = record?.toData() || {};
     const infoData = {
-      code,
-      source,
+      code: source === MARKET_TAB ? null : serviceCode,
+      source: source === MARKET_TAB ? '应用市场' : null,
       gitlab,
       sourceProject,
-      version,
+      version: latestVersion,
     };
     return map(infoData, (value: string, key: string) => (value ? (
       <div className={`${newPrefixCls}-info-item`} key={key}>
@@ -61,16 +61,16 @@ const ContentList = () => {
   return (
     <>
       <div className={newPrefixCls}>
-        {listDs.map((record) => (
+        {listDs.map((record: Record) => (
           <div className={`${newPrefixCls}-item`} key={record.id}>
             <div className={`${newPrefixCls}-header`}>
-              <AppTypeLogo type={record.get('type') || 'project'} />
+              <AppTypeLogo type={record.get('source') || 'project'} />
               <span
                 className={`${newPrefixCls}-header-title`}
                 onClick={() => handleLinkDetail(record)}
                 role="none"
               >
-                {record.get('name')}
+                {record.get('serviceName')}
               </span>
               {getActionData()}
             </div>

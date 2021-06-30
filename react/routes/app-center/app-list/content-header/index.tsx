@@ -5,7 +5,7 @@ import {
 } from 'choerodon-ui/pro';
 import { CustomTabs } from '@choerodon/components';
 import map from 'lodash/map';
-import { LabelLayoutType } from '@/interface';
+import { LabelLayoutType, RecordObjectProps } from '@/interface';
 import { useAppCenterListStore } from '@/routes/app-center/app-list/stores';
 import EnvOption from '@/routes/app-center/components/env-option';
 
@@ -38,6 +38,10 @@ const ContentHeader: React.FC<any> = observer((): any => {
   const renderEnvOption = useCallback(({ record, text }) => (
     <EnvOption record={record} text={text} />
   ), []);
+
+  const renderOptionProperty = useCallback(({ record: envRecord }: RecordObjectProps) => ({
+    disabled: !envRecord.get('permission'),
+  }), []);
 
   return (
     <div className={newPrefixCls}>
@@ -75,6 +79,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
             searchable
             placeholder="请选择"
             optionRenderer={renderEnvOption}
+            onOption={renderOptionProperty}
             onClear={refresh}
           />
         </Form>
