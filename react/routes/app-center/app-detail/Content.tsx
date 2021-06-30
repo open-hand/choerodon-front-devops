@@ -17,6 +17,7 @@ import Loading from '@/components/loading';
 import './index.less';
 
 const DeployConfig = React.lazy(() => import('./deploy-config'));
+const ConfigMap = React.lazy(() => import('./components/config-map'));
 
 const { TabPane } = Tabs;
 
@@ -41,7 +42,7 @@ const AppCenterDetailContent = () => {
     [INSTANCE_TAB]: <div>实例</div>,
     [DEPLOYCONFIG_TAB]: <DeployConfig />,
     [SERVICEANDINGRESS_TAB]: <div>网络与域名</div>,
-    [CONFIGMAP_TAB]: <div>配置映射</div>,
+    [CONFIGMAP_TAB]: <ConfigMap />,
     [SECRET_TAB]: <div>密文</div>,
   }), []);
 
