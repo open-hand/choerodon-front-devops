@@ -12,6 +12,7 @@ import TableDataSet from './TableDataSet';
 interface ContextProps {
   prefixCls: string,
   intlPrefix: string,
+  projectId: number,
   formatMessage(arg0: object, arg1?: object): string,
   tableDs: DataSetProps,
 }
@@ -52,6 +53,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
 
   const value = {
     ...props,
+    projectId,
     prefixCls,
     intlPrefix,
     formatMessage,

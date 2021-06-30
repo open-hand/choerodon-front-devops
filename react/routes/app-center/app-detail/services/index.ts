@@ -27,4 +27,8 @@ export default class AppCenterDetailServices {
       return false;
     }
   }
+
+  static checkDeleteDeployConfig(projectId: number, configId: string) {
+    return axios.get(AppCenterApi.checkDeleteDeployConfig(projectId, configId));
+  }
 }

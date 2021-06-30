@@ -1027,6 +1027,11 @@ const appCenter = {
   'c7ncd.appCenter.label.version': '最新版本',
   'c7ncd.appCenter.configMap': '配置映射',
   'c7ncd.appCenter.create.configMap': '创建配置映射',
+  'c7ncd.appCenter.create.deployConfig': '创建部署配置',
+  'c7ncd.appCenter.edit.deployConfig': '修改部署配置',
+  'c7ncd.appCenter.delete.deployConfig': '删除部署配置',
+  'c7ncd.appCenter.delete.deployConfig.des': '确定要删除部署配置“{name}”吗？',
+  'c7ncd.appCenter.delete.deployConfig.disable': '仅能删除没有关联任务和关联实例的部署配置。',
 };
 
 // 文档地址前缀

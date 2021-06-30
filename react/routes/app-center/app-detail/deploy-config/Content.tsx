@@ -1,26 +1,27 @@
-import React, { useMemo, Fragment, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { Action, Choerodon, HeaderButtons } from '@choerodon/boot';
 import { observer } from 'mobx-react-lite';
 import {
-  Table, Modal, Tooltip, Spin,
+  Table, Modal, Spin,
 } from 'choerodon-ui/pro';
-import { TableColumnTooltip, Record, UserDTOProps } from '@/interface';
+import {
+  TableColumnTooltip, Record, UserDTOProps, RecordObjectProps,
+} from '@/interface';
 import { useAppCenterDetailStore } from '@/routes/app-center/app-detail/stores';
 import { LARGE } from '@/utils/getModalWidth';
 import ClickText from '@/components/click-text';
 import { UserInfo, TimePopover } from '@choerodon/components';
+import AppCenterDetailServices from '@/routes/app-center/app-detail/services';
 import { useDeployConfigStore } from '@/routes/app-center/app-detail/deploy-config/stores';
 import DeployConfigForm from './create-from';
 
 const { Column } = Table;
 const createModalKey = Modal.key();
 const deleteModalKey = Modal.key();
-const modifyModalKey = Modal.key();
 
 const DeployConfig = () => {
   const {
     formatMessage,
-    prefixCls,
     intlPrefix,
     detailDs,
     mainStore,
@@ -29,6 +30,7 @@ const DeployConfig = () => {
 
   const {
     tableDs,
+    projectId,
   } = useDeployConfigStore();
 
   const refresh = useCallback(() => {
@@ -40,7 +42,7 @@ const DeployConfig = () => {
     Modal.open({
       key: createModalKey,
       style: { width: LARGE },
-      title: '创建部署配置',
+      title: formatMessage({ id: `${intlPrefix}.${record ? 'edit' : 'create'}.deployConfig` }),
       drawer: true,
       children: <DeployConfigForm
         envId={envId}
@@ -50,72 +52,70 @@ const DeployConfig = () => {
         appSelectDisabled
         appServiceName={detailDs.current?.get('name')}
       />,
+      okText: formatMessage({ id: record ? 'save' : 'create' }),
     });
   }, [mainStore.getSelectedEnv, appServiceId, detailDs.current]);
 
-  async function checkDelete() {
-    // const record = configDs.current;
-    // const valueId = record.get('id');
-    // const name = record.get('name');
-    // const deleteModal = Modal.open({
-    //   movable: false,
-    //   closable: false,
-    //   key: deleteModalKey,
-    //   title: formatMessage({ id: `${intlPrefix}.config.delete.disable` }, { name }),
-    //   children: <Spin />,
-    //   footer: null,
-    // });
-    // try {
-    //   const res = await envStore.checkDelete(projectId, valueId);
-    //   if (handlePromptError(res)) {
-    //     const modalProps = {
-    //       title: formatMessage({ id: `${intlPrefix}.config.delete.disable` }, { name }),
-    //       children: formatMessage({ id: `${intlPrefix}.config.delete.des` }),
-    //       okText: formatMessage({ id: 'delete' }),
-    //       onOk: () => handleDelete(record),
-    //       okProps: { color: 'red' },
-    //       cancelProps: { color: 'dark' },
-    //       footer: ((okBtn, cancelBtn) => (
-    //         <>
-    //           {okBtn}
-    //           {cancelBtn}
-    //         </>
-    //       )),
-    //     };
-    //     // configDs.delete(record, modalProps);
-    //     deleteModal.update(modalProps);
-    //   } else if (!res.failed) {
-    //     deleteModal.update({
-    //       children: formatMessage({ id: `${intlPrefix}.config.delete.describe` }),
-    //       okCancel: false,
-    //       okText: formatMessage({ id: 'iknow' }),
-    //       footer: ((OkBtn) => (
-    //         <>
-    //           {OkBtn}
-    //         </>
-    //       )),
-    //     });
-    //   } else {
-    //     deleteModal.close();
-    //   }
-    // } catch (e) {
-    //   Choerodon.handleResponseError(e);
-    //   deleteModal.close();
-    // }
-  }
+  const checkDelete = useCallback(async (record: Record) => {
+    const valueId = record?.get('id');
+    const name = record?.get('name');
+    const deleteModal = Modal.open({
+      movable: false,
+      closable: false,
+      key: deleteModalKey,
+      title: formatMessage({ id: `${intlPrefix}.delete.deployConfig` }),
+      children: <Spin />,
+      footer: null,
+    });
+    try {
+      const res = await AppCenterDetailServices.checkDeleteDeployConfig(projectId, valueId);
+      if (res) {
+        const modalProps = {
+          title: formatMessage({ id: `${intlPrefix}.delete.deployConfig` }),
+          children: formatMessage({ id: `${intlPrefix}.delete.deployConfig.des` }, { name }),
+          okText: formatMessage({ id: 'delete' }),
+          onOk: () => handleDelete(record),
+          // okProps: { color: 'red' },
+          // cancelProps: { color: 'dark' },
+          footer: ((okBtn: HTMLButtonElement, cancelBtn: HTMLButtonElement) => (
+            <>
+              {cancelBtn}
+              {okBtn}
+            </>
+          )),
+        };
+        deleteModal.update(modalProps);
+      } else if (!res.failed) {
+        deleteModal.update({
+          children: formatMessage({ id: `${intlPrefix}.delete.deployConfig.disable` }),
+          okCancel: false,
+          okText: formatMessage({ id: 'iknow' }),
+          footer: ((okBtn: HTMLButtonElement) => (
+            <>
+              {okBtn}
+            </>
+          )),
+        });
+      } else {
+        deleteModal.close();
+      }
+    } catch (e) {
+      Choerodon.handleResponseError(e);
+      deleteModal.close();
+    }
+  }, [tableDs.current]);
 
-  const handleDelete = (record: any) => {
-    // try {
-    //   const res = await envStore.deleteRecord(projectId, record.get('id'));
-    //   if (handlePromptError(res, false)) {
-    //     refresh();
-    //   } else {
-    //     return false;
-    //   }
-    // } catch (err) {
-    //   Choerodon.handleResponseError(err);
-    //   return false;
-    // }
+  const handleDelete = async (record: Record) => {
+    try {
+      const res = await tableDs.delete(record, false);
+      if (res && res.success) {
+        refresh();
+        return true;
+      }
+      return false;
+    } catch (err) {
+      return false;
+    }
   };
 
   const renderName = ({ value, record }: { value: string, record: Record }) => (
@@ -129,16 +129,16 @@ const DeployConfig = () => {
     />
   );
 
-  const renderActions = () => {
+  const renderActions = ({ record }: RecordObjectProps) => {
     const actionData = [{
       service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-config'],
       text: formatMessage({ id: 'delete' }),
-      action: checkDelete,
+      action: () => checkDelete(record),
     }];
     return <Action data={actionData} />;
   };
 
-  const renderUser = ({ value, record }: { value: UserDTOProps, record: Record }) => {
+  const renderUser = ({ value }: { value: UserDTOProps }) => {
     const {
       ldap, realName, loginName, email, imageUrl,
     } = value || {};

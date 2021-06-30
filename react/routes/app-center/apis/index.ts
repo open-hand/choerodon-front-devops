@@ -34,4 +34,12 @@ export default class AppCenterApi {
   static getAppServiceValue(projectId: number, appServiceId: string) {
     return `/devops/v1/projects/${projectId}/app_service_versions/value?app_service_id=${appServiceId}`;
   }
+
+  static checkDeleteDeployConfig(projectId: number, valueId: string) {
+    return `/devops/v1/projects/${projectId}/deploy_value/check_delete?value_id=${valueId}`;
+  }
+
+  static deleteDeployConfig(projectId: number, valueId: string) {
+    return `/devops/v1/projects/${projectId}/deploy_value?value_id=${valueId}`;
+  }
 }
