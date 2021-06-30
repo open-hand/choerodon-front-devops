@@ -1,6 +1,6 @@
 export default class AppCenterApi {
   static getAppList(projectId: number) {
-    return '';
+    return `/devops/v1/projects/${projectId}/app_service/app_center`;
   }
 
   static getEnvList(projectId: number) {

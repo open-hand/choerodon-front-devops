@@ -12,6 +12,7 @@ import { useAppCenterDetailStore } from '@/routes/app-center/app-detail/stores';
 import AppTypeLogo from '@/routes/app-center/components/type-logo';
 import EnvOption from '@/routes/app-center/components/env-option';
 import { EnvDataProps } from '@/routes/app-center/app-detail/stores/useStore';
+import Loading from '@/components/loading';
 
 import './index.less';
 
@@ -65,7 +66,7 @@ const AppCenterDetailContent = () => {
   ), []);
 
   if (!record) {
-    return <Spin />;
+    return <Loading display />;
   }
 
   return (
@@ -74,7 +75,9 @@ const AppCenterDetailContent = () => {
       <Content className={`${prefixCls}-detail`}>
         <div className={`${prefixCls}-detail-header`}>
           <AppTypeLogo type={appServiceType} size={24} />
-          <span className={`${prefixCls}-detail-header-name`}>{record.get('name')}</span>
+          <span className={`${prefixCls}-detail-header-name`}>
+            {record.get('name') || record.get('marketServiceName')}
+          </span>
           {record.get('code') && (
             <span>
               (

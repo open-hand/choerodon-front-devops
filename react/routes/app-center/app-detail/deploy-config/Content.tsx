@@ -11,7 +11,7 @@ import TimePopover from '@/components/time-popover';
 import UserInfo from '@/components/userInfo';
 import ClickText from '@/components/click-text';
 import { useDeployConfigStore } from '@/routes/app-center/app-detail/deploy-config/stores';
-import DeployConfigForm from './create-from/index';
+import DeployConfigForm from './create-from';
 
 const { Column } = Table;
 const createModalKey = Modal.key();
@@ -168,13 +168,11 @@ const DeployConfig = () => {
         dataSet={tableDs}
         className="c7ncd-tab-table"
       >
-        <Column name="name" sortable renderer={renderName} />
+        <Column name="name" renderer={renderName} />
         <Column renderer={renderActions} width={60} />
         <Column name="description" tooltip={'overflow' as TableColumnTooltip} />
-        <Column name="appServiceName" sortable />
-        <Column name="envName" />
         <Column name="createUserRealName" renderer={renderUser} />
-        <Column name="lastUpdateDate" renderer={renderDate} sortable />
+        <Column name="lastUpdateDate" renderer={renderDate} />
       </Table>
     </>
   );
