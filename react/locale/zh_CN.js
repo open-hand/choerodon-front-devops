@@ -1036,6 +1036,12 @@ const appCenter = {
   'c7ncd.appCenter.mapping.help.tooltip': '您可粘贴多行“键=值”格式的字段至任何键框中，以便于批量输入键值对',
   'c7ncd.appCenter.mapping.add': '添加配置映射',
   'c7ncd.appCenter.edit.configMap': '修改配置映射',
+  'c7ncd.appCenter.cipher.create': '创建密文',
+  'c7ncd.appCenter.cipher.edit': '修改密文',
+  'c7ncd.appCenter.cipher.head': '密文',
+  'c7ncd.appCenter.cipher': '密文',
+  'c7ncd.appCenter.cipher.add': '添加密文',
+  'c7ncd.appCenter.cipher.help.tooltip': '您可粘贴多行“键=值”格式的字段至任何键框中，以便于批量输入键值对',
 };
 
 // 文档地址前缀

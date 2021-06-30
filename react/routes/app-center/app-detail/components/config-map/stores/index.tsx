@@ -49,8 +49,6 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
 
   const { id: envId, connect } = mainStore.getSelectedEnv || {};
 
-  console.log(mainStore.getSelectedEnv);
-
   const formStore = useStore();
 
   const tableDs = useMemo(() => new DataSet(TableDataSet({
