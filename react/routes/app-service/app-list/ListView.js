@@ -527,7 +527,7 @@ const ListView = withRouter(observer((props) => {
                           }
                         </p>
                       </div>
-                      <div className="c7ncd-appService-item-center-line">
+                      <div className="c7ncd-appService-item-center-line" style={{ justifyContent: 'flex-end' }}>
                     <span
                       className="c7ncd-appService-item-center-line-updateUserName"
                       style={{
