@@ -17,7 +17,6 @@ const DeployConfigForm = () => {
     formDs,
     modal,
     refresh,
-    deployConfigId,
     isModify,
   } = useDeployConfigFormStore();
 

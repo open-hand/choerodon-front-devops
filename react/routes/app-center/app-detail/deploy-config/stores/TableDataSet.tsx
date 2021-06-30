@@ -1,4 +1,4 @@
-import { DataSetProps, DataSet } from '@/interface';
+import { DataSetProps } from '@/interface';
 import AppCenterApi from '@/routes/app-center/apis';
 
 interface TableProps {
@@ -22,6 +22,10 @@ export default ({
         params: { ...params, name: searchParams },
       });
     },
+    destroy: ({ data: [data] }) => ({
+      url: AppCenterApi.deleteDeployConfig(projectId, data?.id),
+      method: 'delete',
+    }),
   },
   fields: [
     {
