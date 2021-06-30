@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { inject } from 'mobx-react';
 import { asyncRouter, asyncLocaleProvider, nomatch } from '@choerodon/boot';
@@ -26,7 +26,7 @@ const OrgTemplate = React.lazy(() => import('./routes/app-template/OrgIndex'));
 const SiteTemplate = React.lazy(() => import('./routes/app-template/SiteIndex'));
 
 function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
-  const IntlProviderAsync = asyncLocaleProvider(language, () => import(`./locale/${language}`));
+  const IntlProviderAsync = useMemo(() => asyncLocaleProvider(language, () => import(`./locale/${language}`)), []);
   return (
     <IntlProviderAsync>
       <div className="c7ncd-root">
