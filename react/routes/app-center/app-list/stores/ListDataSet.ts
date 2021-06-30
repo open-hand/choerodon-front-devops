@@ -15,16 +15,20 @@ export default ({ projectId, defaultTabKey, searchDs }: ListProps): DataSetProps
   pageSize: 6,
   queryDataSet: searchDs,
   transport: {
-    read: ({ data, dataSet }) => {
+    read: ({ data, dataSet, params }) => {
       const { type } = data || {};
       const queryDataSet = dataSet?.queryDataSet;
       const searchRecord = queryDataSet?.get(0);
-      const params = searchRecord?.get('params');
+      const searchParams = searchRecord?.get('params');
       const env = searchRecord?.get('env');
       const newType = type || defaultTabKey;
       return {
         url: AppCenterApis.getAppList(projectId),
         method: 'post',
+        params: {
+          params: searchParams, type: newType, envId: env?.id, ...params,
+        },
+        data: null,
       };
     },
   },

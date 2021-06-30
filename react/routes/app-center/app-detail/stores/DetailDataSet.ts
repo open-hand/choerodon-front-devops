@@ -9,7 +9,7 @@ interface SearchProps {
 
 export default ({ projectId, appServiceId, appServiceType }: SearchProps): DataSetProps => ({
   autoCreate: false,
-  autoQuery: false,
+  autoQuery: true,
   selection: false,
   transport: {
     read: {

@@ -50,13 +50,5 @@ export default ({
       name: 'name',
       label: formatMessage({ id: 'name' }),
     },
-    {
-      name: 'appServiceName',
-      label: formatMessage({ id: 'appService' }),
-    },
-    {
-      name: 'envName',
-      label: formatMessage({ id: 'environment' }),
-    },
   ],
 });

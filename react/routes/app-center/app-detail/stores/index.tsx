@@ -64,7 +64,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     projectId,
     appServiceId,
     appServiceType,
-  })), [projectId]);
+  })), [projectId, appServiceId, appServiceType]);
   const envDs = useMemo(() => new DataSet(EnvOptionsDataSet({ projectId })), [projectId]);
   const searchDs = useMemo(() => new DataSet(SearchDataSet({ envDs })), []);
 
@@ -76,14 +76,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     }
   }, []);
   useEffect(() => {
-    detailDs.loadData([{
-      id: 'asfds',
-      name: 'DevOps服务',
-      type: 'project',
-      code: 'devops-service',
-      version: '1.0.0',
-      gitlab: 'https://...service-demo.git',
-    }]);
     loadEnvData();
   }, []);
 
