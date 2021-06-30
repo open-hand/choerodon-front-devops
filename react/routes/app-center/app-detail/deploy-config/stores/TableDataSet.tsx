@@ -14,9 +14,13 @@ export default ({
   selection: false,
   pageSize: 10,
   transport: {
-    read: {
-      url: AppCenterApi.getDeployConfigList(projectId, appServiceId),
-      method: 'get',
+    read: ({ data, params }) => {
+      const { params: searchParams } = data || {};
+      return ({
+        url: AppCenterApi.getDeployConfigList(projectId, appServiceId),
+        method: 'get',
+        params: { ...params, name: searchParams },
+      });
     },
   },
   fields: [
@@ -37,7 +41,7 @@ export default ({
       label: formatMessage({ id: 'environment' }),
     },
     {
-      name: 'createUserRealName',
+      name: 'creator',
       label: formatMessage({ id: 'creator' }),
     },
     {

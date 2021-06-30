@@ -12,7 +12,7 @@ export default ({ envDs }: SearchProps): DataSetProps => ({
       name: 'params',
     },
     {
-      name: 'env',
+      name: 'envId',
       textField: 'name',
       valueField: 'id',
       options: envDs,
