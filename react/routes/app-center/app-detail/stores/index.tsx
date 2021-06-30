@@ -72,9 +72,12 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     await envDs.query();
     const envRecord = envDs.get(0);
     if (envRecord) {
-      searchDs.current?.set('env', envRecord.toData());
+      const envData = envRecord.toData();
+      searchDs.current?.set('env', envData);
+      mainStore.setSelectedEnv(envData);
     }
   }, []);
+
   useEffect(() => {
     loadEnvData();
   }, []);

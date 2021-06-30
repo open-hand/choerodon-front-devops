@@ -4,12 +4,11 @@ import { observer } from 'mobx-react-lite';
 import {
   Table, Modal, Tooltip, Spin,
 } from 'choerodon-ui/pro';
-import { TableColumnTooltip, Record } from '@/interface';
+import { TableColumnTooltip, Record, UserDTOProps } from '@/interface';
 import { useAppCenterDetailStore } from '@/routes/app-center/app-detail/stores';
 import { LARGE } from '@/utils/getModalWidth';
-import TimePopover from '@/components/time-popover';
-import UserInfo from '@/components/userInfo';
 import ClickText from '@/components/click-text';
+import { UserInfo, TimePopover } from '@choerodon/components';
 import { useDeployConfigStore } from '@/routes/app-center/app-detail/deploy-config/stores';
 import DeployConfigForm from './create-from';
 
@@ -139,18 +138,26 @@ const DeployConfig = () => {
     return <Action data={actionData} />;
   };
 
-  const renderUser = ({ value, record }: { value: string, record: Record }) => (
-    <UserInfo name={value || ''} avatar={record.get('createUserUrl')} />
-  );
+  const renderUser = ({ value, record }: { value: UserDTOProps, record: Record }) => {
+    const {
+      ldap, realName, loginName, email, imageUrl,
+    } = value || {};
+    return (
+      <UserInfo
+        realName={realName || ''}
+        loginName={ldap ? loginName : email}
+        avatar={imageUrl}
+      />
+    );
+  };
 
   const renderDate = ({ value }: { value: string }) => (
-    value ? <TimePopover datetime={value} /> : null
+    value ? <TimePopover content={value} /> : null
   );
 
   return (
     <>
       <HeaderButtons
-        className={`${prefixCls}-detail-headerButton`}
         items={[{
           permissions: [],
           name: '创建部署配置',
@@ -171,8 +178,8 @@ const DeployConfig = () => {
         <Column name="name" renderer={renderName} />
         <Column renderer={renderActions} width={60} />
         <Column name="description" tooltip={'overflow' as TableColumnTooltip} />
-        <Column name="createUserRealName" renderer={renderUser} />
-        <Column name="lastUpdateDate" renderer={renderDate} />
+        <Column name="creator" renderer={renderUser} />
+        <Column name="lastUpdateDate" renderer={renderDate} width={120} />
       </Table>
     </>
   );

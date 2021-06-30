@@ -62,9 +62,12 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const searchDs = useMemo(() => new DataSet(SearchDataSet({ envDs })), []);
   const listDs = useMemo(() => new DataSet(ListDataSet({
     projectId,
-    defaultTabKey,
     searchDs,
   })), [projectId]);
+
+  useEffect(() => {
+    listDs.setQueryParameter('type', defaultTabKey);
+  }, []);
 
   useEffect(() => {
     listDs.loadData([{
