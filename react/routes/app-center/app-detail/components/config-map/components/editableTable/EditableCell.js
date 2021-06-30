@@ -1,3 +1,5 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/state-in-constructor */
 /**
  * @author ale0720@163.com
  * @date 2019-05-09 22:11
@@ -84,6 +86,7 @@ export default class EditableCell extends React.Component {
     if (pasting && record.key === 'key') {
       const value = oldValue !== '' ? (e.target.value.substring(oldValue.length) || e.target.value) : e.target.value;
       if (value.includes('=')) {
+        // eslint-disable-next-line consistent-return
         const KValue = _.map(value.split('\n'), (str) => {
           if (str) {
             return _.map(str.split('='), (s) => s.trim());
@@ -157,8 +160,8 @@ export default class EditableCell extends React.Component {
                         autosize
                         onKeyDown={this.onKeyDown}
                         onChange={this.onChange}
-                      />
-                      
+                      />,
+
                     )}
                   </FormItem>
                 ) : (
