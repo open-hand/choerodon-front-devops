@@ -8,7 +8,7 @@ import { HeaderButtons } from '@choerodon/master';
 import MouserOverWrapper from '../../../../../components/MouseOverWrapper/MouserOverWrapper';
 // import { useKeyValueStore } from './stores';
 // import Modals from './modals';
-// import KeyValueModal from '../application/modals/key-value/KeyValueProIndex';
+import KeyValueModal from './components/key-value';
 import StatusIcon from '../../../../../components/StatusIcon';
 import { useConfigMapStore } from './stores';
 
@@ -82,7 +82,7 @@ const ConfigMap = observer((props) => {
       {
         service: permissions.edit,
         text: formatMessage({ id: 'edit' }),
-        action: openModal,
+        action: () => openModal(id),
       },
       {
         service: permissions.delete,
@@ -93,30 +93,30 @@ const ConfigMap = observer((props) => {
     return <Action data={buttons} />;
   }
 
-  function openModal() {
-    // Modal.open({
-    //   key: modalKey,
-    //   style: modalStyle,
-    //   drawer: true,
-    //   title: formatMessage({ id: `${intlPrefix}.configMap.edit` }),
-    //   children: <KeyValueModal
-    //     modeSwitch
-    //     title="mapping"
-    //     id={ConfigMapTableDs.current?.get('id')}
-    //     envId={envId}
-    //     store={formStore}
-    //     intlPrefix={intlPrefix}
-    //     refresh={refresh}
-    //   />,
-    //   okText: formatMessage({ id: 'save' }),
-    // });
+  function openModal(id?:number) {
+    Modal.open({
+      key: modalKey,
+      style: modalStyle,
+      drawer: true,
+      title: id ? formatMessage({ id: `${intlPrefix}.edit.configMap` }) : formatMessage({ id: `${intlPrefix}.create.configMap` }),
+      children: <KeyValueModal
+        id={id}
+        modeSwitch
+        title="mapping"
+        envId={envId}
+        store={formStore}
+        intlPrefix={intlPrefix}
+        refresh={refresh}
+      />,
+      okText: id ? formatMessage({ id: 'save' }) : formatMessage({ id: 'create' }),
+    });
   }
 
   const renderBtnsItems = () => [{
     permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.configmap'],
     name: formatMessage({ id: `${intlPrefix}.create.configMap` }),
     icon: 'playlist_add',
-    handler: openModal,
+    handler: () => openModal(),
     display: true,
     service: permissions,
     disabled: !connect,

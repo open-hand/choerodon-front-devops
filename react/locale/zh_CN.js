@@ -1032,6 +1032,10 @@ const appCenter = {
   'c7ncd.appCenter.delete.deployConfig': '删除部署配置',
   'c7ncd.appCenter.delete.deployConfig.des': '确定要删除部署配置“{name}”吗？',
   'c7ncd.appCenter.delete.deployConfig.disable': '仅能删除没有关联任务和关联实例的部署配置。',
+  'c7ncd.appCenter.mapping.head': '配置映射',
+  'c7ncd.appCenter.mapping.help.tooltip': '您可粘贴多行“键=值”格式的字段至任何键框中，以便于批量输入键值对',
+  'c7ncd.appCenter.mapping.add': '添加配置映射',
+  'c7ncd.appCenter.edit.configMap': '修改配置映射',
 };
 
 // 文档地址前缀
