@@ -24,12 +24,16 @@ export default ((formatMessage, projectId, id) => ({
             let newRes = res;
             try {
               newRes = JSON.parse(newRes);
-              newRes = newRes.map((i) => ({
+              newRes.content = newRes.content.map((i) => ({
                 ...i,
                 checked: false,
               }));
               return newRes;
             } catch (e) {
+              newRes.content = newRes.content.map((i) => ({
+                ...i,
+                checked: false,
+              }));
               return newRes;
             }
           },
