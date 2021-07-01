@@ -20,6 +20,7 @@ import './index.less';
 const DeployConfig = React.lazy(() => import('./components/deploy-config'));
 const ConfigMap = React.lazy(() => import('./components/config-map'));
 const Secrets = React.lazy(() => import('./components/secrets'));
+const Instance = React.lazy(() => import('./components/instance'));
 
 const { TabPane } = Tabs;
 
@@ -41,7 +42,7 @@ const AppCenterDetailContent = () => {
   const record = useMemo(() => detailDs.current, [detailDs.current]);
 
   const tabContent = useMemo(() => ({
-    [INSTANCE_TAB]: <div>实例</div>,
+    [INSTANCE_TAB]: <Instance />,
     [DEPLOYCONFIG_TAB]: <DeployConfig />,
     [SERVICEANDINGRESS_TAB]: <div>网络与域名</div>,
     [CONFIGMAP_TAB]: <ConfigMap />,
@@ -76,6 +77,7 @@ const AppCenterDetailContent = () => {
     return <Loading display />;
   }
 
+  // @ts-ignore
   return (
     <Page>
       <Breadcrumb title="应用详情" />
