@@ -34,6 +34,8 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       envId,
       hasHostDeploy,
       random,
+      appServiceId,
+      appServiceSource,
     } = props;
 
     const deployUseStore = useStore();
@@ -79,6 +81,8 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       marketServiceOptionsDs,
       hasDevops,
       random,
+      appServiceId,
+      appServiceSource,
     })), [projectId]);
 
     useEffect(() => {
@@ -86,6 +90,14 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       envOptionsDs.query();
       hasMarket && marketAndVersionOptionsDs.query();
     }, [projectId]);
+
+    useEffect(() => {
+      if (appServiceId && appServiceSource) {
+        if (appServiceSource !== 'market_service') {
+          manualDeployDs.current?.set('appServiceId', appServiceId);
+        }
+      }
+    }, []);
 
     const value = {
       ...props,

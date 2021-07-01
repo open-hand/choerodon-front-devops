@@ -1042,6 +1042,8 @@ const appCenter = {
   'c7ncd.appCenter.cipher': '密文',
   'c7ncd.appCenter.cipher.add': '添加密文',
   'c7ncd.appCenter.cipher.help.tooltip': '您可粘贴多行“键=值”格式的字段至任何键框中，以便于批量输入键值对',
+  'c7ncd.appCenter.delete.related': '解除环境关联',
+  'c7ncd.appCenter.delete.related.disable': '该应用服务在该环境下存在实例，不允许解除关联关系',
 };
 
 // 文档地址前缀

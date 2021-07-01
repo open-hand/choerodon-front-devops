@@ -83,7 +83,8 @@ const AppCenterContent = () => {
     }
   }, [search]);
 
-  const openDeploy = (appServiceId?: string) => {
+  const openDeploy = (data?: { appServiceSource: string, appServiceId: string }) => {
+    const { appServiceSource, appServiceId } = data || {};
     Modal.open({
       key: deployKey,
       style: { width: LARGE },
@@ -94,6 +95,7 @@ const AppCenterContent = () => {
         refresh={deployAfter}
         intlPrefix={intlPrefixDeploy}
         appServiceId={appServiceId}
+        appServiceSource={appServiceSource}
         prefixCls="c7ncd-deploy"
       />,
       afterClose: () => {

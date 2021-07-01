@@ -50,4 +50,12 @@ export default class AppCenterApi {
   static createRelatedAppService(projectId: number) {
     return `/devops/v1/projects/${projectId}/env/app_services/batch_create`;
   }
+
+  static getRelatedEnvList(projectId: number, appServiceId: string) {
+    return `/devops/v1/projects/${projectId}/app_service/app_center/envs/by_app_id?appServiceId=${appServiceId}`;
+  }
+
+  static deleteServiceRelated(projectId: number) {
+    return `/devops/v1/projects/${projectId}/env/app_services`;
+  }
 }
