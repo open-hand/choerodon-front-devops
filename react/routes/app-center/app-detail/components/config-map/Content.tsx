@@ -31,6 +31,8 @@ const ConfigMap = observer((props) => {
     ConfigMapTableDs,
     connect,
     envId,
+    deleteModals,
+    openDeleteModal,
   } = useConfigMapStore();
 
   function refresh() {
@@ -85,7 +87,7 @@ const ConfigMap = observer((props) => {
       {
         service: permissions.delete,
         text: formatMessage({ id: 'delete' }),
-        // action: () => openDeleteModal(envId, id, name, 'configMap', refresh),
+        action: () => openDeleteModal(envId, id, name, 'configMap', refresh),
       },
     ];
     return <Action data={buttons} />;
@@ -141,6 +143,7 @@ const ConfigMap = observer((props) => {
         <Column name="key" renderer={renderKey} />
         <Column name="lastUpdateDate" sortable renderer={renderDate} width={105} />
       </Table>
+      {deleteModals}
     </>
   );
 });

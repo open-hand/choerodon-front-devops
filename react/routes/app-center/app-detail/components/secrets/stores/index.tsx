@@ -6,12 +6,13 @@ import { DataSet } from 'choerodon-ui/pro';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
-import { DataSetProps } from '@/interface';
+import map from 'lodash/map';
 import SecretTableDataSet from './SecretTableDataSet';
 // import { useResourceStore } from '../../../../stores';
 import useSecretStore, { FormStoreType } from './useSecretStore';
 // import getTablePostData from '../../../../../../utils/getTablePostData';
 import { useAppCenterDetailStore } from '../../../stores';
+import DeleteModal from '../../delete-modal';
 
 interface ContextProps {
   prefixCls: string,
@@ -27,6 +28,8 @@ interface ContextProps {
   }
   envId:string,
   connect: boolean,
+  deleteModals: React.ReactDOM,
+  openDeleteModal: Function
 }
 
 const Store = createContext({} as ContextProps);
@@ -38,10 +41,6 @@ export function useSecretsStore() {
 export const StoreProvider = injectIntl(inject('AppState')(
   observer((props:any) => {
     const { AppState: { currentMenuType: { projectId } }, children } = props;
-    // const {
-    //   resourceStore: { getSelectedMenu: { parentId }, setUpTarget, getUpTarget },
-    //   itemTypes: { CIPHER_GROUP },
-    // } = useResourceStore();
 
     const {
       prefixCls,
@@ -49,7 +48,25 @@ export const StoreProvider = injectIntl(inject('AppState')(
       formatMessage,
       appServiceId,
       mainStore,
+      deleteModalStore,
     } = useAppCenterDetailStore();
+
+    const deleteModals = useMemo(() => (
+      map(deleteModalStore.getDeleteArr.filter((item:any) => item.type === 'secret'), ({
+        name, display, deleteId, type, refresh, envId,
+      }) => (
+        <DeleteModal
+          key={deleteId}
+          envId={envId}
+          store={deleteModalStore}
+          title={`${formatMessage({ id: `${type}.delete` })}“${name}”`}
+          visible={display}
+          objectId={deleteId}
+          objectType={type}
+          refresh={refresh}
+        />
+      ))
+    ), [deleteModalStore.getDeleteArr]);
 
     const { id: envId, connect } = mainStore.getSelectedEnv || {};
 
@@ -70,17 +87,9 @@ export const StoreProvider = injectIntl(inject('AppState')(
       subPrefixCls: `${prefixCls}-secrets`,
       intlPrefix,
       formatMessage,
+      deleteModals,
+      openDeleteModal: deleteModalStore.openDeleteModal,
     };
-
-    // useEffect(() => {
-    //   const { type, id: envId } = getUpTarget;
-    //   if (parentId === envId) {
-    //     if (type === CIPHER_GROUP) {
-    //       SecretTableDs.query();
-    //       setUpTarget({});
-    //     }
-    //   }
-    // }, [getUpTarget]);
 
     return (
       <Store.Provider value={value}>

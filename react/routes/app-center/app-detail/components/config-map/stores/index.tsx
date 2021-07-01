@@ -7,8 +7,10 @@ import { DataSet } from 'choerodon-ui/pro';
 import { DataSet as DataSetProps } from '@/interface';
 import { useAppCenterDetailStore } from '@/routes/app-center/app-detail/stores';
 import { observer } from 'mobx-react-lite';
+import map from 'lodash/map';
 import TableDataSet from './TableDataSet';
 import useStore, { FormStoreType } from './useConfigMapStore';
+import DeleteModal from '../../delete-modal';
 
 interface ContextProps {
   prefixCls: string,
@@ -24,6 +26,8 @@ interface ContextProps {
   }
   envId:string,
   connect: boolean,
+  deleteModals: React.ReactDOM,
+  openDeleteModal: Function
 }
 
 const Store = createContext({} as ContextProps);
@@ -45,7 +49,25 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     formatMessage,
     appServiceId,
     mainStore,
+    deleteModalStore,
   } = useAppCenterDetailStore();
+
+  const deleteModals = useMemo(() => (
+    map(deleteModalStore.getDeleteArr.filter((item:any) => item.type === 'configMap'), ({
+      name, display, deleteId, type, refresh, envId,
+    }) => (
+      <DeleteModal
+        key={deleteId}
+        envId={envId}
+        store={deleteModalStore}
+        title={`${formatMessage({ id: `${type}.delete` })}“${name}”`}
+        visible={display}
+        objectId={deleteId}
+        objectType={type}
+        refresh={refresh}
+      />
+    ))
+  ), [deleteModalStore.getDeleteArr]);
 
   const { id: envId, connect } = mainStore.getSelectedEnv || {};
 
@@ -73,6 +95,8 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     intl,
     connect,
     envId,
+    deleteModals,
+    openDeleteModal: deleteModalStore.openDeleteModal,
   };
   return (
     <Store.Provider value={value}>
