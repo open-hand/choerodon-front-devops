@@ -10,6 +10,7 @@ import EnvOptionsDataSet from '@/routes/app-center/stores/EnvOptionsDataSet';
 import { useAppCenterStore } from '@/routes/app-center/stores';
 import { DataSet as DataSetProps } from '@/interface';
 import SearchDataSet from '@/routes/app-center/app-detail/stores/SearchDataSet';
+import useDeleteModalStore, { DeleteStoreProps } from './useDeleteModalStore';
 
 interface ContextProps {
   prefixCls: string,
@@ -27,6 +28,7 @@ interface ContextProps {
   searchDs: DataSetProps,
   appServiceType: 'project' | 'share' | 'market',
   appServiceId: string,
+  deleteModalStore: DeleteStoreProps
 }
 
 const Store = createContext({} as ContextProps);
@@ -59,6 +61,8 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const defaultTabKey = useMemo(() => tabKeys.INSTANCE_TAB, []);
 
   const mainStore = useStore({ defaultTabKey });
+
+  const deleteModalStore = useDeleteModalStore();
 
   const detailDs = useMemo(() => new DataSet(DetailDataSet({
     projectId,
@@ -94,6 +98,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     appServiceType,
     envDs,
     searchDs,
+    deleteModalStore,
   };
   return (
     <Store.Provider value={value}>

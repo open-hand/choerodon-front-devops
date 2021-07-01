@@ -32,22 +32,9 @@ const ConfigMap = observer((props) => {
     formatMessage,
     SecretTableDs,
     formStore,
+    openDeleteModal,
+    deleteModals,
   } = useSecretsStore();
-  // const {
-  //   prefixCls,
-  //   intlPrefix,
-  //   resourceStore: { getSelectedMenu: { parentId } },
-  //   treeDs,
-  // } = useResourceStore();
-
-  // const {
-  //   intl: { formatMessage },
-  //   permissions,
-  //   formStore,
-  //   SecretTableDs,
-  // } = useKeyValueStore();
-
-  // const { mainStore: { openDeleteModal } } = useMainStore();
 
   function refresh() {
     SecretTableDs.query();
@@ -103,7 +90,7 @@ const ConfigMap = observer((props) => {
       {
         service: permissions.delete,
         text: formatMessage({ id: 'delete' }),
-        // action: () => openDeleteModal(envId, id, name, 'secret', refresh),
+        action: () => openDeleteModal(envId, id, name, 'secret', refresh),
       },
     ];
     return <Action data={buttons} />;
@@ -159,6 +146,7 @@ const ConfigMap = observer((props) => {
         <Column name="value" renderer={renderValue} header={formatMessage({ id: 'key' })} />
         <Column name="lastUpdateDate" sortable renderer={renderDate} width={105} />
       </Table>
+      {deleteModals}
     </>
   );
 });
