@@ -12,7 +12,7 @@ import { LARGE } from '@/utils/getModalWidth';
 import ClickText from '@/components/click-text';
 import { UserInfo, TimePopover } from '@choerodon/components';
 import AppCenterDetailServices from '@/routes/app-center/app-detail/services';
-import { useDeployConfigStore } from '@/routes/app-center/app-detail/deploy-config/stores';
+import { useDeployConfigStore } from '@/routes/app-center/app-detail/components/deploy-config/stores';
 import DeployConfigForm from './create-from';
 
 const { Column } = Table;
@@ -166,7 +166,7 @@ const DeployConfig = () => {
           display: true,
         }, {
           icon: 'refresh',
-          handle: refresh,
+          handler: refresh,
           display: true,
         }]}
         showClassName

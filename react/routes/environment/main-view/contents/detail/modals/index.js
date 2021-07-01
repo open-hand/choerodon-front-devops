@@ -11,7 +11,7 @@ import { useDetailStore } from '../stores';
 import useStore from './useStore';
 import EnvCreateForm from '../../../modals/env-create';
 import GroupForm from '../../../modals/GroupForm';
-import DeployConfigForm from '../../../../../app-center/app-detail/deploy-config/create-from';
+import DeployConfigForm from '../../../../../app-center/app-detail/components/deploy-config/create-from';
 import { isNotRunning } from '../../../../util';
 import Tips from '../../../../../../components/new-tips';
 

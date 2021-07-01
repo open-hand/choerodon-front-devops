@@ -17,7 +17,7 @@ import { RecordObjectProps } from '@/interface';
 
 import './index.less';
 
-const DeployConfig = React.lazy(() => import('./deploy-config'));
+const DeployConfig = React.lazy(() => import('./components/deploy-config'));
 const ConfigMap = React.lazy(() => import('./components/config-map'));
 const Secrets = React.lazy(() => import('./components/secrets'));
 

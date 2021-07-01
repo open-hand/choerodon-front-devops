@@ -13,8 +13,17 @@ import Tips from '@/components/new-tips';
 import LinkService from '@/routes/app-center/app-list/components/link-service';
 import ContentList from '@/routes/app-center/app-list/content-list';
 import { useAppCenterListStore } from '@/routes/app-center/app-list/stores';
+import { TabCode } from '@choerodon/master';
+import { useHistory, useLocation } from 'react-router';
 
 import './index.less';
+
+interface InstanceProps {
+  config: boolean,
+  id: string,
+  appServiceId: string,
+  envId: string,
+}
 
 const linkServiceKey = Modal.key();
 const deployKey = Modal.key();
@@ -29,6 +38,9 @@ const AppCenterContent = () => {
     mainStore,
     deployStore,
   } = useAppCenterListStore();
+
+  const history = useHistory();
+  const { search } = useLocation();
 
   const resourceIntlPrefix = useMemo(() => 'c7ncd.deployment', []);
   const intlPrefixDeploy = useMemo(() => 'c7ncd.deploy', []);
@@ -54,7 +66,24 @@ const AppCenterContent = () => {
     });
   }, []);
 
-  function openDeploy() {
+  const deployAfter = useCallback((instance: InstanceProps, type = 'instance') => {
+    if (instance.config) {
+      refresh();
+    } else {
+      history.push({
+        pathname: '/devops/resource',
+        search: `${search}&activeKey=${TabCode.get('/devops/resource').tabCodes[0]}`,
+        state: {
+          instanceId: instance.id,
+          appServiceId: instance.appServiceId,
+          envId: instance.envId,
+          viewType: type,
+        },
+      });
+    }
+  }, [search]);
+
+  const openDeploy = (appServiceId?: string) => {
     Modal.open({
       key: deployKey,
       style: { width: LARGE },
@@ -62,8 +91,9 @@ const AppCenterContent = () => {
       title: formatMessage({ id: `${intlPrefixDeploy}.manual` }),
       children: <Deploy
         deployStore={deployStore}
-        refresh={refresh}
+        refresh={deployAfter}
         intlPrefix={intlPrefixDeploy}
+        appServiceId={appServiceId}
         prefixCls="c7ncd-deploy"
       />,
       afterClose: () => {
@@ -73,9 +103,9 @@ const AppCenterContent = () => {
       },
       okText: formatMessage({ id: 'deployment' }),
     });
-  }
+  };
 
-  function openBatchDeploy() {
+  const openBatchDeploy = () => {
     Modal.open({
       key: batchDeployKey,
       style: { width: LARGE },
@@ -83,7 +113,7 @@ const AppCenterContent = () => {
       title: formatMessage({ id: `${intlPrefixDeploy}.batch` }),
       children: <BatchDeploy
         deployStore={deployStore}
-        refresh={refresh}
+        refresh={deployAfter}
         intlPrefix={intlPrefixDeploy}
         prefixCls="c7ncd-deploy"
       />,
@@ -95,7 +125,7 @@ const AppCenterContent = () => {
       },
       okText: formatMessage({ id: 'deployment' }),
     });
-  }
+  };
 
   const getContent = useMemo(() => {
 
@@ -125,7 +155,7 @@ const AppCenterContent = () => {
             permissions: [],
             name: formatMessage({ id: `${intlPrefixDeploy}.manual` }),
             icon: 'cloud_done-o',
-            handler: openDeploy,
+            handler: () => openDeploy(),
             display: true,
           }, {
             permissions: [],
@@ -143,7 +173,7 @@ const AppCenterContent = () => {
       <Breadcrumb />
       <Content className={`${prefixCls}-list`}>
         <ContentHeader />
-        <ContentList />
+        <ContentList openDeploy={openDeploy} />
       </Content>
     </Page>
   );
