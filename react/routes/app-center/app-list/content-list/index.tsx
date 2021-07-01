@@ -10,9 +10,9 @@ import AppTypeLogo from '@/routes/app-center/components/type-logo';
 
 import './index.less';
 
-const ContentList = () => {
+const ContentList = ({ openDeploy }: { openDeploy(appServiceId?: string): void }) => {
   const {
-    prefixCls, intlPrefix, formatMessage, listDs, mainStore, tabKeys: { MARKET_TAB },
+    prefixCls, intlPrefix, formatMessage, listDs, mainStore, tabKeys: { MARKET_TAB, PROJECT_TAB },
   } = useAppCenterListStore();
 
   const history = useHistory();
@@ -29,13 +29,14 @@ const ContentList = () => {
 
   const getInfoContent = useCallback((record: Record) => {
     const {
-      serviceCode, source, gitlab, latestVersion, sourceProject,
+      serviceCode, source, repoUrl, latestVersion, shareProjectName,
     } = record?.toData() || {};
     const infoData = {
       code: source === MARKET_TAB ? null : serviceCode,
       source: source === MARKET_TAB ? '应用市场' : null,
-      gitlab,
-      sourceProject,
+      gitlab: source === PROJECT_TAB
+        ? `${repoUrl?.split('//')[0]}//.../${repoUrl?.split('/')[repoUrl?.split('/')?.length - 1]}` : null,
+      sourceProject: shareProjectName,
       version: latestVersion,
     };
     return map(infoData, (value: string, key: string) => (value ? (
@@ -49,9 +50,13 @@ const ContentList = () => {
     ) : null));
   }, []);
 
-  const getActionData = useCallback(() => {
+  const getActionData = useCallback((record: Record) => {
     const actionData = [{
       text: '部署',
+      handle: () => openDeploy(record.get('id')),
+      service: [],
+    }, {
+      text: '解除环境关联',
       handle: () => {},
       service: [],
     }];
@@ -72,7 +77,7 @@ const ContentList = () => {
               >
                 {record.get('serviceName')}
               </span>
-              {getActionData()}
+              {getActionData(record)}
             </div>
             <div className={`${newPrefixCls}-info`}>
               {getInfoContent(record)}
