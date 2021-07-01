@@ -2,23 +2,34 @@ import React, { useCallback, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useHistory, useLocation } from 'react-router-dom';
 import { Action } from '@choerodon/master';
+import { Modal } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import { CardPagination } from '@choerodon/components';
 import { useAppCenterListStore } from '@/routes/app-center/app-list/stores';
 import { Record } from '@/interface';
 import AppTypeLogo from '@/routes/app-center/components/type-logo';
+import DeleteRelated from '@/routes/app-center/app-list/components/delete-related';
 
 import './index.less';
 
-const ContentList = ({ openDeploy }: { openDeploy(appServiceId?: string): void }) => {
+const deleteRelatedKey = Modal.key();
+
+const ContentList = ({
+  openDeploy,
+}: { openDeploy(data?: { appServiceSource: string, appServiceId: string }): void }) => {
   const {
-    prefixCls, intlPrefix, formatMessage, listDs, mainStore, tabKeys: { MARKET_TAB, PROJECT_TAB },
+    prefixCls, intlPrefix, formatMessage,
+    listDs, tabKeys: { MARKET_TAB, PROJECT_TAB, SHARE_TAB },
   } = useAppCenterListStore();
 
   const history = useHistory();
   const { search, pathname } = useLocation();
 
   const newPrefixCls = useMemo(() => `${prefixCls}-list-content`, []);
+
+  const refresh = useCallback(() => {
+    listDs.query();
+  }, []);
 
   const handleLinkDetail = useCallback((record) => {
     history.push({
@@ -27,6 +38,19 @@ const ContentList = ({ openDeploy }: { openDeploy(appServiceId?: string): void }
     });
   }, [search]);
 
+  const deleteRelated = useCallback((record: Record) => {
+    Modal.open({
+      movable: false,
+      closable: false,
+      key: deleteRelatedKey,
+      title: formatMessage({ id: `${intlPrefix}.delete.related` }),
+      children: <DeleteRelated
+        appServiceId={record.get('id')}
+        refresh={refresh}
+      />,
+    });
+  }, []);
+
   const getInfoContent = useCallback((record: Record) => {
     const {
       serviceCode, source, repoUrl, latestVersion, shareProjectName,
@@ -34,8 +58,8 @@ const ContentList = ({ openDeploy }: { openDeploy(appServiceId?: string): void }
     const infoData = {
       code: source === MARKET_TAB ? null : serviceCode,
       source: source === MARKET_TAB ? '应用市场' : null,
-      gitlab: source === PROJECT_TAB
-        ? `${repoUrl?.split('//')[0]}//.../${repoUrl?.split('/')[repoUrl?.split('/')?.length - 1]}` : null,
+      gitlab: source === PROJECT_TAB && repoUrl
+        ? `${repoUrl.split('//')[0]}//.../${repoUrl.split('/')[repoUrl.split('/')?.length - 1]}` : null,
       sourceProject: shareProjectName,
       version: latestVersion,
     };
@@ -51,15 +75,27 @@ const ContentList = ({ openDeploy }: { openDeploy(appServiceId?: string): void }
   }, []);
 
   const getActionData = useCallback((record: Record) => {
+    const appServiceSource = {
+      [PROJECT_TAB]: 'normal_service',
+      [SHARE_TAB]: 'share_service',
+      [MARKET_TAB]: 'market_service',
+    };
     const actionData = [{
-      text: '部署',
-      handle: () => openDeploy(record.get('id')),
-      service: [],
-    }, {
-      text: '解除环境关联',
-      handle: () => {},
+      text: formatMessage({ id: `${intlPrefix}.delete.related` }),
+      action: () => deleteRelated(record),
       service: [],
     }];
+    if (record.get('latestVersion')) {
+      actionData.unshift({
+        text: formatMessage({ id: 'deployment' }),
+        action: () => openDeploy({
+          // @ts-ignore
+          appServiceSource: appServiceSource[record.get('source')] || 'normal_service',
+          appServiceId: `${record.get('id')}**${record.get('serviceCode')}`,
+        }),
+        service: [],
+      });
+    }
     return <Action className={`${newPrefixCls}-header-action`} data={actionData} />;
   }, []);
 

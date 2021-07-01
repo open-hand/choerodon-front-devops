@@ -7,14 +7,10 @@ import { some } from 'lodash';
 import { RecordObjectProps, Record, FuncType } from '@/interface';
 import { useLinkServiceStore } from '@/routes/app-center/app-list/components/link-service/stores';
 import EnvOption from '@/routes/app-center/components/env-option';
-import DynamicSelect from '@/components/dynamic-select-new';
-
-import './index.less';
 
 const LinkService = () => {
   const {
     linkServiceDs,
-    serviceOptionsDs,
     formDs,
     refresh,
     modal,
@@ -98,14 +94,6 @@ const LinkService = () => {
       >
         添加应用服务
       </Button>
-      {/*<DynamicSelect*/}
-      {/*  selectDataSet={linkServiceDs}*/}
-      {/*  optionsDataSet={serviceOptionsDs}*/}
-      {/*  optionsFilter={optionsFilter}*/}
-      {/*  optionsRenderer={optionsRenderer}*/}
-      {/*  selectName="appServiceId"*/}
-      {/*  addText="添加应用服务"*/}
-      {/*/>*/}
     </>
   );
 };
