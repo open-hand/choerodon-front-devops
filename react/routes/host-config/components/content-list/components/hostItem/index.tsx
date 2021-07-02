@@ -9,7 +9,7 @@ import { observer } from 'mobx-react-lite';
 import StatusTagOutLine from '../../components/statusTagOutLine';
 import eventStopProp from '../../../../../../utils/eventStopProp';
 import { useHostConfigStore } from '../../../../stores';
-import CreateHost from '../../../create-host';
+import CreateHost from '../../../create-deploy-host';
 import DeleteCheck from '../deleteCheck';
 import apis from '../../../../apis';
 
@@ -52,7 +52,6 @@ const HostsItem:React.FC<any> = observer(({
     [`${prefixCls}-content-list-item`]: isDeploy,
     [`${prefixCls}-content-list-item-test`]: !isDeploy,
     [`${prefixCls}-content-list-item-selected`]: isDeploy && mainStore.getSelectedHost?.id === id,
-    [`${prefixCls}-content-list-item-disabled`]: isDeploy && hostStatus !== 'success',
   }), [hostStatus, mainStore.getSelectedHost, isDeploy, id]);
 
   const getMainStatus = useMemo(() => {
@@ -128,7 +127,7 @@ const HostsItem:React.FC<any> = observer(({
   }
 
   const handleSelect = useCallback(() => {
-    if (isDeploy && hostStatus === 'success' && mainStore.getSelectedHost?.id !== id) {
+    if (isDeploy && mainStore.getSelectedHost?.id !== id) {
       mainStore.setSelectedHost(record.toData());
     }
   }, [isDeploy, hostStatus, record, id, mainStore.getSelectedHost]);

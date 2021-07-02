@@ -5,7 +5,6 @@ import {
 } from '@choerodon/boot';
 import { Modal } from 'choerodon-ui/pro';
 import { LARGE, SMALL } from '@/utils/getModalWidth';
-import Loading from '@/components/Loading';
 import ContentHeader from '@/routes/app-center/app-list/content-header';
 import Deploy from '@/routes/deployment/modals/deploy';
 import BatchDeploy from '@/routes/deployment/modals/batch-deploy';
@@ -15,6 +14,8 @@ import ContentList from '@/routes/app-center/app-list/content-list';
 import { useAppCenterListStore } from '@/routes/app-center/app-list/stores';
 import { TabCode } from '@choerodon/master';
 import { useHistory, useLocation } from 'react-router';
+import EmptyPage from '@/components/empty-page';
+import Loading from '@/components/loading';
 
 import './index.less';
 
@@ -130,18 +131,15 @@ const AppCenterContent = () => {
   };
 
   const getContent = useMemo(() => {
-
-    // if (listDs.status === 'loading' || !listDs) {
-    //   return <Loading display />;
-    // }
-    // if (listDs && !listDs.length) {
-    //   // @ts-ignore
-    //   return <EmptyPage title="暂无环境" describe="项目下暂无环境，请创建" />;
-    // }
-    // return (
-    //   <ContentList />
-    // )
-  }, [listDs, listDs.length, mainStore.getCurrentTabKey]);
+    if (listDs.status === 'loading' || !listDs) {
+      return <Loading display />;
+    }
+    if (listDs && !listDs.length) {
+      // @ts-ignore
+      return <EmptyPage title="暂无数据" describe="暂无应用服务，请关联应用服务" />;
+    }
+    return <ContentList openDeploy={openDeploy} />;
+  }, [listDs, listDs.length, mainStore.getCurrentTabKey, listDs.status]);
 
   return (
     <Page>
@@ -175,7 +173,7 @@ const AppCenterContent = () => {
       <Breadcrumb />
       <Content className={`${prefixCls}-list`}>
         <ContentHeader />
-        <ContentList openDeploy={openDeploy} />
+        {getContent}
       </Content>
     </Page>
   );

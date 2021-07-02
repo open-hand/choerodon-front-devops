@@ -912,6 +912,8 @@ const pipelineManage = {
 
 const hostConfig = {
   'c7ncd.host.config.add': '创建主机',
+  'c7ncd.host.config.add.test': '创建测试主机',
+  'c7ncd.host.config.add.deploy': '创建部署主机',
   'c7ncd.host.config.modify': '修改主机',
   'c7ncd.host.config.adjustment': '校准服务器状态',
   'c7ncd.host.config.status': '主机状态',
@@ -921,10 +923,11 @@ const hostConfig = {
   'c7ncd.host.config.type.deploy': '部署主机',
   'c7ncd.host.config.port': 'SSH端口',
   'c7ncd.host.config.port.distribute_test': 'SSH端口',
-  'c7ncd.host.config.port.deploy': '外部SSH认证端口',
+  'c7ncd.host.config.port.deploy': '端口',
   'c7ncd.host.config.ip.distribute_test': 'IP',
-  'c7ncd.host.config.ip.deploy': '外部SSH认证IP',
+  'c7ncd.host.config.ip.deploy': '主机IP',
   'c7ncd.host.config.account': '账号配置',
+  'c7ncd.host.config.account.tips': '若想将此主机用于基础组件部署，则必须进行账号配置',
   'c7ncd.host.config.account.password': '用户名与密码',
   'c7ncd.host.config.account.token': '用户名与密钥',
   'c7ncd.host.config.token': '密钥',
@@ -947,6 +950,8 @@ const hostConfig = {
   'c7ncd.host.config.deploy.date': '部署时间',
   'c7ncd.host.config.process': '进程号',
   'c7ncd.host.config.port.occupied': '占用端口',
+  'c7ncd.host.config.connect': '连接主机',
+  'c7ncd.host.config.connect.tips': '复制以下指令至对应节点执行，与平台建立连接',
 };
 
 const emptyPage = {

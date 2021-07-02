@@ -5,7 +5,6 @@ import { injectIntl } from 'react-intl';
 import { inject } from 'mobx-react';
 import { DataSet } from 'choerodon-ui/pro';
 import { DataSetSelection } from 'choerodon-ui/pro/lib/data-set/enum';
-import some from 'lodash/some';
 import FormDataSet from './FormDataSet';
 
 interface ContextProps {
@@ -17,7 +16,6 @@ interface ContextProps {
   modal: any,
   refresh(tabKey?: string): void,
   hostId?: string,
-  showTestTab: boolean,
 }
 
 const Store = createContext({} as ContextProps);
@@ -30,7 +28,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const {
     children,
     intl: { formatMessage },
-    AppState: { currentMenuType: { projectId, categories } },
+    AppState: { currentMenuType: { projectId } },
     hostId,
   } = props;
 
@@ -66,12 +64,12 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     } else {
       formDs.create();
     }
-  }, [projectId, hostId]);
+  }, [projectId]);
 
   const value = {
     ...props,
     intlPrefix,
-    prefixCls: 'c7ncd-host-config-create',
+    prefixCls: 'c7ncd-deploy-host-config-create',
     formatMessage,
     projectId,
     formDs,

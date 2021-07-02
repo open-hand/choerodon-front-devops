@@ -1,7 +1,8 @@
 import { DataSet } from 'choerodon-ui/pro';
-import HostConfigApis from '@/routes/host-config/apis/TestApis';
+import HostConfigApis from '@/routes/host-config/apis/DeployApis';
 import omit from 'lodash/omit';
 import { RecordObjectProps, DataSetProps, FieldType } from '@/interface';
+import {handlePromptError} from "@/utils";
 
 interface FormProps {
   formatMessage(arg0: object, arg1?: object): string,
@@ -11,31 +12,7 @@ interface FormProps {
   hostId: string,
 }
 
-function setStatus(record: any, isDefault: boolean = false) {
-  if (record) {
-    const hostStatus = record.get('hostStatus');
-    const jmeterStatus = record.get('jmeterStatus');
-    const status = record.get('status');
-    if ((status && status !== 'wait') || isDefault) {
-      // eslint-disable-next-line no-nested-ternary
-      const newStatus = [hostStatus, jmeterStatus].includes('failed') ? 'failed' : hostStatus === 'success' && jmeterStatus === 'success' ? 'success' : 'operating';
-      record.init('status', record.get('type') === 'deploy' ? hostStatus : newStatus);
-    }
-  }
-}
-
-function handleLoad({ dataSet }: { dataSet: DataSet }) {
-  setStatus(dataSet.current, true);
-}
-
 function handleUpdate({ name, record }: { name: string, record: any }) {
-  if (name === 'hostIp') {
-    record.get('sshPort') && record.getField('sshPort').checkValidity();
-    if (record.get('jmeterPort')) {
-      record.getField('jmeterPort').checkValidity();
-    }
-  }
-
   if (name === 'authType') {
     record.get('password') && record.set('password', null);
   }
@@ -69,16 +46,6 @@ export default ({
     return true;
   }
 
-  async function checkPortUnique(ip: string, port: any, type: string) {
-    try {
-      const control = type === 'sshPort' ? HostConfigApis.checkSshPort : HostConfigApis.checkJmeterPort;
-      const res = await control(projectId, ip, port);
-      return res;
-    } catch (e) {
-      return false;
-    }
-  }
-
   function checkIP(value: any) {
     const p = /^((\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.){3}(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])$/;
     if (value && !p.test(value)) {
@@ -90,8 +57,6 @@ export default ({
   async function checkPort(value: any, name: any, record: any) {
     if (value && record.getPristineValue(name)
       && String(value) === String(record.getPristineValue(name))
-      && record.get('hostIp') && record.getPristineValue('hostIp')
-      && record.get('hostIp') === record.getPristineValue('hostIp')
     ) {
       return true;
     }
@@ -109,11 +74,6 @@ export default ({
         && parseInt(value, 10) >= data.min
         && parseInt(value, 10) <= data.max
       ) {
-        if (record.get('hostIp')) {
-          if (await checkPortUnique(record.get('hostIp'), value, name) === false) {
-            return formatMessage({ id: `${intlPrefix}.port.unique.failed.${name}` });
-          }
-        }
         return true;
       }
       return formatMessage({ id: data.failedMsg });
@@ -132,15 +92,23 @@ export default ({
         method: 'get',
       },
       create: ({ data: [data] }) => {
-        const postData = omit(data, ['__status', '__id', 'status', 'jmeterStatus', 'hostStatus']);
+        const postData = omit(data, ['__status', '__id']);
         return ({
           url: HostConfigApis.createHost(projectId),
           method: 'post',
           data: postData,
+          transformResponse: ((res) => {
+            try {
+              const result = JSON.parse(res);
+              return result;
+            } catch (e) {
+              return { data: res };
+            }
+          }),
         });
       },
       update: ({ data: [data] }) => {
-        const postData = omit(data, ['__status', '__id', 'status', 'jmeterStatus', 'hostStatus']);
+        const postData = omit(data, ['__status', '__id']);
         return ({
           url: HostConfigApis.editHost(projectId, hostId),
           method: 'put',
@@ -153,10 +121,10 @@ export default ({
       {
         name: 'name',
         type: 'string' as FieldType,
-        maxLength: 15,
+        maxLength: 30,
         required: true,
         validator: checkName,
-        label: '主机名称',
+        label: formatMessage({ id: `${intlPrefix}.name` }),
       },
       {
         name: 'hostIp',
@@ -164,26 +132,29 @@ export default ({
         // @ts-ignore
         validator: checkIP,
         required: true,
-        label: formatMessage({ id: `${intlPrefix}.ip.distribute_test` }),
+        label: formatMessage({ id: `${intlPrefix}.ip.deploy` }),
       },
       {
         name: 'sshPort',
         validator: checkPort,
-        label: formatMessage({ id: `${intlPrefix}.port` }),
         required: true,
+        label: formatMessage({ id: 'port' }),
+        defaultValue: 22,
       },
       {
         name: 'username',
         type: 'string' as FieldType,
-        required: true,
         label: formatMessage({ id: 'userName' }),
+        dynamicProps: {
+          required: ({ record }: RecordObjectProps) => record.get('password'),
+        },
       },
       {
         name: 'password',
         type: 'string' as FieldType,
-        required: true,
         dynamicProps: {
           label: ({ record }: RecordObjectProps) => formatMessage({ id: record.get('authType') === 'accountPassword' ? 'password' : `${intlPrefix}.token` }),
+          required: ({ record }: RecordObjectProps) => record.get('username'),
         },
       },
       {
@@ -194,25 +165,9 @@ export default ({
         required: true,
         defaultValue: 'accountPassword',
         options: accountDs,
-        label: formatMessage({ id: `${intlPrefix}.account` }),
-      },
-      {
-        name: 'jmeterPort',
-        type: 'string' as FieldType,
-        validator: checkPort,
-        required: true,
-        label: formatMessage({ id: `${intlPrefix}.jmeter.port` }),
-      },
-      {
-        name: 'jmeterPath',
-        type: 'string' as FieldType,
-        pattern: /^(\/[\w\W]+)+$/,
-        required: true,
-        label: formatMessage({ id: `${intlPrefix}.jmeter.path` }),
       },
     ],
     events: {
-      load: (loadProps: { dataSet: DataSet }) => handleLoad({ ...loadProps }),
       update: handleUpdate,
     },
   });
