@@ -21,6 +21,10 @@ export default ({ projectId, formatMessage, intlPrefix }: ListProps): DataSetPro
         method: 'get',
       };
     },
+    destroy: ({ data: [data] }) => ({
+      url: HostConfigApi.jarDelete(projectId, data.hostId, data.id),
+      method: 'delete',
+    }),
   },
   fields: [
     { name: 'name', label: formatMessage({ id: 'name' }) },
