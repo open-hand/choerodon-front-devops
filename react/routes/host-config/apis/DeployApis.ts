@@ -31,6 +31,6 @@ export default class HostConfigApi {
   }
 
   static getLinkShell(projectId:number, hostId:string) {
-    return `/v1/projects/${projectId}/hosts/${hostId}/link_shell`;
+    return `/devops/v1/projects/${projectId}/hosts/${hostId}/link_shell`;
   }
 }

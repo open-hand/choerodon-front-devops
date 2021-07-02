@@ -26,11 +26,9 @@ const CreateHost: React.FC<any> = observer((): any => {
 
   modal.handleOk(async () => {
     try {
-      const record = formDs.current;
-      const selectedTabKey = record?.get('type');
       const res = await formDs.submit();
       if (res) {
-        refresh(selectedTabKey);
+        refresh('deploy');
         if (!hostId && !isEmpty(res?.list) && res.list[0]?.data) {
           Modal.open({
             key: commandModalKey,

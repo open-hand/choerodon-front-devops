@@ -1,14 +1,15 @@
-import React, { useCallback, useMemo } from 'react';
+import React, {
+  useCallback, useEffect, useState,
+} from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Form,
   message,
-  Spin,
-  TextArea,
   Button,
 } from 'choerodon-ui/pro';
+import { Alert } from 'choerodon-ui';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { FuncType } from '@/interface';
+import HostConnectServices from '@/routes/host-config/components/connect-host/services';
 import { useHostConnectStore } from './stores';
 
 const HostConnect = observer(() => {
@@ -16,35 +17,54 @@ const HostConnect = observer(() => {
     formatMessage,
     intlPrefix,
     prefixCls,
-    formDs,
+    projectId,
+    hostId,
+    data,
   } = useHostConnectStore();
 
-  const record = useMemo(() => formDs.current, [formDs.current]);
+  const [command, setCommand] = useState(data || '');
+
+  const loadData = useCallback(async () => {
+    try {
+      const res = await HostConnectServices.getLinkShell(projectId, hostId);
+      setCommand(res);
+    } catch (e) {
+      // setCommand('');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!data && hostId) {
+      loadData();
+    }
+  }, []);
 
   const handleCopy = useCallback(() => {
     message.info(formatMessage({ id: 'copy_success' }));
   }, []);
 
-  if (!record) {
-    return <Spin spinning />;
-  }
-
   return (
     <div className={`${prefixCls}-form`}>
-      <div className={`${prefixCls}-tips`}>
-        {formatMessage({ id: `${intlPrefix}.connect.tips` })}
+      <Alert
+        className={`${prefixCls}-tips`}
+        message={formatMessage({ id: `${intlPrefix}.connect.tips` })}
+        type="info"
+        showIcon
+      />
+      <div className={`${prefixCls}-label`}>
+        <span>{formatMessage({ id: 'envPl.token' })}</span>
       </div>
-      <Form dataSet={formDs}>
-        <TextArea name="command" disabled />
-      </Form>
-      <CopyToClipboard text={record.get('command')}>
-        <Button
-          icon="content_copy"
-          className={`${prefixCls}-copy`}
-          onClick={handleCopy}
-          funcType={'flat' as FuncType}
-        />
-      </CopyToClipboard>
+      <div className={`${prefixCls}-content`}>
+        <span>{command}</span>
+        <CopyToClipboard text={command}>
+          <Button
+            icon="content_copy"
+            className={`${prefixCls}-copy`}
+            onClick={handleCopy}
+            funcType={'flat' as FuncType}
+          />
+        </CopyToClipboard>
+      </div>
     </div>
   );
 });

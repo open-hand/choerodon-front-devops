@@ -72,7 +72,7 @@ function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
           />
           <Route path="*" component={nomatch} />
         </Switch>
-        <ModalContainer location={location} />
+        <ModalContainer />
       </div>
     </IntlProviderAsync>
   );
