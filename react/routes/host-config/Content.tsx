@@ -97,7 +97,7 @@ const HostConfig: React.FC<any> = observer((): any => {
         width: SMALL,
       },
       drawer: true,
-      children: has('test-pro:create-host') && mount('test-pro:create-host', { refresh: afterCreate }),
+      children: mount('test-pro:create-host', { refresh: afterCreate }),
       okText: formatMessage({ id: 'create' }),
     });
   };
