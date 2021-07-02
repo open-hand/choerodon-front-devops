@@ -6,14 +6,14 @@ import TimePopover from '@/components/timePopover';
 import { Tooltip, Modal } from 'choerodon-ui/pro';
 import classnames from 'classnames';
 import { observer } from 'mobx-react-lite';
+import HostConnect from '@/routes/host-config/components/connect-host';
+import { SMALL } from '@/utils/getModalWidth';
 import StatusTagOutLine from '../../components/statusTagOutLine';
 import eventStopProp from '../../../../../../utils/eventStopProp';
 import { useHostConfigStore } from '../../../../stores';
 import CreateHost from '../../../create-deploy-host';
 import DeleteCheck from '../deleteCheck';
 import apis from '../../../../apis';
-import HostConnect from "@/routes/host-config/components/connect-host";
-import {SMALL} from "@/utils/getModalWidth";
 
 const commandModalKey = Modal.key();
 
@@ -45,6 +45,9 @@ const HostsItem:React.FC<any> = observer(({
       TEST_TAB,
       DEPLOY_TAB,
     },
+    mirrorTableDs,
+    jarTableDs,
+    usageDs,
   } = useHostConfigStore();
 
   const type = mainStore.getCurrentTabKey; // 主机类型 deploy / distribute_test
@@ -144,9 +147,21 @@ const HostsItem:React.FC<any> = observer(({
 
   const handleSelect = useCallback(() => {
     if (isDeploy && mainStore.getSelectedHost?.id !== id) {
+      if (getMainStatus === 'connected') {
+        mirrorTableDs.setQueryParameter('hostId', id);
+        jarTableDs.setQueryParameter('hostId', id);
+        usageDs.setQueryParameter('hostId', id);
+        mirrorTableDs.query();
+        jarTableDs.query();
+        usageDs.query();
+      } else {
+        usageDs.removeAll();
+        mirrorTableDs.removeAll();
+        jarTableDs.removeAll();
+      }
       mainStore.setSelectedHost(record.toData());
     }
-  }, [isDeploy, hostStatus, record, id, mainStore.getSelectedHost]);
+  }, [isDeploy, hostStatus, record, id, mainStore.getSelectedHost, getMainStatus]);
 
   const getActionData = useCallback(() => {
     if (isDeploy) {

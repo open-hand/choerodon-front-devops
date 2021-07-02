@@ -10,6 +10,7 @@ import some from 'lodash/some';
 import MirrorTableDataSet from '@/routes/host-config/stores/MirrorTableDataSet';
 import JarTableDataSet from '@/routes/host-config/stores/JarTableDataSet';
 import { DataSet as DataSetProps, DataSetSelection } from '@/interface';
+import UsageDataSet from '@/routes/host-config/stores/UsageDataSet';
 import useStore, { StoreProps } from './useStore';
 
 // @ts-ignore
@@ -37,6 +38,7 @@ interface ContextProps {
   },
   mirrorTableDs: DataSetProps,
   jarTableDs: DataSetProps,
+  usageDs: DataSetProps,
 }
 
 const Store = createContext({} as ContextProps);
@@ -80,6 +82,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
 
   const listDs = useMemo(() => new DataSet(ListDataSet({ projectId, defaultTabKey })), [projectId]);
   const searchDs = useMemo(() => new DataSet(SearchDataSet({ projectId })), [projectId]);
+  const usageDs = useMemo(() => new DataSet(UsageDataSet({ projectId })), [projectId]);
   const mirrorTableDs = useMemo(() => new DataSet(MirrorTableDataSet({
     projectId,
     formatMessage,
@@ -112,6 +115,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     tabKey,
     mirrorTableDs,
     jarTableDs,
+    usageDs,
   };
   return (
     <Store.Provider value={value}>
