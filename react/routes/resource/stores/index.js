@@ -28,13 +28,16 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       children,
       location: { state, search },
     } = props;
+
+    const urlActiveKey = useQueryString().activeKey;
+
     const viewTypeMemo = useMemo(() => viewTypeMappings, []);
     const itemTypes = useMemo(() => itemTypeMappings, []);
     let {
       activeKey,
     } = state || queryString.parse(search) || {};
     if (!activeKey) {
-      activeKey = useQueryString().activeKey;
+      activeKey = urlActiveKey;
     }
     const newViewType = activeKey || '';
     const resourceStore = useStore(newViewType);
