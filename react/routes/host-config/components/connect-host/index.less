@@ -1,29 +1,37 @@
 .c7ncd-host-config-command {
 
   &-form {
-    position: relative;
+   height: 100%;
   }
 
   &-tips {
-    background: rgba(41, 190, 206, 0.08);
-    border-radius: 8px;
-    padding: .1rem .12rem;
-    font-size: .12rem;
-    color: #37b1ec;
-    line-height: .2rem;
     margin-bottom: .2rem;
+  }
+
+  &-label {
+    font-size: .12rem;
+    font-weight: 500;
+    line-height: .2rem;
+    margin-bottom: .1rem;
+  }
+
+  &-content {
+    background: #f5f6fa;
+    border-radius: 4px;
+    padding: .12rem;
+    color: rgba(15, 19, 88, 0.85);
+    position: relative;
+    height: 85%;
+    word-break: break-all;
   }
 
   &-copy {
     position: absolute;
     right: 0.04rem;
-    bottom: 0.65rem;
-    z-index: 1;
-    width: .2rem;
-    height: .2rem !important;
+    bottom: 0.16rem;
 
     & > .icon {
-      font-size: .14rem !important;
+      font-size: .2rem !important;
     }
   }
 }

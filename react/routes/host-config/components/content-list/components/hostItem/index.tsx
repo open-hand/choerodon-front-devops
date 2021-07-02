@@ -12,6 +12,10 @@ import { useHostConfigStore } from '../../../../stores';
 import CreateHost from '../../../create-deploy-host';
 import DeleteCheck from '../deleteCheck';
 import apis from '../../../../apis';
+import HostConnect from "@/routes/host-config/components/connect-host";
+import {SMALL} from "@/utils/getModalWidth";
+
+const commandModalKey = Modal.key();
 
 const HostsItem:React.FC<any> = observer(({
   sshPort, // 主机ssh的端口
@@ -126,29 +130,65 @@ const HostsItem:React.FC<any> = observer(({
     });
   }
 
+  const openConnectModal = useCallback(() => {
+    Modal.open({
+      key: commandModalKey,
+      title: formatMessage({ id: `${intlPrefix}.connect` }),
+      children: <HostConnect hostId={id} />,
+      style: { width: SMALL },
+      drawer: true,
+      okCancel: false,
+      okText: formatMessage({ id: 'close' }),
+    });
+  }, []);
+
   const handleSelect = useCallback(() => {
     if (isDeploy && mainStore.getSelectedHost?.id !== id) {
       mainStore.setSelectedHost(record.toData());
     }
   }, [isDeploy, hostStatus, record, id, mainStore.getSelectedHost]);
 
-  const getActionData = useCallback(() => (getMainStatus !== 'operating' || getMainStatus !== 'occupied' ? [
-    {
-      service: ['choerodon.code.project.deploy.host.ps.correct'],
-      text: '校准状态',
-      action: handleCorrect,
-    },
-    {
-      service: ['choerodon.code.project.deploy.host.ps.edit'],
-      text: formatMessage({ id: 'edit' }),
-      action: handleModify,
-    },
-    {
-      service: ['choerodon.code.project.deploy.host.ps.delete'],
-      text: formatMessage({ id: 'delete' }),
-      action: handleDelete,
-    },
-  ] : []), [getMainStatus, handleCorrect, handleDelete, handleModify]);
+  const getActionData = useCallback(() => {
+    if (isDeploy) {
+      const actionData = [
+        {
+          service: ['choerodon.code.project.deploy.host.ps.edit'],
+          text: formatMessage({ id: 'edit' }),
+          action: handleModify,
+        },
+        {
+          service: ['choerodon.code.project.deploy.host.ps.delete'],
+          text: formatMessage({ id: 'delete' }),
+          action: handleDelete,
+        },
+      ];
+      if (getMainStatus === 'disconnect') {
+        actionData.unshift({
+          service: [],
+          text: formatMessage({ id: `${intlPrefix}.connect` }),
+          action: openConnectModal,
+        });
+      }
+      return actionData;
+    }
+    return (getMainStatus !== 'operating' || getMainStatus !== 'occupied' ? [
+      {
+        service: ['choerodon.code.project.deploy.host.ps.correct'],
+        text: '校准状态',
+        action: handleCorrect,
+      },
+      {
+        service: ['choerodon.code.project.deploy.host.ps.edit'],
+        text: formatMessage({ id: 'edit' }),
+        action: handleModify,
+      },
+      {
+        service: ['choerodon.code.project.deploy.host.ps.delete'],
+        text: formatMessage({ id: 'delete' }),
+        action: handleDelete,
+      },
+    ] : []);
+  }, [getMainStatus, handleCorrect, handleDelete, handleModify, isDeploy]);
 
   return (
     <div className={itemClassName} onClick={handleSelect} role="none">
