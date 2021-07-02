@@ -53,11 +53,11 @@ const ContentList = ({
 
   const getInfoContent = useCallback((record: Record) => {
     const {
-      serviceCode, source, repoUrl, latestVersion, shareProjectName,
+      serviceCode, source, repoUrl, latestVersion, shareProjectName, builtIn, sourceView,
     } = record?.toData() || {};
     const infoData = {
       code: source === MARKET_TAB ? null : serviceCode,
-      source: source === MARKET_TAB ? '应用市场' : null,
+      source: builtIn ? '平台预置' : sourceView,
       gitlab: source === PROJECT_TAB && repoUrl
         ? `${repoUrl.split('//')[0]}//.../${repoUrl.split('/')[repoUrl.split('/')?.length - 1]}` : null,
       sourceProject: shareProjectName,

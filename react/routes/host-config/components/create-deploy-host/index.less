@@ -1,0 +1,41 @@
+@popupPrefix: c7ncd-deploy-host-config-create;
+
+.@{popupPrefix} {
+
+  .c7n-pro-radio-wrapper {
+
+    .c7n-pro-radio-label {
+      display: inline-block;
+      width: 1rem;
+    }
+  }
+
+  &-module-title {
+    font-weight: 500;
+    font-size: .16rem;
+  }
+
+  &-form {
+
+    &-password {
+      margin-bottom: -0.2rem;
+      display: block;
+      color: var(--text-color3);
+
+      &-error {
+        max-width: unset;
+        padding-left: 0.1rem;
+        color: #d50000;
+        font-size: 0.12rem;
+        margin-top: -0.25rem;
+        display: block;
+      }
+    }
+  }
+
+  &-divider {
+    margin: .1rem -0.2rem .24rem;
+    width: calc(100% + 0.4rem);
+    background: var(--divider);
+  }
+}

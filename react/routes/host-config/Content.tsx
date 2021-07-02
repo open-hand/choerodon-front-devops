@@ -1,21 +1,26 @@
 import React, { useCallback, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Page, Header, Breadcrumb, Content, Permission, HeaderButtons,
+  Page, Header, Breadcrumb, Content, HeaderButtons,
 } from '@choerodon/boot';
 import {
-  Button, Modal,
+  Modal,
 } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import ContentHeader from '@/routes/host-config/components/content-header';
 import ContentList from '@/routes/host-config/components/content-list';
-import CreateHost from '@/routes/host-config/components/create-host';
+import CreateHost from '@/routes/host-config/components/create-deploy-host';
 import HostConfigApis from '@/routes/host-config/apis';
 import ResourceContent from '@/routes/host-config/components/resource-content';
 import EmptyPage from '@/components/empty-page';
 import Loading from '@/components/loading';
-import { ButtonColor } from '../../interface';
+import { SMALL } from '@/utils/getModalWidth';
+import { has, mount } from '@choerodon/inject';
 import { useHostConfigStore } from './stores';
+
+const testHostKey = Modal.key();
+const deployHostKey = Modal.key();
+const adjustKey = Modal.key();
 
 const HostConfig: React.FC<any> = observer((): any => {
   const {
@@ -29,6 +34,7 @@ const HostConfig: React.FC<any> = observer((): any => {
     searchDs,
     tabKey: {
       DEPLOY_TAB,
+      TEST_TAB,
     },
   } = useHostConfigStore();
 
@@ -61,7 +67,7 @@ const HostConfig: React.FC<any> = observer((): any => {
 
   const handleAdjustment = () => {
     Modal.open({
-      key: Modal.key(),
+      key: adjustKey,
       title: formatMessage({ id: `${intlPrefix}.batch.correct.title` }),
       children: formatMessage({ id: `${intlPrefix}.batch.correct.des` }),
       movable: false,
@@ -72,13 +78,26 @@ const HostConfig: React.FC<any> = observer((): any => {
 
   const handleAdd = () => {
     Modal.open({
-      key: Modal.key(),
-      title: formatMessage({ id: `${intlPrefix}.add` }),
+      key: deployHostKey,
+      title: formatMessage({ id: `${intlPrefix}.add.deploy` }),
       style: {
-        width: 380,
+        width: SMALL,
       },
       drawer: true,
       children: <CreateHost refresh={afterCreate} />,
+      okText: formatMessage({ id: 'create' }),
+    });
+  };
+
+  const handleCreateTestHost = () => {
+    Modal.open({
+      key: testHostKey,
+      title: formatMessage({ id: `${intlPrefix}.add.test` }),
+      style: {
+        width: SMALL,
+      },
+      drawer: true,
+      children: has('test-pro:create-host') && mount('test-pro:create-host', { refresh: afterCreate }),
       okText: formatMessage({ id: 'create' }),
     });
   };
@@ -97,22 +116,28 @@ const HostConfig: React.FC<any> = observer((): any => {
         {mainStore.getCurrentTabKey === DEPLOY_TAB && <ResourceContent />}
       </div>
     );
-  }, [listDs, listDs.length, mainStore.getCurrentTabKey]);
+  }, [listDs, listDs.length, mainStore.getCurrentTabKey, listDs.status]);
 
   return (
     <Page service={['choerodon.code.project.deploy.host.ps.default']}>
       <Header>
         <HeaderButtons
           items={([{
-            name: formatMessage({ id: `${intlPrefix}.add` }),
+            name: formatMessage({ id: `${intlPrefix}.add.test` }),
             icon: 'playlist_add',
-            display: true,
+            display: mainStore.getCurrentTabKey === TEST_TAB,
+            permissions: ['choerodon.code.project.deploy.host.ps.create'],
+            handler: handleCreateTestHost,
+          }, {
+            name: formatMessage({ id: `${intlPrefix}.add.deploy` }),
+            icon: 'playlist_add',
+            display: mainStore.getCurrentTabKey === DEPLOY_TAB,
             permissions: ['choerodon.code.project.deploy.host.ps.create'],
             handler: handleAdd,
           }, {
             name: formatMessage({ id: `${intlPrefix}.adjustment` }),
             icon: 'refresh',
-            display: true,
+            display: mainStore.getCurrentTabKey === TEST_TAB,
             permissions: ['choerodon.code.project.deploy.host.ps.correct'],
             handler: handleAdjustment,
           }, {
