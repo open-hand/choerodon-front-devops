@@ -78,29 +78,29 @@ const HostConfig: React.FC<any> = observer((): any => {
     });
   };
 
-  const handleAdd = () => {
+  const handleAdd = (hostId?: string) => {
     Modal.open({
       key: deployHostKey,
-      title: formatMessage({ id: `${intlPrefix}.add.deploy` }),
+      title: formatMessage({ id: `${intlPrefix}.${hostId ? 'edit' : 'add'}.deploy` }),
       style: {
         width: SMALL,
       },
       drawer: true,
-      children: <CreateHost refresh={afterCreate} />,
-      okText: formatMessage({ id: 'create' }),
+      children: <CreateHost refresh={afterCreate} hostId={hostId} />,
+      okText: formatMessage({ id: hostId ? 'save' : 'create' }),
     });
   };
 
-  const handleCreateTestHost = () => {
+  const handleCreateTestHost = (hostId?: string) => {
     Modal.open({
       key: testHostKey,
-      title: formatMessage({ id: `${intlPrefix}.add.test` }),
+      title: formatMessage({ id: `${intlPrefix}.${hostId ? 'edit' : 'add'}.test` }),
       style: {
         width: SMALL,
       },
       drawer: true,
-      children: <TestHostContent refresh={afterCreate} />,
-      okText: formatMessage({ id: 'create' }),
+      children: <TestHostContent refresh={afterCreate} hostId={hostId} />,
+      okText: formatMessage({ id: hostId ? 'save' : 'create' }),
     });
   };
 
@@ -114,7 +114,10 @@ const HostConfig: React.FC<any> = observer((): any => {
     }
     return (
       <div className={`${prefixCls}-content-wrap`}>
-        <ContentList />
+        <ContentList
+          handleCreateTestHost={handleCreateTestHost}
+          handleCreateDeployHost={handleAdd}
+        />
         {mainStore.getCurrentTabKey === DEPLOY_TAB && <ResourceContent />}
       </div>
     );
@@ -129,13 +132,13 @@ const HostConfig: React.FC<any> = observer((): any => {
             icon: 'playlist_add',
             display: mainStore.getCurrentTabKey === TEST_TAB,
             permissions: ['choerodon.code.project.deploy.host.ps.create'],
-            handler: handleCreateTestHost,
+            handler: () => handleCreateTestHost(),
           }, {
             name: formatMessage({ id: `${intlPrefix}.add.deploy` }),
             icon: 'playlist_add',
             display: mainStore.getCurrentTabKey === DEPLOY_TAB,
             permissions: ['choerodon.code.project.deploy.host.ps.create'],
-            handler: handleAdd,
+            handler: () => handleAdd(),
           }, {
             name: formatMessage({ id: `${intlPrefix}.adjustment` }),
             icon: 'refresh',

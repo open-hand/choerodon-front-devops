@@ -914,6 +914,8 @@ const hostConfig = {
   'c7ncd.host.config.add': '创建主机',
   'c7ncd.host.config.add.test': '创建测试主机',
   'c7ncd.host.config.add.deploy': '创建部署主机',
+  'c7ncd.host.config.edit.test': '修改测试主机',
+  'c7ncd.host.config.edit.deploy': '修改部署主机',
   'c7ncd.host.config.modify': '修改主机',
   'c7ncd.host.config.adjustment': '校准服务器状态',
   'c7ncd.host.config.status': '主机状态',

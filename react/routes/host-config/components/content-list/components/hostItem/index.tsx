@@ -33,6 +33,8 @@ const HostsItem:React.FC<any> = observer(({
   updaterInfo,
   listDs,
   record,
+  handleCreateTestHost,
+  handleCreateDeployHost,
 }) => {
   const {
     prefixCls,
@@ -120,19 +122,6 @@ const HostsItem:React.FC<any> = observer(({
     Modal.open(modalProps);
   }
 
-  function handleModify() {
-    Modal.open({
-      key: Modal.key(),
-      title: formatMessage({ id: `${intlPrefix}.modify` }),
-      style: {
-        width: 380,
-      },
-      drawer: true,
-      children: <CreateHost hostId={id} refresh={refresh} hostType={type} />,
-      okText: formatMessage({ id: 'save' }),
-    });
-  }
-
   const openConnectModal = useCallback(() => {
     Modal.open({
       key: commandModalKey,
@@ -169,7 +158,7 @@ const HostsItem:React.FC<any> = observer(({
         {
           service: ['choerodon.code.project.deploy.host.ps.edit'],
           text: formatMessage({ id: 'edit' }),
-          action: handleModify,
+          action: () => handleCreateDeployHost(id),
         },
         {
           service: ['choerodon.code.project.deploy.host.ps.delete'],
@@ -195,7 +184,7 @@ const HostsItem:React.FC<any> = observer(({
       {
         service: ['choerodon.code.project.deploy.host.ps.edit'],
         text: formatMessage({ id: 'edit' }),
-        action: handleModify,
+        action: () => handleCreateTestHost(id),
       },
       {
         service: ['choerodon.code.project.deploy.host.ps.delete'],
@@ -203,7 +192,7 @@ const HostsItem:React.FC<any> = observer(({
         action: handleDelete,
       },
     ] : []);
-  }, [getMainStatus, handleCorrect, handleDelete, handleModify, isDeploy]);
+  }, [getMainStatus, handleCorrect, handleDelete, isDeploy]);
 
   return (
     <div className={itemClassName} onClick={handleSelect} role="none">
