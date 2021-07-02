@@ -374,7 +374,15 @@ export default class DetailsSidebar extends Component {
 
   render() {
     const {
-      visible, onClose, withoutStore, json, yaml,
+      visible,
+      onClose,
+      withoutStore,
+      json,
+      yaml,
+      detailsStore,
+      intl: {
+        formatMessage: contextFormat,
+      },
     } = this.props;
     const { activeKey, isExpand, isJson } = this.state;
 
@@ -383,7 +391,6 @@ export default class DetailsSidebar extends Component {
     let formatMessage;
 
     if (!withoutStore) {
-      const { detailsStore, intl: { formatMessage: contextFormat } } = this.context;
       const {
         getDeployments: { detail: storeDetail },
         getDeploymentsYaml: storeYaml,

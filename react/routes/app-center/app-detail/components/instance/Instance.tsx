@@ -9,6 +9,7 @@ import { useAppCenterDetailStore } from '@/routes/app-center/app-detail/stores';
 import openWarnModal from '@/utils/openWarnModal';
 import getTablePostData from '@/utils/getTablePostData';
 import Details from './components/details';
+import Cases from './components/cases';
 
 import './index.less';
 
@@ -56,7 +57,7 @@ export default observer((props) => {
       // case tabs.CASES_TAB:
       //   casesDs.query();
       //   break;
-      case 'event':
+      case 'detail':
         detailsStore.loadResource(projectId, InstanceListDataSet?.current?.get('version'));
         break;
       // case tabs.PODS_TAB:
@@ -127,7 +128,8 @@ export default observer((props) => {
 
   const renderTabContent = () => {
     switch (selectedTab) {
-      case 'event': return <Details />;
+      case 'detail': return <Details />;
+      case 'event': return <Cases />;
       default: return '';
     }
   };

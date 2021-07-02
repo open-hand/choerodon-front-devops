@@ -62,6 +62,7 @@ export default observer(() => {
       },
     },
     InstanceListDataSet,
+    intl,
   } = useAppCenterInstanceStore();
 
   useEffect(() => () => {
@@ -90,8 +91,9 @@ export default observer(() => {
     detailsStore.loadDeploymentsYaml(type, projectId, id, name);
     if (result) {
       setVisible(true);
+    } else {
+      setVisible(false);
     }
-    setVisible(false);
   };
 
   const getDeployContent = (podType) => {
@@ -376,7 +378,9 @@ export default observer(() => {
       {visible && (
       <DetailsSidebar
         visible={visible}
-        onClose={this.hideSidebar}
+        onClose={hideSidebar}
+        detailsStore={detailsStore}
+        intl={intl}
       />
       )}
     </>
