@@ -1,4 +1,6 @@
-import React, { Component, Fragment, useState, useEffect } from 'react';
+import React, {
+  Component, Fragment, useState, useEffect,
+} from 'react';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl, FormattedMessage } from 'react-intl';
@@ -9,6 +11,7 @@ import {
   // Radio,
   Upload,
   Icon,
+  Alert,
 } from 'choerodon-ui';
 import _ from 'lodash';
 import classnames from 'classnames';
@@ -191,10 +194,22 @@ const ResourceSidebar = injectIntl(inject('AppState')(observer((props) => {
 
   return (
     <div className="c7n-region c7ncd-deployment-resource-sidebar">
+      <Alert
+        className="c7ncd-deployment-resource-info"
+        message="平台已经支持创建与管理工作负载（Deployment、StatefulSet、DaemonSet、CronJob、Job）、
+          网络（Service）、域名（Ingress）、配置映射（ConfigMap）、密文（Secret）等资源。
+          若想添加以上类型的资源，请到对应的资源界面进行创建。自定义资源中将不支持添加以上类型的资源。"
+        type="info"
+        showIcon
+      />
       <Form layout="vertical">
-        {type === 'create' && (<Fragment>
+        {type === 'create' && (
+        <>
           <div className="c7ncd-resource-mode">
-            <div className="c7ncd-resource-mode-label">{formatMessage({ id: 'resource.mode' })}：</div>
+            <div className="c7ncd-resource-mode-label">
+              {formatMessage({ id: 'resource.mode' })}
+              ：
+            </div>
             {
               _.map(['paste', 'upload'], (item) => (
                 <Radio
@@ -210,7 +225,8 @@ const ResourceSidebar = injectIntl(inject('AppState')(observer((props) => {
               ))
             }
           </div>
-          </Fragment>)}
+        </>
+        )}
         {mode === 'paste' && (
           <YamlEditor
             readOnly={false}
@@ -246,9 +262,11 @@ const ResourceSidebar = injectIntl(inject('AppState')(observer((props) => {
           </FormItem>
         )}
       </Form>
-      {showError && <div className="c7ncd-resource-error">
+      {showError && (
+      <div className="c7ncd-resource-error">
         <FormattedMessage id="contentCanNotBeEmpty" />
-      </div>}
+      </div>
+      )}
     </div>
   );
 })));

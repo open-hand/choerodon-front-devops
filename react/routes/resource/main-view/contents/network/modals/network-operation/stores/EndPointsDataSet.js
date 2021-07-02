@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { map } from 'lodash';
 
 export default ({ formatMessage }) => {
@@ -28,21 +29,18 @@ export default ({ formatMessage }) => {
       ) {
         if (!isRepeat) {
           return true;
-        } else {
-          return formatMessage({ id: data.typeMsg });
         }
-      } else {
-        return formatMessage({ id: data.failedMsg });
+        return formatMessage({ id: data.typeMsg });
       }
-    } 
+      return formatMessage({ id: data.failedMsg });
+    }
   }
-
 
   return {
     fields: [
       {
         name: 'targetPort',
-        type: 'string', 
+        type: 'string',
         label: formatMessage({ id: 'network.config.targetPort' }),
         dynamicProps: {
           required: ({ dataSet, record, name }) => {
@@ -59,7 +57,9 @@ export default ({ formatMessage }) => {
   };
 };
 
-function updateEventHandler({ dataSet, record, name, value, oldValue }) {
+function updateEventHandler({
+  dataSet, record, name, value, oldValue,
+}) {
   if (!value) return;
   checkOtherRecords(record, name);
 }

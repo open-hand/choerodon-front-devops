@@ -1,10 +1,13 @@
-import React, { Fragment, lazy, Suspense, useEffect, useMemo } from 'react';
+import React, {
+  Fragment, lazy, Suspense, useEffect, useMemo,
+} from 'react';
 import { runInAction } from 'mobx';
 import { observer } from 'mobx-react-lite';
-import { Tabs, Tooltip, Icon, Spin, Progress } from 'choerodon-ui';
+import {
+  Tabs, Spin,
+} from 'choerodon-ui';
 import isEqual from 'lodash/isEqual';
 import pick from 'lodash/pick';
-import omit from 'lodash/omit';
 import PageTitle from '../../../../../components/page-title';
 import PodCircle from '../../components/pod-circle';
 import Modals from './modals';
@@ -25,7 +28,6 @@ const InstanceTitle = ({
   podUnlinkCount,
   status,
   name,
-  errorText,
   versionName,
   formatMessage,
 }) => {
@@ -56,24 +58,28 @@ const InstanceTitle = ({
     return message;
   }
 
-  return <Fragment>
-    <PodCircle
-      style={podSize}
-      dataSource={[{
-        name: 'running',
-        value: podRunningCount,
-        stroke: RUNNING_COLOR,
-      }, {
-        name: 'unlink',
-        value: podUnlinkCount,
-        stroke: PADDING_COLOR,
-      }]}
-    />
-    <span className="c7ncd-page-title-text">{name}</span>
-    <span className="c7ncd-page-title-version">
-      ({versionName || getVersionName()})
-    </span>
-  </Fragment>;
+  return (
+    <>
+      <PodCircle
+        style={podSize}
+        dataSource={[{
+          name: 'running',
+          value: podRunningCount,
+          stroke: RUNNING_COLOR,
+        }, {
+          name: 'unlink',
+          value: podUnlinkCount,
+          stroke: PADDING_COLOR,
+        }]}
+      />
+      <span className="c7ncd-page-title-text">{name}</span>
+      <span className="c7ncd-page-title-version">
+        (
+        {versionName || getVersionName()}
+        )
+      </span>
+    </>
+  );
 };
 
 const InstanceContent = observer(() => {
@@ -95,7 +101,6 @@ const InstanceContent = observer(() => {
   } = useInstanceStore();
   const viewType = resourceStore.getViewType;
   const { getSelectedMenu: { key: selectedKey } } = resourceStore;
-
 
   function handleChange(key) {
     istStore.setTabKey(key);
@@ -158,15 +163,17 @@ const InstanceContent = observer(() => {
         versionName,
       } = current;
       const podUnlinkCount = computeUnlinkPod(podCount, podRunningCount);
-      return <InstanceTitle
-        status={status}
-        name={name}
-        podRunningCount={podRunningCount}
-        podUnlinkCount={podUnlinkCount}
-        errorText={error}
-        versionName={versionName}
-        formatMessage={formatMessage}
-      />;
+      return (
+        <InstanceTitle
+          status={status}
+          name={name}
+          podRunningCount={podRunningCount}
+          podUnlinkCount={podUnlinkCount}
+          errorText={error}
+          versionName={versionName}
+          formatMessage={formatMessage}
+        />
+      );
     }
     return null;
   }
@@ -179,34 +186,39 @@ const InstanceContent = observer(() => {
     } = resourceStore.getSelectedMenu;
     const podUnlinkCount = computeUnlinkPod(podCount, podRunningCount);
 
-    return <InstanceTitle
-      name={name}
-      podRunningCount={podRunningCount}
-      podUnlinkCount={podUnlinkCount}
-    />;
+    return (
+      <InstanceTitle
+        name={name}
+        podRunningCount={podRunningCount}
+        podUnlinkCount={podUnlinkCount}
+      />
+    );
   }
   function chooseTab() {
-    const detailsTab = <TabPane
-      key={DETAILS_TAB}
-      tab={formatMessage({ id: `${intlPrefix}.instance.tabs.details` })}
-    >
-      <Suspense fallback={<Spin />}>
-        <Details />
-      </Suspense>
-    </TabPane>;
-    const casesTab = <TabPane
-      key={CASES_TAB}
-      tab={formatMessage({ id: `${intlPrefix}.instance.tabs.cases` })}
-    >
-      <Suspense fallback={<Spin />}>
-        <Cases />
-      </Suspense>
-    </TabPane>;
+    const detailsTab = (
+      <TabPane
+        key={DETAILS_TAB}
+        tab={formatMessage({ id: `${intlPrefix}.instance.tabs.details` })}
+      >
+        <Suspense fallback={<Spin />}>
+          <Details />
+        </Suspense>
+      </TabPane>
+    );
+    const casesTab = (
+      <TabPane
+        key={CASES_TAB}
+        tab={formatMessage({ id: `${intlPrefix}.instance.tabs.cases` })}
+      >
+        <Suspense fallback={<Spin />}>
+          <Cases />
+        </Suspense>
+      </TabPane>
+    );
     if (viewType === 'instance') {
       return [casesTab, detailsTab];
-    } else {
-      return [detailsTab, casesTab];
     }
+    return [detailsTab, casesTab];
   }
   return (
     <div className={`${prefixCls}-instance`}>
