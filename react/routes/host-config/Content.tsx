@@ -15,12 +15,14 @@ import ResourceContent from '@/routes/host-config/components/resource-content';
 import EmptyPage from '@/components/empty-page';
 import Loading from '@/components/loading';
 import { SMALL } from '@/utils/getModalWidth';
-import { has, mount } from '@choerodon/inject';
+import { mount } from '@choerodon/inject';
 import { useHostConfigStore } from './stores';
 
 const testHostKey = Modal.key();
 const deployHostKey = Modal.key();
 const adjustKey = Modal.key();
+
+const TestHostContent = (props: any) => (mount('test-pro:create-host', props));
 
 const HostConfig: React.FC<any> = observer((): any => {
   const {
@@ -97,7 +99,7 @@ const HostConfig: React.FC<any> = observer((): any => {
         width: SMALL,
       },
       drawer: true,
-      children: mount('test-pro:create-host', { refresh: afterCreate }),
+      children: <TestHostContent refresh={afterCreate} />,
       okText: formatMessage({ id: 'create' }),
     });
   };
