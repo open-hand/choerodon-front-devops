@@ -33,4 +33,16 @@ export default class HostConfigApi {
   static getLinkShell(projectId:number, hostId:string) {
     return `/devops/v1/projects/${projectId}/hosts/${hostId}/link_shell`;
   }
+
+  static getDockerList(projectId: number, hostId: string) {
+    return `/devops/v1/projects/${projectId}/hosts/${hostId}/docker_process`;
+  }
+
+  static getJarList(projectId: number, hostId: string) {
+    return `/devops/v1/projects/${projectId}/hosts/${hostId}/java_process`;
+  }
+
+  static getResourceInfo(projectId: number, hostId: string) {
+    return `/devops/v1/projects/${projectId}/hosts/${hostId}/resource_usage_info`;
+  }
 }

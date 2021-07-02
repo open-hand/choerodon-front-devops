@@ -7,7 +7,10 @@ import { Action } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 import { Size, TableQueryBarType } from '@/interface';
 import { useHostConfigStore } from '@/routes/host-config/stores';
-import { StatusTag } from "@choerodon/components";
+import {
+  StatusTag, TimePopover, UserInfo, EmptyPage,
+} from '@choerodon/components';
+import EmptySvg from '@/routes/host-config/images/empty-page.svg';
 
 import './index.less';
 
@@ -23,30 +26,28 @@ const ResourceContent = observer(() => {
     mainStore,
     mirrorTableDs,
     jarTableDs,
+    usageDs,
   } = useHostConfigStore();
+
+  const usageRecord = useMemo(() => usageDs.current, [usageDs.current]);
 
   const usageData = useMemo(() => ({
     cpu: {
       title: formatMessage({ id: `${intlPrefix}.usage.cpu` }),
       field: 'cpu',
-      value: 23,
+      value: Number(usageRecord?.get('cpu') || 0),
     },
     root: {
       title: formatMessage({ id: `${intlPrefix}.usage.root` }),
       field: 'root',
-      value: 12,
+      value: Number(usageRecord?.get('mem') || 0),
     },
     ram: {
       title: formatMessage({ id: `${intlPrefix}.usage.ram` }),
       field: 'root',
-      value: 75,
+      value: Number(usageRecord?.get('disk') || 0),
     },
-    data: {
-      title: formatMessage({ id: `${intlPrefix}.usage.data` }),
-      field: 'root',
-      value: 50,
-    },
-  }), []);
+  }), [usageRecord, mainStore.getSelectedHost]);
 
   const openStopModal = useCallback(({ record: tableRecord }) => {
     Modal.open({
@@ -113,10 +114,65 @@ const ResourceContent = observer(() => {
   const renderStatus = useCallback(({ value }) => (
     <StatusTag
       type="default"
-      name={value}
-      color={value === 'RUNNING' ? '#1fc2bb' : '#faad4'}
+      name={value?.toUpperCase()}
+      color={value === 'running' ? '#1fc2bb' : '#faad4'}
     />
   ), []);
+
+  const renderUser = useCallback(({ value }) => {
+    const {
+      ldap, loginName, realName, email, imageUrl,
+    } = value || {};
+    return (
+      <UserInfo
+        realName={realName}
+        loginName={ldap ? loginName : email}
+        avatar={imageUrl}
+      />
+    );
+  }, []);
+
+  const renderDate = useCallback(({ value }) => <TimePopover content={value} />, []);
+
+  const getContent = useCallback(() => {
+    if (mainStore.getSelectedHost?.hostStatus === 'connected') {
+      return (
+        <div className={`${prefixCls}-resource-tab`}>
+          <Tabs defaultActiveKey="mirroring">
+            <TabPane tab="镜像" key="mirroring">
+              <Table
+                dataSet={mirrorTableDs}
+                queryBar={'none' as TableQueryBarType}
+                className="c7ncd-tab-table"
+              >
+                <Column name="name" />
+                <Column renderer={renderAction} width={60} />
+                <Column name="status" renderer={renderStatus} />
+                <Column name="hostPort" />
+                <Column name="deployer" renderer={renderUser} />
+                <Column name="creationDate" renderer={renderDate} />
+              </Table>
+            </TabPane>
+            <TabPane tab="jar包" key="jar">
+              <Table
+                dataSet={jarTableDs}
+                queryBar={'none' as TableQueryBarType}
+                className="c7ncd-tab-table"
+              >
+                <Column name="name" />
+                <Column renderer={renderJarAction} width={60} />
+                <Column name="pid" />
+                <Column name="port" />
+                <Column name="deployer" renderer={renderUser} />
+                <Column name="creationDate" renderer={renderDate} />
+              </Table>
+            </TabPane>
+          </Tabs>
+        </div>
+      );
+    }
+    return <EmptyPage image={EmptySvg} description="暂未获取到该主机资源信息" />;
+  }, [mainStore.getSelectedHost]);
 
   return (
     <div className={`${prefixCls}-resource`}>
@@ -130,42 +186,13 @@ const ResourceContent = observer(() => {
               {title}
               ：
             </span>
-            <Progress value={value} size={'small' as Size} />
+            {mainStore.getSelectedHost?.hostStatus === 'connected' ? (
+              <Progress value={value} size={'small' as Size} />
+            ) : '-'}
           </div>
         ))}
       </div>
-      <div className={`${prefixCls}-resource-tab`}>
-        <Tabs defaultActiveKey="mirroring">
-          <TabPane tab="镜像" key="mirroring">
-            <Table
-              dataSet={mirrorTableDs}
-              queryBar={'none' as TableQueryBarType}
-              className="c7ncd-tab-table"
-            >
-              <Column name="name" />
-              <Column renderer={renderAction} />
-              <Column name="status" renderer={renderStatus} />
-              <Column name="port" />
-              <Column name="deployer" />
-              <Column name="deployDate" />
-            </Table>
-          </TabPane>
-          <TabPane tab="jar包" key="jar">
-            <Table
-              dataSet={jarTableDs}
-              queryBar={'none' as TableQueryBarType}
-              className="c7ncd-tab-table"
-            >
-              <Column name="name" />
-              <Column renderer={renderJarAction} />
-              <Column name="process" />
-              <Column name="port" />
-              <Column name="deployer" />
-              <Column name="deployDate" />
-            </Table>
-          </TabPane>
-        </Tabs>
-      </div>
+      {getContent()}
     </div>
   );
 });

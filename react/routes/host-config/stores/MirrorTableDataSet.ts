@@ -1,5 +1,5 @@
 import { DataSetProps } from '@/interface';
-import apis from '@/routes/host-config/apis';
+import HostConfigApi from '@/routes/host-config/apis/DeployApis';
 
 interface ListProps {
   projectId: number,
@@ -16,7 +16,7 @@ export default ({ projectId, formatMessage, intlPrefix }: ListProps): DataSetPro
     read: ({ data }) => {
       const { hostId } = data;
       return {
-        url: '',
+        url: HostConfigApi.getDockerList(projectId, hostId),
         method: 'get',
       };
     },
@@ -24,8 +24,8 @@ export default ({ projectId, formatMessage, intlPrefix }: ListProps): DataSetPro
   fields: [
     { name: 'name', label: formatMessage({ id: 'name' }) },
     { name: 'status', label: formatMessage({ id: 'status' }) },
-    { name: 'port', label: formatMessage({ id: 'port' }) },
+    { name: 'hostPort', label: formatMessage({ id: 'port' }) },
     { name: 'deployer', label: formatMessage({ id: `${intlPrefix}.deployer` }) },
-    { name: 'deployDate', label: formatMessage({ id: `${intlPrefix}.deploy.date` }) },
+    { name: 'creationDate', label: formatMessage({ id: `${intlPrefix}.deploy.date` }) },
   ],
 });
