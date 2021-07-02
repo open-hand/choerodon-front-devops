@@ -1,5 +1,5 @@
 import React, {
-  useMemo, useImperativeHandle, useState, useEffect,
+  useMemo, useImperativeHandle, useState, useEffect, useCallback,
 } from 'react';
 import {
   TabPage, Content, Breadcrumb, Permission, Action,
@@ -47,8 +47,6 @@ const Version = withRouter(observer((props) => {
       setSelectedVersionList([]);
     }
   }, [detailDs.current]);
-
-  console.log(selectedRecordLength);
 
   useEffect(() => {
     // 初始化如果有records 设置默认选中为false 防止切换tab 造成数据错误
@@ -120,6 +118,12 @@ const Version = withRouter(observer((props) => {
       okText: formatMessage({ id: 'delete' }),
       okProps: { color: 'red' },
       cancelProps: { color: 'dark' },
+      onOk: () => {
+        setSelectedVersionList([]);
+        versionDs.records.forEach((i) => {
+          i.set('checked', false);
+        });
+      },
     };
     versionDs.delete(selectedRecords, modalProps);
   }
@@ -216,7 +220,7 @@ const Version = withRouter(observer((props) => {
     );
   }
 
-  const renderTheme4Version = () => (
+  const renderTheme4Version = useCallback(() => (
     <Spin spinning={versionDs.status !== 'ready'}>
       {renderVersionButton()}
       <div className="c7ncd-theme4-version">
@@ -284,7 +288,7 @@ const Version = withRouter(observer((props) => {
         }
       </div>
     </Spin>
-  );
+  ), [versionDs.records, selectedVersionList, isProjectOwner]);
 
   return AppState.getCurrentTheme === 'theme4' ? (
     <HeaderButtons theme4>
