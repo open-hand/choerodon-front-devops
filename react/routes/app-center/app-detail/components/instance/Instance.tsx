@@ -10,6 +10,7 @@ import openWarnModal from '@/utils/openWarnModal';
 import getTablePostData from '@/utils/getTablePostData';
 import Details from './components/details';
 import Cases from './components/cases';
+import Pods from './components/pods-details';
 
 import './index.less';
 
@@ -54,15 +55,15 @@ export default observer((props) => {
   const queryData = () => {
     casesDs.reset();
     switch (selectedTab) {
-      // case tabs.CASES_TAB:
-      //   casesDs.query();
-      //   break;
+      case 'event':
+        casesDs.query();
+        break;
       case 'detail':
         detailsStore.loadResource(projectId, InstanceListDataSet?.current?.get('version'));
         break;
-      // case tabs.PODS_TAB:
-      //   podsDs.query();
-      //   break;
+      case 'pod':
+        podsDs.query();
+        break;
       default:
     }
   };
@@ -130,6 +131,7 @@ export default observer((props) => {
     switch (selectedTab) {
       case 'detail': return <Details />;
       case 'event': return <Cases />;
+      case 'pod': return <Pods />;
       default: return '';
     }
   };

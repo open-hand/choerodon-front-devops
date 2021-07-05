@@ -10,7 +10,7 @@ import _ from 'lodash';
 import ReactCodeMirror from 'react-codemirror';
 import Operation from './op-record';
 import { useResourceStore } from '../../../../stores';
-import { useInstanceStore } from '../stores';
+import { useAppCenterInstanceStore } from '../../stores';
 
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/base16-dark.css';
@@ -150,23 +150,25 @@ const InstanceEvent = ({
 };
 
 const Cases = observer(() => {
+  // const {
+  //   prefixCls,
+  //   intlPrefix,
+  //   resourceStore: { getSelectedMenu: { id, parentId } },
+  // } = useResourceStore();
   const {
     prefixCls,
     intlPrefix,
-    resourceStore: { getSelectedMenu: { id, parentId } },
-  } = useResourceStore();
-  const {
     intl: { formatMessage },
     casesDs,
-  } = useInstanceStore();
+  } = useAppCenterInstanceStore();
   const [currentCommandId, setCurrentCommandId] = useState(null);
   const [expandKeys, setExpandKeys] = useState([]);
   const [ignore, setIgnore] = useState(false);
   const loading = casesDs.status === 'loading';
 
-  useEffect(() => {
-    setCurrentCommandId(null);
-  }, [id, parentId]);
+  // useEffect(() => {
+  //   setCurrentCommandId(null);
+  // }, [id, parentId]);
 
   function changeEvent(data, isIgnore) {
     setCurrentCommandId(data);

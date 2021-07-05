@@ -10,6 +10,7 @@ import { useHostConfigStore } from '@/routes/host-config/stores';
 import {
   StatusTag, TimePopover, UserInfo, EmptyPage,
 } from '@choerodon/components';
+// @ts-ignore
 import EmptySvg from '@/routes/host-config/images/empty-page.svg';
 
 import './index.less';

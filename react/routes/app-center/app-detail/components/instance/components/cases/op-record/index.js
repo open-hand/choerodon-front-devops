@@ -7,7 +7,7 @@ import map from 'lodash/map';
 import classnames from 'classnames';
 import UserInfo from '../../../../../../../../components/userInfo/UserInfo';
 import { useResourceStore } from '../../../../../stores';
-import { useInstanceStore } from '../../stores';
+import { useAppCenterInstanceStore } from '../../../stores';
 
 import './index.less';
 
@@ -69,21 +69,21 @@ const OpCard = ({ index, record, isActive, intlPrefix, prefixCls, formatMessage,
 
 const OpRecord = observer(({ handleClick, active }) => {
   const rowRef = useRef(null);
-  const {
-    prefixCls,
-    intlPrefix,
-    resourceStore: { getSelectedMenu: { id, parentId } },
-  } = useResourceStore();
+  // const {
+  //   resourceStore: { getSelectedMenu: { id, parentId } },
+  // } = useResourceStore();
   const {
     intl: { formatMessage },
     casesDs,
     baseDs,
-  } = useInstanceStore();
+    intlPrefix,
+    prefixCls,
+  } = useAppCenterInstanceStore();
   const [cardActive, setCardActive] = useState(null);
 
-  useEffect(() => {
-    setCardActive(null);
-  }, [id, parentId]);
+  // useEffect(() => {
+  //   setCardActive(null);
+  // }, [id, parentId]);
 
   function handleRecordClick(commandId, isIgnore) {
     setCardActive(commandId);

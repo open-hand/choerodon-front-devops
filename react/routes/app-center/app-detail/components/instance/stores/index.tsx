@@ -46,6 +46,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: Cont
   } = props;
 
   const intlPrefix = 'c7ncd.deployment';
+  const prefixCls = 'c7ncd-deployment';
 
   const {
     mainStore,
@@ -82,6 +83,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: Cont
     intlPrefix,
     casesDs,
     podsDs,
+    prefixCls,
   };
 
   return (
