@@ -4,7 +4,8 @@
   border-left: 1px solid #c2d1e1;
   padding: .16rem;
   flex-grow: 1;
-  overflow: hidden;
+  overflow-y: scroll;
+  overflow-x: hidden;
 
   &-title {
     font-size: .16rem;
@@ -31,5 +32,10 @@
       color: var(--text-color3);
       flex-shrink: 0;
     }
+  }
+
+  &-port {
+    display: flex;
+    align-items: center;
   }
 }

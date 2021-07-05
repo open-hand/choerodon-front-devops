@@ -28,7 +28,7 @@ export default ({ projectId, formatMessage, intlPrefix }: ListProps): DataSetPro
   fields: [
     { name: 'name', label: formatMessage({ id: 'name' }) },
     { name: 'status', label: formatMessage({ id: 'status' }) },
-    { name: 'hostPort', label: formatMessage({ id: 'port' }) },
+    { name: 'portMappingList', label: formatMessage({ id: 'port' }) },
     { name: 'deployer', label: formatMessage({ id: `${intlPrefix}.deployer` }) },
     { name: 'creationDate', label: formatMessage({ id: `${intlPrefix}.deploy.date` }) },
   ],

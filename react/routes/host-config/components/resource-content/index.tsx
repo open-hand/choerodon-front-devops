@@ -1,17 +1,19 @@
 import React, { useCallback, useMemo } from 'react';
 import map from 'lodash/map';
+import isEmpty from 'lodash/isEmpty';
 import {
-  Progress, Tabs, Table, Modal,
+  Progress, Tabs, Table, Modal, Tooltip, Icon,
 } from 'choerodon-ui/pro';
 import { Action } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
-import { Size, TableQueryBarType } from '@/interface';
+import { Size, TableQueryBarType, TableColumnTooltip } from '@/interface';
 import { useHostConfigStore } from '@/routes/host-config/stores';
 import {
   StatusTag, TimePopover, UserInfo, EmptyPage,
 } from '@choerodon/components';
 // @ts-ignore
 import EmptySvg from '@/routes/host-config/images/empty-page.svg';
+import HostConfigServices from '@/routes/host-config/services';
 
 import './index.less';
 
@@ -24,6 +26,7 @@ const ResourceContent = observer(() => {
     intlPrefix,
     formatMessage,
     prefixCls,
+    projectId,
     mainStore,
     mirrorTableDs,
     jarTableDs,
@@ -50,22 +53,46 @@ const ResourceContent = observer(() => {
     },
   }), [usageRecord, mainStore.getSelectedHost]);
 
+  const refreshDocker = useCallback(() => {
+    mirrorTableDs.query();
+  }, []);
+
+  const refreshJar = useCallback(() => {
+    jarTableDs.query();
+  }, []);
+
   const openStopModal = useCallback(({ record: tableRecord }) => {
     Modal.open({
       key: stopModalKey,
       title: '停止镜像',
       children: `确定要停止镜像“${tableRecord.get('name')}”吗？`,
       okText: '停止',
-      onOk: handleStop,
+      onOk: () => handleStop({ record: tableRecord }),
     });
   }, []);
 
-  const handleStop = useCallback(() => {
-
+  const handleStop = useCallback(async ({ record: tableRecord }) => {
+    const res = await HostConfigServices.stopDocker(projectId, tableRecord.get('hostId'), tableRecord.get('id'));
+    if (res) {
+      refreshDocker();
+    }
+    return res;
   }, []);
 
-  const handleReboot = useCallback(() => {
+  const handleRestart = useCallback(async ({ record: tableRecord }) => {
+    const res = await HostConfigServices.restartDocker(projectId, tableRecord.get('hostId'), tableRecord.get('id'));
+    if (res) {
+      refreshDocker();
+    }
+    return res;
+  }, []);
 
+  const handleStart = useCallback(async ({ record: tableRecord }) => {
+    const res = await HostConfigServices.startDocker(projectId, tableRecord.get('hostId'), tableRecord.get('id'));
+    if (res) {
+      refreshDocker();
+    }
+    return res;
   }, []);
 
   const handleDelete = useCallback(({ record: tableRecord }) => {
@@ -89,17 +116,26 @@ const ResourceContent = observer(() => {
   const renderAction = useCallback(({ record: tableRecord }) => {
     const actionData = [{
       service: [],
-      text: '停止',
-      action: openStopModal,
-    }, {
-      service: [],
-      text: '重启',
-      action: handleReboot,
-    }, {
-      service: [],
       text: formatMessage({ id: 'delete' }),
       action: () => handleDelete({ record: tableRecord }),
     }];
+    if (tableRecord.get('status') === 'running') {
+      actionData.unshift({
+        service: [],
+        text: '停止',
+        action: () => openStopModal({ record: tableRecord }),
+      }, {
+        service: [],
+        text: '重启',
+        action: () => handleRestart({ record: tableRecord }),
+      });
+    } else {
+      actionData.unshift({
+        service: [],
+        text: '启动',
+        action: () => handleStart({ record: tableRecord }),
+      });
+    }
     return <Action data={actionData} />;
   }, []);
 
@@ -110,6 +146,29 @@ const ResourceContent = observer(() => {
       action: () => handleJarDelete({ record: tableRecord }),
     }];
     return <Action data={actionData} />;
+  }, []);
+
+  const renderPort = useCallback(({ value }) => {
+    const portContent = map(value || [], (item) => {
+      const { containerPort, hostIP, hostPort } = item || {};
+      return <div>{`${hostIP}:${hostPort}:${containerPort}`}</div>;
+    });
+    if (!isEmpty(portContent)) {
+      return (
+        <div className={`${prefixCls}-resource-port`}>
+          {portContent[0]}
+          {portContent.length > 1 && (
+            <Tooltip
+              theme="light"
+              title={portContent}
+            >
+              <Icon type="expand_more" />
+            </Tooltip>
+          )}
+        </div>
+      );
+    }
+    return null;
   }, []);
 
   const renderStatus = useCallback(({ value }) => (
@@ -146,12 +205,12 @@ const ResourceContent = observer(() => {
                 queryBar={'none' as TableQueryBarType}
                 className="c7ncd-tab-table"
               >
-                <Column name="name" />
+                <Column name="name" tooltip={'overflow' as TableColumnTooltip} />
                 <Column renderer={renderAction} width={60} />
-                <Column name="status" renderer={renderStatus} />
-                <Column name="hostPort" />
+                <Column name="status" renderer={renderStatus} width={100} />
+                <Column name="portMappingList" renderer={renderPort} />
                 <Column name="deployer" renderer={renderUser} />
-                <Column name="creationDate" renderer={renderDate} />
+                <Column name="creationDate" renderer={renderDate} width={105} />
               </Table>
             </TabPane>
             <TabPane tab="jar包" key="jar">
@@ -160,7 +219,7 @@ const ResourceContent = observer(() => {
                 queryBar={'none' as TableQueryBarType}
                 className="c7ncd-tab-table"
               >
-                <Column name="name" />
+                <Column name="name" tooltip={'overflow' as TableColumnTooltip} />
                 <Column renderer={renderJarAction} width={60} />
                 <Column name="pid" />
                 <Column name="port" />
