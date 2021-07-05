@@ -171,13 +171,23 @@ const ResourceContent = observer(() => {
     return null;
   }, []);
 
-  const renderStatus = useCallback(({ value }) => (
-    <StatusTag
-      type="default"
-      name={value?.toUpperCase()}
-      color={value === 'running' ? '#1fc2bb' : '#faad4'}
-    />
-  ), []);
+  const renderStatus = useCallback(({ value }) => {
+    const color = {
+      running: '#1fc2bb',
+      exited: '#faad14',
+    };
+    if (['running', 'exited'].includes(value)) {
+      return (
+        <StatusTag
+          type="default"
+          name={value?.toUpperCase()}
+          // @ts-ignore
+          color={color[value] || '#1fc2bb'}
+        />
+      );
+    }
+    return null;
+  }, []);
 
   const renderUser = useCallback(({ value }) => {
     const {
