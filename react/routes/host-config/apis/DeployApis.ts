@@ -65,4 +65,8 @@ export default class HostConfigApi {
   static jarDelete(projectId: number, hostId: string, instanceId: string) {
     return `/devops/v1/projects/${projectId}/hosts/${hostId}/java_process/${instanceId}`;
   }
+
+  static getDeleteShell(projectId: number, hostId: string) {
+    return `/devops/v1/projects/${projectId}/hosts/${hostId}/uninstall_shell`;
+  }
 }
