@@ -1,11 +1,12 @@
 import React, {
-  createContext, useContext, useEffect, useMemo,
+  createContext, useCallback, useContext, useEffect, useMemo,
 } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { withRouter } from 'react-router-dom';
 import { DataSet } from 'choerodon-ui/pro';
 import some from 'lodash/some';
+import find from 'lodash/find';
 import useStore from './useStore';
 import ManualDeployDataSet from './ManualDeployDataSet';
 import OptionsDataSet from '../../../stores/OptionsDataSet';
@@ -35,6 +36,8 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       hasHostDeploy,
       random,
       appServiceId,
+      marketAppVersionId,
+      marketServiceId,
       appServiceSource,
     } = props;
 
@@ -81,21 +84,57 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       marketServiceOptionsDs,
       hasDevops,
       random,
-      appServiceId,
       appServiceSource,
     })), [projectId]);
 
     useEffect(() => {
       envOptionsDs.transport.read.url = `/devops/v1/projects/${projectId}/envs/list_by_active?active=true`;
       envOptionsDs.query();
-      hasMarket && marketAndVersionOptionsDs.query();
+      hasMarket && loadMarketAndVersion();
     }, [projectId]);
 
     useEffect(() => {
-      if (appServiceId && appServiceSource) {
-        if (appServiceSource !== 'market_service') {
+      if (appServiceSource) {
+        if (appServiceSource === 'market_service') {
+          if (marketAppVersionId && marketServiceId) {
+            marketServiceOptionsDs.setQueryParameter('marketVersionId', marketAppVersionId);
+            loadMarketService();
+          }
+        } else if (appServiceId) {
           manualDeployDs.current?.set('appServiceId', appServiceId);
         }
+      }
+    }, []);
+
+    const loadMarketAndVersion = useCallback(async () => {
+      await marketAndVersionOptionsDs.query();
+      if (appServiceSource === 'market_service' && marketAppVersionId) {
+        let marketData;
+        let groupName;
+        marketAndVersionOptionsDs.some((optionRecord) => {
+          const item = find(optionRecord.get('appVersionVOS') || [], (vo) => vo?.id === marketAppVersionId);
+          if (item) {
+            marketData = item;
+            groupName = optionRecord.get('name');
+            return true;
+          }
+          return false;
+        });
+        if (marketData) {
+          manualDeployDs.current?.init('marketAppAndVersion', {
+            value: marketData,
+            meaning: marketData.versionNumber,
+            ['group-0']: groupName,
+          });
+        }
+      }
+    }, []);
+
+    const loadMarketService = useCallback(async () => {
+      await marketServiceOptionsDs.query();
+      const record = marketServiceOptionsDs.find((optionRecord) => optionRecord.get('id') === marketServiceId);
+      if (record) {
+        manualDeployDs.current?.set('marketService', record.toData());
       }
     }, []);
 
