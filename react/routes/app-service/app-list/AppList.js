@@ -83,8 +83,8 @@ const AppService = withRouter(observer(() => {
       getLoading,
       getHasApp: hasApp,
     } = appServiceStore;
-
-    if (getLoading || loading) return <EmptyLoading formatMessage={formatMessage} />;
+    //
+    // if (getLoading || loading) return <EmptyLoading formatMessage={formatMessage} />;
 
     let content;
     if (!hasApp) {
@@ -96,7 +96,7 @@ const AppService = withRouter(observer(() => {
   }
 
   return (
-    <Page service={listPermissions}>
+    <Page>
       {getContent()}
     </Page>
   );

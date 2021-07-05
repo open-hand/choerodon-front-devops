@@ -1,4 +1,4 @@
-export type statusKinds = 'success' | 'operating' | 'failed' | 'default' | 'occupied';
+export type statusKinds = 'success' | 'operating' | 'failed' | 'default' | 'occupied' | 'connected' | 'disconnect';
 
 export type statusObj = {
   text:string,

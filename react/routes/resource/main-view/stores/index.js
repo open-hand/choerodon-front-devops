@@ -40,7 +40,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer(
     const secretStore = useSecretStore();
     const certStore = useCertStore();
     const childrenStore = useChildrenContextStore();
-    
+
     useEffect(() => {
       // 此处的key是TreeDataSet里的formatInstance中的key值
       // 这个key的规则是每一级别的节点的id属性 然后用 '-' 相连接 例如：’523-1080-21‘

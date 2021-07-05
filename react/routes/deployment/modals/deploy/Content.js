@@ -77,6 +77,7 @@ const DeployModal = observer(() => {
       const res = await manualDeployDs.submit();
       if (res !== false) {
         refresh(res.list[0]);
+        modal.close();
         return true;
       }
       return false;

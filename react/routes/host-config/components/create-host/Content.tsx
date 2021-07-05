@@ -1,18 +1,15 @@
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Form, Password, SelectBox, Spin, TextField, message,
+  Form, Password, SelectBox, Spin, TextField,
 } from 'choerodon-ui/pro';
-import { Alert, Tabs, Divider } from 'choerodon-ui';
+import { Divider } from 'choerodon-ui';
 import pick from 'lodash/pick';
-import HostConfigApis from '@/routes/host-config/apis';
+import HostConfigApis from '@/routes/host-config/apis/TestApis';
 import YamlEditor from '@/components/yamlEditor';
-import Tips from '@/components/new-tips';
 import { useCreateHostStore } from './stores';
 import JmeterGuide from './components/jmeter-guide';
 import TestConnect from './components/test-connect';
-
-const { TabPane } = Tabs;
 
 const CreateHost: React.FC<any> = observer((): any => {
   const {
@@ -23,18 +20,12 @@ const CreateHost: React.FC<any> = observer((): any => {
     formatMessage,
     projectId,
     refresh,
-    hostId,
-    showTestTab,
   } = useCreateHostStore();
 
   modal.handleOk(async () => {
     try {
       const record = formDs.current;
       const selectedTabKey = record?.get('type');
-      if (record && !(record.get('hostIp') || record.get('sshPort') || record.get('privateIp') || record.get('privatePort'))) {
-        message.error('外部SSH认证与内部SSH认证至少填写一个模块');
-        return false;
-      }
       const res = await formDs.submit();
       if (res) {
         refresh(selectedTabKey);
@@ -66,7 +57,7 @@ const CreateHost: React.FC<any> = observer((): any => {
         record.set('jmeterStatus', 'operating');
       }
       record.set('hostStatus', 'operating');
-      const res = await HostConfigApis.testConnection(projectId, postData, postData.type);
+      const res = await HostConfigApis.testConnection(projectId, postData);
       modal.update({
         okProps: { disabled: false },
       });
@@ -103,66 +94,11 @@ const CreateHost: React.FC<any> = observer((): any => {
 
   return (
     <div className={`${prefixCls}`}>
-      {showTestTab && (
-        <Tips
-          title={formatMessage({ id: `${intlPrefix}.type` })}
-          helpText="测试主机可用于执行性能测试时使用；部署主机则用于主机部署操作时使用。"
-          className={`${prefixCls}-type-tips`}
-        />
-      )}
       <Form dataSet={formDs} className={`${prefixCls}-form`}>
-        {showTestTab && <SelectBox name="type" disabled={!!hostId} />}
-        <TextField name="name" style={{ marginTop: '-10px' }} />
+        <TextField name="name" />
+        <TextField name="hostIp" />
+        <TextField name="sshPort" />
       </Form>
-      {formDs && formDs.current && formDs.current.get('type') === 'deploy' ? ([
-        <Divider className={`${prefixCls}-divider`} />,
-        <Alert
-          type="info"
-          showIcon
-          message="外部SSH认证与内部SSH认证至少填写一个模块"
-          className={`${prefixCls}-alert`}
-        />,
-        <Tabs defaultActiveKey="external">
-          <TabPane
-            tab={(
-              <>
-                <span className={`${prefixCls}-tab-text`}>外部SSH认证</span>
-                <Tips
-                  helpText="外部SSH认证用于连通Choerodon与当前主机；设置后，Choerodon才能访问到该主机。"
-                  className={`${prefixCls}-tab-tips`}
-                />
-              </>
-            )}
-            key="external"
-          >
-            <Form dataSet={formDs} className={`${prefixCls}-form`}>
-              <TextField name="hostIp" />
-              <TextField name="sshPort" />
-            </Form>
-          </TabPane>
-          <TabPane
-            tab={(
-              <>
-                <span className={`${prefixCls}-tab-text`}>内部SSH认证</span>
-                <Tips
-                  helpText="内部SSH认证用于实现内部主机之间的连通；设置后，相应的主机之间便能实现相互连通。"
-                />
-              </>
-            )}
-            key="internal"
-          >
-            <Form dataSet={formDs} className={`${prefixCls}-form`}>
-              <TextField name="privateIp" />
-              <TextField name="privatePort" />
-            </Form>
-          </TabPane>
-        </Tabs>,
-      ]) : (
-        <Form dataSet={formDs} className={`${prefixCls}-form`}>
-          <TextField name="hostIp" />
-          <TextField name="sshPort" />
-        </Form>
-      )}
       <Divider className={`${prefixCls}-divider`} />
       <Form dataSet={formDs} className={`${prefixCls}-form`}>
         <SelectBox name="authType" />
@@ -184,19 +120,15 @@ const CreateHost: React.FC<any> = observer((): any => {
           ) : null,
         ]) : <Password name="password" reveal={false} />}
       </Form>
-      {formDs && formDs.current && formDs.current.get('type') === 'distribute_test' && ([
-        <div>
-          <Divider className={`${prefixCls}-divider`} />
-          <span>{formatMessage({ id: `${intlPrefix}.jmeter` })}</span>
-        </div>,
-        <Form dataSet={formDs} className={`${prefixCls}-form`}>
-          <TextField name="jmeterPort" />
-          <TextField name="jmeterPath" />
-        </Form>,
-      ])}
-      {formDs && formDs.current && formDs.current.get('type') === 'distribute_test' && (
-        <JmeterGuide />
-      )}
+      <div>
+        <Divider className={`${prefixCls}-divider`} />
+        <span>{formatMessage({ id: `${intlPrefix}.jmeter` })}</span>
+      </div>
+      <Form dataSet={formDs} className={`${prefixCls}-form`}>
+        <TextField name="jmeterPort" />
+        <TextField name="jmeterPath" />
+      </Form>
+      <JmeterGuide />
       <TestConnect handleTestConnection={handleTestConnection} />
     </div>
   );

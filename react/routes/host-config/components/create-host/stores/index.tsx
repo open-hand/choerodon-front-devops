@@ -8,9 +8,6 @@ import { DataSetSelection } from 'choerodon-ui/pro/lib/data-set/enum';
 import some from 'lodash/some';
 import FormDataSet from './FormDataSet';
 
-// @ts-ignore
-const HAS_BASE_PRO = C7NHasModule('@choerodon/testmanager-pro');
-
 interface ContextProps {
   prefixCls: string,
   intlPrefix: string,
@@ -35,24 +32,10 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     intl: { formatMessage },
     AppState: { currentMenuType: { projectId, categories } },
     hostId,
-    hostType,
   } = props;
 
   const intlPrefix = 'c7ncd.host.config';
 
-  const typeDs = useMemo(() => new DataSet({
-    data: [
-      {
-        text: formatMessage({ id: `${intlPrefix}.type.test` }),
-        value: 'distribute_test',
-      },
-      {
-        text: formatMessage({ id: `${intlPrefix}.type.deploy` }),
-        value: 'deploy',
-      },
-    ],
-    selection: 'single' as DataSetSelection,
-  }), []);
   const accountDs = useMemo(() => new DataSet({
     data: [
       {
@@ -67,18 +50,13 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     selection: 'single' as DataSetSelection,
   }), []);
 
-  const showTestTab = useMemo(() => HAS_BASE_PRO && some(categories, ['code', 'N_TEST']), [categories, HAS_BASE_PRO]);
-
   const formDs = useMemo(
     () => new DataSet(FormDataSet({
       formatMessage,
       intlPrefix,
       projectId,
-      typeDs,
       accountDs,
       hostId,
-      showTestTab,
-      hostType,
     })), [projectId],
   );
 
@@ -97,7 +75,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     formatMessage,
     projectId,
     formDs,
-    showTestTab,
   };
   return (
     <Store.Provider value={value}>
