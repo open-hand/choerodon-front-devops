@@ -44,12 +44,12 @@ const ResourceContent = observer(() => {
     root: {
       title: formatMessage({ id: `${intlPrefix}.usage.root` }),
       field: 'root',
-      value: Number(usageRecord?.get('mem') || 0),
+      value: Number(usageRecord?.get('disk') || 0),
     },
     ram: {
       title: formatMessage({ id: `${intlPrefix}.usage.ram` }),
       field: 'root',
-      value: Number(usageRecord?.get('disk') || 0),
+      value: Number(usageRecord?.get('mem') || 0),
     },
   }), [usageRecord, mainStore.getSelectedHost]);
 

@@ -160,17 +160,17 @@ const HostsItem:React.FC<any> = observer(({
           text: formatMessage({ id: 'edit' }),
           action: () => handleCreateDeployHost(id),
         },
-        {
-          service: ['choerodon.code.project.deploy.host.ps.delete'],
-          text: formatMessage({ id: 'delete' }),
-          action: handleDelete,
-        },
       ];
       if (getMainStatus === 'disconnect') {
         actionData.unshift({
           service: [],
           text: formatMessage({ id: `${intlPrefix}.connect` }),
           action: openConnectModal,
+        });
+        actionData.push({
+          service: ['choerodon.code.project.deploy.host.ps.delete'],
+          text: formatMessage({ id: 'delete' }),
+          action: handleDelete,
         });
       }
       return actionData;
