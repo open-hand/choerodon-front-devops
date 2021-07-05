@@ -26,6 +26,13 @@ interface InstanceProps {
   envId: string,
 }
 
+interface DeployProps {
+  marketAppVersionId?: string,
+  marketServiceId?: string,
+  appServiceSource: string,
+  appServiceId: string
+}
+
 const linkServiceKey = Modal.key();
 const deployKey = Modal.key();
 const batchDeployKey = Modal.key();
@@ -84,8 +91,7 @@ const AppCenterContent = () => {
     }
   }, [search]);
 
-  const openDeploy = (data?: { appServiceSource: string, appServiceId: string }) => {
-    const { appServiceSource, appServiceId } = data || {};
+  const openDeploy = (data?: DeployProps) => {
     Modal.open({
       key: deployKey,
       style: { width: LARGE },
@@ -95,9 +101,8 @@ const AppCenterContent = () => {
         deployStore={deployStore}
         refresh={deployAfter}
         intlPrefix={intlPrefixDeploy}
-        appServiceId={appServiceId}
-        appServiceSource={appServiceSource}
         prefixCls="c7ncd-deploy"
+        {...data || {}}
       />,
       afterClose: () => {
         deployStore.setCertificates([]);

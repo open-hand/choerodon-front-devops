@@ -92,6 +92,9 @@ const ContentList = ({
           // @ts-ignore
           appServiceSource: appServiceSource[record.get('source')] || 'normal_service',
           appServiceId: `${record.get('id')}**${record.get('serviceCode')}`,
+          // @ts-ignore
+          marketAppVersionId: record.get('marketServiceDeployObjectVO')?.marketAppVersionId,
+          marketServiceId: record.get('marketServiceDeployObjectVO')?.marketServiceId,
         }),
         service: [],
       });
