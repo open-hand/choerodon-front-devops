@@ -34,6 +34,7 @@ export default observer((props) => {
   } = useAppCenterDetailStore();
 
   const [selectedTab, setSelectedTab] = useState('event');
+  const [hasInstance, setHasInstance] = useState(true);
 
   const checkIstExist = () => {
     const envId = mainStore.getSelectedEnv.id;
@@ -71,6 +72,7 @@ export default observer((props) => {
   useEffect(() => {
     const id = InstanceListDataSet?.current?.get('version');
     if (id) {
+      setHasInstance(true);
       checkIstExist().then((query: any) => {
         if (query) {
           // @ts-ignore
@@ -105,8 +107,10 @@ export default observer((props) => {
           queryData();
         }
       });
+    } else {
+      setHasInstance(false);
     }
-  }, [projectId, selectedTab, InstanceListDataSet?.current?.get('version')]);
+  }, [projectId, selectedTab, InstanceListDataSet?.current?.get('version'), mainStore.getSelectedEnv]);
 
   const versionOptionsRender = ({ record, text, value }: {
     record: Record
@@ -138,33 +142,40 @@ export default observer((props) => {
 
   return (
     <div className="c7ncd-app_detail-instance">
-      <div className="c7ncd-app_detail-instance-header">
-        <Form className="c7ncd-app_detail-instance-version" labelLayout={'horizontal' as LabelLayoutType} dataSet={InstanceListDataSet}>
-          <Select
-            name="version"
-            optionRenderer={versionOptionsRender}
-            renderer={versionRender}
-          />
-        </Form>
-        <CustomTabs
-          selectedTabValue="event"
-          onChange={(e, name, value) => {
-            setSelectedTab(value);
-          }}
-          data={[{
-            name: '实例事件',
-            value: 'event',
-          }, {
-            name: '运行详情',
-            value: 'detail',
-          }, {
-            name: 'Pod详情',
-            value: 'pod',
-          }]}
-        />
-      </div>
       {
-        renderTabContent()
+        hasInstance ? (
+          <>
+            <div className="c7ncd-app_detail-instance-header">
+              <Form className="c7ncd-app_detail-instance-version" labelLayout={'horizontal' as LabelLayoutType} dataSet={InstanceListDataSet}>
+                <Select
+                  name="version"
+                  optionRenderer={versionOptionsRender}
+                  renderer={versionRender}
+                />
+              </Form>
+              <CustomTabs
+                selectedTabValue="event"
+                onChange={(e, name, value) => {
+                  setSelectedTab(value);
+                }}
+                data={[{
+                  name: '实例事件',
+                  value: 'event',
+                }, {
+                  name: '运行详情',
+                  value: 'detail',
+                }, {
+                  name: 'Pod详情',
+                  value: 'pod',
+                }]}
+              />
+            </div>
+            ,
+            {
+              renderTabContent()
+            }
+          </>
+        ) : <p>无实例详情</p>
       }
     </div>
   );

@@ -20,9 +20,10 @@ export default (
       url: `/devops/v1/projects/${projectId}/app_service_instances/list_by_service_and_env?app_service_id=${appServiceId}&env_id=${mainStore.getSelectedEnv?.id}`,
       method: 'get',
       transformResponse: (res) => {
-        console.log('123');
         const newRes = JSON.parse(res);
-        dataSet?.current?.set('version', newRes && newRes?.length > 0 && newRes[0].id);
+        if (newRes && newRes.length > 0) {
+          dataSet?.current?.set('version', newRes && newRes?.length > 0 && newRes[0].id);
+        }
         return newRes;
       },
     }),

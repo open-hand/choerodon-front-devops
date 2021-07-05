@@ -21,6 +21,7 @@ const DeployConfig = React.lazy(() => import('./components/deploy-config'));
 const ConfigMap = React.lazy(() => import('./components/config-map'));
 const Secrets = React.lazy(() => import('./components/secrets'));
 const Instance = React.lazy(() => import('./components/instance'));
+const Net = React.lazy(() => import('./components/net'));
 
 const { TabPane } = Tabs;
 
@@ -44,7 +45,7 @@ const AppCenterDetailContent = () => {
   const tabContent = useMemo(() => ({
     [INSTANCE_TAB]: <Instance />,
     [DEPLOYCONFIG_TAB]: <DeployConfig />,
-    [SERVICEANDINGRESS_TAB]: <div>网络与域名</div>,
+    [SERVICEANDINGRESS_TAB]: <Net />,
     [CONFIGMAP_TAB]: <ConfigMap />,
     [SECRET_TAB]: <Secrets />,
   }), []);
