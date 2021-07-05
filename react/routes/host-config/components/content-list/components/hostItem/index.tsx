@@ -132,7 +132,7 @@ const HostsItem:React.FC<any> = observer(({
       okCancel: false,
       okText: formatMessage({ id: 'close' }),
     });
-  }, []);
+  }, [id]);
 
   const handleSelect = useCallback(() => {
     if (isDeploy && mainStore.getSelectedHost?.id !== id) {
@@ -192,7 +192,7 @@ const HostsItem:React.FC<any> = observer(({
         action: handleDelete,
       },
     ] : []);
-  }, [getMainStatus, handleCorrect, handleDelete, isDeploy]);
+  }, [getMainStatus, handleCorrect, handleDelete, isDeploy, id]);
 
   return (
     <div className={itemClassName} onClick={handleSelect} role="none">
