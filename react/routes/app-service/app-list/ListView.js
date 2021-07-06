@@ -199,7 +199,7 @@ const ListView = withRouter(observer((props) => {
       }else if(active){
         colorCode = 'active'
       }else{
-        colorCode = 'stop'
+        colorCode = 'unready'
       }
     } else {
       colorCode = 'operating'
@@ -212,7 +212,7 @@ const ListView = withRouter(observer((props) => {
             style={{
               marginRight: '7px'
             }}
-            name={formatMessage({id:colorCode})}
+            name={colorCode === 'unready' ? '停用' : formatMessage({id:colorCode})}
           />
         </div>
       </Tooltip>
