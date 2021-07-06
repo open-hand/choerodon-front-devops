@@ -163,7 +163,7 @@ const HostsItem:React.FC<any> = observer(({
       ];
       if (getMainStatus === 'disconnect') {
         actionData.unshift({
-          service: [],
+          service: ['choerodon.code.project.deploy.host.ps.connect'],
           text: formatMessage({ id: `${intlPrefix}.connect` }),
           action: openConnectModal,
         });

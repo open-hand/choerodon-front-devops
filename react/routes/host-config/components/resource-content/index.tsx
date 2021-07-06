@@ -118,23 +118,23 @@ const ResourceContent = observer(() => {
       return null;
     }
     const actionData = [{
-      service: [],
+      service: ['choerodon.code.project.deploy.host.ps.docker.delete'],
       text: formatMessage({ id: 'delete' }),
       action: () => handleDelete({ record: tableRecord }),
     }];
     if (tableRecord.get('status') === 'running') {
       actionData.unshift({
-        service: [],
+        service: ['choerodon.code.project.deploy.host.ps.docker.stop'],
         text: '停止',
         action: () => openStopModal({ record: tableRecord }),
       }, {
-        service: [],
+        service: ['choerodon.code.project.deploy.host.ps.docker.restart'],
         text: '重启',
         action: () => handleRestart({ record: tableRecord }),
       });
     } else {
       actionData.unshift({
-        service: [],
+        service: ['choerodon.code.project.deploy.host.ps.docker.start'],
         text: '启动',
         action: () => handleStart({ record: tableRecord }),
       });
@@ -144,7 +144,7 @@ const ResourceContent = observer(() => {
 
   const renderJarAction = useCallback(({ record: tableRecord }) => {
     const actionData = [{
-      service: [],
+      service: ['choerodon.code.project.deploy.host.ps.jar.stop'],
       text: formatMessage({ id: 'delete' }),
       action: () => handleJarDelete({ record: tableRecord }),
     }];
