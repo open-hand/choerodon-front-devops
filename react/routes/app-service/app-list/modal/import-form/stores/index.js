@@ -20,13 +20,14 @@ export function useImportAppServiceStore() {
 export const StoreProvider = injectIntl(inject('AppState')(
   (props) => {
     const {
-      AppState: { currentMenuType: { projectId }, currentServices },
+      AppState: { currentMenuType: { projectId, organizationId }, currentServices, isSaasList },
       intl: { formatMessage },
       children,
       intlPrefix,
     } = props;
 
     const hasMarket = useMemo(() => some(currentServices || [], ['serviceCode', 'market-service']), [currentServices]);
+    const isSaaS = isSaasList && isSaasList[organizationId];
 
     const serviceTypeDs = useMemo(() => new DataSet({
       data: [
@@ -63,7 +64,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
 
     const value = {
       ...props,
-      IMPORT_METHOD: ['share', 'market', 'github', 'gitlab'],
+      IMPORT_METHOD: isSaaS ? ['share', 'github', 'gitlab'] : ['share', 'market', 'github', 'gitlab'],
       importDs,
       importTableDs,
       selectedDs,

@@ -36,6 +36,7 @@ const DeployModal = observer(() => {
     marketAndVersionOptionsDs,
     hasDevops,
     hasMarket,
+    isSaaS,
   } = useManualDeployStore();
 
   const record = manualDeployDs.current;
@@ -251,13 +252,15 @@ const DeployModal = observer(() => {
                   {formatMessage({ id: `${intlPrefix}.source.organization` })}
                 </span>
               </Option>
-              <Option value="market_service">
-                <Tooltip title={hasMarket ? '' : '未安装【应用市场】插件，无法使用此功能'}>
-                  <span className={`${prefixCls}-manual-deploy-radio`}>
-                    {formatMessage({ id: `${intlPrefix}.source.market` })}
-                  </span>
-                </Tooltip>
-              </Option>
+              {!isSaaS ? (
+                <Option value="market_service">
+                  <Tooltip title={hasMarket ? '' : '未安装【应用市场】插件，无法使用此功能'}>
+                    <span className={`${prefixCls}-manual-deploy-radio`}>
+                      {formatMessage({ id: `${intlPrefix}.source.market` })}
+                    </span>
+                  </Tooltip>
+                </Option>
+              ) : null}
             </SelectBox>
             {record.get('appServiceSource') === 'market_service' ? (getMarketItem()) : ([
               <Select
