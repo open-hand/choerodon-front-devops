@@ -64,12 +64,6 @@ const DeleteCheck:FC<DeleteCheckProps> = (props) => {
         }
         modal.update({
           okText,
-          okProps: {
-            color: 'red',
-          },
-          cancelProps: {
-            color: '#000',
-          },
           onOk: handleDelete,
           footer: (okBtn:ReactNode, cancelBtn:ReactNode) => (
             <>
