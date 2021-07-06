@@ -953,6 +953,7 @@ const hostConfig = {
   'c7ncd.host.config.process': '进程号',
   'c7ncd.host.config.port.occupied': '占用端口',
   'c7ncd.host.config.connect': '连接主机',
+  'c7ncd.host.config.connect.tips': '复制以下指令至对应节点执行，与平台建立连接。',
   'c7ncd.host.config.delete.des': '复制以下指令至对应主机执行，来删除该主机的agent',
   'c7ncd.host.config.delete.tips': '请确保您已在主机中运行以上指令，否则会导致主机删除不彻底！',
   'c7ncd.host.config.delete.btn': '已执行，删除',
