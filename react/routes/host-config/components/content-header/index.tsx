@@ -44,9 +44,20 @@ const ContentHeader: React.FC<any> = observer((): any => {
     },
   ]), []);
 
+  const deploySearchArr = useMemo(() => ([
+    {
+      text: formatMessage({ id: 'connect' }),
+      value: 'connected',
+    },
+    {
+      text: formatMessage({ id: 'disconnect' }),
+      value: 'disconnect',
+    },
+  ]), []);
+
   const getSearchArr = ():object[] => {
     const isTest = mainStore.getCurrentTabKey === TEST_TAB;
-    return isTest ? searchArr : searchArr.slice(0, searchArr.length - 1);
+    return isTest ? searchArr : deploySearchArr;
   };
 
   useEffect(() => {
