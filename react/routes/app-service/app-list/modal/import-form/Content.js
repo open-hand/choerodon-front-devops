@@ -130,7 +130,7 @@ const ImportForm = injectIntl(observer((props) => {
         <SelectBox className={`${prefixCls}-import-wrap-select`} name="platformType" onOption={handleOptionProps}>
           {map(IMPORT_METHOD, (item) => (
             <Option value={item} key={item}>
-              <Tooltip title={hasMarket && item !== 'market' ? '' : '未安装【应用市场】插件，无法使用此功能'}>
+              <Tooltip title={hasMarket || item !== 'market' ? '' : '未安装【应用市场】插件，无法使用此功能'}>
                 <span className={`${prefixCls}-import-wrap-radio`}>
                   <Tips
                     helpText={formatMessage({ id: `${intlPrefix}.${item}.tips` })}
