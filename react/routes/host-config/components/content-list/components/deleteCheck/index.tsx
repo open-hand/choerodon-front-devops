@@ -33,9 +33,6 @@ const DeleteCheck:FC<DeleteCheckProps> = (props) => {
   const intlPrefix = useMemo(() => 'c7ncd.host.config', []);
 
   const checkNow = useCallback(async ():Promise<void> => {
-    modal.update({
-      title: '正在校验主机...',
-    });
     try {
       const res = await apis.checkHostDeletable(projectId, hostId, hostType);
       setLoading(false);
@@ -66,7 +63,6 @@ const DeleteCheck:FC<DeleteCheckProps> = (props) => {
           setText('确定要删除该主机配置吗？');
         }
         modal.update({
-          title: '删除主机',
           okText,
           okProps: {
             color: 'red',
@@ -86,7 +82,6 @@ const DeleteCheck:FC<DeleteCheckProps> = (props) => {
       }
       setText(hostType !== 'distribute_test' ? '该主机含有关联的流水线主机部署任务，无法删除。' : '该主机状态已改变，请刷新后重试');
       modal.update({
-        title: '删除主机',
         footer: (okBtn:ReactNode, cancelBtn:ReactNode) => (
           <>
             {cancelBtn}
@@ -96,7 +91,6 @@ const DeleteCheck:FC<DeleteCheckProps> = (props) => {
       });
     } catch (error) {
       modal.update({
-        title: '删除主机',
         footer: (okBtn:ReactNode, cancelBtn:ReactNode) => (
           <>
             {cancelBtn}
