@@ -114,6 +114,9 @@ const ResourceContent = observer(() => {
   }, []);
 
   const renderAction = useCallback(({ record: tableRecord }) => {
+    if (!['running', 'exited'].includes(tableRecord.get('status'))) {
+      return null;
+    }
     const actionData = [{
       service: [],
       text: formatMessage({ id: 'delete' }),

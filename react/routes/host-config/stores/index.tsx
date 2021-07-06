@@ -80,7 +80,11 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
 
   const mainStore = useStore({ defaultTabKey });
 
-  const listDs = useMemo(() => new DataSet(ListDataSet({ projectId, defaultTabKey })), [projectId]);
+  const listDs = useMemo(() => new DataSet(ListDataSet({
+    projectId,
+    defaultTabKey,
+    tabKey,
+  })), [projectId]);
   const searchDs = useMemo(() => new DataSet(SearchDataSet({ projectId })), [projectId]);
   const usageDs = useMemo(() => new DataSet(UsageDataSet({ projectId })), [projectId]);
   const mirrorTableDs = useMemo(() => new DataSet(MirrorTableDataSet({
@@ -97,7 +101,14 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const refresh = useCallback(async (callback?:CallableFunction) => {
     await listDs.query();
     typeof callback === 'function' && callback();
-  }, [listDs]);
+    if (mainStore.getCurrentTabKey === tabKey.DEPLOY_TAB
+      && mainStore.getSelectedHost?.id
+      && mainStore.getSelectedHost?.hostStatus === 'connected') {
+      usageDs.query();
+      mirrorTableDs.query();
+      jarTableDs.query();
+    }
+  }, [listDs, mainStore.getSelectedHost]);
 
   const value = {
     ...props,

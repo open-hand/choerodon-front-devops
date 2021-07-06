@@ -5,22 +5,32 @@ import apis from '../apis';
 interface ListProps {
   projectId: number,
   defaultTabKey: string,
+  tabKey: {
+    DEPLOY_TAB: string,
+    TEST_TAB: string,
+  },
 }
 
-export default ({ projectId, defaultTabKey }: ListProps): DataSetProps => ({
+export default ({ projectId, defaultTabKey, tabKey: { DEPLOY_TAB } }: ListProps): DataSetProps => ({
   autoCreate: false,
   autoQuery: true,
   selection: false,
   paging: true,
   pageSize: 10,
   transport: {
-    read: ({ data }) => {
+    read: ({ data, params: pageParams }) => {
       const { type, params, status } = data;
       const newType = type || defaultTabKey;
+      const newParams = newType === DEPLOY_TAB ? {
+        search_param: params,
+        host_status: status,
+        ...pageParams || {},
+      } : pageParams;
       return {
         url: apis.getLoadHostsDetailsUrl(projectId, newType),
         method: 'post',
-        data: {
+        params: newParams,
+        data: newType === DEPLOY_TAB ? null : {
           searchParam: {
             type: newType,
             status,
