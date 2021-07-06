@@ -69,4 +69,8 @@ export default class HostConfigApi {
   static getDeleteShell(projectId: number, hostId: string) {
     return `/devops/v1/projects/${projectId}/hosts/${hostId}/uninstall_shell`;
   }
+
+  static checkSshPort(projectId: number, ip: string, port: number | string) {
+    return `/devops/v1/projects/${projectId}/hosts/check/ssh_unique?ip=${ip}&ssh_port=${port}`;
+  }
 }

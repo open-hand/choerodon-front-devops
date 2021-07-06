@@ -2,7 +2,7 @@ import { DataSet } from 'choerodon-ui/pro';
 import HostConfigApis from '@/routes/host-config/apis/DeployApis';
 import omit from 'lodash/omit';
 import { RecordObjectProps, DataSetProps, FieldType } from '@/interface';
-import {handlePromptError} from "@/utils";
+import HostConfigServices from '@/routes/host-config/services';
 
 interface FormProps {
   formatMessage(arg0: object, arg1?: object): string,
@@ -13,6 +13,9 @@ interface FormProps {
 }
 
 function handleUpdate({ name, record }: { name: string, record: any }) {
+  if (name === 'hostIp') {
+    record.get('sshPort') && record.getField('sshPort').checkValidity();
+  }
   if (name === 'authType') {
     record.get('password') && record.set('password', null);
   }
@@ -46,6 +49,18 @@ export default ({
     return true;
   }
 
+  async function checkPortUnique(ip: string, port: any) {
+    try {
+      const res = await HostConfigServices.checkSshPort(projectId, ip, port);
+      if (res?.failed) {
+        return false;
+      }
+      return res;
+    } catch (e) {
+      return false;
+    }
+  }
+
   function checkIP(value: any) {
     const p = /^((\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.){3}(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])$/;
     if (value && !p.test(value)) {
@@ -57,6 +72,8 @@ export default ({
   async function checkPort(value: any, name: any, record: any) {
     if (value && record.getPristineValue(name)
       && String(value) === String(record.getPristineValue(name))
+      && record.get('hostIp') && record.getPristineValue('hostIp')
+      && record.get('hostIp') === record.getPristineValue('hostIp')
     ) {
       return true;
     }
@@ -74,6 +91,11 @@ export default ({
         && parseInt(value, 10) >= data.min
         && parseInt(value, 10) <= data.max
       ) {
+        if (record.get('hostIp')) {
+          if (await checkPortUnique(record.get('hostIp'), value) === false) {
+            return formatMessage({ id: `${intlPrefix}.port.unique.failed.${name}` });
+          }
+        }
         return true;
       }
       return formatMessage({ id: data.failedMsg });

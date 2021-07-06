@@ -49,4 +49,8 @@ export default class HostConfigServices {
       return false;
     }
   }
+
+  static checkSshPort(projectId: number, ip: string, port: number | string) {
+    return axios.get(HostConfigApi.checkSshPort(projectId, ip, port));
+  }
 }

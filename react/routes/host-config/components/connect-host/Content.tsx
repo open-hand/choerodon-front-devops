@@ -24,8 +24,8 @@ const HostConnect = observer(() => {
 
   const [command, setCommand] = useState(data || '');
   const permissionShell = useMemo(() => `
-  sudo gpasswd -a "\${USER}" docker
-  sudo systemctl restart docker
+  sudo gpasswd -a "\${USER}" docker\n
+  sudo systemctl restart docker\n
   newgrp - docker
   `, []);
 
@@ -60,8 +60,12 @@ const HostConnect = observer(() => {
         <span>{formatMessage({ id: 'envPl.token' })}</span>
       </div>
       <div className={`${prefixCls}-content ${prefixCls}-content-mgb`}>
-        <span>{permissionShell}</span>
-        <CopyToClipboard text={permissionShell}>
+        <span>{'sudo gpasswd -a "${USER}" docker'}</span>
+        <br />
+        <span>sudo systemctl restart docker</span>
+        <br />
+        <span>newgrp - docker</span>
+        <CopyToClipboard text={permissionShell} format>
           <Button
             icon="content_copy"
             className={`${prefixCls}-copy`}
