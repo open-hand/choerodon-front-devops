@@ -110,6 +110,7 @@ const HostsItem:React.FC<any> = observer(({
   async function handleDelete() {
     const modalProps = {
       key: Modal.key(),
+      title: '删除主机',
       children: <DeleteCheck
         formatMessage={formatMessage}
         hostId={id}
