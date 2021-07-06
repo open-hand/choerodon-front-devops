@@ -98,6 +98,18 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     intlPrefix,
   })), [projectId]);
 
+  const loadListData = useCallback(async () => {
+    await listDs.query();
+    const record = listDs.get(0);
+    if (defaultTabKey === tabKey.DEPLOY_TAB && record) {
+      mainStore.setSelectedHost(record.toData());
+    }
+  }, []);
+
+  useEffect(() => {
+    loadListData();
+  }, [projectId]);
+
   const refresh = useCallback(async (callback?:CallableFunction) => {
     await listDs.query();
     typeof callback === 'function' && callback();

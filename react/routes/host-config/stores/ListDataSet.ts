@@ -13,7 +13,7 @@ interface ListProps {
 
 export default ({ projectId, defaultTabKey, tabKey: { DEPLOY_TAB } }: ListProps): DataSetProps => ({
   autoCreate: false,
-  autoQuery: true,
+  autoQuery: false,
   selection: false,
   paging: true,
   pageSize: 10,
