@@ -19,7 +19,7 @@ import { axios, Choerodon } from '@choerodon/boot';
 import { Base64 } from 'js-base64';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { observer } from 'mobx-react-lite';
-import DeployConfig from '@/components/deploy-config';
+import DeployConfig from '@/components/deploy-config-form';
 import JSONbig from 'json-bigint';
 import { get } from 'lodash';
 import addCDTaskDataSetMap from './stores/addCDTaskDataSetMap';
@@ -559,8 +559,10 @@ export default observer(() => {
           // const origin = ADDCDTaskUseStore.getValueIdList;
           setValueIdValues(value);
         }}
+        appSelectDisabled
       />,
       title: '创建部署配置',
+      okText: '创建',
     });
   };
 

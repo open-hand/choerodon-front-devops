@@ -1,30 +1,29 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, {
+  useState, useMemo, useCallback,
+} from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Form, TextField, TextArea, Select,
+  Form, TextField, TextArea, Select, Spin,
 } from 'choerodon-ui/pro';
-import { ResizeType } from 'choerodon-ui/pro/lib/text-area/enum';
+import { ResizeType } from '@/interface';
 import YamlEditor from '@/components/yamlEditor';
-import { useFormStore } from './stores';
+import { useDeployConfigFormStore } from './stores';
 
 import './index.less';
 
-function DeployConfigForm() {
+const DeployConfigForm = () => {
   const {
-    formatMessage,
-    intlPrefix,
     prefixCls,
     formDs,
     modal,
-    configId,
     refresh,
-    store,
-    appServiceId,
-    appServiceName,
-  } = useFormStore();
+    isModify,
+  } = useDeployConfigFormStore();
+
+  const record = useMemo(() => formDs.current, [formDs.current]);
   const [isError, setValueError] = useState(false);
 
-  async function handleSubmit() {
+  modal.handleOk(async () => {
     if (isError) return false;
 
     try {
@@ -38,51 +37,50 @@ function DeployConfigForm() {
     } catch (e) {
       return false;
     }
-  }
+  });
 
-  modal.handleOk(handleSubmit);
+  const handleValueChange = useCallback((value) => {
+    record?.set('value', value);
+  }, [record]);
 
-  const changeValue = (value: string) => {
-    const record = formDs.current;
-    if (record) {
-      record.set('value', value);
-    }
-  };
-
-  function renderValue() {
-    const record = formDs.current;
-    const app = record && record.get('appServiceId');
-    return app && record ? (
+  const renderValue = useCallback(() => {
+    const app = record?.get('appServiceId');
+    return app ? (
       <YamlEditor
         readOnly={false}
-        value={record.get('value')}
-        originValue={store.getValue || record.getPristineValue('value') || record.get('value')}
-        onValueChange={changeValue}
+        value={record?.get('value')}
+        originValue={record?.getPristineValue('value')}
+        onValueChange={handleValueChange}
         handleEnableNext={setValueError}
       />
     ) : null;
+  }, [record]);
+
+  if (!record) {
+    return <Spin />;
   }
 
   return (
     <>
-      <div className={`${prefixCls}-config-form`}>
+      <div className={prefixCls}>
         <Form dataSet={formDs}>
           <TextField name="name" autoFocus />
           <TextArea name="description" resize={'vertical' as ResizeType} />
-          {configId || (appServiceId && appServiceName)
+          {isModify
             ? <TextField name="appServiceName" disabled />
             : (
               <Select
+                clearButton={false}
                 searchable
                 name="appServiceId"
               />
             )}
         </Form>
       </div>
-      <h3>{formatMessage({ id: `${intlPrefix}.config` })}</h3>
+      <h3>部署配置</h3>
       {renderValue()}
     </>
   );
-}
+};
 
 export default observer(DeployConfigForm);

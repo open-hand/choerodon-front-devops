@@ -1,10 +1,12 @@
 import React, { useMemo, Fragment } from 'react';
 import { Action, Choerodon } from '@choerodon/boot';
-import { Table, Modal, Tooltip, Spin } from 'choerodon-ui/pro';
+import {
+  Table, Modal, Tooltip, Spin,
+} from 'choerodon-ui/pro';
 import TimePopover from '../../../../../components/time-popover';
 import UserInfo from '../../../../../components/userInfo';
 import ClickText from '../../../../../components/click-text';
-import DeployConfigForm from './modals/deploy-config';
+import DeployConfigForm from '../../../../../components/deploy-config-form';
 import { handlePromptError } from '../../../../../utils';
 import { useEnvironmentStore } from './stores';
 import { useResourceStore } from '../../../stores';
@@ -64,7 +66,10 @@ export default function DeployConfig() {
           okProps: { color: 'red' },
           cancelProps: { color: 'dark' },
           footer: ((okBtn, cancelBtn) => (
-            <Fragment>{okBtn}{cancelBtn}</Fragment>
+            <>
+              {okBtn}
+              {cancelBtn}
+            </>
           )),
         };
         // configDs.delete(record, modalProps);
@@ -75,9 +80,9 @@ export default function DeployConfig() {
           okCancel: false,
           okText: formatMessage({ id: 'iknow' }),
           footer: ((OkBtn) => (
-            <Fragment>
+            <>
               {OkBtn}
-            </Fragment>
+            </>
           )),
         });
       } else {
@@ -94,24 +99,52 @@ export default function DeployConfig() {
       const res = await envStore.deleteRecord(projectId, record.get('id'));
       if (handlePromptError(res, false)) {
         refresh();
-      } else {
-        return false;
+        return true;
       }
+      return false;
     } catch (err) {
       Choerodon.handleResponseError(err);
       return false;
     }
   }
 
+  // function openModifyModal(record) {
+  //   const valueId = record.get('id');
+  //   const envRecord = baseInfoDs.current;
+  //   const envId = envRecord.get('id');
+  //   configFormDs.transport.read = {
+  //     url: `/devops/v1/projects/${projectId}/deploy_value?value_id=${valueId}`,
+  //     method: 'get',
+  //   };
+  //   configFormDs.query();
+  //
+  //   Modal.open({
+  //     drawer: true,
+  //     key: modifyModalKey,
+  //     style: configModalStyle,
+  //     title: formatMessage({ id: `${intlPrefix}.modify.config` }),
+  //     children: <DeployConfigForm
+  //       isModify
+  //       store={envStore}
+  //       dataSet={configFormDs}
+  //       refresh={refresh}
+  //       envId={envId}
+  //       intlPrefix={intlPrefix}
+  //       prefixCls={prefixCls}
+  //     />,
+  //     afterClose: () => {
+  //       configFormDs.transport.read = null;
+  //       configFormDs.reset();
+  //       envStore.setValue('');
+  //     },
+  //     okText: formatMessage({ id: 'save' }),
+  //   });
+  // }
+
   function openModifyModal(record) {
     const valueId = record.get('id');
     const envRecord = baseInfoDs.current;
     const envId = envRecord.get('id');
-    configFormDs.transport.read = {
-      url: `/devops/v1/projects/${projectId}/deploy_value?value_id=${valueId}`,
-      method: 'get',
-    };
-    configFormDs.query();
 
     Modal.open({
       drawer: true,
@@ -119,32 +152,25 @@ export default function DeployConfig() {
       style: configModalStyle,
       title: formatMessage({ id: `${intlPrefix}.modify.config` }),
       children: <DeployConfigForm
-        isModify
-        store={envStore}
-        dataSet={configFormDs}
         refresh={refresh}
         envId={envId}
-        intlPrefix={intlPrefix}
-        prefixCls={prefixCls}
+        deployConfigId={valueId}
       />,
-      afterClose: () => {
-        configFormDs.transport.read = null;
-        configFormDs.reset();
-        envStore.setValue('');
-      },
       okText: formatMessage({ id: 'save' }),
     });
   }
 
   function renderName({ value, record }) {
-    return <ClickText
-      permissionCode={['choerodon.code.project.deploy.app-deployment.resource.ps.update-deploy-config']}
-      clickAble={!disabled}
-      value={value}
-      onClick={openModifyModal}
-      record={record}
-      showToolTip
-    />;
+    return (
+      <ClickText
+        permissionCode={['choerodon.code.project.deploy.app-deployment.resource.ps.update-deploy-config']}
+        clickAble={!disabled}
+        value={value}
+        onClick={openModifyModal}
+        record={record}
+        showToolTip
+      />
+    );
   }
 
   function renderActions() {
@@ -173,18 +199,20 @@ export default function DeployConfig() {
     );
   }
 
-  return (<div className="c7ncd-tab-table">
-    <Table
-      dataSet={configDs}
-      border={false}
-    >
-      <Column name="name" sortable renderer={renderName} />
-      {!disabled && <Column renderer={renderActions} width={70} />}
-      <Column name="description" renderer={renderDescription} />
-      <Column name="appServiceName" sortable />
-      <Column name="envName" sortable />
-      <Column name="createUserRealName" renderer={renderUser} />
-      <Column name="lastUpdateDate" renderer={renderDate} sortable />
-    </Table>
-  </div>);
+  return (
+    <div className="c7ncd-tab-table">
+      <Table
+        dataSet={configDs}
+        border={false}
+      >
+        <Column name="name" sortable renderer={renderName} />
+        {!disabled && <Column renderer={renderActions} width={70} />}
+        <Column name="description" renderer={renderDescription} />
+        <Column name="appServiceName" sortable />
+        <Column name="envName" sortable />
+        <Column name="createUserRealName" renderer={renderUser} />
+        <Column name="lastUpdateDate" renderer={renderDate} sortable />
+      </Table>
+    </div>
+  );
 }

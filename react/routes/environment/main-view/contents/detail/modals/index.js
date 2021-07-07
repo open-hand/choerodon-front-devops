@@ -11,7 +11,7 @@ import { useDetailStore } from '../stores';
 import useStore from './useStore';
 import EnvCreateForm from '../../../modals/env-create';
 import GroupForm from '../../../modals/GroupForm';
-import DeployConfigForm from '../../../../../app-center/app-detail/components/deploy-config/create-from';
+import DeployConfigForm from '../../../../../../components/deploy-config-form';
 import { isNotRunning } from '../../../../util';
 import Tips from '../../../../../../components/new-tips';
 
@@ -163,31 +163,31 @@ const EnvModals = observer(() => {
     });
   }
 
-  function openConfigModal() {
-    const { id } = getSelectedMenu;
-    configFormDs.create();
-    Modal.open({
-      key: configKey,
-      title: formatMessage({ id: `${currentIntlPrefix}.create.config` }),
-      children: <DeployConfigForm
-        store={detailStore}
-        dataSet={configFormDs}
-        refresh={refresh}
-        envId={id}
-        intlPrefix={currentIntlPrefix}
-        prefixCls={currentPrefixCls}
-      />,
-      drawer: true,
-      style: configModalStyle,
-      afterClose: () => {
-        configFormDs.reset();
-        detailStore.setValue('');
-      },
-      okText: formatMessage({ id: 'create' }),
-    });
-  }
+  // function openConfigModal() {
+  //   const { id } = getSelectedMenu;
+  //   configFormDs.create();
+  //   Modal.open({
+  //     key: configKey,
+  //     title: formatMessage({ id: `${currentIntlPrefix}.create.config` }),
+  //     children: <DeployConfigForm
+  //       store={detailStore}
+  //       dataSet={configFormDs}
+  //       refresh={refresh}
+  //       envId={id}
+  //       intlPrefix={currentIntlPrefix}
+  //       prefixCls={currentPrefixCls}
+  //     />,
+  //     drawer: true,
+  //     style: configModalStyle,
+  //     afterClose: () => {
+  //       configFormDs.reset();
+  //       detailStore.setValue('');
+  //     },
+  //     okText: formatMessage({ id: 'create' }),
+  //   });
+  // }
 
-  const openCreateModal = () => {
+  const openConfigModal = () => {
     const { id } = getSelectedMenu;
     Modal.open({
       key: configKey,
@@ -214,7 +214,7 @@ const EnvModals = observer(() => {
       disabled,
       name: formatMessage({ id: `${currentIntlPrefix}.create.config` }),
       icon: 'playlist_add',
-      handler: openCreateModal,
+      handler: openConfigModal,
       display: true,
       group: 1,
     }, {

@@ -16,7 +16,7 @@ interface ContextProps {
   modal: any,
   envId: string,
   appServiceId: string,
-  refresh(): void,
+  refresh(data?: { valueId: string, value: string }): void,
   deployConfigId: string,
   isModify: boolean,
 }

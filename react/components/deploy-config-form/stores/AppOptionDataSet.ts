@@ -1,5 +1,5 @@
-import AppCenterApi from '@/routes/app-center/apis';
 import { DataSetProps } from '@/interface';
+import DeployConfigApis from '../apis';
 
 export default (projectId: number): DataSetProps => ({
   autoQuery: false,
@@ -7,7 +7,7 @@ export default (projectId: number): DataSetProps => ({
   paging: false,
   transport: {
     read: {
-      url: AppCenterApi.getAppHasVersion(projectId),
+      url: DeployConfigApis.getAppHasVersion(projectId),
       method: 'get',
     },
   },
