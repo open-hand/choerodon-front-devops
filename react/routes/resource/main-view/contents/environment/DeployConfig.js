@@ -108,39 +108,6 @@ export default function DeployConfig() {
     }
   }
 
-  // function openModifyModal(record) {
-  //   const valueId = record.get('id');
-  //   const envRecord = baseInfoDs.current;
-  //   const envId = envRecord.get('id');
-  //   configFormDs.transport.read = {
-  //     url: `/devops/v1/projects/${projectId}/deploy_value?value_id=${valueId}`,
-  //     method: 'get',
-  //   };
-  //   configFormDs.query();
-  //
-  //   Modal.open({
-  //     drawer: true,
-  //     key: modifyModalKey,
-  //     style: configModalStyle,
-  //     title: formatMessage({ id: `${intlPrefix}.modify.config` }),
-  //     children: <DeployConfigForm
-  //       isModify
-  //       store={envStore}
-  //       dataSet={configFormDs}
-  //       refresh={refresh}
-  //       envId={envId}
-  //       intlPrefix={intlPrefix}
-  //       prefixCls={prefixCls}
-  //     />,
-  //     afterClose: () => {
-  //       configFormDs.transport.read = null;
-  //       configFormDs.reset();
-  //       envStore.setValue('');
-  //     },
-  //     okText: formatMessage({ id: 'save' }),
-  //   });
-  // }
-
   function openModifyModal(record) {
     const valueId = record.get('id');
     const envRecord = baseInfoDs.current;
