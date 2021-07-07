@@ -13,7 +13,7 @@ import AppTypeLogo from '@/routes/app-center/components/type-logo';
 import EnvOption from '@/routes/app-center/components/env-option';
 import { EnvDataProps } from '@/routes/app-center/app-detail/stores/useStore';
 import Loading from '@/components/loading';
-import { RecordObjectProps } from '@/interface';
+import { RecordObjectProps, LabelLayoutType } from '@/interface';
 
 import './index.less';
 
@@ -96,12 +96,17 @@ const AppCenterDetailContent = () => {
             </span>
           )}
         </div>
-        <Form dataSet={searchDs} className={`${prefixCls}-detail-env`} columns={3}>
+        <Form
+          dataSet={searchDs}
+          className={`${prefixCls}-detail-env`}
+          columns={3}
+          labelLayout={'horizontal' as LabelLayoutType}
+        >
           <Select
-            label="环境:"
             name="env"
             placeholder="请选择"
             searchable
+            prefix="环境:"
             optionRenderer={renderEnvOption}
             renderer={renderEnvOption}
             onChange={handleSearch}

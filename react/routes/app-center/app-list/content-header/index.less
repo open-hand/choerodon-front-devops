@@ -1,3 +1,5 @@
+@import '~choerodon-ui/lib/style/themes/default';
+
 .c7ncd-app-center-list {
 
   &-search {
@@ -17,6 +19,20 @@
       align-items: center;
       max-width: 60%;
       margin-left: auto;
+    }
+
+    &-form {
+      .@{c7n-pro-prefix}-select-prefix {
+        width: auto;
+        line-height: .2rem;
+        left: .1rem;
+      }
+      .@{c7n-pro-prefix}-select-suffix-button .@{c7n-pro-prefix}-select-rendered-value {
+        padding-left: .45rem;
+      }
+      .@{c7n-pro-prefix}-select:not(textarea):not(:first-child) {
+        padding-left: .45rem;
+      }
     }
 
     &-env {

@@ -73,14 +73,14 @@ const ContentHeader: React.FC<any> = observer((): any => {
             onClear={refresh}
           />
           <Select
-            label="环境:"
+            prefix="环境:"
             name="envId"
             colSpan={3}
             searchable
-            placeholder="请选择"
             optionRenderer={renderEnvOption}
             onOption={renderOptionProperty}
             onClear={refresh}
+            renderer={({ value, text }) => value ? text : '全部'}
           />
         </Form>
         <Button
