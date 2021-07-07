@@ -481,7 +481,7 @@ const ListView = withRouter(observer((props) => {
                           {
                             renderStatus({value:record.get('active'), record})
                           }
-                          {record.get('errorMessage') && <Tooltip overlayStyle={{ maxHeight: 500, overflow: 'auto' }} title={record.get('errorMessage')}>
+                          {record.get('errorMessage') && record.get('fail') && <Tooltip overlayStyle={{ maxHeight: 500, overflow: 'auto' }} title={record.get('errorMessage')}>
                             <Icon
                               type="info"
                               style={{
