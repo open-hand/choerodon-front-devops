@@ -83,7 +83,7 @@ const ContentList = ({
     const actionData = [{
       text: formatMessage({ id: `${intlPrefix}.delete.related` }),
       action: () => deleteRelated(record),
-      service: [],
+      service: ['choerodon.code.project.deploy.app-deployment.application-center.link.delete'],
     }];
     if (record.get('latestVersion')) {
       actionData.unshift({
@@ -96,7 +96,7 @@ const ContentList = ({
           marketAppVersionId: record.get('marketServiceDeployObjectVO')?.marketAppVersionId,
           marketServiceId: record.get('marketServiceDeployObjectVO')?.marketServiceId,
         }),
-        service: [],
+        service: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.manual'],
       });
     }
     return <Action className={`${newPrefixCls}-header-action`} data={actionData} />;
