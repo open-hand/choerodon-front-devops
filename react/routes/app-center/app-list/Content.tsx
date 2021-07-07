@@ -151,19 +151,19 @@ const AppCenterContent = () => {
       <Header>
         <HeaderButtons
           items={([{
-            permissions: [],
+            permissions: ['choerodon.code.project.deploy.app-deployment.application-center.link'],
             name: formatMessage({ id: `${resourceIntlPrefix}.modal.service.link` }),
             icon: 'relate',
             handler: openLinkService,
             display: true,
           }, {
-            permissions: [],
+            permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.manual'],
             name: formatMessage({ id: `${intlPrefixDeploy}.manual` }),
             icon: 'cloud_done-o',
             handler: () => openDeploy(),
             display: true,
           }, {
-            permissions: [],
+            permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.batch'],
             name: formatMessage({ id: `${intlPrefixDeploy}.batch` }),
             icon: 'cloud_done-o',
             handler: openBatchDeploy,

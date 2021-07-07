@@ -120,7 +120,7 @@ const DeployConfig = () => {
 
   const renderName = ({ value, record }: { value: string, record: Record }) => (
     <ClickText
-      permissionCode={['choerodon.code.project.deploy.app-deployment.resource.ps.update-deploy-config']}
+      permissionCode={['choerodon.code.project.deploy.app-deployment.application-center.deploy-config.edit']}
       clickAble
       value={value}
       onClick={openCreateModal}
@@ -131,7 +131,7 @@ const DeployConfig = () => {
 
   const renderActions = ({ record }: RecordObjectProps) => {
     const actionData = [{
-      service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-config'],
+      service: ['choerodon.code.project.deploy.app-deployment.application-center.deploy-config.delete'],
       text: formatMessage({ id: 'delete' }),
       action: () => checkDelete(record),
     }];
@@ -159,7 +159,7 @@ const DeployConfig = () => {
     <>
       <HeaderButtons
         items={[{
-          permissions: [],
+          permissions: ['choerodon.code.project.deploy.app-deployment.application-center.deploy-config.create'],
           name: '创建部署配置',
           icon: 'playlist_add',
           handler: () => openCreateModal(),
