@@ -1,19 +1,20 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { HeaderButtons } from '@choerodon/master';
 import { Modal } from 'choerodon-ui/pro';
 import EnvDetail from '../../../../../../components/env-detail';
-import LinkService from './link-service';
+import LinkService from '../../../../../app-center/app-list/components/link-service';
 import PermissionPage from './permission';
 import { useResourceStore } from '../../../../stores';
 import { useEnvironmentStore } from '../stores';
 import { useModalStore } from './stores';
 import Tips from '../../../../../../components/new-tips';
-import DeployConfigForm from './deploy-config';
+import DeployConfigForm from '../../../../../../components/deploy-config-form';
 import Deploy from '../../../../../deployment/modals/deploy';
 import BatchDeploy from '../../../../../deployment/modals/batch-deploy';
 
 import '../../../../../../components/dynamic-select/style/index.less';
+import { SMALL } from '../../../../../../utils/getModalWidth';
 
 const modalKey1 = Modal.key();
 const modalKey2 = Modal.key();
@@ -131,26 +132,22 @@ const EnvModals = observer(() => {
     });
   }
 
-  function openLinkService() {
+  const openLinkService = useCallback(() => {
     Modal.open({
       key: modalKey2,
       title: <Tips
         helpText={formatMessage({ id: `${intlPrefix}.service.tips` })}
         title={formatMessage({ id: `${intlPrefix}.modal.service.link` })}
       />,
-      style: modalStyle,
+      style: { width: SMALL },
       drawer: true,
       className: 'c7ncd-modal-wrapper',
       children: <LinkService
-        store={modalStore}
-        tree={treeDs}
-        onOk={linkServices}
-        intlPrefix={intlPrefix}
-        prefixCls={prefixCls}
-        modalStores={ModalStores}
+        refresh={() => treeDs.query()}
+        envId={id}
       />,
     });
-  }
+  }, [id]);
 
   function openPermission() {
     const modalPorps = {
@@ -192,25 +189,39 @@ const EnvModals = observer(() => {
     url && window.open(url);
   }
 
+  // function openConfigModal() {
+  //   configFormDs.create();
+  //   Modal.open({
+  //     key: configKey,
+  //     title: formatMessage({ id: `${intlPrefix}.create.config` }),
+  //     children: <DeployConfigForm
+  //       store={envStore}
+  //       dataSet={configFormDs}
+  //       refresh={refresh}
+  //       envId={id}
+  //       intlPrefix={intlPrefix}
+  //       prefixCls={prefixCls}
+  //     />,
+  //     drawer: true,
+  //     style: configModalStyle,
+  //     afterClose: () => {
+  //       configFormDs.reset();
+  //       envStore.setValue('');
+  //     },
+  //     okText: formatMessage({ id: 'create' }),
+  //   });
+  // }
+
   function openConfigModal() {
-    configFormDs.create();
     Modal.open({
       key: configKey,
       title: formatMessage({ id: `${intlPrefix}.create.config` }),
       children: <DeployConfigForm
-        store={envStore}
-        dataSet={configFormDs}
         refresh={refresh}
         envId={id}
-        intlPrefix={intlPrefix}
-        prefixCls={prefixCls}
       />,
       drawer: true,
       style: configModalStyle,
-      afterClose: () => {
-        configFormDs.reset();
-        envStore.setValue('');
-      },
       okText: formatMessage({ id: 'create' }),
     });
   }

@@ -13,7 +13,7 @@ import ClickText from '@/components/click-text';
 import { UserInfo, TimePopover } from '@choerodon/components';
 import AppCenterDetailServices from '@/routes/app-center/app-detail/services';
 import { useDeployConfigStore } from '@/routes/app-center/app-detail/components/deploy-config/stores';
-import DeployConfigForm from './create-from';
+import DeployConfigForm from '@/components/deploy-config-form';
 
 const { Column } = Table;
 const createModalKey = Modal.key();
