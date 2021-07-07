@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
+import { HeaderButtons } from '@choerodon/boot';
 import { Form, Select } from 'choerodon-ui/pro';
 import { useAppCenterInstanceStore } from '@/routes/app-center/app-detail/components/instance/stores';
 import { LabelLayoutType } from 'choerodon-ui/pro/lib/form/Form';
@@ -8,6 +9,7 @@ import { CustomTabs } from '@choerodon/components';
 import { useAppCenterDetailStore } from '@/routes/app-center/app-detail/stores';
 import openWarnModal from '@/utils/openWarnModal';
 import getTablePostData from '@/utils/getTablePostData';
+import Modal from './modals';
 import Details from './components/details';
 import Cases from './components/cases';
 import Pods from './components/pods-details';
@@ -26,6 +28,7 @@ export default observer((props) => {
     baseDs,
     casesDs,
     podsDs,
+    istStore,
   } = useAppCenterInstanceStore();
 
   const {
@@ -142,6 +145,7 @@ export default observer((props) => {
 
   return (
     <div className="c7ncd-app_detail-instance">
+      <Modal checkIstExist={checkIstExist} />
       {
         hasInstance ? (
           <>
@@ -156,6 +160,7 @@ export default observer((props) => {
               <CustomTabs
                 selectedTabValue="event"
                 onChange={(e, name, value) => {
+                  istStore.setTabKey(value);
                   setSelectedTab(value);
                 }}
                 data={[{
@@ -170,7 +175,6 @@ export default observer((props) => {
                 }]}
               />
             </div>
-            ,
             {
               renderTabContent()
             }

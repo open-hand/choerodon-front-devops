@@ -7,6 +7,7 @@ import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
 import { useAppCenterDetailStore } from '@/routes/app-center/app-detail/stores';
 import PodsDataset from '@/routes/resource/main-view/contents/instance/stores/PodsDataSet';
+import useStore from './useStore';
 import BaseInfoDataSet from './BaseInfoDataSet';
 import instanceListDataSet from './instaneListDataSet';
 import DetailsStore from './DetailsStore';
@@ -26,6 +27,7 @@ interface ContextProps {
   casesDs: DataSet,
   intl: any,
   podsDs: any,
+  istStore: any,
 }
 
 const Store = createContext({} as ContextProps);
@@ -65,6 +67,8 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: Cont
     intlPrefix,
   })), []);
 
+  const istStore = useStore({ defaultKey: 'event' });
+
   const InstanceListDataSet = useMemo(
     () => new DataSet(
       instanceListDataSet(
@@ -84,6 +88,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: Cont
     casesDs,
     podsDs,
     prefixCls,
+    istStore,
   };
 
   return (

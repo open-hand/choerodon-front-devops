@@ -13,6 +13,7 @@ import { useApplicationStore } from './stores';
 import EditNetwork from '../network2';
 // import { useMainStore } from '../../../stores';
 import DomainForm from '../../../../resource/main-view/components/domain-form';
+import ModalButton from './modal';
 
 import './index.less';
 
@@ -23,7 +24,7 @@ const modalStyle = {
   width: 740,
 };
 
-const prefixCls = 'c7ncd.deployment';
+const prefixCls = 'c7ncd-deployment';
 const intlPrefix = 'c7ncd.deployment';
 
 const Networking = observer(() => {
@@ -402,6 +403,7 @@ const Networking = observer(() => {
 
   return (
     <div className={`${prefixCls}-application-net`}>
+      <ModalButton />
       <div className="c7ncd-tab-table">
         <Table
           dataSet={netDs}

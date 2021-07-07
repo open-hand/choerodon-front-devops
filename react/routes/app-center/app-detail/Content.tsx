@@ -43,12 +43,12 @@ const AppCenterDetailContent = () => {
   const record = useMemo(() => detailDs.current, [detailDs.current]);
 
   const tabContent = useMemo(() => ({
-    [INSTANCE_TAB]: <Instance />,
+    [INSTANCE_TAB]: <Instance random={Math.random()} />,
     [DEPLOYCONFIG_TAB]: <DeployConfig />,
     [SERVICEANDINGRESS_TAB]: <Net />,
     [CONFIGMAP_TAB]: <ConfigMap />,
     [SECRET_TAB]: <Secrets />,
-  }), []);
+  }), [mainStore.getSelectedEnv]);
 
   const realTabKeys = useMemo(() => (
     appServiceType === 'project' ? tabKeys : omit(tabKeys, ['DEPLOYCONFIG_TAB'])

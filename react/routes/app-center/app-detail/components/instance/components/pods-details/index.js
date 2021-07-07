@@ -199,7 +199,7 @@ const PodDetail = observer(() => {
 
   return (
     <>
-      <div className="c7ncd-tab-table">
+      <div>
         <Table
           dataSet={podsDs}
           border={false}

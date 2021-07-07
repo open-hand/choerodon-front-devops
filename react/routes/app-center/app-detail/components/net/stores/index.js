@@ -62,14 +62,32 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props) => {
     }
   }
 
-  function checkAppExist() {
-    const envId = mainStore.getSelectedEnv.id;
+  /**
+   *
+   * @param params 有则说明从参数读取
+   * @returns {Promise<* | boolean | undefined>}
+   */
+  function checkAppExist(
+    params
+  ) {
+    let projectId;
+    let envId;
+    let id;
+    if (params) {
+      projectId = params.projectId;
+      envId = params.envId;
+      id = params.appServiceId;
+    } else {
+      projectId = proId;
+      envId = mainStore.getSelectedEnv.id
+      id = appServiceId;
+    }
 
     return checkExist({
-      projectId: proId,
+      projectId,
       type: 'app',
       envId,
-      id: appServiceId,
+      id,
     }).then((isExist) => {
       if (!isExist) {
         // openWarnModal(freshTree, formatMessage);
@@ -150,6 +168,8 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props) => {
     netDs,
     domainStore,
     networkStore,
+    baseInfoDs,
+    checkAppExist,
   };
 
   return (
