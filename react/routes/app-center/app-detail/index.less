@@ -1,3 +1,5 @@
+@import '~choerodon-ui/lib/style/themes/default';
+
 @prefixCls: c7ncd-app-center-detail;
 
 .@{prefixCls} {
@@ -23,6 +25,18 @@
 
     &-env {
       margin: .16rem 0 0;
+
+      .@{c7n-pro-prefix}-select-prefix {
+        width: auto;
+        line-height: .2rem;
+        left: .1rem;
+      }
+      .@{c7n-pro-prefix}-select-suffix-button .@{c7n-pro-prefix}-select-rendered-value {
+        padding-left: .45rem;
+      }
+      .@{c7n-pro-prefix}-select:not(textarea):not(:first-child) {
+        padding-left: .45rem;
+      }
     }
 
     &-tabs {
