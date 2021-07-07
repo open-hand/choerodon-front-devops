@@ -189,29 +189,6 @@ const EnvModals = observer(() => {
     url && window.open(url);
   }
 
-  // function openConfigModal() {
-  //   configFormDs.create();
-  //   Modal.open({
-  //     key: configKey,
-  //     title: formatMessage({ id: `${intlPrefix}.create.config` }),
-  //     children: <DeployConfigForm
-  //       store={envStore}
-  //       dataSet={configFormDs}
-  //       refresh={refresh}
-  //       envId={id}
-  //       intlPrefix={intlPrefix}
-  //       prefixCls={prefixCls}
-  //     />,
-  //     drawer: true,
-  //     style: configModalStyle,
-  //     afterClose: () => {
-  //       configFormDs.reset();
-  //       envStore.setValue('');
-  //     },
-  //     okText: formatMessage({ id: 'create' }),
-  //   });
-  // }
-
   function openConfigModal() {
     Modal.open({
       key: configKey,

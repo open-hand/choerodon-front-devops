@@ -163,30 +163,6 @@ const EnvModals = observer(() => {
     });
   }
 
-  // function openConfigModal() {
-  //   const { id } = getSelectedMenu;
-  //   configFormDs.create();
-  //   Modal.open({
-  //     key: configKey,
-  //     title: formatMessage({ id: `${currentIntlPrefix}.create.config` }),
-  //     children: <DeployConfigForm
-  //       store={detailStore}
-  //       dataSet={configFormDs}
-  //       refresh={refresh}
-  //       envId={id}
-  //       intlPrefix={currentIntlPrefix}
-  //       prefixCls={currentPrefixCls}
-  //     />,
-  //     drawer: true,
-  //     style: configModalStyle,
-  //     afterClose: () => {
-  //       configFormDs.reset();
-  //       detailStore.setValue('');
-  //     },
-  //     okText: formatMessage({ id: 'create' }),
-  //   });
-  // }
-
   const openConfigModal = () => {
     const { id } = getSelectedMenu;
     Modal.open({

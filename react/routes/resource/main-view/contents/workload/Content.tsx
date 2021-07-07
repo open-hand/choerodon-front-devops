@@ -256,15 +256,17 @@ const WorkloadContent = observer(() => {
   const renderAction = useCallback(({ record }: RecordObjectProps) => {
     const envRecord = treeDs.find((treeRecord: Record) => treeRecord.get('key') === parentId);
     const connect = envRecord && envRecord.get('connect');
-    if (!connect || record.get('instanceId') || record.get('commandStatus') === 'operating') {
+    if (record.get('commandStatus') === 'operating') {
       return null;
     }
-    const actionData = [
-      {
-        service: ['choerodon.code.project.deploy.app-deployment.resource.ps.workload.pod'],
-        text: formatMessage({ id: `${intlPrefix}.workload.pod.detail` }),
-        action: () => openPodDetailModal(record),
-      }, {
+    const actionData = [{
+      service: ['choerodon.code.project.deploy.app-deployment.resource.ps.workload.pod'],
+      text: formatMessage({ id: `${intlPrefix}.workload.pod.detail` }),
+      action: () => openPodDetailModal(record),
+    }];
+
+    if (connect && !record.get('instanceId')) {
+      actionData.push({
         service: [`choerodon.code.project.deploy.app-deployment.resource.ps.workload.create.${workloadStore.getTabKey}`],
         text: formatMessage({ id: 'edit' }),
         action: () => openEditModal(record),
@@ -272,8 +274,8 @@ const WorkloadContent = observer(() => {
         service: [`choerodon.code.project.deploy.app-deployment.resource.ps.workload.delete.${workloadStore.getTabKey}`],
         text: formatMessage({ id: 'delete' }),
         action: () => openDeleteModal(record),
-      },
-    ];
+      });
+    }
     return <Action data={actionData} />;
   }, [parentId, openPodDetailModal, openEditModal, openDeleteModal, workloadStore.getTabKey]);
 
