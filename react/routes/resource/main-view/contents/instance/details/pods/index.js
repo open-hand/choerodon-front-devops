@@ -31,8 +31,14 @@ export default class Pods extends PureComponent {
         },
       },
       refresh,
+      podType,
     } = this.props;
-    store.operatePodCount(projectId, envId, name, count)
+    const KIND_TYPE = {
+      deploymentVOS: 'Deployment',
+      daemonSetVOS: 'DaemonSet',
+      statefulSetVOS: 'StatefulSet',
+    };
+    store.operatePodCount(projectId, envId, name, count, KIND_TYPE[podType])
       .then(() => {
         refresh();
       })

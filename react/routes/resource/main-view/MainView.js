@@ -34,6 +34,7 @@ const ConfigMapDetail = lazy(() => import('./contents/config-detail'));
 const SecretDetail = lazy(() => import('./contents/secret-detail'));
 const ServiceDetail = lazy(() => import('./contents/service-detail'));
 const PVCContent = lazy(() => import('./contents/pvc'));
+const WorkloadContent = lazy(() => import('./contents/workload'));
 
 const EmptyShown = lazy(() => import('./contents/empty'));
 
@@ -63,6 +64,7 @@ const MainView = observer(() => {
       IST_GROUP,
       PVC_ITEM,
       PVC_GROUP,
+      WORKLOAD_GROUP,
     },
     treeDs,
     intl: { formatMessage },
@@ -114,6 +116,7 @@ const MainView = observer(() => {
       [CIPHER_ITEM]: <SecretDetail />,
       [SERVICES_ITEM]: <ServiceDetail />,
       [PVC_GROUP]: <PVCContent />,
+      [WORKLOAD_GROUP]: <WorkloadContent />,
     };
     return cmMaps[itemType]
       ? <Suspense fallback={<Loading display />}>{cmMaps[itemType]}</Suspense>

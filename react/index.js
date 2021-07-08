@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { inject } from 'mobx-react';
-import { asyncRouter, asyncLocaleProvider, nomatch } from '@choerodon/boot';
+import { asyncLocaleProvider, nomatch } from '@choerodon/boot';
 import { PermissionRoute, Charts } from '@choerodon/master';
 import { ModalContainer } from 'choerodon-ui/pro';
 
@@ -24,6 +24,7 @@ const PipelineManage = React.lazy(() => import('./routes/pipeline-manage'));
 const HostConfig = React.lazy(() => import('./routes/host-config'));
 const OrgTemplate = React.lazy(() => import('./routes/app-template/OrgIndex'));
 const SiteTemplate = React.lazy(() => import('./routes/app-template/SiteIndex'));
+const AppCenter = React.lazy(() => import('./routes/app-center'));
 
 function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
   const IntlProviderAsync = useMemo(() => asyncLocaleProvider(language, () => import(`./locale/${language}`)), []);
@@ -31,7 +32,7 @@ function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
     <IntlProviderAsync>
       <div className="c7ncd-root">
         <Switch>
-          <PermissionRoute path={`${match.url}/app-service`} component={AppService} service={['choerodon.code.project.develop.app-service.ps.default']} />
+          <PermissionRoute path={`${match.url}/app-service`} service={['choerodon.code.project.develop.app-service.ps.default']} component={AppService} />
           <PermissionRoute path={`${match.url}/code-management`} component={Code} service={['choerodon.code.project.develop.code-management.ps.default']} />
           <PermissionRoute path={`${match.url}/resource`} component={Resource} service={['choerodon.code.project.deploy.app-deployment.resource.ps.default']} />
           <PermissionRoute path={`${match.url}/deployment-operation`} component={Deployment} service={['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.default']} />
@@ -63,6 +64,11 @@ function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
             service={['choerodon.code.project.deploy.chart.ps.default']}
             path={`${match.url}/charts/deploy`}
             component={DeployReports}
+          />
+          <PermissionRoute
+            service={[]}
+            path={`${match.url}/application-center`}
+            component={AppCenter}
           />
           <Route path="*" component={nomatch} />
         </Switch>

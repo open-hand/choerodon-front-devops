@@ -318,7 +318,7 @@ export default class CreateNetwork extends Component {
    */
   handleInputKeyDown = (e, type) => {
     const { value } = e.target;
-    if (e.keyCode === 13 && !e.isDefaultPrevented() && value) {
+    if (e.keyCode === 13 && !e?.isDefaultPrevented() && value) {
       this.setIpInSelect(value, type);
     }
   };

@@ -34,8 +34,6 @@ const PodDetail = memo(() => {
     intl,
     podsDs,
   } = useInstanceStore();
-  // eslint-disable-next-line no-unused-expressions
-  shellVisible;
   const [visible, setVisible] = useState(false);
   const [shellVisible, setShellVisible] = useState(false);
 

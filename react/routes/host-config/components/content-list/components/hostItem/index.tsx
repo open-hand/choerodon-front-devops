@@ -4,14 +4,20 @@ import { Action } from '@choerodon/boot';
 import UserInfo from '@/components/userInfo';
 import TimePopover from '@/components/timePopover';
 import { Tooltip, Modal } from 'choerodon-ui/pro';
+import classnames from 'classnames';
+import { observer } from 'mobx-react-lite';
+import HostConnect from '@/routes/host-config/components/connect-host';
+import { SMALL } from '@/utils/getModalWidth';
 import StatusTagOutLine from '../../components/statusTagOutLine';
 import eventStopProp from '../../../../../../utils/eventStopProp';
 import { useHostConfigStore } from '../../../../stores';
-import CreateHost from '../../../create-host';
+import CreateHost from '../../../create-deploy-host';
 import DeleteCheck from '../deleteCheck';
 import apis from '../../../../apis';
 
-const HostsItem:React.FC<any> = ({
+const commandModalKey = Modal.key();
+
+const HostsItem:React.FC<any> = observer(({
   sshPort, // 主机ssh的端口
   hostStatus, // 主机状态
   hostIp, // 主机ip
@@ -27,6 +33,8 @@ const HostsItem:React.FC<any> = ({
   updaterInfo,
   listDs,
   record,
+  handleCreateTestHost,
+  handleCreateDeployHost,
 }) => {
   const {
     prefixCls,
@@ -35,15 +43,31 @@ const HostsItem:React.FC<any> = ({
     refresh,
     projectId,
     mainStore,
+    tabKey: {
+      TEST_TAB,
+      DEPLOY_TAB,
+    },
+    mirrorTableDs,
+    jarTableDs,
+    usageDs,
   } = useHostConfigStore();
 
   const type = mainStore.getCurrentTabKey; // 主机类型 deploy / distribute_test
+  const isDeploy = useMemo(() => (
+    mainStore.getCurrentTabKey === DEPLOY_TAB
+  ), [mainStore.getCurrentTabKey]);
+
+  const itemClassName = useMemo(() => classnames({
+    [`${prefixCls}-content-list-item`]: isDeploy,
+    [`${prefixCls}-content-list-item-test`]: !isDeploy,
+    [`${prefixCls}-content-list-item-selected`]: isDeploy && mainStore.getSelectedHost?.id === id,
+  }), [hostStatus, mainStore.getSelectedHost, isDeploy, id]);
 
   const getMainStatus = useMemo(() => {
-    if (type === 'deploy') {
+    if (isDeploy) {
       return hostStatus;
     }
-    if (type === 'distribute_test') {
+    if (type === TEST_TAB) {
       if (jmeterStatus === 'occupied') {
         return 'occupied';
       }
@@ -86,6 +110,7 @@ const HostsItem:React.FC<any> = ({
   async function handleDelete() {
     const modalProps = {
       key: Modal.key(),
+      title: '删除主机',
       children: <DeleteCheck
         formatMessage={formatMessage}
         hostId={id}
@@ -98,39 +123,80 @@ const HostsItem:React.FC<any> = ({
     Modal.open(modalProps);
   }
 
-  function handleModify() {
+  const openConnectModal = useCallback(() => {
     Modal.open({
-      key: Modal.key(),
-      title: formatMessage({ id: `${intlPrefix}.modify` }),
-      style: {
-        width: 380,
-      },
+      key: commandModalKey,
+      title: formatMessage({ id: `${intlPrefix}.connect` }),
+      children: <HostConnect hostId={id} />,
+      style: { width: SMALL },
       drawer: true,
-      children: <CreateHost hostId={id} refresh={refresh} hostType={type} />,
-      okText: formatMessage({ id: 'save' }),
+      okCancel: false,
+      okText: formatMessage({ id: 'close' }),
     });
-  }
+  }, [id]);
 
-  const getActionData = useCallback(() => (getMainStatus !== 'operating' || getMainStatus !== 'occupied' ? [
-    {
-      service: ['choerodon.code.project.deploy.host.ps.correct'],
-      text: '校准状态',
-      action: handleCorrect,
-    },
-    {
-      service: ['choerodon.code.project.deploy.host.ps.edit'],
-      text: '修改',
-      action: handleModify,
-    },
-    {
-      service: ['choerodon.code.project.deploy.host.ps.delete'],
-      text: formatMessage({ id: 'delete' }),
-      action: handleDelete,
-    },
-  ] : []), [getMainStatus, handleCorrect, handleDelete, handleModify]);
+  const handleSelect = useCallback(() => {
+    if (isDeploy && mainStore.getSelectedHost?.id !== id) {
+      if (getMainStatus === 'connected') {
+        mirrorTableDs.setQueryParameter('hostId', id);
+        jarTableDs.setQueryParameter('hostId', id);
+        usageDs.setQueryParameter('hostId', id);
+        mirrorTableDs.query();
+        jarTableDs.query();
+        usageDs.query();
+      } else {
+        usageDs.removeAll();
+        mirrorTableDs.removeAll();
+        jarTableDs.removeAll();
+      }
+      mainStore.setSelectedHost(record.toData());
+    }
+  }, [isDeploy, hostStatus, record, id, mainStore.getSelectedHost, getMainStatus]);
+
+  const getActionData = useCallback(() => {
+    if (isDeploy) {
+      const actionData = [
+        {
+          service: ['choerodon.code.project.deploy.host.ps.edit'],
+          text: formatMessage({ id: 'edit' }),
+          action: () => handleCreateDeployHost(id),
+        },
+      ];
+      if (getMainStatus === 'disconnect') {
+        actionData.unshift({
+          service: ['choerodon.code.project.deploy.host.ps.connect'],
+          text: formatMessage({ id: `${intlPrefix}.connect` }),
+          action: openConnectModal,
+        });
+        actionData.push({
+          service: ['choerodon.code.project.deploy.host.ps.delete'],
+          text: formatMessage({ id: 'delete' }),
+          action: handleDelete,
+        });
+      }
+      return actionData;
+    }
+    return (getMainStatus !== 'operating' || getMainStatus !== 'occupied' ? [
+      {
+        service: ['choerodon.code.project.deploy.host.ps.correct'],
+        text: '校准状态',
+        action: handleCorrect,
+      },
+      {
+        service: ['choerodon.code.project.deploy.host.ps.edit'],
+        text: formatMessage({ id: 'edit' }),
+        action: () => handleCreateTestHost(id),
+      },
+      {
+        service: ['choerodon.code.project.deploy.host.ps.delete'],
+        text: formatMessage({ id: 'delete' }),
+        action: handleDelete,
+      },
+    ] : []);
+  }, [getMainStatus, handleCorrect, handleDelete, isDeploy, id]);
 
   return (
-    <div className={`${prefixCls}-content-list-item`}>
+    <div className={itemClassName} onClick={handleSelect} role="none">
       <div className={`${prefixCls}-content-list-item-header`}>
         <div className={`${prefixCls}-content-list-item-header-left`}>
           <div className={`${prefixCls}-content-list-item-header-left-top`}>
@@ -155,9 +221,8 @@ const HostsItem:React.FC<any> = ({
                 style={{
                   marginLeft: '4px',
                   fontSize: '12px',
-                  fontFamily: 'PingFangSC-Regular, PingFang SC',
                   fontWeight: 400,
-                  color: 'rgba(58, 52, 95, 0.65)',
+                  color: 'var(--text-color4)',
                 }}
                 content={lastUpdateDate}
               />
@@ -211,6 +276,6 @@ const HostsItem:React.FC<any> = ({
       </main>
     </div>
   );
-};
+});
 
 export default HostsItem;

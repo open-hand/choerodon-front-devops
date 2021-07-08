@@ -174,7 +174,7 @@ export default function useStore(viewType) {
             const groupKey = `${envId}**${type}`;
             const group = {
               id: index,
-              name: formatMessage({ id: type }),
+              name: formatMessage({ id: `${type}_group` }),
               key: groupKey,
               isGroup: true,
               itemType: `group_${type}`,

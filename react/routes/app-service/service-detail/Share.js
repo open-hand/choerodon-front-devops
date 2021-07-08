@@ -261,17 +261,36 @@ const Share = withRouter(observer((props) => {
                             </span>
                           </p>
                           <p style={{ marginTop: 6 }}>
-                            <span
-                              className="c7ncd-theme4-version-item-line-versionType"
-                              style={{
-                                color: versionTypeStyleMaps[share.get('versionType')]?.color || '#5365EA',
-                                background: versionTypeStyleMaps[share.get('versionType')]?.background || '#F0F5FF',
-                                border: `1px solid ${versionTypeStyleMaps[share.get('versionType')]?.border || '#ADC6FF'}`,
-                              }}
-                            >
-                              {share.get('versionType') || '未指定'}
-                            </span>
-                            <span className="c7ncd-theme4-version-item-line-versionType">{share.get('version')}</span>
+                            {
+                              share.get('versionType') ? (
+                                <>
+                                  <span
+                                    className="c7ncd-theme4-version-item-line-versionText"
+                                  >
+                                    共享特定类型:
+                                  </span>
+                                  <span
+                                    className="c7ncd-theme4-version-item-line-versionType"
+                                    style={{
+                                      color: versionTypeStyleMaps[share.get('versionType')]?.color || '#5365EA',
+                                      background: versionTypeStyleMaps[share.get('versionType')]?.background || '#F0F5FF',
+                                      border: `1px solid ${versionTypeStyleMaps[share.get('versionType')]?.border || '#ADC6FF'}`,
+                                    }}
+                                  >
+                                    {share.get('versionType')}
+                                  </span>
+                                </>
+                              ) : (
+                                <>
+                                  <span
+                                    className="c7ncd-theme4-version-item-line-versionText"
+                                  >
+                                    共享特定版本:
+                                  </span>
+                                  <span className="c7ncd-theme4-version-item-line-versionType">{share.get('version')}</span>
+                                </>
+                              )
+                            }
                           </p>
                         </div>
                         {renderAction(share)}

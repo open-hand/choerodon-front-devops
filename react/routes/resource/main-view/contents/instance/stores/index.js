@@ -1,4 +1,6 @@
-import React, { createContext, useMemo, useContext, useEffect } from 'react';
+import React, {
+  createContext, useMemo, useContext, useEffect,
+} from 'react';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
@@ -105,7 +107,8 @@ export const StoreProvider = injectIntl(inject('AppState')(
             const podId = data[0].id;
             return {
               url: `devops/v1/projects/${projectId}/pods/${podId}?env_id=${envId}`,
-              method: 'delete' };
+              method: 'delete',
+            };
           };
           queryData();
         }

@@ -90,7 +90,7 @@ const mapping = {
 
 function getRandomName(prefix = '') {
   const randomString = uuidV1();
-  const realPrefix = prefix.split('_')[1] || prefix.split('_')[0];
+  const realPrefix = prefix?.split('_')[1] || prefix?.split('_')[0];
 
   return realPrefix
     ? `${realPrefix.substring(0, 24)}-${randomString.substring(0, 5)}`
@@ -135,6 +135,7 @@ export default (({
   marketServiceOptionsDs,
   hasDevops,
   random,
+  appServiceSource,
 }) => {
   // 如果有该参数 部署方式增加主机部署
   if (hasHostDeploy) {
@@ -152,7 +153,9 @@ export default (({
     }];
   }
   function handleCreate({ dataSet, record }) {
-    deployStore.loadAppService(projectId, record.get('appServiceSource'));
+    if (record.get('appServiceSource') !== 'market_service') {
+      deployStore.loadAppService(projectId, record.get('appServiceSource'));
+    }
   }
 
   function handleUpdate({
@@ -187,7 +190,7 @@ export default (({
             url: `/devops/v1/projects/${projectId}/app_service_versions/page_by_options?app_service_id=${value.split('**')[0]}&deploy_only=true&do_page=true&page=1&size=40`,
             method: 'post',
           });
-          record.set('instanceName', getRandomName(value.split('**')[1]));
+          record.set('instanceName', getRandomName(value.split('**')[1]) || '');
         }
         loadValueList(record);
         break;
@@ -216,9 +219,9 @@ export default (({
       case 'marketService':
         if (value && !isEmpty(value.marketServiceDeployObjectVO)) {
           const {
-            id: deployObjectId, devopsAppServiceCode,
+            id: deployObjectId, devopsAppServiceCode, hzeroServiceCode,
           } = value.marketServiceDeployObjectVO;
-          record.set('instanceName', getRandomName(devopsAppServiceCode));
+          record.set('instanceName', getRandomName(devopsAppServiceCode || hzeroServiceCode || ''));
           record.get(mapping.deployWay.value) === mapping.deployWay.options[0].value
           && deployStore.loadMarketDeployValue(projectId, deployObjectId);
         } else {
@@ -780,7 +783,11 @@ export default (({
       { name: 'values', type: 'string' },
       { name: 'type', type: 'string', defaultValue: 'create' },
       { name: 'isNotChange', type: 'boolean', defaultValue: false },
-      { name: 'appServiceSource', type: 'string', defaultValue: hasDevops ? 'normal_service' : 'share_service' },
+      {
+        name: 'appServiceSource',
+        type: 'string',
+        defaultValue: appServiceSource || (hasDevops ? 'normal_service' : 'share_service'),
+      },
       {
         name: 'marketAppAndVersion',
         label: formatMessage({ id: `${intlPrefix}.appAndVersion` }),

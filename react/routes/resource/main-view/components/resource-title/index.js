@@ -2,14 +2,16 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
 import { runInAction } from 'mobx';
-import { Icon, Progress, Tooltip } from 'choerodon-ui';
+import { Icon, Spin, Tooltip } from 'choerodon-ui';
 import PageTitle from '../../../../../components/page-title';
 import { useResourceStore } from '../../../stores';
 
 import './index.less';
 
 function ResourceTitle(props) {
-  const { record, iconType, statusKey, errorKey } = props;
+  const {
+    record, iconType, statusKey, errorKey,
+  } = props;
   const {
     resourceStore,
     treeDs,
@@ -38,38 +40,42 @@ function ResourceTitle(props) {
     const current = getCurrent();
     if (current) {
       const { name, status, errorText } = current;
-      return <div className="c7ncd-resource-title">
-        <Icon type={iconType} className="c7ncd-resource-title-icon" />
-        <span className="c7ncd-resource-title-name">{name}</span>
-        {status === 'failed' && (
+      return (
+        <div className="c7ncd-resource-title">
+          <Icon type={iconType} className="c7ncd-resource-title-icon" />
+          <span className="c7ncd-resource-title-name">{name}</span>
+          {status === 'failed' && (
           <Tooltip title={errorText || ''}>
             <Icon type="error" className="c7ncd-resource-title-error-icon" />
           </Tooltip>
-        )}
-        {status === 'operating' && (
+          )}
+          {status === 'operating' && (
           <Tooltip title={formatMessage({ id: 'operating' })}>
-            <Progress
+            <Spin
               className="c7ncd-resource-title-operating-icon"
               type="loading"
               size="small"
               width={15}
             />
           </Tooltip>
-        )}
-      </div>;
+          )}
+        </div>
+      );
     }
     return null;
   }
 
   function getFallBack() {
     const { name, status } = resourceStore.getSelectedMenu;
-    return <div className="c7ncd-resource-title">
-      <Icon type={iconType} className="c7ncd-resource-title-icon" />
-      <span>{name}</span>
-      {status === 'failed' && (
+    return (
+      <div className="c7ncd-resource-title">
+        <Icon type={iconType} className="c7ncd-resource-title-icon" />
+        <span>{name}</span>
+        {status === 'failed' && (
         <Icon type="error" className="c7ncd-resource-title-error-icon" />
-      )}
-    </div>;
+        )}
+      </div>
+    );
   }
 
   useEffect(() => {
