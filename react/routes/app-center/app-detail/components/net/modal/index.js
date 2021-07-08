@@ -177,17 +177,18 @@ const AppModals = observer(() => {
           disabled,
           name: formatMessage({ id: `${intlPrefix}.create.ingress` }),
           handler: openDomain,
-        }, {
-          permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.configmap'],
-          disabled,
-          name: formatMessage({ id: `${intlPrefix}.create.configMap` }),
-          // handler: () => openKeyValue(MAPPING_TAB),
-        }, {
-          permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.cipher'],
-          disabled,
-          name: formatMessage({ id: `${intlPrefix}.create.cipher` }),
-          // handler: () => openKeyValue(CIPHER_TAB),
         },
+        // , {
+        //   permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.configmap'],
+        //   disabled,
+        //   name: formatMessage({ id: `${intlPrefix}.create.configMap` }),
+        //   // handler: () => openKeyValue(MAPPING_TAB),
+        // }, {
+        //   permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.cipher'],
+        //   disabled,
+        //   name: formatMessage({ id: `${intlPrefix}.create.cipher` }),
+        //   // handler: () => openKeyValue(CIPHER_TAB),
+        // },
       ],
     }, {
       disabled: notReady,
