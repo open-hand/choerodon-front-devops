@@ -40,15 +40,21 @@ const statusObj = {
     icon: 'remove_circle',
     text: '已终止',
   },
+  manual: {
+    icon: 'timelapse',
+    text: '待执行',
+  },
 };
 
 const statusDot = (props) => {
-  const { size, status, style, ...rest } = props;
+  const {
+    size, status, style, ...rest
+  } = props;
   return (
-    <Tooltip title={statusObj[status].text}>
+    <Tooltip title={statusObj[status]?.text}>
       <Icon
         {...rest}
-        type={statusObj[status].icon}
+        type={statusObj[status]?.icon}
         style={{ fontSize: `${size}px`, ...style }}
         className={`c7n-piplineManage-detail-column-status-icon c7n-piplineManage-detail-column-status-icon-${status}`}
       />

@@ -135,7 +135,7 @@ const BuildTable = withRouter(observer((props) => {
         rel="nofollow me noopener noreferrer"
         className="c7n-status-link"
       >
-        <i className={`icon ${ICONS[status].icon} c7n-icon-${status} c7n-icon-lg`} />
+        <i className={`icon ${ICONS[status]?.icon} c7n-icon-${status} c7n-icon-lg`} />
         <span className="c7n-text-status black">{ICONS[status].display}</span>
       </a>
     </div>

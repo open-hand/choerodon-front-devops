@@ -32,7 +32,6 @@
     "diff-match-patch": "^1.0.4",
     "echarts": "^4.2.1",
     "echarts-for-react": "^2.0.12",
-    "file-saver": "^2.0.5",
     "js-base64": "^2.5.2",
     "js-file-download": "^0.4.8",
     "js-yaml": "^3.12.1",

@@ -112,35 +112,45 @@ const ListView = withRouter(observer((props) => {
     })
   };
 
-  const getItemsButton = () => ([{
-    name: formatMessage({ id: `${intlPrefix}.create` }),
-    icon: 'playlist_add',
-    permissions: ['choerodon.code.project.develop.app-service.ps.create'],
-    display: true,
-    handler: openCreate,
-  }, {
-    name: formatMessage({ id: `${intlPrefix}.import` }),
-    icon: 'archive-o',
-    permissions: ['choerodon.code.project.develop.app-service.ps.import'],
-    display: true,
-    handler: openImport,
-  }, {
-    name: '权限管理',
-    icon: 'settings-o',
-    display: true,
-    permissions: ['choerodon.code.project.develop.app-service.ps.permission.update'],
-    handler: () => {
-      const {
-        history,
-        location,
-      } = props;
-      history.push(`/rducm/code-lib-management/assign${location.search}`);
-    }
-  }, {
-    icon: 'refresh',
-    display: true,
-    handler: refresh,
-  }]);
+  const getItemsButton = () => {
+    const disabled = !appListStore.getCanCreate;
+    const disabledMessage = disabled ? formatMessage({ id: `${intlPrefix}.create.disabled` }) : '';
+    const { openImport } =props;
+
+    return ([{
+      name: formatMessage({ id: `${intlPrefix}.create` }),
+      icon: 'playlist_add',
+      permissions: ['choerodon.code.project.develop.app-service.ps.create'],
+      display: true,
+      handler: openCreate,
+      disabled,
+      disabledMessage,
+    }, {
+      name: formatMessage({ id: `${intlPrefix}.import` }),
+      icon: 'archive-o',
+      permissions: ['choerodon.code.project.develop.app-service.ps.import'],
+      display: true,
+      handler: openImport,
+      disabled,
+      disabledMessage,
+    }, {
+      name: '权限管理',
+      icon: 'settings-o',
+      display: true,
+      permissions: ['choerodon.code.project.develop.app-service.ps.permission.update'],
+      handler: () => {
+        const {
+          history,
+          location,
+        } = props;
+        history.push(`/rducm/code-lib-management/assign${location.search}`);
+      }
+    }, {
+      icon: 'refresh',
+      display: true,
+      handler: refresh,
+    }]);
+  };
 
   function renderName({ value, record }) {
     const {
@@ -199,7 +209,7 @@ const ListView = withRouter(observer((props) => {
       }else if(active){
         colorCode = 'active'
       }else{
-        colorCode = 'stop'
+        colorCode = 'unready'
       }
     } else {
       colorCode = 'operating'
@@ -212,7 +222,7 @@ const ListView = withRouter(observer((props) => {
             style={{
               marginRight: '7px'
             }}
-            name={formatMessage({id:colorCode})}
+            name={colorCode === 'unready' ? '停用' : formatMessage({id:colorCode})}
           />
         </div>
       </Tooltip>
@@ -292,22 +302,6 @@ const ListView = withRouter(observer((props) => {
         prefixCls={prefixCls}
       />,
       okText: formatMessage({ id: 'create' }),
-    });
-  }
-
-  function openImport() {
-    Modal.open({
-      key: modalKey2,
-      drawer: true,
-      style: modalStyle2,
-      title: formatMessage({ id: `${intlPrefix}.import` }),
-      children: <ImportForm
-        appServiceStore={appServiceStore}
-        intlPrefix={intlPrefix}
-        prefixCls={prefixCls}
-        refresh={refresh}
-      />,
-      okText: formatMessage({ id: 'import' }),
     });
   }
 
@@ -487,7 +481,7 @@ const ListView = withRouter(observer((props) => {
                           {
                             renderStatus({value:record.get('active'), record})
                           }
-                          {record.get('errorMessage') && <Tooltip overlayStyle={{ maxHeight: 500, overflow: 'auto' }} title={record.get('errorMessage')}>
+                          {record.get('errorMessage') && record.get('fail') && <Tooltip overlayStyle={{ maxHeight: 500, overflow: 'auto' }} title={record.get('errorMessage')}>
                             <Icon
                               type="info"
                               style={{

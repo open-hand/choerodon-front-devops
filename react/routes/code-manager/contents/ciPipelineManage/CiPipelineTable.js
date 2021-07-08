@@ -115,7 +115,7 @@ export default injectIntl(observer((props) => {
           onClick={() => linkToNewMerge(gitlabUrl ? `${gitlabUrl.slice(0, -4)}/pipelines/${pipelineId}` : null)}
           className="c7n-status-link"
         >
-          <i className={`icon ${ICONS[value].icon} c7n-icon-${value} c7n-icon-lg`} />
+          <i className={`icon ${ICONS[value]?.icon} c7n-icon-${value} c7n-icon-lg`} />
           <span className="c7n-text-status black">{ICONS[value].display}</span>
         </span>
       </div>);

@@ -28,7 +28,7 @@ export function EmptyLoading({ formatMessage }) {
   );
 }
 
-export default function EmptyShown({ access, onClick }) {
+export default function EmptyShown({ access, onClick, openImport }) {
   const {
     intl: { formatMessage },
     AppState: {
@@ -54,6 +54,12 @@ export default function EmptyShown({ access, onClick }) {
             permissions: ['choerodon.code.project.develop.app-service.ps.create'],
             display: true,
             handler: onClick,
+          }, {
+            name: formatMessage({ id: `${intlPrefix}.import` }),
+            icon: 'archive-o',
+            permissions: ['choerodon.code.project.develop.app-service.ps.import'],
+            display: true,
+            handler: openImport,
           }, {
             icon: 'refresh',
             display: true,

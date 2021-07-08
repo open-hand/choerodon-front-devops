@@ -27,7 +27,11 @@ export function useManualDeployStore() {
 export const StoreProvider = withRouter(injectIntl(inject('AppState')(
   (props) => {
     const {
-      AppState: { currentMenuType: { projectId, organizationId, categories }, currentServices },
+      AppState: {
+        currentMenuType: { projectId, organizationId, categories },
+        currentServices,
+        isSaasList,
+      },
       intl: { formatMessage },
       children,
       intlPrefix,
@@ -44,6 +48,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
     const deployUseStore = useStore();
     const hasDevops = useMemo(() => some(categories || [], ['code', 'N_DEVOPS']), [categories]);
     const hasMarket = useMemo(() => some(currentServices || [], ['serviceCode', 'market-service']), [currentServices]);
+    const isSaaS = isSaasList && isSaasList[organizationId];
 
     const envOptionsDs = useMemo(() => new DataSet(OptionsDataSet()), []);
     const valueIdOptionsDs = useMemo(() => new DataSet(OptionsDataSet()), []);
@@ -90,7 +95,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
     useEffect(() => {
       envOptionsDs.transport.read.url = `/devops/v1/projects/${projectId}/envs/list_by_active?active=true`;
       envOptionsDs.query();
-      hasMarket && loadMarketAndVersion();
+      !isSaaS && hasMarket && loadMarketAndVersion();
     }, [projectId]);
 
     useEffect(() => {
@@ -150,6 +155,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       marketAndVersionOptionsDs,
       hasDevops,
       hasMarket,
+      isSaaS,
     };
     return (
       <Store.Provider value={value}>
