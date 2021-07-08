@@ -119,7 +119,7 @@ const InstanceEvent = ({
     <div key={index} className="operation-content-step">
       <div className="content-step-title">
         {jobPodStatus === 'running'
-          ? <Progress type="loading" />
+          ? <Spin spinning className="content-step-title-spin" />
           : (
             <Icon
               type="wait_circle"
