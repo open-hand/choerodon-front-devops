@@ -73,8 +73,6 @@ function DetailItem({ record, search, intl: { formatMessage }, intlPrefix }) {
           deleteModal.update({
             children: formatMessage({ id: `${intlPrefix}.delete.des.resource.confirm` }),
             okText: formatMessage({ id: 'delete' }),
-            okProps: { color: 'red' },
-            cancelProps: { color: 'dark' },
             onOk: handleDelete,
             footer: ((okBtn, cancelBtn) => (
               <Fragment>

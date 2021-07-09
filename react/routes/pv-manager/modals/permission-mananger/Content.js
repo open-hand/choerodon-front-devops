@@ -69,8 +69,6 @@ export default injectIntl(observer(() => {
       title: formatMessage({ id: `${intlPrefix}.permission.delete.title` }),
       children: formatMessage({ id: `${intlPrefix}.permission.project.delete.des` }),
       okText: formatMessage({ id: 'delete' }),
-      okProps: { color: 'red' },
-      cancelProps: { color: 'dark' },
     };
     permissionProjectDs.delete(permissionProjectDs.current, modalProps);
   }

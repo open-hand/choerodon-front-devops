@@ -192,8 +192,6 @@ const PodDetail = memo(() => {
       title: intl.formatMessage({ id: `${intlPrefix}.instance.pod.delete.title` }),
       children: intl.formatMessage({ id: `${intlPrefix}.instance.pod.delete.des` }),
       okText: intl.formatMessage({ id: 'delete' }),
-      okProps: { color: 'red' },
-      cancelProps: { color: 'dark' },
     };
     podsDs.delete(podsDs.current, modalProps);
   }

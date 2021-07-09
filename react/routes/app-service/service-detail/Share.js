@@ -130,8 +130,6 @@ const Share = withRouter(observer((props) => {
       title: formatMessage({ id: `${intlPrefix}.rule.delete.title` }),
       children: formatMessage({ id: `${intlPrefix}.rule.delete.des` }),
       okText: formatMessage({ id: 'delete' }),
-      okProps: { color: 'red' },
-      cancelProps: { color: 'dark' },
     };
     shareDs.delete(record, modalProps);
   }

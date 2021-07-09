@@ -219,8 +219,6 @@ export default observer((props) => {
             okText: formatMessage({ id: 'uninstall' }),
             okCancel: true,
             onOk: handleUninstallCert,
-            okProps: { color: 'red' },
-            cancelProps: { color: 'dark' },
             footer: (okBtn, cancelBtn) => (
               <div>
                 {cancelBtn}

@@ -22,8 +22,6 @@ export default () => {
             title: formatMessage({ id: 'c7ncd.deployment.permission.delete.title' }),
             children: formatMessage({ id: 'c7ncd.deployment.permission.project.delete.des' }),
             okText: formatMessage({ id: 'delete' }),
-            okProps: { color: 'red' },
-            cancelProps: { color: 'dark' },
           };
           PermissionDs.delete(record, modalProps);
         },
