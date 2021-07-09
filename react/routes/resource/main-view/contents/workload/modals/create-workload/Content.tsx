@@ -122,6 +122,7 @@ const CreateWorkloadContent = observer(() => {
           originValue={record.getPristineValue('value') || ''}
           onValueChange={handleChangeValue}
           handleEnableNext={handleEnableNext}
+          showMoreDocumentErrorTips
         />
       ) : ([
         <Upload

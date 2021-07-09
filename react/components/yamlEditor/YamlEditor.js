@@ -17,6 +17,7 @@ import './merge';
 
 const HAS_ERROR = true;
 const NO_ERROR = false;
+const MoreDocumentErrorReason = 'expected a single document in the stream, but found more';
 
 @injectIntl
 export default class YamlEditor extends Component {
@@ -29,6 +30,7 @@ export default class YamlEditor extends Component {
     modeChange: PropTypes.bool,
     showError: PropTypes.bool,
     className: PropTypes.string,
+    showMoreDocumentErrorTips: PropTypes.string,
   };
 
   static defaultProps = {
@@ -40,12 +42,14 @@ export default class YamlEditor extends Component {
     },
     onValueChange: () => {
     },
+    showMoreDocumentErrorTips: false,
   };
 
   constructor(props) {
     super(props);
     this.state = {
       errorTip: false,
+      moreDocumentErrorTip: false,
     };
     this.options = {
       // chd 自定制的主题配色
@@ -86,12 +90,18 @@ export default class YamlEditor extends Component {
    * @param {*} values
    */
   checkYamlFormat(values) {
-    const { handleEnableNext } = this.props;
+    const { handleEnableNext, showMoreDocumentErrorTips } = this.props;
 
     let errorTip = NO_ERROR;
+    let moreDocumentErrorTip = NO_ERROR;
     // yaml 格式校验结果
     const formatResult = checkFormat(values);
     if (formatResult && formatResult.length) {
+      if (showMoreDocumentErrorTips
+        && formatResult.some((item) => item?.reason && item?.reason === MoreDocumentErrorReason)
+      ) {
+        moreDocumentErrorTip = HAS_ERROR;
+      }
       errorTip = HAS_ERROR;
       handleEnableNext(HAS_ERROR);
     } else {
@@ -100,7 +110,7 @@ export default class YamlEditor extends Component {
     }
 
     // 显示编辑器下方的错误 tips
-    this.setState({ errorTip });
+    this.setState({ errorTip, moreDocumentErrorTip });
     return errorTip;
   }
 
@@ -114,8 +124,9 @@ export default class YamlEditor extends Component {
       readOnly,
       showError,
       className,
+      showMoreDocumentErrorTips,
     } = this.props;
-    const { errorTip } = this.state;
+    const { errorTip, moreDocumentErrorTip } = this.state;
 
     const wrapClass = classnames({
       'c7ncd-yaml-wrapper': true,
@@ -124,7 +135,7 @@ export default class YamlEditor extends Component {
     });
 
     return (
-      <Fragment>
+      <>
         <div className={wrapClass}>
           <CodeMirror
             modeChange={modeChange}
@@ -141,11 +152,15 @@ export default class YamlEditor extends Component {
           <div className="c7ncd-yaml-error">
             <Icon type="error" className="c7ncd-yaml-error-icon" />
             <span className="c7ncd-yaml-error-msg">
-              {formatMessage({ id: 'yaml.error.tooltip' })}
+              {formatMessage({
+                id: showMoreDocumentErrorTips && moreDocumentErrorTip
+                  ? 'yaml.error.tooltip.moreDocument'
+                  : 'yaml.error.tooltip',
+              })}
             </span>
           </div>
         ) : null}
-      </Fragment>
+      </>
     );
   }
 }

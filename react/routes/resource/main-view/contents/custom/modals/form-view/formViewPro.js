@@ -234,6 +234,7 @@ const ResourceSidebar = injectIntl(inject('AppState')(observer((props) => {
             originValue={resourceContent || ''}
             onValueChange={handleChangeValue}
             handleEnableNext={handleEnableNext}
+            showMoreDocumentErrorTips
           />
         )}
         {mode === 'upload' && (
