@@ -63,8 +63,6 @@ export default function DeployConfig() {
           children: formatMessage({ id: `${intlPrefix}.config.delete.des` }),
           okText: formatMessage({ id: 'delete' }),
           onOk: () => handleDelete(record),
-          okProps: { color: 'red' },
-          cancelProps: { color: 'dark' },
           footer: ((okBtn, cancelBtn) => (
             <>
               {okBtn}

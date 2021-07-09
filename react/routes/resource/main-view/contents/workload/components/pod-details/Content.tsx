@@ -192,8 +192,6 @@ const PodDetail = observer(() => {
       title: formatMessage({ id: `${intlPrefix}.instance.pod.delete.title` }),
       children: formatMessage({ id: `${intlPrefix}.instance.pod.delete.des` }),
       okText: formatMessage({ id: 'delete' }),
-      okProps: { color: 'red' },
-      cancelProps: { color: 'dark' },
     };
     podsDs.delete(podsDs.current, modalProps);
   }

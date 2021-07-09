@@ -62,8 +62,6 @@ function GroupItem({ record, search, intl: { formatMessage }, intlPrefix }) {
       children: <div>{formatMessage({ id: `${intlPrefix}.group.delete.warn` })}</div>,
       onOk: handleDelete,
       okText: formatMessage({ id: 'delete' }),
-      okProps: { color: 'red' },
-      cancelProps: { color: 'dark' },
     });
   }
 

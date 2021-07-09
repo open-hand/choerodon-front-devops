@@ -116,8 +116,6 @@ export default observer((props) => {
         children: formatMessage({ id: 'apptag.delete.tooltip' }),
         onOk: () => handleRemove(tag),
         okText: formatMessage({ id: 'delete' }),
-        okProps: { color: 'red' },
-        cancelProps: { color: 'dark' },
       });
     } catch (e) {
       // return;

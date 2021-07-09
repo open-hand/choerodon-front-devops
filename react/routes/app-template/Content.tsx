@@ -120,8 +120,6 @@ const TemplateTable = observer(() => {
       title: formatMessage({ id: `${intlPrefix}.delete.title` }, { name: record.get('name') }),
       children: formatMessage({ id: `${intlPrefix}.delete.des` }),
       okText: formatMessage({ id: 'delete' }),
-      okProps: { color: 'red' },
-      cancelProps: { color: 'dark' },
     };
     tableDs.delete(record, modalProps);
   }, []);

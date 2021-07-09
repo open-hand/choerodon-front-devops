@@ -75,8 +75,6 @@ const DeployConfig = () => {
           children: formatMessage({ id: `${intlPrefix}.delete.deployConfig.des` }, { name }),
           okText: formatMessage({ id: 'delete' }),
           onOk: () => handleDelete(record),
-          // okProps: { color: 'red' },
-          // cancelProps: { color: 'dark' },
           footer: ((okBtn: HTMLButtonElement, cancelBtn: HTMLButtonElement) => (
             <>
               {cancelBtn}

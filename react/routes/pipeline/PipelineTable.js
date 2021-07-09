@@ -105,12 +105,6 @@ const PiplelineTable = withRouter(observer((props) => {
       title: `${formatMessage({ id: 'pipeline.invalid' })}“${itemName}”`,
       children: '确认要删除吗？',
       okText: formatMessage({ id: 'delete' }),
-      okProps: {
-        color: 'red',
-      },
-      cancelProps: {
-        color: 'dark',
-      },
       onOk: handleDelete.bind(this, id, itemName),
     });
   }
