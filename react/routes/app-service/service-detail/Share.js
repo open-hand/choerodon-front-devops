@@ -265,7 +265,7 @@ const Share = withRouter(observer((props) => {
                                   <span
                                     className="c7ncd-theme4-version-item-line-versionText"
                                   >
-                                    共享特定类型:
+                                    共享版本类型:
                                   </span>
                                   <span
                                     className="c7ncd-theme4-version-item-line-versionType"
