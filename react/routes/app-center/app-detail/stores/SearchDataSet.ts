@@ -15,5 +15,12 @@ export default ({ envDs }: SearchProps): DataSetProps => ({
       valueField: 'id',
       options: envDs,
     },
+    {
+      name: 'host',
+      type: 'object' as FieldType,
+      textField: 'name',
+      valueField: 'id',
+      options: envDs,
+    },
   ],
 });

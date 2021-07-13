@@ -8,6 +8,7 @@ import {
 } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
+import { CustomTabs } from '@choerodon/components';
 import { useAppCenterDetailStore } from '@/routes/app-center/app-detail/stores';
 import AppTypeLogo from '@/routes/app-center/components/type-logo';
 import EnvOption from '@/routes/app-center/components/env-option';
@@ -38,6 +39,10 @@ const AppCenterDetailContent = () => {
     tabKeys: {
       INSTANCE_TAB, DEPLOYCONFIG_TAB, SERVICEANDINGRESS_TAB, CONFIGMAP_TAB, SECRET_TAB,
     },
+    mainTabKeys,
+    mainTabKeys: { ENV_TAB, HOST_TAB },
+    hostTabKeys,
+    hostTabKeys: { APP_INSTANCE_TAB },
   } = useAppCenterDetailStore();
 
   const record = useMemo(() => detailDs.current, [detailDs.current]);
@@ -48,11 +53,29 @@ const AppCenterDetailContent = () => {
     [SERVICEANDINGRESS_TAB]: <Net />,
     [CONFIGMAP_TAB]: <ConfigMap />,
     [SECRET_TAB]: <Secrets />,
+    [APP_INSTANCE_TAB]: <div>应用实例</div>,
   }), [mainStore.getSelectedEnv]);
 
-  const realTabKeys = useMemo(() => (
-    appServiceType === 'project' ? tabKeys : omit(tabKeys, ['DEPLOYCONFIG_TAB'])
-  ), [appServiceType]);
+  const realTabKeys = useMemo(() => {
+    if (mainStore.getCurrentMainTabKey === HOST_TAB) {
+      return hostTabKeys;
+    }
+    return appServiceType === 'project' ? tabKeys : omit(tabKeys, DEPLOYCONFIG_TAB);
+  }, [appServiceType, mainStore.getCurrentMainTabKey]);
+
+  const selectPros = useMemo(() => (
+    mainStore.getCurrentMainTabKey === ENV_TAB
+      ? {
+        name: 'env',
+        prefix: '环境:',
+        onChange: handleSearch,
+        onOption: renderOptionProperty,
+      } : {
+        name: 'host',
+        prefix: '主机:',
+        onChange: handleSelectHost,
+      }
+  ), [mainStore.getCurrentMainTabKey]);
 
   const refresh = useCallback(() => {
     detailDs.query();
@@ -62,8 +85,20 @@ const AppCenterDetailContent = () => {
     mainStore.setCurrentTabKey(tabKey);
   }, []);
 
+  const handleMainTabChange = useCallback((
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>, name: string, tabKey: string,
+  ) => {
+    mainStore.setCurrentMainTabKey(tabKey);
+    // @ts-ignore
+    mainStore.setCurrentTabKey(tabKey === ENV_TAB ? INSTANCE_TAB : APP_INSTANCE_TAB);
+  }, []);
+
   const handleSearch = useCallback((value: EnvDataProps) => {
     mainStore.setSelectedEnv(value);
+  }, []);
+
+  const handleSelectHost = useCallback((value: EnvDataProps) => {
+    mainStore.setSelectedHost(value);
   }, []);
 
   const renderEnvOption = useCallback(({ value, text, record: envRecord }) => (
@@ -96,23 +131,29 @@ const AppCenterDetailContent = () => {
             </span>
           )}
         </div>
-        <Form
-          dataSet={searchDs}
-          className={`${prefixCls}-detail-env`}
-          columns={3}
-          labelLayout={'horizontal' as LabelLayoutType}
-        >
-          <Select
-            name="env"
-            placeholder="请选择"
-            searchable
-            prefix="环境:"
-            optionRenderer={renderEnvOption}
-            renderer={renderEnvOption}
-            onChange={handleSearch}
-            onOption={renderOptionProperty}
+        <div className={`${prefixCls}-detail-main`}>
+          <CustomTabs
+            data={map(mainTabKeys, (value: string, key: string) => ({
+              name: formatMessage({ id: `${intlPrefix}.detail.tab.${key}` }),
+              value,
+            }))}
+            selectedTabValue={mainStore.getCurrentMainTabKey}
+            onChange={handleMainTabChange}
           />
-        </Form>
+          <Form
+            dataSet={searchDs}
+            className={`${prefixCls}-detail-env`}
+            columns={2}
+            labelLayout={'horizontal' as LabelLayoutType}
+          >
+            <Select
+              {...selectPros}
+              searchable
+              optionRenderer={renderEnvOption}
+              renderer={renderEnvOption}
+            />
+          </Form>
+        </div>
         <Tabs
           className={`${prefixCls}-detail-tabs`}
           animated={false}
