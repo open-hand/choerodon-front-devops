@@ -58,4 +58,14 @@ export default class AppCenterApi {
   static deleteServiceRelated(projectId: number) {
     return `/devops/v1/projects/${projectId}/env/app_services`;
   }
+
+  static getAppIngress() {
+    // eslint-disable-next-line quotes
+    return `/devops/v1`;
+  }
+
+  static deleteAppIngress() {
+    // eslint-disable-next-line quotes
+    return `/devops/v1`;
+  }
 }
