@@ -3,16 +3,43 @@ import Apis from '@/routes/app-center/apis';
 
 export default ():any => ({
   autoQuery: true,
-  transport: {
-    read: {
-      url: Apis.getAppIngress(),
-      method: 'get',
+  selection: false,
+  // transport: {
+  //   read: {
+  //     url: Apis.getAppIngress(),
+  //     method: 'get',
+  //   },
+  //   destroy: {
+  //     url: Apis.deleteAppIngress(),
+  //     method: 'delete',
+  //   },
+  // },
+  data: [
+    {
+      name: 'hellowrold',
+      status: 'success',
+      progressPort: '#sdadas',
+      port: '12121',
+      deployer: 'motherfucker',
+      date: '2019-06-29 01:01:03',
     },
-    destroy: {
-      url: Apis.deleteAppIngress(),
-      method: 'delete',
+    {
+      name: 'hellowrold',
+      status: 'success',
+      progressPort: '#sdadas',
+      port: '12121',
+      deployer: 'motherfucker',
+      date: '2019-06-29 01:01:03',
     },
-  },
+    {
+      name: 'hellowrold',
+      status: 'success',
+      progressPort: '#sdadas',
+      port: '12121',
+      deployer: 'motherfucker',
+      date: '2019-06-29 01:01:03',
+    },
+  ],
   fields: [
     {
       type: 'string',

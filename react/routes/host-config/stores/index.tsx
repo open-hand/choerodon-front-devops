@@ -85,6 +85,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     defaultTabKey,
     tabKey,
   })), [projectId]);
+
   const searchDs = useMemo(() => new DataSet(SearchDataSet({ projectId })), [projectId]);
   const usageDs = useMemo(() => new DataSet(UsageDataSet({ projectId })), [projectId]);
   const mirrorTableDs = useMemo(() => new DataSet(MirrorTableDataSet({
@@ -92,6 +93,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     formatMessage,
     intlPrefix,
   })), [projectId]);
+
   const jarTableDs = useMemo(() => new DataSet(JarTableDataSet({
     projectId,
     formatMessage,
@@ -111,6 +113,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   }, [projectId]);
 
   const refresh = useCallback(async (callback?:CallableFunction) => {
+    listDs.setQueryParameter('forceUpdate', true);
     await listDs.query();
     typeof callback === 'function' && callback();
     if (mainStore.getCurrentTabKey === tabKey.DEPLOY_TAB

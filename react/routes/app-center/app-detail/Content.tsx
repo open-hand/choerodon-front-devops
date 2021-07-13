@@ -17,6 +17,7 @@ import Loading from '@/components/loading';
 import { RecordObjectProps, LabelLayoutType } from '@/interface';
 
 import './index.less';
+import AppIngress from '@/routes/app-center/app-detail/components/app-ingress';
 
 const DeployConfig = React.lazy(() => import('./components/deploy-config'));
 const ConfigMap = React.lazy(() => import('./components/config-map'));
@@ -53,7 +54,7 @@ const AppCenterDetailContent = () => {
     [SERVICEANDINGRESS_TAB]: <Net />,
     [CONFIGMAP_TAB]: <ConfigMap />,
     [SECRET_TAB]: <Secrets />,
-    [APP_INSTANCE_TAB]: <div>应用实例</div>,
+    [APP_INSTANCE_TAB]: <AppIngress />,
   }), [mainStore.getSelectedEnv]);
 
   const realTabKeys = useMemo(() => {
