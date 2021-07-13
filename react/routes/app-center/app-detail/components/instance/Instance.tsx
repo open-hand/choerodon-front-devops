@@ -119,7 +119,11 @@ export default observer((props) => {
     record: Record
     text: string,
     value: string,
-  }) => text;
+  }) => (
+    <span>
+      {`${record?.get('code')}(${record?.get('version')})`}
+    </span>
+  );
 
   const versionRender = ({ record, text, value }: {
     record: Record,
