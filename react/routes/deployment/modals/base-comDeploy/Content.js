@@ -841,8 +841,8 @@ export default observer(() => {
                       disabled: getHostNameDisabled(data),
                     })}
                   />
-                  <TextField colSpan={1} name={hostMapping.ip.name} />
-                  <TextField colSpan={1} name={hostMapping.port.name} />
+                  {/* <TextField colSpan={1} name={hostMapping.ip.name} />
+                  <TextField colSpan={1} name={hostMapping.port.name} /> */}
                   {
                     BaseDeployDataSet
                       .current
@@ -859,7 +859,7 @@ export default observer(() => {
                   icon="delete"
                   style={{
                     position: 'absolute',
-                    right: '-36px',
+                    left: BaseDeployDataSet.current.get(mapping.deployMode.name) === deployModeOptionsData[0].value ? '250px' : '450px',
                     bottom: '30px',
                   }}
                   onClick={() => handleDeleteHost(record)}
@@ -878,7 +878,7 @@ export default observer(() => {
           >
             添加主机
           </Button>
-          <div
+          {/* <div
             className="c7ncd-baseDeploy-middle-testButton"
           >
             <Button
@@ -894,7 +894,7 @@ export default observer(() => {
               renderHostResult()
             }
 
-          </div>
+          </div> */}
           <p style={{ marginTop: 30 }} className="c7ncd-baseDeploy-middle-deploySetting">
             参数配置
             {/* <Icon type="expand_less" /> */}
@@ -1023,14 +1023,14 @@ export default observer(() => {
                 position: 'relative',
               }}
             >
-              <TextField colSpan={1} name={hostMapping.ip.name} />
-              <TextField colSpan={1} name={hostMapping.port.name} />
+              {/* <TextField colSpan={1} name={hostMapping.ip.name} />
+              <TextField colSpan={1} name={hostMapping.port.name} /> */}
               <TextField colSpan={1} name={hostMapping.privateIp.name} />
               <TextField colSpan={1} name={hostMapping.privatePort.name} />
               {renderItemHostStatus(HostSettingDataSet
                 .records.find((i) => i.get(hostMapping.checked.name)))}
             </Form>
-            <div
+            {/* <div
               className="c7ncd-baseDeploy-middle-testButton"
               style={{
                 marginTop: 'unset',
@@ -1048,7 +1048,7 @@ export default observer(() => {
               >
                 测试连接
               </Button>
-            </div>
+            </div> */}
             <Button
               icon="add"
               color="primary"

@@ -89,14 +89,14 @@ export default (projectId, BaseComDeployStore, random) => ({
         case mapping.hostName.name: {
           const item = BaseComDeployStore.getHostList.find((i) => i.id === value);
           if (item) {
-            record.set(mapping.ip.name, item.hostIp);
-            record.set(mapping.port.name, item.sshPort);
+            // record.set(mapping.ip.name, item.hostIp);
+            // record.set(mapping.port.name, item.sshPort);
             record.set(mapping.hostId.name, item.id);
             record.set(mapping.privateIp.name, item.privateIp);
             record.set(mapping.privatePort.name, item.privatePort);
           } else {
-            record.set(mapping.ip.name, '');
-            record.set(mapping.port.name, '');
+            // record.set(mapping.ip.name, '');
+            // record.set(mapping.port.name, '');
             record.set(mapping.hostId.name, '');
             record.set(mapping.privateIp.name, '');
             record.set(mapping.privatePort.name, '');
