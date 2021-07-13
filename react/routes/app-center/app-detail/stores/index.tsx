@@ -29,6 +29,13 @@ interface ContextProps {
   appServiceType: 'project' | 'share' | 'market',
   appServiceId: string,
   deleteModalStore: DeleteStoreProps
+  mainTabKeys: {
+    ENV_TAB: 'env',
+    HOST_TAB: 'host',
+  },
+  hostTabKeys: {
+    APP_INSTANCE_TAB: 'app_instance',
+  }
 }
 
 const Store = createContext({} as ContextProps);
@@ -58,9 +65,19 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     SECRET_TAB: 'secret',
   }), []);
 
-  const defaultTabKey = useMemo(() => tabKeys.INSTANCE_TAB, []);
+  const mainTabKeys = useMemo(() => ({
+    ENV_TAB: 'env',
+    HOST_TAB: 'host',
+  }), []);
 
-  const mainStore = useStore({ defaultTabKey });
+  const hostTabKeys = useMemo(() => ({
+    APP_INSTANCE_TAB: 'app_instance',
+  }), []);
+
+  const defaultTabKey = useMemo(() => tabKeys.INSTANCE_TAB, []);
+  const defaultMainTabKey = useMemo(() => mainTabKeys.ENV_TAB, []);
+
+  const mainStore = useStore({ defaultTabKey, defaultMainTabKey });
 
   const deleteModalStore = useDeleteModalStore();
 
@@ -99,6 +116,8 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     envDs,
     searchDs,
     deleteModalStore,
+    mainTabKeys,
+    hostTabKeys,
   };
   return (
     <Store.Provider value={value}>
