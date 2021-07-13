@@ -23,7 +23,9 @@ export function useDeployStore() {
 export const StoreProvider = withRouter(injectIntl(inject('AppState')(
   (props) => {
     const {
-      AppState: { currentMenuType: { projectId } },
+      AppState: {
+        currentMenuType: { projectId },
+      },
       intl: { formatMessage },
       children,
       location: { state },
