@@ -1,10 +1,8 @@
 /* eslint-disable max-len */
 import React, { useMemo, useState, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Action } from '@choerodon/boot';
 import AppIngressTable from '@/components/app-ingress-table';
-import { Modal, Table } from 'choerodon-ui/pro';
-import { TableQueryBarType } from '@/interface';
+import { Modal } from 'choerodon-ui/pro';
 import { HeaderButtons } from '@choerodon/master';
 import { useAppIngressStore } from './stores';
 
@@ -29,6 +27,7 @@ const AppIngress = observer(() => {
     {
       icon: 'refresh',
       handler: handleRefresh,
+      display: true,
     },
   ];
 

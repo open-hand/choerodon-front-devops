@@ -19,7 +19,9 @@ export default ({ projectId, defaultTabKey, tabKey: { DEPLOY_TAB } }: ListProps)
   pageSize: 10,
   transport: {
     read: ({ data, params: pageParams }) => {
-      const { type, params, status } = data;
+      const {
+        type, params, status, forceUpdate = false,
+      } = data;
       const newType = type || defaultTabKey;
       const newParams = newType === DEPLOY_TAB ? {
         search_param: params,
@@ -30,6 +32,8 @@ export default ({ projectId, defaultTabKey, tabKey: { DEPLOY_TAB } }: ListProps)
         url: apis.getLoadHostsDetailsUrl(projectId, newType),
         method: 'post',
         params: newParams,
+        enabledCancelCache: 40,
+        forceUpdate,
         data: newType === DEPLOY_TAB ? null : {
           searchParam: {
             type: newType,
