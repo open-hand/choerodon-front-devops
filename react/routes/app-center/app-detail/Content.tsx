@@ -12,7 +12,7 @@ import { CustomTabs } from '@choerodon/components';
 import { useAppCenterDetailStore } from '@/routes/app-center/app-detail/stores';
 import AppTypeLogo from '@/routes/app-center/components/type-logo';
 import EnvOption from '@/routes/app-center/components/env-option';
-import { EnvDataProps } from '@/routes/app-center/app-detail/stores/useStore';
+import { EnvDataProps, HostDataProps } from '@/routes/app-center/app-detail/stores/useStore';
 import Loading from '@/components/loading';
 import { RecordObjectProps, LabelLayoutType } from '@/interface';
 
@@ -69,12 +69,12 @@ const AppCenterDetailContent = () => {
       ? {
         name: 'env',
         prefix: '环境:',
-        onChange: handleSearch,
-        onOption: renderOptionProperty,
+        onChange: (value: EnvDataProps) => handleSearch(value),
+        onOption: (optionProps: RecordObjectProps) => renderOptionProperty(optionProps),
       } : {
         name: 'host',
         prefix: '主机:',
-        onChange: handleSelectHost,
+        onChange: (value: HostDataProps) => handleSelectHost(value),
       }
   ), [mainStore.getCurrentMainTabKey]);
 
@@ -98,12 +98,16 @@ const AppCenterDetailContent = () => {
     mainStore.setSelectedEnv(value);
   }, []);
 
-  const handleSelectHost = useCallback((value: EnvDataProps) => {
+  const handleSelectHost = useCallback((value: HostDataProps) => {
     mainStore.setSelectedHost(value);
   }, []);
 
   const renderEnvOption = useCallback(({ value, text, record: envRecord }) => (
-    <EnvOption connect={value?.connect || envRecord.get('connect')} text={text} />
+    <EnvOption
+      connect={value?.connect || envRecord.get('connect')
+      || value?.hostStatus === 'connected' || envRecord.get('hostStatus') === 'connected'}
+      text={text}
+    />
   ), []);
 
   const renderOptionProperty = useCallback(({ record: envRecord }: RecordObjectProps) => ({
@@ -114,7 +118,6 @@ const AppCenterDetailContent = () => {
     return <Loading display />;
   }
 
-  // @ts-ignore
   return (
     <Page>
       <Breadcrumb title="应用详情" />

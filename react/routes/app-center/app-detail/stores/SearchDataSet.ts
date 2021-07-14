@@ -2,9 +2,10 @@ import { DataSetProps, DataSet, FieldType } from '@/interface';
 
 interface SearchProps {
   envDs: DataSet,
+  hostDs: DataSet,
 }
 
-export default ({ envDs }: SearchProps): DataSetProps => ({
+export default ({ envDs, hostDs }: SearchProps): DataSetProps => ({
   autoCreate: true,
   selection: false,
   fields: [
@@ -20,7 +21,7 @@ export default ({ envDs }: SearchProps): DataSetProps => ({
       type: 'object' as FieldType,
       textField: 'name',
       valueField: 'id',
-      options: envDs,
+      options: hostDs,
     },
   ],
 });

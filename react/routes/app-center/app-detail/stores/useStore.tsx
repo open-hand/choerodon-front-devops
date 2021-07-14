@@ -5,6 +5,11 @@ export interface EnvDataProps {
   connect: boolean,
 }
 
+export interface HostDataProps {
+  id: string,
+  hostStatus: 'connected' | 'disconnect',
+}
+
 export default function useStore({
   defaultTabKey,
   defaultMainTabKey,
@@ -37,7 +42,7 @@ export default function useStore({
     },
 
     selectedHost: {},
-    setSelectedHost(data: EnvDataProps) {
+    setSelectedHost(data: HostDataProps) {
       this.selectedHost = data;
     },
     get getSelectedHost() {

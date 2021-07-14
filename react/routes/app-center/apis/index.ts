@@ -68,4 +68,8 @@ export default class AppCenterApi {
     // eslint-disable-next-line quotes
     return `/devops/v1`;
   }
+
+  static getHostList(projectId: number) {
+    return `/devops/v1/projects/${projectId}/hosts/page_by_options`;
+  }
 }
