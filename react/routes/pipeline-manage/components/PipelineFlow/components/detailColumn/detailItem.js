@@ -32,6 +32,7 @@ const DetailItem = (props) => {
       retryJob,
       getDetailData,
       retryCdJob, // retryCdJob是部署类型任务的重试
+      executeCustomJob, // 自定义类型任务，manual状态时的执行操作
     },
     projectId,
   } = usePipelineManageStore();
@@ -476,6 +477,21 @@ const DetailItem = (props) => {
     });
   };
 
+  // 自定义任务manual状态时的执行操作
+  async function handleExecute() {
+    try {
+      const res = await executeCustomJob(projectId, gitlabProjectId, gitlabJobId);
+      if (handlePromptError(res)) {
+        handleRefresh();
+        return true;
+      }
+      return false;
+    } catch (error) {
+      Choerodon.handleResponseError(error);
+      return false;
+    }
+  }
+
   const renderFooterBtns = () => {
     const data = [];
     if (!['cdAudit', 'cdApiTest'].includes(itemType)) {
@@ -537,7 +553,13 @@ const DetailItem = (props) => {
         action: goToApiTest,
       });
     }
-
+    if (itemType === 'custom' && jobStatus === 'manual') {
+      data.push({
+        text: '执行',
+        service: ['choerodon.code.project.develop.ci-pipeline.ps.job.execute'],
+        action: handleExecute,
+      });
+    }
     return (
       data.length ? <Action data={data} /> : ''
     );

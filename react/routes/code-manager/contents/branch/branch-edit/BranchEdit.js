@@ -1,7 +1,9 @@
 import React, {
   useCallback, useMemo, useState,
 } from 'react';
-import { Form, Select, Button } from 'choerodon-ui/pro';
+import {
+  Form, Select, Button, Tooltip,
+} from 'choerodon-ui/pro';
 import { injectIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import debounce from 'lodash/debounce';
@@ -115,13 +117,9 @@ function BranchEdit() {
         )}
         <span className="branch-issue-content">
           <span style={{ color: 'rgb(0,0,0,0.65)' }}>{issueNum}</span>
-          <MouserOverWrapper
-            style={{ display: 'inline-block', verticalAlign: 'sub' }}
-            width="350px"
-            text={summary}
-          >
+          <Tooltip title={summary}>
             {summary}
-          </MouserOverWrapper>
+          </Tooltip>
         </span>
       </>
     );

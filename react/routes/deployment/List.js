@@ -51,6 +51,9 @@ const logOptions = {
   lineWrapping: true,
 };
 
+// eslint-disable-next-line no-undef
+const HAS_BASE_PRO = C7NHasModule('@choerodon/base-pro');
+
 const Deployment = withRouter(observer((props) => {
   const {
     intl: { formatMessage },
@@ -437,7 +440,7 @@ const Deployment = withRouter(observer((props) => {
             {
               name: '基础组件部署',
               icon: 'cloud_done-o',
-              display: true,
+              display: HAS_BASE_PRO,
               permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.basedComponent'],
               handler: () => openBaseDeploy(),
             },

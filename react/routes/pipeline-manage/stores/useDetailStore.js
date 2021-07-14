@@ -45,5 +45,9 @@ export default function useStore(mainStore) {
     retryCdJob(projectId, pipelineRecordId) {
       return axios.get(`devops/v1/projects/${projectId}/cicd_pipelines_record/retry_cd_task?cd_pipeline_record_id=${pipelineRecordId}`);
     },
+
+    executeCustomJob(projectId, gitlabProjectId, jobId) {
+      return axios.get(`/devops/v1/projects/${projectId}/ci_jobs/gitlab_projects/${gitlabProjectId}/gitlab_jobs/${jobId}/play`);
+    },
   }));
 }
