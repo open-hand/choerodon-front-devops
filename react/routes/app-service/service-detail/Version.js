@@ -116,8 +116,6 @@ const Version = withRouter(observer((props) => {
         ? formatMessage({ id: `${intlPrefix}.version.delete.des` }, { version, length: selectedRecords.length })
         : formatMessage({ id: `${intlPrefix}.version.delete.des.single` }, { version }),
       okText: formatMessage({ id: 'delete' }),
-      okProps: { color: 'red' },
-      cancelProps: { color: 'dark' },
       onOk: () => {
         setSelectedVersionList([]);
         versionDs.records.forEach((i) => {

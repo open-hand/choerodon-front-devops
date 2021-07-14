@@ -38,22 +38,34 @@ const statusKindMap:statusKindsMap = {
     fontColor: 'rgb(216, 216, 216)',
     hoverText: '',
   },
+  connected: {
+    text: '已连接',
+    bgColor: '#e6fffb',
+    fontColor: '#1fc2bb',
+    hoverText: '',
+  },
+  disconnect: {
+    text: '未连接',
+    bgColor: '#fffbe6',
+    fontColor: '#faad14',
+    hoverText: '',
+  },
 };
 
 const StatusTag:React.FC<StatusTagOutLineProps> = ({
   fontSize,
   status,
 }) => (
-  <Tooltip title={statusKindMap[status].hoverText} placement="topRight">
+  <Tooltip title={statusKindMap[status]?.hoverText} placement="topRight">
     <span
       className={`${prefixCls}-statusTagOutLine`}
       style={{
-        color: statusKindMap[status].fontColor,
-        backgroundColor: statusKindMap[status].bgColor,
+        color: statusKindMap[status]?.fontColor,
+        backgroundColor: statusKindMap[status]?.bgColor,
         fontSize: `${fontSize}px`,
       }}
     >
-      {statusKindMap[status].text}
+      {statusKindMap[status]?.text}
     </span>
   </Tooltip>
 );

@@ -145,19 +145,20 @@ const HostDeployForm = injectIntl(observer(({ getMarketItem, getMarketAndVersion
         <Select
           colSpan={1}
           name={mapping.hostName.value}
-          onChange={handleChangeHostName}
+          // onChange={handleChangeHostName}
           addonAfter={<Tips helpText="您需在此选择一个此项目下”主机配置“中已有的主机作为部署的载体" placement="bottom" />}
         />
-        <div style={{ display: 'flex', alignItems: 'flex-start' }} colSpan={1}>
+        {/* 不在有ip和端口 */}
+        {/* <div style={{ display: 'flex', alignItems: 'flex-start' }} colSpan={1}>
           <div style={{ width: '70%' }}>
             <TextField style={{ width: '100%' }} name={mapping.ip.value} />
           </div>
           <div style={{ marginLeft: 10, flex: 1 }}>
             <TextField name={mapping.port.value} />
           </div>
-        </div>
+        </div> */}
       </Form>
-      <Button
+      {/* <Button
         color="primary"
         funcType="raised"
         disabled={!record.get(mapping.ip.value) || !record.get(mapping.port.value)}
@@ -165,7 +166,7 @@ const HostDeployForm = injectIntl(observer(({ getMarketItem, getMarketAndVersion
       >
         测试连接
       </Button>
-      {getTestDom()}
+      {getTestDom()} */}
       <div style={{ marginTop: 10 }} className="c7ncd-deploy-manual-deploy-divided" />
       <p className="c7ncd-deploy-manual-deploy-title">部署模式</p>
       <Form columns={7} record={record} style={{ width: '125%' }}>

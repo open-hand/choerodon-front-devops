@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { DataSet } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 
@@ -63,12 +64,10 @@ export default ({ formatMessage, pathListDs }) => {
       ) {
         if (!isRepeat) {
           return true;
-        } else {
-          return formatMessage({ id: data.typeMsg });
         }
-      } else {
-        return formatMessage({ id: data.failedMsg });
+        return formatMessage({ id: data.typeMsg });
       }
+      return formatMessage({ id: data.failedMsg });
     }
   }
 
@@ -125,7 +124,7 @@ export default ({ formatMessage, pathListDs }) => {
       },
       {
         name: 'protocol',
-        type: 'string', 
+        type: 'string',
         label: formatMessage({ id: 'ist.deploy.ports.protocol' }),
         textField: 'value',
         valueField: 'value',

@@ -1,8 +1,12 @@
 import React, {
-  FC, ReactNode, useCallback, useEffect, useState,
+  FC, ReactNode, useCallback, useEffect, useMemo, useState,
 } from 'react';
-import { Spin } from 'choerodon-ui/pro';
+import { Spin, Icon } from 'choerodon-ui/pro';
+import { Input } from 'choerodon-ui';
+import HostConfigServices from '@/routes/host-config/services';
 import apis from '../../../../apis';
+
+import './index.less';
 
 interface DeleteCheckProps {
   modal?:any,
@@ -23,31 +27,48 @@ const DeleteCheck:FC<DeleteCheckProps> = (props) => {
     hostType,
   } = props;
   const [loading, setLoading] = useState<boolean>(true);
-  const [text, setText] = useState<string>('');
+  const [text, setText] = useState<string | ReactNode>('');
+
+  const prefixCls = useMemo(() => 'c7ncd-host-config', []);
+  const intlPrefix = useMemo(() => 'c7ncd.host.config', []);
 
   const checkNow = useCallback(async ():Promise<void> => {
-    modal.update({
-      title: '正在校验主机...',
-    });
     try {
       const res = await apis.checkHostDeletable(projectId, hostId, hostType);
       setLoading(false);
       if (res) {
-        setText('确定要删除该主机配置吗？');
+        let okText = formatMessage({ id: 'delete' });
+        if (hostType === 'deploy') {
+          const shell = await HostConfigServices.getDeleteShell(projectId, hostId);
+          setText(
+            <div>
+              <span>{formatMessage({ id: `${intlPrefix}.delete.des` })}</span>
+              <div
+                className={`${prefixCls}-delete-input`}
+              >
+                <Input
+                  value={shell}
+                  readOnly
+                  copy
+                />
+              </div>
+              <div className={`${prefixCls}-delete-notice`}>
+                <Icon type="error" />
+                <span>{formatMessage({ id: `${intlPrefix}.delete.tips` })}</span>
+              </div>
+            </div>,
+          );
+          okText = formatMessage({ id: `${intlPrefix}.delete.btn` });
+        } else {
+          setText('确定要删除该主机配置吗？');
+        }
         modal.update({
-          title: '删除主机',
-          okText: formatMessage({ id: 'delete' }),
-          okProps: {
-            color: 'red',
-          },
-          cancelProps: {
-            color: '#000',
-          },
+          okText,
           onOk: handleDelete,
           footer: (okBtn:ReactNode, cancelBtn:ReactNode) => (
             <>
-              {cancelBtn}
               {okBtn}
+              {cancelBtn}
             </>
           ),
         });
@@ -55,7 +76,6 @@ const DeleteCheck:FC<DeleteCheckProps> = (props) => {
       }
       setText(hostType !== 'distribute_test' ? '该主机含有关联的流水线主机部署任务，无法删除。' : '该主机状态已改变，请刷新后重试');
       modal.update({
-        title: '删除主机',
         footer: (okBtn:ReactNode, cancelBtn:ReactNode) => (
           <>
             {cancelBtn}
@@ -65,7 +85,6 @@ const DeleteCheck:FC<DeleteCheckProps> = (props) => {
       });
     } catch (error) {
       modal.update({
-        title: '删除主机',
         footer: (okBtn:ReactNode, cancelBtn:ReactNode) => (
           <>
             {cancelBtn}

@@ -19,7 +19,7 @@ import { axios, Choerodon } from '@choerodon/boot';
 import { Base64 } from 'js-base64';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { observer } from 'mobx-react-lite';
-import DeployConfig from '@/components/deploy-config';
+import DeployConfig from '@/components/deploy-config-form';
 import JSONbig from 'json-bigint';
 import { get } from 'lodash';
 import addCDTaskDataSetMap from './stores/addCDTaskDataSetMap';
@@ -559,8 +559,10 @@ export default observer(() => {
           // const origin = ADDCDTaskUseStore.getValueIdList;
           setValueIdValues(value);
         }}
+        appSelectDisabled
       />,
       title: '创建部署配置',
+      okText: '创建',
     });
   };
 
@@ -585,7 +587,7 @@ export default observer(() => {
     if (value === addCDTaskDataSetMap.alreadyhost) {
       return [
         <div
-          colSpan={2}
+          colSpan={1}
           style={{
             display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', position: 'relative',
           }}
@@ -600,12 +602,12 @@ export default observer(() => {
               ADDCDTaskDataSet.current.set('hostPort', item.sshPort);
             }}
           />
-          <div style={{ flex: 1, marginLeft: 16 }}>
+          {/* <div style={{ flex: 1, marginLeft: 16 }}>
             <TextField style={{ width: '100%' }} name="hostIp" />
           </div>
           <div style={{ flex: 1, marginLeft: 16 }}>
             <TextField style={{ width: '100%' }} name="hostPort" />
-          </div>
+          </div> */}
         </div>,
       ];
     }
@@ -906,7 +908,7 @@ export default observer(() => {
             <Option value={addCDTaskDataSetMap.customhost}>自定义主机</Option>
           </SelectBox>
           {renderHostSetting()}
-          <div newLine colSpan={2} style={{ display: 'flex', alignItems: 'center' }}>
+          {/* <div newLine colSpan={2} style={{ display: 'flex', alignItems: 'center' }}>
             <Button
               disabled={
                 ADDCDTaskDataSet.current.get(
@@ -914,7 +916,8 @@ export default observer(() => {
                 ) === addCDTaskDataSetMap.customhost
                   ? (!ADDCDTaskDataSet.current.get('hostIp')
                 || !ADDCDTaskDataSet.current.get('hostPort')
-                || !ADDCDTaskDataSet.current.get('username')) : !ADDCDTaskDataSet.current.get(addCDTaskDataSetMap.host)
+                || !ADDCDTaskDataSet.current.get('username'))
+                : !ADDCDTaskDataSet.current.get(addCDTaskDataSetMap.host)
               }
               onClick={handleTestConnect}
               style={{ marginRight: 20 }}
@@ -924,7 +927,7 @@ export default observer(() => {
               测试连接
             </Button>
             {getTestDom()}
-          </div>
+          </div> */}
         </Form>,
         <div className="addcdTask-divided" />,
         <p className="addcdTask-title">主机部署</p>,

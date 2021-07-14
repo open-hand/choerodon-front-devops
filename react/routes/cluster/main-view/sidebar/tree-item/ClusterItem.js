@@ -108,7 +108,6 @@ function ClusterItem({
           </>
         )),
         okText: formatMessage({ id: 'cluster.del.confirm' }),
-        okProps: { color: 'red' },
       });
     }
   }

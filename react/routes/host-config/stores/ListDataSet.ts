@@ -4,23 +4,37 @@ import apis from '../apis';
 
 interface ListProps {
   projectId: number,
-  showTestTab: boolean,
+  defaultTabKey: string,
+  tabKey: {
+    DEPLOY_TAB: string,
+    TEST_TAB: string,
+  },
 }
 
-export default ({ projectId, showTestTab }: ListProps): DataSetProps => ({
+export default ({ projectId, defaultTabKey, tabKey: { DEPLOY_TAB } }: ListProps): DataSetProps => ({
   autoCreate: false,
-  autoQuery: true,
+  autoQuery: false,
   selection: false,
   paging: true,
   pageSize: 10,
   transport: {
-    read: ({ data }) => {
-      const { type, params, status } = data;
-      const newType = type || (showTestTab ? 'distribute_test' : 'deploy');
+    read: ({ data, params: pageParams }) => {
+      const {
+        type, params, status, forceUpdate = false,
+      } = data;
+      const newType = type || defaultTabKey;
+      const newParams = newType === DEPLOY_TAB ? {
+        search_param: params,
+        host_status: status,
+        ...pageParams || {},
+      } : pageParams;
       return {
         url: apis.getLoadHostsDetailsUrl(projectId, newType),
         method: 'post',
-        data: {
+        params: newParams,
+        enabledCancelCache: 40,
+        forceUpdate,
+        data: newType === DEPLOY_TAB ? null : {
           searchParam: {
             type: newType,
             status,

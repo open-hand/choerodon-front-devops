@@ -173,7 +173,8 @@ const Deployment = withRouter(observer((props) => {
   function deployAfter(instance, type = 'instance') {
     const { history, location: { search } } = props;
     if (instance.config) {
-      history.push(`/devops/deployment-operation${search}`);
+      // history.push(`/devops/deployment-operation${search}`);
+      refresh();
     } else {
       history.push({
         pathname: '/devops/resource',

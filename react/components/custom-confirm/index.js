@@ -30,12 +30,6 @@ class CustomConfirm {
       header: true,
       children: child,
       onOk: handleOk,
-      okProps: {
-        color: 'red',
-      },
-      cancelProps: {
-        color: 'dark',
-      },
     });
   }
 }

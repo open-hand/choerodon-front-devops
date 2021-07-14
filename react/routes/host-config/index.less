@@ -1,7 +1,7 @@
 @prefixCls: c7ncd-host-config;
 
 .@{prefixCls}-content {
-  padding: 0 0 60px 0 !important;
+  padding: 0 !important;
   background: #f5f6fa !important;
 
   &-search {
@@ -43,5 +43,13 @@
       margin-left: -9%;
       margin-right: 1%;
     }
+  }
+
+  &-wrap {
+    background: #fff;
+    margin-top: .16rem;
+    display: flex;
+    height: calc(100% - .7rem);
+    overflow-y: scroll;
   }
 }

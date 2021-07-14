@@ -26,12 +26,6 @@ const RemoveForm = observer(({
   }, []);
 
   const successModalProps = {
-    okProps: {
-      color: 'red',
-    },
-    cancelProps: {
-      color: 'dark',
-    },
     onOk: handleSubmit,
     okText: '移除',
     title: formatMessage({ id: `${intlPrefix}.node.action.removeRole` }),
@@ -56,9 +50,6 @@ const RemoveForm = observer(({
   };
 
   const loadingModalProps = {
-    cancelProps: {
-      color: 'dark',
-    },
     title: formatMessage({ id: `${intlPrefix}.node.action.removeRole` }),
 
     footer: (okbtn, cancelbtn) => (
@@ -75,11 +66,7 @@ const RemoveForm = observer(({
 
   const loadingModalFailedProps = {
     okProps: {
-      color: 'red',
       loading: false,
-    },
-    cancelProps: {
-      color: 'dark',
     },
     okText: '移除',
     onOk: handleSubmit,

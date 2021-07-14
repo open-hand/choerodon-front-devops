@@ -196,6 +196,18 @@ const commonField = {
   secrets: '密文',
   customResources: '自定义资源',
   pvcs: 'PVC',
+  workload: '工作负载',
+
+  // 资源树目录名称
+  instances_group: '实例（Chart）',
+  services_group: '网络（Service）',
+  ingresses_group: '域名（Ingress）',
+  certifications_group: '证书',
+  configMaps_group: '配置映射（ConfigMap）',
+  secrets_group: '密文（Secret）',
+  customResources_group: '自定义资源',
+  pvcs_group: 'PVC',
+  workload_group: '工作负载（Workload）',
 };
 
 const deployment = {
@@ -437,7 +449,7 @@ const deployment = {
   'c7ncd.deployment.choose.version': '选择版本',
   'c7ncd.deployment.polaris.empty.des': '当前环境下暂无实例，无法执行健康检查。',
   'c7ncd.deployment.polaris.check.empty': '该实例为空',
-  'c7ncd.deployment.pod.disabled.tops': '若想降至0，请直接点击“停用实例',
+  'c7ncd.deployment.pod.disabled.tops': '若想降至0，请直接点击“停用实例”',
   'c7ncd.deployment.marketApp': '市场应用',
   'c7ncd.deployment.marketApp.version': '应用版本',
   'c7ncd.deployment.marketService': '市场服务',
@@ -447,6 +459,23 @@ const deployment = {
   'c7ncd.deployment.market.version.currentVersion': '当前版本',
   'c7ncd.deployment.market.version.lastVersion': '最新版本',
   'c7ncd.deployment.market.version.fixVersion': '修复版本',
+  'c7ncd.deployment.workload.source': '来源',
+  'c7ncd.deployment.workload.source.deploy': '应用部署',
+  'c7ncd.deployment.workload.source.manual': '手动添加',
+  'c7ncd.deployment.workload.create': '创建{name}',
+  'c7ncd.deployment.workload.edit': '修改{name}',
+  'c7ncd.deployment.workload.detail': '{type}“{name}”的详情',
+  'c7ncd.deployment.workload.create.type': '选择添加方式',
+  'c7ncd.deployment.workload.create.type.upload': '直接上传YAML文件',
+  'c7ncd.deployment.workload.create.type.copy': '粘贴YAML内容添加',
+  'c7ncd.deployment.workload.pod.detail': '关联Pod详情',
+  'c7ncd.deployment.workload.delete.title': '删除{type}',
+  'c7ncd.deployment.workload.delete.des': '确定删除{type}“{name}”吗？',
+  'c7ncd.deployment.workload.lastScheduleTime': '最后调度时间',
+  'c7ncd.deployment.workload.active': '活跃中',
+  'c7ncd.deployment.workload.suspend': '是否挂起',
+  'c7ncd.deployment.workload.plan': '计划',
+  'c7ncd.deployment.pod.disabled.tips': '若想将Pod数降至0，请前往停用对应的实例',
 
 };
 
@@ -883,6 +912,10 @@ const pipelineManage = {
 
 const hostConfig = {
   'c7ncd.host.config.add': '创建主机',
+  'c7ncd.host.config.add.test': '创建测试主机',
+  'c7ncd.host.config.add.deploy': '创建部署主机',
+  'c7ncd.host.config.edit.test': '修改测试主机',
+  'c7ncd.host.config.edit.deploy': '修改部署主机',
   'c7ncd.host.config.modify': '修改主机',
   'c7ncd.host.config.adjustment': '校准服务器状态',
   'c7ncd.host.config.status': '主机状态',
@@ -892,10 +925,11 @@ const hostConfig = {
   'c7ncd.host.config.type.deploy': '部署主机',
   'c7ncd.host.config.port': 'SSH端口',
   'c7ncd.host.config.port.distribute_test': 'SSH端口',
-  'c7ncd.host.config.port.deploy': '外部SSH认证端口',
+  'c7ncd.host.config.port.deploy': '端口',
   'c7ncd.host.config.ip.distribute_test': 'IP',
-  'c7ncd.host.config.ip.deploy': '外部SSH认证IP',
+  'c7ncd.host.config.ip.deploy': '主机IP',
   'c7ncd.host.config.account': '账号配置',
+  'c7ncd.host.config.account.tips': '若想将此主机用于基础组件部署，则必须进行账号配置',
   'c7ncd.host.config.account.password': '用户名与密码',
   'c7ncd.host.config.account.token': '用户名与密钥',
   'c7ncd.host.config.token': '密钥',
@@ -910,6 +944,21 @@ const hostConfig = {
   'c7ncd.host.config.batch.correct': '校准',
   'c7ncd.host.config.ip.private': '内部SSH认证IP',
   'c7ncd.host.config.port.private': '内部SSH认证端口',
+  'c7ncd.host.config.usage.cpu': 'CPU使用率',
+  'c7ncd.host.config.usage.ram': '内存使用率',
+  'c7ncd.host.config.usage.root': '根分区使用率',
+  'c7ncd.host.config.usage.data': '数据分区使用率',
+  'c7ncd.host.config.deployer': '部署者',
+  'c7ncd.host.config.deploy.date': '部署时间',
+  'c7ncd.host.config.process': '进程号',
+  'c7ncd.host.config.port.occupied': '占用端口',
+  'c7ncd.host.config.connect': '连接主机',
+  'c7ncd.host.config.connect.shell': '连接指令',
+  'c7ncd.host.config.connect.tips': '复制以下指令至对应节点执行，与平台建立连接。',
+  'c7ncd.host.config.connect.attention': '注意：在执行连接指令时，请确保主机中当前登录的用户已被分配docker执行权限。否则，需执行以下指令为当前登录用户分配权限。',
+  'c7ncd.host.config.delete.des': '复制以下指令至对应主机执行，来删除该主机的agent',
+  'c7ncd.host.config.delete.tips': '请确保您已在主机中运行以上指令，否则会导致主机删除不彻底！',
+  'c7ncd.host.config.delete.btn': '已执行，删除',
 };
 
 const emptyPage = {
@@ -971,6 +1020,45 @@ const appTemplate = {
   'c7ncd.template.permission.no.des': '您没有该模板对应的仓库权限,请点击列表中该模板对应的<三点>图标按钮，并执行<获取GitLab仓库权限>后，才能获得该仓库的访问、推拉与修改权限。',
   'c7ncd.template.url.tips': '此处支持填写HTTP或HTTPS地址',
   'c7ncd.template.tips': '此处仅默认查出20个应用模板，您可通过模糊搜索查询到其他的模板',
+};
+
+const appCenter = {
+  'c7ncd.appCenter.list.tab.ALL_TAB': '全部应用',
+  'c7ncd.appCenter.list.tab.PROJECT_TAB': '项目应用',
+  'c7ncd.appCenter.list.tab.SHARE_TAB': '共享应用',
+  'c7ncd.appCenter.list.tab.MARKET_TAB': '市场应用',
+  'c7ncd.appCenter.detail.tab.INSTANCE_TAB': '实例',
+  'c7ncd.appCenter.detail.tab.DEPLOYCONFIG_TAB': '部署配置',
+  'c7ncd.appCenter.detail.tab.SERVICEANDINGRESS_TAB': '网络与域名',
+  'c7ncd.appCenter.detail.tab.CONFIGMAP_TAB': '配置映射',
+  'c7ncd.appCenter.detail.tab.SECRET_TAB': '密文',
+  'c7ncd.appCenter.detail.tab.APP_INSTANCE_TAB': '应用实例',
+  'c7ncd.appCenter.detail.tab.ENV_TAB': '环境',
+  'c7ncd.appCenter.detail.tab.HOST_TAB': '主机',
+  'c7ncd.appCenter.label.code': '服务编码',
+  'c7ncd.appCenter.label.gitlab': '仓库地址',
+  'c7ncd.appCenter.label.source': '来源',
+  'c7ncd.appCenter.label.sourceProject': '来源项目',
+  'c7ncd.appCenter.label.version': '最新版本',
+  'c7ncd.appCenter.configMap': '配置映射',
+  'c7ncd.appCenter.create.configMap': '创建配置映射',
+  'c7ncd.appCenter.create.deployConfig': '创建部署配置',
+  'c7ncd.appCenter.edit.deployConfig': '修改部署配置',
+  'c7ncd.appCenter.delete.deployConfig': '删除部署配置',
+  'c7ncd.appCenter.delete.deployConfig.des': '确定要删除部署配置“{name}”吗？',
+  'c7ncd.appCenter.delete.deployConfig.disable': '仅能删除没有关联任务和关联实例的部署配置。',
+  'c7ncd.appCenter.mapping.head': '配置映射',
+  'c7ncd.appCenter.mapping.help.tooltip': '您可粘贴多行“键=值”格式的字段至任何键框中，以便于批量输入键值对',
+  'c7ncd.appCenter.mapping.add': '添加配置映射',
+  'c7ncd.appCenter.edit.configMap': '修改配置映射',
+  'c7ncd.appCenter.cipher.create': '创建密文',
+  'c7ncd.appCenter.cipher.edit': '修改密文',
+  'c7ncd.appCenter.cipher.head': '密文',
+  'c7ncd.appCenter.cipher': '密文',
+  'c7ncd.appCenter.cipher.add': '添加密文',
+  'c7ncd.appCenter.cipher.help.tooltip': '您可粘贴多行“键=值”格式的字段至任何键框中，以便于批量输入键值对',
+  'c7ncd.appCenter.delete.related': '解除环境关联',
+  'c7ncd.appCenter.delete.related.disable': '该应用服务在该环境下存在实例，不允许解除关联关系',
 };
 
 // 文档地址前缀
@@ -1654,6 +1742,8 @@ const zhCN = {
   'ist.deploy.Deployment.detail': '查看实例Deployment详情',
   'ist.deploy.StatefulSet.detail': '查看实例Stateful Set详情',
   'ist.deploy.DaemonSet.detail': '查看实例Daemon Set详情',
+  'ist.deploy.Job.detail': '查看实例Job详情',
+  'ist.deploy.CronJob.detail': '查看实例CronJob详情',
   'ist.deploy.title': '查看实例“{name}”的Deployment详情',
   'ist.deploy.type.json': '列表格式查看',
   'ist.deploy.type.yaml': 'YAML格式查看',
@@ -2315,6 +2405,7 @@ const zhCN = {
   'yaml.modify': '当前修改',
   'yaml.error.tooltip':
     'Values文件yaml格式错误，请根据错误提示信息修改',
+  'yaml.error.tooltip.moreDocument': 'YAML文件中仅支持包含1个资源对象',
 
   // merge request
   'merge.head': '合并请求',
@@ -3029,6 +3120,7 @@ const zhCN = {
   ...hostConfig,
   ...reports,
   ...appTemplate,
+  ...appCenter,
 };
 
 export default zhCN;
