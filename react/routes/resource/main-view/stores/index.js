@@ -27,7 +27,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer(
     const {
       resourceStore: {
         getSelectedMenu: {
-          parentId, key,
+          parentId, key, name,
         },
       },
     } = useResourceStore();
@@ -49,6 +49,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer(
         baseInfoDs.transport.read.url = `/devops/v1/projects/${projectId}/envs/${key}/info`;
         baseInfoDs.query();
       }
+      key && mainStore.getAutoDeployMsg(key, projectId);
     }, [projectId, key]);
 
     const value = {
@@ -68,6 +69,9 @@ export const StoreProvider = injectIntl(inject('AppState')(observer(
       childrenStore,
       certStore,
       baseInfoDs,
+      key,
+      projectId,
+      name,
     };
     return (
       <Store.Provider value={value}>

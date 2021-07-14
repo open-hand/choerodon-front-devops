@@ -1,5 +1,6 @@
 import React, {
   useRef, lazy, Suspense, useMemo,
+  useEffect,
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
@@ -72,8 +73,12 @@ const MainView = observer(() => {
   const { mainStore } = useMainStore();
   const rootRef = useRef(null);
 
-  const { getSelectedMenu: { parentId } } = resourceStore;
+  const { getSelectedMenu: { parentId }, getSelectedMenu } = resourceStore;
   const { getDeleteArr } = mainStore;
+
+  useEffect(() => {
+    console.log(getSelectedMenu);
+  }, [getSelectedMenu]);
 
   const deleteModals = useMemo(() => (
     map(getDeleteArr, ({
