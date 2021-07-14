@@ -1027,11 +1027,11 @@ const appCenter = {
   'c7ncd.appCenter.list.tab.PROJECT_TAB': '项目应用',
   'c7ncd.appCenter.list.tab.SHARE_TAB': '共享应用',
   'c7ncd.appCenter.list.tab.MARKET_TAB': '市场应用',
-  'c7ncd.appCenter.detail.tab.INSTANCE_TAB': '实例',
+  'c7ncd.appCenter.detail.tab.INSTANCE_TAB': '实例（Chart）',
   'c7ncd.appCenter.detail.tab.DEPLOYCONFIG_TAB': '部署配置',
-  'c7ncd.appCenter.detail.tab.SERVICEANDINGRESS_TAB': '网络与域名',
-  'c7ncd.appCenter.detail.tab.CONFIGMAP_TAB': '配置映射',
-  'c7ncd.appCenter.detail.tab.SECRET_TAB': '密文',
+  'c7ncd.appCenter.detail.tab.SERVICEANDINGRESS_TAB': '网络（Service）与域名（Ingress）',
+  'c7ncd.appCenter.detail.tab.CONFIGMAP_TAB': '配置映射（ConfigMap）',
+  'c7ncd.appCenter.detail.tab.SECRET_TAB': '密文（Secret）',
   'c7ncd.appCenter.detail.tab.APP_INSTANCE_TAB': '应用实例',
   'c7ncd.appCenter.detail.tab.ENV_TAB': '环境',
   'c7ncd.appCenter.detail.tab.HOST_TAB': '主机',
@@ -1059,6 +1059,8 @@ const appCenter = {
   'c7ncd.appCenter.cipher.help.tooltip': '您可粘贴多行“键=值”格式的字段至任何键框中，以便于批量输入键值对',
   'c7ncd.appCenter.delete.related': '解除环境关联',
   'c7ncd.appCenter.delete.related.disable': '该应用服务在该环境下存在实例，不允许解除关联关系',
+  'c7ncd.appCenter.version.empty': '暂无应用服务版本',
+  'c7ncd.appCenter.source.built': '平台预置',
 };
 
 // 文档地址前缀

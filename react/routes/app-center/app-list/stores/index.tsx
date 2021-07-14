@@ -1,5 +1,5 @@
 import React, {
-  createContext, useMemo, useContext, useEffect,
+  createContext, useMemo, useContext, useEffect, useCallback,
 } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
@@ -26,6 +26,7 @@ interface ContextProps {
   listDs: DataSetProps,
   mainStore: StoreProps,
   deployStore: any,
+  ALL_ENV_KEY: string,
 }
 
 const Store = createContext({} as ContextProps);
@@ -54,19 +55,32 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   }), []);
 
   const defaultTabKey = useMemo(() => tabKeys.ALL_TAB, []);
+  const ALL_ENV_KEY = useMemo(() => '0', []);
 
   const mainStore = useStore({ defaultTabKey });
   const deployStore = useDeployStore();
 
   const envDs = useMemo(() => new DataSet(EnvOptionsDataSet({ projectId })), [projectId]);
-  const searchDs = useMemo(() => new DataSet(SearchDataSet({ envDs })), []);
+  const searchDs = useMemo(() => new DataSet(SearchDataSet({ envDs, ALL_ENV_KEY })), []);
   const listDs = useMemo(() => new DataSet(ListDataSet({
     projectId,
     searchDs,
   })), [projectId]);
 
+  const loadEnvData = useCallback(async () => {
+    await envDs.query();
+    envDs.appendData([{
+      name: '全部环境',
+      id: ALL_ENV_KEY,
+      permission: true,
+      connect: true,
+    }]);
+    searchDs.current?.init('envId', ALL_ENV_KEY);
+  }, []);
+
   useEffect(() => {
     listDs.setQueryParameter('type', defaultTabKey);
+    loadEnvData();
   }, []);
 
   const value = {
@@ -79,6 +93,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     listDs,
     deployStore,
     mainStore,
+    ALL_ENV_KEY,
   };
   return (
     <Store.Provider value={value}>

@@ -57,11 +57,11 @@ const ContentList = ({
     } = record?.toData() || {};
     const infoData = {
       code: source === MARKET_TAB ? null : serviceCode,
-      source: builtIn ? '平台预置' : sourceView,
+      source: builtIn ? formatMessage({ id: `${intlPrefix}.source.built` }) : sourceView,
       gitlab: source === PROJECT_TAB && repoUrl
         ? `${repoUrl.split('//')[0]}//.../${repoUrl.split('/')[repoUrl.split('/')?.length - 1]}` : null,
       sourceProject: shareProjectName,
-      version: latestVersion,
+      version: latestVersion || formatMessage({ id: `${intlPrefix}.version.empty` }),
     };
     return map(infoData, (value: string, key: string) => (value ? (
       <div className={`${newPrefixCls}-info-item`} key={key}>
