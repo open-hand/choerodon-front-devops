@@ -7,7 +7,7 @@ interface EnvOptionsProps {
 
 export default ({ projectId }: EnvOptionsProps): DataSetProps => ({
   autoCreate: false,
-  autoQuery: true,
+  autoQuery: false,
   selection: false,
   paging: false,
   transport: {

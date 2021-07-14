@@ -20,6 +20,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
     listDs,
     mainStore,
     tabKeys,
+    ALL_ENV_KEY,
   } = useAppCenterListStore();
 
   const newPrefixCls = useMemo(() => `${prefixCls}-list-search`, []);
@@ -29,14 +30,13 @@ const ContentHeader: React.FC<any> = observer((): any => {
   }, []);
 
   const handleChange = (key:string) => {
-    searchDs.reset();
     listDs.setQueryParameter('type', key);
     mainStore.setCurrentTabKey(key);
     refresh();
   };
 
-  const renderEnvOption = useCallback(({ record, text }) => (
-    <EnvOption record={record} text={text} />
+  const renderEnvOption = useCallback(({ record, text, value }) => (
+    value === ALL_ENV_KEY ? text : <EnvOption record={record} text={text} />
   ), []);
 
   const renderOptionProperty = useCallback(({ record: envRecord }: RecordObjectProps) => ({
@@ -80,7 +80,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
             optionRenderer={renderEnvOption}
             onOption={renderOptionProperty}
             onClear={refresh}
-            renderer={({ value, text }) => value ? text : '全部'}
+            // renderer={({ value, text }) => value ? text : '全部'}
           />
         </Form>
         <Button
