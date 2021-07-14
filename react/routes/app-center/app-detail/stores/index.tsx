@@ -10,6 +10,7 @@ import EnvOptionsDataSet from '@/routes/app-center/stores/EnvOptionsDataSet';
 import { useAppCenterStore } from '@/routes/app-center/stores';
 import { DataSet as DataSetProps } from '@/interface';
 import SearchDataSet from '@/routes/app-center/app-detail/stores/SearchDataSet';
+import HostOptionsDataSet from '@/routes/app-center/app-detail/stores/HostOptionsDataSet';
 import useDeleteModalStore, { DeleteStoreProps } from './useDeleteModalStore';
 
 interface ContextProps {
@@ -87,7 +88,8 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     appServiceType,
   })), [projectId, appServiceId, appServiceType]);
   const envDs = useMemo(() => new DataSet(EnvOptionsDataSet({ projectId })), [projectId]);
-  const searchDs = useMemo(() => new DataSet(SearchDataSet({ envDs })), []);
+  const hostDs = useMemo(() => new DataSet(HostOptionsDataSet({ projectId })), [projectId]);
+  const searchDs = useMemo(() => new DataSet(SearchDataSet({ envDs, hostDs })), []);
 
   const loadEnvData = useCallback(async () => {
     await envDs.query();
@@ -99,8 +101,19 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     }
   }, []);
 
+  const loadHostData = useCallback(async () => {
+    await hostDs.query();
+    const hostRecord = hostDs.find((eachRecord) => eachRecord.get('hostStatus') === 'connected') || hostDs.get(0);
+    if (hostRecord) {
+      const hostData = hostRecord.toData();
+      searchDs.current?.set('host', hostData);
+      mainStore.setSelectedHost(hostData);
+    }
+  }, []);
+
   useEffect(() => {
     loadEnvData();
+    loadHostData();
   }, []);
 
   const value = {
