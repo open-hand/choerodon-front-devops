@@ -294,7 +294,12 @@ const Deployment = withRouter(observer((props) => {
     const deployMode = record.get('deployMode');
     const deployPayloadName = record.get('deployPayloadName');
     return (
-      <span>
+      <span style={{
+        display: 'flex',
+        alignItems: 'center',
+        whiteSpace: 'nowrap',
+      }}
+      >
         <StatusTag
           color={deployMode === 'host' ? 'rgb(142, 187, 252)' : 'rgb(116, 217, 221)'}
           name={deployMode === 'host' ? '主机' : '环境'}
