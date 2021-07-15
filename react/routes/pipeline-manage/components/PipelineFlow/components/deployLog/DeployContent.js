@@ -97,7 +97,6 @@ const LogItem = observer((props) => {
           <Tooltip title={formatMessage({ id: 'c7ncd.deployment.instance.cases.fullScreen' })}>
             <Button
               className="c7ncd-term-fullscreen-button"
-              type="primary"
               funcType="flat"
               shape="circle"
               icon="fullscreen"
