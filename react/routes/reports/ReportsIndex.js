@@ -5,13 +5,18 @@ import {
 } from 'react-router-dom';
 import { asyncRouter, nomatch } from '@choerodon/boot';
 import { Charts, PermissionRoute } from '@choerodon/master';
+import { has, get } from '@choerodon/inject';
 import { StoreProvider } from './stores';
+
+const securityGet = (code, notfound = nomatch) => (has(code) ? get(code) : () => notfound);
 
 const SUBMISSION = asyncRouter(() => import('./Submission'));
 const BUILDNUMBER = asyncRouter(() => import('./BuildNumber'));
 const BUILDDURATION = asyncRouter(() => import('./BuildDuration'));
 const PipelineTriggerNumber = asyncRouter(() => import('./PipelineTriggerNumberChart'));
 const PipelineDuration = asyncRouter(() => import('./pipeline-duration'));
+const TableDesignWorkplace = asyncRouter(securityGet('rdqam:tableDesignWorkplace'));
+const CodeQualityWorkplace = asyncRouter(securityGet('rdqam:codeQualityWorkplace'));
 
 const ReportsIndex = (props) => {
   const { match } = props;
@@ -23,6 +28,14 @@ const ReportsIndex = (props) => {
           service={['choerodon.code.project.operation.chart.ps.commit']}
           path={`${match.url}/submission`}
           component={SUBMISSION}
+        />
+        <Route
+          path={`${match.url}/design-quality-workplace`}
+          component={TableDesignWorkplace}
+        />
+        <Route
+          path={`${match.url}/code-quality-workplace`}
+          component={CodeQualityWorkplace}
         />
         <PermissionRoute
           service={['choerodon.code.project.operation.chart.ps.build.times']}

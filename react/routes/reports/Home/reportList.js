@@ -21,6 +21,14 @@ const developReportList = [
     pic: 'submission',
     title: '代码提交图',
   }, {
+    key: 'table-design-workplace',
+    link: '/devops/charts/develop/design-quality-workplace',
+    title: '表设计工作台',
+  }, {
+    key: 'code-quality-workplace',
+    link: '/devops/charts/develop/code-quality-workplace',
+    title: '代码质量工作台',
+  }, {
     key: 'build-number',
     link: '/devops/charts/develop/build-number',
     pic: 'number',
@@ -43,7 +51,7 @@ const developReportList = [
   },
 ];
 
-has('rdqam:reportList') && developReportList.splice(1, 0, ...get('rdqam:reportList'));
+// has('rdqam:reportList') && developReportList.splice(1, 0, ...get('rdqam:reportList'));
 
 const reportListMap = {
   deploy: deployReportList,
