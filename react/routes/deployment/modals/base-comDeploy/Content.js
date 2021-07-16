@@ -437,12 +437,12 @@ export default observer(() => {
       .current
       .get(mapping.deployMode.name))) {
       //  如果是哨兵模式
-      if (data.record.get('privateIp')) {
+      if (data.record.get('hostIp') && data.record.get('sshPort') && data.record.get('hostStatus') === 'connected') {
         return false;
       }
       return true;
     }
-    return false;
+    return data.record.get('hostStatus') !== 'connected';
   };
 
   /**
