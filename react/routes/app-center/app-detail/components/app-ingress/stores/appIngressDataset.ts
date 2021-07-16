@@ -7,7 +7,7 @@ export default ({ projectId, hostId, appServiceId }:any):any => ({
   selection: false,
   transport: {
     read: {
-      url: Apis.getAppIngress(projectId, hostId, appServiceId),
+      url: Apis.getAppIngress(projectId, appServiceId, hostId),
       method: 'get',
     },
     destroy: ({ data: [data] }:any) => ({

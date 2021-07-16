@@ -59,9 +59,12 @@ export default class AppCenterApi {
     return `/devops/v1/projects/${projectId}/env/app_services`;
   }
 
-  static getAppIngress(projectId:string, hostId:string, appServiceId:string) {
+  static getAppIngress(projectId:string, appServiceId:string, hostId:string) {
     // return '/devops/v1/projects/1/hosts/1/app/1/instance/list';
-    return `/devops/v1/projects/${projectId}/hosts/${hostId}/app/${appServiceId}/instance/list`;
+    // return `/devops/v1/projects/${projectId}/hosts/${hostId}/app/${appServiceId}/instance/list`;
+    let baseUrl = `/devops/v1/projects/${projectId}/hosts/app/${appServiceId}/instance/list`;
+    hostId && (baseUrl += `?hostId=${hostId}`);
+    return baseUrl;
   }
 
   static getHostList(projectId: number) {
