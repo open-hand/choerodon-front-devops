@@ -60,13 +60,8 @@ export default class AppCenterApi {
   }
 
   static getAppIngress(projectId:string, hostId:string, appServiceId:string) {
-    return '/devops/v1/projects/1/hosts/1/app/1/instance/list';
-    // return `/devops/v1/projects/${projectId}/hosts/${hostId}/app/${appServiceId}/instance/list`;
-  }
-
-  static deleteAppIngress() {
-    // eslint-disable-next-line quotes
-    return `/devops/v1`;
+    // return '/devops/v1/projects/1/hosts/1/app/1/instance/list';
+    return `/devops/v1/projects/${projectId}/hosts/${hostId}/app/${appServiceId}/instance/list`;
   }
 
   static getHostList(projectId: number) {
