@@ -1,45 +1,20 @@
 /* eslint-disable import/no-anonymous-default-export */
+import HostConfigApi from '@/components/app-ingress-table/apis';
 import Apis from '@/routes/app-center/apis';
 
-export default ():any => ({
+export default ({ projectId, hostId, appServiceId }:any):any => ({
   autoQuery: true,
   selection: false,
-  // transport: {
-  //   read: {
-  //     url: Apis.getAppIngress(),
-  //     method: 'get',
-  //   },
-  //   destroy: {
-  //     url: Apis.deleteAppIngress(),
-  //     method: 'delete',
-  //   },
-  // },
-  data: [
-    {
-      name: 'hellowrold',
-      status: 'success',
-      progressPort: '#sdadas',
-      port: '12121',
-      deployer: 'motherfucker',
-      date: '2019-06-29 01:01:03',
+  transport: {
+    read: {
+      url: Apis.getAppIngress(projectId, hostId, appServiceId),
+      method: 'get',
     },
-    {
-      name: 'hellowrold',
-      status: 'success',
-      progressPort: '#sdadas',
-      port: '12121',
-      deployer: 'motherfucker',
-      date: '2019-06-29 01:01:03',
-    },
-    {
-      name: 'hellowrold',
-      status: 'success',
-      progressPort: '#sdadas',
-      port: '12121',
-      deployer: 'motherfucker',
-      date: '2019-06-29 01:01:03',
-    },
-  ],
+    destroy: ({ data: [data] }:any) => ({
+      url: HostConfigApi.dockerDelete(projectId, data.hostId, data.id),
+      method: 'delete',
+    }),
+  },
   fields: [
     {
       type: 'string',
@@ -53,22 +28,22 @@ export default ():any => ({
     },
     {
       type: 'string',
-      name: 'progressPort',
+      name: 'pid',
       label: '进程号',
     },
     {
       type: 'string',
-      name: 'port',
+      name: 'ports',
       label: '占用端口',
     },
     {
-      type: 'string',
+      type: 'object',
       name: 'deployer',
       label: '部署者',
     },
     {
       type: 'string',
-      name: 'date',
+      name: 'creationDate',
       label: '部署时间',
     },
   ],
