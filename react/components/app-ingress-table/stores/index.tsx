@@ -11,6 +11,7 @@ interface ContextProps {
   prefixCls: string,
   intl: { formatMessage(arg0: object, arg1?: object): string },
   appIngressDataset: DataSet,
+  projectId: number,
 }
 
 const Store = createContext({} as ContextProps);
@@ -21,12 +22,16 @@ export function useAppIngressTableStore() {
 
 export const StoreProvider = injectIntl(inject('AppState')(
   observer((props:any) => {
-    const { AppState: { currentMenuType: { projectId } }, children, appIngressDataset } = props;
+    const {
+      AppState: { currentMenuType: { projectId } }, children, appIngressDataset, intl,
+    } = props;
 
     const value = {
       ...props,
       prefixCls: 'c7ncd-appIngress-table',
       appIngressDataset,
+      intl,
+      projectId,
     };
 
     return (

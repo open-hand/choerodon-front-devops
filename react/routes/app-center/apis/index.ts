@@ -59,9 +59,9 @@ export default class AppCenterApi {
     return `/devops/v1/projects/${projectId}/env/app_services`;
   }
 
-  static getAppIngress() {
-    // eslint-disable-next-line quotes
-    return `/devops/v1`;
+  static getAppIngress(projectId:string, hostId:string, appServiceId:string) {
+    return '/devops/v1/projects/1/hosts/1/app/1/instance/list';
+    // return `/devops/v1/projects/${projectId}/hosts/${hostId}/app/${appServiceId}/instance/list`;
   }
 
   static deleteAppIngress() {

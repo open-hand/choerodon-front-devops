@@ -34,7 +34,11 @@ export const StoreProvider = injectIntl(inject('AppState')(
       mainStore,
     } = useAppCenterDetailStore();
 
-    const appIngressDs = useMemo(() => new DataSet(AppIngressDataset()), []);
+    const {
+      id: hostId,
+    } = mainStore.getSelectedHost || {};
+
+    const appIngressDs = useMemo(() => new DataSet(AppIngressDataset({ projectId, hostId, appServiceId })), [appServiceId, hostId, projectId]);
 
     const value = {
       ...props,
