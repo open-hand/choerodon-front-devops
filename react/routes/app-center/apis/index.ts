@@ -70,4 +70,8 @@ export default class AppCenterApi {
   static getHostList(projectId: number) {
     return `/devops/v1/projects/${projectId}/hosts/page_by_options`;
   }
+
+  static getAppListByHost(projectId: number) {
+    return `/devops/v1/projects/${projectId}/app_service/app_center/host/app/list`;
+  }
 }
