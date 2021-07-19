@@ -28,27 +28,6 @@ export default ({
   accountDs,
   hostId,
 }: FormProps): DataSetProps => {
-  async function checkName(value: any, name: any, record: any) {
-    if (value && record.getPristineValue(name) && value === record.getPristineValue(name)) {
-      return true;
-    }
-    if (value && value === record.getPristineValue(name)) {
-      return true;
-    }
-    if (value) {
-      try {
-        const res = await HostConfigApis.checkName(projectId, value);
-        if ((res && res.failed) || !res) {
-          return formatMessage({ id: 'checkNameExist' });
-        }
-        return true;
-      } catch (err) {
-        return formatMessage({ id: 'checkNameFail' });
-      }
-    }
-    return true;
-  }
-
   async function checkPortUnique(ip: string, port: any) {
     try {
       const res = await HostConfigServices.checkSshPort(projectId, ip, port);
@@ -141,40 +120,33 @@ export default ({
     // @ts-ignore
     fields: [
       {
-        name: 'name',
-        type: 'string' as FieldType,
-        maxLength: 30,
-        required: true,
-        validator: checkName,
-        label: formatMessage({ id: `${intlPrefix}.name` }),
-      },
-      {
         name: 'hostIp',
         type: 'string' as FieldType,
         // @ts-ignore
         validator: checkIP,
-        label: formatMessage({ id: `${intlPrefix}.ip.private` }),
+        required: true,
+        label: formatMessage({ id: `${intlPrefix}.ip.external` }),
       },
       {
         name: 'sshPort',
         validator: checkPort,
-        label: formatMessage({ id: `${intlPrefix}.port.private` }),
+        label: formatMessage({ id: `${intlPrefix}.port.external` }),
+        required: true,
         defaultValue: 22,
       },
       {
         name: 'username',
         type: 'string' as FieldType,
         label: formatMessage({ id: 'userName' }),
-        dynamicProps: {
-          required: ({ record }: RecordObjectProps) => (record.get('hostIp') && record.get('sshPort')) || record.get('password'),
-        },
+        required: true,
+
       },
       {
         name: 'password',
         type: 'string' as FieldType,
+        required: true,
         dynamicProps: {
           label: ({ record }: RecordObjectProps) => formatMessage({ id: record.get('authType') === 'accountPassword' ? 'password' : `${intlPrefix}.token` }),
-          required: ({ record }: RecordObjectProps) => (record.get('hostIp') && record.get('sshPort')) || record.get('username'),
         },
       },
       {

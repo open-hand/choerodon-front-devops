@@ -1,4 +1,4 @@
-@popupPrefix: c7ncd-deploy-host-config-create;
+@popupPrefix: c7ncd-host-config-command-auto;
 
 .@{popupPrefix} {
 
@@ -41,5 +41,15 @@
     margin: .1rem -0.2rem .24rem;
     width: calc(100% + 0.4rem);
     background: var(--divider);
+  }
+
+  &-test {
+    display: flex;
+    align-items: center;
+
+    &-result {
+      margin-left: .12rem;
+      width: 100%;
+    }
   }
 }

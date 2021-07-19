@@ -130,8 +130,8 @@ const HostsItem:React.FC<any> = observer(({
       children: <HostConnect hostId={id} />,
       style: { width: SMALL },
       drawer: true,
-      okCancel: false,
-      okText: formatMessage({ id: 'close' }),
+      // okCancel: false,
+      // okText: formatMessage({ id: 'close' }),
     });
   }, [id]);
 

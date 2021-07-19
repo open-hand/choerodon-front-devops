@@ -141,7 +141,7 @@ const AppCenterContent = () => {
     }
     if (listDs && !listDs.length) {
       // @ts-ignore
-      return <EmptyPage title="暂无数据" describe="暂无应用服务，请关联应用服务" />;
+      return <EmptyPage title="暂无数据" describe="暂无应用服务，请关联应用服务" access />;
     }
     return <ContentList openDeploy={openDeploy} />;
   }, [listDs, listDs.length, mainStore.getCurrentTabKey, listDs.status]);
