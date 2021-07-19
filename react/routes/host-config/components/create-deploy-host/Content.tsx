@@ -56,13 +56,21 @@ const CreateHost: React.FC<any> = observer((): any => {
     <div className={`${prefixCls}`}>
       <Form dataSet={formDs} className={`${prefixCls}-form`}>
         <TextField name="name" />
+      </Form>
+      <Divider className={`${prefixCls}-divider`} />
+      <NewTips
+        className={`${prefixCls}-module-title`}
+        title={formatMessage({ id: `${intlPrefix}.attest` })}
+        helpText={formatMessage({ id: `${intlPrefix}.attest.tips` })}
+      />
+      <Form dataSet={formDs} className={`${prefixCls}-form-mt`}>
         <TextField name="hostIp" />
         <TextField name="sshPort" />
       </Form>
       <Divider className={`${prefixCls}-divider`} />
       <NewTips
         className={`${prefixCls}-module-title`}
-        title={formatMessage({ id: `${intlPrefix}.account` })}
+        title={formatMessage({ id: `${intlPrefix}.account.private` })}
         helpText={formatMessage({ id: `${intlPrefix}.account.tips` })}
       />
       <Form dataSet={formDs} className={`${prefixCls}-form`}>

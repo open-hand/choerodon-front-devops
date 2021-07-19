@@ -1,0 +1,33 @@
+.c7ncd-host-config-command {
+
+  &-card {
+    padding: .12rem;
+    border-radius: 4px;
+    border: 1px solid #d9e6f2;
+    cursor: pointer;
+
+    &-selected {
+      background: #f0f4ff;
+      box-shadow: 0 2px 6px 0 rgba(55, 177, 236, 0.25);
+      border-radius: 4px;
+      border: 1px solid rgba(77, 144, 254, 0.85);
+    }
+
+    & + & {
+      margin-top: .2rem;
+    }
+
+    &-title {
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 22px;
+      padding-left: .1rem;
+    }
+
+    &-des {
+      color: var(--text-color3);
+      line-height: 20px;
+      margin-top: .1rem;
+    }
+  }
+}

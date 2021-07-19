@@ -1,8 +1,9 @@
 import React, {
-  createContext, useContext,
+  createContext, useContext, useMemo,
 } from 'react';
 import { injectIntl } from 'react-intl';
 import { inject } from 'mobx-react';
+import useStore, { StoreProps } from './useStore';
 
 interface ContextProps {
   prefixCls: string,
@@ -12,6 +13,16 @@ interface ContextProps {
   projectId: number,
   hostId: string,
   data: string,
+  mainStore: StoreProps,
+  typeKeys: {
+    AUTO: 'auto',
+    MANUAL: 'manual',
+  },
+  stepKeys: {
+    AUTO: 'auto',
+    MANUAL: 'manual',
+    ALL: 'all',
+  }
 }
 
 const Store = createContext({} as ContextProps);
@@ -25,17 +36,29 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     children,
     intl: { formatMessage },
     AppState: { currentMenuType: { projectId } },
-    data,
   } = props;
 
-  const intlPrefix = 'c7ncd.host.config';
+  const typeKeys = useMemo(() => ({
+    AUTO: 'auto',
+    MANUAL: 'manual',
+  }), []);
+  const stepKeys = useMemo(() => ({
+    AUTO: 'auto',
+    MANUAL: 'manual',
+    ALL: 'all',
+  }), []);
+
+  const mainStore = useStore({ defaultStep: stepKeys.ALL, defaultType: typeKeys.AUTO });
 
   const value = {
     ...props,
     prefixCls: 'c7ncd-host-config-command',
-    intlPrefix,
+    intlPrefix: 'c7ncd.host.config',
     formatMessage,
     projectId,
+    mainStore,
+    typeKeys,
+    stepKeys,
   };
   return (
     <Store.Provider value={value}>

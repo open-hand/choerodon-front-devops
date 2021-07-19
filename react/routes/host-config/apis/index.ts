@@ -34,7 +34,7 @@ export default class HostConfigApi {
   }
 
   static getLoadHostsDetailsUrl(projectId:number, type: string) {
-    return `/${getPrefix(type)}/v1/projects/${projectId}/hosts/page_by_options?with_updater_info=true`;
+    return `/${getPrefix(type)}/v1/projects/${projectId}/hosts/page_by_options?with_updater_info=true&do_page=true`;
   }
 
   static getDeleteHostUrl(projectId:number, hostId:string, type: string) {
