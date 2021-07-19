@@ -9,6 +9,7 @@ import {
 import { Tabs, Popover } from 'choerodon-ui';
 import { map, isEmpty } from 'lodash';
 import { Action } from '@choerodon/master';
+import { StatusTag } from '@choerodon/components';
 import ResourceListTitle from '@/routes/resource/main-view/components/resource-list-title';
 import { RecordObjectProps, Record } from '@/interface';
 import TimePopover from '@/components/timePopover';
@@ -167,15 +168,29 @@ const WorkloadContent = observer(() => {
   const renderName = useCallback(({ value, record }: { value: string, record: Record }) => {
     const status = record.get('commandStatus');
     const error = record.get('error');
+    const hasInstanceId = record.get('instanceId');
     return (
-      <StatusIcon
-        name={value}
-        status={status}
-        clickAble={status !== 'operating'}
-        onClick={() => openDetailModal(record)}
-        permissionCode={['choerodon.code.project.deploy.app-deployment.resource.ps.workload.detail']}
-        error={error}
-      />
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
+      }}
+      >
+        <StatusIcon
+          name={value}
+          status={status}
+          clickAble={status !== 'operating'}
+          onClick={() => openDetailModal(record)}
+          permissionCode={['choerodon.code.project.deploy.app-deployment.resource.ps.workload.detail']}
+          error={error}
+        />
+        {
+         hasInstanceId && <StatusTag colorCode="operating" type="border" name="Chart资源" />
+       }
+      </div>
+
     );
   }, []);
 
