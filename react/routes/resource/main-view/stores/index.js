@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useMemo, useEffect } from 'react';
+import React, {
+  createContext, useContext, useMemo, useEffect,
+} from 'react';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
@@ -27,7 +29,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer(
     const {
       resourceStore: {
         getSelectedMenu: {
-          parentId, key, name,
+          key, name, isLeaf,
         },
       },
     } = useResourceStore();
@@ -48,9 +50,9 @@ export const StoreProvider = injectIntl(inject('AppState')(observer(
       if (key && key.indexOf('**') < 0) {
         baseInfoDs.transport.read.url = `/devops/v1/projects/${projectId}/envs/${key}/info`;
         baseInfoDs.query();
+        mainStore.getAutoDeployMsg(key, projectId);
       }
-      key && mainStore.getAutoDeployMsg(key, projectId);
-    }, [projectId, key]);
+    }, [projectId, key, isLeaf]);
 
     const value = {
       ...props,

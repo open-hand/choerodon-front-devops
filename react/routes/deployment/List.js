@@ -294,18 +294,17 @@ const Deployment = withRouter(observer((props) => {
     const deployMode = record.get('deployMode');
     const deployPayloadName = record.get('deployPayloadName');
     return (
-      <span style={{
-        display: 'flex',
-        alignItems: 'center',
-        whiteSpace: 'nowrap',
-      }}
-      >
+      <span className="c7ncd-deploy-content-deployType">
         <StatusTag
           color={deployMode === 'host' ? 'rgb(142, 187, 252)' : 'rgb(116, 217, 221)'}
           name={deployMode === 'host' ? '主机' : '环境'}
           style={statusTagsStyle}
         />
-        {deployPayloadName}
+        <Tooltip title={deployPayloadName}>
+          <span className="c7ncd-deploy-content-deployType-name">
+            {deployPayloadName}
+          </span>
+        </Tooltip>
       </span>
     );
   };

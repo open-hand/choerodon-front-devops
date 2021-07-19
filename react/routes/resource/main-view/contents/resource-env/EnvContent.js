@@ -17,14 +17,18 @@ function countDisplay(count, max) {
   return count > max ? <Tooltip title={count}>{`${max}+`}</Tooltip> : count;
 }
 
-function ItemNumberByStatus({ code, count, name, prefixCls }) {
+function ItemNumberByStatus({
+  code, count, name, prefixCls,
+}) {
   return (
     <div className={`${prefixCls}-re-grid-right-item`}>
       <div className={`${prefixCls}-re-status ${prefixCls}-re-status_${code}`}>
         {countDisplay(count, 99)}
       </div>
       <div className={`${prefixCls}-re-grid-right-text`}>
+        {/* <Tooltip title={`${name}(${code})`}> */}
         <span>{name}</span>
+        {/* </Tooltip> */}
       </div>
     </div>
   );
@@ -37,20 +41,42 @@ ItemNumberByStatus.propTypes = {
   prefixCls: PropTypes.string,
 };
 
-function ItemNumberByResource({ code, count, name, prefixCls }) {
-  const iconMappings = {
-    instanceCount: 'instance_outline',
-    serviceCount: 'router',
-    ingressCount: 'language',
-    certificationCount: 'class',
-    configMapCount: 'compare_arrows',
-    secretCount: 'vpn_key',
+function ItemNumberByResource({
+  code, count, name, prefixCls,
+}) {
+  const instanceMappings = {
+    instanceCount: {
+      icon: 'instance_outline',
+      name: 'Instance',
+    },
+    serviceCount: {
+      icon: 'router',
+      name: 'Service',
+    },
+    ingressCount: {
+      icon: 'language',
+      name: 'Ingress',
+    },
+    certificationCount: {
+      icon: 'class',
+      name: 'Certification',
+    },
+    configMapCount: {
+      icon: 'compare_arrows',
+      name: 'ConfigMap',
+    },
+    secretCount: {
+      icon: 'vpn_key',
+      name: 'Secret',
+    },
   };
   return (
     <div className={`${prefixCls}-re-grid-left-item`}>
-      <Icon type={iconMappings[code]} className={`${prefixCls}-re-grid-left-icon`} />
+      <Icon type={instanceMappings[code].icon} className={`${prefixCls}-re-grid-left-icon`} />
       <span className={`${prefixCls}-re-grid-left-number`}>{countDisplay(count, 99)}</span>
-      <span className={`${prefixCls}-re-grid-left-name`}>{name}</span>
+      <Tooltip title={`${name}(${instanceMappings[code].name})`}>
+        <span className={`${prefixCls}-re-grid-left-name`}>{name}</span>
+      </Tooltip>
     </div>
   );
 }
@@ -91,25 +117,29 @@ const Content = observer(() => {
       return statusCount.map((item) => {
         const count = record ? record.get(item) : 0;
         const name = formatMessage({ id: `${intlPrefix}.status.${item}` });
-        return <ItemNumberByStatus
-          key={item}
-          code={item}
-          name={name}
-          count={count}
-          prefixCls={prefixCls}
-        />;
+        return (
+          <ItemNumberByStatus
+            key={item}
+            code={item}
+            name={name}
+            count={count}
+            prefixCls={prefixCls}
+          />
+        );
       });
     }
     return resourceCount.map((item) => {
       const count = record ? record.get(item) : 0;
       const name = formatMessage({ id: `${intlPrefix}.resource.${item}` });
-      return <ItemNumberByResource
-        key={item}
-        code={item}
-        name={name}
-        count={count}
-        prefixCls={prefixCls}
-      />;
+      return (
+        <ItemNumberByResource
+          key={item}
+          code={item}
+          name={name}
+          count={count}
+          prefixCls={prefixCls}
+        />
+      );
     });
   }
 
@@ -124,7 +154,9 @@ const Content = observer(() => {
       const name = record.get('name');
       const active = record.get('active');
       const connect = record.get('connect');
-      return { id, name, active, connect };
+      return {
+        id, name, active, connect,
+      };
     }
     return null;
   }
@@ -132,7 +164,9 @@ const Content = observer(() => {
   useEffect(() => {
     const currentBase = getCurrent();
     if (currentBase) {
-      const { id, name, active, connect } = currentBase;
+      const {
+        id, name, active, connect,
+      } = currentBase;
       const menuItem = treeDs.find((item) => item.get('key') === String(id));
       if (menuItem) {
         // 清除已经停用的环境
