@@ -138,7 +138,7 @@ const AppCenterDetailContent = () => {
         <div className={`${prefixCls}-detail-main`}>
           <CustomTabs
             data={map(mainTabKeys, (value: string, key: string) => ({
-              name: formatMessage({ id: `${intlPrefix}.detail.tab.${key}` }),
+              name: formatMessage({ id: `${intlPrefix}.tab.${key}` }),
               value,
             }))}
             selectedTabValue={mainStore.getCurrentMainTabKey}

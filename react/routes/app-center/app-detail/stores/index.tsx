@@ -10,7 +10,7 @@ import EnvOptionsDataSet from '@/routes/app-center/stores/EnvOptionsDataSet';
 import { useAppCenterStore } from '@/routes/app-center/stores';
 import { DataSet as DataSetProps } from '@/interface';
 import SearchDataSet from '@/routes/app-center/app-detail/stores/SearchDataSet';
-import HostOptionsDataSet from '@/routes/app-center/app-detail/stores/HostOptionsDataSet';
+import HostOptionsDataSet from '@/routes/app-center/stores/HostOptionsDataSet';
 import useDeleteModalStore, { DeleteStoreProps } from './useDeleteModalStore';
 
 interface ContextProps {

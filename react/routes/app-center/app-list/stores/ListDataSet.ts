@@ -14,9 +14,12 @@ export default ({ projectId, searchDs }: ListProps): DataSetProps => ({
   pageSize: 6,
   queryDataSet: searchDs,
   transport: {
-    read: {
-      url: AppCenterApis.getAppList(projectId),
-      method: 'get',
+    read: ({ data }: { data: { typeKey: string } }) => {
+      const { typeKey } = data || {};
+      return ({
+        url: typeKey === 'env' ? AppCenterApis.getAppList(projectId) : AppCenterApis.getAppListByHost(projectId),
+        method: 'get',
+      });
     },
   },
 });

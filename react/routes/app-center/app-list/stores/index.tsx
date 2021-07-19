@@ -10,6 +10,7 @@ import useStore, { StoreProps } from '@/routes/app-center/app-list/stores/useSto
 import SearchDataSet from '@/routes/app-center/app-list/stores/SearchDataSet';
 import useDeployStore from '@/routes/deployment/stores/useStore';
 import EnvOptionsDataSet from '@/routes/app-center/stores/EnvOptionsDataSet';
+import HostOptionsDataSet from '@/routes/app-center/stores/HostOptionsDataSet';
 import { useAppCenterStore } from '@/routes/app-center/stores';
 
 interface ContextProps {
@@ -27,6 +28,10 @@ interface ContextProps {
   mainStore: StoreProps,
   deployStore: any,
   ALL_ENV_KEY: string,
+  typeTabKeys: {
+    ENV_TAB: 'env',
+    HOST_TAB: 'host',
+  }
 }
 
 const Store = createContext({} as ContextProps);
@@ -53,15 +58,21 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     SHARE_TAB: 'share',
     MARKET_TAB: 'market',
   }), []);
+  const typeTabKeys = useMemo(() => ({
+    ENV_TAB: 'env',
+    HOST_TAB: 'host',
+  }), []);
 
   const defaultTabKey = useMemo(() => tabKeys.ALL_TAB, []);
+  const defaultTypeTabKey = useMemo(() => typeTabKeys.ENV_TAB, []);
   const ALL_ENV_KEY = useMemo(() => '0', []);
 
-  const mainStore = useStore({ defaultTabKey });
+  const mainStore = useStore({ defaultTabKey, defaultTypeTabKey });
   const deployStore = useDeployStore();
 
   const envDs = useMemo(() => new DataSet(EnvOptionsDataSet({ projectId })), [projectId]);
-  const searchDs = useMemo(() => new DataSet(SearchDataSet({ envDs, ALL_ENV_KEY })), []);
+  const hostDs = useMemo(() => new DataSet(HostOptionsDataSet({ projectId })), [projectId]);
+  const searchDs = useMemo(() => new DataSet(SearchDataSet({ envDs, hostDs, ALL_ENV_KEY })), []);
   const listDs = useMemo(() => new DataSet(ListDataSet({
     projectId,
     searchDs,
@@ -77,10 +88,20 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     }]);
     searchDs.current?.init('envId', ALL_ENV_KEY);
   }, []);
+  const loadHostData = useCallback(async () => {
+    await hostDs.query();
+    hostDs.appendData([{
+      name: '全部主机',
+      id: ALL_ENV_KEY,
+    }]);
+    searchDs.current?.init('hostId', ALL_ENV_KEY);
+  }, []);
 
   useEffect(() => {
     listDs.setQueryParameter('type', defaultTabKey);
+    listDs.setQueryParameter('typeKey', defaultTypeTabKey);
     loadEnvData();
+    loadHostData();
   }, []);
 
   const value = {
@@ -94,6 +115,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     deployStore,
     mainStore,
     ALL_ENV_KEY,
+    typeTabKeys,
   };
   return (
     <Store.Provider value={value}>

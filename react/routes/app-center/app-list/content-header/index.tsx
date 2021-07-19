@@ -21,6 +21,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
     mainStore,
     tabKeys,
     ALL_ENV_KEY,
+    typeTabKeys,
   } = useAppCenterListStore();
 
   const newPrefixCls = useMemo(() => `${prefixCls}-list-search`, []);
@@ -35,8 +36,18 @@ const ContentHeader: React.FC<any> = observer((): any => {
     refresh();
   };
 
+  const handleTypeChange = (key:string) => {
+    listDs.setQueryParameter('typeKey', key);
+    mainStore.setCurrentTypeTabKey(key);
+    refresh();
+  };
+
   const renderEnvOption = useCallback(({ record, text, value }) => (
     value === ALL_ENV_KEY ? text : <EnvOption record={record} text={text} />
+  ), []);
+
+  const renderHostOption = useCallback(({ record, text, value }) => (
+    value === ALL_ENV_KEY ? text : <EnvOption connect={record.get('hostStatus') === 'connected'} text={text} />
   ), []);
 
   const renderOptionProperty = useCallback(({ record: envRecord }: RecordObjectProps) => ({
@@ -56,6 +67,17 @@ const ContentHeader: React.FC<any> = observer((): any => {
         selectedTabValue={mainStore.getCurrentTabKey}
         className={`${newPrefixCls}-tab`}
       />
+      <CustomTabs
+        onChange={(
+          e: React.MouseEvent<HTMLDivElement, MouseEvent>, tabName: string, tabKey: string,
+        ) => handleTypeChange(tabKey)}
+        data={map(typeTabKeys, (value, key) => ({
+          name: formatMessage({ id: `${intlPrefix}.tab.${key}` }),
+          value,
+        }))}
+        selectedTabValue={mainStore.getCurrentTypeTabKey}
+        className={`${newPrefixCls}-tab`}
+      />
       <div className={`${newPrefixCls}-form-wrap`}>
         <Form
           dataSet={searchDs}
@@ -72,16 +94,26 @@ const ContentHeader: React.FC<any> = observer((): any => {
             prefix={<Icon type="search" />}
             onClear={refresh}
           />
-          <Select
-            prefix="环境:"
-            name="envId"
-            colSpan={3}
-            searchable
-            optionRenderer={renderEnvOption}
-            onOption={renderOptionProperty}
-            onClear={refresh}
-            // renderer={({ value, text }) => value ? text : '全部'}
-          />
+          {mainStore.getCurrentTypeTabKey === typeTabKeys.ENV_TAB ? (
+            <Select
+              prefix="环境:"
+              name="envId"
+              colSpan={3}
+              searchable
+              optionRenderer={renderEnvOption}
+              onOption={renderOptionProperty}
+              onClear={refresh}
+            />
+          ) : (
+            <Select
+              prefix="主机:"
+              name="hostId"
+              colSpan={3}
+              searchable
+              optionRenderer={renderHostOption}
+              onClear={refresh}
+            />
+          )}
         </Form>
         <Button
           onClick={refresh}

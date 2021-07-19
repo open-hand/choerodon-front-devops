@@ -1,6 +1,9 @@
 import { useLocalStore } from 'mobx-react-lite';
 
-export default function useStore({ defaultTabKey }: { defaultTabKey: string }) {
+export default function useStore({
+  defaultTabKey,
+  defaultTypeTabKey,
+}: { defaultTabKey: string, defaultTypeTabKey: string }) {
   return useLocalStore(() => ({
     currentTabKey: defaultTabKey,
     setCurrentTabKey(key:string) {
@@ -8,6 +11,14 @@ export default function useStore({ defaultTabKey }: { defaultTabKey: string }) {
     },
     get getCurrentTabKey() {
       return this.currentTabKey;
+    },
+
+    currentTypeTabKey: defaultTypeTabKey,
+    setCurrentTypeTabKey(key:string) {
+      this.currentTypeTabKey = key;
+    },
+    get getCurrentTypeTabKey() {
+      return this.currentTypeTabKey;
     },
 
     selectedApp: {},
