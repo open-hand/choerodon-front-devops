@@ -47,8 +47,7 @@ const HostsItem:React.FC<any> = observer(({
       TEST_TAB,
       DEPLOY_TAB,
     },
-    mirrorTableDs,
-    jarTableDs,
+    appInstanceTableDs,
     usageDs,
   } = useHostConfigStore();
 
@@ -138,16 +137,13 @@ const HostsItem:React.FC<any> = observer(({
   const handleSelect = useCallback(() => {
     if (isDeploy && mainStore.getSelectedHost?.id !== id) {
       if (getMainStatus === 'connected') {
-        mirrorTableDs.setQueryParameter('hostId', id);
-        jarTableDs.setQueryParameter('hostId', id);
+        appInstanceTableDs.setQueryParameter('host_id', id);
         usageDs.setQueryParameter('hostId', id);
-        mirrorTableDs.query();
-        jarTableDs.query();
+        appInstanceTableDs.query();
         usageDs.query();
       } else {
         usageDs.removeAll();
-        mirrorTableDs.removeAll();
-        jarTableDs.removeAll();
+        appInstanceTableDs.removeAll();
       }
       mainStore.setSelectedHost(record.toData());
     }

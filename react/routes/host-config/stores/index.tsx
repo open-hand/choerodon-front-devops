@@ -7,15 +7,13 @@ import { DataSet } from 'choerodon-ui/pro';
 import ListDataSet from '@/routes/host-config/stores/ListDataSet';
 import SearchDataSet from '@/routes/host-config/stores/SearchDataSet';
 import some from 'lodash/some';
-import MirrorTableDataSet from '@/routes/host-config/stores/MirrorTableDataSet';
-import JarTableDataSet from '@/routes/host-config/stores/JarTableDataSet';
+import AppInstanceTableDataSet from '@/routes/host-config/stores/AppInstanceTableDataSet';
 import { DataSet as DataSetProps, DataSetSelection } from '@/interface';
 import UsageDataSet from '@/routes/host-config/stores/UsageDataSet';
 import useStore, { StoreProps } from './useStore';
 
 // @ts-ignore
-// const HAS_BASE_PRO = C7NHasModule('@choerodon/testmanager-pro');
-const HAS_BASE_PRO = true;
+const HAS_BASE_PRO = C7NHasModule('@choerodon/testmanager-pro');
 
 interface ContextProps {
   prefixCls: string,
@@ -36,8 +34,7 @@ interface ContextProps {
     DEPLOY_TAB: 'deploy',
     TEST_TAB: 'distribute_test',
   },
-  mirrorTableDs: DataSetProps,
-  jarTableDs: DataSetProps,
+  appInstanceTableDs: DataSetProps,
   usageDs: DataSetProps,
 }
 
@@ -88,13 +85,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
 
   const searchDs = useMemo(() => new DataSet(SearchDataSet({ projectId })), [projectId]);
   const usageDs = useMemo(() => new DataSet(UsageDataSet({ projectId })), [projectId]);
-  const mirrorTableDs = useMemo(() => new DataSet(MirrorTableDataSet({
-    projectId,
-    formatMessage,
-    intlPrefix,
-  })), [projectId]);
-
-  const jarTableDs = useMemo(() => new DataSet(JarTableDataSet({
+  const appInstanceTableDs = useMemo(() => new DataSet(AppInstanceTableDataSet({
     projectId,
     formatMessage,
     intlPrefix,
@@ -120,8 +111,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
       && mainStore.getSelectedHost?.id
       && mainStore.getSelectedHost?.hostStatus === 'connected') {
       usageDs.query();
-      mirrorTableDs.query();
-      jarTableDs.query();
+      appInstanceTableDs.query();
     }
   }, [listDs, mainStore.getSelectedHost]);
 
@@ -139,8 +129,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     showTestTab,
     statusDs,
     tabKey,
-    mirrorTableDs,
-    jarTableDs,
+    appInstanceTableDs,
     usageDs,
   };
   return (
