@@ -144,7 +144,7 @@ const ResourceContent = observer(() => {
 
   const renderJarAction = useCallback(({ record: tableRecord }) => {
     const actionData = [{
-      service: ['choerodon.code.project.deploy.host.ps.jar.stop'],
+      service: ['choerodon.code.project.deploy.host.ps.jar.delete'],
       text: formatMessage({ id: 'delete' }),
       action: () => handleJarDelete({ record: tableRecord }),
     }];
