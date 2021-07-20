@@ -22,6 +22,7 @@ import { observer } from 'mobx-react-lite';
 import DeployConfig from '@/components/deploy-config-form';
 import JSONbig from 'json-bigint';
 import { get } from 'lodash';
+import StatusDot from '@/components/status-dot';
 import addCDTaskDataSetMap from './stores/addCDTaskDataSetMap';
 import { useAddCDTaskStore } from './stores';
 import YamlEditor from '../../../../../../components/yamlEditor';
@@ -294,11 +295,11 @@ export default observer(() => {
     const result = await ADDCDTaskDataSet.current.validate(true);
     if (result) {
       const ds = JSON.parse(JSON.stringify(ADDCDTaskDataSet.toData()[0]));
-      if (ds.type === 'cdHost') {
-        if (!(await handleTestConnect())) {
-          return false;
-        }
-      }
+      // if (ds.type === 'cdHost') {
+      //   if (!(await handleTestConnect())) {
+      //     return false;
+      //   }
+      // }
       const cdAuditUserIds = ds.cdAuditUserIds.map((x) => (typeof x === 'object' ? x.id : x));
       const data = {
         ...ds,
@@ -582,6 +583,21 @@ export default observer(() => {
 
   const optionRenderValueId = ({ value, text, record }) => rendererValueId({ text });
 
+  const renderOptionProperty = ({ record }) => ({
+    disabled: !record.get('connect'),
+  });
+
+  const renderEnvOption = ({ record, text }) => (
+    <>
+      <StatusDot
+        size="small"
+        synchronize
+        connect={record.get('connect')}
+      />
+      <span style={{ marginLeft: 5 }}>{ text }</span>
+    </>
+  );
+
   const renderHostSetting = () => {
     const value = ADDCDTaskDataSet.current.get(addCDTaskDataSetMap.hostSource);
     if (value === addCDTaskDataSetMap.alreadyhost) {
@@ -596,6 +612,8 @@ export default observer(() => {
           <Select
             style={{ flex: 1 }}
             name={addCDTaskDataSetMap.host}
+            optionRenderer={renderEnvOption}
+            onOption={renderOptionProperty}
             onChange={(value2) => {
               const item = ADDCDTaskUseStore.getHostList.find((i) => i.id == value2);
               ADDCDTaskDataSet.current.set('hostIp', item.hostIp);
@@ -611,33 +629,34 @@ export default observer(() => {
         </div>,
       ];
     }
-    return [
-      <TextField newLine colSpan={1} name="hostIp" />,
-      <TextField colSpan={1} name="hostPort" />,
-      <SelectBox colSpan={1} name="authType" className="addcdTask-mode">
-        <Option value="accountPassword">用户名与密码</Option>
-        <Option value="accountKey">用户名与密钥</Option>
-      </SelectBox>,
-      <TextField colSpan={1} newLine name="username" />,
-        ADDCDTaskDataSet?.current?.get('authType')
-        === 'accountPassword' ? (
-          <Password colSpan={1} name="password" />
-          ) : (
-            [
-              <p newLine colSpan={1} className="addcdTask-accountKeyP">
-                密钥
-              </p>,
-              <YamlEditor
-                colSpan={2}
-                newLine
-                readOnly={false}
-                value={accountKeyValue}
-                modeChange={false}
-                onValueChange={(data) => setAccountKeyValue(data)}
-              />,
-            ]
-          ),
-    ];
+    return '';
+    // return [
+    //   <TextField newLine colSpan={1} name="hostIp" />,
+    //   <TextField colSpan={1} name="hostPort" />,
+    //   <SelectBox colSpan={1} name="authType" className="addcdTask-mode">
+    //     <Option value="accountPassword">用户名与密码</Option>
+    //     <Option value="accountKey">用户名与密钥</Option>
+    //   </SelectBox>,
+    //   <TextField colSpan={1} newLine name="username" />,
+    //     ADDCDTaskDataSet?.current?.get('authType')
+    //     === 'accountPassword' ? (
+    //       <Password colSpan={1} name="password" />
+    //       ) : (
+    //         [
+    //           <p newLine colSpan={1} className="addcdTask-accountKeyP">
+    //             密钥
+    //           </p>,
+    //           <YamlEditor
+    //             colSpan={2}
+    //             newLine
+    //             readOnly={false}
+    //             value={accountKeyValue}
+    //             modeChange={false}
+    //             onValueChange={(data) => setAccountKeyValue(data)}
+    //           />,
+    //         ]
+    //       ),
+    // ];
   };
 
   /**
@@ -905,7 +924,7 @@ export default observer(() => {
             }}
           >
             <Option value={addCDTaskDataSetMap.alreadyhost}>已有主机</Option>
-            <Option value={addCDTaskDataSetMap.customhost}>自定义主机</Option>
+            {/* <Option value={addCDTaskDataSetMap.customhost}>自定义主机</Option> */}
           </SelectBox>
           {renderHostSetting()}
           {/* <div newLine colSpan={2} style={{ display: 'flex', alignItems: 'center' }}>

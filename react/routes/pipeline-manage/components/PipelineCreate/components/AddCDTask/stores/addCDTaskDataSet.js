@@ -240,6 +240,10 @@ export default (
           let newRes = res;
           try {
             newRes = JSONbig.parse(newRes);
+            newRes.content = newRes.content.map((i) => ({
+              ...i,
+              connect: i.hostStatus === 'connected',
+            }));
             useStore.setHostList(newRes.content);
             return newRes;
           } catch (e) {
