@@ -2,7 +2,7 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Action } from '@choerodon/boot';
-import { Modal, Table } from 'choerodon-ui/pro';
+import { Modal, Table, Tooltip } from 'choerodon-ui/pro';
 import { TableQueryBarType } from '@/interface';
 import { StatusTag, TimePopover, UserInfo } from '@choerodon/components';
 import { useAppIngressTableStore } from './stores';
@@ -74,7 +74,7 @@ const AppIngress = observer(() => {
   }, []);
 
   const renderAction = useCallback(({ record: tableRecord }) => {
-    if (!['running', 'exited'].includes(tableRecord.get('status'))) {
+    if (!['running', 'exited', 'removed'].includes(tableRecord.get('status'))) {
       return null;
     }
     const actionData = [{
@@ -82,38 +82,52 @@ const AppIngress = observer(() => {
       text: formatMessage({ id: 'delete' }),
       action: () => handleDelete({ record: tableRecord }),
     }];
-    if (tableRecord.get('status') === 'running') {
-      actionData.unshift({
-        service: ['choerodon.code.project.deploy.host.ps.docker.stop'],
-        text: '停止',
-        action: () => openStopModal({ record: tableRecord }),
-      }, {
-        service: ['choerodon.code.project.deploy.host.ps.docker.restart'],
-        text: '重启',
-        action: () => handleRestart({ record: tableRecord }),
-      });
-    } else {
-      actionData.unshift({
-        service: ['choerodon.code.project.deploy.host.ps.docker.start'],
-        text: '启动',
-        action: () => handleStart({ record: tableRecord }),
-      });
+
+    const status = tableRecord.get('status');
+
+    switch (status) {
+      case 'running':
+        actionData.unshift({
+          service: ['choerodon.code.project.deploy.host.ps.docker.stop'],
+          text: '停止',
+          action: () => openStopModal({ record: tableRecord }),
+        }, {
+          service: ['choerodon.code.project.deploy.host.ps.docker.restart'],
+          text: '重启',
+          action: () => handleRestart({ record: tableRecord }),
+        });
+        break;
+      case 'removed':
+        break;
+      default:
+        actionData.unshift({
+          service: ['choerodon.code.project.deploy.host.ps.docker.start'],
+          text: '启动',
+          action: () => handleStart({ record: tableRecord }),
+        });
+        break;
     }
     return <Action data={actionData} />;
   }, [handleDelete, handleRestart, handleStart, openStopModal]);
 
-  const renderName = ({ record, text }:any) => {
+  const renderType = ({ record }:any) => {
     const instanceType = record.get('instanceType');
+
     const isIntance = instanceType === 'normal_process';
     const tagName = isIntance ? '实例进程' : 'Docker';
     const tagColor = isIntance ? 'running' : 'success';
-    return (
-      <div className={`${prefixCls}-name`}>
-        {text}
-        <StatusTag colorCode={tagColor} name={tagName} type="border" />
-      </div>
-    );
+    return <StatusTag colorCode={tagColor} name={tagName} type="border" />;
   };
+
+  const renderName = ({ record, text }:any) => (
+    <Tooltip
+      title={text}
+    >
+      <span className={`${prefixCls}-name`}>
+        {text}
+      </span>
+    </Tooltip>
+  );
 
   const renderStatus = ({ record, text }:any) => (
     <StatusTag colorCode={text} name={text?.toUpperCase() || 'UNKNOWN'} />
@@ -138,6 +152,7 @@ const AppIngress = observer(() => {
       className="c7ncd-tab-table"
     >
       <Column name="name" renderer={renderName} />
+      <Column name="instanceType" renderer={renderType} />
       <Column renderer={renderAction} width={60} />
       <Column name="status" renderer={renderStatus} />
       <Column name="pid" width={100} />
