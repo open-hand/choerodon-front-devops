@@ -13,6 +13,7 @@ import Modal from './modals';
 import Details from './components/details';
 import Cases from './components/cases';
 import Pods from './components/pods-details';
+import noInstance from './images/noinstance.png';
 
 import './index.less';
 
@@ -183,7 +184,18 @@ export default observer((props) => {
               renderTabContent()
             }
           </>
-        ) : <p>无实例详情</p>
+        ) : (
+          <div
+            className="c7ncd-app_detail-instance-img"
+          >
+            <img
+              src={noInstance}
+              alt=""
+            />
+            <p>暂无实例详情</p>
+          </div>
+
+        )
       }
     </div>
   );
