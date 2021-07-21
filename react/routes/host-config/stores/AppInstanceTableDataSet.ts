@@ -24,5 +24,6 @@ export default ({ projectId, formatMessage, intlPrefix }: ListProps): DataSetPro
     { name: 'ports', label: formatMessage({ id: `${intlPrefix}.port.occupied` }) },
     { name: 'deployer', label: formatMessage({ id: `${intlPrefix}.deployer` }) },
     { name: 'creationDate', label: formatMessage({ id: `${intlPrefix}.deploy.date` }) },
+    { name: 'instanceType', label: '类型'},
   ],
 });

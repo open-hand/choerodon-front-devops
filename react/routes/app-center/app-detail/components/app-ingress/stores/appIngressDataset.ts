@@ -23,6 +23,11 @@ export default ({ projectId, hostId, appServiceId }:any):any => ({
     },
     {
       type: 'string',
+      name: 'instanceType',
+      label: '类型',
+    },
+    {
+      type: 'string',
       name: 'status',
       label: '状态',
     },
