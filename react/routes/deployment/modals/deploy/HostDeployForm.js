@@ -8,6 +8,7 @@ import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
 import { axios } from '@choerodon/boot';
 import { mapping } from '@/routes/deployment/modals/deploy/stores/ManualDeployDataSet';
+import StatusDot from '@/components/status-dot';
 import YamlEditor from '../../../../components/yamlEditor';
 import Tips from '../../../../components/new-tips';
 import { useManualDeployStore } from './stores';
@@ -137,6 +138,17 @@ const HostDeployForm = injectIntl(observer(({ getMarketItem, getMarketAndVersion
     });
   });
 
+  const renderEnvOption = ({ record: hostRecord, text }) => (
+    <>
+      <StatusDot
+        size="small"
+        synchronize
+        connect={hostRecord.get('connect')}
+      />
+      <span style={{ marginLeft: 5 }}>{ text }</span>
+    </>
+  );
+
   return (
     <div style={{ width: '80%' }}>
       <div className="c7ncd-deploy-manual-deploy-divided" />
@@ -145,6 +157,10 @@ const HostDeployForm = injectIntl(observer(({ getMarketItem, getMarketAndVersion
         <Select
           colSpan={1}
           name={mapping.hostName.value}
+          optionRenderer={renderEnvOption}
+          onOption={({ record: hostRecord }) => ({
+            disabled: !hostRecord.get('connect'),
+          })}
           // onChange={handleChangeHostName}
           addonAfter={<Tips helpText="您需在此选择一个此项目下”主机配置“中已有的主机作为部署的载体" placement="bottom" />}
         />

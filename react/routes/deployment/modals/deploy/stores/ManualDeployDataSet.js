@@ -360,11 +360,15 @@ export default (({
         };
         const deploySource = data[mapping.deploySource.value];
         const deployObject = data[mapping.deployObject.value];
+        res.hostId = data[mapping.hostName.value];
+        res.value = Base64.encode(deployUseStore.getImageYaml);
         // 项目制品库
         if (deploySource === mapping.deploySource.options[0].value) {
+          res.sourceType = 'currentProject';
           // 如果部署对象是Docker镜像
           if (deployObject === mapping.deployObject.options[0].value) {
-            res.imageDeploy = {
+            res.name = data[mapping.containerName.value];
+            res.imageInfo = {
               [mapping.projectImageRepo.value]: data[mapping.projectImageRepo.value],
               [mapping.projectImageRepo.textField]: dataSet
                 .current
@@ -388,7 +392,7 @@ export default (({
             };
           } else {
             //  如果部署对象是jar应用
-            res.jarDeploy = {
+            res.prodJarInfoVO = {
               [mapping.nexus.value]: data[mapping.nexus.value],
               [mapping.projectProduct.value]: data[mapping.projectProduct.value],
               [mapping.groupId.value]: data[mapping.groupId.value],
@@ -403,14 +407,17 @@ export default (({
           const { marketServiceDeployObjectVO } = data.marketService || {};
           const deployObjectId = marketServiceDeployObjectVO && marketServiceDeployObjectVO.id;
           res.appSource = 'market';
+          res.sourceType = 'market';
+          res.deployObjectId = deployObjectId;
           if (deployObject === mapping.deployObject.options[0].value) {
-            res.imageDeploy = {
+            res.name = data[mapping.containerName.value];
+            res.imageInfo = {
               deployObjectId,
               [mapping.containerName.value]: data[mapping.containerName.value],
               value: Base64.encode(deployUseStore.getImageYaml),
             };
           } else {
-            res.jarDeploy = {
+            res.imageInfo = {
               deployObjectId,
               [mapping.workPath.value]: data[mapping.workPath.value],
               value: Base64.encode(deployUseStore.getJarYaml),
@@ -418,7 +425,8 @@ export default (({
           }
         }
         return ({
-          url: `/devops/v1/projects/${projectId}/deploy/host`,
+          url: deployObject === mapping.deployObject.options[0].value
+            ? `/devops/v1/projects/${projectId}/deploy/docker` : `/devops/v1/projects/${projectId}/deploy/host`,
           method: 'post',
           data: res,
         });
@@ -437,6 +445,7 @@ export default (({
         label: '主机名称',
         textField: 'name',
         valueField: 'id',
+        required: true,
         lookupAxiosConfig: () => ({
           method: 'post',
           url: `/devops/v1/projects/${projectId}/hosts/page_by_options?random=${random}`,
@@ -450,6 +459,10 @@ export default (({
             let newRes = res;
             try {
               newRes = JSONbig.parse(newRes);
+              newRes.content = newRes.content.map((i) => ({
+                ...i,
+                connect: i.hostStatus === 'connected',
+              }));
               return newRes;
             } catch (e) {
               return newRes;
@@ -462,18 +475,18 @@ export default (({
         type: 'string',
         label: 'IP',
         disabled: true,
-        dynamicProps: {
-          required: getRequired,
-        },
+        // dynamicProps: {
+        //   required: getRequired,
+        // },
       },
       {
         name: mapping.port.value,
         type: 'string',
         label: '端口',
         disabled: true,
-        dynamicProps: {
-          required: getRequired,
-        },
+        // dynamicProps: {
+        //   required: getRequired,
+        // },
       },
       {
         name: mapping.deployObject.value,
