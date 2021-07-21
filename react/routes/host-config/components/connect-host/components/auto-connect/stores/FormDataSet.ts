@@ -83,36 +83,20 @@ export default ({
   }
 
   return ({
-    autoCreate: false,
+    autoCreate: true,
     selection: false,
     autoQueryAfterSubmit: false,
     paging: false,
     transport: {
-      read: {
-        url: HostConfigApis.getHostDetail(projectId, hostId),
-        method: 'get',
-      },
-      create: ({ data: [data] }) => {
+      // read: {
+      //   url: HostConfigApis.getHostDetail(projectId, hostId),
+      //   method: 'get',
+      // },
+      submit: ({ data: [data] }) => {
         const postData = omit(data, ['__status', '__id']);
         return ({
-          url: HostConfigApis.createHost(projectId),
+          url: HostConfigApis.hostConnect(projectId, hostId),
           method: 'post',
-          data: postData,
-          transformResponse: ((res) => {
-            try {
-              const result = JSON.parse(res);
-              return result;
-            } catch (e) {
-              return { data: res };
-            }
-          }),
-        });
-      },
-      update: ({ data: [data] }) => {
-        const postData = omit(data, ['__status', '__id']);
-        return ({
-          url: HostConfigApis.editHost(projectId, hostId),
-          method: 'put',
           data: postData,
         });
       },
@@ -132,7 +116,6 @@ export default ({
         validator: checkPort,
         label: formatMessage({ id: `${intlPrefix}.port.external` }),
         required: true,
-        defaultValue: 22,
       },
       {
         name: 'username',

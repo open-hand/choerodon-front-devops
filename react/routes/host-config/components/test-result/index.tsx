@@ -1,15 +1,17 @@
+/* eslint-disable react/require-default-props */
+
 import React, { memo, useMemo } from 'react';
-import { Icon } from 'choerodon-ui/pro';
+import { Icon, Tooltip } from 'choerodon-ui/pro';
 
 import './index.less';
 
 interface Props {
   status: 'success' | 'failed',
-  // eslint-disable-next-line react/require-default-props
   className?: string,
+  failedMessage?: string,
 }
 
-const TestResult = memo(({ status, className = '' }: Props) => {
+const TestResult = memo(({ status, className = '', failedMessage = '' }: Props) => {
   const prefixCls = useMemo(() => 'c7ncd-test-result', []);
   return (
     <div className={`${prefixCls} ${prefixCls}-${status} ${className}`}>
@@ -18,7 +20,9 @@ const TestResult = memo(({ status, className = '' }: Props) => {
         <Icon type="finished" />,
         <span>成功</span>,
       ]) : ([
-        <Icon type="highlight_off" />,
+        <Tooltip title={failedMessage}>
+          <Icon type="highlight_off" />
+        </Tooltip>,
         <span>失败</span>,
       ])}
     </div>

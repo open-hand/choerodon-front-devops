@@ -16,7 +16,7 @@ interface ContextProps {
   formDs: DataSet,
   modal: any,
   refresh(tabKey?: string): void,
-  hostId?: string,
+  hostId: string,
 }
 
 const Store = createContext({} as ContextProps);
@@ -30,12 +30,12 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     children,
     intl: { formatMessage },
     AppState: { currentMenuType: { projectId } },
-    hostId,
   } = props;
 
   const {
     prefixCls,
     intlPrefix,
+    hostId,
   } = useHostConnectStore();
 
   const accountDs = useMemo(() => new DataSet({
@@ -61,14 +61,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
       hostId,
     })), [projectId],
   );
-
-  useEffect(() => {
-    if (hostId) {
-      formDs.query();
-    } else {
-      formDs.create();
-    }
-  }, [projectId]);
 
   const value = {
     ...props,

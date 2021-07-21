@@ -77,4 +77,12 @@ export default class HostConfigApi {
   static getAppInstanceList(projectId: number) {
     return `/devops/v1/projects/${projectId}/hosts/instance/list`;
   }
+
+  static hostConnect(projectId: number, hostId: string) {
+    return `/devops/v1/projects/${projectId}/hosts/${hostId}/connection_host`;
+  }
+
+  static testHostConnect(projectId: number, hostId: string) {
+    return `/devops/v1/projects/${projectId}/hosts/${hostId}/connection_host_test`;
+  }
 }

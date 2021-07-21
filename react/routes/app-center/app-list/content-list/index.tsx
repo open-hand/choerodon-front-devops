@@ -20,6 +20,7 @@ const ContentList = ({
   const {
     prefixCls, intlPrefix, formatMessage,
     listDs, tabKeys: { MARKET_TAB, PROJECT_TAB, SHARE_TAB },
+    mainStore, typeTabKeys: { HOST_TAB },
   } = useAppCenterListStore();
 
   const history = useHistory();
@@ -75,6 +76,9 @@ const ContentList = ({
   }, []);
 
   const getActionData = useCallback((record: Record) => {
+    if (mainStore.getCurrentTypeTabKey === HOST_TAB) {
+      return null;
+    }
     const appServiceSource = {
       [PROJECT_TAB]: 'normal_service',
       [SHARE_TAB]: 'share_service',

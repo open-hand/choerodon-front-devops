@@ -119,14 +119,14 @@ export default ({
           url: HostConfigApis.createHost(projectId),
           method: 'post',
           data: postData,
-          transformResponse: ((res) => {
-            try {
-              const result = JSON.parse(res);
-              return result;
-            } catch (e) {
-              return { data: res };
-            }
-          }),
+          // transformResponse: ((res) => {
+          //   try {
+          //     const result = JSON.parse(res);
+          //     return result;
+          //   } catch (e) {
+          //     return { data: res };
+          //   }
+          // }),
         });
       },
       update: ({ data: [data] }) => {
@@ -159,7 +159,6 @@ export default ({
         name: 'sshPort',
         validator: checkPort,
         label: formatMessage({ id: `${intlPrefix}.port.private` }),
-        defaultValue: 22,
       },
       {
         name: 'username',
