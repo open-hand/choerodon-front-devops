@@ -29,11 +29,11 @@ const CreateHost: React.FC<any> = observer((): any => {
       const res = await formDs.submit();
       if (res) {
         refresh('deploy');
-        if (!hostId && !isEmpty(res?.list) && res.list[0]?.data) {
+        if (!hostId && !isEmpty(res?.list) && res.list[0]) {
           Modal.open({
             key: commandModalKey,
             title: formatMessage({ id: `${intlPrefix}.connect` }),
-            children: <HostConnect data={res.list[0]?.data} />,
+            children: <HostConnect hostId={res.list[0]?.id} data={res.list[0]?.data} />,
             style: { width: SMALL },
             drawer: true,
             okCancel: false,

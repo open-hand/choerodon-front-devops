@@ -1,6 +1,6 @@
 import React, {
   ReactNode,
-  useCallback, useEffect, useState,
+  useCallback, useEffect, useMemo, useState,
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
@@ -9,12 +9,14 @@ import {
   TextField,
   SelectBox,
   Password,
+  Spin,
 } from 'choerodon-ui/pro';
 import { Divider } from 'choerodon-ui';
 import { ButtonColor } from '@/interface';
 import { NewTips } from '@choerodon/components';
 import YamlEditor from '@/components/yamlEditor';
 import TestResult from '@/routes/host-config/components/test-result';
+import HostConnectServices from '@/routes/host-config/components/connect-host/services';
 import { useAutoConnectStore } from './stores';
 import { useHostConnectStore } from '../../stores';
 
@@ -36,7 +38,12 @@ const AutoConnect = observer(() => {
     formDs,
   } = useAutoConnectStore();
 
+  const record = useMemo(() => formDs.current, [formDs.current]);
+
   const [testResult, setTestResult] = useState<'' | 'success' | 'failed'>('');
+  const [failedMessage, setFailedMessage] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [intervalTimer, setIntervalTimer] = useState<any>();
 
   const goPrevious = useCallback(() => {
     mainStore.setCurrentStep(ALL);
@@ -50,22 +57,74 @@ const AutoConnect = observer(() => {
           {cancelBtn}
           <Button
             onClick={goPrevious}
+            disabled={isLoading}
           >
             上一步
           </Button>
           <Button
             color={'primary' as ButtonColor}
+            loading={isLoading}
+            onClick={handleConnect}
           >
             连接
           </Button>
         </>
       ),
     });
+  }, [isLoading]);
+
+  useEffect(() => () => {
+    intervalTimer && clearInterval(intervalTimer);
+  }, [intervalTimer]);
+
+  const loadConnectStatus = useCallback(async () => {
+    const res = await HostConnectServices.getHostConnectStatus(projectId, hostId);
+    if (res?.status !== 'operating') {
+      setIsLoading(false);
+      intervalTimer && clearInterval(intervalTimer);
+      setIntervalTimer(null);
+      setTestResult(res?.status);
+      if (res?.status === 'success') {
+        modal.close();
+      } else {
+        setFailedMessage(res?.exception || '');
+      }
+    }
+  }, [projectId, hostId]);
+
+  const handleConnect = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      if (!await handleTest()) {
+        setIsLoading(false);
+        return false;
+      }
+      await formDs.submit();
+      setIntervalTimer(setInterval(() => {
+        loadConnectStatus();
+      }, 2000));
+      return false;
+    } catch (e) {
+      setIsLoading(false);
+      return false;
+    }
   }, []);
 
-  const handleTest = useCallback(() => {
-    setTestResult('success');
-  }, []);
+  const handleTest = useCallback(async () => {
+    const validate = await formDs.validate();
+    if (!validate) {
+      return false;
+    }
+    const postData = formDs.current?.toData();
+    const res = await HostConnectServices.testConnect(projectId, hostId, postData);
+    setTestResult(res?.status);
+    setFailedMessage(res?.exception);
+    return res?.status === 'success';
+  }, [projectId, hostId]);
+
+  if (!record) {
+    return <Spin />;
+  }
 
   return (
     <div className={`${prefixCls}`}>
@@ -108,7 +167,13 @@ const AutoConnect = observer(() => {
         <Button onClick={handleTest}>
           测试连接
         </Button>
-        {testResult && <TestResult status={testResult} className={`${prefixCls}-test-result`} />}
+        {testResult && (
+          <TestResult
+            status={testResult}
+            className={`${prefixCls}-test-result`}
+            failedMessage={failedMessage}
+          />
+        )}
       </div>
     </div>
   );
