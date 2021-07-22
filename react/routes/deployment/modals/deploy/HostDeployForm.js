@@ -242,11 +242,11 @@ const HostDeployForm = injectIntl(observer(({ getMarketItem, getMarketAndVersion
             <Select name={mapping.groupId.value} colSpan={1} />,
             <Select name={mapping.artifactId.value} colSpan={1} />,
             <Select name={mapping.jarVersion.value} colSpan={1} />,
-            <TextField
-              name={mapping.workPath.value}
-              colSpan={1}
-              addonAfter={getWorkPathTips}
-            />,
+            // <TextField
+            //   name={mapping.workPath.value}
+            //   colSpan={1}
+            //   addonAfter={getWorkPathTips}
+            // />,
             <TextField
               name="name"
               colSpan={1}

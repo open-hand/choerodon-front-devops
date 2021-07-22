@@ -398,10 +398,11 @@ export default (({
               [mapping.groupId.value]: data[mapping.groupId.value],
               [mapping.artifactId.value]: data[mapping.artifactId.value],
               [mapping.jarVersion.value]: data[mapping.jarVersion.value],
-              [mapping.workPath.value]: data[mapping.workPath.value],
-              name: data.name,
+              // [mapping.workPath.value]: data[mapping.workPath.value],
               value: Base64.encode(deployUseStore.getJarYaml),
             };
+            res.value = Base64.encode(deployUseStore.getJarYaml);
+            res.name = data.name;
           }
         } else {
           // 市场应用
@@ -418,12 +419,14 @@ export default (({
               value: Base64.encode(deployUseStore.getImageYaml),
             };
           } else {
-            res.imageInfo = {
+            res.prodJarInfoVO = {
               deployObjectId,
               name: data.name,
               [mapping.workPath.value]: data[mapping.workPath.value],
               value: Base64.encode(deployUseStore.getJarYaml),
             };
+            res.name = data.name;
+            res.value = Base64.encode(deployUseStore.getJarYaml);
           }
         }
         return ({
