@@ -1,5 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import HostConfigApi from '@/components/app-ingress-table/apis';
+import { DataSet } from '@/interface';
 import Apis from '@/routes/app-center/apis';
 
 export default ({ projectId, hostId, appServiceId }:any):any => ({
@@ -50,6 +51,28 @@ export default ({ projectId, hostId, appServiceId }:any):any => ({
       type: 'string',
       name: 'creationDate',
       label: '部署时间',
+    },
+  ],
+  queryFields: [
+    { name: 'name', label: '名称' },
+    { name: 'status', label: '状态' },
+    {
+      name: 'type',
+      label: '类型',
+      textField: 'text',
+      valueField: 'value',
+      options: new DataSet({
+        data: [
+          {
+            text: 'docker',
+            value: 'docker_process',
+          },
+          {
+            text: '实例进程',
+            value: 'normal_process',
+          },
+        ],
+      }),
     },
   ],
 });
