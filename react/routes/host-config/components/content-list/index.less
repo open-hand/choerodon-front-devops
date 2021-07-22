@@ -1,7 +1,7 @@
 @prefixCls: c7ncd-host-config;
 
 .@{prefixCls}-content-pagination {
-  margin-top: 20px;
+  margin: .2rem 0;
   text-align: center;
 }
 
@@ -29,106 +29,5 @@
   &-deploy {
     width: 416px;
     flex-shrink: 0;
-  }
-
-  &-item {
-    background: #fff;
-    border-radius: 5px;
-    border: 1px solid #b7d5f0;
-    cursor: pointer;
-
-    &-test {
-      box-shadow: 0 2px 10px 0 rgba(109, 121, 184, 0.16);
-      border: none;
-      cursor: default;
-    }
-
-    &-selected {
-      border: 2px solid var(--primary-color);
-    }
-
-    &-disabled {
-      border: 1px solid #d9dbe6;
-      cursor: default;
-    }
-
-    &-header {
-      display: flex;
-      position: relative;
-      justify-content: center;
-      background: rgba(104, 135, 232, 0.04);
-      padding: 0.07rem 0.04rem 0.06rem 0;
-      &-left {
-        &-top {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          &-name {
-            font-size: 14px;
-            font-family: PingFangSC-Regular, PingFang SC, sans-serif;
-            font-weight: 400;
-            color: #3a345f;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 0.9rem;
-          }
-        }
-        &-bottom {
-          margin-top: 8px;
-          display: flex;
-          align-items: center;
-          .c7ncd-userinfo-wrap {
-            display: flex;
-            align-items: center;
-          }
-          & > div {
-            display: flex;
-            align-items: center;
-            &:nth-of-type(2) {
-              font-size: 12px;
-              font-family: PingFangSC-Regular, PingFang SC, sans-serif;
-              font-weight: 400;
-              color: rgba(58, 52, 95, 0.65);
-            }
-          }
-          & > div + div {
-            margin-left: 4px;
-          }
-        }
-      }
-      &-right {
-        position: absolute;
-        right: 0;
-      }
-    }
-    &-main {
-      padding: .24rem 0.16rem;
-
-      &-item {
-        display: flex;
-        flex-direction: column;
-        span:first-of-type {
-          font-size: 12px;
-          font-family: PingFangSC-Regular, PingFang SC, sans-serif;
-          font-weight: 400;
-          color: rgba(58, 52, 95, 0.54);
-        }
-        span:nth-of-type(2) {
-          margin-top: 2px;
-          font-size: 13px;
-          font-family: PingFangSC-Regular, PingFang SC, sans-serif;
-          font-weight: 400;
-          color: #3a345f;
-        }
-        & + & {
-          margin-top: 10px;
-        }
-      }
-    }
-
-    &-test > .@{prefixCls}-content-list-item-main {
-      padding: .08rem 0.1rem 0.12rem;
-    }
   }
 }
