@@ -1,13 +1,9 @@
-import React, { useEffect, useMemo } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Button, Form, Icon, Select, TextField, DataSet,
+  Button, Form, Icon, Select, TextField,
 } from 'choerodon-ui/pro';
-import { CustomTabs } from '@choerodon/components';
-import map from 'lodash/map';
-import {
-  ButtonColor, FuncType, LabelLayoutType,
-} from '../../../../interface';
+import { LabelLayoutType } from '@/interface';
 import { useHostConfigStore } from '../../stores';
 
 import './index.less';
@@ -17,90 +13,20 @@ const ContentHeader: React.FC<any> = observer((): any => {
     prefixCls,
     formatMessage,
     searchDs,
-    hostTabKeys,
     listDs,
-    mainStore,
     showTestTab,
-    statusDs,
-    tabKey: { TEST_TAB },
+    hasExtraTab,
+    tab,
   } = useHostConfigStore();
 
-  const searchArr = useMemo(() => ([
-    {
-      text: formatMessage({ id: 'success' }),
-      value: 'success',
-    },
-    {
-      text: formatMessage({ id: 'failed' }),
-      value: 'failed',
-    },
-    {
-      text: formatMessage({ id: 'connecting' }),
-      value: 'operating',
-    },
-    {
-      text: formatMessage({ id: 'occupied' }),
-      value: 'occupied',
-    },
-  ]), []);
-
-  const deploySearchArr = useMemo(() => ([
-    {
-      text: formatMessage({ id: 'connect' }),
-      value: 'connected',
-    },
-    {
-      text: formatMessage({ id: 'disconnect' }),
-      value: 'disconnect',
-    },
-  ]), []);
-
-  const getSearchArr = ():object[] => {
-    const isTest = mainStore.getCurrentTabKey === TEST_TAB;
-    return isTest ? searchArr : deploySearchArr;
-  };
-
-  useEffect(() => {
-    statusDs && statusDs.loadData(getSearchArr());
-  }, [mainStore.getCurrentTabKey]);
-
-  const handleChange = (key:string) => {
-    searchDs.reset();
-    listDs.setQueryParameter('type', key);
-    listDs.setQueryParameter('params', '');
-    listDs.setQueryParameter('status', '');
-    mainStore.setCurrentTabKey(key);
-    listDs.query();
-  };
-
   const handleSearch = () => {
-    const { params, status }:any = searchDs.toData()[0];
-    listDs.setQueryParameter('type', mainStore.getCurrentTabKey);
-    listDs.setQueryParameter('params', params);
-    listDs.setQueryParameter('status', status);
     listDs.query();
   };
 
   return (
     <div className={`${prefixCls}-content-search`}>
-      {showTestTab && (
-        <CustomTabs
-          onChange={(
-            e: React.MouseEvent<HTMLDivElement, MouseEvent>, tabName: string, tabKey: string,
-          ) => handleChange(tabKey)}
-          data={map(hostTabKeys, (item) => ({
-            name: item?.text,
-            value: item?.key,
-          }))}
-          selectedTabValue={mainStore.getCurrentTabKey}
-          className={`${prefixCls}-content-search-tab`}
-        />
-      )}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-      }}
-      >
+      {showTestTab && hasExtraTab && tab}
+      <div className={`${prefixCls}-content-search-form-wrap`}>
         <Form
           dataSet={searchDs}
           columns={7}
@@ -110,19 +36,17 @@ const ContentHeader: React.FC<any> = observer((): any => {
         >
           <TextField
             clearButton
-            name="params"
+            name="search_param"
             colSpan={4}
             placeholder="请输入搜索条件"
-            prefix={<Icon type="search" style={{ color: '#CACAE4', lineHeight: '22px' }} />}
+            prefix={<Icon type="search" />}
             onClear={handleSearch}
           />
           <Select
-            label="主机状态:"
-            name="status"
+            prefix="主机状态:"
+            name="host_status"
             colSpan={3}
-            placeholder="请选择"
             onClear={handleSearch}
-            options={statusDs}
           />
         </Form>
         <Button

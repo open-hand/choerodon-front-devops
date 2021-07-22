@@ -1,47 +1,35 @@
-/* eslint-disable import/no-anonymous-default-export */
-import { DataSetProps } from 'choerodon-ui/pro/lib/data-set/DataSet';
-import apis from '../apis';
+import { DataSet, DataSetProps } from '@/interface';
+import HostConfigApis from '@/routes/host-config/apis/DeployApis';
+import { StoreProps } from '@/routes/host-config/stores/useStore';
+import assign from 'lodash/assign';
 
 interface ListProps {
   projectId: number,
-  defaultTabKey: string,
-  tabKey: {
-    DEPLOY_TAB: string,
-    TEST_TAB: string,
-  },
+  searchDs: DataSet,
+  mainStore: StoreProps,
 }
 
-export default ({ projectId, defaultTabKey, tabKey: { DEPLOY_TAB } }: ListProps): DataSetProps => ({
+export default ({ projectId, searchDs, mainStore }: ListProps): DataSetProps => ({
   autoCreate: false,
-  autoQuery: false,
+  autoQuery: true,
   selection: false,
   paging: true,
   pageSize: 10,
+  queryDataSet: searchDs,
   transport: {
-    read: ({ data, params: pageParams }) => {
-      const {
-        type, params, status, forceUpdate = false,
-      } = data;
-      const newType = type || defaultTabKey;
-      const newParams = newType === DEPLOY_TAB ? {
-        search_param: params,
-        host_status: status,
-        ...pageParams || {},
-      } : pageParams;
-      return {
-        url: apis.getLoadHostsDetailsUrl(projectId, newType),
-        method: 'post',
-        params: newParams,
-        enabledCancelCache: 40,
-        forceUpdate,
-        data: newType === DEPLOY_TAB ? null : {
-          searchParam: {
-            type: newType,
-            status,
-          },
-          params: params ? [params] : [],
-        },
-      };
+    read: ({ params, data }) => ({
+      url: HostConfigApis.getLoadHostsDetailsUrl(projectId),
+      method: 'post',
+      params: assign(params, data),
+      data: null,
+    }),
+  },
+  events: {
+    load: ({ dataSet }: { dataSet: DataSet }) => {
+      const record = dataSet.get(0);
+      if (record) {
+        mainStore.setSelectedHost(record.toData());
+      }
     },
   },
 });

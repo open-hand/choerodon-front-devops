@@ -1,5 +1,5 @@
 import React, {
-  createContext, useCallback, useContext, useEffect, useMemo,
+  createContext, ReactNode, useCallback, useContext, useMemo,
 } from 'react';
 import { injectIntl } from 'react-intl';
 import { inject } from 'mobx-react';
@@ -11,9 +11,6 @@ import AppInstanceTableDataSet from '@/routes/host-config/stores/AppInstanceTabl
 import { DataSet as DataSetProps, DataSetSelection } from '@/interface';
 import UsageDataSet from '@/routes/host-config/stores/UsageDataSet';
 import useStore, { StoreProps } from './useStore';
-
-// @ts-ignore
-const HAS_BASE_PRO = C7NHasModule('@choerodon/testmanager-pro');
 
 interface ContextProps {
   prefixCls: string,
@@ -29,13 +26,14 @@ interface ContextProps {
   refresh():void,
   mainStore:StoreProps,
   showTestTab: boolean,
-  statusDs: DataSetProps,
   tabKey: {
     DEPLOY_TAB: 'deploy',
     TEST_TAB: 'distribute_test',
   },
   appInstanceTableDs: DataSetProps,
   usageDs: DataSetProps,
+  hasExtraTab: boolean,
+  tab: ReactNode,
 }
 
 const Store = createContext({} as ContextProps);
@@ -68,22 +66,29 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   ], []);
 
   const statusDs = useMemo(() => new DataSet({
-    data: [],
+    data: [
+      {
+        text: formatMessage({ id: 'connect' }),
+        value: 'connected',
+      },
+      {
+        text: formatMessage({ id: 'disconnect' }),
+        value: 'disconnect',
+      },
+    ],
     selection: 'single' as DataSetSelection,
   }), []);
 
-  const showTestTab = useMemo(() => HAS_BASE_PRO && some(categories, ['code', 'N_TEST']), [categories, HAS_BASE_PRO]);
-  const defaultTabKey = useMemo(() => tabKey.DEPLOY_TAB, []);
+  const showTestTab = useMemo(() => some(categories, ['code', 'N_TEST']), [categories]);
+  const mainStore = useStore();
 
-  const mainStore = useStore({ defaultTabKey });
-
+  const searchDs = useMemo(() => new DataSet(SearchDataSet({ statusDs })), []);
   const listDs = useMemo(() => new DataSet(ListDataSet({
     projectId,
-    defaultTabKey,
-    tabKey,
+    searchDs,
+    mainStore,
   })), [projectId]);
 
-  const searchDs = useMemo(() => new DataSet(SearchDataSet({ projectId })), [projectId]);
   const usageDs = useMemo(() => new DataSet(UsageDataSet({ projectId })), [projectId]);
   const appInstanceTableDs = useMemo(() => new DataSet(AppInstanceTableDataSet({
     projectId,
@@ -91,24 +96,10 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     intlPrefix,
   })), [projectId]);
 
-  const loadListData = useCallback(async () => {
-    await listDs.query();
-    const record = listDs.get(0);
-    if (defaultTabKey === tabKey.DEPLOY_TAB && record) {
-      mainStore.setSelectedHost(record.toData());
-    }
-  }, []);
-
-  useEffect(() => {
-    loadListData();
-  }, [projectId]);
-
   const refresh = useCallback(async (callback?:CallableFunction) => {
-    listDs.setQueryParameter('forceUpdate', true);
     await listDs.query();
     typeof callback === 'function' && callback();
-    if (mainStore.getCurrentTabKey === tabKey.DEPLOY_TAB
-      && mainStore.getSelectedHost?.id
+    if (mainStore.getSelectedHost?.id
       && mainStore.getSelectedHost?.hostStatus === 'connected') {
       usageDs.query();
       appInstanceTableDs.query();
@@ -127,7 +118,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     mainStore,
     projectId,
     showTestTab,
-    statusDs,
     tabKey,
     appInstanceTableDs,
     usageDs,

@@ -4,7 +4,7 @@ import React, {
 import { Spin, Icon } from 'choerodon-ui/pro';
 import { Input } from 'choerodon-ui';
 import HostConfigServices from '@/routes/host-config/services';
-import apis from '../../../../apis';
+import HostConfigApis from '@/routes/host-config/apis/DeployApis';
 
 import './index.less';
 
@@ -14,7 +14,6 @@ interface DeleteCheckProps {
   hostId:string,
   handleDelete():void,
   formatMessage(arg0: object, arg1?: object): string,
-  hostType:string,
 }
 
 const DeleteCheck:FC<DeleteCheckProps> = (props) => {
@@ -24,7 +23,6 @@ const DeleteCheck:FC<DeleteCheckProps> = (props) => {
     hostId,
     handleDelete,
     formatMessage,
-    hostType,
   } = props;
   const [loading, setLoading] = useState<boolean>(true);
   const [text, setText] = useState<string | ReactNode>('');
@@ -34,36 +32,32 @@ const DeleteCheck:FC<DeleteCheckProps> = (props) => {
 
   const checkNow = useCallback(async ():Promise<void> => {
     try {
-      const res = await apis.checkHostDeletable(projectId, hostId, hostType);
+      const res = await HostConfigApis.checkHostDeletable(projectId, hostId);
       setLoading(false);
       if (res) {
-        let okText = formatMessage({ id: 'delete' });
-        if (hostType === 'deploy') {
-          const shell = await HostConfigServices.getDeleteShell(projectId, hostId);
-          setText(
-            <div>
-              <span>{formatMessage({ id: `${intlPrefix}.delete.des` })}</span>
-              <div
-                className={`${prefixCls}-delete-input`}
-              >
-                <Input
-                  value={shell}
-                  readOnly
-                  copy
-                />
-              </div>
-              <div className={`${prefixCls}-delete-notice`}>
-                <Icon type="error" />
-                <span>{formatMessage({ id: `${intlPrefix}.delete.tips` })}</span>
-              </div>
-            </div>,
-          );
-          okText = formatMessage({ id: `${intlPrefix}.delete.btn` });
-        } else {
-          setText('确定要删除该主机配置吗？');
-        }
+        const shell = await HostConfigServices.getDeleteShell(projectId, hostId);
+        setText(
+          <div>
+            <span>{formatMessage({ id: `${intlPrefix}.delete.des1` })}</span>
+            <br />
+            <span>{formatMessage({ id: `${intlPrefix}.delete.des2` })}</span>
+            <div
+              className={`${prefixCls}-delete-input`}
+            >
+              <Input
+                value={shell}
+                readOnly
+                copy
+              />
+            </div>
+            <div className={`${prefixCls}-delete-notice`}>
+              <Icon type="error" />
+              <span>{formatMessage({ id: `${intlPrefix}.delete.tips` })}</span>
+            </div>
+          </div>,
+        );
         modal.update({
-          okText,
+          okText: formatMessage({ id: `${intlPrefix}.delete.btn` }),
           onOk: handleDelete,
           footer: (okBtn:ReactNode, cancelBtn:ReactNode) => (
             <>
@@ -74,7 +68,7 @@ const DeleteCheck:FC<DeleteCheckProps> = (props) => {
         });
         return;
       }
-      setText(hostType !== 'distribute_test' ? '该主机含有关联的流水线主机部署任务，无法删除。' : '该主机状态已改变，请刷新后重试');
+      setText('该主机含有关联的流水线主机部署任务，无法删除。');
       modal.update({
         footer: (okBtn:ReactNode, cancelBtn:ReactNode) => (
           <>
