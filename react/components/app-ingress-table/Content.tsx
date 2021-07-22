@@ -75,16 +75,21 @@ const AppIngress = observer(() => {
   }, [appIngressDataset, refresh]);
 
   const renderAction = useCallback(({ record: tableRecord }) => {
-    if (!['running', 'exited', 'removed'].includes(tableRecord.get('status'))) {
-      return null;
-    }
+    const status = tableRecord.get('status');
+
     const actionData = [{
       service: ['choerodon.code.project.deploy.host.ps.docker.delete'],
       text: formatMessage({ id: 'delete' }),
       action: () => handleDelete({ record: tableRecord }),
     }];
 
-    const status = tableRecord.get('status');
+    if (!status) {
+      return <Action data={actionData} />;
+    }
+
+    if (!['running', 'exited', 'removed'].includes(status)) {
+      return null;
+    }
 
     switch (status) {
       case 'running':
@@ -146,10 +151,13 @@ const AppIngress = observer(() => {
   };
 
   const renderStatus = ({ record, text }:any) => (
-    <StatusTag colorCode={text} name={text?.toUpperCase() || 'UNKNOWN'} />
+    text ? <StatusTag colorCode={text} name={text?.toUpperCase() || 'UNKNOWN'} /> : ''
   );
 
   const renderUser = ({ value }:any) => {
+    if (!value) {
+      return null;
+    }
     const {
       ldap,
       realName,
@@ -172,7 +180,7 @@ const AppIngress = observer(() => {
       <Column name="instanceType" renderer={renderType} width={90} />
       <Column name="status" renderer={renderStatus} />
       <Column name="pid" width={80} />
-      <Column name="ports" width={80} />
+      <Column name="ports" width={80} renderer={({ value }) => <Tooltip title={value}>{value}</Tooltip>} />
       <Column name="deployer" renderer={renderUser} />
       <Column name="creationDate" renderer={({ text }) => <TimePopover content={text} />} />
     </Table>
