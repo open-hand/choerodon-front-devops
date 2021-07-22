@@ -132,7 +132,7 @@ const AppIngress = observer(() => {
         <span className={`${prefixCls}-name`}>
           {text}
         </span>
-        {!(operateStatus === 'success') && (
+        {operateStatus && !(operateStatus === 'success') && (
         <StatusTag
           style={{
             marginLeft: '5px',
