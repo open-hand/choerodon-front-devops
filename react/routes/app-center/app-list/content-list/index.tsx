@@ -104,7 +104,7 @@ const ContentList = ({
       });
     }
     return <Action className={`${newPrefixCls}-header-action`} data={actionData} />;
-  }, []);
+  }, [mainStore.getCurrentTypeTabKey]);
 
   return (
     <>

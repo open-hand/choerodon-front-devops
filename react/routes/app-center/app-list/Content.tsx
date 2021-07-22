@@ -45,6 +45,7 @@ const AppCenterContent = () => {
     listDs,
     mainStore,
     deployStore,
+    typeTabKeys: { HOST_TAB },
   } = useAppCenterListStore();
 
   const history = useHistory();
@@ -52,6 +53,9 @@ const AppCenterContent = () => {
 
   const resourceIntlPrefix = useMemo(() => 'c7ncd.deployment', []);
   const intlPrefixDeploy = useMemo(() => 'c7ncd.deploy', []);
+  const isHost = useMemo(() => (
+    mainStore.getCurrentTypeTabKey === HOST_TAB
+  ), [mainStore.getCurrentTypeTabKey]);
 
   const refresh = useCallback(() => {
     listDs.query();
@@ -155,19 +159,19 @@ const AppCenterContent = () => {
             name: formatMessage({ id: `${resourceIntlPrefix}.modal.service.link` }),
             icon: 'relate',
             handler: openLinkService,
-            display: true,
+            display: !isHost,
           }, {
             permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.manual'],
             name: formatMessage({ id: `${intlPrefixDeploy}.manual` }),
             icon: 'cloud_done-o',
             handler: () => openDeploy(),
-            display: true,
+            display: !isHost,
           }, {
             permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.batch'],
             name: formatMessage({ id: `${intlPrefixDeploy}.batch` }),
             icon: 'cloud_done-o',
             handler: openBatchDeploy,
-            display: true,
+            display: !isHost,
           }, {
             icon: 'refresh',
             display: true,
