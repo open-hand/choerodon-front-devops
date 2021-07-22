@@ -822,24 +822,24 @@ export default observer(() => {
               )}
             />
           ),
-          <TextField
-            addonAfter={(
-              <Tips
-                helpText={(
-                  <>
-                    <p style={{ margin: 0 }}>
-                      默认工作目录，当前工作目录(./)，jar包下载存放目录为：./temp-jar/xxx.jar 日志存放目录为：./temp-log/xxx.log
-                    </p>
-                    <p style={{ margin: 0 }}>
-                      填写工作目录，jar包下载存放目录为：工作目录/temp-jar/xxx.jar 日志存放目录为：工作目录/temp-jar/xxx.log
-                    </p>
-                  </>
-                )}
-              />
-            )}
-            colSpan={3}
-            name="workingPath"
-          />,
+          // <TextField
+          //   addonAfter={(
+          //     <Tips
+          //       helpText={(
+          //         <>
+          //           <p style={{ margin: 0 }}>
+          //             默认工作目录，当前工作目录(./)，jar包下载存放目录为：./temp-jar/xxx.jar 日志存放目录为：./temp-log/xxx.log
+          //           </p>
+          //           <p style={{ margin: 0 }}>
+          //             填写工作目录，jar包下载存放目录为：工作目录/temp-jar/xxx.jar 日志存放目录为：工作目录/temp-jar/xxx.log
+          //           </p>
+          //         </>
+          //       )}
+          //     />
+          //   )}
+          //   colSpan={3}
+          //   name="workingPath"
+          // />,
           <TextField
             colSpan={3}
             name="appInstanceName"
