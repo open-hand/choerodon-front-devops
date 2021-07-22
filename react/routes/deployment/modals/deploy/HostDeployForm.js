@@ -278,11 +278,11 @@ const HostDeployForm = injectIntl(observer(({ getMarketItem, getMarketAndVersion
                 onValueChange={(value) => deployUseStore.setImageYaml(value)}
               />,
             ] : [
-              <TextField
-                name={mapping.workPath.value}
-                addonAfter={getWorkPathTips}
-                colSpan={2}
-              />,
+              // <TextField
+              //   name={mapping.workPath.value}
+              //   addonAfter={getWorkPathTips}
+              //   colSpan={2}
+              // />,
               <TextField
                 name="name"
                 colSpan={2}

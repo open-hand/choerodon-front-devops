@@ -737,10 +737,12 @@ export default (({
         type: 'string',
         label: '工作目录',
         defaultValue: './',
-        dynamicProps: {
-          required: ({ record }) => getRequired({ record })
-            && (record.get(mapping.deployObject.value) === (mapping.deployObject.options.length > 1 ? mapping.deployObject.options[1].value : '')),
-        },
+        // dynamicProps: {
+        //   required: ({ record }) => getRequired({ record })
+        //     && (record.get(mapping.deployObject.value) ===
+        //     (mapping.deployObject.options.length > 1
+        //     ? mapping.deployObject.options[1].value : '')),
+        // },
       },
       {
         name: 'name',
