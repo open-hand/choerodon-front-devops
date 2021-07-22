@@ -55,7 +55,7 @@ export default observer(() => {
   } = useBaseComDeployStore();
 
   modal.handleOk(async () => {
-    const middleWare = BaseDeployDataSet.current.get(mapping.middlewarce.name);
+    const middleWare = BaseDeployDataSet.current.get(mapping.middleware.name);
     let pass;
     let axiosData = {};
     let flag = false;
@@ -217,12 +217,13 @@ export default observer(() => {
         const baseValid = await BaseDeployDataSet.validate();
         const hostValid = await HostSettingDataSet.validate();
         if (baseValid && hostValid) {
-          if (HostSettingDataSet.records.some((i) => !i.get(hostMapping.status.name) || i.get(hostMapping.status.name) !== 'success')) {
-            const result = await handleTestConnect();
-            if (!result) {
-              return false;
-            }
-          }
+          // if (HostSettingDataSet.records.some((i) =>
+          // !i.get(hostMapping.status.name) || i.get(hostMapping.status.name) !== 'success')) {
+          //   const result = await handleTestConnect();
+          //   if (!result) {
+          //     return false;
+          //   }
+          // }
           if (!flag) {
             axiosData = {
               hostIds: HostSettingDataSet.records.map((i) => i.get(hostMapping.hostId.name)),
@@ -298,12 +299,13 @@ export default observer(() => {
         const hostValid = await HostSettingDataSet.validate();
         if (baseValid && hostValid) {
           // if exist un-connect host
-          if (HostSettingDataSet.records.filter((i) => !i.isRemoved).some((i) => !i.get('status'))) {
-            const testResult = await handleTestConnect();
-            if (!testResult) {
-              return false;
-            }
-          }
+          // if (HostSettingDataSet.records.filter((i) =>
+          // !i.isRemoved).some((i) => !i.get('status'))) {
+          //   const testResult = await handleTestConnect();
+          //   if (!testResult) {
+          //     return false;
+          //   }
+          // }
           const result = setFlagBaseOnParamsSetting(flag, {}, true);
           if (!result.f) {
             axiosData = {
@@ -851,19 +853,17 @@ export default observer(() => {
                         <TextField colSpan={1} name={hostMapping.privatePort.name} />,
                     ]
                   }
-
+                  <Button
+                    funcType="flat"
+                    disabled={deleteHostDisabled(BaseDeployDataSet, HostSettingDataSet)}
+                    icon="delete"
+                    style={{
+                      position: 'relative',
+                      top: 9,
+                    }}
+                    onClick={() => handleDeleteHost(record)}
+                  />
                 </Form>
-                <Button
-                  funcType="flat"
-                  disabled={deleteHostDisabled(BaseDeployDataSet, HostSettingDataSet)}
-                  icon="delete"
-                  style={{
-                    position: 'absolute',
-                    left: BaseDeployDataSet.current.get(mapping.deployMode.name) === deployModeOptionsData[0].value ? '250px' : '450px',
-                    bottom: '30px',
-                  }}
-                  onClick={() => handleDeleteHost(record)}
-                />
                 {renderItemHostStatus(record)}
               </div>
             ))

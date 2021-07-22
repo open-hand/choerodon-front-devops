@@ -283,6 +283,7 @@ export default observer(() => {
             value: Base64.encode(jarValues),
           };
         }
+        ds.jarDeploy.name = ds.appInstanceName;
         ds.jarDeploy.workingPath = ds.workingPath;
       }
     }
@@ -366,6 +367,7 @@ export default observer(() => {
         } else if (hostDeployType === 'image') {
           setImageDeployValues(Base64.decode(metadata.imageDeploy.value));
         } else if (hostDeployType === 'jar') {
+          extra.appInstanceName = metadata.jarDeploy.name;
           setJarValues(Base64.decode(metadata.jarDeploy.value));
         }
       } else if (jobDetail.type === 'cdAudit') {
@@ -837,6 +839,10 @@ export default observer(() => {
             )}
             colSpan={3}
             name="workingPath"
+          />,
+          <TextField
+            colSpan={3}
+            name="appInstanceName"
           />,
           <YamlEditor
             colSpan={6}

@@ -16,7 +16,7 @@ export default (
     textField: 'code',
     lookupAxiosConfig: ({ dataSet }: {
         dataSet: DataSet
-      }) => ({
+      }) => (mainStore.getSelectedEnv?.id ? ({
       url: `/devops/v1/projects/${projectId}/app_service_instances/list_by_service_and_env?app_service_id=${appServiceId}&env_id=${mainStore.getSelectedEnv?.id}`,
       method: 'get',
       transformResponse: (res) => {
@@ -35,7 +35,7 @@ export default (
           return newRes;
         }
       },
-    }),
+    }) : () => []),
   }] as FieldProps[],
   events: {
     update: ({

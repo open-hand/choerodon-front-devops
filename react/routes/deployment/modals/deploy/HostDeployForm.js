@@ -247,7 +247,12 @@ const HostDeployForm = injectIntl(observer(({ getMarketItem, getMarketAndVersion
               colSpan={1}
               addonAfter={getWorkPathTips}
             />,
+            <TextField
+              name="name"
+              colSpan={1}
+            />,
             <YamlEditor
+              newLine
               colSpan={2}
               readOnly={false}
               modeChange={false}
@@ -278,7 +283,12 @@ const HostDeployForm = injectIntl(observer(({ getMarketItem, getMarketAndVersion
                 addonAfter={getWorkPathTips}
                 colSpan={2}
               />,
+              <TextField
+                name="name"
+                colSpan={2}
+              />,
               <YamlEditor
+                newLine
                 colSpan={7}
                 readOnly={false}
                 modeChange={false}

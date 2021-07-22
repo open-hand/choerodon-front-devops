@@ -399,6 +399,7 @@ export default (({
               [mapping.artifactId.value]: data[mapping.artifactId.value],
               [mapping.jarVersion.value]: data[mapping.jarVersion.value],
               [mapping.workPath.value]: data[mapping.workPath.value],
+              name: data.name,
               value: Base64.encode(deployUseStore.getJarYaml),
             };
           }
@@ -419,6 +420,7 @@ export default (({
           } else {
             res.imageInfo = {
               deployObjectId,
+              name: data.name,
               [mapping.workPath.value]: data[mapping.workPath.value],
               value: Base64.encode(deployUseStore.getJarYaml),
             };
@@ -426,7 +428,7 @@ export default (({
         }
         return ({
           url: deployObject === mapping.deployObject.options[0].value
-            ? `/devops/v1/projects/${projectId}/deploy/docker` : `/devops/v1/projects/${projectId}/deploy/host`,
+            ? `/devops/v1/projects/${projectId}/deploy/docker` : `/devops/v1/projects/${projectId}/deploy/java`,
           method: 'post',
           data: res,
         });
@@ -736,6 +738,16 @@ export default (({
           required: ({ record }) => getRequired({ record })
             && (record.get(mapping.deployObject.value) === (mapping.deployObject.options.length > 1 ? mapping.deployObject.options[1].value : '')),
         },
+      },
+      {
+        name: 'name',
+        type: 'string',
+        label: '应用实例名称',
+        dynamicProps: {
+          required: ({ record }) => getRequired({ record })
+            && (record.get(mapping.deployObject.value) === (mapping.deployObject.options.length > 1 ? mapping.deployObject.options[1].value : '')),
+        },
+        maxLength: 64,
       },
       {
         name: mapping.deploySource.value,

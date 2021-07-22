@@ -319,6 +319,16 @@ export default (
       defaultValue: './',
     },
     {
+      name: 'appInstanceName',
+      type: 'string',
+      label: '应用实例名称',
+      dynamicProps: {
+        required: ({ record }) => record.get('type') === 'cdHost'
+          && (record.get('hostDeployType') === 'jar'),
+      },
+      maxLength: 64,
+    },
+    {
       name: 'pipelineTask',
       type: 'string',
       label: '关联构建任务',
