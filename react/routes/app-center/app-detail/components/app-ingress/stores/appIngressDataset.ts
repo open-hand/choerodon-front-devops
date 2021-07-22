@@ -10,10 +10,10 @@ export default ({ projectId, hostId, appServiceId }:any):any => ({
       url: Apis.getAppIngress(projectId, appServiceId, hostId),
       method: 'get',
     },
-    destroy: ({ data: [data] }:any) => ({
-      url: HostConfigApi.dockerDelete(projectId, data.hostId, data.id),
-      method: 'delete',
-    }),
+    // destroy: ({ data: [data] }:any) => ({
+    //   url: HostConfigApi.dockerDelete(projectId, data.hostId, data.id),
+    //   method: 'delete',
+    // }),
   },
   fields: [
     {

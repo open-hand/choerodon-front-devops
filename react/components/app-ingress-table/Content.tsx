@@ -64,14 +64,15 @@ const AppIngress = observer(() => {
     return res;
   }, []);
 
-  const handleDelete = useCallback(({ record: tableRecord }) => {
+  const handleDelete = useCallback(async ({ record: tableRecord }) => {
     const modalProps = {
       title: '删除镜像',
       children: `确定删除镜像“${tableRecord.get('name')}”吗？`,
       okText: formatMessage({ id: 'delete' }),
     };
-    appIngressDataset.delete(tableRecord, modalProps);
-  }, []);
+    const res = await appIngressDataset.delete(tableRecord, modalProps);
+    refresh();
+  }, [appIngressDataset, refresh]);
 
   const renderAction = useCallback(({ record: tableRecord }) => {
     if (!['running', 'exited', 'removed'].includes(tableRecord.get('status'))) {
@@ -90,6 +91,7 @@ const AppIngress = observer(() => {
         actionData.unshift({
           service: ['choerodon.code.project.deploy.host.ps.docker.stop'],
           text: '停止',
+          // @ts-expect-error
           action: () => openStopModal({ record: tableRecord }),
         }, {
           service: ['choerodon.code.project.deploy.host.ps.docker.restart'],
@@ -103,6 +105,7 @@ const AppIngress = observer(() => {
         actionData.unshift({
           service: ['choerodon.code.project.deploy.host.ps.docker.start'],
           text: '启动',
+          // @ts-expect-error
           action: () => handleStart({ record: tableRecord }),
         });
         break;
@@ -119,15 +122,28 @@ const AppIngress = observer(() => {
     return <StatusTag colorCode={tagColor} name={tagName} type="border" />;
   };
 
-  const renderName = ({ record, text }:any) => (
-    <Tooltip
-      title={text}
-    >
-      <span className={`${prefixCls}-name`}>
-        {text}
-      </span>
-    </Tooltip>
-  );
+  const renderName = ({ record, text }:any) => {
+    const devopsHostCommandDTO = record.get('devopsHostCommandDTO');
+    const operateStatus = devopsHostCommandDTO?.status;
+    return (
+      <Tooltip
+        title={text}
+      >
+        <span className={`${prefixCls}-name`}>
+          {text}
+        </span>
+        {!(operateStatus === 'success') && (
+        <StatusTag
+          style={{
+            marginLeft: '5px',
+          }}
+          colorCode={operateStatus}
+          name={operateStatus}
+        />
+        )}
+      </Tooltip>
+    );
+  };
 
   const renderStatus = ({ record, text }:any) => (
     <StatusTag colorCode={text} name={text?.toUpperCase() || 'UNKNOWN'} />
@@ -152,11 +168,11 @@ const AppIngress = observer(() => {
       className="c7ncd-tab-table"
     >
       <Column name="name" renderer={renderName} />
-      <Column name="instanceType" renderer={renderType} />
-      <Column renderer={renderAction} width={60} />
+      <Column renderer={renderAction} width={55} />
+      <Column name="instanceType" renderer={renderType} width={90} />
       <Column name="status" renderer={renderStatus} />
-      <Column name="pid" width={100} />
-      <Column name="ports" width={100} />
+      <Column name="pid" width={80} />
+      <Column name="ports" width={80} />
       <Column name="deployer" renderer={renderUser} />
       <Column name="creationDate" renderer={({ text }) => <TimePopover content={text} />} />
     </Table>

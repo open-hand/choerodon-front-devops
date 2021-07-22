@@ -6,6 +6,7 @@ import { DataSet } from 'choerodon-ui/pro';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
+import HostConfigApi from '../apis';
 
 interface ContextProps {
   prefixCls: string,
@@ -25,6 +26,15 @@ export const StoreProvider = injectIntl(inject('AppState')(
     const {
       AppState: { currentMenuType: { projectId } }, children, appIngressDataset, intl,
     } = props;
+
+    useEffect(() => {
+      if (!appIngressDataset?.transport?.destroy) {
+        appIngressDataset.transport.destroy = ({ data: [data] }:any) => ({
+          url: HostConfigApi.dockerDelete(projectId, data.hostId, data.id),
+          method: 'delete',
+        });
+      }
+    }, [appIngressDataset.transport, projectId]);
 
     const value = {
       ...props,
