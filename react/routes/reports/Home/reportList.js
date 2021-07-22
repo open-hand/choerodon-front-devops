@@ -1,4 +1,4 @@
-import { has, get } from '@choerodon/inject';
+import { has } from '@choerodon/inject';
 
 const deployReportList = [
   {
@@ -14,13 +14,8 @@ const deployReportList = [
   },
 ];
 
-const developReportList = [
+const qualityList = [
   {
-    key: 'submission',
-    link: '/devops/charts/develop/submission',
-    pic: 'submission',
-    title: '代码提交图',
-  }, {
     key: 'table-design-workplace',
     link: '/devops/charts/develop/design-quality-workplace',
     title: '表设计工作台',
@@ -28,6 +23,15 @@ const developReportList = [
     key: 'code-quality-workplace',
     link: '/devops/charts/develop/code-quality-workplace',
     title: '代码质量工作台',
+  },
+];
+
+const developReportList = [
+  {
+    key: 'submission',
+    link: '/devops/charts/develop/submission',
+    pic: 'submission',
+    title: '代码提交图',
   }, {
     key: 'build-number',
     link: '/devops/charts/develop/build-number',
@@ -51,7 +55,7 @@ const developReportList = [
   },
 ];
 
-// has('rdqam:reportList') && developReportList.splice(1, 0, ...get('rdqam:reportList'));
+has('rdqam:tableDesignWorkplace') && developReportList.splice(1, 0, ...qualityList);
 
 const reportListMap = {
   deploy: deployReportList,

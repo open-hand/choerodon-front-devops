@@ -3,20 +3,20 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
-import { asyncRouter, nomatch } from '@choerodon/boot';
+import { nomatch } from '@choerodon/boot';
 import { Charts, PermissionRoute } from '@choerodon/master';
 import { has, get } from '@choerodon/inject';
 import { StoreProvider } from './stores';
 
 const securityGet = (code, notfound = nomatch) => (has(code) ? get(code) : () => notfound);
 
-const SUBMISSION = asyncRouter(() => import('./Submission'));
-const BUILDNUMBER = asyncRouter(() => import('./BuildNumber'));
-const BUILDDURATION = asyncRouter(() => import('./BuildDuration'));
-const PipelineTriggerNumber = asyncRouter(() => import('./PipelineTriggerNumberChart'));
-const PipelineDuration = asyncRouter(() => import('./pipeline-duration'));
-const TableDesignWorkplace = asyncRouter(securityGet('rdqam:tableDesignWorkplace'));
-const CodeQualityWorkplace = asyncRouter(securityGet('rdqam:codeQualityWorkplace'));
+const SUBMISSION = React.lazy(() => import('./Submission'));
+const BUILDNUMBER = React.lazy(() => import('./BuildNumber'));
+const BUILDDURATION = React.lazy(() => import('./BuildDuration'));
+const PipelineTriggerNumber = React.lazy(() => import('./PipelineTriggerNumberChart'));
+const PipelineDuration = React.lazy(() => import('./pipeline-duration'));
+const TableDesignWorkplace = React.lazy(securityGet('rdqam:tableDesignWorkplace'));
+const CodeQualityWorkplace = React.lazy(securityGet('rdqam:codeQualityWorkplace'));
 
 const ReportsIndex = (props) => {
   const { match } = props;
