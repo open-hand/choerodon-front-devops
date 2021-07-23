@@ -11,10 +11,6 @@ import HostConfigServices from './services';
 import './index.less';
 
 const { Column } = Table;
-const modalKey = Modal.key();
-const modalStyle = {
-  width: 'calc(100vw - 3.52rem)',
-};
 
 const AppIngress = observer(() => {
   const {
@@ -31,8 +27,8 @@ const AppIngress = observer(() => {
   const openStopModal = useCallback(({ record: tableRecord }) => {
     Modal.open({
       key: Modal.key(),
-      title: '停止镜像',
-      children: `确定要停止镜像“${tableRecord.get('name')}”吗？`,
+      title: '停止应用实例',
+      children: `确定要停止应用实例“${tableRecord.get('name')}”吗？`,
       okText: '停止',
       onOk: () => handleStop({ record: tableRecord }),
     });
@@ -66,16 +62,23 @@ const AppIngress = observer(() => {
 
   const handleDelete = useCallback(async ({ record: tableRecord }) => {
     const modalProps = {
-      title: '删除镜像',
-      children: `确定删除镜像“${tableRecord.get('name')}”吗？`,
+      title: '删除应用实例',
+      children: `确定删除应用实例“${tableRecord.get('name')}”吗？`,
       okText: formatMessage({ id: 'delete' }),
     };
-    appIngressDataset.setQueryParameter('instanceType', tableRecord.get('instanceType'))
+    appIngressDataset.setQueryParameter('instanceType', tableRecord.get('instanceType'));
     const res = await appIngressDataset.delete(tableRecord, modalProps);
     refresh();
   }, [appIngressDataset, refresh]);
 
   const renderAction = useCallback(({ record: tableRecord }) => {
+    const devopsHostCommandDTO = tableRecord.get('devopsHostCommandDTO');
+    const operateStatus = devopsHostCommandDTO?.status;
+
+    if (operateStatus === 'operating') {
+      return null;
+    }
+
     const status = tableRecord.get('status');
 
     const actionData = [{
