@@ -35,7 +35,13 @@ export const StoreProvider = injectIntl(inject('AppState')(
       const {
         fields, queryFields,
       } = DsBasicObj;
-      appIngressDataset.fields = fields;
+      fields.forEach((item) => {
+        const {
+          name,
+          ...res
+        } = item;
+        appIngressDataset.addField(name, { ...res });
+      });
       appIngressDataset.queryFields = queryFields;
       if (!appIngressDataset?.transport?.destroy) {
         appIngressDataset.transport.destroy = ({ data: [data] }:any) => ({
