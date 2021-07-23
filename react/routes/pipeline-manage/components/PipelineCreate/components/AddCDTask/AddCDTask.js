@@ -88,9 +88,10 @@ export default observer(() => {
     + '# java -jar 后台运行参数会自动添加 不需要在重复添加\n'
     + '# 其余参数可参考可根据需要添加\n'
     + 'java -jar ${jar}\n'
-    + '# 默认工作目录，当前工作目录(./)，jar包下载存放目录为：./temp-jar/xxx.jar 日志存放目录为：./temp-log/xxx.log\n'
-    + '# 填写工作目录，jar包下载存放目录为：工作目录/temp-jar/xxx.jar 日志存放目录为：工作目录/temp-jar/xxx.log\n'
-    + '# 请确保用户有该目录操作权限');
+    + '# 相关文件存放目录：jar包下载目录为$HOME/choerodon/实例id/temp-jar/, 日志存放目录为$HOME/choerodon/实例id/temp-jar/\',\n');
+    // + '# 默认工作目录，当前工作目录(./)，jar包下载存放目录为：./temp-jar/xxx.jar 日志存放目录为：./temp-log/xxx.log\n'
+    // + '# 填写工作目录，jar包下载存放目录为：工作目录/temp-jar/xxx.jar 日志存放目录为：工作目录/temp-jar/xxx.log\n'
+    // + '# 请确保用户有该目录操作权限');
   const [testStatus, setTestStatus] = useState('');
   const [accountKeyValue, setAccountKeyValue] = useState('');
   const [relatedJobOpts, setRelatedJobOpts] = useState([]);
