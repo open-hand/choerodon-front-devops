@@ -70,6 +70,7 @@ const AppIngress = observer(() => {
       children: `确定删除镜像“${tableRecord.get('name')}”吗？`,
       okText: formatMessage({ id: 'delete' }),
     };
+    appIngressDataset.setQueryParameter('instanceType', tableRecord.get('instanceType'))
     const res = await appIngressDataset.delete(tableRecord, modalProps);
     refresh();
   }, [appIngressDataset, refresh]);
@@ -83,7 +84,7 @@ const AppIngress = observer(() => {
       action: () => handleDelete({ record: tableRecord }),
     }];
 
-    if (!status) {
+    if (!status || (['normal_process', 'java_process'].includes(tableRecord.get('instanceType')))) {
       return <Action data={actionData} />;
     }
 
@@ -121,7 +122,7 @@ const AppIngress = observer(() => {
   const renderType = ({ record }:any) => {
     const instanceType = record.get('instanceType');
 
-    const isIntance = instanceType === 'normal_process';
+    const isIntance = (['normal_process', 'java_process'].includes(instanceType));
     const tagName = isIntance ? '实例进程' : 'Docker';
     const tagColor = isIntance ? 'running' : 'success';
     return <StatusTag colorCode={tagColor} name={tagName} type="border" />;
