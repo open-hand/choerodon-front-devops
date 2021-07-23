@@ -50,6 +50,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     prefixCls,
     intlPrefix,
     formatMessage,
+    mainTabKeys: typeTabKeys,
   } = useAppCenterStore();
 
   const tabKeys = useMemo(() => ({
@@ -57,10 +58,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     PROJECT_TAB: 'project',
     SHARE_TAB: 'share',
     MARKET_TAB: 'market',
-  }), []);
-  const typeTabKeys = useMemo(() => ({
-    ENV_TAB: 'env',
-    HOST_TAB: 'host',
   }), []);
 
   const defaultTabKey = useMemo(() => tabKeys.ALL_TAB, []);

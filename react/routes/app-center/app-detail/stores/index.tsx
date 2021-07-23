@@ -49,13 +49,14 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const {
     children,
     AppState: { currentMenuType: { projectId } },
-    match: { params: { id: appServiceId, type: appServiceType } },
+    match: { params: { id: appServiceId, type: appServiceType, typeKey } },
   } = props;
 
   const {
     prefixCls,
     intlPrefix,
     formatMessage,
+    mainTabKeys,
   } = useAppCenterStore();
 
   const tabKeys = useMemo(() => ({
@@ -66,17 +67,12 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     SECRET_TAB: 'secret',
   }), []);
 
-  const mainTabKeys = useMemo(() => ({
-    ENV_TAB: 'env',
-    HOST_TAB: 'host',
-  }), []);
-
   const hostTabKeys = useMemo(() => ({
     APP_INSTANCE_TAB: 'app_instance',
   }), []);
 
   const defaultTabKey = useMemo(() => tabKeys.INSTANCE_TAB, []);
-  const defaultMainTabKey = useMemo(() => mainTabKeys.ENV_TAB, []);
+  const defaultMainTabKey = useMemo(() => typeKey || mainTabKeys.ENV_TAB, [typeKey]);
 
   const mainStore = useStore({ defaultTabKey, defaultMainTabKey });
 

@@ -34,10 +34,10 @@ const ContentList = ({
 
   const handleLinkDetail = useCallback((record) => {
     history.push({
-      pathname: `${pathname}/detail/${record.get('id')}/${record.get('source')}`,
+      pathname: `${pathname}/detail/${record.get('id')}/${record.get('source')}/${mainStore.getCurrentTypeTabKey}`,
       search,
     });
-  }, [search]);
+  }, [search, mainStore.getCurrentTypeTabKey]);
 
   const deleteRelated = useCallback((record: Record) => {
     Modal.open({

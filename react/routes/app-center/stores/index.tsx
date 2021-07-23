@@ -8,6 +8,10 @@ interface ContextProps {
   prefixCls: string,
   intlPrefix: string,
   formatMessage(arg0: object, arg1?: object): string,
+  mainTabKeys: {
+    ENV_TAB: 'env',
+    HOST_TAB: 'host',
+  }
 }
 
 const Store = createContext({} as ContextProps);
@@ -23,11 +27,17 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     AppState: { currentMenuType: { projectId } },
   } = props;
 
+  const mainTabKeys = useMemo(() => ({
+    ENV_TAB: 'env',
+    HOST_TAB: 'host',
+  }), []);
+
   const value = {
     ...props,
     prefixCls: 'c7ncd-app-center',
     intlPrefix: 'c7ncd.appCenter',
     formatMessage,
+    mainTabKeys,
   };
   return (
     <Store.Provider value={value}>
