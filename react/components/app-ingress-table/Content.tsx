@@ -130,23 +130,29 @@ const AppIngress = observer(() => {
   const renderName = ({ record, text }:any) => {
     const devopsHostCommandDTO = record.get('devopsHostCommandDTO');
     const operateStatus = devopsHostCommandDTO?.status;
+    const error = devopsHostCommandDTO?.error;
     return (
-      <Tooltip
-        title={text}
-      >
-        <span className={`${prefixCls}-name`}>
-          {text}
-        </span>
+      <>
+        <Tooltip
+          title={text}
+        >
+          <span className={`${prefixCls}-name`}>
+            {text}
+          </span>
+        </Tooltip>
+        {/* <Tooltip title={error}> */}
         {operateStatus && !(operateStatus === 'success') && (
         <StatusTag
           style={{
             marginLeft: '5px',
           }}
+          ellipsisTitle={error}
           colorCode={operateStatus}
-          name={operateStatus}
+          name={operateStatus === 'operating' ? '执行中' : '失败'}
         />
         )}
-      </Tooltip>
+        {/* </Tooltip> */}
+      </>
     );
   };
 
