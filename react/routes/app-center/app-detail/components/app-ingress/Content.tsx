@@ -1,17 +1,11 @@
 /* eslint-disable max-len */
-import React, { useMemo, useState, useCallback } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
 import AppIngressTable from '@/components/app-ingress-table';
-import { Modal } from 'choerodon-ui/pro';
 import { HeaderButtons } from '@choerodon/master';
 import { useAppIngressStore } from './stores';
 
 import './index.less';
-
-const modalKey = Modal.key();
-const modalStyle = {
-  width: 'calc(100vw - 3.52rem)',
-};
 
 const AppIngress = observer(() => {
   const {

@@ -47,7 +47,7 @@ function ItemNumberByResource({
   const instanceMappings = {
     instanceCount: {
       icon: 'instance_outline',
-      name: 'Instance',
+      name: 'Chart',
     },
     serviceCount: {
       icon: 'router',

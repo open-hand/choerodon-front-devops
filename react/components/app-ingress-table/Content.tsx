@@ -140,7 +140,6 @@ const AppIngress = observer(() => {
             {text}
           </span>
         </Tooltip>
-        {/* <Tooltip title={error}> */}
         {operateStatus && !(operateStatus === 'success') && (
         <StatusTag
           style={{
@@ -151,7 +150,6 @@ const AppIngress = observer(() => {
           name={operateStatus === 'operating' ? '执行中' : '失败'}
         />
         )}
-        {/* </Tooltip> */}
       </>
     );
   };
