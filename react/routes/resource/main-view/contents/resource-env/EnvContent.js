@@ -69,6 +69,14 @@ function ItemNumberByResource({
       icon: 'vpn_key',
       name: 'Secret',
     },
+    workloadCount: {
+      icon: 'swap_horizontal_circle-o',
+      name: 'WorkLoad',
+    },
+    podCount: {
+      icon: 'fiber_manual_record-o',
+      name: 'Pod',
+    },
   };
   return (
     <div className={`${prefixCls}-re-grid-left-item`}>
@@ -92,6 +100,8 @@ const Content = observer(() => {
   const statusCount = useMemo(() => (['runningInstanceCount', 'operatingInstanceCount', 'stoppedInstanceCount', 'failedInstanceCount']), []);
   const resourceCount = useMemo(() => ([
     'instanceCount',
+    'workloadCount',
+    'podCount',
     'serviceCount',
     'ingressCount',
     'certificationCount',

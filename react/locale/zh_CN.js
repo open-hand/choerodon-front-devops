@@ -383,6 +383,8 @@ const deployment = {
   'c7ncd.deployment.resource.instanceCount': '实例',
   'c7ncd.deployment.resource.serviceCount': '网络',
   'c7ncd.deployment.resource.ingressCount': '域名',
+  'c7ncd.deployment.resource.workloadCount': '工作负载',
+  'c7ncd.deployment.resource.podCount': 'Pods',
   'c7ncd.deployment.resource.certificationCount': '证书',
   'c7ncd.deployment.resource.configMapCount': '配置映射',
   'c7ncd.deployment.resource.secretCount': '密文',
