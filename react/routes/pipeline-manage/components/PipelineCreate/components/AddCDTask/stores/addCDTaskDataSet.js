@@ -259,7 +259,7 @@ export default (
       dynamicProps: {
         disabled: ({ record }) => record.get(addCDTaskDataSetMap.hostSource)
           === addCDTaskDataSetMap.alreadyhost,
-        required: ({ record }) => record.get('type') === 'cdHost',
+        // required: ({ record }) => record.get('type') === 'cdHost',
       },
     },
     {
@@ -269,7 +269,7 @@ export default (
       dynamicProps: {
         disabled: ({ record }) => record.get(addCDTaskDataSetMap.hostSource)
           === addCDTaskDataSetMap.alreadyhost,
-        required: ({ record }) => record.get('type') === 'cdHost',
+        // required: ({ record }) => record.get('type') === 'cdHost',
       },
     },
     {
