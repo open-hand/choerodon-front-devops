@@ -199,15 +199,15 @@ const commonField = {
   workload: '工作负载',
 
   // 资源树目录名称
-  instances_group: '实例（Chart）',
-  services_group: '网络（Service）',
-  ingresses_group: '域名（Ingress）',
+  instances_group: '实例',
+  services_group: '网络',
+  ingresses_group: '域名',
   certifications_group: '证书',
-  configMaps_group: '配置映射（ConfigMap）',
-  secrets_group: '密文（Secret）',
+  configMaps_group: '配置映射',
+  secrets_group: '密文',
   customResources_group: '自定义资源',
   pvcs_group: 'PVC',
-  workload_group: '工作负载（Workload）',
+  workload_group: '工作负载',
 };
 
 const deployment = {
