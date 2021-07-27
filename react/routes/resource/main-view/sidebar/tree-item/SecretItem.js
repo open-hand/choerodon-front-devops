@@ -5,9 +5,9 @@ import { injectIntl } from 'react-intl';
 import { Action } from '@choerodon/boot';
 import { Icon } from 'choerodon-ui';
 import { Modal } from 'choerodon-ui/pro';
+import KeyValueModal from '@/components/key-value';
 import { useResourceStore } from '../../../stores';
 import { useMainStore } from '../../stores';
-import KeyValueModal from '../../contents/application/modals/key-value';
 import eventStopProp from '../../../../../utils/eventStopProp';
 import openWarnModal from '../../../../../utils/openWarnModal';
 
@@ -117,11 +117,13 @@ function ConfigItem({
     return <Action placement="bottomRight" data={actionData} onClick={eventStopProp} />;
   }
 
-  return <Fragment>
-    <Icon type="vpn_key" />
-    {name}
-    {getSuffix()}
-  </Fragment>;
+  return (
+    <>
+      <Icon type="vpn_key" />
+      {name}
+      {getSuffix()}
+    </>
+  );
 }
 
 ConfigItem.propTypes = {

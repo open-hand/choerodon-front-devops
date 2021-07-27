@@ -71,7 +71,6 @@ export const StoreProvider = injectIntl(inject('AppState')(
     const { id: envId, connect } = mainStore.getSelectedEnv || {};
 
     const SecretTableDs = useMemo(() => new DataSet(SecretTableDataSet({ formatMessage, envId, projectId })), [envId, projectId]);
-    const formStore = useSecretStore();
 
     const value = {
       ...props,
@@ -79,7 +78,6 @@ export const StoreProvider = injectIntl(inject('AppState')(
         edit: ['choerodon.code.project.deploy.app-deployment.resource.ps.edit-cipher'],
         delete: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-cipher'],
       },
-      formStore,
       SecretTableDs,
       connect,
       envId,

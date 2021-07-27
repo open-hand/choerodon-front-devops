@@ -6,7 +6,8 @@ export default ({
     const pattern = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
     if (value && !pattern.test(value)) {
       return formatMessage({ id: 'network.name.check.failed' });
-    } if (value && pattern.test(value)) {
+    }
+    if (value && pattern.test(value)) {
       try {
         const res = await store.checkName(projectId, envId, value);
         if (res && !res.failed) {
