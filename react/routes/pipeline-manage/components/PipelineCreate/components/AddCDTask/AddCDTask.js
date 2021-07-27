@@ -1317,6 +1317,8 @@ export default observer(() => {
             <Select
               newLine
               colSpan={1}
+              searchable
+              searchMatcher="task_name"
               name={addCDTaskDataSetMap.apiTestMission}
               addonAfter={<Tips helpText="此处仅能从项目下已有的API测试任务中进行选择" />}
             />,
