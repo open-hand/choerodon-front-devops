@@ -219,25 +219,21 @@ const FormView = observer(() => {
     const isValidate = await FormDataSet.validate();
     if (isValidate) {
       const postData = await formValidate();
-      debugger
       if (!postData) {
         return false;
       }
       try {
         const res = await store.postKV(projectId, postData);
-        debugger
         if (handlePromptError(res)) {
           refresh();
           return true;
         }
         return false;
       } catch (error) {
-        debugger
         Choerodon.handleResponseError(error);
         return false;
       }
     } else {
-      debugger
       return false;
     }
   };
