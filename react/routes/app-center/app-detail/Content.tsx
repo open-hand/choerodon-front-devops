@@ -61,7 +61,7 @@ const AppCenterDetailContent = () => {
     if (mainStore.getCurrentMainTabKey === HOST_TAB) {
       return hostTabKeys;
     }
-    return appServiceType === 'project' ? tabKeys : omit(tabKeys, DEPLOYCONFIG_TAB);
+    return appServiceType === 'project' ? tabKeys : omit(tabKeys, 'DEPLOYCONFIG_TAB');
   }, [appServiceType, mainStore.getCurrentMainTabKey]);
 
   const selectPros = useMemo(() => (
