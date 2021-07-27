@@ -76,6 +76,19 @@ const mapping = {
   workPath: {
     value: 'workingPath',
   },
+  hzeroApp: {
+    value: 'hzeroApp',
+  },
+  hzeroAppVersion: {
+    name: 'hzeroAppVersion',
+    type: 'string',
+    label: 'HZERO应用版本',
+  },
+  hzeroServiceVersion: {
+    name: 'hzeroServiceVersion',
+    type: 'string',
+    label: '服务及版本',
+  },
   deploySource: {
     value: 'deploySource',
     options: [{
@@ -438,6 +451,12 @@ export default (({
       },
     },
     fields: [
+      {
+        ...mapping.hzeroAppVersion,
+      },
+      {
+        ...mapping.hzeroServiceVersion,
+      },
       {
         name: mapping.deployWay.value,
         type: 'string',
