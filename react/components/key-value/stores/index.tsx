@@ -4,6 +4,7 @@ import { inject } from 'mobx-react';
 import { DataSet } from 'choerodon-ui/pro';
 import formDataSet from './formDataSet';
 import keyValueDataSet from './keyValueDataSet';
+import useSelectStore from './useSecretStore';
 
 const Store = createContext({} as any);
 
@@ -14,7 +15,6 @@ export function useKeyValueStore() {
 export const StoreProvider = injectIntl(inject('AppState')((props:any) => {
   const {
     id,
-    store,
     intl: { formatMessage },
     AppState: {
       currentMenuType: {
@@ -26,6 +26,8 @@ export const StoreProvider = injectIntl(inject('AppState')((props:any) => {
     title,
   } = props;
 
+  const store = useSelectStore();
+
   const KeyValueDataSet = useMemo(() => new DataSet(keyValueDataSet()), []);
   const FormDataSet = useMemo(() => new DataSet(formDataSet({
     title, id, formatMessage, projectId, envId, store,
@@ -35,6 +37,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props:any) => {
     ...props,
     FormDataSet,
     KeyValueDataSet,
+    store,
   };
 
   return (

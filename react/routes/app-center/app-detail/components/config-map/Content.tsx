@@ -5,8 +5,8 @@ import { Table, Modal } from 'choerodon-ui/pro';
 import { TimePopover } from '@choerodon/components';
 import { TableQueryBarType } from '@/interface';
 import { HeaderButtons } from '@choerodon/master';
+import KeyValueModal from '@/components/key-value';
 import MouserOverWrapper from '../../../../../components/MouseOverWrapper/MouserOverWrapper';
-import KeyValueModal from '../key-value';
 import StatusIcon from '../../../../../components/StatusIcon';
 import { useConfigMapStore } from './stores';
 

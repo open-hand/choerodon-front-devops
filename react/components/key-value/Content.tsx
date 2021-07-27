@@ -18,7 +18,7 @@ import {
 } from './utils';
 import { useKeyValueStore } from './stores';
 
-import '../../../../main.less';
+import '@/routes/main.less';
 import './index.less';
 
 const FormView = observer(() => {
@@ -53,16 +53,17 @@ const FormView = observer(() => {
 
   const [isSubmit, setIsSubmit] = useState(false);
 
-  useEffect(() => {
-    async function callBack() {
-      if (id) {
-        const res = await FormDataSet.query();
-        // @ts-ignore
-        // eslint-disable-next-line max-len
-        const dataSourceCurrent = _.map(res.value, (value:any, key:any) => new ConfigNode(key, value));
-        KeyValueDataSet.loadData(dataSourceCurrent);
-      }
+  async function callBack() {
+    if (id) {
+      const res = await FormDataSet.query();
+      // @ts-ignore
+      // eslint-disable-next-line max-len
+      const dataSourceCurrent = _.map(res.value, (value:any, key:any) => new ConfigNode(key, value));
+      KeyValueDataSet.loadData(dataSourceCurrent);
     }
+  }
+
+  useEffect(() => {
     callBack();
   }, []);
 
@@ -218,21 +219,25 @@ const FormView = observer(() => {
     const isValidate = await FormDataSet.validate();
     if (isValidate) {
       const postData = await formValidate();
+      debugger
       if (!postData) {
         return false;
       }
       try {
         const res = await store.postKV(projectId, postData);
+        debugger
         if (handlePromptError(res)) {
           refresh();
           return true;
         }
         return false;
       } catch (error) {
+        debugger
         Choerodon.handleResponseError(error);
         return false;
       }
     } else {
+      debugger
       return false;
     }
   };
@@ -291,8 +296,7 @@ const FormView = observer(() => {
             handleEnableNext={checkYamlError}
           />
           <div className="c7ncd-config-yaml-tip">
-            {hasValueError && (valueErrorMsg
-          || <FormattedMessage id="configMap.yaml.error" />)}
+            {hasValueError && (valueErrorMsg || <FormattedMessage id="configMap.yaml.error" />)}
           </div>
         </>
       );
@@ -377,12 +381,10 @@ const FormView = observer(() => {
         <Form dataSet={FormDataSet} className="c7n-sidebar-form" layout="vertical">
           <TextField
             name="name"
-            // autoFocus={!id}
             disabled={!!id}
           />
           <TextArea
             name="description"
-            // autoFocus={!!id}
             autosize={{ minRows: 2 }}
           />
         </Form>

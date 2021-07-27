@@ -10,8 +10,8 @@ import { TimePopover } from '@choerodon/components';
 import MouserOverWrapper from '@/components/MouseOverWrapper/MouserOverWrapper';
 // import { useResourceStore } from '../../../stores';
 import StatusIcon from '@/components/StatusIcon';
+import KeyValueModal from '@/components/key-value';
 import { useSecretsStore } from './stores';
-import KeyValueModal from '../key-value';
 // import { useMainStore } from '../../stores';
 
 import './index.less';
@@ -106,7 +106,6 @@ const ConfigMap = observer((props) => {
         title="cipher"
         id={id}
         envId={envId}
-        store={formStore}
         intlPrefix={intlPrefix}
         refresh={refresh}
       />,
