@@ -27,7 +27,9 @@ export default ({ projectId, searchDs, mainStore }: ListProps): DataSetProps => 
   events: {
     load: ({ dataSet }: { dataSet: DataSet }) => {
       const record = dataSet.get(0);
-      if (record) {
+      const { id: selectedId } = mainStore.getSelectedHost || {};
+      const selectedRecord = selectedId ? dataSet.some((eachRecord) => eachRecord.get('id') === selectedId) : null;
+      if (!selectedRecord && record) {
         mainStore.setSelectedHost(record.toData());
       }
     },

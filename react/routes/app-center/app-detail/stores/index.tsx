@@ -71,7 +71,9 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     APP_INSTANCE_TAB: 'app_instance',
   }), []);
 
-  const defaultTabKey = useMemo(() => tabKeys.INSTANCE_TAB, []);
+  const defaultTabKey = useMemo(() => (
+    typeKey === mainTabKeys.HOST_TAB ? hostTabKeys.APP_INSTANCE_TAB : tabKeys.INSTANCE_TAB
+  ), [typeKey]);
   const defaultMainTabKey = useMemo(() => typeKey || mainTabKeys.ENV_TAB, [typeKey]);
 
   const mainStore = useStore({ defaultTabKey, defaultMainTabKey });
