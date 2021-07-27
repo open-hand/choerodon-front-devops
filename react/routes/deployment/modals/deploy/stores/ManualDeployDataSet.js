@@ -469,7 +469,10 @@ export default (({
         label: '主机名称',
         textField: 'name',
         valueField: 'id',
-        required: true,
+        dynamicProps: {
+          required: ({ record }) => record.get(mapping.deployWay.value)
+            === mapping.deployWay.options[1].value,
+        },
         lookupAxiosConfig: () => ({
           method: 'post',
           url: `/devops/v1/projects/${projectId}/hosts/page_by_options?random=${random}`,
