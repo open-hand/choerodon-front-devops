@@ -19,7 +19,7 @@ const ContentList = ({
 }: { openDeploy(data?: { appServiceSource: string, appServiceId: string }): void }) => {
   const {
     prefixCls, intlPrefix, formatMessage,
-    listDs, tabKeys: { MARKET_TAB, PROJECT_TAB, SHARE_TAB },
+    listDs, tabKeys: { MARKET_TAB, PROJECT_TAB, SHARE_TAB, HZERO_TAB },
     mainStore, typeTabKeys: { HOST_TAB },
   } = useAppCenterListStore();
 
@@ -76,7 +76,7 @@ const ContentList = ({
   }, []);
 
   const getActionData = useCallback((record: Record) => {
-    if (mainStore.getCurrentTypeTabKey === HOST_TAB) {
+    if (mainStore.getCurrentTypeTabKey === HOST_TAB || record.get('source') === HZERO_TAB) {
       return null;
     }
     const appServiceSource = {
