@@ -1,13 +1,34 @@
 import React from 'react';
-import { StoreProvider } from './stores';
-import Content from './Content';
+import { observer } from 'mobx-react-lite';
+import { CardPagination } from '@choerodon/components';
+import HostsItem from './components/hostItem';
+import { useHostConfigStore } from '../../stores';
 
-import './index.less';
+const ContentList: React.FC<any> = observer(({
+  handleCreateDeployHost,
+}): any => {
+  const {
+    prefixCls, listDs,
+  } = useHostConfigStore();
 
-const HostConfigIndex = (props: any) => (
-  <StoreProvider {...props}>
-    <Content />
-  </StoreProvider>
-);
+  return (
+    <div className={`${prefixCls}-content-list-over ${prefixCls}-content-list-deploy`}>
+      <div className={`${prefixCls}-content-list`}>
+        {listDs.map((record) => (
+          <HostsItem
+            {...record.data}
+            record={record}
+            listDs={listDs}
+            handleCreateDeployHost={handleCreateDeployHost}
+          />
+        ))}
+      </div>
+      <CardPagination
+        className={`${prefixCls}-content-pagination`}
+        dataSet={listDs}
+      />
+    </div>
+  );
+});
 
-export default HostConfigIndex;
+export default ContentList;

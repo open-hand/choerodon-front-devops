@@ -1,17 +1,22 @@
 import React, { useCallback, useMemo } from 'react';
-
 import { Action } from '@choerodon/boot';
-import UserInfo from '@/components/userInfo';
-import TimePopover from '@/components/timePopover';
 import { Tooltip, Modal } from 'choerodon-ui/pro';
+import classnames from 'classnames';
+import { observer } from 'mobx-react-lite';
+import { UserInfo, TimePopover } from '@choerodon/components';
+import HostConnect from '@/routes/host-config/components/connect-host';
+import { SMALL } from '@/utils/getModalWidth';
+import HostConfigApis from '@/routes/host-config/apis/DeployApis';
 import StatusTagOutLine from '../../components/statusTagOutLine';
 import eventStopProp from '../../../../../../utils/eventStopProp';
 import { useHostConfigStore } from '../../../../stores';
-import CreateHost from '../../../create-host';
 import DeleteCheck from '../deleteCheck';
-import apis from '../../../../apis';
 
-const HostsItem:React.FC<any> = ({
+import './index.less';
+
+const commandModalKey = Modal.key();
+
+const HostsItem:React.FC<any> = observer(({
   sshPort, // 主机ssh的端口
   hostStatus, // 主机状态
   hostIp, // 主机ip
@@ -27,6 +32,8 @@ const HostsItem:React.FC<any> = ({
   updaterInfo,
   listDs,
   record,
+  handleCreateTestHost,
+  handleCreateDeployHost,
 }) => {
   const {
     prefixCls,
@@ -35,44 +42,18 @@ const HostsItem:React.FC<any> = ({
     refresh,
     projectId,
     mainStore,
+    appInstanceTableDs,
+    usageDs,
   } = useHostConfigStore();
 
-  const type = mainStore.getCurrentTabKey; // 主机类型 deploy / distribute_test
+  const itemClassName = useMemo(() => classnames({
+    [`${prefixCls}-content-list-item`]: true,
+    [`${prefixCls}-content-list-item-selected`]: mainStore.getSelectedHost?.id === id,
+  }), [hostStatus, mainStore.getSelectedHost, id]);
 
-  const getMainStatus = useMemo(() => {
-    if (type === 'deploy') {
-      return hostStatus;
-    }
-    if (type === 'distribute_test') {
-      if (jmeterStatus === 'occupied') {
-        return 'occupied';
-      }
-      if (jmeterStatus === 'success' && hostStatus === 'success') {
-        return 'success';
-      }
-      if (jmeterStatus === 'failed' || hostStatus === 'failed') {
-        return 'failed';
-      }
-      return 'operating';
-    }
-    return 'operating';
-  }, [jmeterStatus, hostStatus]);
-
-  const handleCorrect = async ():Promise<void> => {
+  async function deleteRecord():Promise<boolean> {
     try {
-      const res = await apis.batchCorrect(projectId, [id], type);
-      if (res && res.failed) {
-        return;
-      }
-      refresh();
-    } catch (e) {
-      throw new Error(e);
-    }
-  };
-
-  async function deleteRerord():Promise<boolean> {
-    try {
-      const res = await apis.getDeleteHostUrl(projectId, id, type);
+      const res = await HostConfigApis.getDeleteHostUrl(projectId, id);
       if (res && res.failed) {
         return false;
       }
@@ -86,131 +67,112 @@ const HostsItem:React.FC<any> = ({
   async function handleDelete() {
     const modalProps = {
       key: Modal.key(),
+      title: '删除主机',
       children: <DeleteCheck
         formatMessage={formatMessage}
         hostId={id}
         projectId={projectId}
-        handleDelete={deleteRerord}
-        hostType={type}
+        handleDelete={deleteRecord}
       />,
       footer: null,
     };
     Modal.open(modalProps);
   }
 
-  function handleModify() {
+  const openConnectModal = useCallback(() => {
     Modal.open({
-      key: Modal.key(),
-      title: formatMessage({ id: `${intlPrefix}.modify` }),
-      style: {
-        width: 380,
-      },
+      key: commandModalKey,
+      title: formatMessage({ id: `${intlPrefix}.connect` }),
+      children: <HostConnect hostId={id} />,
+      style: { width: SMALL },
       drawer: true,
-      children: <CreateHost hostId={id} refresh={refresh} hostType={type} />,
-      okText: formatMessage({ id: 'save' }),
     });
-  }
+  }, [id]);
 
-  const getActionData = useCallback(() => (getMainStatus !== 'operating' || getMainStatus !== 'occupied' ? [
-    {
-      service: ['choerodon.code.project.deploy.host.ps.correct'],
-      text: '校准状态',
-      action: handleCorrect,
-    },
-    {
-      service: ['choerodon.code.project.deploy.host.ps.edit'],
-      text: '修改',
-      action: handleModify,
-    },
-    {
-      service: ['choerodon.code.project.deploy.host.ps.delete'],
-      text: formatMessage({ id: 'delete' }),
-      action: handleDelete,
-    },
-  ] : []), [getMainStatus, handleCorrect, handleDelete, handleModify]);
+  const handleSelect = useCallback(() => {
+    if (mainStore.getSelectedHost?.id !== id) {
+      if (hostStatus === 'connected') {
+        appInstanceTableDs.setQueryParameter('host_id', id);
+        usageDs.setQueryParameter('hostId', id);
+        appInstanceTableDs.query();
+        usageDs.query();
+      } else {
+        usageDs.removeAll();
+        appInstanceTableDs.removeAll();
+      }
+      mainStore.setSelectedHost(record.toData());
+    }
+  }, [hostStatus, record, id, mainStore.getSelectedHost, hostStatus]);
+
+  const getActionData = useCallback(() => {
+    const actionData = [
+      {
+        service: ['choerodon.code.project.deploy.host.ps.edit'],
+        text: formatMessage({ id: 'edit' }),
+        action: () => handleCreateDeployHost(id),
+      },
+    ];
+    if (hostStatus === 'disconnect') {
+      actionData.unshift({
+        service: ['choerodon.code.project.deploy.host.ps.connect'],
+        text: formatMessage({ id: `${intlPrefix}.connect` }),
+        action: openConnectModal,
+      });
+      actionData.push({
+        service: ['choerodon.code.project.deploy.host.ps.delete'],
+        text: formatMessage({ id: 'delete' }),
+        action: handleDelete,
+      });
+    }
+    return actionData;
+  }, [hostStatus, handleDelete, id]);
 
   return (
-    <div className={`${prefixCls}-content-list-item`}>
+    <div className={itemClassName} onClick={handleSelect} role="none">
       <div className={`${prefixCls}-content-list-item-header`}>
-        <div className={`${prefixCls}-content-list-item-header-left`}>
-          <div className={`${prefixCls}-content-list-item-header-left-top`}>
-            <StatusTagOutLine status={getMainStatus} />
-            <Tooltip title={name} placement="top">
-              <span className={`${prefixCls}-content-list-item-header-left-top-name`}>
-                {name}
-              </span>
-            </Tooltip>
-          </div>
-          <div className={`${prefixCls}-content-list-item-header-left-bottom`}>
-            <div>
-              <UserInfo
-                name={updaterInfo?.ldap ? `${updaterInfo?.realName}(${updaterInfo?.loginName})` : `${updaterInfo?.loginName}(${updaterInfo?.email})`}
-                showName={false}
-                avatar={updaterInfo?.imageUrl}
-              />
-            </div>
-            <div>
-              <span>更新于</span>
-              <TimePopover
-                style={{
-                  marginLeft: '4px',
-                  fontSize: '12px',
-                  fontFamily: 'PingFangSC-Regular, PingFang SC',
-                  fontWeight: 400,
-                  color: 'rgba(58, 52, 95, 0.65)',
-                }}
-                content={lastUpdateDate}
-              />
-            </div>
-          </div>
+        <div className={`${prefixCls}-content-list-item-header-left-top`}>
+          <StatusTagOutLine status={hostStatus} />
+          <Tooltip title={name} placement="top">
+            <span className={`${prefixCls}-content-list-item-header-left-top-name`}>
+              {name}
+            </span>
+          </Tooltip>
         </div>
-        {getMainStatus !== 'operating' && getMainStatus !== 'occupied' && (
-          <div className={`${prefixCls}-content-list-item-header-right`}>
-            <Action
-              data={getActionData()}
-              onClick={eventStopProp}
-              style={{
-                color: '#5365EA',
-                marginRight: '4px',
-              }}
-            />
-          </div>
-        )}
+        <div className={`${prefixCls}-content-list-item-header-right`}>
+          <Action
+            data={getActionData()}
+            onClick={eventStopProp}
+            style={{
+              color: '#5365EA',
+              marginRight: '4px',
+            }}
+          />
+        </div>
       </div>
       <main className={`${prefixCls}-content-list-item-main`}>
         <div className={`${prefixCls}-content-list-item-main-item`}>
           <span>
-            IP与端口
+            更新者
           </span>
           <span>
-            {hostIp && sshPort ? `${hostIp}：${sshPort}` : '-'}
+            <UserInfo
+              realName={updaterInfo?.realName}
+              loginName={updaterInfo?.ldap ? updaterInfo?.loginName : updaterInfo?.email}
+              avatar={updaterInfo?.imageUrl}
+            />
           </span>
         </div>
-        {
-          type === 'distribute_test' && (
-            <>
-              <div className={`${prefixCls}-content-list-item-main-item`}>
-                <span>
-                  Jmeter端口
-                </span>
-                <span>
-                  {jmeterPort}
-                </span>
-              </div>
-              <div className={`${prefixCls}-content-list-item-main-item`}>
-                <span>
-                  Jmeter路径
-                </span>
-                <span>
-                  {jmeterPath}
-                </span>
-              </div>
-            </>
-          )
-        }
+        <div className={`${prefixCls}-content-list-item-main-item`}>
+          <span>
+            更新时间
+          </span>
+          <span>
+            <TimePopover content={lastUpdateDate} />
+          </span>
+        </div>
       </main>
     </div>
   );
-};
+});
 
 export default HostsItem;

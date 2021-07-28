@@ -173,7 +173,8 @@ const Deployment = withRouter(observer((props) => {
   function deployAfter(instance, type = 'instance') {
     const { history, location: { search } } = props;
     if (instance.config) {
-      history.push(`/devops/deployment-operation${search}`);
+      // history.push(`/devops/deployment-operation${search}`);
+      refresh();
     } else {
       history.push({
         pathname: '/devops/resource',
@@ -293,13 +294,17 @@ const Deployment = withRouter(observer((props) => {
     const deployMode = record.get('deployMode');
     const deployPayloadName = record.get('deployPayloadName');
     return (
-      <span>
+      <span className="c7ncd-deploy-content-deployType">
         <StatusTag
           color={deployMode === 'host' ? 'rgb(142, 187, 252)' : 'rgb(116, 217, 221)'}
           name={deployMode === 'host' ? '主机' : '环境'}
           style={statusTagsStyle}
         />
-        {deployPayloadName}
+        <Tooltip title={deployPayloadName}>
+          <span className="c7ncd-deploy-content-deployType-name">
+            {deployPayloadName}
+          </span>
+        </Tooltip>
       </span>
     );
   };

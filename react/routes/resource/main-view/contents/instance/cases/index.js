@@ -91,7 +91,6 @@ const InstanceEvent = ({
           <Tooltip title={formatMessage({ id: `${intlPrefix}.instance.cases.fullScreen` })}>
             <Button
               className="c7ncd-term-fullscreen-button"
-              type="primary"
               funcType="flat"
               shape="circle"
               icon="fullscreen"

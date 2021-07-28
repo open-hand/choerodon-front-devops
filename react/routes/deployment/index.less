@@ -9,6 +9,18 @@
 .c7ncd-deploy-content {
   padding-top: 0;
 
+  &-deployType {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    &-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
   &-deployObjectP {
     margin-bottom: 2px;
     overflow: hidden;

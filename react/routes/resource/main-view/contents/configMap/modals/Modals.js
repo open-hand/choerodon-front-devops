@@ -2,10 +2,10 @@ import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
 import { HeaderButtons } from '@choerodon/master';
+import KeyValueModal from '@/components/key-value';
 import { useResourceStore } from '../../../../stores';
 import { useModalStore } from './stores';
 import { useKeyValueStore } from '../stores';
-import KeyValueModal from '../../application/modals/key-value/KeyValueProIndex';
 
 const modalKey = Modal.key();
 const modalStyle = {

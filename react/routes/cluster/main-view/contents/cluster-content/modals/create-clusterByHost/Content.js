@@ -59,9 +59,6 @@ function CreateClusterHostForm() {
       title: '注意',
       children:
         '您创建的集群中Etcd类型节点为偶数个，Etcd官方建议Etcd集群服务器个数为奇数个（比如1、3、5）以防止脑裂',
-      cancelProps: {
-        color: 'dark',
-      },
       footer: (okbtn, cancelBtn) => (
         <div>
           <Button

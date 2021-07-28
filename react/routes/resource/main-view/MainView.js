@@ -1,5 +1,6 @@
 import React, {
   useRef, lazy, Suspense, useMemo,
+  useEffect,
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
@@ -34,6 +35,7 @@ const ConfigMapDetail = lazy(() => import('./contents/config-detail'));
 const SecretDetail = lazy(() => import('./contents/secret-detail'));
 const ServiceDetail = lazy(() => import('./contents/service-detail'));
 const PVCContent = lazy(() => import('./contents/pvc'));
+const WorkloadContent = lazy(() => import('./contents/workload'));
 
 const EmptyShown = lazy(() => import('./contents/empty'));
 
@@ -63,6 +65,7 @@ const MainView = observer(() => {
       IST_GROUP,
       PVC_ITEM,
       PVC_GROUP,
+      WORKLOAD_GROUP,
     },
     treeDs,
     intl: { formatMessage },
@@ -70,8 +73,12 @@ const MainView = observer(() => {
   const { mainStore } = useMainStore();
   const rootRef = useRef(null);
 
-  const { getSelectedMenu: { parentId } } = resourceStore;
+  const { getSelectedMenu: { parentId }, getSelectedMenu } = resourceStore;
   const { getDeleteArr } = mainStore;
+
+  useEffect(() => {
+    console.log(getSelectedMenu);
+  }, [getSelectedMenu]);
 
   const deleteModals = useMemo(() => (
     map(getDeleteArr, ({
@@ -114,6 +121,7 @@ const MainView = observer(() => {
       [CIPHER_ITEM]: <SecretDetail />,
       [SERVICES_ITEM]: <ServiceDetail />,
       [PVC_GROUP]: <PVCContent />,
+      [WORKLOAD_GROUP]: <WorkloadContent />,
     };
     return cmMaps[itemType]
       ? <Suspense fallback={<Loading display />}>{cmMaps[itemType]}</Suspense>

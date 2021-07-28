@@ -1,21 +1,21 @@
-/* eslint-disable import/no-anonymous-default-export */
-import { DataSetProps } from 'choerodon-ui/pro/lib/data-set/DataSet';
+import { DataSetProps, DataSet } from '@/interface';
 
 interface ListProps {
-  projectId: number,
+  statusDs: DataSet,
 }
 
-export default ({ projectId }: ListProps): DataSetProps => ({
+export default ({ statusDs }: ListProps): DataSetProps => ({
   autoCreate: true,
   selection: false,
   fields: [
     {
-      name: 'params',
+      name: 'search_param',
     },
     {
-      name: 'status',
+      name: 'host_status',
       textField: 'text',
       valueField: 'value',
+      options: statusDs,
     },
   ],
 });

@@ -6,21 +6,18 @@ import {
 import TimePopover from '../../../../../components/time-popover';
 import UserInfo from '../../../../../components/userInfo';
 import ClickText from '../../../../../components/click-text';
-import DeployConfigForm from './modals/deploy-config';
+import DeployConfigForm from '../../../../../components/deploy-config-form';
 import { isNotRunning } from '../../../util';
 import { handlePromptError } from '../../../../../utils';
 import { useEnvironmentStore } from '../../../stores';
 import { useDetailStore } from './stores';
+import { LARGE } from '../../../../../utils/getModalWidth';
 
 const { Column } = Table;
 const deleteModalKey = Modal.key();
 const modifyModalKey = Modal.key();
 
 export default function DeployConfig() {
-  const configModalStyle = useMemo(() => ({
-    width: 'calc(100vw - 3.52rem)',
-    minWidth: '2rem',
-  }), []);
   const {
     intlPrefix,
     prefixCls,
@@ -59,8 +56,6 @@ export default function DeployConfig() {
           children: formatMessage({ id: `${intlPrefix}.config.delete.des` }),
           okText: formatMessage({ id: 'delete' }),
           onOk: () => handleDelete(record),
-          okProps: { color: 'red' },
-          cancelProps: { color: 'dark' },
           footer: ((okBtn, cancelBtn) => (
             <>
               {okBtn}
@@ -103,37 +98,22 @@ export default function DeployConfig() {
     }
   }
 
-  function openModifyModal(record) {
+  const openModifyModal = (record) => {
     const valueId = record.get('id');
     const { id: envId } = getSelectedMenu;
-    configFormDs.transport.read = {
-      url: `/devops/v1/projects/${projectId}/deploy_value?value_id=${valueId}`,
-      method: 'get',
-    };
-    configFormDs.query();
 
     Modal.open({
-      drawer: true,
       key: modifyModalKey,
-      style: configModalStyle,
+      style: { width: LARGE },
       title: formatMessage({ id: `${intlPrefix}.modify.config` }),
+      drawer: true,
       children: <DeployConfigForm
-        isModify
-        store={detailStore}
-        dataSet={configFormDs}
-        refresh={refresh}
         envId={envId}
-        intlPrefix={intlPrefix}
-        prefixCls={prefixCls}
+        refresh={refresh}
+        deployConfigId={valueId}
       />,
-      afterClose: () => {
-        configFormDs.transport.read = null;
-        configFormDs.reset();
-        detailStore.setValue('');
-      },
-      okText: formatMessage({ id: 'save' }),
     });
-  }
+  };
 
   function renderName({ value, record }) {
     return (

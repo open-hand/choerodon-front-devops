@@ -298,8 +298,6 @@ function Branch(props) {
       title: formatMessage({ id: 'branch.action.delete.title' }, { name }),
       children: formatMessage({ id: 'branch.delete.tooltip' }),
       okText: formatMessage({ id: 'delete' }),
-      okProps: { color: 'red' },
-      cancelProps: { color: 'dark' },
     };
     tableDs.delete(record, deleteModal);
   };

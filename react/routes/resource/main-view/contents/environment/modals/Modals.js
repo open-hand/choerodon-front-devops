@@ -1,19 +1,21 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { HeaderButtons } from '@choerodon/master';
 import { Modal } from 'choerodon-ui/pro';
 import EnvDetail from '../../../../../../components/env-detail';
-import LinkService from './link-service';
+import LinkService from '../../../../../app-center/app-list/components/link-service';
 import PermissionPage from './permission';
 import { useResourceStore } from '../../../../stores';
 import { useEnvironmentStore } from '../stores';
+import { useMainStore } from '../../../stores';
 import { useModalStore } from './stores';
 import Tips from '../../../../../../components/new-tips';
-import DeployConfigForm from './deploy-config';
+import DeployConfigForm from '../../../../../../components/deploy-config-form';
 import Deploy from '../../../../../deployment/modals/deploy';
 import BatchDeploy from '../../../../../deployment/modals/batch-deploy';
 
 import '../../../../../../components/dynamic-select/style/index.less';
+import { SMALL } from '../../../../../../utils/getModalWidth';
 
 const modalKey1 = Modal.key();
 const modalKey2 = Modal.key();
@@ -34,12 +36,24 @@ const EnvModals = observer(() => {
     intlPrefix,
     prefixCls,
     intl: { formatMessage },
-    resourceStore: { getSelectedMenu: { id } },
+    resourceStore: { getSelectedMenu: { id, name } },
     AppState: { currentMenuType: { id: projectId } },
     treeDs,
     resourceStore,
     itemTypes,
   } = useResourceStore();
+
+  const {
+    mainStore,
+    mainStore: {
+      autoDeployMsg: {
+        existAutoDeploy = false,
+        autoDeployStatus = false,
+      },
+      handleAutoDeployStatus,
+    },
+  } = useMainStore();
+
   const intlPrefixDeploy = 'c7ncd.deploy';
   const {
     envStore,
@@ -53,7 +67,6 @@ const EnvModals = observer(() => {
     gitopsLogDs,
     gitopsSyncDs,
     baseInfoDs,
-    configFormDs,
     configDs,
     polarisNumDS,
     istSummaryDs,
@@ -66,10 +79,6 @@ const EnvModals = observer(() => {
     nonePermissionDs,
     deployStore,
   } = ModalStores;
-
-  function linkServices(data) {
-    return modalStore.addService(projectId, id, data);
-  }
 
   function refresh() {
     baseInfoDs.query();
@@ -131,26 +140,22 @@ const EnvModals = observer(() => {
     });
   }
 
-  function openLinkService() {
+  const openLinkService = useCallback(() => {
     Modal.open({
       key: modalKey2,
       title: <Tips
         helpText={formatMessage({ id: `${intlPrefix}.service.tips` })}
         title={formatMessage({ id: `${intlPrefix}.modal.service.link` })}
       />,
-      style: modalStyle,
+      style: { width: SMALL },
       drawer: true,
       className: 'c7ncd-modal-wrapper',
       children: <LinkService
-        store={modalStore}
-        tree={treeDs}
-        onOk={linkServices}
-        intlPrefix={intlPrefix}
-        prefixCls={prefixCls}
-        modalStores={ModalStores}
+        refresh={() => treeDs.query()}
+        envId={id}
       />,
     });
-  }
+  }, [id]);
 
   function openPermission() {
     const modalPorps = {
@@ -179,13 +184,6 @@ const EnvModals = observer(() => {
     });
   }
 
-  function toPermissionTab() {
-    const { getTabKey } = envStore;
-    baseInfoDs.query();
-    envStore.setTabKey(ASSIGN_TAB);
-    getTabKey === ASSIGN_TAB && permissionsDs.query();
-  }
-
   function linkToConfig() {
     const record = baseInfoDs.current;
     const url = record && record.get('gitlabUrl');
@@ -193,24 +191,15 @@ const EnvModals = observer(() => {
   }
 
   function openConfigModal() {
-    configFormDs.create();
     Modal.open({
       key: configKey,
       title: formatMessage({ id: `${intlPrefix}.create.config` }),
       children: <DeployConfigForm
-        store={envStore}
-        dataSet={configFormDs}
         refresh={refresh}
         envId={id}
-        intlPrefix={intlPrefix}
-        prefixCls={prefixCls}
       />,
       drawer: true,
       style: configModalStyle,
-      afterClose: () => {
-        configFormDs.reset();
-        envStore.setValue('');
-      },
       okText: formatMessage({ id: 'create' }),
     });
   }
@@ -260,6 +249,15 @@ const EnvModals = observer(() => {
     });
   }
 
+  async function handleCloseAutoDeployModal() {
+    Modal.open({
+      title: autoDeployStatus ? '停用自动部署' : '启用自动部署',
+      onOk: () => handleAutoDeployStatus(id, projectId, refresh),
+      children: autoDeployStatus ? `确定要停用环境“${name}”下所有的自动部署任务吗？停用后，所有应用流水线中该环境的自动部署任务将不再执行。需要您在此手动开启后，才会继续生效。` : `是否要启用“${name}”环境的自动部署？`,
+      okText: autoDeployStatus ? '停用' : '启用',
+    });
+  }
+
   function getButtons() {
     const record = baseInfoDs.current;
     const notReady = !record;
@@ -304,16 +302,28 @@ const EnvModals = observer(() => {
       disabled: notReady,
     }, {
       disabled: notReady,
-      name: formatMessage({ id: `${intlPrefix}.modal.env-detail` }),
-      icon: 'find_in_page-o',
-      handler: openEnvDetail,
-      display: true,
-    }, {
-      disabled: notReady,
       name: formatMessage({ id: `${intlPrefix}.environment.config-lab` }),
       icon: 'account_balance',
       handler: linkToConfig,
       display: true,
+    }, {
+      name: '更多操作',
+      groupBtnItems: [
+        {
+          disabled: notReady,
+          name: formatMessage({ id: `${intlPrefix}.modal.env-detail` }),
+          handler: openEnvDetail,
+        },
+        {
+          permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.autoDeploy'],
+          disabled: !existAutoDeploy,
+          tooltipsConfig: {
+            title: !existAutoDeploy && '流水线中没有该环境下的自动部署任务',
+          },
+          name: autoDeployStatus ? '停用自动部署' : '开启自动部署',
+          handler: handleCloseAutoDeployModal,
+        },
+      ],
     }, {
       icon: 'refresh',
       handler: refresh,

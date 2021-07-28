@@ -342,8 +342,6 @@ const ListView = withRouter(observer((props) => {
       title: formatMessage({ id: `${intlPrefix}.delete.title` }, { name: record.get('name') }),
       children: formatMessage({ id: `${intlPrefix}.delete.des` }),
       okText: formatMessage({ id: 'delete' }),
-      okProps: { color: 'red' },
-      cancelProps: { color: 'dark' },
     };
     const res = await listDs.delete(record, modalProps);
     if (res && res.success) {
@@ -521,7 +519,7 @@ const ListView = withRouter(observer((props) => {
                           }
                         </p>
                       </div>
-                      <div className="c7ncd-appService-item-center-line">
+                      <div className="c7ncd-appService-item-center-line" style={{ justifyContent: 'flex-end' }}>
                     <span
                       className="c7ncd-appService-item-center-line-updateUserName"
                       style={{
@@ -589,7 +587,7 @@ const ListView = withRouter(observer((props) => {
   }
 
   return (
-    <Page service={listPermissions}>
+    <>
       {getHeader()}
       <Breadcrumb
         {
@@ -630,7 +628,7 @@ const ListView = withRouter(observer((props) => {
           )
         }
       </Content>
-    </Page>
+    </>
   );
 }));
 

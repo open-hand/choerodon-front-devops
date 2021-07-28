@@ -83,8 +83,6 @@ const pvcContent = observer((props) => {
       title: formatMessage({ id: `${intlPrefix}.pvc.delete.title` }, { name: record.get('name') }),
       children: formatMessage({ id: `${intlPrefix}.pvc.delete.des` }),
       okText: formatMessage({ id: 'delete' }),
-      okProps: { color: 'red' },
-      cancelProps: { color: 'dark' },
     };
     tableDs.delete(record, modalProps);
   }

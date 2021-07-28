@@ -5,6 +5,7 @@ import { injectIntl } from 'react-intl';
 import { Action } from '@choerodon/boot';
 import { Icon } from 'choerodon-ui';
 import { Modal } from 'choerodon-ui/pro';
+import { StatusTag } from '@choerodon/components';
 import { useResourceStore } from '../../../stores';
 import EditNetwork from '../../contents/network/modals/network-operation';
 import { useMainStore } from '../../stores';
@@ -117,11 +118,23 @@ function NetworkItem({
     return <Action placement="bottomRight" data={actionData} onClick={eventStopProp} />;
   }
 
-  return <Fragment>
-    <Icon type="router" />
-    {name}
-    {getSuffix()}
-  </Fragment>;
+  return (
+    <>
+      <Icon type="router" />
+      {name}
+      {record.get('instanceId') && (
+      <StatusTag
+        style={{
+          marginLeft: '5px',
+        }}
+        type="border"
+        colorCode="operating"
+        name="Chart资源"
+      />
+      )}
+      {!record.get('instanceId') && getSuffix()}
+    </>
+  );
 }
 
 NetworkItem.propTypes = {

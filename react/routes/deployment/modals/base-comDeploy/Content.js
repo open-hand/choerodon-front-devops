@@ -217,12 +217,13 @@ export default observer(() => {
         const baseValid = await BaseDeployDataSet.validate();
         const hostValid = await HostSettingDataSet.validate();
         if (baseValid && hostValid) {
-          if (HostSettingDataSet.records.some((i) => !i.get(hostMapping.status.name) || i.get(hostMapping.status.name) !== 'success')) {
-            const result = await handleTestConnect();
-            if (!result) {
-              return false;
-            }
-          }
+          // if (HostSettingDataSet.records.some((i) =>
+          // !i.get(hostMapping.status.name) || i.get(hostMapping.status.name) !== 'success')) {
+          //   const result = await handleTestConnect();
+          //   if (!result) {
+          //     return false;
+          //   }
+          // }
           if (!flag) {
             axiosData = {
               hostIds: HostSettingDataSet.records.map((i) => i.get(hostMapping.hostId.name)),
@@ -298,12 +299,13 @@ export default observer(() => {
         const hostValid = await HostSettingDataSet.validate();
         if (baseValid && hostValid) {
           // if exist un-connect host
-          if (HostSettingDataSet.records.filter((i) => !i.isRemoved).some((i) => !i.get('status'))) {
-            const testResult = await handleTestConnect();
-            if (!testResult) {
-              return false;
-            }
-          }
+          // if (HostSettingDataSet.records.filter((i) =>
+          // !i.isRemoved).some((i) => !i.get('status'))) {
+          //   const testResult = await handleTestConnect();
+          //   if (!testResult) {
+          //     return false;
+          //   }
+          // }
           const result = setFlagBaseOnParamsSetting(flag, {}, true);
           if (!result.f) {
             axiosData = {
@@ -437,12 +439,12 @@ export default observer(() => {
       .current
       .get(mapping.deployMode.name))) {
       //  如果是哨兵模式
-      if (data.record.get('privateIp')) {
+      if (data.record.get('hostIp') && data.record.get('sshPort') && data.record.get('hostStatus') === 'connected') {
         return false;
       }
       return true;
     }
-    return false;
+    return data.record.get('hostStatus') !== 'connected';
   };
 
   /**
@@ -841,8 +843,8 @@ export default observer(() => {
                       disabled: getHostNameDisabled(data),
                     })}
                   />
-                  <TextField colSpan={1} name={hostMapping.ip.name} />
-                  <TextField colSpan={1} name={hostMapping.port.name} />
+                  {/* <TextField colSpan={1} name={hostMapping.ip.name} />
+                  <TextField colSpan={1} name={hostMapping.port.name} /> */}
                   {
                     BaseDeployDataSet
                       .current
@@ -851,19 +853,17 @@ export default observer(() => {
                         <TextField colSpan={1} name={hostMapping.privatePort.name} />,
                     ]
                   }
-
+                  <Button
+                    funcType="flat"
+                    disabled={deleteHostDisabled(BaseDeployDataSet, HostSettingDataSet)}
+                    icon="delete"
+                    style={{
+                      position: 'relative',
+                      top: 9,
+                    }}
+                    onClick={() => handleDeleteHost(record)}
+                  />
                 </Form>
-                <Button
-                  funcType="flat"
-                  disabled={deleteHostDisabled(BaseDeployDataSet, HostSettingDataSet)}
-                  icon="delete"
-                  style={{
-                    position: 'absolute',
-                    right: '-36px',
-                    bottom: '30px',
-                  }}
-                  onClick={() => handleDeleteHost(record)}
-                />
                 {renderItemHostStatus(record)}
               </div>
             ))
@@ -878,7 +878,7 @@ export default observer(() => {
           >
             添加主机
           </Button>
-          <div
+          {/* <div
             className="c7ncd-baseDeploy-middle-testButton"
           >
             <Button
@@ -894,7 +894,7 @@ export default observer(() => {
               renderHostResult()
             }
 
-          </div>
+          </div> */}
           <p style={{ marginTop: 30 }} className="c7ncd-baseDeploy-middle-deploySetting">
             参数配置
             {/* <Icon type="expand_less" /> */}
@@ -1023,14 +1023,14 @@ export default observer(() => {
                 position: 'relative',
               }}
             >
-              <TextField colSpan={1} name={hostMapping.ip.name} />
-              <TextField colSpan={1} name={hostMapping.port.name} />
+              {/* <TextField colSpan={1} name={hostMapping.ip.name} />
+              <TextField colSpan={1} name={hostMapping.port.name} /> */}
               <TextField colSpan={1} name={hostMapping.privateIp.name} />
               <TextField colSpan={1} name={hostMapping.privatePort.name} />
               {renderItemHostStatus(HostSettingDataSet
                 .records.find((i) => i.get(hostMapping.checked.name)))}
             </Form>
-            <div
+            {/* <div
               className="c7ncd-baseDeploy-middle-testButton"
               style={{
                 marginTop: 'unset',
@@ -1048,7 +1048,7 @@ export default observer(() => {
               >
                 测试连接
               </Button>
-            </div>
+            </div> */}
             <Button
               icon="add"
               color="primary"

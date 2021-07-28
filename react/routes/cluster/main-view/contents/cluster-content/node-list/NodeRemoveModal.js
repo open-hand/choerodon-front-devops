@@ -41,12 +41,6 @@ const NodeRemove = observer(({
   };
 
   const successProps = {
-    okProps: {
-      color: 'red',
-    },
-    cancelProps: {
-      color: 'dark',
-    },
     onOk: handleSubmit,
     okText: formatMessage({ id: 'delete' }),
     title: formatMessage({ id: `${intlPrefix}.node.modal.canDelete` }),
@@ -75,11 +69,7 @@ const NodeRemove = observer(({
 
   const loadingModalFailedProps = {
     okProps: {
-      color: 'red',
       loading: false,
-    },
-    cancelProps: {
-      color: 'dark',
     },
     onOk: handleSubmit,
     okText: formatMessage({ id: 'delete' }),

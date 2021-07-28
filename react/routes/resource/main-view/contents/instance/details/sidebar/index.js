@@ -2,7 +2,9 @@ import React, { Component, Fragment } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react';
 import _ from 'lodash';
-import { Button, Modal, Collapse, Spin } from 'choerodon-ui';
+import {
+  Button, Modal, Collapse, Spin,
+} from 'choerodon-ui';
 import Store from '../../stores';
 import SimpleTable from './SimpleTable';
 import YamlEditor from '../../../../../../../components/yamlEditor';
@@ -21,14 +23,18 @@ const PANEL_TYPE = [
   'variables',
 ];
 
-const ContainerLabel = () => (<span className="c7ncd-deploy-container-label">
-  <FormattedMessage id="ist.deploy.container" />
-</span>);
+const ContainerLabel = () => (
+  <span className="c7ncd-deploy-container-label">
+    <FormattedMessage id="ist.deploy.container" />
+  </span>
+);
 
 @observer
 export default class DetailsSidebar extends Component {
+  // eslint-disable-next-line react/static-property-placement
   static contextType = Store;
 
+  // eslint-disable-next-line react/state-in-constructor
   state = {
     activeKey: [],
     isJson: true,
@@ -145,14 +151,14 @@ export default class DetailsSidebar extends Component {
 
     if (containers && containers.length) {
       const colItems = ['name', 'containerPort', 'protocol', 'hostPort'];
-      const columns = _.map(colItems, item => ({
+      const columns = _.map(colItems, (item) => ({
         title: <FormattedMessage id={`ist.deploy.ports.${item}`} />,
         key: item,
         dataIndex: item,
         render: textOrNA,
       }));
 
-      portsContent = _.map(containers, item => {
+      portsContent = _.map(containers, (item) => {
         const { name, ports } = item;
         if (ports && ports.length) {
           hasPorts = true;
@@ -189,7 +195,6 @@ export default class DetailsSidebar extends Component {
 
     return portsContent;
   }
-
 
   renderLabel = (labels, annotations) => {
     /**
@@ -233,12 +238,12 @@ export default class DetailsSidebar extends Component {
     const annoContent = format(annotations, columns);
 
     return (
-      <Fragment>
+      <>
         <div className="c7ncd-deploy-label">Labels</div>
         {labelContent}
         <div className="c7ncd-deploy-label">Annotations</div>
         {annoContent}
-      </Fragment>
+      </>
     );
   };
 
@@ -368,13 +373,30 @@ export default class DetailsSidebar extends Component {
   };
 
   render() {
-    const { detailsStore, intl: { formatMessage } } = this.context;
-    const { visible, onClose } = this.props;
-    const { activeKey, isExpand, isJson } = this.state;
     const {
-      getDeployments: { detail },
-      getDeploymentsYaml,
-    } = detailsStore;
+      visible, onClose, withoutStore, json, yaml,
+    } = this.props;
+    const { activeKey, isExpand, isJson } = this.state;
+
+    let detail;
+    let getDeploymentsYaml;
+    let formatMessage;
+
+    if (!withoutStore) {
+      const { detailsStore, intl: { formatMessage: contextFormat } } = this.context;
+      const {
+        getDeployments: { detail: storeDetail },
+        getDeploymentsYaml: storeYaml,
+      } = detailsStore;
+      detail = storeDetail;
+      getDeploymentsYaml = storeYaml;
+      formatMessage = contextFormat;
+    } else {
+      // eslint-disable-next-line react/destructuring-assignment
+      formatMessage = this.props.formatMessage;
+      detail = json;
+      getDeploymentsYaml = yaml;
+    }
 
     let containers = [];
     let volumes = [];
@@ -389,7 +411,7 @@ export default class DetailsSidebar extends Component {
         annotations = detail.metadata.annotations;
       }
       if (detail.spec && detail.spec.template && detail.spec.template.spec) {
-        const spec = detail.spec.template.spec;
+        const { spec } = detail.spec.template;
         containers = spec.containers;
         volumes = spec.volumes;
         hostIPC = spec.hostIPC;
@@ -406,70 +428,75 @@ export default class DetailsSidebar extends Component {
       label: () => this.renderLabel(labels, annotations),
     };
 
-    return (<Sidebar
-      destroyOnClose
-      visible
-      footer={[
-        <Button
-          type="primary"
-          funcType="raised"
-          key="close"
-          onClick={onClose}
-        >
-          <FormattedMessage id="close" />
-        </Button>,
-      ]}
-      title={formatMessage({ id: `ist.deploy.${detail ? detail.kind : 'Deployment'}.detail` })}
-    >
-      <div className="c7ncd-expand-btn-wrap">
-        <Button
-          className="c7ncd-deploy-detail-type-btn"
-          onClick={this.handleChangeType}
-        >
-          <FormattedMessage id={`ist.deploy.type.${isJson ? 'yaml' : 'json'}`} />
-        </Button>
-        {isJson && (
+    return (
+      <Sidebar
+        destroyOnClose
+        visible
+        footer={[
+          <Button
+            type="primary"
+            funcType="raised"
+            key="close"
+            onClick={onClose}
+          >
+            <FormattedMessage id="close" />
+          </Button>,
+        ]}
+        title={formatMessage({ id: `ist.deploy.${detail ? detail.kind : 'Deployment'}.detail` })}
+      >
+        <div className="c7ncd-expand-btn-wrap">
+          <Button
+            className="c7ncd-deploy-detail-type-btn"
+            onClick={this.handleChangeType}
+            style={{
+              display: ['Job', 'CronJob'].includes(detail.kind) ? 'none' : 'block',
+            }}
+          >
+            <FormattedMessage id={`ist.deploy.type.${isJson ? 'yaml' : 'json'}`} />
+          </Button>
+          {isJson && !['Job', 'CronJob'].includes(detail.kind) && (
           <Button
             className="c7ncd-expand-btn"
             onClick={this.handleExpandAll}
           >
             <FormattedMessage id={isExpand ? 'collapseAll' : 'expandAll'} />
           </Button>
+          )}
+        </div>
+        {isJson && !['Job', 'CronJob'].includes(detail.kind) ? (
+          <Collapse
+            bordered={false}
+            activeKey={activeKey}
+            onChange={this.handlePanelChange}
+          >
+            {_.map(PANEL_TYPE, (item) => (
+              <Panel
+                key={item}
+                header={(
+                  <div className="c7ncd-deploy-panel-header">
+                    <div className="c7ncd-deploy-panel-title">
+                      <FormattedMessage id={`ist.deploy.${item}`} />
+                    </div>
+                    <div className="c7ncd-deploy-panel-text">
+                      <FormattedMessage id={`ist.deploy.${item}.describe`} />
+                    </div>
+                  </div>
+              )}
+                className="c7ncd-deploy-panel"
+              >
+                {visible && renderFun[item]()}
+              </Panel>
+            ))}
+          </Collapse>
+        ) : (
+          <YamlEditor
+            value={getDeploymentsYaml}
+            originValue={getDeploymentsYaml}
+            readOnly
+          />
         )}
-      </div>
-      {isJson ? (
-        <Collapse
-          bordered={false}
-          activeKey={activeKey}
-          onChange={this.handlePanelChange}
-        >
-          {_.map(PANEL_TYPE, (item) => (
-            <Panel
-              key={item}
-              header={
-                <div className="c7ncd-deploy-panel-header">
-                  <div className="c7ncd-deploy-panel-title">
-                    <FormattedMessage id={`ist.deploy.${item}`} />
-                  </div>
-                  <div className="c7ncd-deploy-panel-text">
-                    <FormattedMessage id={`ist.deploy.${item}.describe`} />
-                  </div>
-                </div>
-              }
-              className="c7ncd-deploy-panel"
-            >
-              {visible && renderFun[item]()}
-            </Panel>
-          ))}
-        </Collapse>
-      ) : (
-        <YamlEditor
-          value={getDeploymentsYaml}
-          originValue={getDeploymentsYaml}
-          readOnly
-        />
-      )}
-    </Sidebar>);
+      </Sidebar>
+    );
   }
 }
 
@@ -614,13 +641,13 @@ function volumesTemplate(data) {
       break;
   }
   return (
-    <Fragment>
+    <>
       <div className="c7ncd-deploy-volume-main">
         {volumesItem('name', name)}
         {volumesItem('volume.type', type)}
       </div>
       {template}
-    </Fragment>
+    </>
   );
 }
 

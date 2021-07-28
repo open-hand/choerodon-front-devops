@@ -78,6 +78,7 @@ const DeployModal = observer(() => {
       const res = await manualDeployDs.submit();
       if (res !== false) {
         refresh(res.list[0]);
+        modal.close();
         return true;
       }
       return false;
@@ -230,6 +231,47 @@ const DeployModal = observer(() => {
     ));
   }
 
+  const getItems = (selfRecord) => {
+    switch (selfRecord.get('appServiceSource')) {
+      case 'market_service': {
+        return getMarketItem();
+        break;
+      }
+      case mapping.hzeroApp.value: {
+        return ([
+          <Select
+            newLine
+            name={mapping.hzeroAppVersion.name}
+          />,
+          <Select
+            name={mapping.hzeroServiceVersion.name}
+          />,
+        ]);
+        break;
+      }
+      default: {
+        return ([
+          <Select
+            name="appServiceId"
+            searchable
+            newLine={selfRecord.get('appServiceSource') !== 'market_service'}
+            notFoundContent={<FormattedMessage id={`${intlPrefix}.app.empty`} />}
+            searchMatcher={renderSearchMatcher}
+          >
+            {getAppServiceOptions()}
+          </Select>,
+          <Select
+            name="appServiceVersionId"
+            searchable
+            searchMatcher="version"
+            disabled={!record.get('appServiceId')}
+          />,
+        ]);
+        break;
+      }
+    }
+  };
+
   const renderRestForm = () => (
     record.get(mapping.deployWay.value) === mapping.deployWay.options[0].value
       ? (
@@ -261,24 +303,13 @@ const DeployModal = observer(() => {
                   </Tooltip>
                 </Option>
               ) : null}
+              <Option value={mapping.hzeroApp.value}>
+                <span className={`${prefixCls}-manual-deploy-radio`}>
+                  HZERO应用
+                </span>
+              </Option>
             </SelectBox>
-            {record.get('appServiceSource') === 'market_service' ? (getMarketItem()) : ([
-              <Select
-                name="appServiceId"
-                searchable
-                newLine={record.get('appServiceSource') !== 'market_service'}
-                notFoundContent={<FormattedMessage id={`${intlPrefix}.app.empty`} />}
-                searchMatcher={renderSearchMatcher}
-              >
-                {getAppServiceOptions()}
-              </Select>,
-              <Select
-                name="appServiceVersionId"
-                searchable
-                searchMatcher="version"
-                disabled={!record.get('appServiceId')}
-              />,
-            ])}
+            { getItems(record) }
             {!envId
               ? (
                 <Select
@@ -296,7 +327,7 @@ const DeployModal = observer(() => {
               colSpan={!envId ? 1 : 2}
               newLine={!!envId}
             />
-            {record.get('appServiceSource') !== 'market_service' && (
+            {!['market_service', mapping.hzeroApp.value].includes(record.get('appServiceSource')) && (
               <Select
                 name="valueId"
                 searchable

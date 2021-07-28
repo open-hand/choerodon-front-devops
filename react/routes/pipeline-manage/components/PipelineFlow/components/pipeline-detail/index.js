@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 /* eslint-disable max-len */
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
 import forEach from 'lodash/forEach';
@@ -64,9 +64,18 @@ export default observer((props) => {
     setRightLineDom(rightList);
   }, [getLoading, getViewData]);
 
+  const getTriggerBranch = useCallback(({ triggerType, triggerValue }) => (
+    <span>
+      触发分支：
+      {triggerType === 'exact_exclude' ? '精确排除 ' : ''}
+      {triggerValue || '所有分支或tag'}
+    </span>
+  ), []);
+
   function getJobTask({
     jobType: type, metadata, iamUserDTOS, jobTriggerValue, triggerValue, envName, countersigned,
   }) {
+    const branchContent = getTriggerBranch({ triggerType: jobTriggerValue, triggerValue });
     if (type === 'cdAudit') {
       return (
         <div className="c7ncd-pipeline-detail-job-task">
@@ -84,12 +93,15 @@ export default observer((props) => {
               审核模式：
               {countersigned === 0 ? '或签' : '会签'}
             </span>
-            <span>
-              触发分支：
-              {jobTriggerValue === 'exact_exclude' ? '精确排除 ' : ''}
-              {triggerValue || '所有分支或tag'}
-            </span>
+            {branchContent}
           </div>
+        </div>
+      );
+    }
+    if (type === 'chart') {
+      return (
+        <div className="c7ncd-pipeline-detail-job-task c7ncd-pipeline-detail-job-task-branch">
+          {branchContent}
         </div>
       );
     }
@@ -99,20 +111,25 @@ export default observer((props) => {
         sonarUrl, config, scannerType, blockAfterJob,
       } = newData || {};
       let content;
+      let showBranchContent;
       switch (type) {
         case 'sonar':
-          if (sonarUrl) {
-            content = (
-              <div className="c7ncd-pipeline-detail-job-task-sonar">
-                <span>{sonarUrl}</span>
-                <span className="c7ncd-pipeline-detail-job-task-sonar-type">
-                  检查类型:
+          content = (
+            <div className="c7ncd-pipeline-detail-job-task-sonar">
+              {branchContent}
+              {sonarUrl ? (
+                <>
                   <br />
-                  {scannerType}
-                </span>
-              </div>
-            );
-          }
+                  <span>{sonarUrl}</span>
+                  <span className="c7ncd-pipeline-detail-job-task-sonar-type">
+                    检查类型:
+                    <br />
+                    {scannerType}
+                  </span>
+                </>
+              ) : null}
+            </div>
+          );
           break;
         case 'cdDeploy':
         case 'cdHost':
@@ -124,39 +141,12 @@ export default observer((props) => {
                   {envName}
                 </span>
               ) : null}
-              <span>
-                触发分支：
-                {jobTriggerValue === 'exact_exclude' ? '精确排除 ' : ''}
-                {triggerValue || '所有分支或tag'}
-              </span>
-            </div>
-          );
-          break;
-        case 'cdAudit':
-          content = (
-            <div className="c7ncd-pipeline-detail-job-task-deploy">
-              <span className="c7ncd-pipeline-detail-job-task-deploy-item">
-                审核人员：
-                {map(iamUserDTOS || [], ({ loginName, realName, id: userId }, index) => (
-                  <span key={userId}>
-                    {realName}
-                    {index !== iamUserDTOS.length - 1 && ','}
-                  </span>
-                ))}
-              </span>
-              <span className="c7ncd-pipeline-detail-job-task-deploy-item">
-                审核模式：
-                {countersigned === 0 ? '或签' : '会签'}
-              </span>
-              <span>
-                触发分支：
-                {jobTriggerValue === 'exact_exclude' ? '精确排除 ' : ''}
-                {triggerValue || '所有分支或tag'}
-              </span>
+              {branchContent}
             </div>
           );
           break;
         case 'build':
+          showBranchContent = true;
           content = config ? (
             map(config, ({ name: taskName, sequence }) => (
               <div className="c7ncd-pipeline-detail-job-task-item" key={sequence}>
@@ -172,16 +162,23 @@ export default observer((props) => {
                 是否阻塞：
                 {blockAfterJob ? '是' : '否'}
               </span>
-              <span>
-                触发分支：
-                {jobTriggerValue === 'exact_exclude' ? '精确排除 ' : ''}
-                {triggerValue || '所有分支或tag'}
-              </span>
+              {branchContent}
             </div>
           );
         default:
       }
-      return content && <div className="c7ncd-pipeline-detail-job-task">{content}</div>;
+      return (
+        <>
+          {showBranchContent && (
+            <div className="c7ncd-pipeline-detail-job-task c7ncd-pipeline-detail-job-task-branch">
+              {branchContent}
+            </div>
+          )}
+          {content && (
+            <div className="c7ncd-pipeline-detail-job-task">{content}</div>
+          )}
+        </>
+      );
     }
   }
 

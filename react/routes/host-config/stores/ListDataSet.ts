@@ -1,33 +1,37 @@
-/* eslint-disable import/no-anonymous-default-export */
-import { DataSetProps } from 'choerodon-ui/pro/lib/data-set/DataSet';
-import apis from '../apis';
+import { DataSet, DataSetProps } from '@/interface';
+import HostConfigApis from '@/routes/host-config/apis/DeployApis';
+import { StoreProps } from '@/routes/host-config/stores/useStore';
+import assign from 'lodash/assign';
 
 interface ListProps {
   projectId: number,
-  showTestTab: boolean,
+  searchDs: DataSet,
+  mainStore: StoreProps,
 }
 
-export default ({ projectId, showTestTab }: ListProps): DataSetProps => ({
+export default ({ projectId, searchDs, mainStore }: ListProps): DataSetProps => ({
   autoCreate: false,
   autoQuery: true,
   selection: false,
   paging: true,
   pageSize: 10,
+  queryDataSet: searchDs,
   transport: {
-    read: ({ data }) => {
-      const { type, params, status } = data;
-      const newType = type || (showTestTab ? 'distribute_test' : 'deploy');
-      return {
-        url: apis.getLoadHostsDetailsUrl(projectId, newType),
-        method: 'post',
-        data: {
-          searchParam: {
-            type: newType,
-            status,
-          },
-          params: params ? [params] : [],
-        },
-      };
+    read: ({ params, data }) => ({
+      url: HostConfigApis.getLoadHostsDetailsUrl(projectId),
+      method: 'post',
+      params: assign(params, data),
+      data: null,
+    }),
+  },
+  events: {
+    load: ({ dataSet }: { dataSet: DataSet }) => {
+      const record = dataSet.get(0);
+      const { id: selectedId } = mainStore.getSelectedHost || {};
+      const selectedRecord = selectedId ? dataSet.some((eachRecord) => eachRecord.get('id') === selectedId) : null;
+      if (!selectedRecord && record) {
+        mainStore.setSelectedHost(record.toData());
+      }
     },
   },
 });
