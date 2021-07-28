@@ -263,14 +263,16 @@ const IstModals = injectIntl(observer((props) => {
         title: !btnDisabled && marketDisable ? formatMessage({ id: `${intlPrefix}.instance.disable.message` }) : '',
       },
       disabledMessage: !btnDisabled ? formatMessage({ id: `${intlPrefix}.instance.disable.message` }) : null,
-    }, {
-      name: formatMessage({ id: `${intlPrefix}.modal.modify` }),
-      icon: 'backup_line',
-      handler: openUpgradeModal,
-      permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.example'],
-      display: !isMarket,
-      disabled: btnDisabled,
-    }, {
+    },
+    // , {
+    //   name: formatMessage({ id: `${intlPrefix}.modal.modify` }),
+    //   icon: 'backup_line',
+    //   handler: openUpgradeModal,
+    //   permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.example'],
+    //   display: !isMarket,
+    //   disabled: btnDisabled,
+    // },
+    {
       name: formatMessage({ id: 'upgrade' }),
       icon: 'backup_line',
       handler: openMarketUpgradeModal,
