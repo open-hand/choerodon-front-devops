@@ -208,9 +208,10 @@ const PipelineManage = observer(() => {
   function getHeaderButtons() {
     const { parentId, status, devopsCdPipelineDeatilVO } = getSelectedMenu;
     const {
-      status: detailStatus, edit = false,
+      status: detailStatus,
       devopsCdPipelineDeatilVO: detailDevopsCdPipelineDeatilVO,
     } = getDetailData;
+    const { edit = false } = editBlockStore.getMainData || {};
     const buttons = [{
       permissions: ['choerodon.code.project.develop.ci-pipeline.ps.create'],
       name: formatMessage({ id: `${intlPrefix}.create` }),
