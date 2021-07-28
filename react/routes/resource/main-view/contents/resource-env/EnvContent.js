@@ -59,7 +59,7 @@ function ItemNumberByResource({
     },
     certificationCount: {
       icon: 'class',
-      name: 'Certification',
+      name: '',
     },
     configMapCount: {
       icon: 'compare_arrows',
@@ -75,14 +75,14 @@ function ItemNumberByResource({
     },
     podCount: {
       icon: 'fiber_manual_record-o',
-      name: 'Pod',
+      name: '',
     },
   };
   return (
     <div className={`${prefixCls}-re-grid-left-item`}>
       <Icon type={instanceMappings[code].icon} className={`${prefixCls}-re-grid-left-icon`} />
       <span className={`${prefixCls}-re-grid-left-number`}>{countDisplay(count, 99)}</span>
-      <Tooltip title={`${name}`}>
+      <Tooltip title={`${name}${instanceMappings[code].name && `(${instanceMappings[code].name})`}`}>
         <span className={`${prefixCls}-re-grid-left-name`}>{name}</span>
       </Tooltip>
     </div>
