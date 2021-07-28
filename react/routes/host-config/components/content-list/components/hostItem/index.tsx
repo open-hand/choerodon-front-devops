@@ -128,11 +128,11 @@ const HostsItem:React.FC<any> = observer(({
           <TextField
             value={mainStore.getDisConnectCommand}
             disabled
-            suffix={
+            suffix={(
               <CopyToBoard text={mainStore.getDisConnectCommand} onCopy={handleClickCopy} options={{ format: 'text/plain' }}>
                 <Icon style={{ cursor: 'pointer' }} type="content_copy" />
               </CopyToBoard>
-            }
+            )}
             style={{
               width: '100%',
             }}
