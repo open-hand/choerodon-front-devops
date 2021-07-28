@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Page, Header, Breadcrumb, Content, HeaderButtons,
@@ -13,9 +13,11 @@ import ResourceContent from '@/routes/host-config/components/resource-content';
 import EmptyPage from '@/components/empty-page';
 import Loading from '@/components/loading';
 import { SMALL } from '@/utils/getModalWidth';
+import HostPermission from '@/routes/host-config/components/permission-management';
 import { useHostConfigStore } from './stores';
 
 const deployHostKey = Modal.key();
+const permissionKey = Modal.key();
 
 const HostConfig: React.FC<any> = observer((): any => {
   const {
@@ -24,6 +26,7 @@ const HostConfig: React.FC<any> = observer((): any => {
     formatMessage,
     refresh,
     listDs,
+    mainStore,
   } = useHostConfigStore();
 
   const handleAdd = (hostId?: string) => {
@@ -38,6 +41,19 @@ const HostConfig: React.FC<any> = observer((): any => {
       okText: formatMessage({ id: hostId ? 'save' : 'create' }),
     });
   };
+
+  const openPermissionManagement = useCallback(() => {
+    const { id } = mainStore.getSelectedHost || {};
+    Modal.open({
+      key: permissionKey,
+      title: formatMessage({ id: 'permission_management' }),
+      style: {
+        width: SMALL,
+      },
+      drawer: true,
+      children: <HostPermission hostId={id} />,
+    });
+  }, []);
 
   const getContent = useMemo(() => {
     if (listDs.status === 'loading' || !listDs) {
@@ -67,6 +83,12 @@ const HostConfig: React.FC<any> = observer((): any => {
             display: true,
             permissions: ['choerodon.code.project.deploy.host.ps.create'],
             handler: () => handleAdd(),
+          }, {
+            name: formatMessage({ id: 'permission_management' }),
+            icon: 'settings-o',
+            display: true,
+            // permissions: ['choerodon.code.project.deploy.host.ps.permission'],
+            handler: openPermissionManagement,
           }, {
             icon: 'refresh',
             display: true,

@@ -27,7 +27,7 @@ interface ContextProps {
   mainStore: StoreProps,
   detailDs: DataSetProps,
   searchDs: DataSetProps,
-  appServiceType: 'project' | 'share' | 'market',
+  appServiceType: 'project' | 'share' | 'market' | 'hzero',
   appServiceId: string,
   deleteModalStore: DeleteStoreProps
   mainTabKeys: {

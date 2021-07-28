@@ -208,7 +208,7 @@ const PipelineManage = observer(() => {
   function getHeaderButtons() {
     const { parentId, status, devopsCdPipelineDeatilVO } = getSelectedMenu;
     const {
-      status: detailStatus,
+      status: detailStatus, edit = false,
       devopsCdPipelineDeatilVO: detailDevopsCdPipelineDeatilVO,
     } = getDetailData;
     const buttons = [{
@@ -241,7 +241,7 @@ const PipelineManage = observer(() => {
           name: formatMessage({ id: 'edit' }),
           icon: 'edit-o',
           handler: openEditModal,
-          display: true,
+          display: edit,
         }, {
           permissions: ['choerodon.code.project.develop.ci-pipeline.ps.variable.app'],
           name: formatMessage({ id: `${intlPrefix}.settings.local` }),
