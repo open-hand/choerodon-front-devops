@@ -186,6 +186,10 @@ const commonField = {
   all_instance: '所有实例',
   appService: '应用服务',
   copy_success: '复制成功',
+  permission_management: '权限管理',
+  member_all: '项目下所有人员',
+  member_specific: '项目下特定人员',
+  add_member: '添加人员',
 
   // 资源树名称
   instances: '实例',
