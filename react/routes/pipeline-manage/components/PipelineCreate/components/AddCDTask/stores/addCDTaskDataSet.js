@@ -72,7 +72,7 @@ export default (
       dynamicProps: {
         required: ({ record }) => record.get('type') === addCDTaskDataSetMap.apiTest,
       },
-      lookupAxiosConfig: () => ({
+      lookupAxiosConfig: ({ params }) => ({
         method: 'get',
         url: `/test/v1/projects/${projectId}/api_test/tasks/paging?random=${random}`,
         transformResponse: (res) => {
