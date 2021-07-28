@@ -97,6 +97,9 @@ const mapping = {
     }, {
       value: 'market',
       label: '市场应用',
+    }, {
+      value: 'hzero',
+      label: 'HZERO应用',
     }],
   },
 };
@@ -179,7 +182,7 @@ export default (({
     switch (name) {
       case 'appServiceSource':
         deployStore.setAppService([]);
-        value !== 'market_service' && deployStore.loadAppService(projectId, value);
+        !['market_service', mapping.hzeroApp.value].includes(value) && deployStore.loadAppService(projectId, value);
         record.get('appServiceId') && record.set('appServiceId', null);
         break;
       case 'environmentId':

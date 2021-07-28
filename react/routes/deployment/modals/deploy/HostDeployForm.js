@@ -28,6 +28,7 @@ const HostDeployForm = injectIntl(observer(({ getMarketItem, getMarketAndVersion
   const [testStatus, setTestStatus] = useState('');
   const isMarket = record.get(mapping.deploySource.value) === (mapping.deploySource.options.length > 1 ? mapping.deploySource.options[1].value : '');
   const isDocker = record.get(mapping.deployObject.value) === mapping.deployObject.options[0].value;
+  const isHzero = record.get(mapping.deploySource.value) === mapping.deploySource.options[2].value;
   const getWorkPathTips = useMemo(() => (
     <Tips
       helpText={(
@@ -149,6 +150,97 @@ const HostDeployForm = injectIntl(observer(({ getMarketItem, getMarketAndVersion
     </>
   );
 
+  const getOthers = (selfRecord, selfIsHzero) => {
+    if (selfIsHzero) {
+      return [
+        <Select
+          name={mapping.hzeroAppVersion.name}
+          colSpan={1}
+        />,
+        <Select
+          name={mapping.hzeroServiceVersion.name}
+          colSpan={1}
+        />,
+        isDocker ? [
+          <TextField name={mapping.containerName.value} colSpan={1} />,
+          <YamlEditor
+            newLine
+            colSpan={2}
+            readOnly={false}
+            // modeChange={false}
+            value={deployUseStore.getImageYaml}
+            onValueChange={(value) => deployUseStore.setImageYaml(value)}
+          />,
+        ] : [
+          <TextField
+            name="name"
+            colSpan={1}
+          />,
+          <YamlEditor
+            newLine
+            colSpan={2}
+            readOnly={false}
+            modeChange={false}
+            value={deployUseStore.getJarYaml}
+            onValueChange={(value) => deployUseStore.setJarYaml(value)}
+          />,
+        ],
+      ];
+    }
+    return !isMarket && (
+      isDocker ? [
+        <Select
+          newLine
+          name={mapping.projectImageRepo.value}
+          colSpan={1}
+          onChange={() => {
+            record.init(mapping.image.value);
+            record.init(mapping.imageVersion.value);
+          }}
+        />,
+        <Select
+          name={mapping.image.value}
+          colSpan={1}
+          onChange={() => {
+            record.init(mapping.imageVersion.value);
+          }}
+        />,
+        <Select name={mapping.imageVersion.value} colSpan={1} />,
+        <TextField name={mapping.containerName.value} colSpan={1} />,
+        <YamlEditor
+          colSpan={2}
+          readOnly={false}
+            // modeChange={false}
+          value={deployUseStore.getImageYaml}
+          onValueChange={(value) => deployUseStore.setImageYaml(value)}
+        />,
+      ] : [
+        <Select newLine name={mapping.nexus.value} colSpan={1} />,
+        <Select name={mapping.projectProduct.value} colSpan={1} />,
+        <Select name={mapping.groupId.value} colSpan={1} />,
+        <Select name={mapping.artifactId.value} colSpan={1} />,
+        <Select name={mapping.jarVersion.value} colSpan={1} />,
+        // <TextField
+        //   name={mapping.workPath.value}
+        //   colSpan={1}
+        //   addonAfter={getWorkPathTips}
+        // />,
+        <TextField
+          name="name"
+          colSpan={1}
+        />,
+        <YamlEditor
+          newLine
+          colSpan={2}
+          readOnly={false}
+          modeChange={false}
+          value={deployUseStore.getJarYaml}
+          onValueChange={(value) => deployUseStore.setJarYaml(value)}
+        />,
+      ]
+    );
+  };
+
   return (
     <div style={{ width: '80%' }}>
       <div className="c7ncd-deploy-manual-deploy-divided" />
@@ -195,7 +287,7 @@ const HostDeployForm = injectIntl(observer(({ getMarketItem, getMarketAndVersion
             ))
           }
         </SelectBox>
-        <SelectBox colSpan={1} name={mapping.deployObject.value}>
+        <SelectBox newLine colSpan={1} name={mapping.deployObject.value}>
           {
             mapping.deployObject.options.map((o) => (
               <Option value={o.value}>
@@ -209,58 +301,7 @@ const HostDeployForm = injectIntl(observer(({ getMarketItem, getMarketAndVersion
         </SelectBox>
       </Form>
       <Form columns={2} record={record}>
-        {!isMarket && (
-          isDocker ? [
-            <Select
-              newLine
-              name={mapping.projectImageRepo.value}
-              colSpan={1}
-              onChange={() => {
-                record.init(mapping.image.value);
-                record.init(mapping.imageVersion.value);
-              }}
-            />,
-            <Select
-              name={mapping.image.value}
-              colSpan={1}
-              onChange={() => {
-                record.init(mapping.imageVersion.value);
-              }}
-            />,
-            <Select name={mapping.imageVersion.value} colSpan={1} />,
-            <TextField name={mapping.containerName.value} colSpan={1} />,
-            <YamlEditor
-              colSpan={2}
-              readOnly={false}
-              // modeChange={false}
-              value={deployUseStore.getImageYaml}
-              onValueChange={(value) => deployUseStore.setImageYaml(value)}
-            />,
-          ] : [
-            <Select newLine name={mapping.nexus.value} colSpan={1} />,
-            <Select name={mapping.projectProduct.value} colSpan={1} />,
-            <Select name={mapping.groupId.value} colSpan={1} />,
-            <Select name={mapping.artifactId.value} colSpan={1} />,
-            <Select name={mapping.jarVersion.value} colSpan={1} />,
-            // <TextField
-            //   name={mapping.workPath.value}
-            //   colSpan={1}
-            //   addonAfter={getWorkPathTips}
-            // />,
-            <TextField
-              name="name"
-              colSpan={1}
-            />,
-            <YamlEditor
-              newLine
-              colSpan={2}
-              readOnly={false}
-              modeChange={false}
-              value={deployUseStore.getJarYaml}
-              onValueChange={(value) => deployUseStore.setJarYaml(value)}
-            />,
-          ]
-        )}
+        { getOthers(record, isHzero) }
       </Form>
       {isMarket && (
         <Form columns={7} record={record} style={{ width: '125%' }}>
