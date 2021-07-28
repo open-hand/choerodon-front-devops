@@ -22,6 +22,7 @@ interface ContextProps {
     PROJECT_TAB: 'project',
     SHARE_TAB: 'share',
     MARKET_TAB: 'market',
+    HZERO_TAB: 'hzero',
   }
   searchDs: DataSetProps,
   listDs: DataSetProps,
@@ -58,6 +59,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     PROJECT_TAB: 'project',
     SHARE_TAB: 'share',
     MARKET_TAB: 'market',
+    HZERO_TAB: 'hzero',
   }), []);
 
   const defaultTabKey = useMemo(() => tabKeys.ALL_TAB, []);

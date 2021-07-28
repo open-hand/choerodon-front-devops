@@ -1041,6 +1041,7 @@ const appCenter = {
   'c7ncd.appCenter.list.tab.PROJECT_TAB': '项目应用',
   'c7ncd.appCenter.list.tab.SHARE_TAB': '共享应用',
   'c7ncd.appCenter.list.tab.MARKET_TAB': '市场应用',
+  'c7ncd.appCenter.list.tab.HZERO_TAB': 'HZERO应用',
   'c7ncd.appCenter.detail.tab.INSTANCE_TAB': '实例（Chart）',
   'c7ncd.appCenter.detail.tab.DEPLOYCONFIG_TAB': '部署配置',
   'c7ncd.appCenter.detail.tab.SERVICEANDINGRESS_TAB': '网络（Service）与域名（Ingress）',
