@@ -9,6 +9,14 @@ export default function useStore() {
     get getSelectedHost() {
       return this.selectedHost;
     },
+
+    disConnectCommand: '',
+    setDisConnectCommand(data: string) {
+      this.disConnectCommand = data;
+    },
+    get getDisConnectCommand() {
+      return this.disConnectCommand;
+    },
   }));
 }
 

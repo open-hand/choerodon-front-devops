@@ -1,8 +1,12 @@
 import React, { useCallback, useMemo } from 'react';
 import { Action } from '@choerodon/boot';
-import { Tooltip, Modal } from 'choerodon-ui/pro';
+import {
+  Tooltip, Modal, TextField, message,
+} from 'choerodon-ui/pro';
+import { Icon } from 'choerodon-ui';
 import classnames from 'classnames';
 import { observer } from 'mobx-react-lite';
+import CopyToBoard from 'react-copy-to-clipboard';
 import { UserInfo, TimePopover } from '@choerodon/components';
 import HostConnect from '@/routes/host-config/components/connect-host';
 import { SMALL } from '@/utils/getModalWidth';
@@ -104,6 +108,43 @@ const HostsItem:React.FC<any> = observer(({
     }
   }, [hostStatus, record, id, mainStore.getSelectedHost, hostStatus]);
 
+  /**
+   * 复制按钮
+   * @param text
+   */
+  const handleClickCopy = (text: string) => {
+    message.success('复制成功');
+  };
+
+  /**
+   * 断开连接
+   */
+  const handleDisConnect = () => {
+    Modal.open({
+      title: '断开连接',
+      children: (
+        <div>
+          <p>复制以下指令至对应主机执行，来断开连接。</p>
+          <TextField
+            value={mainStore.getDisConnectCommand}
+            disabled
+            suffix={
+              <CopyToBoard text={mainStore.getDisConnectCommand} onCopy={handleClickCopy} options={{ format: 'text/plain' }}>
+                <Icon style={{ cursor: 'pointer' }} type="content_copy" />
+              </CopyToBoard>
+            }
+            style={{
+              width: '100%',
+            }}
+          />
+        </div>
+      ),
+      okText: '我知道了',
+      okCancel: false,
+    });
+    console.log(mainStore.getDisConnectCommand);
+  };
+
   const getActionData = useCallback(() => {
     const actionData = [
       {
@@ -122,6 +163,12 @@ const HostsItem:React.FC<any> = observer(({
         service: ['choerodon.code.project.deploy.host.ps.delete'],
         text: formatMessage({ id: 'delete' }),
         action: handleDelete,
+      });
+    } else {
+      actionData.unshift({
+        service: [],
+        text: '断开连接',
+        action: () => handleDisConnect(),
       });
     }
     return actionData;
