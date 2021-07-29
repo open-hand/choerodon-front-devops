@@ -10,6 +10,7 @@ import { useHostConfigStore } from '@/routes/host-config/stores';
 import { EmptyPage } from '@choerodon/components';
 // @ts-ignore
 import EmptySvg from '@/routes/host-config/images/empty-page.svg';
+import PermissionTable from './PermissionTable';
 
 import './index.less';
 
@@ -46,20 +47,25 @@ const ResourceContent = observer(() => {
     },
   }), [usageRecord, mainStore.getSelectedHost]);
 
-  const getContent = useCallback(() => {
-    if (mainStore.getSelectedHost?.hostStatus === 'connected') {
-      return (
-        <div className={`${prefixCls}-resource-tab`}>
-          <Tabs defaultActiveKey="appInstance">
-            <TabPane tab="应用实例" key="appInstance">
-              <AppIngressTable appIngressDataset={appInstanceTableDs} />
-            </TabPane>
-          </Tabs>
-        </div>
-      );
-    }
-    return <EmptyPage image={EmptySvg} description="暂未获取到该主机资源信息" />;
-  }, [mainStore.getSelectedHost]);
+  const getContent = useCallback(() => (
+    <div className={`${prefixCls}-resource-tab`}>
+      <Tabs defaultActiveKey="appInstance">
+        <TabPane tab="应用实例" key="appInstance">
+          {mainStore.getSelectedHost?.hostStatus === 'connected' ? (
+            <AppIngressTable appIngressDataset={appInstanceTableDs} />
+          ) : (
+            <EmptyPage image={EmptySvg} description="暂未获取到该主机资源信息" />
+          )}
+        </TabPane>
+        <TabPane
+          tab={formatMessage({ id: 'permission_management' })}
+          key="permission"
+        >
+          <PermissionTable />
+        </TabPane>
+      </Tabs>
+    </div>
+  ), [mainStore.getSelectedHost]);
 
   return (
     <div className={`${prefixCls}-resource`}>

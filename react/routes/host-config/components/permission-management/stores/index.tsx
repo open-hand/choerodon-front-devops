@@ -34,8 +34,12 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     hostId,
   } = props;
 
-  const selectDs = useMemo(() => new DataSet(SelectDataSet({ projectId, hostId })), [hostId]);
-  const formDs = useMemo(() => new DataSet(FormDataSet({ projectId, hostId })), [hostId]);
+  const selectDs = useMemo(() => new DataSet(SelectDataSet({
+    projectId, hostId, formatMessage,
+  })), [hostId]);
+  const formDs = useMemo(() => new DataSet(FormDataSet({
+    projectId, hostId, formatMessage, selectDs,
+  })), [hostId]);
 
   const value = {
     ...props,

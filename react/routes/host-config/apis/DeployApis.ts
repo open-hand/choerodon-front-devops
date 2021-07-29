@@ -85,4 +85,16 @@ export default class HostConfigApi {
   static testHostConnect(projectId: number, hostId: string) {
     return `/devops/v1/projects/${projectId}/hosts/${hostId}/connection_host_test`;
   }
+
+  static getHostPermissionList(projectId: number, hostId: string) {
+    return `/devops/v1/projects/${projectId}/hosts/${hostId}/permission/page_by_options`;
+  }
+
+  static getHostNonRelated(projectId: number, hostId: string) {
+    return `/devops/v1/projects/${projectId}/hosts/${hostId}/permission/list_non_related`;
+  }
+
+  static updateHostPermission(projectId: number, hostId: string) {
+    return `/devops/v1/projects/${projectId}/hosts/${hostId}/permission`;
+  }
 }

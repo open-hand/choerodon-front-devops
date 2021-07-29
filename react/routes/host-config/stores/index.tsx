@@ -10,6 +10,7 @@ import some from 'lodash/some';
 import AppInstanceTableDataSet from '@/routes/host-config/stores/AppInstanceTableDataSet';
 import { DataSet as DataSetProps, DataSetSelection } from '@/interface';
 import UsageDataSet from '@/routes/host-config/stores/UsageDataSet';
+import PermissionTableDataSet from '@/routes/host-config/stores/PermissionTableDataSet';
 import useStore, { StoreProps } from './useStore';
 
 interface ContextProps {
@@ -32,8 +33,10 @@ interface ContextProps {
   },
   appInstanceTableDs: DataSetProps,
   usageDs: DataSetProps,
+  permissionDs: DataSetProps,
   hasExtraTab: boolean,
   tab: ReactNode,
+  loadData(data: { hostId: string, hostStatus: string }): void,
 }
 
 const Store = createContext({} as ContextProps);
@@ -83,11 +86,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const mainStore = useStore();
 
   const searchDs = useMemo(() => new DataSet(SearchDataSet({ statusDs })), []);
-  const listDs = useMemo(() => new DataSet(ListDataSet({
-    projectId,
-    searchDs,
-    mainStore,
-  })), [projectId]);
 
   const usageDs = useMemo(() => new DataSet(UsageDataSet({ projectId })), [projectId]);
   const appInstanceTableDs = useMemo(() => new DataSet(AppInstanceTableDataSet({
@@ -95,14 +93,42 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     formatMessage,
     intlPrefix,
   })), [projectId]);
+  const permissionDs = useMemo(() => new DataSet(PermissionTableDataSet({
+    projectId,
+    formatMessage,
+    intlPrefix,
+  })), [projectId]);
+
+  const loadData = useCallback(({ hostStatus, hostId }) => {
+    if (hostStatus === 'connected') {
+      appInstanceTableDs.setQueryParameter('host_id', hostId);
+      usageDs.setQueryParameter('hostId', hostId);
+      appInstanceTableDs.query();
+      usageDs.query();
+    } else {
+      usageDs.removeAll();
+      appInstanceTableDs.removeAll();
+    }
+    permissionDs.setQueryParameter('hostId', hostId);
+    permissionDs.query();
+  }, []);
+
+  const listDs = useMemo(() => new DataSet(ListDataSet({
+    projectId,
+    searchDs,
+    mainStore,
+    loadData,
+  })), [projectId]);
 
   const refresh = useCallback(async (callback?:CallableFunction) => {
     await listDs.query();
     typeof callback === 'function' && callback();
-    if (mainStore.getSelectedHost?.id
-      && mainStore.getSelectedHost?.hostStatus === 'connected') {
-      usageDs.query();
-      appInstanceTableDs.query();
+    if (mainStore.getSelectedHost?.id) {
+      if (mainStore.getSelectedHost?.hostStatus === 'connected') {
+        usageDs.query();
+        appInstanceTableDs.query();
+      }
+      permissionDs.query();
     }
   }, [listDs, mainStore.getSelectedHost]);
 
@@ -121,6 +147,8 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     tabKey,
     appInstanceTableDs,
     usageDs,
+    permissionDs,
+    loadData,
   };
   return (
     <Store.Provider value={value}>

@@ -7,9 +7,12 @@ interface ListProps {
   projectId: number,
   searchDs: DataSet,
   mainStore: StoreProps,
+  loadData(data: { hostId: string, hostStatus: string }): void,
 }
 
-export default ({ projectId, searchDs, mainStore }: ListProps): DataSetProps => ({
+export default ({
+  projectId, searchDs, mainStore, loadData,
+}: ListProps): DataSetProps => ({
   autoCreate: false,
   autoQuery: true,
   selection: false,
@@ -31,6 +34,7 @@ export default ({ projectId, searchDs, mainStore }: ListProps): DataSetProps => 
       const selectedRecord = selectedId ? dataSet.some((eachRecord) => eachRecord.get('id') === selectedId) : null;
       if (!selectedRecord && record) {
         mainStore.setSelectedHost(record.toData());
+        loadData({ hostId: record.get('id'), hostStatus: record.get('hostStatus') });
       }
     },
   },
