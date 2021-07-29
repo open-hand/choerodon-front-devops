@@ -242,7 +242,10 @@ const DeployModal = observer(() => {
           <Select
             newLine
             name={mapping.hzeroAppVersion.name}
-          />,
+            renderer={({ value }) => value?.introduction}
+          >
+            {getMarketAndVersionContent()}
+          </Select>,
           <Select
             name={mapping.hzeroServiceVersion.name}
           />,

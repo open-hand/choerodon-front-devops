@@ -112,6 +112,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
     }, []);
 
     const loadMarketAndVersion = useCallback(async () => {
+      marketAndVersionOptionsDs.setQueryParameter('application_type', 'common');
       await marketAndVersionOptionsDs.query();
       if (appServiceSource === 'market_service' && marketAppVersionId) {
         let marketData;

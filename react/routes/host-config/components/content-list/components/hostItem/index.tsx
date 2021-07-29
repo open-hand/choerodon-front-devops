@@ -142,7 +142,6 @@ const HostsItem:React.FC<any> = observer(({
       okText: '我知道了',
       okCancel: false,
     });
-    console.log(mainStore.getDisConnectCommand);
   };
 
   const getActionData = useCallback(() => {
