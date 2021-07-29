@@ -6,6 +6,7 @@ import {
 import { UserInfo } from '@choerodon/components';
 import { useHostPermissionStore } from '@/routes/host-config/components/permission-management/stores';
 import { Record, UserDTOProps, FuncType } from '@/interface';
+import map from 'lodash/map';
 
 const { Option } = Select;
 
@@ -22,6 +23,7 @@ const HostPermission = () => {
 
   modal.handleOk(async () => {
     try {
+      const userIds = selectDs.map((record) => record.get('iamUserId'));
       if (await formDs.submit() !== false) {
         refresh();
         return true;
@@ -35,24 +37,26 @@ const HostPermission = () => {
   const renderUserOption = useCallback(({
     record,
     value,
+    text,
   }) => {
     if (!value) {
       return null;
     }
+    const sourceData = typeof value === 'object' ? value : record?.toData();
     const {
-      realName, loginName, ldap, email, imageUrl,
-    } = value || record?.toData() || {};
+      realName, loginName, imageUrl,
+    } = sourceData || {};
     return (
       <UserInfo
         realName={realName}
-        loginName={ldap ? loginName : email}
+        loginName={loginName}
         avatar={imageUrl}
       />
     );
   }, []);
 
   const optionsFilter = useCallback((record: Record): boolean => {
-    const flag = selectDs.some((optionRecord: Record) => optionRecord.get('id') === record.get('id'));
+    const flag = selectDs.some((optionRecord: Record) => optionRecord.get('iamUserId') === record.get('iamUserId'));
     return !flag;
   }, []);
 
@@ -72,7 +76,7 @@ const HostPermission = () => {
           <Option value={false}>{formatMessage({ id: 'member_specific' })}</Option>
         </SelectBox>
       </Form>
-      {formDs.current && !formDs.current.get('skipCheckPermission') && (
+      {formDs.current && !formDs.current.get('skipCheckPermission') && ([
         selectDs.map((record: Record) => (
           <Form record={record} columns={10} key={record.id}>
             <Select
@@ -92,15 +96,15 @@ const HostPermission = () => {
               className="c7ncd-form-record-delete-btn"
             />
           </Form>
-        ))
-      )}
-      <Button
-        icon="add"
-        funcType={'flat' as FuncType}
-        onClick={handleCreate}
-      >
-        {formatMessage({ id: 'add_member' })}
-      </Button>
+        )),
+        <Button
+          icon="add"
+          funcType={'flat' as FuncType}
+          onClick={handleCreate}
+        >
+          {formatMessage({ id: 'add_member' })}
+        </Button>,
+      ])}
     </>
   );
 };

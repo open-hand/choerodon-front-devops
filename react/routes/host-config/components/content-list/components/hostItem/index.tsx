@@ -46,8 +46,7 @@ const HostsItem:React.FC<any> = observer(({
     refresh,
     projectId,
     mainStore,
-    appInstanceTableDs,
-    usageDs,
+    loadData,
   } = useHostConfigStore();
 
   const itemClassName = useMemo(() => classnames({
@@ -95,15 +94,7 @@ const HostsItem:React.FC<any> = observer(({
 
   const handleSelect = useCallback(() => {
     if (mainStore.getSelectedHost?.id !== id) {
-      if (hostStatus === 'connected') {
-        appInstanceTableDs.setQueryParameter('host_id', id);
-        usageDs.setQueryParameter('hostId', id);
-        appInstanceTableDs.query();
-        usageDs.query();
-      } else {
-        usageDs.removeAll();
-        appInstanceTableDs.removeAll();
-      }
+      loadData({ hostStatus, hostId: id });
       mainStore.setSelectedHost(record.toData());
     }
   }, [hostStatus, record, id, mainStore.getSelectedHost, hostStatus]);

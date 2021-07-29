@@ -186,10 +186,16 @@ const commonField = {
   all_instance: '所有实例',
   appService: '应用服务',
   copy_success: '复制成功',
+
+  // 项目人员权限管理通用
   permission_management: '权限管理',
   member_all: '项目下所有人员',
   member_specific: '项目下特定人员',
   add_member: '添加人员',
+  permission_delete: '删除权限',
+  permission_delete_des: '确定要删除该成员的权限吗？',
+  permission_assignment: '权限分配',
+  permission_addTime: '添加时间',
 
   // 资源树名称
   instances: '实例',
