@@ -80,13 +80,13 @@ const mapping = {
     value: 'hzeroApp',
   },
   hzeroAppVersion: {
-    name: 'hzeroAppVersion',
+    name: 'hzeroAppId',
     type: 'string',
     label: 'HZERO应用版本',
   },
   hzeroServiceVersion: {
-    name: 'hzeroServiceVersion',
-    type: 'string',
+    name: 'hzeroServiceVersionId',
+    type: 'object',
     label: '服务及版本',
   },
   deploySource: {
@@ -184,6 +184,11 @@ export default (({
         deployStore.setAppService([]);
         !['market_service', mapping.hzeroApp.value].includes(value) && deployStore.loadAppService(projectId, value);
         record.get('appServiceId') && record.set('appServiceId', null);
+        // 如果再次选中市场应用和hzero应用重查应用及版本
+        if (['market_service', mapping.hzeroApp.value].includes(value)) {
+          marketAndVersionOptionsDs.setQueryParameter('application_type', value === 'market_service' ? 'common' : 'hzero');
+          marketAndVersionOptionsDs.query();
+        }
         break;
       case 'environmentId':
         record.getField('instanceName').checkValidity();
@@ -210,6 +215,19 @@ export default (({
         }
         loadValueList(record);
         break;
+      case mapping.hzeroServiceVersion.name: {
+        if (value && !isEmpty(value.marketServiceDeployObjectVO)) {
+          const {
+            id: deployObjectId, devopsAppServiceCode, hzeroServiceCode,
+          } = value.marketServiceDeployObjectVO;
+          record.set('instanceName', getRandomName(devopsAppServiceCode || hzeroServiceCode || ''));
+          record.get(mapping.deployWay.value) === mapping.deployWay.options[0].value
+          && deployStore.loadMarketDeployValue(projectId, deployObjectId);
+        } else {
+          record.get('instanceName') && record.set('instanceName', null);
+        }
+        break;
+      }
       case 'appServiceVersionId':
         if (!record.get('valueId')) {
           value && deployStore.loadDeployValue(projectId, value);
@@ -225,6 +243,13 @@ export default (({
           deployStore.setConfigValue('');
         }
         break;
+      case mapping.hzeroAppVersion.name: {
+        if (value?.value?.id || value?.id) {
+          marketServiceOptionsDs.setQueryParameter('marketVersionId', value?.value?.id || value?.id);
+          marketServiceOptionsDs.query();
+        }
+        break;
+      }
       case 'marketAppAndVersion':
         record.get('marketService') && record.set('marketService', null);
         if (value && value.value) {
@@ -317,12 +342,19 @@ export default (({
         if (data[mapping.deployWay.value] === mapping.deployWay.options[0].value) {
           const res = pick(data, ['values', 'devopsServiceReqVO', 'devopsIngressVO', 'environmentId', 'instanceName', 'type', 'isNotChange']);
           const isMarket = data.appServiceSource === 'market_service';
+          const isHzero = data.appServiceSource === mapping.hzeroApp.value;
           const { marketServiceDeployObjectVO, id: marketAppServiceId } = data.marketService || {};
-          const appServiceId = isMarket ? marketAppServiceId : data.appServiceId.split('**')[0];
+          const appServiceId = (isMarket || isHzero) ? marketAppServiceId : data.appServiceId.split('**')[0];
           if (isMarket) {
+            res.application_type = 'market';
             res.marketAppServiceId = marketAppServiceId;
             res.marketDeployObjectId = marketServiceDeployObjectVO
               && marketServiceDeployObjectVO.id;
+          } else if (isHzero) {
+            res.application_type = 'hzero';
+            res[mapping.hzeroAppVersion.name] = data[mapping.hzeroAppVersion.name]?.id;
+            res[mapping.hzeroServiceVersion.name] = data[mapping.hzeroServiceVersion.name]?.id;
+            res.valueId = data.valueId;
           } else {
             res.appServiceId = appServiceId;
             res.appServiceVersionId = data.appServiceVersionId;
@@ -456,9 +488,27 @@ export default (({
     fields: [
       {
         ...mapping.hzeroAppVersion,
+        dynamicProps: {
+          required: ({ record }) => {
+            const res = (record.get(mapping.deployWay.value) === mapping.deployWay.options[0].value)
+              && (record.get('appServiceSource') === mapping.hzeroApp.value);
+            return res;
+          },
+        },
       },
       {
         ...mapping.hzeroServiceVersion,
+        textField: 'marketServiceName',
+        valueField: 'id',
+        options: marketServiceOptionsDs,
+        dynamicProps: {
+          required: ({ record }) => {
+            const res = (record.get(mapping.deployWay.value) === mapping.deployWay.options[0].value)
+              && (record.get('appServiceSource') === mapping.hzeroApp.value);
+            return res;
+          },
+          disabled: ({ record }) => !record.get(mapping.hzeroAppVersion.name),
+        },
       },
       {
         name: mapping.deployWay.value,
@@ -794,7 +844,7 @@ export default (({
         label: formatMessage({ id: `${intlPrefix}.app` }),
         dynamicProps: {
           required: ({ record }) => (record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[0].value && record.get('appServiceSource') !== 'market_service'),
+            === mapping.deployWay.options[0].value && !['market_service', mapping.hzeroApp.value].includes(record.get('appServiceSource'))),
         },
       },
       {
@@ -805,7 +855,7 @@ export default (({
         label: formatMessage({ id: `${intlPrefix}.app.version` }),
         dynamicProps: {
           required: ({ record }) => (record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[0].value && record.get('appServiceSource') !== 'market_service'),
+            === mapping.deployWay.options[0].value && !['market_service', mapping.hzeroApp.value].includes(record.get('appServiceSource'))),
         },
       },
       {
