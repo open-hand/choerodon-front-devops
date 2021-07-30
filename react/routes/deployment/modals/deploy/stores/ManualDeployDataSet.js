@@ -524,7 +524,7 @@ export default (({
         valueField: 'id',
         dynamicProps: {
           required: ({ record }) => record.get(mapping.deployWay.value)
-            === mapping.deployWay.options[1].value,
+            === mapping.deployWay.options?.[1]?.value,
         },
         lookupAxiosConfig: () => ({
           method: 'post',
