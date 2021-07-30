@@ -398,6 +398,7 @@ const DeployModal = observer(() => {
       ) : (
         <HostDeployForm
           getMarketItem={getMarketItem}
+          getMarketAndVersionContent={getMarketAndVersionContent}
         />
       ));
 
