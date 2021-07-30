@@ -156,7 +156,7 @@ const HostsItem:React.FC<any> = observer(({
       });
     } else {
       actionData.unshift({
-        service: [],
+        service: ['choerodon.code.project.deploy.host.ps.disconnect'],
         text: '断开连接',
         action: () => handleDisConnect(),
       });
