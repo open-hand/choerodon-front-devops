@@ -2,7 +2,7 @@ import {
   DataSetProps, FieldType, DataSet,
 } from '@/interface';
 import HostConfigApi from '@/routes/host-config/apis/DeployApis';
-import { map, compact } from 'lodash';
+import { map } from 'lodash';
 
 interface SelectProps {
   projectId: number,
@@ -30,9 +30,9 @@ export default (({
         skipCheckPermission: data.skipCheckPermission,
         userIds: data.skipCheckPermission
           ? []
-          : compact(map(data.users || [], (item: { user: { iamUserId: string }}) => (
+          : map(data.users || [], (item: { user: { iamUserId: string }}) => (
             item?.user?.iamUserId
-          ))),
+          )),
       };
       return ({
         url: HostConfigApi.updateHostPermission(projectId, hostId),
