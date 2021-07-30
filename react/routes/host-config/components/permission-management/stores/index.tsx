@@ -35,9 +35,10 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   } = props;
 
   const { id: hostId } = hostData || {};
+  const random = useMemo(() => Math.random(), []);
 
   const selectDs = useMemo(() => new DataSet(SelectDataSet({
-    projectId, hostId, formatMessage,
+    projectId, hostId, formatMessage, random,
   })), [hostId]);
   const formDs = useMemo(() => new DataSet(FormDataSet({
     projectId, hostId, formatMessage, selectDs, hostData,

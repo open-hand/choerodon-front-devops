@@ -5,9 +5,12 @@ interface SelectProps {
   projectId: number,
   hostId: string,
   formatMessage(arg0: object, arg1?: object): string,
+  random: number,
 }
 
-export default (({ projectId, hostId, formatMessage }: SelectProps): DataSetProps => ({
+export default (({
+  projectId, hostId, formatMessage, random,
+}: SelectProps): DataSetProps => ({
   autoCreate: true,
   autoQuery: false,
   selection: false,
@@ -20,7 +23,7 @@ export default (({ projectId, hostId, formatMessage }: SelectProps): DataSetProp
     lookupAxiosConfig: ({ params }) => {
       const { name } = params || {};
       return ({
-        url: HostConfigApi.getHostNonRelated(projectId, hostId),
+        url: HostConfigApi.getHostNonRelated(projectId, hostId, random),
         method: 'post',
         data: name ? { params: [name], searchParam: {} } : null,
       });
