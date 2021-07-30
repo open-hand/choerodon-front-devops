@@ -270,7 +270,7 @@ function ClusterItem({
     }
     if (status === 'running') {
       Data.push({
-        service: [],
+        service: ['choerodon.code.project.deploy.cluster.cluster-management.ps.disconnect'],
         text: '断开连接',
         action: handleDisConnect,
       });
