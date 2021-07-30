@@ -97,4 +97,8 @@ export default class HostConfigApi {
   static updateHostPermission(projectId: number, hostId: string) {
     return `/devops/v1/projects/${projectId}/hosts/${hostId}/permission`;
   }
+
+  static deletePermission(projectId: number, hostId: string, userId: string) {
+    return `/devops/v1/projects/${projectId}/hosts/${hostId}/permission?user_id=${userId}`;
+  }
 }
