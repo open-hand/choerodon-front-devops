@@ -132,6 +132,10 @@ function getIsMarket({ record }) {
   return record.get(mapping.deploySource.value) === (mapping.deploySource.options.length > 1 ? mapping.deploySource.options[1].value : '');
 }
 
+function getIsHzero({ record }) {
+  return record.get(mapping.deploySource.value) === (mapping.deploySource.options.length > 1 ? mapping.deploySource.options[2].value : '');
+}
+
 export { mapping };
 
 export default (({
@@ -452,6 +456,33 @@ export default (({
             res.value = Base64.encode(deployUseStore.getJarYaml);
             res.name = data.name;
           }
+        } else if (deploySource === mapping.deploySource.options[2].value) {
+        //  hzero
+          res.appSource = 'hzero';
+          res.sourceType = 'hzero';
+          res[mapping.hzeroAppVersion.name] = data[mapping.hzeroAppVersion.name]?.id;
+          // res[mapping.hzeroServiceVersion.name] = data[mapping.hzeroServiceVersion.name]?.id;
+          res[mapping.containerName.value] = data[mapping.containerName.value];
+          res.name = data.name;
+          if (deployObject === mapping.deployObject.options[0].value) {
+            res.name = data[mapping.containerName.value];
+            res.imageInfo = {
+              deployObjectId:
+              data[mapping.hzeroServiceVersion.name]?.marketServiceDeployObjectVO?.id,
+              [mapping.containerName.value]: data[mapping.containerName.value],
+              value: Base64.encode(deployUseStore.getImageYaml),
+            };
+          } else {
+            res.prodJarInfoVO = {
+              deployObjectId:
+              data[mapping.hzeroServiceVersion.name]?.marketServiceDeployObjectVO?.id,
+              name: data.name,
+              [mapping.workPath.value]: data[mapping.workPath.value],
+              value: Base64.encode(deployUseStore.getJarYaml),
+            };
+            res.name = data.name;
+            res.value = Base64.encode(deployUseStore.getJarYaml);
+          }
         } else {
           // 市场应用
           const { marketServiceDeployObjectVO } = data.marketService || {};
@@ -490,9 +521,14 @@ export default (({
         ...mapping.hzeroAppVersion,
         dynamicProps: {
           required: ({ record }) => {
-            const res = (record.get(mapping.deployWay.value) === mapping.deployWay.options[0].value)
+            const imageFLag = (record.get(mapping.deployWay.value)
+              === mapping.deployWay.options[0].value)
               && (record.get('appServiceSource') === mapping.hzeroApp.value);
-            return res;
+
+            const hostFlag = (record.get(mapping.deployWay.value)
+              === mapping.deployWay.options[1].value)
+              && (record.get('deploySource') === 'hzero');
+            return imageFLag || hostFlag;
           },
         },
       },
@@ -503,9 +539,14 @@ export default (({
         options: marketServiceOptionsDs,
         dynamicProps: {
           required: ({ record }) => {
-            const res = (record.get(mapping.deployWay.value) === mapping.deployWay.options[0].value)
+            const imageFLag = (record.get(mapping.deployWay.value)
+              === mapping.deployWay.options[0].value)
               && (record.get('appServiceSource') === mapping.hzeroApp.value);
-            return res;
+
+            const hostFlag = (record.get(mapping.deployWay.value)
+              === mapping.deployWay.options[1].value)
+              && (record.get('deploySource') === 'hzero');
+            return imageFLag || hostFlag;
           },
           disabled: ({ record }) => !record.get(mapping.hzeroAppVersion.name),
         },
@@ -584,7 +625,9 @@ export default (({
         textField: 'repoName',
         valueField: 'repoId',
         dynamicProps: {
-          required: ({ record }) => getRequired({ record }) && !getIsMarket({ record })
+          required: ({ record }) => getRequired({ record })
+            && !getIsMarket({ record })
+            && !getIsHzero({ record })
           && (record.get(mapping.deployObject.value) === mapping.deployObject.options[0].value),
         },
         lookupAxiosConfig: () => ({
@@ -609,7 +652,9 @@ export default (({
         valueField: 'imageId',
         dynamicProps: {
           disabled: ({ record }) => !record.get(mapping.projectImageRepo.value),
-          required: ({ record }) => getRequired({ record }) && !getIsMarket({ record })
+          required: ({ record }) => getRequired({ record })
+            && !getIsMarket({ record })
+            && !getIsHzero({ record })
             && (record.get(mapping.deployObject.value) === mapping.deployObject.options[0].value),
           lookupAxiosConfig: ({ record }) => ({
             method: 'get',
@@ -642,7 +687,9 @@ export default (({
         textField: 'tagName',
         valueField: 'tagName',
         dynamicProps: {
-          required: ({ record }) => getRequired({ record }) && !getIsMarket({ record })
+          required: ({ record }) => getRequired({ record })
+            && !getIsMarket({ record })
+            && !getIsHzero({ record })
             && (record.get(mapping.deployObject.value) === mapping.deployObject.options[0].value),
           disabled: ({ record }) => !record.get(mapping.image.value),
           lookupAxiosConfig: ({ record }) => ({
@@ -692,7 +739,9 @@ export default (({
         textField: 'serverName',
         valueField: 'configId',
         dynamicProps: {
-          required: ({ record }) => getRequired({ record }) && !getIsMarket({ record })
+          required: ({ record }) => getRequired({ record })
+            && !getIsMarket({ record })
+            && !getIsHzero({ record })
             && (record.get(mapping.deployObject.value) === (mapping.deployObject.options.length > 1 ? mapping.deployObject.options[1].value : '')),
         },
         lookupAxiosConfig: () => ({
@@ -707,7 +756,9 @@ export default (({
         textField: 'neRepositoryName',
         valueField: 'repositoryId',
         dynamicProps: {
-          required: ({ record }) => getRequired({ record }) && !getIsMarket({ record })
+          required: ({ record }) => getRequired({ record })
+            && !getIsMarket({ record })
+            && !getIsHzero({ record })
             && (record.get(mapping.deployObject.value) === (mapping.deployObject.options.length > 1 ? mapping.deployObject.options[1].value : '')),
           disabled: ({ record }) => !record.get(mapping.nexus.value),
           lookupAxiosConfig: ({ record }) => ({
@@ -727,7 +778,9 @@ export default (({
         textField: 'name',
         valueField: 'value',
         dynamicProps: {
-          required: ({ record }) => getRequired({ record }) && !getIsMarket({ record })
+          required: ({ record }) => getRequired({ record })
+            && !getIsMarket({ record })
+            && !getIsHzero({ record })
             && (record.get(mapping.deployObject.value) === (mapping.deployObject.options.length > 1 ? mapping.deployObject.options[1].value : '')),
           disabled: ({ record }) => !record.get(mapping.projectProduct.value),
           lookupAxiosConfig: ({ record }) => ({
@@ -758,7 +811,9 @@ export default (({
         textField: 'name',
         valueField: 'value',
         dynamicProps: {
-          required: ({ record }) => getRequired({ record }) && !getIsMarket({ record })
+          required: ({ record }) => getRequired({ record })
+            && !getIsMarket({ record })
+            && !getIsHzero({ record })
             && (record.get(mapping.deployObject.value) === (mapping.deployObject.options.length > 1 ? mapping.deployObject.options[1].value : '')),
           disabled: ({ record }) => !record.get(mapping.groupId.value),
           lookupAxiosConfig: ({ record }) => ({
@@ -789,7 +844,9 @@ export default (({
         textField: 'version',
         valueField: 'version',
         dynamicProps: {
-          required: ({ record }) => getRequired({ record }) && !getIsMarket({ record })
+          required: ({ record }) => getRequired({ record })
+            && !getIsMarket({ record })
+            && !getIsHzero({ record })
             && (record.get(mapping.deployObject.value) === (mapping.deployObject.options.length > 1 ? mapping.deployObject.options[1].value : '')),
           disabled: ({ record }) => !record.get(mapping.groupId.value)
             || !record.get(mapping.artifactId.value),
