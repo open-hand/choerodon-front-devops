@@ -86,7 +86,7 @@ const HostConfig: React.FC<any> = observer((): any => {
             name: formatMessage({ id: 'permission_management' }),
             icon: 'settings-o',
             display: true,
-            // permissions: ['choerodon.code.project.deploy.host.ps.permission'],
+            permissions: ['choerodon.code.project.deploy.host.ps.permission'],
             handler: openPermissionManagement,
           }, {
             icon: 'refresh',
