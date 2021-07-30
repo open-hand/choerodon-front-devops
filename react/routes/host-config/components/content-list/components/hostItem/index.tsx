@@ -33,7 +33,7 @@ const HostsItem:React.FC<any> = observer(({
   jmeterPath, // jmeter二进制文件的路径
   username, // 用户名
   lastUpdateDate,
-  updaterInfo,
+  creatorInfo,
   listDs,
   record,
   handleCreateTestHost,
@@ -189,13 +189,13 @@ const HostsItem:React.FC<any> = observer(({
       <main className={`${prefixCls}-content-list-item-main`}>
         <div className={`${prefixCls}-content-list-item-main-item`}>
           <span>
-            更新者
+            创建者
           </span>
           <span>
             <UserInfo
-              realName={updaterInfo?.realName}
-              loginName={updaterInfo?.ldap ? updaterInfo?.loginName : updaterInfo?.email}
-              avatar={updaterInfo?.imageUrl}
+              realName={creatorInfo?.realName}
+              loginName={creatorInfo?.ldap ? creatorInfo?.loginName : creatorInfo?.email}
+              avatar={creatorInfo?.imageUrl}
             />
           </span>
         </div>
