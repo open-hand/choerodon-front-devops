@@ -56,7 +56,7 @@ const HostPermission = () => {
   }, []);
 
   const optionsFilter = useCallback((record: Record): boolean => {
-    const flag = selectDs.some((optionRecord: Record) => optionRecord.get('iamUserId') === record.get('iamUserId'));
+    const flag = selectDs.some((optionRecord: Record) => optionRecord.get('user') && optionRecord.get('user').iamUserId === record.get('iamUserId'));
     return !flag;
   }, []);
 

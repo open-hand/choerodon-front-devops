@@ -90,8 +90,8 @@ export default class HostConfigApi {
     return `/devops/v1/projects/${projectId}/hosts/${hostId}/permission/page_by_options`;
   }
 
-  static getHostNonRelated(projectId: number, hostId: string) {
-    return `/devops/v1/projects/${projectId}/hosts/${hostId}/permission/list_non_related`;
+  static getHostNonRelated(projectId: number, hostId: string, random: number) {
+    return `/devops/v1/projects/${projectId}/hosts/${hostId}/permission/list_non_related?&random=${random}`;
   }
 
   static updateHostPermission(projectId: number, hostId: string) {
