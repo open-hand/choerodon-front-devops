@@ -39,7 +39,7 @@ const PermissionTable = () => {
       return null;
     }
     const actionData = [{
-      service: [''],
+      service: ['choerodon.code.project.deploy.host.ps.permission.delete'],
       text: formatMessage({ id: 'delete' }),
       action: () => handleDelete(record),
     }];
