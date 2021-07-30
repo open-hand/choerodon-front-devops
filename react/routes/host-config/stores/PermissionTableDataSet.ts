@@ -1,5 +1,7 @@
 import { DataSet, DataSetProps } from '@/interface';
 import HostConfigApi from '@/routes/host-config/apis/DeployApis';
+import getTablePostData from '@/utils/getTablePostData';
+import { omit } from 'lodash';
 
 interface ListProps {
   projectId: number,
@@ -14,9 +16,11 @@ export default ({ projectId, formatMessage, intlPrefix }: ListProps): DataSetPro
   transport: {
     read: ({ data }) => {
       const { hostId } = data || {};
+      const postData = getTablePostData(omit(data, 'hostId'));
       return ({
         url: HostConfigApi.getHostPermissionList(projectId, hostId),
         method: 'post',
+        data: postData,
       });
     },
   },
@@ -29,7 +33,11 @@ export default ({ projectId, formatMessage, intlPrefix }: ListProps): DataSetPro
   queryFields: [
     {
       name: 'realName',
-      label: formatMessage({ id: 'name' }),
+      label: formatMessage({ id: 'userName' }),
+    },
+    {
+      name: 'loginName',
+      label: formatMessage({ id: 'loginName' }),
     },
   ],
 });

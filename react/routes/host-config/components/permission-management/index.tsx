@@ -3,7 +3,12 @@ import { StoreProvider } from './stores';
 import Content from './Content';
 
 interface Props {
-  hostId: string,
+  hostData: {
+    id: string,
+    skipCheckPermission: boolean,
+    objectVersionNumber: number,
+  },
+  refresh(): void,
 }
 
 const PermissionManagementIndex = (props: Props) => (

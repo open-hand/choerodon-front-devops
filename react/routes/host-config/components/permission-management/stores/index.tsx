@@ -31,14 +31,16 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     children,
     intl: { formatMessage },
     AppState: { currentMenuType: { projectId } },
-    hostId,
+    hostData,
   } = props;
+
+  const { id: hostId } = hostData || {};
 
   const selectDs = useMemo(() => new DataSet(SelectDataSet({
     projectId, hostId, formatMessage,
   })), [hostId]);
   const formDs = useMemo(() => new DataSet(FormDataSet({
-    projectId, hostId, formatMessage, selectDs,
+    projectId, hostId, formatMessage, selectDs, hostData,
   })), [hostId]);
 
   const value = {

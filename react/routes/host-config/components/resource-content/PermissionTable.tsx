@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { Action } from '@choerodon/master';
 import { useHostConfigStore } from '@/routes/host-config/stores';
 import { Table } from 'choerodon-ui/pro';
-import { RecordObjectProps, Record } from '@/interface';
+import { RecordObjectProps, Record, TableColumnTooltip } from '@/interface';
 import { TimePopover, UserInfo } from '@choerodon/components';
 import map from 'lodash/map';
 
@@ -14,6 +14,8 @@ const PermissionTable = () => {
     permissionDs,
     formatMessage,
     intlPrefix,
+    mainStore,
+    prefixCls,
   } = useHostConfigStore();
 
   const refresh = useCallback(() => {
@@ -33,6 +35,9 @@ const PermissionTable = () => {
   }, []);
 
   const renderAction = useCallback(({ record }: RecordObjectProps) => {
+    if (record.get('gitlabProjectOwner') || record.get('creator')) {
+      return null;
+    }
     const actionData = [{
       service: [''],
       text: formatMessage({ id: 'delete' }),
@@ -46,10 +51,17 @@ const PermissionTable = () => {
   const renderUserInfo = useCallback(({ value, record }) => {
     const imageUrl = record.get('imageUrl');
     return (
-      <UserInfo
-        realName={value}
-        avatar={imageUrl}
-      />
+      <div className={`${prefixCls}-resource-user`}>
+        <UserInfo
+          realName={value}
+          avatar={imageUrl}
+        />
+        {record.get('creator') && (
+          <span className={`${prefixCls}-resource-creator`}>
+            {formatMessage({ id: 'creator' })}
+          </span>
+        )}
+      </div>
     );
   }, []);
 
@@ -65,10 +77,12 @@ const PermissionTable = () => {
   return (
     <Table dataSet={permissionDs} className="c7ncd-tab-table">
       <Column name="realName" renderer={renderUserInfo} />
-      <Column renderer={renderAction} width={60} />
-      <Column name="loginName" />
+      {!mainStore.getSelectedHost?.skipCheckPermission && (
+        <Column renderer={renderAction} width={60} />
+      )}
+      <Column name="loginName" tooltip={'overflow' as TableColumnTooltip} />
       <Column name="roles" renderer={renderRole} />
-      <Column name="creationDate" renderer={renderDate} />
+      <Column name="creationDate" renderer={renderDate} width={100} />
     </Table>
   );
 };

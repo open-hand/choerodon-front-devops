@@ -9,18 +9,24 @@ interface SelectProps {
   hostId: string,
   formatMessage(arg0: object, arg1?: object): string,
   selectDs: DataSet,
+  hostData: {
+    skipCheckPermission: boolean,
+    objectVersionNumber: number,
+  }
 }
 
 export default (({
-  formatMessage, projectId, hostId, selectDs,
+  formatMessage, projectId, hostId, selectDs, hostData,
 }: SelectProps): DataSetProps => ({
   autoCreate: true,
   autoQuery: false,
   selection: false,
   children: { users: selectDs },
   transport: {
-    submit: ({ data: [data] }) => {
+    create: ({ data: [data] }) => {
       const postData = {
+        hostId,
+        objectVersionNumber: hostData.objectVersionNumber,
         skipCheckPermission: data.skipCheckPermission,
         userIds: data.skipCheckPermission
           ? []
@@ -39,6 +45,6 @@ export default (({
     name: 'skipCheckPermission',
     type: FieldType.boolean,
     label: formatMessage({ id: 'permission_assignment' }),
-    defaultValue: true,
+    defaultValue: hostData?.skipCheckPermission,
   }],
 }));

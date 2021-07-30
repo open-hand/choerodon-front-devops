@@ -43,7 +43,6 @@ const HostConfig: React.FC<any> = observer((): any => {
   };
 
   const openPermissionManagement = useCallback(() => {
-    const { id } = mainStore.getSelectedHost || {};
     Modal.open({
       key: permissionKey,
       title: formatMessage({ id: 'permission_management' }),
@@ -51,7 +50,7 @@ const HostConfig: React.FC<any> = observer((): any => {
         width: SMALL,
       },
       drawer: true,
-      children: <HostPermission hostId={id} />,
+      children: <HostPermission hostData={mainStore.getSelectedHost} refresh={refresh} />,
     });
   }, []);
 

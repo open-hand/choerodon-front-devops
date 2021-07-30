@@ -23,12 +23,12 @@ const HostPermission = () => {
 
   modal.handleOk(async () => {
     try {
-      const userIds = selectDs.map((record) => record.get('iamUserId'));
-      if (await formDs.submit() !== false) {
-        refresh();
-        return true;
+      const res = await formDs.submit();
+      if (res && res.failed) {
+        return false;
       }
-      return false;
+      refresh();
+      return true;
     } catch (e) {
       return false;
     }
