@@ -97,6 +97,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     projectId,
     formatMessage,
     intlPrefix,
+    mainStore,
   })), [projectId]);
 
   const loadData = useCallback(({ hostStatus, hostId }) => {
@@ -109,7 +110,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
       usageDs.removeAll();
       appInstanceTableDs.removeAll();
     }
-    permissionDs.setQueryParameter('hostId', hostId);
     permissionDs.query();
   }, []);
 
