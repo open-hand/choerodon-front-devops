@@ -36,7 +36,7 @@ interface ContextProps {
   permissionDs: DataSetProps,
   hasExtraTab: boolean,
   tab: ReactNode,
-  loadData(data: { hostId: string, hostStatus: string }): void,
+  loadData(data: { hostId: string, hostStatus: string, showPermission: boolean }): void,
 }
 
 const Store = createContext({} as ContextProps);
@@ -100,7 +100,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     mainStore,
   })), [projectId]);
 
-  const loadData = useCallback(({ hostStatus, hostId }) => {
+  const loadData = useCallback(({ hostStatus, hostId, showPermission }) => {
     if (hostStatus === 'connected') {
       appInstanceTableDs.setQueryParameter('host_id', hostId);
       usageDs.setQueryParameter('hostId', hostId);
@@ -110,7 +110,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
       usageDs.removeAll();
       appInstanceTableDs.removeAll();
     }
-    mainStore.getSelectedHost?.showPermission && permissionDs.query();
+    showPermission && permissionDs.query();
   }, [mainStore.getSelectedHost]);
 
   const listDs = useMemo(() => new DataSet(ListDataSet({
