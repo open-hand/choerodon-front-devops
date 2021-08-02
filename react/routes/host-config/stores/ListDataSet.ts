@@ -7,7 +7,7 @@ interface ListProps {
   projectId: number,
   searchDs: DataSet,
   mainStore: StoreProps,
-  loadData(data: { hostId: string, hostStatus: string }): void,
+  loadData(data: { hostId: string, hostStatus: string, showPermission: boolean }): void,
 }
 
 export default ({
@@ -37,7 +37,11 @@ export default ({
       }
       if (!selectedRecord && record) {
         mainStore.setSelectedHost(record.toData());
-        loadData({ hostId: record.get('id'), hostStatus: record.get('hostStatus') });
+        loadData({
+          hostId: record.get('id'),
+          hostStatus: record.get('hostStatus'),
+          showPermission: record.get('showPermission'),
+        });
       }
     },
   },

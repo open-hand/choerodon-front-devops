@@ -38,6 +38,7 @@ const HostsItem:React.FC<any> = observer(({
   record,
   handleCreateTestHost,
   handleCreateDeployHost,
+  showPermission, // 是否可见权限管理
 }) => {
   const {
     prefixCls,
@@ -94,7 +95,7 @@ const HostsItem:React.FC<any> = observer(({
 
   const handleSelect = useCallback(() => {
     if (mainStore.getSelectedHost?.id !== id) {
-      loadData({ hostStatus, hostId: id });
+      loadData({ hostStatus, hostId: id, showPermission });
       mainStore.setSelectedHost(record.toData());
     }
   }, [hostStatus, record, id, mainStore.getSelectedHost, hostStatus]);
