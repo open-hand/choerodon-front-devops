@@ -6,7 +6,7 @@ import {
 import { some } from 'lodash';
 import { RecordObjectProps, Record, FuncType } from '@/interface';
 import { useLinkServiceStore } from '@/routes/app-center/app-list/components/link-service/stores';
-import EnvOption from '@/routes/app-center/components/env-option';
+import EnvOption from '@/components/env-option';
 
 const LinkService = () => {
   const {
