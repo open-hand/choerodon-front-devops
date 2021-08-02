@@ -1,4 +1,4 @@
-import { DataSet, DataSetProps } from '@/interface';
+import { DataSet, DataSetProps, FieldType } from '@/interface';
 import HostConfigApi from '@/routes/host-config/apis/DeployApis';
 import getTablePostData from '@/utils/getTablePostData';
 import { omit } from 'lodash';
@@ -40,10 +40,12 @@ export default ({
   queryFields: [
     {
       name: 'realName',
+      type: 'string' as FieldType,
       label: formatMessage({ id: 'userName' }),
     },
     {
       name: 'loginName',
+      type: 'string' as FieldType,
       label: formatMessage({ id: 'loginName' }),
     },
   ],
