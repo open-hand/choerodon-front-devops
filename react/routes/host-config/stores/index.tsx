@@ -110,8 +110,8 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
       usageDs.removeAll();
       appInstanceTableDs.removeAll();
     }
-    permissionDs.query();
-  }, []);
+    mainStore.getSelectedHost?.showPermission && permissionDs.query();
+  }, [mainStore.getSelectedHost]);
 
   const listDs = useMemo(() => new DataSet(ListDataSet({
     projectId,
@@ -128,7 +128,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
         usageDs.query();
         appInstanceTableDs.query();
       }
-      permissionDs.query();
+      mainStore.getSelectedHost?.showPermission && permissionDs.query();
     }
   }, [listDs, mainStore.getSelectedHost]);
 
