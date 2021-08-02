@@ -42,6 +42,7 @@ const commonField = {
   envName: '环境名称',
   envCode: '环境编码',
   instance: '实例',
+  instanceName: '实例名称',
   network: '网络',
   label: '标签',
   version: '版本',
@@ -789,11 +790,17 @@ const deploy = {
   'c7ncd.deploy.type.batch': '批量',
   'c7ncd.deploy.type.auto': '流水线',
   'c7ncd.deploy.type.baseComponent': '基础组件',
+  'c7ncd.deploy.type.hzero': 'HZERO',
   'c7ncd.deploy.source.deploy': '部署来源',
   'c7ncd.deploy.source.deploy.currentProject': '本项目',
   'c7ncd.deploy.source.deploy.share': '共享',
   'c7ncd.deploy.source.deploy.market': '市场',
   'c7ncd.deploy.source.deploy.platformPreset': '平台预置',
+  'c7ncd.deploy.source.deploy.hzero': 'Hzero应用',
+  'c7ncd.deploy.hzero': 'HZERO应用快速部署',
+  'c7ncd.deploy.hzero.version': 'HZERO应用版本',
+  'c7ncd.deploy.hzero.version.service': '服务版本',
+  'c7ncd.deploy.hzero.add': '添加HZERO服务',
 };
 
 const repository = {
