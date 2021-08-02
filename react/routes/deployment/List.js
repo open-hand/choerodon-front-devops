@@ -14,6 +14,7 @@ import { observer } from 'mobx-react-lite';
 import app from '@/images/app.svg';
 import image from '@/images/image.svg';
 import jar from '@/images/jar.svg';
+import hzero from '@/images/hzero.svg';
 import { StatusTag } from '@choerodon/components';
 import { TabCode } from '@choerodon/master';
 import { SMALL } from '@/utils/getModalWidth';
@@ -26,7 +27,9 @@ import UserInfo from '../../components/userInfo';
 import Deploy from './modals/deploy';
 import BaseComDeploy from './modals/base-comDeploy';
 import BatchDeploy from './modals/batch-deploy';
+import HzeroDeploy from './modals/hzero-deploy';
 import Tips from '../../components/new-tips';
+import { LARGE } from '../../utils/getModalWidth';
 
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/base16-dark.css';
@@ -36,6 +39,7 @@ const { Column } = Table;
 const modalKey4 = Modal.key();
 const batchDeployModalKey = Modal.key();
 const commandModalKey = Modal.key();
+const hzeroDeployModalKey = Modal.key();
 const modalStyle2 = {
   width: 'calc(100vw - 3.52rem)',
 };
@@ -189,6 +193,19 @@ const Deployment = withRouter(observer((props) => {
     }
   }
 
+  const openHzeroDeploy = useCallback(() => {
+    Modal.open({
+      key: hzeroDeployModalKey,
+      style: {
+        width: LARGE,
+      },
+      title: formatMessage({ id: `${intlPrefix}.hzero` }),
+      children: <HzeroDeploy />,
+      drawer: true,
+      okText: formatMessage({ id: 'deployment' }),
+    });
+  }, []);
+
   function renderNumber({ record }) {
     const errorInfo = record.get('errorInfo');
     const deployStatus = record.get('deployStatus');
@@ -197,10 +214,7 @@ const Deployment = withRouter(observer((props) => {
     return (
       <>
         <span
-          className={classNames({
-            [`${prefixCls}-content-table-mark ${prefixCls}-content-table-mark-${type}`]: true,
-            'c7ncd-number-base': type === 'baseComponent',
-          })}
+          className={`${prefixCls}-content-table-mark ${prefixCls}-content-table-mark-${type}`}
         >
           {formatMessage({ id: `${intlPrefix}.type.${type}` })}
         </span>
@@ -329,6 +343,10 @@ const Deployment = withRouter(observer((props) => {
         img: image,
         text: 'Docker镜像',
       },
+      hzero: {
+        img: hzero,
+        text: 'Hzero应用',
+      },
     };
     return [
       <p className="c7ncd-deploy-content-deployObjectP">
@@ -447,6 +465,13 @@ const Deployment = withRouter(observer((props) => {
               display: HAS_BASE_PRO,
               permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.basedComponent'],
               handler: () => openBaseDeploy(),
+            },
+            {
+              name: formatMessage({ id: `${intlPrefix}.hzero` }),
+              icon: 'cloud_done-o',
+              display: true,
+              permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.batch'],
+              handler: openHzeroDeploy,
             },
             {
               icon: 'refresh',
