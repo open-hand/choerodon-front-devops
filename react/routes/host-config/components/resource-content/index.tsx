@@ -57,12 +57,14 @@ const ResourceContent = observer(() => {
             <EmptyPage image={EmptySvg} description="暂未获取到该主机资源信息" />
           )}
         </TabPane>
-        <TabPane
-          tab={formatMessage({ id: 'permission_management' })}
-          key="permission"
-        >
-          <PermissionTable />
-        </TabPane>
+        {mainStore.getSelectedHost?.showPermission ? (
+          <TabPane
+            tab={formatMessage({ id: 'permission_management' })}
+            key="permission"
+          >
+            <PermissionTable />
+          </TabPane>
+        ) : null}
       </Tabs>
     </div>
   ), [mainStore.getSelectedHost]);
