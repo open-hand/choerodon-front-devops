@@ -49,7 +49,7 @@ export default observer(() => {
     AppState: { currentMenuType: { projectId } },
     refresh,
     deployWay,
-    middlewareData,
+    middleware: middlewareData,
     ServiceVersionDataSet,
     BaseComDeployStore,
   } = useBaseComDeployStore();
