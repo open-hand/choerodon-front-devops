@@ -1,6 +1,6 @@
-import React, { createRef, useEffect } from 'react';
+import React, { createRef, useEffect, useMemo } from 'react';
 import {
-  Modal, Icon, Button,
+  Modal, Icon, Button, Tooltip,
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import { usePipelineStageEditStore } from '../../stores';
@@ -121,6 +121,36 @@ const EditItem = (props) => {
     cursor: 'all-scroll',
   });
 
+  const isCdDisabled = useMemo(() => (!edit && stageType === 'CD'), [edit, stageType]);
+
+  const renderOptsBtn = () => {
+    const toolText = '该用户没有部署任务对应的环境权限，无法修改或删除';
+    return (
+      <>
+        <Tooltip title={isCdDisabled && toolText}>
+          <Button
+            className={`${prefixCls}-btnGroup-btn`}
+            disabled={isCdDisabled}
+            shape="circle"
+            size="small"
+            icon="mode_edit"
+            onClick={openEditJobModal}
+          />
+        </Tooltip>
+        <Tooltip title={isCdDisabled && toolText}>
+          <Button
+            className={`${prefixCls}-btnGroup-btn`}
+            disabled={isCdDisabled}
+            shape="circle"
+            size="small"
+            icon="delete_forever"
+            onClick={openDeleteJobModal}
+          />
+        </Tooltip>
+      </>
+    );
+  };
+
   return (
     <div
       className={prefixCls}
@@ -139,22 +169,7 @@ const EditItem = (props) => {
         {name}
       </div>
       <div className={`${prefixCls}-btnGroup`}>
-        <Button
-          className={`${prefixCls}-btnGroup-btn`}
-          disabled={(!edit && stageType === 'CD')}
-          shape="circle"
-          size="small"
-          icon="mode_edit"
-          onClick={openEditJobModal}
-        />
-        <Button
-          className={`${prefixCls}-btnGroup-btn`}
-          disabled={(!edit && stageType === 'CD')}
-          shape="circle"
-          size="small"
-          icon="delete_forever"
-          onClick={openDeleteJobModal}
-        />
+        {renderOptsBtn()}
       </div>
     </div>
   );
