@@ -86,11 +86,12 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
     }, []);
 
     useEffect(() => {
-      envOptionsDs.transport.read.url = `/devops/v1/projects/${projectId}/envs/list_by_active?active=true`;
+      // envOptionsDs.transport.read.url
+      // = `/devops/v1/projects/${projectId}/envs/list_by_active?active=true`;
       // pipelineOptionsDs.transport.read.url =
       //   `/devops/v1/projects/${projectId}/pipeline/list_all`;
-      envOptionsDs.query();
-      pipelineOptionsDs.query();
+      // envOptionsDs.query();
+      // pipelineOptionsDs.query();
     }, [projectId]);
 
     const value = {

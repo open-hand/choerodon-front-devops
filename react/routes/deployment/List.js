@@ -28,6 +28,7 @@ import Deploy from './modals/deploy';
 import BaseComDeploy from './modals/base-comDeploy';
 import BatchDeploy from './modals/batch-deploy';
 import HzeroDeploy from './modals/hzero-deploy';
+import HzeroDeployDetail from './modals/hzero-deploy-detail';
 import Tips from '../../components/new-tips';
 import { LARGE } from '../../utils/getModalWidth';
 
@@ -40,6 +41,7 @@ const modalKey4 = Modal.key();
 const batchDeployModalKey = Modal.key();
 const commandModalKey = Modal.key();
 const hzeroDeployModalKey = Modal.key();
+const hzeroDeployDetailModalKey = Modal.key();
 const modalStyle2 = {
   width: 'calc(100vw - 3.52rem)',
 };
@@ -81,10 +83,18 @@ const Deployment = withRouter(observer((props) => {
   }, []);
 
   function refresh() {
-    envOptionsDs.query();
-    pipelineOptionsDs.query();
+    // envOptionsDs.query();
+    // pipelineOptionsDs.query();
     listDs.query();
   }
+
+  const getStatusTag = useCallback((status) => (
+    <StatusTag
+      colorCode={status || ''}
+      name={status ? formatMessage({ id: `${intlPrefix}.status.${status}` }) : 'unKnow'}
+      style={statusTagsStyle}
+    />
+  ), []);
 
   function openDeploy() {
     Modal.open({
@@ -235,11 +245,7 @@ const Deployment = withRouter(observer((props) => {
     const errMsg = record.get('errorMessage');
     return (
       <>
-        <StatusTag
-          colorCode={value || ''}
-          name={value ? formatMessage({ id: `${intlPrefix}.status.${value}` }) : 'unKnow'}
-          style={statusTagsStyle}
-        />
+        {getStatusTag(value)}
         {errMsg && (
         <Tooltip title={errMsg}>
           <Icon
@@ -425,7 +431,38 @@ const Deployment = withRouter(observer((props) => {
     });
   }, []);
 
+  const openHzeroDeployDetailModal = useCallback((record) => {
+    Modal.open({
+      key: hzeroDeployDetailModalKey,
+      title: (
+        <div>
+          <span style={{ paddingRight: '0.12rem' }}>
+            记录“#
+            {record.get('viewId')}
+            ”的执行详情
+          </span>
+          {getStatusTag(record.get('status'))}
+        </div>
+      ),
+      style: { width: LARGE },
+      children: <HzeroDeployDetail status={record.get('status')} />,
+      okText: formatMessage({ id: 'close' }),
+      okCancel: false,
+      drawer: true,
+    });
+  }, []);
+
   const renderAction = useCallback(({ record }) => {
+    if (record.get('deployType') === 'hzero') {
+      return (
+        <Action
+          data={[{
+            text: '查看记录详情',
+            action: () => openHzeroDeployDetailModal(record),
+          }]}
+        />
+      );
+    }
     if (record.get('log')) {
       return (
         <Action data={[{

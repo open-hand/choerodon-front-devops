@@ -131,6 +131,7 @@ const HzeroDeploy = observer(() => {
   return (
     <div className={`${prefixCls}`}>
       <Form dataSet={formDs} columns={5}>
+        <SelectBox name="appType" colSpan={2} />
         <Select
           name="environmentId"
           searchable
@@ -138,6 +139,7 @@ const HzeroDeploy = observer(() => {
           optionRenderer={renderEnvOption}
           onOption={renderOptionProperty}
           colSpan={2}
+          newLine
         />
         <Select
           name="appVersionId"
