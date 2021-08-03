@@ -167,8 +167,9 @@ const Deployment = withRouter(observer((props) => {
           envId,
         },
       });
+    } else {
+      history.push(`/devops/resource${search}`);
     }
-    history.push(`/devops/resource${search}`);
   }
 
   function deployAfter(instance, type = 'instance') {
