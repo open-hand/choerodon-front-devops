@@ -802,6 +802,9 @@ const deploy = {
   'c7ncd.deploy.hzero.version.service': '服务版本',
   'c7ncd.deploy.hzero.add': '添加HZERO服务',
   'c7ncd.deploy.hzero.placeholder': '请选择HZERO服务',
+  'c7ncd.deploy.hzero.type': 'HZERO应用类型',
+  'c7ncd.deploy.hzero.type.open': 'HZERO开源版',
+  'c7ncd.deploy.hzero.type.business': 'HZERO企业版',
 };
 
 const repository = {
