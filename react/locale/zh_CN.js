@@ -801,6 +801,7 @@ const deploy = {
   'c7ncd.deploy.hzero.version': 'HZERO应用版本',
   'c7ncd.deploy.hzero.version.service': '服务版本',
   'c7ncd.deploy.hzero.add': '添加HZERO服务',
+  'c7ncd.deploy.hzero.placeholder': '请选择HZERO服务',
 };
 
 const repository = {

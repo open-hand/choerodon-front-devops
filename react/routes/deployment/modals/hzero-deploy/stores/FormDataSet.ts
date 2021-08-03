@@ -1,10 +1,12 @@
 import { DataSet, DataSetProps, FieldType } from '@/interface';
+import DeploymentApi from '@/routes/deployment/apis';
 
 interface FormProps {
   formatMessage(arg0: object, arg1?: object): string,
   intlPrefix: string,
   projectId: number,
   serviceDs: DataSet,
+  random: number,
 }
 
 export default ({
@@ -12,6 +14,7 @@ export default ({
   intlPrefix,
   projectId,
   serviceDs,
+  random,
 }: FormProps): DataSetProps => ({
   autoCreate: true,
   selection: false,
@@ -25,7 +28,11 @@ export default ({
       valueField: 'id',
       label: formatMessage({ id: 'environment' }),
       required: true,
-      // options: envOptionsDs,
+      lookupAxiosConfig: () => ({
+        url: DeploymentApi.getEnvList(projectId),
+        params: { random },
+        method: 'get',
+      }),
     },
     {
       name: 'appVersionId',
