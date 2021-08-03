@@ -7,7 +7,6 @@ interface FormProps {
   projectId: number,
   serviceDs: DataSet,
   typeDs: DataSet,
-  random: number,
 }
 
 export default ({
@@ -15,10 +14,9 @@ export default ({
   intlPrefix,
   projectId,
   serviceDs,
-  random,
   typeDs,
 }: FormProps): DataSetProps => ({
-  autoCreate: true,
+  autoCreate: false,
   selection: false,
   autoQueryAfterSubmit: false,
   paging: false,
@@ -30,25 +28,23 @@ export default ({
       valueField: 'value',
       label: formatMessage({ id: `${intlPrefix}.type` }),
       options: typeDs,
-      defaultValue: 'open',
+    },
+    {
+      name: 'environmentName',
+      label: formatMessage({ id: 'environment' }),
+      required: true,
     },
     {
       name: 'environmentId',
-      textField: 'name',
-      valueField: 'id',
-      label: formatMessage({ id: 'environment' }),
       required: true,
-      lookupAxiosConfig: () => ({
-        url: DeploymentApi.getEnvList(projectId),
-        params: { random },
-        method: 'get',
-      }),
+    },
+    {
+      name: 'appVersionName',
+      label: formatMessage({ id: `${intlPrefix}.version` }),
+      required: true,
     },
     {
       name: 'appVersionId',
-      label: formatMessage({ id: `${intlPrefix}.version` }),
-      textField: 'name',
-      valueField: 'id',
       required: true,
     },
   ],

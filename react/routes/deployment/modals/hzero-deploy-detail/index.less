@@ -1,0 +1,23 @@
+@import "../hzero-deploy/index";
+@popupPrefix: c7ncd-deploy-hzero;
+@success_status: #1fc2bb;
+@failed_status: #f76776;
+@wait_status: rgba(15, 19, 88, 0.25);
+
+.@{popupPrefix} {
+
+  .@{popupPrefix}-status-icon {
+    margin-left: auto;
+    font-size: .2rem;
+
+    &.success {
+      color: @success_status;
+    }
+    &.failed {
+      color: @failed_status;
+    }
+    &.wait {
+      color: @wait_status;
+    }
+  }
+}

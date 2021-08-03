@@ -17,11 +17,14 @@ interface ContextProps {
   serviceDs: DataSetProps,
   modal: any,
   refresh(): void,
+  status: StatusProps,
 }
+
+export type StatusProps = 'success' | 'failed';
 
 const Store = createContext({} as ContextProps);
 
-export function useHzeroDeployStore() {
+export function useHzeroDeployDetailStore() {
   return useContext(Store);
 }
 
@@ -33,7 +36,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   } = props;
 
   const intlPrefix = useMemo(() => 'c7ncd.deploy.hzero', []);
-  const random = useMemo(() => Math.random(), []);
 
   const typeDs = useMemo(() => new DataSet({
     data: [{
@@ -55,28 +57,60 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     intlPrefix,
     projectId,
     serviceDs,
-    random,
     typeDs,
   })), [projectId]);
 
   useEffect(() => {
-    serviceDs.loadData([{
-      name: 'hzero-1',
-      id: '111',
-      isRequired: true,
-      instanceName: 'instance-1',
-      values: 'aa',
-    }, {
-      name: 'hzero-2',
-      id: '222',
-      instanceName: 'instance-2',
-      values: 'bbb',
-    }, {
-      name: 'hzero-3',
-      id: '333',
-      instanceName: 'instance-3',
-      values: 'ccc',
+    formDs.loadData([{
+      appType: 'open',
+      environmentId: '11',
+      environmentName: 'Staging环境',
+      appVersionId: '21',
+      appVersionName: '1.0.0',
+      hzeroService: [{
+        name: 'hzero-1',
+        id: '111',
+        isRequired: true,
+        instanceName: 'instance-1',
+        serviceVersionId: 'v-1',
+        serviceVersionName: '1.0.0',
+        values: 'aa',
+        status: 'success',
+      }, {
+        name: 'hzero-2',
+        id: '222',
+        instanceName: 'instance-2',
+        values: 'bbb',
+        status: 'success',
+        serviceVersionId: 'v-2',
+        serviceVersionName: '2.0.0',
+      }, {
+        name: 'hzero-3',
+        id: '333',
+        instanceName: 'instance-3',
+        values: 'ccc',
+        status: 'failed',
+        serviceVersionId: 'v-3',
+        serviceVersionName: '3.0.0',
+      }, {
+        name: 'hzero-4',
+        id: '444',
+        instanceName: 'instance-4',
+        values: 'ddd',
+        status: 'wait',
+        serviceVersionId: 'v-4',
+        serviceVersionName: '4.0.0',
+      }, {
+        name: 'hzero-5',
+        id: '555',
+        instanceName: 'instance-5',
+        values: 'eee',
+        status: 'wait',
+        serviceVersionId: 'v-5',
+        serviceVersionName: '5.0.0',
+      }],
     }]);
+    // serviceDs.loadData();
   }, []);
 
   const value = {
