@@ -1,4 +1,4 @@
-import React, { createRef } from 'react';
+import React, { createRef, useEffect } from 'react';
 import {
   Modal, Icon, Button,
 } from 'choerodon-ui/pro';
@@ -26,7 +26,9 @@ const EditItem = (props) => {
     snapshotinner,
   } = props;
 
-  const { name, type } = jobDetail;
+  const { name, type, edit } = jobDetail;
+
+  const prefixCls = 'c7n-piplineManage-edit-column-item';
 
   const {
     editBlockStore,
@@ -121,7 +123,7 @@ const EditItem = (props) => {
 
   return (
     <div
-      className="c7n-piplineManage-edit-column-item"
+      className={prefixCls}
       ref={innerRef}
       {...dragProvided.draggableProps}
       {...dragProvided.dragHandleProps}
@@ -130,22 +132,24 @@ const EditItem = (props) => {
         dragProvided.draggableProps.style,
       )}
     >
-      <div className="c7n-piplineManage-edit-column-item-header">
+      <div className={`${prefixCls}-header`}>
         【
         {Object.prototype.hasOwnProperty.bind(jobType, type) && jobType[type]}
         】
         {name}
       </div>
-      <div className="c7n-piplineManage-edit-column-item-btnGroup">
+      <div className={`${prefixCls}-btnGroup`}>
         <Button
-          className="c7n-piplineManage-edit-column-item-btnGroup-btn"
+          className={`${prefixCls}-btnGroup-btn`}
+          disabled={(!edit && stageType === 'CD')}
           shape="circle"
           size="small"
           icon="mode_edit"
           onClick={openEditJobModal}
         />
         <Button
-          className="c7n-piplineManage-edit-column-item-btnGroup-btn"
+          className={`${prefixCls}-btnGroup-btn`}
+          disabled={(!edit && stageType === 'CD')}
           shape="circle"
           size="small"
           icon="delete_forever"
