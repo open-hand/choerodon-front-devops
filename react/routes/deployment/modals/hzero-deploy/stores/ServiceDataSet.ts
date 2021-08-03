@@ -1,6 +1,6 @@
 import { DataSet } from 'choerodon-ui/pro';
 import omit from 'lodash/omit';
-import { RecordObjectProps, DataSetProps, FieldType } from '@/interface';
+import { Record, DataSetProps, FieldType } from '@/interface';
 import { axios } from '@choerodon/boot';
 
 interface FormProps {
@@ -20,7 +20,7 @@ export default ({
   intlPrefix,
   projectId,
 }: FormProps): DataSetProps => {
-  async function checkName(value, name, record) {
+  async function checkName(value: any, name: string, record: Record) {
     const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
     if (value && pa.test(value)) {
       if (!record.get('environmentId')) return true;

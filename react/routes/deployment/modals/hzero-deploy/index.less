@@ -19,6 +19,9 @@
         line-height: 20px;
         padding: .13rem .1rem;
         border-bottom: 1px solid @contentBorderColor;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
 
         &.disabled {
           color: rgba(15, 19, 88, 0.45);
@@ -29,12 +32,47 @@
           background: rgba(104, 135, 232, 0.08);
           color: var(--primary-color);
           font-weight: 500;
+          padding: .13rem .1rem .13rem .07rem;
         }
+      }
+
+      &-required {
+        background: #f0f5ff;
+        border-radius: 4px;
+        border: 1px solid #adc6ff;
+        font-size: 12px;
+        font-weight: 400;
+        color: #5365ea;
+        line-height: 20px;
+        padding: 0 .04rem;
+        transform: scale(0.83);
+        margin-left: auto;
+        margin-right: 0.16rem;
+      }
+
+      &-btn {
+        margin-left: auto;
+
+        &>button {
+          width: .2rem !important;
+          height: .2rem !important;
+          color: #abbccf !important;
+        }
+      }
+
+      &-add {
+        margin-top: .2rem;
       }
     }
 
     &-form {
       margin: .16rem;
     }
+  }
+
+  &-dropdown-popup {
+    width: 3rem;
+    margin-top: .1rem;
+    margin-left: .1rem;
   }
 }

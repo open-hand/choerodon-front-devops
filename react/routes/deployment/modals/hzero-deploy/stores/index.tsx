@@ -33,6 +33,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   } = props;
 
   const intlPrefix = useMemo(() => 'c7ncd.deploy.hzero', []);
+  const random = useMemo(() => Math.random(), []);
 
   const serviceDs = useMemo(() => new DataSet(ServiceDataSet({
     formatMessage,
@@ -44,7 +45,28 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     intlPrefix,
     projectId,
     serviceDs,
+    random,
   })), [projectId]);
+
+  useEffect(() => {
+    serviceDs.loadData([{
+      name: 'hzero-1',
+      id: '111',
+      isRequired: true,
+      instanceName: 'instance-1',
+      values: 'aa',
+    }, {
+      name: 'hzero-2',
+      id: '222',
+      instanceName: 'instance-2',
+      values: 'bbb',
+    }, {
+      name: 'hzero-3',
+      id: '333',
+      instanceName: 'instance-3',
+      values: 'ccc',
+    }]);
+  }, []);
 
   const value = {
     ...props,

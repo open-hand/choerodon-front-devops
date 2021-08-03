@@ -78,7 +78,7 @@
     "lodash": "latest"
   },
   "lint-staged": {
-    "react/**/*.{js,jsx}": [
+    "react/**/*.{js,jsx,ts,tsx}": [
       "npm run lint-staged:es"
     ],
     "react/**/*.{scss,less}": "stylelint --syntax less"
