@@ -42,6 +42,7 @@ const batchDeployModalKey = Modal.key();
 const commandModalKey = Modal.key();
 const hzeroDeployModalKey = Modal.key();
 const hzeroDeployDetailModalKey = Modal.key();
+const hzeroStopModalKey = Modal.key();
 const modalStyle2 = {
   width: 'calc(100vw - 3.52rem)',
 };
@@ -431,6 +432,19 @@ const Deployment = withRouter(observer((props) => {
     });
   }, []);
 
+  const handleHzeroRetry = useCallback(() => {
+
+  }, []);
+
+  const openHzeroStopModal = useCallback(() => {
+    Modal.open({
+      key: hzeroStopModalKey,
+      title: '停止执行',
+      children: '确定停止该条HZERO快速部署吗？',
+      okText: formatMessage({ id: 'stop' }),
+    });
+  }, []);
+
   const openHzeroDeployDetailModal = useCallback((record) => {
     Modal.open({
       key: hzeroDeployDetailModalKey,
@@ -454,13 +468,26 @@ const Deployment = withRouter(observer((props) => {
 
   const renderAction = useCallback(({ record }) => {
     if (record.get('deployType') === 'hzero') {
+      const actionData = [{
+        text: '查看记录详情',
+        action: () => openHzeroDeployDetailModal(record),
+      }];
+      switch (record.get('status')) {
+        case 'failed':
+          actionData.push({
+            text: formatMessage({ id: 'retry' }),
+            action: handleHzeroRetry,
+          });
+          break;
+        case 'operating':
+          actionData.push({
+            text: formatMessage({ id: 'stop' }),
+            action: openHzeroStopModal,
+          });
+        default:
+      }
       return (
-        <Action
-          data={[{
-            text: '查看记录详情',
-            action: () => openHzeroDeployDetailModal(record),
-          }]}
-        />
+        <Action data={actionData} />
       );
     }
     if (record.get('log')) {
