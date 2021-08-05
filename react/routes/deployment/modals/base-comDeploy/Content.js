@@ -811,6 +811,17 @@ export default observer(() => {
     return true;
   };
 
+  const renderHostOption = ({ record, text }) => (
+    <>
+      <StatusDot
+        size="small"
+        synchronize
+        connect={record.get('hostStatus') === 'connected'}
+      />
+      <span style={{ marginLeft: 5 }}>{ text }</span>
+    </>
+  );
+
   /**
    * 主机部署的主机设置部分
    */
@@ -839,6 +850,7 @@ export default observer(() => {
                   <Select
                     colSpan={1}
                     name={hostMapping.hostName.name}
+                    optionRenderer={renderHostOption}
                     onOption={(data) => ({
                       disabled: getHostNameDisabled(data),
                     })}
@@ -979,6 +991,7 @@ export default observer(() => {
                       <Select
                         onClick={(e) => e.stopPropagation()}
                         name={hostMapping.hostName.name}
+                        optionRenderer={renderHostOption}
                         onOption={(data) => ({
                           disabled: getHostNameDisabled(data),
                         })}
