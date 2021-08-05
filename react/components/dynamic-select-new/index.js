@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+/* eslint-disable */
 import React, { useEffect, useState, useMemo } from 'react';
 import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
@@ -71,7 +71,7 @@ const DynamicSelect = injectIntl(observer((props) => {
       store.setOldOptionsData(optionsDataSet.records);
 
       // 手动加入加载更多的选项
-      if (res.hasNextPage) {
+      if (res.hasNextPage && res.number < res.totalPages) {
         const loadMoreRecord = optionsDataSet.create({
           [valueField]: 'More',
           [textField]: 'More',
@@ -174,7 +174,8 @@ const DynamicSelect = injectIntl(observer((props) => {
               optionRenderer={optionRendererWraper}
               renderer={rendererWraper}
               optionsFilter={optionsFilterWaper}
-              searchable onInput={handleInput}
+              searchable
+              onInput={handleInput}
               searchMatcher={() => true}
               onBlur={handleBlur.bind(this, createdRecord)}
               popupCls="c7ncd-select-menu-item-more-hidden"
