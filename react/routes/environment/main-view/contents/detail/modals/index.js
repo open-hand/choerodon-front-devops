@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
 import { HeaderButtons } from '@choerodon/boot';
@@ -11,11 +11,12 @@ import { useDetailStore } from '../stores';
 import useStore from './useStore';
 import EnvCreateForm from '../../../modals/env-create';
 import GroupForm from '../../../modals/GroupForm';
-import DeployConfigForm from './deploy-config';
+import DeployConfigForm from '../../../../../../components/deploy-config-form';
 import { isNotRunning } from '../../../../util';
 import Tips from '../../../../../../components/new-tips';
 
 import '../../../../../../components/dynamic-select/style/index.less';
+import { LARGE } from '../../../../../../utils/getModalWidth';
 
 const detailKey = Modal.key();
 const envKey = Modal.key();
@@ -162,29 +163,19 @@ const EnvModals = observer(() => {
     });
   }
 
-  function openConfigModal() {
+  const openConfigModal = () => {
     const { id } = getSelectedMenu;
-    configFormDs.create();
     Modal.open({
       key: configKey,
+      style: { width: LARGE },
       title: formatMessage({ id: `${currentIntlPrefix}.create.config` }),
-      children: <DeployConfigForm
-        store={detailStore}
-        dataSet={configFormDs}
-        refresh={refresh}
-        envId={id}
-        intlPrefix={currentIntlPrefix}
-        prefixCls={currentPrefixCls}
-      />,
       drawer: true,
-      style: configModalStyle,
-      afterClose: () => {
-        configFormDs.reset();
-        detailStore.setValue('');
-      },
-      okText: formatMessage({ id: 'create' }),
+      children: <DeployConfigForm
+        envId={id}
+        refresh={refresh}
+      />,
     });
-  }
+  };
 
   function getButtons() {
     return [{

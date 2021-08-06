@@ -1,0 +1,59 @@
+@popupPrefix: c7ncd-host-config-resource;
+
+.@{popupPrefix} {
+  border-left: 1px solid #c2d1e1;
+  padding: .16rem;
+  flex-grow: 1;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  &-title {
+    font-size: .16rem;
+    line-height: .24rem;
+    font-weight: 500;
+  }
+
+  &-usage {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: .16rem 0 0 .24rem;
+    background: #f5f6fa;
+    border-radius: 4px;
+    margin: .16rem 0 .24rem;
+
+    &-item {
+      display: flex;
+      width: 45%;
+      margin-bottom: .16rem;
+    }
+
+    &-label {
+      color: var(--text-color3);
+      flex-shrink: 0;
+    }
+  }
+
+  &-port {
+    display: flex;
+    align-items: center;
+  }
+
+  &-user {
+    display: flex;
+    align-items: center;
+  }
+
+  &-creator {
+    background: #5365ea;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #fff;
+    line-height: .2rem;
+    transform: scale(0.83);
+    padding: 0 .04rem;
+    display: inline-block;
+    margin-right: .06rem;
+  }
+}

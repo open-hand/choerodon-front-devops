@@ -240,6 +240,10 @@ export default (
           let newRes = res;
           try {
             newRes = JSONbig.parse(newRes);
+            newRes.content = newRes.content.map((i) => ({
+              ...i,
+              connect: i.hostStatus === 'connected',
+            }));
             useStore.setHostList(newRes.content);
             return newRes;
           } catch (e) {
@@ -255,7 +259,7 @@ export default (
       dynamicProps: {
         disabled: ({ record }) => record.get(addCDTaskDataSetMap.hostSource)
           === addCDTaskDataSetMap.alreadyhost,
-        required: ({ record }) => record.get('type') === 'cdHost',
+        // required: ({ record }) => record.get('type') === 'cdHost',
       },
     },
     {
@@ -265,7 +269,7 @@ export default (
       dynamicProps: {
         disabled: ({ record }) => record.get(addCDTaskDataSetMap.hostSource)
           === addCDTaskDataSetMap.alreadyhost,
-        required: ({ record }) => record.get('type') === 'cdHost',
+        // required: ({ record }) => record.get('type') === 'cdHost',
       },
     },
     {
@@ -313,6 +317,16 @@ export default (
       type: 'string',
       label: '工作目录',
       defaultValue: './',
+    },
+    {
+      name: 'appInstanceName',
+      type: 'string',
+      label: '应用实例名称',
+      dynamicProps: {
+        required: ({ record }) => record.get('type') === 'cdHost'
+          && (record.get('hostDeployType') === 'jar'),
+      },
+      maxLength: 64,
     },
     {
       name: 'pipelineTask',

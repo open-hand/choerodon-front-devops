@@ -10,6 +10,7 @@ import {
 import { Modal, Table } from 'choerodon-ui/pro';
 import _ from 'lodash';
 import classnames from 'classnames';
+import { StatusTag } from '@choerodon/components';
 import StatusIcon from '../../../../../components/StatusIcon';
 import ResourceListTitle from '../../components/resource-list-title';
 import { useResourceStore } from '../../../stores';
@@ -57,12 +58,29 @@ const NetworkContent = observer(() => {
     const name = record.get('name');
     const status = record.get('status');
     const error = record.get('error');
+    const instanceId = record.get('instanceId');
     return (
-      <StatusIcon
-        name={name}
-        status={status || ''}
-        error={error || ''}
-      />
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+      }}
+      >
+        <StatusIcon
+          name={name}
+          status={status || ''}
+          error={error || ''}
+        />
+        {instanceId && (
+        <StatusTag
+          style={{
+            marginLeft: '5px',
+          }}
+          type="border"
+          colorCode="operating"
+          name="Chart资源"
+        />
+        )}
+      </div>
     );
   }
 
@@ -267,7 +285,7 @@ const NetworkContent = observer(() => {
   function renderAction({ record }) {
     const status = record.get('status');
     const disabled = getEnvIsNotRunning() || status === 'operating';
-    if (disabled) {
+    if (disabled || record.get('instanceId')) {
       return null;
     }
     const id = record.get('id');

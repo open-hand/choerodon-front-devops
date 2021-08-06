@@ -14,6 +14,7 @@ import { observer } from 'mobx-react-lite';
 import app from '@/images/app.svg';
 import image from '@/images/image.svg';
 import jar from '@/images/jar.svg';
+import hzero from '@/images/hzero.svg';
 import { StatusTag } from '@choerodon/components';
 import { TabCode } from '@choerodon/master';
 import { SMALL } from '@/utils/getModalWidth';
@@ -26,7 +27,10 @@ import UserInfo from '../../components/userInfo';
 import Deploy from './modals/deploy';
 import BaseComDeploy from './modals/base-comDeploy';
 import BatchDeploy from './modals/batch-deploy';
+import HzeroDeploy from './modals/hzero-deploy';
+import HzeroDeployDetail from './modals/hzero-deploy-detail';
 import Tips from '../../components/new-tips';
+import { LARGE } from '../../utils/getModalWidth';
 
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/base16-dark.css';
@@ -36,6 +40,9 @@ const { Column } = Table;
 const modalKey4 = Modal.key();
 const batchDeployModalKey = Modal.key();
 const commandModalKey = Modal.key();
+const hzeroDeployModalKey = Modal.key();
+const hzeroDeployDetailModalKey = Modal.key();
+const hzeroStopModalKey = Modal.key();
 const modalStyle2 = {
   width: 'calc(100vw - 3.52rem)',
 };
@@ -78,10 +85,18 @@ const Deployment = withRouter(observer((props) => {
   }, []);
 
   function refresh() {
-    envOptionsDs.query();
-    pipelineOptionsDs.query();
+    // envOptionsDs.query();
+    // pipelineOptionsDs.query();
     listDs.query();
   }
+
+  const getStatusTag = useCallback((status) => (
+    <StatusTag
+      colorCode={status || ''}
+      name={status ? formatMessage({ id: `${intlPrefix}.status.${status}` }) : 'unKnow'}
+      style={statusTagsStyle}
+    />
+  ), []);
 
   function openDeploy() {
     Modal.open({
@@ -175,7 +190,8 @@ const Deployment = withRouter(observer((props) => {
   function deployAfter(instance, type = 'instance') {
     const { history, location: { search } } = props;
     if (instance.config) {
-      history.push(`/devops/deployment-operation${search}`);
+      // history.push(`/devops/deployment-operation${search}`);
+      refresh();
     } else {
       history.push({
         pathname: '/devops/resource',
@@ -190,6 +206,19 @@ const Deployment = withRouter(observer((props) => {
     }
   }
 
+  const openHzeroDeploy = useCallback(() => {
+    Modal.open({
+      key: hzeroDeployModalKey,
+      style: {
+        width: LARGE,
+      },
+      title: formatMessage({ id: `${intlPrefix}.hzero` }),
+      children: <HzeroDeploy />,
+      drawer: true,
+      okText: formatMessage({ id: 'deployment' }),
+    });
+  }, []);
+
   function renderNumber({ record }) {
     const errorInfo = record.get('errorInfo');
     const deployStatus = record.get('deployStatus');
@@ -198,10 +227,7 @@ const Deployment = withRouter(observer((props) => {
     return (
       <>
         <span
-          className={classNames({
-            [`${prefixCls}-content-table-mark ${prefixCls}-content-table-mark-${type}`]: true,
-            'c7ncd-number-base': type === 'baseComponent',
-          })}
+          className={`${prefixCls}-content-table-mark ${prefixCls}-content-table-mark-${type}`}
         >
           {formatMessage({ id: `${intlPrefix}.type.${type}` })}
         </span>
@@ -222,11 +248,7 @@ const Deployment = withRouter(observer((props) => {
     const errMsg = record.get('errorMessage');
     return (
       <>
-        <StatusTag
-          colorCode={value || ''}
-          name={value ? formatMessage({ id: `${intlPrefix}.status.${value}` }) : 'unKnow'}
-          style={statusTagsStyle}
-        />
+        {getStatusTag(value)}
         {errMsg && (
         <Tooltip title={errMsg}>
           <Icon
@@ -295,13 +317,17 @@ const Deployment = withRouter(observer((props) => {
     const deployMode = record.get('deployMode');
     const deployPayloadName = record.get('deployPayloadName');
     return (
-      <span>
+      <span className="c7ncd-deploy-content-deployType">
         <StatusTag
           color={deployMode === 'host' ? 'rgb(142, 187, 252)' : 'rgb(116, 217, 221)'}
           name={deployMode === 'host' ? '主机' : '环境'}
           style={statusTagsStyle}
         />
-        {deployPayloadName}
+        <Tooltip title={deployPayloadName}>
+          <span className="c7ncd-deploy-content-deployType-name">
+            {deployPayloadName}
+          </span>
+        </Tooltip>
       </span>
     );
   };
@@ -325,6 +351,10 @@ const Deployment = withRouter(observer((props) => {
       image: {
         img: image,
         text: 'Docker镜像',
+      },
+      hzero: {
+        img: hzero,
+        text: 'Hzero应用',
       },
     };
     return [
@@ -404,7 +434,64 @@ const Deployment = withRouter(observer((props) => {
     });
   }, []);
 
+  const handleHzeroRetry = useCallback(() => {
+
+  }, []);
+
+  const openHzeroStopModal = useCallback(() => {
+    Modal.open({
+      key: hzeroStopModalKey,
+      title: '停止执行',
+      children: '确定停止该条HZERO快速部署吗？',
+      okText: formatMessage({ id: 'stop' }),
+    });
+  }, []);
+
+  const openHzeroDeployDetailModal = useCallback((record) => {
+    Modal.open({
+      key: hzeroDeployDetailModalKey,
+      title: (
+        <div>
+          <span style={{ paddingRight: '0.12rem' }}>
+            记录“#
+            {record.get('viewId')}
+            ”的执行详情
+          </span>
+          {getStatusTag(record.get('status'))}
+        </div>
+      ),
+      style: { width: LARGE },
+      children: <HzeroDeployDetail status={record.get('status')} />,
+      okText: formatMessage({ id: 'close' }),
+      okCancel: false,
+      drawer: true,
+    });
+  }, []);
+
   const renderAction = useCallback(({ record }) => {
+    if (record.get('deployType') === 'hzero') {
+      const actionData = [{
+        text: '查看记录详情',
+        action: () => openHzeroDeployDetailModal(record),
+      }];
+      switch (record.get('status')) {
+        case 'failed':
+          actionData.push({
+            text: formatMessage({ id: 'retry' }),
+            action: handleHzeroRetry,
+          });
+          break;
+        case 'operating':
+          actionData.push({
+            text: formatMessage({ id: 'stop' }),
+            action: openHzeroStopModal,
+          });
+        default:
+      }
+      return (
+        <Action data={actionData} />
+      );
+    }
     if (record.get('log')) {
       return (
         <Action data={[{
@@ -444,6 +531,13 @@ const Deployment = withRouter(observer((props) => {
               display: HAS_BASE_PRO,
               permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.basedComponent'],
               handler: () => openBaseDeploy(),
+            },
+            {
+              name: formatMessage({ id: `${intlPrefix}.hzero` }),
+              icon: 'cloud_done-o',
+              display: true,
+              permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.batch'],
+              handler: openHzeroDeploy,
             },
             {
               icon: 'refresh',

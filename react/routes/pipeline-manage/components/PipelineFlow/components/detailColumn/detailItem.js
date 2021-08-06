@@ -454,9 +454,6 @@ const DetailItem = (props) => {
       title: '下载jar包',
       children: '确定要下载此次构建任务产生的jar包吗？',
       okText: '下载',
-      cancelProps: {
-        color: 'dark',
-      },
       onOk: () => handleFileDownLoad(jarUrl, username, password, jarUrl.split('/')[jarUrl.split('/').length - 1]),
     });
   };

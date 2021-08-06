@@ -1,6 +1,6 @@
-import React, { createRef } from 'react';
+import React, { createRef, useEffect, useMemo } from 'react';
 import {
-  Modal, Icon, Button,
+  Modal, Icon, Button, Tooltip,
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import { usePipelineStageEditStore } from '../../stores';
@@ -26,7 +26,9 @@ const EditItem = (props) => {
     snapshotinner,
   } = props;
 
-  const { name, type } = jobDetail;
+  const { name, type, edit } = jobDetail;
+
+  const prefixCls = 'c7n-piplineManage-edit-column-item';
 
   const {
     editBlockStore,
@@ -119,9 +121,39 @@ const EditItem = (props) => {
     cursor: 'all-scroll',
   });
 
+  const isCdDisabled = useMemo(() => (!edit && stageType === 'CD'), [edit, stageType]);
+
+  const renderOptsBtn = () => {
+    const toolText = '该用户没有部署任务对应的环境权限，无法修改或删除';
+    return (
+      <>
+        <Tooltip title={isCdDisabled && toolText}>
+          <Button
+            className={`${prefixCls}-btnGroup-btn`}
+            disabled={isCdDisabled}
+            shape="circle"
+            size="small"
+            icon="mode_edit"
+            onClick={openEditJobModal}
+          />
+        </Tooltip>
+        <Tooltip title={isCdDisabled && toolText}>
+          <Button
+            className={`${prefixCls}-btnGroup-btn`}
+            disabled={isCdDisabled}
+            shape="circle"
+            size="small"
+            icon="delete_forever"
+            onClick={openDeleteJobModal}
+          />
+        </Tooltip>
+      </>
+    );
+  };
+
   return (
     <div
-      className="c7n-piplineManage-edit-column-item"
+      className={prefixCls}
       ref={innerRef}
       {...dragProvided.draggableProps}
       {...dragProvided.dragHandleProps}
@@ -130,27 +162,14 @@ const EditItem = (props) => {
         dragProvided.draggableProps.style,
       )}
     >
-      <div className="c7n-piplineManage-edit-column-item-header">
+      <div className={`${prefixCls}-header`}>
         【
         {Object.prototype.hasOwnProperty.bind(jobType, type) && jobType[type]}
         】
         {name}
       </div>
-      <div className="c7n-piplineManage-edit-column-item-btnGroup">
-        <Button
-          className="c7n-piplineManage-edit-column-item-btnGroup-btn"
-          shape="circle"
-          size="small"
-          icon="mode_edit"
-          onClick={openEditJobModal}
-        />
-        <Button
-          className="c7n-piplineManage-edit-column-item-btnGroup-btn"
-          shape="circle"
-          size="small"
-          icon="delete_forever"
-          onClick={openDeleteJobModal}
-        />
+      <div className={`${prefixCls}-btnGroup`}>
+        {renderOptsBtn()}
       </div>
     </div>
   );

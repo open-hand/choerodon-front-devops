@@ -98,8 +98,6 @@ const Allocation = withRouter(observer((props) => {
       title: formatMessage({ id: `${intlPrefix}.permission.delete.title` }),
       children: formatMessage({ id: `${intlPrefix}.permission.delete.des` }),
       okText: formatMessage({ id: 'delete' }),
-      okProps: { color: 'red' },
-      cancelProps: { color: 'dark' },
     };
     permissionDs.delete(record, modalProps);
   }

@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useMemo, useEffect } from 'react';
+import React, {
+  createContext, useContext, useMemo, useEffect,
+} from 'react';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
@@ -27,7 +29,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer(
     const {
       resourceStore: {
         getSelectedMenu: {
-          parentId, key,
+          key, name, isLeaf,
         },
       },
     } = useResourceStore();
@@ -40,7 +42,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer(
     const secretStore = useSecretStore();
     const certStore = useCertStore();
     const childrenStore = useChildrenContextStore();
-    
+
     useEffect(() => {
       // 此处的key是TreeDataSet里的formatInstance中的key值
       // 这个key的规则是每一级别的节点的id属性 然后用 '-' 相连接 例如：’523-1080-21‘
@@ -48,8 +50,9 @@ export const StoreProvider = injectIntl(inject('AppState')(observer(
       if (key && key.indexOf('**') < 0) {
         baseInfoDs.transport.read.url = `/devops/v1/projects/${projectId}/envs/${key}/info`;
         baseInfoDs.query();
+        mainStore.getAutoDeployMsg(key, projectId);
       }
-    }, [projectId, key]);
+    }, [projectId, key, isLeaf]);
 
     const value = {
       ...props,
@@ -68,6 +71,9 @@ export const StoreProvider = injectIntl(inject('AppState')(observer(
       childrenStore,
       certStore,
       baseInfoDs,
+      key,
+      projectId,
+      name,
     };
     return (
       <Store.Provider value={value}>

@@ -34,8 +34,6 @@ const PodDetail = memo(() => {
     intl,
     podsDs,
   } = useInstanceStore();
-  // eslint-disable-next-line no-unused-expressions
-  shellVisible;
   const [visible, setVisible] = useState(false);
   const [shellVisible, setShellVisible] = useState(false);
 
@@ -194,8 +192,6 @@ const PodDetail = memo(() => {
       title: intl.formatMessage({ id: `${intlPrefix}.instance.pod.delete.title` }),
       children: intl.formatMessage({ id: `${intlPrefix}.instance.pod.delete.des` }),
       okText: intl.formatMessage({ id: 'delete' }),
-      okProps: { color: 'red' },
-      cancelProps: { color: 'dark' },
     };
     podsDs.delete(podsDs.current, modalProps);
   }

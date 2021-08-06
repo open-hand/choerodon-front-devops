@@ -5,7 +5,7 @@ import CodeManagerApis from '@/routes/code-manager/apis';
 
 export default ({
   projectId, formatMessage, appServiceId, objectVersionNumber,
-  branchName, projectOptionsDs,
+  branchName, projectOptionsDs, projectName,
 }) => ({
   autoCreate: false,
   autoQuery: false,
@@ -34,6 +34,7 @@ export default ({
       type: 'object',
       textField: 'name',
       valueField: 'id',
+      defaultValue: { id: projectId, name: projectName },
       label: formatMessage({ id: 'branch.issue.source' }),
       options: projectOptionsDs,
     },

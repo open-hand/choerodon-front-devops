@@ -211,6 +211,7 @@ const PipelineManage = observer(() => {
       status: detailStatus,
       devopsCdPipelineDeatilVO: detailDevopsCdPipelineDeatilVO,
     } = getDetailData;
+    const { edit = false } = editBlockStore.getMainData || {};
     const buttons = [{
       permissions: ['choerodon.code.project.develop.ci-pipeline.ps.create'],
       name: formatMessage({ id: `${intlPrefix}.create` }),
@@ -241,7 +242,7 @@ const PipelineManage = observer(() => {
           name: formatMessage({ id: 'edit' }),
           icon: 'edit-o',
           handler: openEditModal,
-          display: true,
+          display: edit,
         }, {
           permissions: ['choerodon.code.project.develop.ci-pipeline.ps.variable.app'],
           name: formatMessage({ id: `${intlPrefix}.settings.local` }),

@@ -82,8 +82,6 @@ const Group = observer(() => {
           deleteModal.update({
             children: formatMessage({ id: `${intlPrefix}.delete.des.resource.confirm` }),
             okText: formatMessage({ id: 'delete' }),
-            okProps: { color: 'red' },
-            cancelProps: { color: 'dark' },
             onOk: handleDelete,
             footer: ((okBtn, cancelBtn) => (
               <>

@@ -2,10 +2,10 @@ import React, { useMemo, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { HeaderButtons } from '@choerodon/master';
 import { Modal } from 'choerodon-ui/pro';
+import KeyValueModal from '@/components/key-value';
 import { useResourceStore } from '../../../../stores';
 import { useApplicationStore } from '../stores';
 import Detail from './detail';
-import KeyValueModal from './key-value/KeyValueProIndex';
 import CreateNetwork2 from './network2';
 import DomainForm from '../../../components/domain-form';
 

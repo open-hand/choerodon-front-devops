@@ -1,13 +1,41 @@
-import React from 'react';
-import { StoreProvider } from './stores';
-import Content from './Content';
+import React, { useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
+import { CardPagination } from '@choerodon/components';
+import HostItemServices from '@/routes/host-config/components/content-list/components/hostItem/services';
+import HostsItem from './components/hostItem';
+import { useHostConfigStore } from '../../stores';
 
-import './index.less';
+const ContentList: React.FC<any> = observer(({
+  handleCreateDeployHost,
+}): any => {
+  const {
+    prefixCls, listDs, projectId, mainStore,
+  } = useHostConfigStore();
 
-const HostConfigIndex = (props: any) => (
-  <StoreProvider {...props}>
-    <Content />
-  </StoreProvider>
-);
+  useEffect(() => {
+    HostItemServices.axiosGetHostDisconnect(projectId).then((res: string) => {
+      mainStore.setDisConnectCommand(res);
+    });
+  }, []);
 
-export default HostConfigIndex;
+  return (
+    <div className={`${prefixCls}-content-list-over ${prefixCls}-content-list-deploy`}>
+      <div className={`${prefixCls}-content-list`}>
+        {listDs.map((record) => (
+          <HostsItem
+            {...record.data}
+            record={record}
+            listDs={listDs}
+            handleCreateDeployHost={handleCreateDeployHost}
+          />
+        ))}
+      </div>
+      <CardPagination
+        className={`${prefixCls}-content-pagination`}
+        dataSet={listDs}
+      />
+    </div>
+  );
+});
+
+export default ContentList;

@@ -2,12 +2,22 @@ import { useLocalStore } from 'mobx-react-lite';
 
 export default function useStore() {
   return useLocalStore(() => ({
-    currentTabKey: 'distribute_test',
-    setCurrentTabKey(key:string) {
-      this.currentTabKey = key;
+    selectedHost: {},
+    setSelectedHost(data: object) {
+      this.selectedHost = data;
     },
-    get getCurrentTabKey() {
-      return this.currentTabKey;
+    get getSelectedHost() {
+      return this.selectedHost;
+    },
+
+    disConnectCommand: '',
+    setDisConnectCommand(data: string) {
+      this.disConnectCommand = data;
+    },
+    get getDisConnectCommand() {
+      return this.disConnectCommand;
     },
   }));
 }
+
+export type StoreProps = ReturnType<typeof useStore>;

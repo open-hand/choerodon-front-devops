@@ -45,12 +45,6 @@ function AppItem({
       children: formatMessage({ id: `${intlPrefix}.modal.service.delete.desc` }),
       okText: formatMessage({ id: 'delete' }),
       onOk: handleClick,
-      okProps: {
-        color: 'red',
-      },
-      cancelProps: {
-        color: 'dark',
-      },
     });
   }
 

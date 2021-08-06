@@ -1,9 +1,13 @@
 /* eslint-disable max-len */
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Action, Choerodon } from '@choerodon/boot';
-import { Modal, Icon, Spin } from 'choerodon-ui/pro';
-import { Input } from 'choerodon-ui';
+import {
+  Modal, Icon, Spin, TextField,
+} from 'choerodon-ui/pro';
+import { Input, message as UiMessage } from 'choerodon-ui';
+import TreeItemService from '@/routes/cluster/main-view/sidebar/tree-item/services';
+import CopyToBoard from 'react-copy-to-clipboard';
 import { useClusterStore } from '../../../stores';
 import { useClusterMainStore } from '../../stores';
 import StatusDot from '../../../../../components/status-dot';
@@ -108,7 +112,6 @@ function ClusterItem({
           </>
         )),
         okText: formatMessage({ id: 'cluster.del.confirm' }),
-        okProps: { color: 'red' },
       });
     }
   }
@@ -197,6 +200,39 @@ function ClusterItem({
     }
   };
 
+  const handleDisConnect = async () => {
+    const clusterId = record.get('id');
+    const res = await TreeItemService.axiosGetDisConnect(projectId, clusterId);
+    Modal.open({
+      title: '断开连接',
+      children: (
+        <div>
+          <p>复制以下指令至对应主机执行，来断开连接。</p>
+          <TextField
+            value={res}
+            disabled
+            suffix={(
+              <CopyToBoard
+                text={res}
+                onCopy={() => {
+                  UiMessage.success('复制成功');
+                }}
+                options={{ format: 'text/plain' }}
+              >
+                <Icon style={{ cursor: 'pointer' }} type="content_copy" />
+              </CopyToBoard>
+            )}
+            style={{
+              width: '100%',
+            }}
+          />
+        </div>
+      ),
+      okText: '我知道了',
+      okCancel: false,
+    });
+  };
+
   const getSuffix = useMemo(() => {
     const [status] = getStatus();
     if (status === 'operating') {
@@ -230,6 +266,13 @@ function ClusterItem({
         service: ['choerodon.code.project.deploy.cluster.cluster-management.ps.delete'],
         text: formatMessage({ id: `${intlPrefix}.action.delete` }),
         action: deleteItem,
+      });
+    }
+    if (status === 'running') {
+      Data.push({
+        service: ['choerodon.code.project.deploy.cluster.cluster-management.ps.disconnect'],
+        text: '断开连接',
+        action: handleDisConnect,
       });
     }
 

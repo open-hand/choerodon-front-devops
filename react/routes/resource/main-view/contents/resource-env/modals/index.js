@@ -16,11 +16,22 @@ const REModals = observer(() => {
     intl: { formatMessage },
     treeDs,
   } = useResourceStore();
+
   const {
     baseInfoDs,
     resourceCountDs,
     gitopsLogDs,
     gitopsSyncDs,
+    mainStore: {
+      autoDeployMsg: {
+        existAutoDeploy = false,
+        autoDeployStatus = false,
+      },
+      handleAutoDeployStatus,
+    },
+    key,
+    projectId,
+    name,
   } = useREStore();
 
   function refresh() {
@@ -35,6 +46,15 @@ const REModals = observer(() => {
     const record = baseInfoDs.current;
     const url = record && record.get('gitlabUrl');
     url && window.open(url);
+  }
+
+  async function handleCloseAutoDeployModal() {
+    Modal.open({
+      title: autoDeployStatus ? '停用自动部署' : '启用自动部署',
+      onOk: () => handleAutoDeployStatus(key, projectId, refresh),
+      children: autoDeployStatus ? `确定要停用环境“${name}”下所有的自动部署任务吗？停用后，所有应用流水线中该环境的自动部署任务将不再执行。需要您在此手动开启后，才会继续生效。` : `是否要启用“${name}”环境的自动部署？`,
+      okText: autoDeployStatus ? '停用' : '启用',
+    });
   }
 
   function openEnvDetail() {
@@ -60,6 +80,15 @@ const REModals = observer(() => {
       icon: 'account_balance',
       handler: linkToConfig,
       display: true,
+    }, {
+      permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.autoDeploy'],
+      icon: autoDeployStatus ? 'block' : 'finished',
+      disabled: !existAutoDeploy,
+      tooltipsConfig: {
+        title: !existAutoDeploy && '流水线中没有该环境下的自动部署任务',
+      },
+      name: autoDeployStatus ? '停用自动部署' : '开启自动部署',
+      handler: handleCloseAutoDeployModal,
     }, {
       icon: 'refresh',
       handler: refresh,

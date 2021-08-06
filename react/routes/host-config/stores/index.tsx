@@ -1,17 +1,17 @@
 import React, {
-  createContext, useCallback, useContext, useEffect, useMemo,
+  createContext, ReactNode, useCallback, useContext, useMemo,
 } from 'react';
 import { injectIntl } from 'react-intl';
 import { inject } from 'mobx-react';
 import { DataSet } from 'choerodon-ui/pro';
 import ListDataSet from '@/routes/host-config/stores/ListDataSet';
 import SearchDataSet from '@/routes/host-config/stores/SearchDataSet';
-import { DataSetSelection } from 'choerodon-ui/pro/lib/data-set/enum';
 import some from 'lodash/some';
-import useStore from './useStore';
-
-// @ts-ignore
-const HAS_BASE_PRO = C7NHasModule('@choerodon/testmanager-pro');
+import AppInstanceTableDataSet from '@/routes/host-config/stores/AppInstanceTableDataSet';
+import { DataSet as DataSetProps, DataSetSelection } from '@/interface';
+import UsageDataSet from '@/routes/host-config/stores/UsageDataSet';
+import PermissionTableDataSet from '@/routes/host-config/stores/PermissionTableDataSet';
+import useStore, { StoreProps } from './useStore';
 
 interface ContextProps {
   prefixCls: string,
@@ -25,9 +25,18 @@ interface ContextProps {
     text:string,
   }[],
   refresh():void,
-  mainStore:any,
+  mainStore:StoreProps,
   showTestTab: boolean,
-  statusDs:DataSet,
+  tabKey: {
+    DEPLOY_TAB: 'deploy',
+    TEST_TAB: 'distribute_test',
+  },
+  appInstanceTableDs: DataSetProps,
+  usageDs: DataSetProps,
+  permissionDs: DataSetProps,
+  hasExtraTab: boolean,
+  tab: ReactNode,
+  loadData(data: { hostId: string, hostStatus: string, showPermission: boolean }): void,
 }
 
 const Store = createContext({} as ContextProps);
@@ -43,40 +52,85 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     AppState: { currentMenuType: { projectId, categories } },
   } = props;
   const intlPrefix = 'c7ncd.host.config';
+  const tabKey = useMemo(() => ({
+    DEPLOY_TAB: 'deploy',
+    TEST_TAB: 'distribute_test',
+  }), []);
 
   const hostTabKeys = useMemo(() => [
     {
-      key: 'distribute_test',
-      text: '测试主机',
+      key: tabKey.DEPLOY_TAB,
+      text: '部署主机',
     },
     {
-      key: 'deploy',
-      text: '部署主机',
+      key: tabKey.TEST_TAB,
+      text: '测试主机',
     },
   ], []);
 
   const statusDs = useMemo(() => new DataSet({
-    data: [],
+    data: [
+      {
+        text: formatMessage({ id: 'connect' }),
+        value: 'connected',
+      },
+      {
+        text: formatMessage({ id: 'disconnect' }),
+        value: 'disconnect',
+      },
+    ],
     selection: 'single' as DataSetSelection,
   }), []);
 
-  const showTestTab = useMemo(() => HAS_BASE_PRO && some(categories, ['code', 'N_TEST']), [categories, HAS_BASE_PRO]);
-
+  const showTestTab = useMemo(() => some(categories, ['code', 'N_TEST']), [categories]);
   const mainStore = useStore();
 
-  const listDs = useMemo(() => new DataSet(ListDataSet({ projectId, showTestTab })), [projectId]);
-  const searchDs = useMemo(() => new DataSet(SearchDataSet({ projectId })), [projectId]);
+  const searchDs = useMemo(() => new DataSet(SearchDataSet({ statusDs })), []);
+
+  const usageDs = useMemo(() => new DataSet(UsageDataSet({ projectId })), [projectId]);
+  const appInstanceTableDs = useMemo(() => new DataSet(AppInstanceTableDataSet({
+    projectId,
+    formatMessage,
+    intlPrefix,
+  })), [projectId]);
+  const permissionDs = useMemo(() => new DataSet(PermissionTableDataSet({
+    projectId,
+    formatMessage,
+    intlPrefix,
+    mainStore,
+  })), [projectId]);
+
+  const loadData = useCallback(({ hostStatus, hostId, showPermission }) => {
+    if (hostStatus === 'connected') {
+      appInstanceTableDs.setQueryParameter('host_id', hostId);
+      usageDs.setQueryParameter('hostId', hostId);
+      appInstanceTableDs.query();
+      usageDs.query();
+    } else {
+      usageDs.removeAll();
+      appInstanceTableDs.removeAll();
+    }
+    showPermission && permissionDs.query();
+  }, [mainStore.getSelectedHost]);
+
+  const listDs = useMemo(() => new DataSet(ListDataSet({
+    projectId,
+    searchDs,
+    mainStore,
+    loadData,
+  })), [projectId]);
 
   const refresh = useCallback(async (callback?:CallableFunction) => {
     await listDs.query();
     typeof callback === 'function' && callback();
-  }, [listDs]);
-
-  useEffect(() => {
-    if (!showTestTab) {
-      mainStore.setCurrentTabKey('deploy');
+    if (mainStore.getSelectedHost?.id) {
+      if (mainStore.getSelectedHost?.hostStatus === 'connected') {
+        usageDs.query();
+        appInstanceTableDs.query();
+      }
+      mainStore.getSelectedHost?.showPermission && permissionDs.query();
     }
-  }, []);
+  }, [listDs, mainStore.getSelectedHost]);
 
   const value = {
     ...props,
@@ -90,7 +144,11 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     mainStore,
     projectId,
     showTestTab,
-    statusDs,
+    tabKey,
+    appInstanceTableDs,
+    usageDs,
+    permissionDs,
+    loadData,
   };
   return (
     <Store.Provider value={value}>

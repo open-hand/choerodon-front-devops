@@ -25,8 +25,10 @@ export const StoreProvider = injectIntl(inject('AppState')(
       intl: { formatMessage },
       children,
     } = props;
-    const { resourceStore: { getSelectedMenu: { id } }, intlPrefix } = useResourceStore();
-    const { baseInfoDs } = useMainStore();
+    const { resourceStore: { getSelectedMenu: { id, name } }, intlPrefix } = useResourceStore();
+    const {
+      baseInfoDs, mainStore, key,
+    } = useMainStore();
 
     const resourceCountDs = useMemo(() => new DataSet(ResourceCountDataSet()), []);
     const gitopsLogDs = useMemo(() => new DataSet(GitopsLogDataSet({
@@ -53,6 +55,10 @@ export const StoreProvider = injectIntl(inject('AppState')(
       gitopsLogDs,
       gitopsSyncDs,
       retryDs,
+      mainStore,
+      key,
+      projectId,
+      name,
     };
     return (
       <Store.Provider value={value}>

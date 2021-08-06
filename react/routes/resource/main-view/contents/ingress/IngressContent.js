@@ -5,6 +5,7 @@ import { Action } from '@choerodon/boot';
 import { Modal, Table, Icon } from 'choerodon-ui/pro';
 import { Tooltip } from 'choerodon-ui';
 import map from 'lodash/map';
+import { StatusTag } from '@choerodon/components';
 import StatusIcon from '../../../../../components/StatusIcon';
 import { useResourceStore } from '../../../stores';
 import { useIngressStore } from './stores';
@@ -55,14 +56,29 @@ const IngressContent = observer(() => {
     const status = record.get('status');
     const error = record.get('error');
     const disabled = getEnvIsNotRunning() || status === 'operating';
+    const instanceId = record.get('instanceId');
     return (
-      <>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+      }}
+      >
         <StatusIcon
           name={name}
           status={status || ''}
           error={error || ''}
         />
-      </>
+        {instanceId && (
+        <StatusTag
+          style={{
+            marginLeft: '5px',
+          }}
+          type="border"
+          colorCode="operating"
+          name="Chart资源"
+        />
+        )}
+      </div>
     );
   }
 
@@ -111,7 +127,7 @@ const IngressContent = observer(() => {
   function renderAction({ record }) {
     const status = record.get('status');
     const disabled = getEnvIsNotRunning() || status === 'operating';
-    if (disabled) {
+    if (disabled || record.get('instanceId')) {
       return null;
     }
     const id = record.get('id');

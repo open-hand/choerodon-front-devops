@@ -8,6 +8,7 @@ import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
 import { axios } from '@choerodon/boot';
 import { mapping } from '@/routes/deployment/modals/deploy/stores/ManualDeployDataSet';
+import StatusDot from '@/components/status-dot';
 import YamlEditor from '../../../../components/yamlEditor';
 import Tips from '../../../../components/new-tips';
 import { useManualDeployStore } from './stores';
@@ -27,6 +28,7 @@ const HostDeployForm = injectIntl(observer(({ getMarketItem, getMarketAndVersion
   const [testStatus, setTestStatus] = useState('');
   const isMarket = record.get(mapping.deploySource.value) === (mapping.deploySource.options.length > 1 ? mapping.deploySource.options[1].value : '');
   const isDocker = record.get(mapping.deployObject.value) === mapping.deployObject.options[0].value;
+  const isHzero = record.get(mapping.deploySource.value) === mapping.deploySource.options[2].value;
   const getWorkPathTips = useMemo(() => (
     <Tips
       helpText={(
@@ -137,6 +139,111 @@ const HostDeployForm = injectIntl(observer(({ getMarketItem, getMarketAndVersion
     });
   });
 
+  const renderEnvOption = ({ record: hostRecord, text }) => (
+    <>
+      <StatusDot
+        size="small"
+        synchronize
+        connect={hostRecord.get('connect')}
+      />
+      <span style={{ marginLeft: 5 }}>{ text }</span>
+    </>
+  );
+
+  const getOthers = (selfRecord, selfIsHzero) => {
+    if (selfIsHzero) {
+      return [
+        <Select
+          name={mapping.hzeroAppVersion.name}
+          colSpan={1}
+          renderer={({ value }) => value?.introduction}
+        >
+          {getMarketAndVersionContent()}
+        </Select>,
+        <Select
+          name={mapping.hzeroServiceVersion.name}
+          colSpan={1}
+        />,
+        isDocker ? [
+          <TextField name={mapping.containerName.value} colSpan={1} />,
+          <YamlEditor
+            newLine
+            colSpan={2}
+            readOnly={false}
+            // modeChange={false}
+            value={deployUseStore.getImageYaml}
+            onValueChange={(value) => deployUseStore.setImageYaml(value)}
+          />,
+        ] : [
+          <TextField
+            name="name"
+            colSpan={1}
+          />,
+          <YamlEditor
+            newLine
+            colSpan={2}
+            readOnly={false}
+            modeChange={false}
+            value={deployUseStore.getJarYaml}
+            onValueChange={(value) => deployUseStore.setJarYaml(value)}
+          />,
+        ],
+      ];
+    }
+    return !isMarket && (
+      isDocker ? [
+        <Select
+          newLine
+          name={mapping.projectImageRepo.value}
+          colSpan={1}
+          onChange={() => {
+            record.init(mapping.image.value);
+            record.init(mapping.imageVersion.value);
+          }}
+        />,
+        <Select
+          name={mapping.image.value}
+          colSpan={1}
+          onChange={() => {
+            record.init(mapping.imageVersion.value);
+          }}
+        />,
+        <Select name={mapping.imageVersion.value} colSpan={1} />,
+        <TextField name={mapping.containerName.value} colSpan={1} />,
+        <YamlEditor
+          colSpan={2}
+          readOnly={false}
+            // modeChange={false}
+          value={deployUseStore.getImageYaml}
+          onValueChange={(value) => deployUseStore.setImageYaml(value)}
+        />,
+      ] : [
+        <Select newLine name={mapping.nexus.value} colSpan={1} />,
+        <Select name={mapping.projectProduct.value} colSpan={1} />,
+        <Select name={mapping.groupId.value} colSpan={1} />,
+        <Select name={mapping.artifactId.value} colSpan={1} />,
+        <Select name={mapping.jarVersion.value} colSpan={1} />,
+        // <TextField
+        //   name={mapping.workPath.value}
+        //   colSpan={1}
+        //   addonAfter={getWorkPathTips}
+        // />,
+        <TextField
+          name="name"
+          colSpan={1}
+        />,
+        <YamlEditor
+          newLine
+          colSpan={2}
+          readOnly={false}
+          modeChange={false}
+          value={deployUseStore.getJarYaml}
+          onValueChange={(value) => deployUseStore.setJarYaml(value)}
+        />,
+      ]
+    );
+  };
+
   return (
     <div style={{ width: '80%' }}>
       <div className="c7ncd-deploy-manual-deploy-divided" />
@@ -145,19 +252,24 @@ const HostDeployForm = injectIntl(observer(({ getMarketItem, getMarketAndVersion
         <Select
           colSpan={1}
           name={mapping.hostName.value}
-          onChange={handleChangeHostName}
+          optionRenderer={renderEnvOption}
+          onOption={({ record: hostRecord }) => ({
+            disabled: !hostRecord.get('connect'),
+          })}
+          // onChange={handleChangeHostName}
           addonAfter={<Tips helpText="您需在此选择一个此项目下”主机配置“中已有的主机作为部署的载体" placement="bottom" />}
         />
-        <div style={{ display: 'flex', alignItems: 'flex-start' }} colSpan={1}>
+        {/* 不在有ip和端口 */}
+        {/* <div style={{ display: 'flex', alignItems: 'flex-start' }} colSpan={1}>
           <div style={{ width: '70%' }}>
             <TextField style={{ width: '100%' }} name={mapping.ip.value} />
           </div>
           <div style={{ marginLeft: 10, flex: 1 }}>
             <TextField name={mapping.port.value} />
           </div>
-        </div>
+        </div> */}
       </Form>
-      <Button
+      {/* <Button
         color="primary"
         funcType="raised"
         disabled={!record.get(mapping.ip.value) || !record.get(mapping.port.value)}
@@ -165,7 +277,7 @@ const HostDeployForm = injectIntl(observer(({ getMarketItem, getMarketAndVersion
       >
         测试连接
       </Button>
-      {getTestDom()}
+      {getTestDom()} */}
       <div style={{ marginTop: 10 }} className="c7ncd-deploy-manual-deploy-divided" />
       <p className="c7ncd-deploy-manual-deploy-title">部署模式</p>
       <Form columns={7} record={record} style={{ width: '125%' }}>
@@ -178,7 +290,7 @@ const HostDeployForm = injectIntl(observer(({ getMarketItem, getMarketAndVersion
             ))
           }
         </SelectBox>
-        <SelectBox colSpan={1} name={mapping.deployObject.value}>
+        <SelectBox newLine colSpan={1} name={mapping.deployObject.value}>
           {
             mapping.deployObject.options.map((o) => (
               <Option value={o.value}>
@@ -192,53 +304,7 @@ const HostDeployForm = injectIntl(observer(({ getMarketItem, getMarketAndVersion
         </SelectBox>
       </Form>
       <Form columns={2} record={record}>
-        {!isMarket && (
-          isDocker ? [
-            <Select
-              newLine
-              name={mapping.projectImageRepo.value}
-              colSpan={1}
-              onChange={() => {
-                record.init(mapping.image.value);
-                record.init(mapping.imageVersion.value);
-              }}
-            />,
-            <Select
-              name={mapping.image.value}
-              colSpan={1}
-              onChange={() => {
-                record.init(mapping.imageVersion.value);
-              }}
-            />,
-            <Select name={mapping.imageVersion.value} colSpan={1} />,
-            <TextField name={mapping.containerName.value} colSpan={1} />,
-            <YamlEditor
-              colSpan={2}
-              readOnly={false}
-              // modeChange={false}
-              value={deployUseStore.getImageYaml}
-              onValueChange={(value) => deployUseStore.setImageYaml(value)}
-            />,
-          ] : [
-            <Select newLine name={mapping.nexus.value} colSpan={1} />,
-            <Select name={mapping.projectProduct.value} colSpan={1} />,
-            <Select name={mapping.groupId.value} colSpan={1} />,
-            <Select name={mapping.artifactId.value} colSpan={1} />,
-            <Select name={mapping.jarVersion.value} colSpan={1} />,
-            <TextField
-              name={mapping.workPath.value}
-              colSpan={1}
-              addonAfter={getWorkPathTips}
-            />,
-            <YamlEditor
-              colSpan={2}
-              readOnly={false}
-              modeChange={false}
-              value={deployUseStore.getJarYaml}
-              onValueChange={(value) => deployUseStore.setJarYaml(value)}
-            />,
-          ]
-        )}
+        { getOthers(record, isHzero) }
       </Form>
       {isMarket && (
         <Form columns={7} record={record} style={{ width: '125%' }}>
@@ -256,12 +322,17 @@ const HostDeployForm = injectIntl(observer(({ getMarketItem, getMarketAndVersion
                 onValueChange={(value) => deployUseStore.setImageYaml(value)}
               />,
             ] : [
+              // <TextField
+              //   name={mapping.workPath.value}
+              //   addonAfter={getWorkPathTips}
+              //   colSpan={2}
+              // />,
               <TextField
-                name={mapping.workPath.value}
-                addonAfter={getWorkPathTips}
+                name="name"
                 colSpan={2}
               />,
               <YamlEditor
+                newLine
                 colSpan={7}
                 readOnly={false}
                 modeChange={false}
