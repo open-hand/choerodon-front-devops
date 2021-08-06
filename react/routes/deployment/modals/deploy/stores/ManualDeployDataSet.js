@@ -194,6 +194,13 @@ export default (({
           marketAndVersionOptionsDs.query();
         }
         break;
+      case mapping.deploySource.value: {
+        if (value === 'hzero') {
+          marketAndVersionOptionsDs.setQueryParameter('application_type', 'hzero');
+          marketAndVersionOptionsDs.query();
+        }
+        break;
+      }
       case 'environmentId':
         record.getField('instanceName').checkValidity();
         if (record.get('appServiceSource') !== 'market_service') {
@@ -350,14 +357,16 @@ export default (({
           const { marketServiceDeployObjectVO, id: marketAppServiceId } = data.marketService || {};
           const appServiceId = (isMarket || isHzero) ? marketAppServiceId : data.appServiceId.split('**')[0];
           if (isMarket) {
-            res.application_type = 'market';
+            res.applicationType = 'market';
             res.marketAppServiceId = marketAppServiceId;
             res.marketDeployObjectId = marketServiceDeployObjectVO
               && marketServiceDeployObjectVO.id;
           } else if (isHzero) {
-            res.application_type = 'hzero';
+            res.applicationType = 'hzero';
             res[mapping.hzeroAppVersion.name] = data[mapping.hzeroAppVersion.name]?.id;
             res[mapping.hzeroServiceVersion.name] = data[mapping.hzeroServiceVersion.name]?.id;
+            res.marketDeployObjectId = data[mapping.hzeroServiceVersion.name]
+              ?.marketServiceDeployObjectVO?.id;
             res.valueId = data.valueId;
           } else {
             res.appServiceId = appServiceId;
@@ -394,7 +403,7 @@ export default (({
             res.devopsIngressVO = null;
           }
           return ({
-            url: `/devops/v1/projects/${projectId}/app_service_instances${isMarket ? '/market/instances' : ''}`,
+            url: `/devops/v1/projects/${projectId}/app_service_instances${isMarket || isHzero ? '/market/instances' : ''}`,
             method: 'post',
             data: res,
           });
@@ -464,6 +473,7 @@ export default (({
           // res[mapping.hzeroServiceVersion.name] = data[mapping.hzeroServiceVersion.name]?.id;
           res[mapping.containerName.value] = data[mapping.containerName.value];
           res.name = data.name;
+          res.deployObjectId = data.hzeroServiceVersionId.marketServiceDeployObjectVO?.id;
           if (deployObject === mapping.deployObject.options[0].value) {
             res.name = data[mapping.containerName.value];
             res.imageInfo = {
