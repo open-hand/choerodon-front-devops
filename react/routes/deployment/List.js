@@ -79,6 +79,7 @@ const Deployment = withRouter(observer((props) => {
     if (urlQuery.get('mode') || urlQuery.get('deployType')) {
       openBaseDeploy(urlQuery.get('mode'), urlQuery.get('deployType'));
       urlQuery.delete('mode');
+      urlQuery.delete('deployType');
       window.history.replaceState(null, null, `/#/devops/deployment-operation?${urlQuery.toString()}`);
     }
   }, []);
@@ -181,8 +182,9 @@ const Deployment = withRouter(observer((props) => {
           envId,
         },
       });
+    } else {
+      history.push(`/devops/resource${search}`);
     }
-    history.push(`/devops/resource${search}`);
   }
 
   function deployAfter(instance, type = 'instance') {
