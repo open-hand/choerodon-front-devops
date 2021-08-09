@@ -45,7 +45,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
       value: 'open',
       disabled: !syncStatus?.open,
     }, {
-      text: formatMessage({ id: `${intlPrefix}.type.business` }),
+      text: formatMessage({ id: `${intlPrefix}.type.sass` }),
       value: 'sass',
       disabled: !syncStatus?.sass,
     }],

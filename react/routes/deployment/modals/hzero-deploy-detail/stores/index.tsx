@@ -44,8 +44,8 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
       text: formatMessage({ id: `${intlPrefix}.type.open` }),
       value: 'open',
     }, {
-      text: formatMessage({ id: `${intlPrefix}.type.business` }),
-      value: 'business',
+      text: formatMessage({ id: `${intlPrefix}.type.sass` }),
+      value: 'sass',
     }],
   }), []);
 

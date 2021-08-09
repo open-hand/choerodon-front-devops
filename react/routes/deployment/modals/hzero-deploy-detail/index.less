@@ -1,10 +1,11 @@
 @import "../hzero-deploy/index";
+@import '~choerodon-ui/lib/style/themes/default';
 @popupPrefix: c7ncd-deploy-hzero;
 @success_status: #1fc2bb;
 @failed_status: #f76776;
 @wait_status: rgba(15, 19, 88, 0.25);
 
-.@{popupPrefix} {
+.@{popupPrefix}-detail {
 
   .@{popupPrefix}-status-icon {
     margin-left: auto;
@@ -18,6 +19,23 @@
     }
     &.wait {
       color: @wait_status;
+    }
+  }
+
+  .@{popupPrefix}-content {
+    margin-top: .15rem;
+    height: calc(100vh - 2.4rem);
+  }
+
+  .@{c7n-pro-prefix}-field-label-output {
+    color: var(--text-color3);
+  }
+
+  .@{popupPrefix}-detail-form {
+    padding-right: .2rem;
+
+    td:nth-child(2) {
+      width: 1.96rem;
     }
   }
 }
