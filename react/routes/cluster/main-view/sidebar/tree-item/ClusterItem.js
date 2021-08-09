@@ -207,7 +207,7 @@ function ClusterItem({
       title: '断开连接',
       children: (
         <div>
-          <p>复制以下指令至对应主机执行，来断开连接。</p>
+          <p>复制以下指令至对应集群执行，来断开连接。</p>
           <TextField
             value={res}
             disabled

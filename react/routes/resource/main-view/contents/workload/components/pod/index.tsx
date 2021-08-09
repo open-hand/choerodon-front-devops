@@ -108,7 +108,7 @@ const PodContent = injectIntl(({
             className={`${prefixCls}-btn-wrap-item`}
             icon="expand_less"
             onClick={handleIncrease}
-            funcType={'flat' as FuncType}
+            funcType="flat"
             size={'small' as Size}
           />
           <Tooltip title={minPodCount === 2 ? formatMessage({ id: 'c7ncd.deployment.pod.disabled.tips' }) : ''}>
@@ -117,7 +117,7 @@ const PodContent = injectIntl(({
               className={`${prefixCls}-btn-wrap-item`}
               icon="expand_more"
               onClick={handleDecrease}
-              funcType={'flat' as FuncType}
+              funcType="flat"
               size={'small' as Size}
             />
           </Tooltip>
