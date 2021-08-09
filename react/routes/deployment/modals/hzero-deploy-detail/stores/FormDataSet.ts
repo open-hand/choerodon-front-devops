@@ -29,14 +29,16 @@ export default ({
   },
   fields: [
     {
-      name: 'appType',
+      name: 'type',
       textField: 'text',
       valueField: 'value',
       label: formatMessage({ id: `${intlPrefix}.type` }),
       options: typeDs,
     },
     {
-      name: 'envName',
+      name: 'environmentDTO',
+      textField: 'name',
+      valueField: 'id',
       label: formatMessage({ id: 'environment' }),
       required: true,
     },
@@ -46,15 +48,15 @@ export default ({
       required: true,
     },
   ],
-  events: {
-    load: ({ dataSet }: { dataSet: DataSet }) => {
-      const record = dataSet.current;
-      if (record) {
-        record.set({
-          envName: record.get('environmentDTO')?.name,
-          envId: record.get('environmentDTO')?.id,
-        });
-      }
-    },
-  },
+  // events: {
+  //   load: ({ dataSet }: { dataSet: DataSet }) => {
+  //     const record = dataSet.current;
+  //     if (record) {
+  //       record.set({
+  //         envName: record.get('environmentDTO')?.name,
+  //         envId: record.get('environmentDTO')?.id,
+  //       });
+  //     }
+  //   },
+  // },
 });

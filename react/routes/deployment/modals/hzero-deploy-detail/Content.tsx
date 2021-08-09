@@ -94,9 +94,9 @@ const HzeroDeployDetail = observer(() => {
   return (
     <div className={`${prefixCls}`}>
       <Form dataSet={formDs} columns={5}>
-        <SelectBox name="appType" colSpan={2} disabled />
+        <SelectBox name="type" colSpan={2} disabled />
         <TextField
-          name="envName"
+          name="environmentDTO"
           colSpan={2}
           disabled
           newLine

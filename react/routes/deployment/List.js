@@ -460,12 +460,12 @@ const Deployment = withRouter(observer((props) => {
             {record.get('viewId')}
             ”的执行详情
           </span>
-          {getStatusTag(record.get('status'))}
+          {getStatusTag(record.get('deployResult'))}
         </div>
       ),
       style: { width: LARGE },
       children: <HzeroDeployDetail
-        status={record.get('status')}
+        status={record.get('deployResult')}
         recordId={record.get('id')}
       />,
       okText: formatMessage({ id: 'close' }),
