@@ -1,5 +1,5 @@
 import React, {
-  createContext, useContext, useEffect, useMemo,
+  createContext, useContext, useMemo,
 } from 'react';
 import { injectIntl } from 'react-intl';
 import { inject } from 'mobx-react';
@@ -34,7 +34,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const {
     children,
     intl: { formatMessage },
-    AppState: { currentMenuType: { projectId } },
     recordId,
   } = props;
 
@@ -53,76 +52,20 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const serviceDs = useMemo(() => new DataSet(ServiceDataSet({
     formatMessage,
     intlPrefix,
-    projectId,
-  })), [projectId]);
+  })), []);
   const formDs = useMemo(() => new DataSet(FormDataSet({
     formatMessage,
     intlPrefix,
-    projectId,
     serviceDs,
     typeDs,
     recordId,
-  })), [projectId]);
-
-  useEffect(() => {
-    formDs.loadData([{
-      appType: 'open',
-      environmentId: '11',
-      environmentName: 'Staging环境',
-      appVersionId: '21',
-      appVersionName: '1.0.0',
-      hzeroService: [{
-        name: 'hzero-1',
-        id: '111',
-        isRequired: true,
-        instanceName: 'instance-1',
-        serviceVersionId: 'v-1',
-        serviceVersionName: '1.0.0',
-        values: 'aa',
-        status: 'success',
-      }, {
-        name: 'hzero-2',
-        id: '222',
-        instanceName: 'instance-2',
-        values: 'bbb',
-        status: 'success',
-        serviceVersionId: 'v-2',
-        serviceVersionName: '2.0.0',
-      }, {
-        name: 'hzero-3',
-        id: '333',
-        instanceName: 'instance-3',
-        values: 'ccc',
-        status: 'failed',
-        serviceVersionId: 'v-3',
-        serviceVersionName: '3.0.0',
-      }, {
-        name: 'hzero-4',
-        id: '444',
-        instanceName: 'instance-4',
-        values: 'ddd',
-        status: 'wait',
-        serviceVersionId: 'v-4',
-        serviceVersionName: '4.0.0',
-      }, {
-        name: 'hzero-5',
-        id: '555',
-        instanceName: 'instance-5',
-        values: 'eee',
-        status: 'wait',
-        serviceVersionId: 'v-5',
-        serviceVersionName: '5.0.0',
-      }],
-    }]);
-    // serviceDs.loadData();
-  }, []);
+  })), []);
 
   const value = {
     ...props,
     intlPrefix,
     prefixCls: 'c7ncd-deploy-hzero',
     formatMessage,
-    projectId,
     formDs,
     serviceDs,
   };

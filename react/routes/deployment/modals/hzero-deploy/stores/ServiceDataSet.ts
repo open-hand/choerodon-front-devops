@@ -1,19 +1,14 @@
-import { DataSet } from 'choerodon-ui/pro';
-import omit from 'lodash/omit';
 import { Record, DataSetProps, FieldType } from '@/interface';
-import { axios } from '@choerodon/boot';
 import { appServiceInstanceApi } from '@/api';
 
 interface FormProps {
   formatMessage(arg0: object, arg1?: object): string,
   intlPrefix: string,
-  projectId: number,
 }
 
 export default ({
   formatMessage,
   intlPrefix,
-  projectId,
 }: FormProps): DataSetProps => {
   async function checkName(value: any, name: string, record: Record) {
     const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;

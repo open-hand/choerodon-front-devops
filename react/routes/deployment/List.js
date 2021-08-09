@@ -451,8 +451,8 @@ const Deployment = withRouter(observer((props) => {
   const openHzeroStopModal = useCallback((record) => {
     Modal.open({
       key: hzeroStopModalKey,
-      title: '停止执行',
-      children: '确定停止该条HZERO快速部署吗？',
+      title: formatMessage({ id: `${intlPrefix}.title` }),
+      children: formatMessage({ id: `${intlPrefix}.stop.des` }),
       okText: formatMessage({ id: `${intlPrefix}.stop` }),
       onOk: () => handleHzeroStop(record.get('id')),
     });
@@ -497,7 +497,7 @@ const Deployment = withRouter(observer((props) => {
   const renderAction = useCallback(({ record }) => {
     if (record.get('deployType') === 'hzero') {
       const actionData = [{
-        text: '查看记录详情',
+        text: formatMessage({ id: `${intlPrefix}.record.detail` }),
         action: () => openHzeroDeployDetailModal(record),
       }];
       switch (record.get('deployResult')) {

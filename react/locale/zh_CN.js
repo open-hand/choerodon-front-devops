@@ -807,6 +807,9 @@ const deploy = {
   'c7ncd.deploy.hzero.type.open': 'HZERO开源版',
   'c7ncd.deploy.hzero.type.business': 'HZERO企业版',
   'c7ncd.deploy.hzero.stop': '停止',
+  'c7ncd.deploy.record.detail': '查看记录详情',
+  'c7ncd.deploy.record.stop.title': '停止执行',
+  'c7ncd.deploy.record.stop.des': '确定停止该条HZERO应用快速部署吗？',
 };
 
 const repository = {
