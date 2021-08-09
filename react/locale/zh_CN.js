@@ -766,6 +766,7 @@ const deploy = {
   'c7ncd.deploy.status.pendingcheck': '待审核',
   'c7ncd.deploy.status.operating': '部署中',
   'c7ncd.deploy.status.running': '执行中',
+  'c7ncd.deploy.status.canceled': '已停止',
   'c7ncd.deploy.search.env': '查询部署环境',
   'c7ncd.deploy.search.type': '查询部署类型',
   'c7ncd.deploy.search.result': '查询运行结果',

@@ -31,6 +31,7 @@ import HzeroDeploy from './modals/hzero-deploy';
 import HzeroDeployDetail from './modals/hzero-deploy-detail';
 import Tips from '../../components/new-tips';
 import { LARGE } from '../../utils/getModalWidth';
+import { deployRecordApi } from '../../api';
 
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/base16-dark.css';
@@ -437,17 +438,34 @@ const Deployment = withRouter(observer((props) => {
     });
   }, []);
 
-  const handleHzeroRetry = useCallback(() => {
-
+  const handleHzeroRetry = useCallback(async (record) => {
+    try {
+      await deployRecordApi.retryRecord(record.get('id'));
+      refresh();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }, []);
 
-  const openHzeroStopModal = useCallback(() => {
+  const openHzeroStopModal = useCallback((record) => {
     Modal.open({
       key: hzeroStopModalKey,
       title: '停止执行',
       children: '确定停止该条HZERO快速部署吗？',
-      okText: formatMessage({ id: 'stop' }),
+      okText: formatMessage({ id: `${intlPrefix}.stop` }),
+      onOk: () => handleHzeroStop(record.get('id')),
     });
+  }, []);
+
+  const handleHzeroStop = useCallback(async (recordId) => {
+    try {
+      await deployRecordApi.stopRecord(recordId);
+      refresh();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }, []);
 
   const openHzeroDeployDetailModal = useCallback((record) => {
@@ -467,6 +485,8 @@ const Deployment = withRouter(observer((props) => {
       children: <HzeroDeployDetail
         status={record.get('deployResult')}
         recordId={record.get('id')}
+        refresh={refresh}
+        handleHzeroStop={handleHzeroStop}
       />,
       okText: formatMessage({ id: 'close' }),
       okCancel: false,
@@ -481,16 +501,17 @@ const Deployment = withRouter(observer((props) => {
         action: () => openHzeroDeployDetailModal(record),
       }];
       switch (record.get('deployResult')) {
+        case 'canceled':
         case 'failed':
           actionData.push({
-            text: formatMessage({ id: 'retry' }),
-            action: handleHzeroRetry,
+            text: formatMessage({ id: `${intlPrefix}.retry` }),
+            action: () => handleHzeroRetry(record),
           });
           break;
         case 'operating':
           actionData.push({
             text: formatMessage({ id: `${intlPrefix}.hzero.stop` }),
-            action: openHzeroStopModal,
+            action: () => openHzeroStopModal(record),
           });
         default:
       }
@@ -542,11 +563,11 @@ const Deployment = withRouter(observer((props) => {
               name: formatMessage({ id: `${intlPrefix}.hzero` }),
               icon: 'cloud_done-o',
               display: true,
-              disabled: !(deployStore.getHzeroSyncStatus?.open && deployStore.getHzeroSyncStatus?.sass),
+              disabled: !(deployStore.getHzeroSyncStatus?.open || deployStore.getHzeroSyncStatus?.sass),
               permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.batch'],
               handler: openHzeroDeploy,
               tooltipsConfig: {
-                title: !(deployStore.getHzeroSyncStatus?.open && deployStore.getHzeroSyncStatus?.sass)
+                title: !(deployStore.getHzeroSyncStatus?.open || deployStore.getHzeroSyncStatus?.sass)
                   ? '未从开放平台同步HZERO应用至C7N平台，无法执行此操作' : '',
               },
             },

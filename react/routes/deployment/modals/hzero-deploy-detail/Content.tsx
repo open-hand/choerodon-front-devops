@@ -22,6 +22,7 @@ import {
   Record, RecordObjectProps, FuncType, Placements,
 } from '@/interface';
 import YamlEditor from '@/components/yamlEditor';
+import { deployRecordApi } from '@/api';
 import { useHzeroDeployDetailStore } from './stores';
 
 import './index.less';
@@ -31,25 +32,46 @@ const HzeroDeployDetail = observer(() => {
     formatMessage,
     intlPrefix,
     prefixCls,
-    projectId,
     modal,
     formDs,
     serviceDs,
     status,
+    recordId,
+    refresh,
+    handleHzeroStop,
   } = useHzeroDeployDetailStore();
 
   useEffect(() => {
-    if (status === 'failed') {
-      modal.update({
-        okCancel: true,
-        okText: formatMessage({ id: 'retry' }),
-      });
+    switch (status) {
+      case 'canceled':
+      case 'failed':
+        modal.update({
+          okCancel: true,
+          okText: formatMessage({ id: '重试' }),
+          onOk: handleRetry,
+        });
+        break;
+      case 'operating':
+        modal.update({
+          okCancel: true,
+          okText: formatMessage({ id: `${intlPrefix}.stop` }),
+          onOk: () => handleHzeroStop(recordId),
+        });
+        break;
+      default:
     }
-    if (status === 'operating') {
-      modal.update({
-        okCancel: true,
-        okText: formatMessage({ id: `${intlPrefix}.stop` }),
-      });
+  }, []);
+
+  const handleRetry = useCallback(async () => {
+    try {
+      const data = {
+        deployDetailsVOList: serviceDs.toData(),
+      };
+      await deployRecordApi.retryRecord(recordId, data);
+      refresh();
+      return true;
+    } catch (e) {
+      return false;
     }
   }, []);
 
@@ -96,7 +118,7 @@ const HzeroDeployDetail = observer(() => {
       <Form dataSet={formDs} columns={5}>
         <SelectBox name="type" colSpan={2} disabled />
         <TextField
-          name="environmentDTO"
+          name="envName"
           colSpan={2}
           disabled
           newLine
@@ -133,7 +155,7 @@ const HzeroDeployDetail = observer(() => {
             <TextField name="instanceCode" disabled />
             <YamlEditor
               colSpan={2}
-              readOnly={status !== 'failed'}
+              readOnly={!['failed', 'canceled'].includes(status)}
               value={serviceDs?.current?.get('value') || ''}
               onValueChange={ChangeConfigValue}
               handleEnableNext={handleEnableNext}
