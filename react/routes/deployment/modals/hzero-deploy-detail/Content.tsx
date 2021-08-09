@@ -7,10 +7,11 @@ import {
   TextField,
   SelectBox,
   Icon,
+  Output,
 } from 'choerodon-ui/pro';
 import classnames from 'classnames';
 import {
-  Record,
+  Record, LabelLayoutType, LabelAlignType,
 } from '@/interface';
 import YamlEditor from '@/components/yamlEditor';
 import { deployRecordApi } from '@/api';
@@ -105,21 +106,25 @@ const HzeroDeployDetail = observer(() => {
   }, [serviceDs.current]);
 
   return (
-    <div className={`${prefixCls}`}>
-      <Form dataSet={formDs} columns={5}>
-        <SelectBox name="type" colSpan={2} disabled />
-        <TextField
+    <div className={`${prefixCls} ${prefixCls}-detail`}>
+      <Form
+        dataSet={formDs}
+        columns={3}
+        labelLayout={'horizontal' as LabelLayoutType}
+        labelAlign={'left' as LabelAlignType}
+        labelWidth={120}
+        className={`${prefixCls}-detail-form`}
+      >
+        <Output
+          name="type"
+          renderer={({ value }) => value && formatMessage({ id: `${intlPrefix}.type.${value}` })}
+          className={`${prefixCls}-detail-type`}
+        />
+        <Output
           name="environmentDTO"
-          colSpan={2}
-          disabled
-          newLine
           renderer={({ value }) => value?.name}
         />
-        <TextField
-          name="mktAppVersion"
-          colSpan={2}
-          disabled
-        />
+        <Output name="mktAppVersion" />
       </Form>
       {serviceDs.length ? (
         <div className={`${prefixCls}-content`}>
@@ -138,13 +143,17 @@ const HzeroDeployDetail = observer(() => {
               </div>
             ))}
           </div>
-          <Form
-            record={serviceDs.current}
-            columns={2}
-            className={`${prefixCls}-content-form`}
-          >
-            <TextField name="mktServiceVersion" disabled />
-            <TextField name="instanceCode" disabled />
+          <div className={`${prefixCls}-content-form`}>
+            <Form
+              record={serviceDs.current}
+              columns={2}
+              labelLayout={'horizontal' as LabelLayoutType}
+              labelAlign={'left' as LabelAlignType}
+              labelWidth={120}
+            >
+              <Output name="mktServiceVersion" />
+              <Output name="instanceCode" />
+            </Form>
             <YamlEditor
               colSpan={2}
               readOnly={!['failed', 'canceled'].includes(status)}
@@ -152,7 +161,7 @@ const HzeroDeployDetail = observer(() => {
               onValueChange={ChangeConfigValue}
               handleEnableNext={handleEnableNext}
             />
-          </Form>
+          </div>
         </div>
       ) : null}
     </div>

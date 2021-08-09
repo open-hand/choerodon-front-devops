@@ -805,7 +805,7 @@ const deploy = {
   'c7ncd.deploy.hzero.placeholder': '请选择HZERO服务',
   'c7ncd.deploy.hzero.type': 'HZERO应用类型',
   'c7ncd.deploy.hzero.type.open': 'HZERO开源版',
-  'c7ncd.deploy.hzero.type.business': 'HZERO企业版',
+  'c7ncd.deploy.hzero.type.sass': 'HZERO企业版',
   'c7ncd.deploy.hzero.stop': '停止',
   'c7ncd.deploy.record.detail': '查看记录详情',
   'c7ncd.deploy.record.stop.title': '停止执行',
