@@ -12,6 +12,7 @@ import DetailDataSet from './DetailDataSet';
 import useStore from './useStore';
 import usePipelineStore from './usePipelineStore';
 import OptionsDataSet from './OptionsDataSet';
+import useHasMarket from '../../../hooks/useHasMarket';
 
 const Store = createContext();
 const STATUS = ['success', 'failed', 'operating'];
@@ -31,6 +32,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       location: { state },
     } = props;
     const intlPrefix = 'c7ncd.deploy';
+    const hasMarket = useHasMarket();
     const deployTypeDs = useMemo(() => new DataSet({
       data: [
         {
@@ -83,7 +85,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       if (state && state.pipelineId) {
         listDs.queryDataSet.getField('pipelineId').set('defaultValue', state.pipelineId);
       }
-      deployStore.loadHzeroSyncStatus();
+      hasMarket && deployStore.loadHzeroSyncStatus();
     }, []);
 
     useEffect(() => {
@@ -114,6 +116,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       pipelineStore,
       envOptionsDs,
       pipelineOptionsDs,
+      hasMarket,
     };
     return (
       <Store.Provider value={value}>
