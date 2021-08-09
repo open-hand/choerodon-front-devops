@@ -1,4 +1,4 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, max-len */
 
 import React, { useCallback, useEffect, useState } from 'react';
 import {
@@ -213,7 +213,7 @@ const Deployment = withRouter(observer((props) => {
         width: LARGE,
       },
       title: formatMessage({ id: `${intlPrefix}.hzero` }),
-      children: <HzeroDeploy />,
+      children: <HzeroDeploy syncStatus={deployStore.getHzeroSyncStatus} />,
       drawer: true,
       okText: formatMessage({ id: 'deployment' }),
     });
@@ -536,8 +536,13 @@ const Deployment = withRouter(observer((props) => {
               name: formatMessage({ id: `${intlPrefix}.hzero` }),
               icon: 'cloud_done-o',
               display: true,
+              disabled: !(deployStore.getHzeroSyncStatus?.open && deployStore.getHzeroSyncStatus?.sass),
               permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.batch'],
               handler: openHzeroDeploy,
+              tooltipsConfig: {
+                title: !(deployStore.getHzeroSyncStatus?.open && deployStore.getHzeroSyncStatus?.sass)
+                  ? '未从开放平台同步HZERO应用至C7N平台，无法执行此操作' : '',
+              },
             },
             {
               icon: 'refresh',

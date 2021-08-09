@@ -23,9 +23,18 @@ import {
 } from '@/interface';
 import YamlEditor from '@/components/yamlEditor';
 import EnvOption from '@/components/env-option';
+import { axios } from '@choerodon/boot';
 import { useHzeroDeployStore } from './stores';
 
 import './index.less';
+
+interface ServiceItemProps {
+  id: string,
+  values: string,
+  marketServiceName: string,
+  marketServiceCode: string,
+  required: boolean,
+}
 
 const HzeroDeploy = observer(() => {
   const {
@@ -36,53 +45,38 @@ const HzeroDeploy = observer(() => {
     modal,
     formDs,
     serviceDs,
+    mainStore,
   } = useHzeroDeployStore();
 
   // 记录点击展开下拉内容的HZERO服务record的index
   const [recordIndex, setRecordIndex] = useState<number | never>();
 
-  const menuData = useMemo(() => ([
-    {
-      name: 'hzero-1',
-      id: '111',
-      isRequired: true,
-      instanceName: 'instance-1',
-      values: 'aa',
-    }, {
-      name: 'hzero-2',
-      id: '222',
-      instanceName: 'instance-2',
-      values: 'bbb',
-    }, {
-      name: 'hzero-3',
-      id: '333',
-      instanceName: 'instance-3',
-      values: 'ccc',
-    }, {
-      name: 'hzero-4',
-      id: '444',
-      instanceName: 'instance-4',
-      values: 'ddd',
-    }, {
-      name: 'hzero-5',
-      id: '555',
-      instanceName: 'instance-5',
-      values: 'eee',
-    },
-  ]), []);
+  modal.handleOk(async () => {
+    try {
+      const [res1, res2] = await axios.all([formDs.validate(), serviceDs.validate(true)]);
+      if (res1 && res2) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }, []);
+
+  const menuData = useMemo(() => mainStore.getServiceData, [mainStore.getServiceData]);
 
   const handleSelect = useCallback(({ domEvent, key }) => {
     eventStopProp(domEvent);
-    const data = menuData.find((item) => item.id === key);
+    const data = menuData.find((item: ServiceItemProps) => item.id === key);
     data && recordIndex && serviceDs.get(recordIndex)?.set(data);
-  }, [recordIndex]);
+  }, [recordIndex, menuData]);
 
   const menu = useMemo(() => (
     <Menu onClick={handleSelect}>
-      {map(menuData, ({ id, name }) => (serviceDs.some((serviceRecord) => serviceRecord.get('id') === id)
-        ? null : <Menu.Item key={id}>{name}</Menu.Item>))}
+      {map(menuData, ({ id, marketServiceName }) => (serviceDs.some((serviceRecord) => serviceRecord.get('id') === id)
+        ? null : <Menu.Item key={id}>{marketServiceName}</Menu.Item>))}
     </Menu>
-  ), [handleSelect, serviceDs.records]);
+  ), [serviceDs.records, menuData]);
 
   const handleClickExpand = useCallback((e, record: Record) => {
     eventStopProp(e);
@@ -93,7 +87,7 @@ const HzeroDeploy = observer(() => {
     `${prefixCls}-content-service-item`,
     {
       selected: record === serviceDs.current,
-      disabled: record.get('isRequired'),
+      disabled: record.get('required'),
     },
   ), [serviceDs.current]);
 
@@ -128,10 +122,14 @@ const HzeroDeploy = observer(() => {
     disabled: !envRecord.get('permission') || !envRecord.get('connect'),
   }), []);
 
+  const renderTypeOptionProperty = useCallback(({ record: typeRecord }: RecordObjectProps) => ({
+    disabled: typeRecord.get('disabled'),
+  }), []);
+
   return (
     <div className={`${prefixCls}`}>
       <Form dataSet={formDs} columns={5}>
-        <SelectBox name="appType" colSpan={2} />
+        <SelectBox name="appType" colSpan={2} onOption={renderTypeOptionProperty} />
         <Select
           name="environmentId"
           searchable
@@ -159,9 +157,9 @@ const HzeroDeploy = observer(() => {
                 role="none"
               >
                 <span>
-                  {serviceRecord.get('name') || formatMessage({ id: `${intlPrefix}.placeholder` })}
+                  {serviceRecord.get('marketServiceName') || formatMessage({ id: `${intlPrefix}.placeholder` })}
                 </span>
-                {serviceRecord.get('isRequired') ? (
+                {serviceRecord.get('required') ? (
                   <span className={`${prefixCls}-content-service-required`}>必选</span>
                 ) : (
                   <div className={`${prefixCls}-content-service-btn`}>
@@ -192,6 +190,7 @@ const HzeroDeploy = observer(() => {
               funcType={FuncType.flat}
               className={`${prefixCls}-content-service-add`}
               icon="add"
+              disabled={menuData?.length === serviceDs.length}
             >
               {formatMessage({ id: `${intlPrefix}.add` })}
             </Button>
@@ -201,10 +200,9 @@ const HzeroDeploy = observer(() => {
             columns={2}
             className={`${prefixCls}-content-form`}
           >
-            <Select
-              name="serviceVersionId"
-              searchable
-              clearButton={false}
+            <TextField
+              name="marketServiceVersion"
+              disabled
             />
             <TextField name="instanceName" />
             <YamlEditor

@@ -1,6 +1,7 @@
 import { useLocalStore } from 'mobx-react-lite';
 import { axios, Choerodon } from '@choerodon/boot';
 import { handlePromptError } from '../../../utils';
+import { marketHzeroApi } from '../../../api';
 
 export default function useStore() {
   return useLocalStore(() => ({
@@ -41,6 +42,14 @@ export default function useStore() {
     },
     get getCertificates() {
       return this.certificates;
+    },
+
+    hzeroSyncStatus: null,
+    get getHzeroSyncStatus() {
+      return this.hzeroSyncStatus;
+    },
+    setHzeroSyncStatus(data) {
+      this.hzeroSyncStatus = data;
     },
 
     async startPipeline(projectId, pipelineIds) {
@@ -134,6 +143,19 @@ export default function useStore() {
 
     checkPath(projectId, domain, env, value, id = '') {
       return axios.get(`/devops/v1/projects/${projectId}/ingress/check_domain?domain=${domain}&env_id=${env}&path=${value}&id=${id}`);
+    },
+
+    async loadHzeroSyncStatus() {
+      try {
+        const res = await marketHzeroApi.loadSyncStatus();
+        if (res && !res.failed) {
+          this.setHzeroSyncStatus(res);
+        } else {
+          this.setHzeroSyncStatus(null);
+        }
+      } catch (e) {
+        this.setHzeroSyncStatus(null);
+      }
     },
   }));
 }

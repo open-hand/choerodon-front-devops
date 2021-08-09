@@ -127,7 +127,7 @@ const HzeroDeployDetail = observer(() => {
             <TextField name="instanceName" disabled />
             <YamlEditor
               colSpan={2}
-              readOnly={false}
+              readOnly={status !== 'failed'}
               value={serviceDs?.current?.get('values') || ''}
               onValueChange={ChangeConfigValue}
               handleEnableNext={handleEnableNext}

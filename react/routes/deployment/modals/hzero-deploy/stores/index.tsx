@@ -1,12 +1,14 @@
 import React, {
-  createContext, useContext, useEffect, useMemo,
+  createContext, useCallback, useContext, useEffect, useMemo,
 } from 'react';
 import { injectIntl } from 'react-intl';
 import { inject } from 'mobx-react';
 import { DataSet } from 'choerodon-ui/pro';
 import { DataSet as DataSetProps } from '@/interface';
+import { marketHzeroApi } from '@/api';
 import FormDataSet from './FormDataSet';
 import ServiceDataSet from './ServiceDataSet';
+import useStore, { StoreProps } from './useStore';
 
 interface ContextProps {
   prefixCls: string,
@@ -17,6 +19,7 @@ interface ContextProps {
   serviceDs: DataSetProps,
   modal: any,
   refresh(): void,
+  mainStore: StoreProps,
 }
 
 const Store = createContext({} as ContextProps);
@@ -30,18 +33,22 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     children,
     intl: { formatMessage },
     AppState: { currentMenuType: { projectId } },
+    syncStatus,
   } = props;
 
   const intlPrefix = useMemo(() => 'c7ncd.deploy.hzero', []);
   const random = useMemo(() => Math.random(), []);
 
+  const mainStore = useMemo(() => useStore(), []);
   const typeDs = useMemo(() => new DataSet({
     data: [{
       text: formatMessage({ id: `${intlPrefix}.type.open` }),
       value: 'open',
+      disabled: !syncStatus?.open,
     }, {
       text: formatMessage({ id: `${intlPrefix}.type.business` }),
       value: 'business',
+      disabled: !syncStatus?.sass,
     }],
   }), []);
 
@@ -53,30 +60,18 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const formDs = useMemo(() => new DataSet(FormDataSet({
     formatMessage,
     intlPrefix,
-    projectId,
     serviceDs,
     random,
     typeDs,
+    mainStore,
   })), [projectId]);
 
   useEffect(() => {
-    serviceDs.loadData([{
-      name: 'hzero-1',
-      id: '111',
-      isRequired: true,
-      instanceName: 'instance-1',
-      values: 'aa',
-    }, {
-      name: 'hzero-2',
-      id: '222',
-      instanceName: 'instance-2',
-      values: 'bbb',
-    }, {
-      name: 'hzero-3',
-      id: '333',
-      instanceName: 'instance-3',
-      values: 'ccc',
-    }]);
+    if (!syncStatus?.open && syncStatus?.saas) {
+      formDs.current?.set('appType', 'saas');
+    } else {
+      formDs.current?.set('appType', 'open');
+    }
   }, []);
 
   const value = {
@@ -87,6 +82,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     projectId,
     formDs,
     serviceDs,
+    mainStore,
   };
   return (
     <Store.Provider value={value}>

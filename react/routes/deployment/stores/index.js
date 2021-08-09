@@ -83,6 +83,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       if (state && state.pipelineId) {
         listDs.queryDataSet.getField('pipelineId').set('defaultValue', state.pipelineId);
       }
+      deployStore.loadHzeroSyncStatus();
     }, []);
 
     useEffect(() => {
