@@ -19,7 +19,9 @@ const ContentList = ({
 }: { openDeploy(data?: { appServiceSource: string, appServiceId: string }): void }) => {
   const {
     prefixCls, intlPrefix, formatMessage,
-    listDs, tabKeys: { MARKET_TAB, PROJECT_TAB, SHARE_TAB, HZERO_TAB },
+    listDs, tabKeys: {
+      MARKET_TAB, PROJECT_TAB, SHARE_TAB, HZERO_TAB,
+    },
     mainStore, typeTabKeys: { HOST_TAB },
   } = useAppCenterListStore();
 
@@ -58,7 +60,8 @@ const ContentList = ({
     } = record?.toData() || {};
     const infoData = {
       code: source === MARKET_TAB ? null : serviceCode,
-      source: builtIn ? formatMessage({ id: `${intlPrefix}.source.built` }) : sourceView,
+      // eslint-disable-next-line no-nested-ternary
+      source: source === HZERO_TAB ? 'HZERO应用' : (builtIn ? formatMessage({ id: `${intlPrefix}.source.built` }) : sourceView),
       gitlab: source === PROJECT_TAB && repoUrl
         ? `${repoUrl.split('//')[0]}//.../${repoUrl.split('/')[repoUrl.split('/')?.length - 1]}` : null,
       sourceProject: shareProjectName,

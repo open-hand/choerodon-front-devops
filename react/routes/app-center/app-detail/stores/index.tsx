@@ -27,7 +27,7 @@ interface ContextProps {
   mainStore: StoreProps,
   detailDs: DataSetProps,
   searchDs: DataSetProps,
-  appServiceType: 'project' | 'share' | 'market' | 'hzero',
+  appServiceType: AppServiceType,
   appServiceId: string,
   deleteModalStore: DeleteStoreProps
   mainTabKeys: {
@@ -38,6 +38,8 @@ interface ContextProps {
     APP_INSTANCE_TAB: 'app_instance',
   }
 }
+
+export type AppServiceType = 'project' | 'share' | 'market' | 'hzero';
 
 const Store = createContext({} as ContextProps);
 
