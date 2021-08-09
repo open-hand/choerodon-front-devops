@@ -6,14 +6,14 @@ class DeployApi extends Api<DeployApi> {
   }
 
   /**
-   * 加载环境列表
-   * @param params 额外的接口请求参数
+   * 快速部署HZERO应用
+   * @param data 部署参数
    */
-  deployHzero(params = {}) {
+  deployHzero(data: object) {
     return this.request({
-      method: 'get',
+      method: 'post',
       url: `${this.prefix}/hzero`,
-      params: { active: true, ...params || {} },
+      data,
     });
   }
 }

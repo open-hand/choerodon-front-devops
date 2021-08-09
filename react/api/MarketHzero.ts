@@ -32,7 +32,7 @@ class MarketHzeroApi extends Api<MarketHzeroApi> {
   loadHzeroVersions(type = 'open') {
     return this.request({
       method: 'get',
-      url: `${this.sitePrefix}/hzero`,
+      url: `${this.sitePrefix}/hzero/versions`,
       params: { type },
     });
   }

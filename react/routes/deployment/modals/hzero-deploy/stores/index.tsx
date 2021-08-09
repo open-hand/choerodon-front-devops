@@ -39,7 +39,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const intlPrefix = useMemo(() => 'c7ncd.deploy.hzero', []);
   const random = useMemo(() => Math.random(), []);
 
-  const mainStore = useMemo(() => useStore(), []);
+  const mainStore = useStore();
   const typeDs = useMemo(() => new DataSet({
     data: [{
       text: formatMessage({ id: `${intlPrefix}.type.open` }),
@@ -47,7 +47,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
       disabled: !syncStatus?.open,
     }, {
       text: formatMessage({ id: `${intlPrefix}.type.business` }),
-      value: 'business',
+      value: 'sass',
       disabled: !syncStatus?.sass,
     }],
   }), []);

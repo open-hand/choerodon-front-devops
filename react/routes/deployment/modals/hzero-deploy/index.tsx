@@ -4,6 +4,7 @@ import Content from './Content';
 
 interface Props {
   syncStatus: { open: boolean, sass: boolean },
+  refresh(): void,
 }
 
 export default (props: Props) => (

@@ -1,5 +1,5 @@
 import { DataSet, DataSetProps, FieldType } from '@/interface';
-import DeploymentApi from '@/routes/deployment/apis';
+import { deployRecordApiConfig } from '@/api';
 
 interface FormProps {
   formatMessage(arg0: object, arg1?: object): string,
@@ -7,6 +7,7 @@ interface FormProps {
   projectId: number,
   serviceDs: DataSet,
   typeDs: DataSet,
+  recordId: string,
 }
 
 export default ({
@@ -15,12 +16,17 @@ export default ({
   projectId,
   serviceDs,
   typeDs,
+  recordId,
 }: FormProps): DataSetProps => ({
   autoCreate: false,
+  autoQuery: true,
   selection: false,
   autoQueryAfterSubmit: false,
   paging: false,
-  children: { hzeroService: serviceDs },
+  children: { deployDetailsVOList: serviceDs },
+  transport: {
+    read: deployRecordApiConfig.loadRecordDetail(recordId),
+  },
   fields: [
     {
       name: 'appType',
@@ -30,22 +36,25 @@ export default ({
       options: typeDs,
     },
     {
-      name: 'environmentName',
+      name: 'envName',
       label: formatMessage({ id: 'environment' }),
       required: true,
     },
     {
-      name: 'environmentId',
-      required: true,
-    },
-    {
-      name: 'appVersionName',
+      name: 'mktAppVersion',
       label: formatMessage({ id: `${intlPrefix}.version` }),
       required: true,
     },
-    {
-      name: 'appVersionId',
-      required: true,
-    },
   ],
+  events: {
+    load: ({ dataSet }: { dataSet: DataSet }) => {
+      const record = dataSet.current;
+      if (record) {
+        record.set({
+          envName: record.get('environmentDTO')?.name,
+          envId: record.get('environmentDTO')?.id,
+        });
+      }
+    },
+  },
 });

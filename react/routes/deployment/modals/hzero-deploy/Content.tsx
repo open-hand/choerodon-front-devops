@@ -14,6 +14,7 @@ import {
   Select,
   Menu,
   Dropdown,
+  Tooltip,
 } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import classnames from 'classnames';
@@ -46,6 +47,7 @@ const HzeroDeploy = observer(() => {
     formDs,
     serviceDs,
     mainStore,
+    refresh,
   } = useHzeroDeployStore();
 
   // 记录点击展开下拉内容的HZERO服务record的index
@@ -53,15 +55,17 @@ const HzeroDeploy = observer(() => {
 
   modal.handleOk(async () => {
     try {
-      const [res1, res2] = await axios.all([formDs.validate(), serviceDs.validate(true)]);
+      const [res1, res2] = await axios.all([formDs.validate(), serviceDs.validate()]);
       if (res1 && res2) {
+        await formDs.submit();
+        refresh();
         return true;
       }
       return false;
     } catch (e) {
       return false;
     }
-  }, []);
+  });
 
   const menuData = useMemo(() => mainStore.getServiceData, [mainStore.getServiceData]);
 
@@ -126,12 +130,26 @@ const HzeroDeploy = observer(() => {
     disabled: typeRecord.get('disabled'),
   }), []);
 
+  const renderTypeOption = useCallback(({ record, text }) => (
+    <Tooltip
+      title={record.get('disabled') ? `平台中未同步${text}，暂不可选择` : ''}
+      placement="top"
+    >
+      <span>{text}</span>
+    </Tooltip>
+  ), []);
+
   return (
     <div className={`${prefixCls}`}>
       <Form dataSet={formDs} columns={5}>
-        <SelectBox name="appType" colSpan={2} onOption={renderTypeOptionProperty} />
+        <SelectBox
+          name="appType"
+          colSpan={2}
+          onOption={renderTypeOptionProperty}
+          optionRenderer={renderTypeOption}
+        />
         <Select
-          name="environmentId"
+          name="envId"
           searchable
           clearButton={false}
           optionRenderer={renderEnvOption}
@@ -140,7 +158,7 @@ const HzeroDeploy = observer(() => {
           newLine
         />
         <Select
-          name="appVersionId"
+          name="mktAppVersion"
           searchable
           clearButton={false}
           colSpan={2}

@@ -42,7 +42,13 @@ const HzeroDeployDetail = observer(() => {
     if (status === 'failed') {
       modal.update({
         okCancel: true,
-        okText: '重试',
+        okText: formatMessage({ id: 'retry' }),
+      });
+    }
+    if (status === 'operating') {
+      modal.update({
+        okCancel: true,
+        okText: formatMessage({ id: `${intlPrefix}.stop` }),
       });
     }
   }, []);
@@ -78,7 +84,7 @@ const HzeroDeployDetail = observer(() => {
   }, []);
 
   const ChangeConfigValue = useCallback((value) => {
-    serviceDs.current?.set('values', value);
+    serviceDs.current?.set('value', value);
   }, [serviceDs.current]);
 
   const handleEnableNext = useCallback((flag: boolean) => {
@@ -90,13 +96,13 @@ const HzeroDeployDetail = observer(() => {
       <Form dataSet={formDs} columns={5}>
         <SelectBox name="appType" colSpan={2} disabled />
         <TextField
-          name="environmentName"
+          name="envName"
           colSpan={2}
           disabled
           newLine
         />
         <TextField
-          name="appVersionName"
+          name="mktAppVersion"
           colSpan={2}
           disabled
         />
@@ -112,7 +118,7 @@ const HzeroDeployDetail = observer(() => {
                 role="none"
               >
                 <span>
-                  {serviceRecord.get('name') || formatMessage({ id: `${intlPrefix}.placeholder` })}
+                  {serviceRecord.get('mktServiceName') || formatMessage({ id: `${intlPrefix}.placeholder` })}
                 </span>
                 {getStatusIcon(serviceRecord)}
               </div>
@@ -123,12 +129,12 @@ const HzeroDeployDetail = observer(() => {
             columns={2}
             className={`${prefixCls}-content-form`}
           >
-            <TextField name="serviceVersionName" disabled />
-            <TextField name="instanceName" disabled />
+            <TextField name="mktServiceVersion" disabled />
+            <TextField name="instanceCode" disabled />
             <YamlEditor
               colSpan={2}
               readOnly={status !== 'failed'}
-              value={serviceDs?.current?.get('values') || ''}
+              value={serviceDs?.current?.get('value') || ''}
               onValueChange={ChangeConfigValue}
               handleEnableNext={handleEnableNext}
             />

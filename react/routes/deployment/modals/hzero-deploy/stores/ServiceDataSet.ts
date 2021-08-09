@@ -18,9 +18,10 @@ export default ({
   async function checkName(value: any, name: string, record: Record) {
     const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
     if (value && pa.test(value)) {
-      if (!record.get('environmentId')) return true;
+      const envId = record?.cascadeParent?.get('envId');
+      if (!envId) return true;
       try {
-        const res = await appServiceInstanceApi.checkName(record.get('environmentId'), value);
+        const res = await appServiceInstanceApi.checkName(envId, value);
         if ((res && res.failed) || !res) {
           return formatMessage({ id: 'checkNameExist' });
         }

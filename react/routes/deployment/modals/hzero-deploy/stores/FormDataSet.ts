@@ -1,9 +1,14 @@
 import {
   DataSet, DataSetProps, FieldType, UpdateEventProps,
 } from '@/interface';
-import { environmentApiConfig, marketHzeroApiConfig, marketHzeroApi } from '@/api';
+import {
+  environmentApiConfig,
+  marketHzeroApiConfig,
+  marketHzeroApi,
+  deployApiConfig,
+} from '@/api';
 import JSONBig from 'json-bigint';
-import { map, isEmpty } from 'lodash';
+import { map, isEmpty, pick } from 'lodash';
 import uuidV1 from 'uuid/v1';
 import { StoreProps } from './useStore';
 
@@ -41,11 +46,11 @@ export default ({
   mainStore,
 }: FormProps): DataSetProps => {
   async function handleUpdate({ value, name, record }: UpdateEventProps) {
-    if (name === 'appVersionId') {
+    if (name === 'mktAppVersion') {
       if (value) {
         const serviceData = await marketHzeroApi.loadHzeroServices(
-          mainStore.getApplicationId,
-          record.get('appVersionId'),
+          record.get('mktAppId'),
+          record.get('mktAppVersion')?.id,
         );
         const newServiceData = map(serviceData, (item: ServiceItemProps) => ({
           ...item,
@@ -60,13 +65,16 @@ export default ({
       }
     }
     if (name === 'appType') {
-      const field = record.getField('appVersionId');
+      const field = record.getField('mktAppVersion');
+      field?.reset();
+      serviceDs.removeAll();
       const appVersionData = await field?.fetchLookup();
       if (!isEmpty(appVersionData)) {
         record.set({
           // @ts-ignore
-          appVersionId: appVersionData[0]?.id,
-          applicationId: mainStore.getApplicationId,
+          mktAppId: appVersionData[0]?.marketAppId,
+          // @ts-ignore
+          mktAppVersion: appVersionData[0],
         });
       }
     }
@@ -79,7 +87,18 @@ export default ({
     paging: false,
     children: { hzeroService: serviceDs },
     transport: {
-
+      submit: ({ data: [data] }) => {
+        const postData = pick(data, 'envId', 'mktAppId');
+        postData.mktAppVersion = data.mktAppVersion?.versionNumber;
+        postData.deployDetailsVOList = serviceDs.map((record) => ({
+          sequence: record.get('sequence'),
+          value: record.get('values'),
+          mktServiceId: record.get('id'),
+          instanceCode: record.get('instanceName'),
+          mktDeployObjectId: record.get('marketServiceDeployObjectVO')?.id,
+        }));
+        return deployApiConfig.deployHzero(postData);
+      },
     },
     fields: [
       {
@@ -90,7 +109,7 @@ export default ({
         options: typeDs,
       },
       {
-        name: 'environmentId',
+        name: 'envId',
         textField: 'name',
         valueField: 'id',
         label: formatMessage({ id: 'environment' }),
@@ -98,28 +117,14 @@ export default ({
         lookupAxiosConfig: () => environmentApiConfig.loadEnvList({ random }),
       },
       {
-        name: 'appVersionId',
+        name: 'mktAppVersion',
+        type: 'object' as FieldType,
         label: formatMessage({ id: `${intlPrefix}.version` }),
         textField: 'versionNumber',
         valueField: 'id',
         required: true,
         dynamicProps: {
-          lookupAxiosConfig: ({ record }) => ({
-            ...marketHzeroApiConfig.loadHzeroVersions(record.get('appType')),
-            transformResponse: (response: string) => {
-              try {
-                const data = JSONBig.parse(response);
-                if (data && data.failed) {
-                  return data;
-                }
-                const appVersionVOS = data?.appVersionVOS || [];
-                mainStore.setApplicationId(data?.id);
-                return appVersionVOS;
-              } catch (e) {
-                return response;
-              }
-            },
-          }),
+          lookupAxiosConfig: ({ record }) => marketHzeroApiConfig.loadHzeroVersions(record.get('appType')),
         },
       },
     ],
