@@ -1,25 +1,16 @@
 import React, {
-  ReactNode,
-  useCallback, useEffect, useMemo, useState,
+  useCallback, useEffect,
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Button,
   Form,
   TextField,
   SelectBox,
-  Password,
-  Spin,
   Icon,
-  Select,
-  Menu,
-  Dropdown,
 } from 'choerodon-ui/pro';
-import map from 'lodash/map';
 import classnames from 'classnames';
-import eventStopProp from '@/utils/eventStopProp';
 import {
-  Record, RecordObjectProps, FuncType, Placements,
+  Record,
 } from '@/interface';
 import YamlEditor from '@/components/yamlEditor';
 import { deployRecordApi } from '@/api';
@@ -47,7 +38,7 @@ const HzeroDeployDetail = observer(() => {
       case 'failed':
         modal.update({
           okCancel: true,
-          okText: formatMessage({ id: '重试' }),
+          okText: formatMessage({ id: 'c7ncd.deploy.retry' }),
           onOk: handleRetry,
         });
         break;
@@ -118,10 +109,11 @@ const HzeroDeployDetail = observer(() => {
       <Form dataSet={formDs} columns={5}>
         <SelectBox name="type" colSpan={2} disabled />
         <TextField
-          name="envName"
+          name="environmentDTO"
           colSpan={2}
           disabled
           newLine
+          renderer={({ value }) => value?.name}
         />
         <TextField
           name="mktAppVersion"

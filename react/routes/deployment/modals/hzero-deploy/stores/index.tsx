@@ -32,7 +32,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const {
     children,
     intl: { formatMessage },
-    AppState: { currentMenuType: { projectId } },
     syncStatus,
   } = props;
 
@@ -55,8 +54,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const serviceDs = useMemo(() => new DataSet(ServiceDataSet({
     formatMessage,
     intlPrefix,
-    projectId,
-  })), [projectId]);
+  })), []);
   const formDs = useMemo(() => new DataSet(FormDataSet({
     formatMessage,
     intlPrefix,
@@ -64,7 +62,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     random,
     typeDs,
     mainStore,
-  })), [projectId]);
+  })), []);
 
   useEffect(() => {
     if (!syncStatus?.open && syncStatus?.saas) {
@@ -79,7 +77,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     intlPrefix,
     prefixCls: 'c7ncd-deploy-hzero',
     formatMessage,
-    projectId,
     formDs,
     serviceDs,
     mainStore,

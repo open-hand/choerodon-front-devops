@@ -4,7 +4,6 @@ import { deployRecordApiConfig } from '@/api';
 interface FormProps {
   formatMessage(arg0: object, arg1?: object): string,
   intlPrefix: string,
-  projectId: number,
   serviceDs: DataSet,
   typeDs: DataSet,
   recordId: string,
@@ -13,7 +12,6 @@ interface FormProps {
 export default ({
   formatMessage,
   intlPrefix,
-  projectId,
   serviceDs,
   typeDs,
   recordId,
@@ -36,7 +34,7 @@ export default ({
       options: typeDs,
     },
     {
-      name: 'envName',
+      name: 'environmentDTO',
       label: formatMessage({ id: 'environment' }),
       required: true,
     },
@@ -46,14 +44,4 @@ export default ({
       required: true,
     },
   ],
-  events: {
-    load: ({ dataSet }: { dataSet: DataSet }) => {
-      const record = dataSet.current;
-      if (record) {
-        record.set({
-          envName: record.get('environmentDTO')?.name,
-        });
-      }
-    },
-  },
 });

@@ -1,6 +1,5 @@
 import React, {
-  ReactNode,
-  useCallback, useEffect, useMemo, useState,
+  useCallback, useMemo, useState,
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
@@ -8,9 +7,6 @@ import {
   Form,
   TextField,
   SelectBox,
-  Password,
-  Spin,
-  Icon,
   Select,
   Menu,
   Dropdown,
@@ -42,7 +38,6 @@ const HzeroDeploy = observer(() => {
     formatMessage,
     intlPrefix,
     prefixCls,
-    projectId,
     modal,
     formDs,
     serviceDs,

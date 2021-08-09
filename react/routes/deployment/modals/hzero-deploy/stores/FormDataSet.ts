@@ -7,7 +7,6 @@ import {
   marketHzeroApi,
   deployApiConfig,
 } from '@/api';
-import JSONBig from 'json-bigint';
 import { map, isEmpty, pick } from 'lodash';
 import uuidV1 from 'uuid/v1';
 import { StoreProps } from './useStore';
