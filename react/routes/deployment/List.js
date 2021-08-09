@@ -1,4 +1,4 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, max-len */
 
 import React, { useCallback, useEffect, useState } from 'react';
 import {
@@ -213,7 +213,10 @@ const Deployment = withRouter(observer((props) => {
         width: LARGE,
       },
       title: formatMessage({ id: `${intlPrefix}.hzero` }),
-      children: <HzeroDeploy />,
+      children: <HzeroDeploy
+        syncStatus={deployStore.getHzeroSyncStatus}
+        refresh={refresh}
+      />,
       drawer: true,
       okText: formatMessage({ id: 'deployment' }),
     });
@@ -457,11 +460,14 @@ const Deployment = withRouter(observer((props) => {
             {record.get('viewId')}
             ”的执行详情
           </span>
-          {getStatusTag(record.get('status'))}
+          {getStatusTag(record.get('deployResult'))}
         </div>
       ),
       style: { width: LARGE },
-      children: <HzeroDeployDetail status={record.get('status')} />,
+      children: <HzeroDeployDetail
+        status={record.get('deployResult')}
+        recordId={record.get('id')}
+      />,
       okText: formatMessage({ id: 'close' }),
       okCancel: false,
       drawer: true,
@@ -474,7 +480,7 @@ const Deployment = withRouter(observer((props) => {
         text: '查看记录详情',
         action: () => openHzeroDeployDetailModal(record),
       }];
-      switch (record.get('status')) {
+      switch (record.get('deployResult')) {
         case 'failed':
           actionData.push({
             text: formatMessage({ id: 'retry' }),
@@ -483,7 +489,7 @@ const Deployment = withRouter(observer((props) => {
           break;
         case 'operating':
           actionData.push({
-            text: formatMessage({ id: 'stop' }),
+            text: formatMessage({ id: `${intlPrefix}.hzero.stop` }),
             action: openHzeroStopModal,
           });
         default:
@@ -536,8 +542,13 @@ const Deployment = withRouter(observer((props) => {
               name: formatMessage({ id: `${intlPrefix}.hzero` }),
               icon: 'cloud_done-o',
               display: true,
+              disabled: !(deployStore.getHzeroSyncStatus?.open && deployStore.getHzeroSyncStatus?.sass),
               permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.batch'],
               handler: openHzeroDeploy,
+              tooltipsConfig: {
+                title: !(deployStore.getHzeroSyncStatus?.open && deployStore.getHzeroSyncStatus?.sass)
+                  ? '未从开放平台同步HZERO应用至C7N平台，无法执行此操作' : '',
+              },
             },
             {
               icon: 'refresh',

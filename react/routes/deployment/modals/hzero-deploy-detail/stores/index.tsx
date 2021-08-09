@@ -20,7 +20,7 @@ interface ContextProps {
   status: StatusProps,
 }
 
-export type StatusProps = 'success' | 'failed';
+export type StatusProps = 'success' | 'failed' | 'operating';
 
 const Store = createContext({} as ContextProps);
 
@@ -33,6 +33,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     children,
     intl: { formatMessage },
     AppState: { currentMenuType: { projectId } },
+    recordId,
   } = props;
 
   const intlPrefix = useMemo(() => 'c7ncd.deploy.hzero', []);
@@ -58,6 +59,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     projectId,
     serviceDs,
     typeDs,
+    recordId,
   })), [projectId]);
 
   useEffect(() => {

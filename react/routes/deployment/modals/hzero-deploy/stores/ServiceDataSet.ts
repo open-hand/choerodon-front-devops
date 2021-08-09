@@ -2,17 +2,12 @@ import { DataSet } from 'choerodon-ui/pro';
 import omit from 'lodash/omit';
 import { Record, DataSetProps, FieldType } from '@/interface';
 import { axios } from '@choerodon/boot';
+import { appServiceInstanceApi } from '@/api';
 
 interface FormProps {
   formatMessage(arg0: object, arg1?: object): string,
   intlPrefix: string,
   projectId: number,
-}
-
-function handleUpdate({ name, record }: { name: string, record: any }) {
-  if (name === 'authType') {
-    record.get('password') && record.set('password', null);
-  }
 }
 
 export default ({
@@ -23,9 +18,10 @@ export default ({
   async function checkName(value: any, name: string, record: Record) {
     const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
     if (value && pa.test(value)) {
-      if (!record.get('environmentId')) return true;
+      const envId = record?.cascadeParent?.get('envId');
+      if (!envId) return true;
       try {
-        const res = await axios.get(`/devops/v1/projects/${projectId}/app_service_instances/check_name?instance_name=${value}&env_id=${record.get('environmentId')}`);
+        const res = await appServiceInstanceApi.checkName(envId, value);
         if ((res && res.failed) || !res) {
           return formatMessage({ id: 'checkNameExist' });
         }
@@ -39,18 +35,15 @@ export default ({
   }
 
   return ({
-    autoCreate: true,
+    autoCreate: false,
     selection: false,
     autoQueryAfterSubmit: false,
     paging: false,
     fields: [
       {
-        name: 'serviceVersionId',
-        textField: 'version',
-        valueField: 'id',
+        name: 'marketServiceVersion',
         label: formatMessage({ id: `${intlPrefix}.version.service` }),
         required: true,
-        // options: envOptionsDs,
       },
       {
         name: 'instanceName',
@@ -60,12 +53,6 @@ export default ({
         maxLength: 60,
       },
       { name: 'values' },
-      {
-        name: 'hzeroServiceId',
-        textField: 'version',
-        valueField: 'id',
-        required: true,
-      },
     ],
   });
 };

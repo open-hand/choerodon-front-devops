@@ -20,27 +20,15 @@ export default ({
   paging: false,
   fields: [
     {
-      name: 'serviceVersionId',
-      required: true,
-    },
-    {
-      name: 'serviceVersionName',
+      name: 'mktServiceVersion',
       label: formatMessage({ id: `${intlPrefix}.version.service` }),
       required: true,
     },
     {
-      name: 'instanceName',
+      name: 'instanceCode',
       label: formatMessage({ id: 'instanceName' }),
       required: true,
     },
-    { name: 'values' },
-    {
-      name: 'hzeroServiceId',
-      required: true,
-    },
-    {
-      name: 'hzeroServiceName',
-      required: true,
-    },
+    { name: 'value' },
   ],
 });

@@ -2,7 +2,12 @@ import React from 'react';
 import { StoreProvider } from './stores';
 import Content from './Content';
 
-export default (props: any) => (
+interface Props {
+  syncStatus: { open: boolean, sass: boolean },
+  refresh(): void,
+}
+
+export default (props: Props) => (
   <StoreProvider {...props}>
     <Content />
   </StoreProvider>

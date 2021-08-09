@@ -805,6 +805,7 @@ const deploy = {
   'c7ncd.deploy.hzero.type': 'HZERO应用类型',
   'c7ncd.deploy.hzero.type.open': 'HZERO开源版',
   'c7ncd.deploy.hzero.type.business': 'HZERO企业版',
+  'c7ncd.deploy.hzero.stop': '停止',
 };
 
 const repository = {

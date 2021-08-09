@@ -30,6 +30,14 @@ interface RecordObjectProps {
   record: Record;
 }
 
+interface UpdateEventProps {
+  dataSet: DataSet,
+  record: Record,
+  name: string,
+  value: any,
+  oldValue: any,
+}
+
 export {
   TableMode,
   ButtonColor,
@@ -51,4 +59,5 @@ export {
   UploadFile,
   ResizeType,
   Placements,
+  UpdateEventProps,
 };
