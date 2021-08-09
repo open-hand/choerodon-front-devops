@@ -135,10 +135,11 @@ const AppIngress = observer(() => {
     const devopsHostCommandDTO = record.get('devopsHostCommandDTO');
     const operateStatus = devopsHostCommandDTO?.status;
     const error = devopsHostCommandDTO?.error;
+    const commandType = devopsHostCommandDTO?.commandType;
     return (
       <>
         <Tooltip
-          title={text}
+          title={`[${commandType}]text`}
         >
           <span className={`${prefixCls}-name`}>
             {text}
