@@ -18,9 +18,11 @@ interface ContextProps {
   modal: any,
   refresh(): void,
   status: StatusProps,
+  recordId: string,
+  handleHzeroStop(recordId: string): void,
 }
 
-export type StatusProps = 'success' | 'failed' | 'operating';
+export type StatusProps = 'success' | 'failed' | 'operating' | 'canceled';
 
 const Store = createContext({} as ContextProps);
 

@@ -15,6 +15,30 @@ class DeployRecordApi extends Api<DeployRecordApi> {
       url: `${this.prefix}/${recordId}`,
     });
   }
+
+  /**
+   * 重试部署记录
+   * @param recordId 部署记录ID
+   * @param data 参数
+   */
+  retryRecord(recordId: string, data?: object) {
+    return this.request({
+      method: 'post',
+      url: `${this.prefix}/${recordId}/retry`,
+      data,
+    });
+  }
+
+  /**
+   * 停止部署记录
+   * @param recordId 部署记录ID
+   */
+  stopRecord(recordId: string) {
+    return this.request({
+      method: 'put',
+      url: `${this.prefix}/${recordId}/stop`,
+    });
+  }
 }
 
 const deployRecordApi = new DeployRecordApi();

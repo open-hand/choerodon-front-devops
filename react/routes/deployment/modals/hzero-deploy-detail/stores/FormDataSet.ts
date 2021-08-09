@@ -36,9 +36,7 @@ export default ({
       options: typeDs,
     },
     {
-      name: 'environmentDTO',
-      textField: 'name',
-      valueField: 'id',
+      name: 'envName',
       label: formatMessage({ id: 'environment' }),
       required: true,
     },
@@ -48,15 +46,14 @@ export default ({
       required: true,
     },
   ],
-  // events: {
-  //   load: ({ dataSet }: { dataSet: DataSet }) => {
-  //     const record = dataSet.current;
-  //     if (record) {
-  //       record.set({
-  //         envName: record.get('environmentDTO')?.name,
-  //         envId: record.get('environmentDTO')?.id,
-  //       });
-  //     }
-  //   },
-  // },
+  events: {
+    load: ({ dataSet }: { dataSet: DataSet }) => {
+      const record = dataSet.current;
+      if (record) {
+        record.set({
+          envName: record.get('environmentDTO')?.name,
+        });
+      }
+    },
+  },
 });
