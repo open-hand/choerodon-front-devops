@@ -72,6 +72,7 @@ const Deployment = withRouter(observer((props) => {
     deployStore,
     envOptionsDs,
     pipelineOptionsDs,
+    hasMarket,
   } = useDeployStore();
 
   useEffect(() => {
@@ -497,6 +498,7 @@ const Deployment = withRouter(observer((props) => {
   const renderAction = useCallback(({ record }) => {
     if (record.get('deployType') === 'hzero') {
       const actionData = [{
+        service: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.hzero.detail'],
         text: formatMessage({ id: `${intlPrefix}.record.detail` }),
         action: () => openHzeroDeployDetailModal(record),
       }];
@@ -504,12 +506,14 @@ const Deployment = withRouter(observer((props) => {
         case 'canceled':
         case 'failed':
           actionData.push({
+            service: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.hzero.retry'],
             text: formatMessage({ id: `${intlPrefix}.retry` }),
             action: () => handleHzeroRetry(record),
           });
           break;
         case 'operating':
           actionData.push({
+            service: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.hzero.stop'],
             text: formatMessage({ id: `${intlPrefix}.hzero.stop` }),
             action: () => openHzeroStopModal(record),
           });
@@ -562,9 +566,9 @@ const Deployment = withRouter(observer((props) => {
             {
               name: formatMessage({ id: `${intlPrefix}.hzero` }),
               icon: 'cloud_done-o',
-              display: true,
+              display: hasMarket,
               disabled: !(deployStore.getHzeroSyncStatus?.open || deployStore.getHzeroSyncStatus?.sass),
-              permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.batch'],
+              permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.hzero'],
               handler: openHzeroDeploy,
               tooltipsConfig: {
                 title: !(deployStore.getHzeroSyncStatus?.open || deployStore.getHzeroSyncStatus?.sass)
