@@ -94,10 +94,11 @@ const ManualConnect = observer(() => {
       {docker && (
         <>
           <Alert
-            className={`${newPrefixCls}-tips`}
+            className={`${newPrefixCls}-tips ${newPrefixCls}-tips-info`}
             message={formatMessage({ id: `${intlPrefix}.connect.attention` })}
             type="error"
             showIcon
+            iconType="info"
           />
           <div className={`${newPrefixCls}-title`}>
             <span>{formatMessage({ id: 'envPl.token' })}</span>
