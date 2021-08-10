@@ -218,6 +218,41 @@ const Version = withRouter(observer((props) => {
     );
   }
 
+  /**
+   * 全选反选
+   * @param isSelectAll
+   * @param ds
+   * @param selectedList
+   */
+  const handleSelect = (isSelectAll, ds, selectedList) => {
+    let selfSelectedList = selectedList;
+    const ids = selectedList.map((i) => i.get('id'));
+    ds.records.forEach((i) => {
+      // 如果是全选
+      if (isSelectAll) {
+        // 如果当前是未选中
+        if (!i.get('checked')) {
+          i.set('checked', true);
+        }
+        // 如果state中没有这条加上
+        if (!ids.includes(i.get('id'))) {
+          selfSelectedList.push(i);
+        }
+      } else {
+        //  如果是反选
+        if (i.get('checked')) {
+          //  如果一开始是选中的
+          selfSelectedList = selfSelectedList.filter((j) => j.get('id') !== i.get('id'));
+        } else {
+          //  如果一开始是未选中的
+          selfSelectedList.push(i);
+        }
+        i.set('checked', !i.get('checked'));
+      }
+    });
+    setSelectedVersionList(selfSelectedList);
+  };
+
   const renderTheme4Version = useCallback(() => (
     <Spin spinning={versionDs.status !== 'ready'}>
       {renderVersionButton()}
@@ -236,6 +271,10 @@ const Version = withRouter(observer((props) => {
         {
           versionDs.records && versionDs.records.length > 0 ? (
             <>
+              <div className="c7ncd-appService-version__buttons">
+                <p role="none" onClick={() => handleSelect(true, versionDs, selectedVersionList)}>全选</p>
+                <p role="none" onClick={() => handleSelect(false, versionDs, selectedVersionList)}>反选</p>
+              </div>
               {
                 versionDs.records.map((version) => (
                   <>
