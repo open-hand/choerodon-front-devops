@@ -70,20 +70,23 @@ const HzeroDeployDetail = observer(() => {
   const getStatusIcon = useCallback((record: Record) => {
     const serviceStatus = record.get('status');
     const className = classnames(`${prefixCls}-status-icon`, { [serviceStatus]: true });
-    let content;
+    let iconType = 'remove_circle';
     switch (serviceStatus) {
       case 'success':
-        content = <Icon type="check_circle" className={className} />;
+        iconType = 'check_circle';
         break;
       case 'failed':
-        content = <Icon type="cancel" className={className} />;
+        iconType = 'cancel';
         break;
-      case 'wait':
-        content = <Icon type="remove_circle" className={className} />;
+      case 'deploying':
+        iconType = 'timelapse';
+        break;
+      case 'created':
+        iconType = 'remove_circle';
         break;
       default:
     }
-    return content;
+    return <Icon type={iconType} className={className} />;
   }, []);
 
   const serviceClassNames = useCallback((record: Record) => classnames(

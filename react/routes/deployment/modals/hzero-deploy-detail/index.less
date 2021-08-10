@@ -4,12 +4,14 @@
 @success_status: #1fc2bb;
 @failed_status: #f76776;
 @wait_status: rgba(15, 19, 88, 0.25);
+@running: #4d90fe;
 
 .@{popupPrefix}-detail {
 
   .@{popupPrefix}-status-icon {
     margin-left: auto;
     font-size: .2rem;
+    color: @wait_status;
 
     &.success {
       color: @success_status;
@@ -17,8 +19,11 @@
     &.failed {
       color: @failed_status;
     }
-    &.wait {
+    &.created {
       color: @wait_status;
+    }
+    &.deploying {
+      color: @running;
     }
   }
 
