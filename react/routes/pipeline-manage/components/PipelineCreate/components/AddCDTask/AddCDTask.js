@@ -327,7 +327,7 @@ export default observer(() => {
       let newCdAuditUserIds = jobDetail?.cdAuditUserIds;
       let extra = {};
       if (jobDetail.type === 'cdDeploy') {
-        const { value } = JSON.parse(jobDetail.metadata.replace(/'/g, '"'));
+        const { value } = JSONbig.parse(jobDetail.metadata.replace(/'/g, '"'));
         value && setValueIdValues(Base64.decode(value));
       } else if (jobDetail.type === addCDTaskDataSetMap.apiTest) {
         if (jobDetail.metadata) {
@@ -391,6 +391,12 @@ export default observer(() => {
             : jobDetail.triggerValue?.split(','),
       };
       delete newJobDetail.metadata;
+      if (newJobDetail.envId) {
+        newJobDetail.envId = String(newJobDetail.envId);
+      }
+      if (newJobDetail.valueId) {
+        newJobDetail.valueId = String(newJobDetail.valueId);
+      }
       ADDCDTaskDataSet.loadData([newJobDetail]);
     }
     ADDCDTaskDataSet.current.set(
