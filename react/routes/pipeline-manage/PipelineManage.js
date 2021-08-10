@@ -238,11 +238,11 @@ const PipelineManage = observer(() => {
     if (treeDs.length && treeDs.status === 'ready') {
       if (!parentId) {
         buttons.push({
-          permissions: ['choerodon.code.project.develop.ci-pipeline.ps.update'],
+          // permissions: ['choerodon.code.project.develop.ci-pipeline.ps.update'],
           name: formatMessage({ id: 'edit' }),
           icon: 'edit-o',
           handler: openEditModal,
-          display: edit,
+          // display: edit,
         }, {
           permissions: ['choerodon.code.project.develop.ci-pipeline.ps.variable.app'],
           name: formatMessage({ id: `${intlPrefix}.settings.local` }),
