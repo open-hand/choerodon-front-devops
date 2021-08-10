@@ -12,7 +12,7 @@ import {
   Dropdown,
   Tooltip,
 } from 'choerodon-ui/pro';
-import map from 'lodash/map';
+import { map, filter, isEmpty } from 'lodash';
 import classnames from 'classnames';
 import eventStopProp from '@/utils/eventStopProp';
 import {
@@ -70,12 +70,25 @@ const HzeroDeploy = observer(() => {
     data && recordIndex && serviceDs.get(recordIndex)?.set(data);
   }, [recordIndex, menuData]);
 
-  const menu = useMemo(() => (
-    <Menu onClick={handleSelect}>
-      {map(menuData, ({ id, marketServiceName }) => (serviceDs.some((serviceRecord) => serviceRecord.get('id') === id)
-        ? null : <Menu.Item key={id}>{marketServiceName}</Menu.Item>))}
-    </Menu>
-  ), [serviceDs.data, menuData]);
+  const menu = () => {
+    const realMenuData = filter(menuData, (item: ServiceItemProps) => !serviceDs.some((serviceRecord) => serviceRecord.get('id') === item?.id));
+    if (isEmpty(realMenuData)) {
+      return (
+        <Menu>
+          <Menu.Item>
+            <span className={`${prefixCls}-empty`}>{formatMessage({ id: 'nodata' })}</span>
+          </Menu.Item>
+        </Menu>
+      );
+    }
+    return (
+      <Menu onClick={handleSelect}>
+        {map(realMenuData, (item: ServiceItemProps) => (
+          <Menu.Item key={item?.id}>{item?.marketServiceName}</Menu.Item>
+        ))}
+      </Menu>
+    );
+  };
 
   const handleClickExpand = useCallback((e, record: Record) => {
     eventStopProp(e);
@@ -182,7 +195,7 @@ const HzeroDeploy = observer(() => {
                       onClick={(e) => handleDeleteService(e, serviceRecord)}
                     />
                     <Dropdown
-                      overlay={menu}
+                      overlay={menu()}
                       // @ts-ignore
                       trigger={['click']}
                       placement={'bottomRight' as Placements}
