@@ -17,6 +17,7 @@ import {
 import YamlEditor from '@/components/yamlEditor';
 import { deployRecordApi } from '@/api';
 import STATUS_TYPE from '@/constants/STATUS_TYPE';
+import Loading from '@/components/loading';
 import { useHzeroDeployDetailStore } from './stores';
 
 import './index.less';
@@ -99,6 +100,10 @@ const HzeroDeployDetail = observer(() => {
     serviceDs.current?.set('valueFailed', flag);
   }, [serviceDs.current]);
 
+  if (formDs.status === 'loading') {
+    return <Loading display />;
+  }
+
   return (
     <div className={`${prefixCls} ${prefixCls}-detail`}>
       <Form
@@ -106,7 +111,7 @@ const HzeroDeployDetail = observer(() => {
         columns={3}
         labelLayout={'horizontal' as LabelLayoutType}
         labelAlign={'left' as LabelAlignType}
-        labelWidth={120}
+        labelWidth={130}
         className={`${prefixCls}-detail-form`}
       >
         <Output
@@ -143,7 +148,7 @@ const HzeroDeployDetail = observer(() => {
               columns={2}
               labelLayout={'horizontal' as LabelLayoutType}
               labelAlign={'left' as LabelAlignType}
-              labelWidth={120}
+              labelWidth={130}
             >
               <Output name="mktServiceVersion" />
               <Output name="instanceCode" />

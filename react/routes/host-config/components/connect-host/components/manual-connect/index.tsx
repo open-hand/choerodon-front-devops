@@ -106,8 +106,6 @@ const ManualConnect = observer(() => {
           <div className={`${newPrefixCls}-content ${newPrefixCls}-content-mgb`}>
             <span>{'sudo gpasswd -a "${USER}" docker'}</span>
             <br />
-            <span>sudo systemctl restart docker</span>
-            <br />
             <span>newgrp - docker</span>
             <CopyToClipboard text={permissionShell} format>
               <Button
