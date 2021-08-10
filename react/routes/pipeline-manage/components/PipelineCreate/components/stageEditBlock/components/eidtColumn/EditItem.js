@@ -121,7 +121,7 @@ const EditItem = (props) => {
     cursor: 'all-scroll',
   });
 
-  const isCdDisabled = useMemo(() => (!edit && stageType === 'CD'), [edit, stageType]);
+  const isCdDisabled = useMemo(() => (typeof edit === 'boolean' && !edit && stageType === 'CD'), [edit, stageType]);
 
   const renderOptsBtn = () => {
     const toolText = '该用户没有部署任务对应的环境权限，无法修改或删除';
