@@ -154,6 +154,7 @@ const HzeroDeployDetail = observer(() => {
               value={serviceDs?.current?.get('value') || ''}
               onValueChange={ChangeConfigValue}
               handleEnableNext={handleEnableNext}
+              className={`${prefixCls}-detail-yaml`}
             />
           </div>
         </div>

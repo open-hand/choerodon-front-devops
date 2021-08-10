@@ -742,6 +742,7 @@ const deploy = {
   'c7ncd.deploy.failed': '强制失败',
   'c7ncd.deploy.check': '审核',
   'c7ncd.deploy.retry': '重试',
+  'c7ncd.deploy.stop': '停止',
   'c7ncd.deploy.failed.tips': '确定要将此流程置为失败状态？强制失败后，您可继续重试当前流程。',
   'c7ncd.deploy.retry.tips': '确定重新执行该流程吗？',
   'c7ncd.deploy.app': '应用服务',
@@ -808,8 +809,8 @@ const deploy = {
   'c7ncd.deploy.hzero.type.sass': 'HZERO企业版',
   'c7ncd.deploy.hzero.stop': '停止',
   'c7ncd.deploy.record.detail': '查看记录详情',
-  'c7ncd.deploy.record.stop.title': '停止执行',
-  'c7ncd.deploy.record.stop.des': '确定停止该条HZERO应用快速部署吗？',
+  'c7ncd.deploy.hzero.stop.title': '停止执行',
+  'c7ncd.deploy.hzero.stop.des': '确定停止该条HZERO应用快速部署吗？',
 };
 
 const repository = {
