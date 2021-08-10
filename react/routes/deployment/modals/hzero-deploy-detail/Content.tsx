@@ -8,6 +8,7 @@ import {
   SelectBox,
   Icon,
   Output,
+  Tooltip,
 } from 'choerodon-ui/pro';
 import classnames from 'classnames';
 import {
@@ -15,6 +16,7 @@ import {
 } from '@/interface';
 import YamlEditor from '@/components/yamlEditor';
 import { deployRecordApi } from '@/api';
+import STATUS_TYPE from '@/constants/STATUS_TYPE';
 import { useHzeroDeployDetailStore } from './stores';
 
 import './index.less';
@@ -69,24 +71,13 @@ const HzeroDeployDetail = observer(() => {
 
   const getStatusIcon = useCallback((record: Record) => {
     const serviceStatus = record.get('status');
-    const className = classnames(`${prefixCls}-status-icon`, { [serviceStatus]: true });
-    let iconType = 'remove_circle';
-    switch (serviceStatus) {
-      case 'success':
-        iconType = 'check_circle';
-        break;
-      case 'failed':
-        iconType = 'cancel';
-        break;
-      case 'deploying':
-        iconType = 'timelapse';
-        break;
-      case 'created':
-        iconType = 'remove_circle';
-        break;
-      default:
-    }
-    return <Icon type={iconType} className={className} />;
+    // @ts-ignore
+    const { icon, name, color } = STATUS_TYPE[serviceStatus] || {};
+    return (
+      <Tooltip title={name}>
+        <Icon type={icon} style={{ color }} className={`${prefixCls}-status-icon`} />
+      </Tooltip>
+    );
   }, []);
 
   const serviceClassNames = useCallback((record: Record) => classnames(

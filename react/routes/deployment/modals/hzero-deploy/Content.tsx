@@ -75,7 +75,7 @@ const HzeroDeploy = observer(() => {
       {map(menuData, ({ id, marketServiceName }) => (serviceDs.some((serviceRecord) => serviceRecord.get('id') === id)
         ? null : <Menu.Item key={id}>{marketServiceName}</Menu.Item>))}
     </Menu>
-  ), [serviceDs.records, menuData]);
+  ), [serviceDs.data, menuData]);
 
   const handleClickExpand = useCallback((e, record: Record) => {
     eventStopProp(e);

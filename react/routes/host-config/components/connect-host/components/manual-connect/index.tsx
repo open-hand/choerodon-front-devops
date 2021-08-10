@@ -35,7 +35,6 @@ const ManualConnect = observer(() => {
   const newPrefixCls = useMemo(() => `${prefixCls}-manual`, []);
   const permissionShell = useMemo(() => `
   sudo gpasswd -a "\${USER}" docker\n
-  sudo systemctl restart docker\n
   newgrp - docker
   `, []);
 
