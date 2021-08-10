@@ -6,6 +6,7 @@ import {
 } from 'choerodon-ui/pro';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
+import { StatusTag } from '@choerodon/components';
 import map from 'lodash/map';
 import get from 'lodash/get';
 import { mapping } from '@/routes/deployment/modals/deploy/stores/ManualDeployDataSet';
@@ -188,13 +189,30 @@ const DeployModal = observer(() => {
     ]);
   }
 
-  function getMarketAndVersionContent() {
+  function getMarketAndVersionContent(isHzero = false) {
     if (marketAndVersionOptionsDs.status === 'loading') {
       return optionLoading;
     }
     return (
       marketAndVersionOptionsDs.map((marketRecord) => (
-        <OptGroup label={marketRecord.get('name')} key={marketRecord.get('id')}>
+        <OptGroup
+          label={(
+            <div>
+              <span>{marketRecord.get('name')}</span>
+              {
+                !isHzero && marketRecord.get('type') === 'open' && (
+                  <StatusTag
+                    type="border"
+                    name="开放平台应用"
+                    colorCode="opened"
+                  />
+                )
+              }
+              <span>{}</span>
+            </div>
+        )}
+          key={marketRecord.get('id')}
+        >
           {map(marketRecord.get('appVersionVOS') || [], (item) => (
             <Option value={item} key={item.id}>{item.versionNumber}</Option>
           ))}
@@ -244,7 +262,7 @@ const DeployModal = observer(() => {
             name={mapping.hzeroAppVersion.name}
             renderer={({ value }) => value?.introduction}
           >
-            {getMarketAndVersionContent()}
+            {getMarketAndVersionContent(true)}
           </Select>,
           <Select
             name={mapping.hzeroServiceVersion.name}

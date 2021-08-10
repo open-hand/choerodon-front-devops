@@ -158,7 +158,7 @@ const HostDeployForm = injectIntl(observer(({ getMarketItem, getMarketAndVersion
           colSpan={1}
           renderer={({ value }) => value?.introduction}
         >
-          {getMarketAndVersionContent()}
+          {getMarketAndVersionContent(true)}
         </Select>,
         <Select
           name={mapping.hzeroServiceVersion.name}
