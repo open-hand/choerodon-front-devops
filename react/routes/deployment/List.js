@@ -452,8 +452,8 @@ const Deployment = withRouter(observer((props) => {
   const openHzeroStopModal = useCallback((record) => {
     Modal.open({
       key: hzeroStopModalKey,
-      title: formatMessage({ id: `${intlPrefix}.title` }),
-      children: formatMessage({ id: `${intlPrefix}.stop.des` }),
+      title: formatMessage({ id: `${intlPrefix}.hzero.stop.title` }),
+      children: formatMessage({ id: `${intlPrefix}.hzero.stop.des` }),
       okText: formatMessage({ id: `${intlPrefix}.stop` }),
       onOk: () => handleHzeroStop(record.get('id')),
     });

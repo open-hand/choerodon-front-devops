@@ -111,7 +111,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
       appInstanceTableDs.removeAll();
     }
     showPermission && permissionDs.query();
-  }, [mainStore.getSelectedHost]);
+  }, []);
 
   const listDs = useMemo(() => new DataSet(ListDataSet({
     projectId,
@@ -123,12 +123,9 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const refresh = useCallback(async (callback?:CallableFunction) => {
     await listDs.query();
     typeof callback === 'function' && callback();
-    if (mainStore.getSelectedHost?.id) {
-      if (mainStore.getSelectedHost?.hostStatus === 'connected') {
-        usageDs.query();
-        appInstanceTableDs.query();
-      }
-      mainStore.getSelectedHost?.showPermission && permissionDs.query();
+    const hostId = mainStore.getSelectedHost?.id;
+    if (hostId) {
+      loadData({ ...mainStore.getSelectedHost, hostId });
     }
   }, [listDs, mainStore.getSelectedHost]);
 

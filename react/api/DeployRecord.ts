@@ -25,7 +25,7 @@ class DeployRecordApi extends Api<DeployRecordApi> {
     return this.request({
       method: 'post',
       url: `${this.prefix}/${recordId}/retry`,
-      data,
+      data: data || {},
     });
   }
 
