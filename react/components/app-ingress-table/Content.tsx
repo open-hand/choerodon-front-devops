@@ -1,10 +1,11 @@
 /* eslint-disable max-len */
+// @ts-nocheck
 import React, { useMemo, useState, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Action } from '@choerodon/boot';
 import { Modal, Table, Tooltip } from 'choerodon-ui/pro';
-import { TableQueryBarType } from '@/interface';
 import { StatusTag, TimePopover, UserInfo } from '@choerodon/components';
+import { TableQueryBarType } from '@/interface';
 import { useAppIngressTableStore } from './stores';
 import HostConfigServices from './services';
 
@@ -100,7 +101,6 @@ const AppIngress = observer(() => {
         actionData.unshift({
           service: ['choerodon.code.project.deploy.host.ps.docker.stop'],
           text: '停止',
-          // @ts-expect-error
           action: () => openStopModal({ record: tableRecord }),
         }, {
           service: ['choerodon.code.project.deploy.host.ps.docker.restart'],
@@ -114,7 +114,6 @@ const AppIngress = observer(() => {
         actionData.unshift({
           service: ['choerodon.code.project.deploy.host.ps.docker.start'],
           text: '启动',
-          // @ts-expect-error
           action: () => handleStart({ record: tableRecord }),
         });
         break;

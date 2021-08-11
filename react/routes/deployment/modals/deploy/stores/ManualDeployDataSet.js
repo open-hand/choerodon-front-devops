@@ -85,7 +85,7 @@ const mapping = {
     label: 'HZERO应用版本',
   },
   hzeroServiceVersion: {
-    name: 'hzeroServiceVersionId',
+    name: 'marketAppServiceId',
     type: 'object',
     label: '服务及版本',
   },
