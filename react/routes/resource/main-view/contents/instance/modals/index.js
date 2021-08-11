@@ -148,6 +148,7 @@ const IstModals = injectIntl(observer(() => {
       marketDeployObjectId: record.get('appServiceVersionId'),
       marketServiceName: record.get('appServiceName'),
       environmentId,
+      applicationType: record.get('applicationType'),
     };
 
     Modal.open({
