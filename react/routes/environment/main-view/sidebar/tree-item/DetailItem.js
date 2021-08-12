@@ -17,7 +17,9 @@ const formKey = Modal.key();
 const effectKey = Modal.key();
 const deleteKey = Modal.key();
 
-function DetailItem({ record, search, intl: { formatMessage }, intlPrefix }) {
+function DetailItem({
+  record, search, intl: { formatMessage }, intlPrefix,
+}) {
   const modalStyle = useMemo(() => ({
     width: 380,
   }), []);
@@ -75,9 +77,10 @@ function DetailItem({ record, search, intl: { formatMessage }, intlPrefix }) {
             okText: formatMessage({ id: 'delete' }),
             onOk: handleDelete,
             footer: ((okBtn, cancelBtn) => (
-              <Fragment>
-                {cancelBtn}{okBtn}
-              </Fragment>
+              <>
+                {cancelBtn}
+                {okBtn}
+              </>
             )),
           });
         } else {
@@ -85,9 +88,9 @@ function DetailItem({ record, search, intl: { formatMessage }, intlPrefix }) {
             children: formatMessage({ id: `${intlPrefix}.delete.des.pipeline.confirm` }),
             okText: formatMessage({ id: 'iknow' }),
             footer: ((okBtn) => (
-              <Fragment>
+              <>
                 {okBtn}
-              </Fragment>
+              </>
             )),
           });
         }
@@ -97,9 +100,9 @@ function DetailItem({ record, search, intl: { formatMessage }, intlPrefix }) {
           okText: formatMessage({ id: 'iknow' }),
           onOk: refresh,
           footer: ((okBtn) => (
-            <Fragment>
+            <>
               {okBtn}
-            </Fragment>
+            </>
           )),
         });
       }
@@ -195,9 +198,10 @@ function DetailItem({ record, search, intl: { formatMessage }, intlPrefix }) {
             okCancel: true,
             onOk: () => handleEffect(false),
             footer: ((okBtn, cancelBtn) => (
-              <Fragment>
-                {okBtn}{cancelBtn}
-              </Fragment>
+              <>
+                {cancelBtn}
+                {okBtn}
+              </>
             )),
           });
         } else if (!result.failed) {
@@ -205,9 +209,9 @@ function DetailItem({ record, search, intl: { formatMessage }, intlPrefix }) {
             children: formatMessage({ id: `${intlPrefix}.no.stop.des` }),
             okText: formatMessage({ id: 'iknow' }),
             footer: ((okBtn, cancelBtn) => (
-              <Fragment>
+              <>
                 {okBtn}
-              </Fragment>
+              </>
             )),
           });
         } else {
@@ -222,9 +226,9 @@ function DetailItem({ record, search, intl: { formatMessage }, intlPrefix }) {
         children: formatMessage({ id: `${intlPrefix}.status.change` }),
         onOk: refresh,
         footer: (okBtn, cancelBtn) => (
-          <Fragment>
+          <>
             {okBtn}
-          </Fragment>
+          </>
         ),
       });
     }
@@ -244,7 +248,9 @@ function DetailItem({ record, search, intl: { formatMessage }, intlPrefix }) {
   }
 
   function getSuffix() {
-    const { RUNNING, STOPPED, OPERATING, FAILED, DISCONNECTED } = statusMappings;
+    const {
+      RUNNING, STOPPED, OPERATING, FAILED, DISCONNECTED,
+    } = statusMappings;
     const status = getStatusInRecord();
     const result = getEnvStatus(status);
 
@@ -296,11 +302,13 @@ function DetailItem({ record, search, intl: { formatMessage }, intlPrefix }) {
       default:
     }
 
-    return <Action
-      placement="bottomRight"
-      data={actionData}
-      onClick={eventStopProp}
-    />;
+    return (
+      <Action
+        placement="bottomRight"
+        data={actionData}
+        onClick={eventStopProp}
+      />
+    );
   }
 
   function getName() {
@@ -309,21 +317,27 @@ function DetailItem({ record, search, intl: { formatMessage }, intlPrefix }) {
     const status = getStatusInRecord();
     const result = getEnvStatus(status);
     const disabled = result === OPERATING || result === FAILED;
-    const name = <TreeItemName
-      disabled={disabled}
-      name={itemName}
-      search={search}
-    />;
-    return <EnvItem
-      name={name}
-      {...status}
-    />;
+    const name = (
+      <TreeItemName
+        disabled={disabled}
+        name={itemName}
+        search={search}
+      />
+    );
+    return (
+      <EnvItem
+        name={name}
+        {...status}
+      />
+    );
   }
 
-  return <Fragment>
-    {getName()}
-    {getSuffix()}
-  </Fragment>;
+  return (
+    <>
+      {getName()}
+      {getSuffix()}
+    </>
+  );
 }
 
 DetailItem.propTypes = {

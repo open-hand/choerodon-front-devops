@@ -65,8 +65,8 @@ export default function DeployConfig() {
           onOk: () => handleDelete(record),
           footer: ((okBtn, cancelBtn) => (
             <>
-              {okBtn}
               {cancelBtn}
+              {okBtn}
             </>
           )),
         };

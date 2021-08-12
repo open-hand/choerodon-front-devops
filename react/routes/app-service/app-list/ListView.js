@@ -115,7 +115,7 @@ const ListView = withRouter(observer((props) => {
   const getItemsButton = () => {
     const disabled = !appListStore.getCanCreate;
     const disabledMessage = disabled ? formatMessage({ id: `${intlPrefix}.create.disabled` }) : '';
-    const { openImport } =props;
+    const { openImport } = props;
 
     return ([{
       name: formatMessage({ id: `${intlPrefix}.create` }),
@@ -199,30 +199,30 @@ const ListView = withRouter(observer((props) => {
     );
   }
 
-  function renderStatus({ value:active, record }) {
+  function renderStatus({ value: active, record }) {
     const isSynchro = record.get('synchro');
     const isFailed = record.get('fail');
     let colorCode;
-    if(isSynchro){
-      if(isFailed){
+    if (isSynchro) {
+      if (isFailed) {
         colorCode = 'failed'
-      }else if(active){
+      } else if (active) {
         colorCode = 'active'
-      }else{
+      } else {
         colorCode = 'unready'
       }
     } else {
       colorCode = 'operating'
     }
     return (
-      <Tooltip title={formatMessage({id:colorCode})}>
+      <Tooltip title={formatMessage({ id: colorCode })}>
         <div style={{ display: 'inline-block' }}>
           <StatusTag
             colorCode={colorCode}
             style={{
               marginRight: '7px'
             }}
-            name={colorCode === 'unready' ? '停用' : formatMessage({id:colorCode})}
+            name={colorCode === 'unready' ? '停用' : formatMessage({ id: colorCode })}
           />
         </div>
       </Tooltip>
@@ -233,7 +233,7 @@ const ListView = withRouter(observer((props) => {
     const actionData = {
       detail: {
         service: ['choerodon.code.project.develop.app-service.ps.default'],
-        text: formatMessage({ id: `${intlPrefix}.detail`}),
+        text: formatMessage({ id: `${intlPrefix}.detail` }),
         action: () => {
           ref?.current?.openDetail();
         },
@@ -415,8 +415,8 @@ const ListView = withRouter(observer((props) => {
           okText: status ? formatMessage({ id: 'iknow' }) : formatMessage({ id: 'stop' }),
           footer: ((okBtn, cancelBtn) => (
             <>
-              {okBtn}
               {!status && cancelBtn}
+              {okBtn}
             </>
           )),
         };
@@ -448,136 +448,136 @@ const ListView = withRouter(observer((props) => {
 
   const renderTheme4Dom = () => {
     return (
-        <div className="c7ncd-theme4-appService">
-          <div className="c7ncd-theme4-appService-left">
-            <Spin spinning={listDs.status !== 'ready'}>
-              {
-                listDs.records.map(record => (
-                  <div
-                    className="c7ncd-appService-item"
-                    style={{
-                      background: record.get('id') === selectedAppService?.id ? 'rgba(104, 135, 232, 0.08)' : 'unset',
-                    }}
-                    onClick={() => setSelectedAppService(record.toData())}
-                  >
-                {/*<span*/}
-                {/*  className="c7ncd-appService-item-icon"*/}
-                {/*  style={{*/}
-                {/*    backgroundImage: record.get('imgUrl') ? `url(${record.get('imgUrl')})` : 'unset',*/}
-                {/*  }}*/}
-                {/*>*/}
-                {/*  {*/}
-                {/*    !record.get('imgUrl') && record.get('name').substring(0,1).toUpperCase()*/}
-                {/*  }*/}
-                {/*</span>*/}
-                    <div className="c7ncd-appService-item-center">
-                      <div className="c7ncd-appService-item-center-line" style={{ justifyContent: 'space-between' }}>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                          <Tooltip title={record.get('name')}>
-                            <span className="c7ncd-appService-item-center-line-name">{record.get('name')}</span>
-                          </Tooltip>
-                          {
-                            renderStatus({value:record.get('active'), record})
-                          }
-                          {record.get('errorMessage') && record.get('fail') && <Tooltip overlayStyle={{ maxHeight: 500, overflow: 'auto' }} title={record.get('errorMessage')}>
-                            <Icon
-                              type="info"
-                              style={{
-                                color: '#f76776',
-                                marginRight: '5px'
-                              }}
-                            />
-                          </Tooltip>
-                          }
-                          <span className="c7ncd-appService-item-center-line-type">
-                            <FormattedMessage id={`${intlPrefix}.type.${record.get('type')}`} />
-                          </span>
-                        </div>
-                        {renderActions({record})}
+      <div className="c7ncd-theme4-appService">
+        <div className="c7ncd-theme4-appService-left">
+          <Spin spinning={listDs.status !== 'ready'}>
+            {
+              listDs.records.map(record => (
+                <div
+                  className="c7ncd-appService-item"
+                  style={{
+                    background: record.get('id') === selectedAppService?.id ? 'rgba(104, 135, 232, 0.08)' : 'unset',
+                  }}
+                  onClick={() => setSelectedAppService(record.toData())}
+                >
+                  {/*<span*/}
+                  {/*  className="c7ncd-appService-item-icon"*/}
+                  {/*  style={{*/}
+                  {/*    backgroundImage: record.get('imgUrl') ? `url(${record.get('imgUrl')})` : 'unset',*/}
+                  {/*  }}*/}
+                  {/*>*/}
+                  {/*  {*/}
+                  {/*    !record.get('imgUrl') && record.get('name').substring(0,1).toUpperCase()*/}
+                  {/*  }*/}
+                  {/*</span>*/}
+                  <div className="c7ncd-appService-item-center">
+                    <div className="c7ncd-appService-item-center-line" style={{ justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Tooltip title={record.get('name')}>
+                          <span className="c7ncd-appService-item-center-line-name">{record.get('name')}</span>
+                        </Tooltip>
+                        {
+                          renderStatus({ value: record.get('active'), record })
+                        }
+                        {record.get('errorMessage') && record.get('fail') && <Tooltip overlayStyle={{ maxHeight: 500, overflow: 'auto' }} title={record.get('errorMessage')}>
+                          <Icon
+                            type="info"
+                            style={{
+                              color: '#f76776',
+                              marginRight: '5px'
+                            }}
+                          />
+                        </Tooltip>
+                        }
+                        <span className="c7ncd-appService-item-center-line-type">
+                          <FormattedMessage id={`${intlPrefix}.type.${record.get('type')}`} />
+                        </span>
                       </div>
-                      <div className="c7ncd-appService-item-center-line" style={{ justifyContent: 'flex-start' }}>
-                        <p className="c7ncd-appService-item-center-line-code">{record.get('code')}</p>
-                      </div>
+                      {renderActions({ record })}
                     </div>
-                    <div
-                      className="c7ncd-appService-item-center"
-                      style={{
-                        position: 'absolute',
-                        right: '16px',
-                        width: 'unset',
-                      }}
-                    >
-                      <div className="c7ncd-appService-item-center-line" style={{ justifyContent: 'flex-end' }}>
-                        <p className="c7ncd-appService-item-center-line-url">
-                          {
-                            record.get('repoUrl') && (
-                              <>
-                                <Icon className="c7ncd-appService-item-center-line-url-git" type="git" />
-                                {renderUrl({ value: record.get('repoUrl') })}
-                              </>
-                            )
-                          }
-                        </p>
-                      </div>
-                      <div className="c7ncd-appService-item-center-line" style={{ justifyContent: 'flex-end' }}>
-                    <span
-                      className="c7ncd-appService-item-center-line-updateUserName"
-                      style={{
-                        backgroundImage: `url(${record.get('updateUserImage')})`
-                      }}
-                    >
-                      {!record.get('updateUserImage') && record.get('updateUserName')?.substring(0,1)?.toUpperCase()}
-                    </span>
-                        <span className="c7ncd-appService-item-center-line-gxy">更新于</span>
-                        {
-                          record.get('lastUpdateDate') &&
-                          <TimePopover content={record.get('lastUpdateDate')} />
-                        }
-                        <span
-                          style={{
-                            marginLeft: 31,
-                            backgroundImage: `url(${record.get('createUserImage')})`
-                          }}
-                          className="c7ncd-appService-item-center-line-updateUserName"
-
-                        >
-                      {!record.get('createUserImage') && record.get('createUserName')?.substring(0,1)?.toUpperCase()}
-                    </span>
-                        <span className="c7ncd-appService-item-center-line-gxy">创建于</span>
-                        {
-                          record.get('creationDate') &&
-                          <TimePopover content={record.get('creationDate')} />
-                        }
-                      </div>
+                    <div className="c7ncd-appService-item-center-line" style={{ justifyContent: 'flex-start' }}>
+                      <p className="c7ncd-appService-item-center-line-code">{record.get('code')}</p>
                     </div>
                   </div>
-                ))
-              }
-            </Spin>
-            <Pagination
-              total={listDs.totalCount}
-              pageSize={listDs.pageSize}
-              page={listDs.currentPage}
-              onChange={handleChangeListPage}
-              style={{
-                marginTop: '17px',
-                float: 'right',
-              }}
-            />
-          </div>
-          <div className="c7ncd-theme4-appService-divided" />
-          <div className="c7ncd-theme4-appService-right">
-            <ServiceDetail
-              cRef={ref}
-              match={{
-                params: {
-                  id: selectedAppService?.id,
-                  projectId: AppState.currentMenuType.projectId,
-                }
-              }}
-            />
-          </div>
+                  <div
+                    className="c7ncd-appService-item-center"
+                    style={{
+                      position: 'absolute',
+                      right: '16px',
+                      width: 'unset',
+                    }}
+                  >
+                    <div className="c7ncd-appService-item-center-line" style={{ justifyContent: 'flex-end' }}>
+                      <p className="c7ncd-appService-item-center-line-url">
+                        {
+                          record.get('repoUrl') && (
+                            <>
+                              <Icon className="c7ncd-appService-item-center-line-url-git" type="git" />
+                              {renderUrl({ value: record.get('repoUrl') })}
+                            </>
+                          )
+                        }
+                      </p>
+                    </div>
+                    <div className="c7ncd-appService-item-center-line" style={{ justifyContent: 'flex-end' }}>
+                      <span
+                        className="c7ncd-appService-item-center-line-updateUserName"
+                        style={{
+                          backgroundImage: `url(${record.get('updateUserImage')})`
+                        }}
+                      >
+                        {!record.get('updateUserImage') && record.get('updateUserName')?.substring(0, 1)?.toUpperCase()}
+                      </span>
+                      <span className="c7ncd-appService-item-center-line-gxy">更新于</span>
+                      {
+                        record.get('lastUpdateDate') &&
+                        <TimePopover content={record.get('lastUpdateDate')} />
+                      }
+                      <span
+                        style={{
+                          marginLeft: 31,
+                          backgroundImage: `url(${record.get('createUserImage')})`
+                        }}
+                        className="c7ncd-appService-item-center-line-updateUserName"
+
+                      >
+                        {!record.get('createUserImage') && record.get('createUserName')?.substring(0, 1)?.toUpperCase()}
+                      </span>
+                      <span className="c7ncd-appService-item-center-line-gxy">创建于</span>
+                      {
+                        record.get('creationDate') &&
+                        <TimePopover content={record.get('creationDate')} />
+                      }
+                    </div>
+                  </div>
+                </div>
+              ))
+            }
+          </Spin>
+          <Pagination
+            total={listDs.totalCount}
+            pageSize={listDs.pageSize}
+            page={listDs.currentPage}
+            onChange={handleChangeListPage}
+            style={{
+              marginTop: '17px',
+              float: 'right',
+            }}
+          />
         </div>
+        <div className="c7ncd-theme4-appService-divided" />
+        <div className="c7ncd-theme4-appService-right">
+          <ServiceDetail
+            cRef={ref}
+            match={{
+              params: {
+                id: selectedAppService?.id,
+                projectId: AppState.currentMenuType.projectId,
+              }
+            }}
+          />
+        </div>
+      </div>
     )
   }
 
@@ -591,19 +591,19 @@ const ListView = withRouter(observer((props) => {
       {getHeader()}
       <Breadcrumb
         {
-          ...AppState.getCurrentTheme === 'theme4' ? {
-            extraNode: (
-              <TextField
-                className="theme4-c7n-member-search"
-                placeholder="搜索应用服务"
-                style={{ marginLeft: 32 }}
-                suffix={(
-                  <Icon type="search" />
-                )}
-                onEnterDown={(e) => handleChangeSearch(e.target.value)}
-                onChange={handleChangeSearch}
-              />),
-          } : {}
+        ...AppState.getCurrentTheme === 'theme4' ? {
+          extraNode: (
+            <TextField
+              className="theme4-c7n-member-search"
+              placeholder="搜索应用服务"
+              style={{ marginLeft: 32 }}
+              suffix={(
+                <Icon type="search" />
+              )}
+              onEnterDown={(e) => handleChangeSearch(e.target.value)}
+              onChange={handleChangeSearch}
+            />),
+        } : {}
         }
       />
       <Content className={`${prefixCls}-content`}>

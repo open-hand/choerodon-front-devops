@@ -177,8 +177,8 @@ const Group = observer(() => {
             onOk: () => handleEffect(envId, false),
             footer: ((okBtn, cancelBtn) => (
               <>
-                {okBtn}
                 {cancelBtn}
+                {okBtn}
               </>
             )),
           });

@@ -300,7 +300,8 @@ const PiplelineTable = withRouter(observer((props) => {
       ),
       footer: (okBtn, cancelBtn) => (
         <Fragment>
-          {executeStatus !== 'failed' && cancelBtn}{okBtn}
+          {executeStatus !== 'failed' && cancelBtn}
+          {okBtn}
         </Fragment>
       ),
     });
