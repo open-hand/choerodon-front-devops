@@ -9,17 +9,18 @@ import {
 } from 'choerodon-ui/pro';
 import { FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router-dom';
+import { get, has } from '@choerodon/inject';
 import classNames from 'classnames';
 import { observer } from 'mobx-react-lite';
+import { StatusTag } from '@choerodon/components';
+import { TabCode } from '@choerodon/master';
+import ReactCodeMirror from 'react-codemirror';
 import app from '@/images/app.svg';
 import image from '@/images/image.svg';
 import jar from '@/images/jar.svg';
 import hzero from '@/images/hzero.svg';
-import { StatusTag } from '@choerodon/components';
-import { TabCode } from '@choerodon/master';
 import { SMALL } from '@/utils/getModalWidth';
 import YamlEditor from '@/components/yamlEditor';
-import ReactCodeMirror from 'react-codemirror';
 import { mapping } from './stores/ListDataSet';
 import { useDeployStore } from './stores';
 import TimePopover from '../../components/timePopover/TimePopover';
@@ -79,7 +80,8 @@ const Deployment = withRouter(observer((props) => {
     const { location: { search } } = props;
     const urlQuery = new URLSearchParams(search);
     if (urlQuery.get('mode') || urlQuery.get('deployType')) {
-      openBaseDeploy(urlQuery.get('mode'), urlQuery.get('deployType'));
+      has('base-pro:getBaseComponentDeployConfig') && get('base-pro:getBaseComponentDeployConfig')(refresh, true)(urlQuery.get('mode'), urlQuery.get('deployType'));
+      // openBaseDeploy();
       urlQuery.delete('mode');
       urlQuery.delete('deployType');
       window.history.replaceState(null, null, `/#/devops/deployment-operation?${urlQuery.toString()}`);
@@ -557,11 +559,12 @@ const Deployment = withRouter(observer((props) => {
               handler: openBatchDeploy,
             },
             {
-              name: '基础组件部署',
-              icon: 'cloud_done-o',
-              display: HAS_BASE_PRO,
-              permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.basedComponent'],
-              handler: () => openBaseDeploy(),
+              ...has('base-pro:getBaseComponentDeployConfig') ? get('base-pro:getBaseComponentDeployConfig')(refresh, false) : {},
+              // name: '基础组件部署',
+              // icon: 'cloud_done-o',
+              // display: HAS_BASE_PRO,
+              // permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.basedComponent'],
+              // handler: () => openBaseDeploy(),
             },
             {
               name: formatMessage({ id: `${intlPrefix}.hzero` }),
