@@ -22,10 +22,15 @@
   }
 
   &-deployObjectP {
-    margin-bottom: 2px;
+    margin-bottom: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    line-height: .2rem;
+
+    & + & {
+      margin-top: 2px;
+    }
   }
 
   &-deployObjectName {
