@@ -1,5 +1,7 @@
+/* eslint-disable no-param-reassign */
+
 import {
-  DataSet, DataSetProps, FieldType, UpdateEventProps,
+  DataSet, DataSetProps, FieldType, UpdateEventProps, DataSetStatus,
 } from '@/interface';
 import {
   environmentApiConfig,
@@ -47,6 +49,7 @@ export default ({
   async function handleUpdate({ value, name, record }: UpdateEventProps) {
     if (name === 'mktAppVersion') {
       if (value) {
+        serviceDs.status = 'loading' as DataSetStatus;
         const serviceData = await marketHzeroApi.loadHzeroServices(
           record.get('mktAppId'),
           record.get('mktAppVersion')?.id,
@@ -59,6 +62,7 @@ export default ({
         }));
         serviceDs.loadData(newServiceData || []);
         mainStore.setServiceData(newServiceData || []);
+        serviceDs.status = 'ready' as DataSetStatus;
       } else {
         serviceDs.removeAll();
       }
