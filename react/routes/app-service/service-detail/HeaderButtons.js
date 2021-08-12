@@ -118,8 +118,8 @@ const HeaderButtons = observer(({ children, theme4 }) => {
           okText: status ? formatMessage({ id: 'iknow' }) : formatMessage({ id: 'stop' }),
           footer: ((okBtn, cancelBtn) => (
             <>
-              {okBtn}
               {!status && cancelBtn}
+              {okBtn}
             </>
           )),
         };
@@ -175,7 +175,7 @@ const HeaderButtons = observer(({ children, theme4 }) => {
           onClick={
             serviceActive
               ? openStop.bind(this, detailCurrent) : handleChangeActive.bind(this, true)
-}
+          }
         >
           {getActiveText()}
         </Button>

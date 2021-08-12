@@ -9,14 +9,14 @@ import HostConfigApis from '@/routes/host-config/apis/DeployApis';
 import './index.less';
 
 interface DeleteCheckProps {
-  modal?:any,
-  projectId:number,
-  hostId:string,
-  handleDelete():void,
+  modal?: any,
+  projectId: number,
+  hostId: string,
+  handleDelete(): void,
   formatMessage(arg0: object, arg1?: object): string,
 }
 
-const DeleteCheck:FC<DeleteCheckProps> = (props) => {
+const DeleteCheck: FC<DeleteCheckProps> = (props) => {
   const {
     modal,
     projectId,
@@ -30,7 +30,7 @@ const DeleteCheck:FC<DeleteCheckProps> = (props) => {
   const prefixCls = useMemo(() => 'c7ncd-host-config', []);
   const intlPrefix = useMemo(() => 'c7ncd.host.config', []);
 
-  const checkNow = useCallback(async ():Promise<void> => {
+  const checkNow = useCallback(async (): Promise<void> => {
     try {
       const res = await HostConfigApis.checkHostDeletable(projectId, hostId);
       setLoading(false);
@@ -59,10 +59,10 @@ const DeleteCheck:FC<DeleteCheckProps> = (props) => {
         modal.update({
           okText: formatMessage({ id: `${intlPrefix}.delete.btn` }),
           onOk: handleDelete,
-          footer: (okBtn:ReactNode, cancelBtn:ReactNode) => (
+          footer: (okBtn: ReactNode, cancelBtn: ReactNode) => (
             <>
-              {okBtn}
               {cancelBtn}
+              {okBtn}
             </>
           ),
         });
@@ -70,7 +70,7 @@ const DeleteCheck:FC<DeleteCheckProps> = (props) => {
       }
       setText('该主机含有关联的流水线主机部署任务，无法删除。');
       modal.update({
-        footer: (okBtn:ReactNode, cancelBtn:ReactNode) => (
+        footer: (okBtn: ReactNode, cancelBtn: ReactNode) => (
           <>
             {cancelBtn}
           </>
@@ -79,7 +79,7 @@ const DeleteCheck:FC<DeleteCheckProps> = (props) => {
       });
     } catch (error) {
       modal.update({
-        footer: (okBtn:ReactNode, cancelBtn:ReactNode) => (
+        footer: (okBtn: ReactNode, cancelBtn: ReactNode) => (
           <>
             {cancelBtn}
           </>

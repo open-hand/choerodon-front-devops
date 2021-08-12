@@ -1,14 +1,25 @@
+/* eslint-disable react/jsx-closing-tag-location */
+/* eslint-disable react/state-in-constructor */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable max-len */
+/* eslint-disable react/sort-comp */
+/* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Modal, Icon, Form, Input, Select, Radio, Tooltip } from 'choerodon-ui';
+import {
+  Modal, Icon, Form, Input, Select, Radio, Tooltip,
+} from 'choerodon-ui';
 import { Button } from 'choerodon-ui/pro';
 import { Choerodon } from '@choerodon/boot';
 import _ from 'lodash';
 import StageCard from '../components/stageCard';
 import StageCreateModal from '../components/stageCreateModal';
-import { STAGE_FLOW_AUTO, STAGE_FLOW_MANUAL, TRIGGER_TYPE_AUTO, TRIGGER_TYPE_MANUAL } from '../components/Constants';
+import {
+  STAGE_FLOW_AUTO, STAGE_FLOW_MANUAL, TRIGGER_TYPE_AUTO, TRIGGER_TYPE_MANUAL,
+} from '../components/Constants';
 import InterceptMask from '../../../components/intercept-mask';
 import PipelineCreateStore from '../stores/PipelineCreateStore';
 
@@ -18,7 +29,7 @@ import '../../main.less';
 const { Item: FormItem } = Form;
 const { Option } = Select;
 const { Group: RadioGroup } = Radio;
-const Sidebar = Modal.Sidebar;
+const { Sidebar } = Modal;
 
 const formItemLayout = {
   labelCol: {
@@ -165,23 +176,27 @@ export default class PipelineCreate extends Component {
     const { getStageList } = PipelineCreateStore;
     if (getStageList.length === 1) {
       const [{ tempId, stageName }] = getStageList;
-      return <StageCard
-        head
-        allowDelete={false}
+      return (
+        <StageCard
+          head
+          allowDelete={false}
+          key={tempId}
+          stageId={tempId}
+          stageName={stageName}
+          clickAdd={this.openCreateForm}
+        />
+      );
+    }
+
+    return _.map(getStageList, ({ tempId, stageName }, stageIndex) => (
+      <StageCard
         key={tempId}
+        head={stageIndex === 0}
         stageId={tempId}
         stageName={stageName}
         clickAdd={this.openCreateForm}
-      />;
-    }
-
-    return _.map(getStageList, ({ tempId, stageName }, stageIndex) => (<StageCard
-      key={tempId}
-      head={stageIndex === 0}
-      stageId={tempId}
-      stageName={stageName}
-      clickAdd={this.openCreateForm}
-    />));
+      />
+    ));
   }
 
   loadMoreWrap = (e) => {
@@ -199,7 +214,7 @@ export default class PipelineCreate extends Component {
   };
 
   handleSearch = _.debounce((value) => {
-    const { 
+    const {
       AppState: {
         currentMenuType: { id: projectId },
       },
@@ -319,65 +334,76 @@ export default class PipelineCreate extends Component {
               initialValue: STAGE_FLOW_AUTO,
             })(
               <RadioGroup onChange={this.changeTriggerType}>
-                <span className="radio-label"><FormattedMessage id="pipeline.trigger" />:</span>
+                <span className="radio-label">
+                  <FormattedMessage id="pipeline.trigger" />
+                  :
+                </span>
                 <Radio value={STAGE_FLOW_AUTO}>
                   <FormattedMessage id="pipeline.trigger.auto" />
                 </Radio>
                 <Radio value={STAGE_FLOW_MANUAL}>
                   <FormattedMessage id="pipeline.trigger.manual" />
                 </Radio>
-              </RadioGroup>
+              </RadioGroup>,
             )}
           </FormItem>
-          {triggerType === STAGE_FLOW_MANUAL && <FormItem
+          {triggerType === STAGE_FLOW_MANUAL && (
+          <FormItem
             className="c7n-select_512"
             {...formItemLayout}
           >
-              {getFieldDecorator('users', {
-                rules: [{
-                  required: true,
-                  message: formatMessage({ id: 'required' }),
-                }],
-              })(
-                <Select
-                  filter
-                  filterOption={false}
-                  allowClear
-                  mode="multiple"
-                  label={formatMessage({ id: 'pipeline.trigger.member' })}
-                  loading={getLoading.user}
-                  getPopupContainer={(triggerNode) => triggerNode.parentNode}
-                  onSearch={this.handleSearch}
-                  onChange={this.handleUserChange}
-                >
-                  {user}
-                </Select>,
-              )}
-            </FormItem>}
+            {getFieldDecorator('users', {
+              rules: [{
+                required: true,
+                message: formatMessage({ id: 'required' }),
+              }],
+            })(
+              <Select
+                filter
+                filterOption={false}
+                allowClear
+                mode="multiple"
+                label={formatMessage({ id: 'pipeline.trigger.member' })}
+                loading={getLoading.user}
+                getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                onSearch={this.handleSearch}
+                onChange={this.handleUserChange}
+              >
+                {user}
+              </Select>,
+            )}
+          </FormItem>
+          )}
           <div className="c7ncd-pipeline-main">
             <div className="c7ncd-pipeline-scroll">
               {this.renderPipelineDom}
             </div>
           </div>
-          {getIsDisabled && <div className="c7ncd-pipeline-error">
+          {getIsDisabled && (
+          <div className="c7ncd-pipeline-error">
             <Icon type="error" className="c7ncd-pipeline-error-icon" />
             <span className="c7ncd-pipeline-error-msg">{formatMessage({ id: 'pipeline.create.error-1' })}</span>
-            </div>}
-          {!getCanSubmit && <div className="c7ncd-pipeline-error">
+          </div>
+          )}
+          {!getCanSubmit && (
+          <div className="c7ncd-pipeline-error">
             <Icon type="error" className="c7ncd-pipeline-error-icon" />
             <span className="c7ncd-pipeline-error-msg">{formatMessage({ id: 'pipeline.create.error-2' })}</span>
-            </div>}
+          </div>
+          )}
           <FormItem
             {...formItemLayout}
           />
         </Form>
         <InterceptMask visible={submitLoading} />
-        {showCreate && <StageCreateModal
+        {showCreate && (
+        <StageCreateModal
           store={PipelineCreateStore}
           prevId={prevId}
           visible={showCreate}
           onClose={this.closeCreateForm}
-        />}
+        />
+        )}
       </Sidebar>
     );
   }

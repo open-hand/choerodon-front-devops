@@ -1,4 +1,4 @@
-import React, { useMemo, Fragment } from 'react';
+import React from 'react';
 import { Action, Choerodon } from '@choerodon/boot';
 import {
   Table, Modal, Tooltip, Spin,
@@ -20,7 +20,6 @@ const modifyModalKey = Modal.key();
 export default function DeployConfig() {
   const {
     intlPrefix,
-    prefixCls,
     AppState: { currentMenuType: { id: projectId } },
     envStore: { getSelectedMenu },
   } = useEnvironmentStore();
@@ -28,7 +27,6 @@ export default function DeployConfig() {
     intl: { formatMessage },
     configDs,
     detailStore,
-    configFormDs,
   } = useDetailStore();
 
   const disabled = isNotRunning(getSelectedMenu);
@@ -58,8 +56,8 @@ export default function DeployConfig() {
           onOk: () => handleDelete(record),
           footer: ((okBtn, cancelBtn) => (
             <>
-              {okBtn}
               {cancelBtn}
+              {okBtn}
             </>
           )),
         };

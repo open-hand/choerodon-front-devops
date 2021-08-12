@@ -107,8 +107,8 @@ function ClusterItem({
         okCancel: true,
         footer: ((okBtn, cancelBtn) => (
           <>
-            {okBtn}
             {cancelBtn}
+            {okBtn}
           </>
         )),
         okText: formatMessage({ id: 'cluster.del.confirm' }),
