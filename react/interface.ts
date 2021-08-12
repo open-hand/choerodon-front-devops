@@ -7,7 +7,9 @@ import { Size } from 'choerodon-ui/lib/_util/enum';
 // DataSet record
 import Record from 'choerodon-ui/pro/lib/data-set/Record';
 import { DataSetProps } from 'choerodon-ui/pro/lib/data-set/DataSet';
-import { DataSetSelection, FieldType, FieldIgnore } from 'choerodon-ui/pro/lib/data-set/enum';
+import {
+  DataSetSelection, FieldType, FieldIgnore, DataSetStatus,
+} from 'choerodon-ui/pro/lib/data-set/enum';
 import {
   TableQueryBarType, SelectionMode, TableColumnTooltip, TableMode,
 } from 'choerodon-ui/pro/lib/table/enum';
@@ -61,4 +63,5 @@ export {
   ResizeType,
   Placements,
   UpdateEventProps,
+  DataSetStatus,
 };
