@@ -102,13 +102,13 @@ const AppCenterDetailContent = () => {
     mainStore.setSelectedHost(value);
   }, []);
 
-  const renderEnvOption = useCallback(({ value, text, record: envRecord }) => (
+  const renderEnvOption = useCallback(({ value, text, record: envRecord }) => (text ? (
     <EnvOption
       connect={value?.connect || envRecord.get('connect')
       || value?.hostStatus === 'connected' || envRecord.get('hostStatus') === 'connected'}
       text={text}
     />
-  ), []);
+  ) : null), []);
 
   const renderOptionProperty = useCallback(({ record: envRecord }: RecordObjectProps) => ({
     disabled: !envRecord.get('permission'),
