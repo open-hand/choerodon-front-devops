@@ -537,53 +537,55 @@ const Deployment = withRouter(observer((props) => {
     return null;
   }, []);
 
+  const getHeaderButtons = () => {
+    const res = [
+      {
+        name: formatMessage({ id: `${intlPrefix}.manual` }),
+        icon: 'cloud_done-o',
+        display: true,
+        permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.manual'],
+        handler: openDeploy,
+      },
+      {
+        name: formatMessage({ id: `${intlPrefix}.batch` }),
+        icon: 'cloud_done-o',
+        display: true,
+        permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.batch'],
+        handler: openBatchDeploy,
+      },
+      {
+        name: formatMessage({ id: `${intlPrefix}.hzero` }),
+        icon: 'cloud_done-o',
+        display: hasMarket,
+        disabled: !(deployStore.getHzeroSyncStatus?.open || deployStore.getHzeroSyncStatus?.sass),
+        permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.hzero'],
+        handler: openHzeroDeploy,
+        tooltipsConfig: {
+          title: !(deployStore.getHzeroSyncStatus?.open || deployStore.getHzeroSyncStatus?.sass)
+            ? '未从开放平台同步HZERO应用至C7N平台，无法执行此操作' : '',
+        },
+      },
+      {
+        icon: 'refresh',
+        display: true,
+        handler: refresh,
+      },
+    ];
+    if (has('base-pro:getBaseComponentDeployConfig')) {
+      res.splice(2, 0, {
+        ...get('base-pro:getBaseComponentDeployConfig')(refresh, false),
+      });
+    }
+    return res;
+  };
+
   return (
     <Page
       service={['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.default']}
     >
       <Header title={<FormattedMessage id="app.head" />} backPath={getBackPath()}>
         <HeaderButtons
-          items={([
-            {
-              name: formatMessage({ id: `${intlPrefix}.manual` }),
-              icon: 'cloud_done-o',
-              display: true,
-              permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.manual'],
-              handler: openDeploy,
-            },
-            {
-              name: formatMessage({ id: `${intlPrefix}.batch` }),
-              icon: 'cloud_done-o',
-              display: true,
-              permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.batch'],
-              handler: openBatchDeploy,
-            },
-            {
-              ...has('base-pro:getBaseComponentDeployConfig') ? get('base-pro:getBaseComponentDeployConfig')(refresh, false) : {},
-              // name: '基础组件部署',
-              // icon: 'cloud_done-o',
-              // display: HAS_BASE_PRO,
-              // permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.basedComponent'],
-              // handler: () => openBaseDeploy(),
-            },
-            {
-              name: formatMessage({ id: `${intlPrefix}.hzero` }),
-              icon: 'cloud_done-o',
-              display: hasMarket,
-              disabled: !(deployStore.getHzeroSyncStatus?.open || deployStore.getHzeroSyncStatus?.sass),
-              permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.hzero'],
-              handler: openHzeroDeploy,
-              tooltipsConfig: {
-                title: !(deployStore.getHzeroSyncStatus?.open || deployStore.getHzeroSyncStatus?.sass)
-                  ? '未从开放平台同步HZERO应用至C7N平台，无法执行此操作' : '',
-              },
-            },
-            {
-              icon: 'refresh',
-              display: true,
-              handler: refresh,
-            },
-          ])}
+          items={getHeaderButtons()}
           showClassName={false}
         />
       </Header>
