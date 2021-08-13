@@ -1,7 +1,11 @@
+/* eslint-disable react/static-property-placement */
+/* eslint-disable react/state-in-constructor */
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Button, Modal, Tooltip, Icon, Select } from 'choerodon-ui';
+import {
+  Button, Modal, Tooltip, Icon, Select,
+} from 'choerodon-ui';
 import _ from 'lodash';
 import PipelineCreateStore from '../../stores/PipelineCreateStore';
 import TaskCreate from '../taskCreate';
@@ -72,11 +76,15 @@ export default class StageCard extends Component {
   };
 
   openTaskRemove(id, name, isHead) {
-    this.setState({ showTaskDelete: true, taskId: id, taskName: name, isRemoveHead: isHead });
+    this.setState({
+      showTaskDelete: true, taskId: id, taskName: name, isRemoveHead: isHead,
+    });
   }
 
   closeTaskRemove = () => {
-    this.setState({ showTaskDelete: false, taskId: null, taskName: '', isRemoveHead: false });
+    this.setState({
+      showTaskDelete: false, taskId: null, taskName: '', isRemoveHead: false,
+    });
   };
 
   handleHeadChange = () => {
@@ -118,29 +126,33 @@ export default class StageCard extends Component {
       stageId,
       intl: { formatMessage },
     } = this.props;
-    return _.map(PipelineCreateStore.getTaskList[stageId], ({ name, type, index, isHead }) => {
+    return _.map(PipelineCreateStore.getTaskList[stageId], ({
+      name, type, index, isHead,
+    }) => {
       const isTaskTypeError = isHead && type === TASK_TYPE_MANUAL && PipelineCreateStore.getTrigger === TRIGGER_TYPE_AUTO;
-      return <div
-        key={index}
-        className={`c7ncd-stagecard-item ${isTaskTypeError ? 'c7ncd-stagecard-error' : ''}`}
-      >
-        <Tooltip
-          title={isTaskTypeError
-            ? formatMessage({ id: 'pipeline.mode.error' }, { name })
-            : name}
-          placement="top"
+      return (
+        <div
+          key={index}
+          className={`c7ncd-stagecard-item ${isTaskTypeError ? 'c7ncd-stagecard-error' : ''}`}
         >
-          <span className="c7ncd-stagecard-title">
-            <ClickText value={`【${formatMessage({ id: `pipeline.mode.${type}` })}】${name}`} onClick={this.openTaskSidebar.bind(this, null, index, isHead)} clickAble />
-          </span>
-        </Tooltip>
-        <Button
-          onClick={this.openTaskRemove.bind(this, index, name, isHead)}
-          size="small"
-          icon="delete_forever"
-          shape="circle"
-        />
-      </div>;
+          <Tooltip
+            title={isTaskTypeError
+              ? formatMessage({ id: 'pipeline.mode.error' }, { name })
+              : name}
+            placement="top"
+          >
+            <span className="c7ncd-stagecard-title">
+              <ClickText value={`【${formatMessage({ id: `pipeline.mode.${type}` })}】${name}`} onClick={this.openTaskSidebar.bind(this, null, index, isHead)} clickAble />
+            </span>
+          </Tooltip>
+          <Button
+            onClick={this.openTaskRemove.bind(this, index, name, isHead)}
+            size="small"
+            icon="delete_forever"
+            shape="circle"
+          />
+        </div>
+      );
     });
   }
 
@@ -255,20 +267,24 @@ export default class StageCard extends Component {
             <FormattedMessage id="pipeline.stage.delete.msg" />
           </div>
         </Modal>
-        {showTask && <TaskCreate
+        {showTask && (
+        <TaskCreate
           id={taskId}
           isHead={isEditHead}
           stageName={stageName}
           stageId={stageId}
           visible={showTask}
           onClose={this.onCloseSidebar}
-        />}
-        {showHeadModal && <StageCreateModal
+        />
+        )}
+        {showHeadModal && (
+        <StageCreateModal
           visible={showHeadModal}
           stage={stage}
           store={PipelineCreateStore}
           onClose={this.closeCreateForm}
-        />}
+        />
+        )}
       </div>
     );
   }

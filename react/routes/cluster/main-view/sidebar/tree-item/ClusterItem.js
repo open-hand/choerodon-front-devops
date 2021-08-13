@@ -6,8 +6,8 @@ import {
   Modal, Icon, Spin, TextField,
 } from 'choerodon-ui/pro';
 import { Input, message as UiMessage } from 'choerodon-ui';
-import TreeItemService from '@/routes/cluster/main-view/sidebar/tree-item/services';
 import CopyToBoard from 'react-copy-to-clipboard';
+import TreeItemService from '@/routes/cluster/main-view/sidebar/tree-item/services';
 import { useClusterStore } from '../../../stores';
 import { useClusterMainStore } from '../../stores';
 import StatusDot from '../../../../../components/status-dot';
