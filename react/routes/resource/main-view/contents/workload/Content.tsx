@@ -157,8 +157,6 @@ const WorkloadContent = observer(() => {
       title: formatMessage({ id: `${intlPrefix}.workload.delete.title` }, { type: workloadStore.getTabKey }),
       children: formatMessage({ id: `${intlPrefix}.workload.delete.des` }, { type: workloadStore.getTabKey, name: record.get('name') }),
       okText: formatMessage({ id: 'delete' }),
-      okProps: { color: 'red' },
-      cancelProps: { color: 'dark' },
     };
     // @ts-ignore
     record.set('urlType', urlTypes[workloadStore.getTabKey] || 'deployments');

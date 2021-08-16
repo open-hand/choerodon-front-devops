@@ -137,10 +137,9 @@ const EditItem = (props) => {
             onClick={openEditJobModal}
           />
         </Tooltip>
-        <Tooltip title={isCdDisabled && toolText}>
+        <Tooltip title={toolText}>
           <Button
             className={`${prefixCls}-btnGroup-btn`}
-            disabled={isCdDisabled}
             shape="circle"
             size="small"
             icon="delete_forever"
