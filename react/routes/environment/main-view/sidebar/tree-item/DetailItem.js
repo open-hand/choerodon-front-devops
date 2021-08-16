@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import React, { Fragment, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';

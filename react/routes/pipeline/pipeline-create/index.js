@@ -1,10 +1,3 @@
-/* eslint-disable react/jsx-closing-tag-location */
-/* eslint-disable react/state-in-constructor */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable max-len */
-/* eslint-disable react/sort-comp */
-/* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
@@ -75,7 +68,7 @@ export default class PipelineCreate extends Component {
               callback();
             }
           })
-          .catch((error) => {
+          .catch(() => {
             callback(formatMessage({ id: 'checkNameFail' }));
           });
       } else {
