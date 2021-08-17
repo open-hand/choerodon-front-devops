@@ -139,18 +139,18 @@ export default withRouter(injectIntl(observer(({
       </div>
       <div style={{ display: 'flex' }}>
         <Button
+          funcType="raised"
+          onClick={refresh}
+        >
+          <span style={{ color: '#3f51b5' }}>{formatMessage({ id: 'cancel' })}</span>
+        </Button>
+        <Button
           color="primary"
           funcType="raised"
           onClick={handleSave}
           style={{ marginRight: '.12rem' }}
         >
           {formatMessage({ id: 'save' })}
-        </Button>
-        <Button
-          funcType="raised"
-          onClick={refresh}
-        >
-          <span style={{ color: '#3f51b5' }}>{formatMessage({ id: 'cancel' })}</span>
         </Button>
       </div>
     </div>
