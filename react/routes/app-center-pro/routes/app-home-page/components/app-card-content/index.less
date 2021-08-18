@@ -1,0 +1,64 @@
+@prefixCls: c7ncd-app-center-homepage-list;
+
+.@{prefixCls} {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: max-content;
+  column-gap: 0.14rem;
+  row-gap: 0.12rem;
+  margin-top: 0.12rem;
+  &-pagination {
+    text-align: center;
+    margin-top: 20px;
+  }
+  &-card {
+    background: #fff;
+    box-shadow: 0 0 30px 0 rgba(82, 63, 105, 0.05);
+    border-radius: 4px;
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    aside {
+      position: absolute;
+      right: 13px;
+      top: 17px;
+    }
+    header {
+    }
+
+    main {
+      margin-top: 16px;
+      border-radius: 4px;
+      padding: 12px 13px;
+      background: #fafbff;
+      > div {
+        display: flex;
+        align-items: center;
+        > span {
+          font-size: 13px;
+          font-weight: 400;
+          &:first-of-type {
+            color: rgba(15, 19, 88, 0.65);
+            width: 73px;
+          }
+          &:nth-of-type(2) {
+            color: #0f1358;
+          }
+        }
+      }
+      > div + div {
+        margin-top: 12px;
+      }
+    }
+    &-appname {
+      font-size: 14px;
+      font-weight: 500;
+      color: #5365ea;
+      cursor: pointer;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
