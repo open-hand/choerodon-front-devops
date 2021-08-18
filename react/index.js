@@ -24,7 +24,7 @@ const PipelineManage = React.lazy(() => import('./routes/pipeline-manage'));
 const HostConfig = React.lazy(() => import('./routes/host-config'));
 const OrgTemplate = React.lazy(() => import('./routes/app-template/OrgIndex'));
 const SiteTemplate = React.lazy(() => import('./routes/app-template/SiteIndex'));
-const AppCenter = React.lazy(() => import('./routes/app-center'));
+const AppCenter = React.lazy(() => import('./routes/app-center-pro'));
 
 function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
   const IntlProviderAsync = useMemo(() => asyncLocaleProvider(language, () => import(`./locale/${language}`)), []);
