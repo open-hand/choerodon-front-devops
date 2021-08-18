@@ -28,7 +28,6 @@
     "styled-components": "5.2.0"
   },
   "dependencies": {
-    "@choerodon/base-pro": "1.1.0",
     "copy-to-clipboard": "^3.3.1",
     "diff-match-patch": "^1.0.4",
     "echarts": "^4.2.1",
