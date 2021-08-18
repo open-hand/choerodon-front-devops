@@ -1,0 +1,43 @@
+@import '~choerodon-ui/lib/style/themes/default';
+
+.c7ncd-app-center-homepage {
+
+  &-search {
+    display: flex;
+    background: #fff;
+    overflow: hidden;
+    align-items: center;
+    padding: 0 .12rem;
+
+    &-tab {
+      flex-shrink: 0;
+      margin: .1rem .3rem .1rem 0;
+    }
+
+    &-form-wrap {
+      display: flex;
+      align-items: center;
+      max-width: 60%;
+      margin-left: auto;
+    }
+
+    &-form {
+      .@{c7n-pro-prefix}-select-prefix {
+        width: auto;
+        line-height: .22rem;
+        left: .1rem;
+        color: rgba(15, 19, 88, 0.85);
+      }
+      .@{c7n-pro-prefix}-select-suffix-button .@{c7n-pro-prefix}-select-rendered-value {
+        padding-left: .45rem;
+      }
+      .@{c7n-pro-prefix}-select:not(textarea):not(:first-child) {
+        padding-left: .45rem;
+      }
+    }
+
+    &-env {
+      padding-left: .06rem;
+    }
+  }
+}
