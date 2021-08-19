@@ -24,7 +24,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
     } = props;
     const { intlPrefix } = useAppTopStore();
     const appListStore = useStore();
-    const listDs = useMemo(() => new DataSet(ListDataSet(intlPrefix, formatMessage, projectId)), [projectId]);
+    const listDs = useMemo(() => new DataSet(ListDataSet(intlPrefix, formatMessage, projectId)), [formatMessage, intlPrefix, projectId]);
 
     useEffect(() => {
       appListStore.checkCreate(projectId);

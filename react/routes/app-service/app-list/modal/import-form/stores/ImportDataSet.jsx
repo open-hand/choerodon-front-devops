@@ -233,6 +233,12 @@ export default ({
         defaultValue: false,
       },
       {
+        name: 'isGitLabTemplate',
+        type: 'bool',
+        defaultValue: false,
+        label: formatMessage({ id: `${intlPrefix}.github.source` }),
+      },
+      {
         name: 'githubTemplate',
         type: 'string',
         textField: 'name',

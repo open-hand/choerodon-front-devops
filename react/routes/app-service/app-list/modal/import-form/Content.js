@@ -136,6 +136,10 @@ const ImportForm = injectIntl(observer((props) => {
     );
   }
 
+  function handleClick(value) {
+    record.set('platformType', value);
+  }
+
   return (
     <div className={`${prefixCls}-import-wrap`}>
       <div className={`${prefixCls}-select-custom-list`}>
