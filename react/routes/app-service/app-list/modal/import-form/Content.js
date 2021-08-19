@@ -143,7 +143,11 @@ const ImportForm = injectIntl(observer((props) => {
   return (
     <div className={`${prefixCls}-import-wrap`}>
       <div className={`${prefixCls}-select-custom-list`}>
+<<<<<<< HEAD
         <CustomSelect
+=======
+        <SelectCustom
+>>>>>>> 241d8975d (给select-custom组件增加ts类型限制)
           onClickCallback={(value) => handleClick(value)}
           data={IMPORT_METHOD}
           identity="type"
