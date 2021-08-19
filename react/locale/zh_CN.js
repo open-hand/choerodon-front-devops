@@ -584,6 +584,8 @@ const appService = {
   'c7ncd.appService.belong.market': '所属应用',
   'c7ncd.appService.github.system': '系统预设模板',
   'c7ncd.appService.github.custom': '已有应用服务',
+  'c7ncd.appService.gitlab.simple': '导入单个代码库',
+  'c7ncd.appService.gitlab.move': '从GitLab-Group中批量迁移',
   'c7ncd.appService.github.source': '导入来源',
   'c7ncd.appService.github.template': '应用服务模板',
   'c7ncd.appService.empty': '暂无应用服务',

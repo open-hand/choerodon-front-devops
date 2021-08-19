@@ -1,4 +1,7 @@
-import React, { createContext, useContext, useEffect, useMemo } from 'react';
+/* eslint-disable max-len */
+import React, {
+  createContext, useContext, useEffect, useMemo,
+} from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
@@ -21,7 +24,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
     } = props;
     const { intlPrefix } = useAppTopStore();
     const appListStore = useStore();
-    const listDs = useMemo(() => new DataSet(ListDataSet(intlPrefix, formatMessage, projectId)), [projectId]);
+    const listDs = useMemo(() => new DataSet(ListDataSet(intlPrefix, formatMessage, projectId)), [formatMessage, intlPrefix, projectId]);
 
     useEffect(() => {
       appListStore.checkCreate(projectId);

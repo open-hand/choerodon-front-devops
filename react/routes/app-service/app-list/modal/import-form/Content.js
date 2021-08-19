@@ -11,12 +11,10 @@ import keys from 'lodash/keys';
 import countBy from 'lodash/countBy';
 import pickBy from 'lodash/pickBy';
 import isEmpty from 'lodash/isEmpty';
-import map from 'lodash/map';
 import PlatForm from './Platform';
 import Tips from '../../../../../components/new-tips';
 import { useImportAppServiceStore } from './stores';
-
-import './index.less';
+import SelectCustom from '../../../components/select-custom';
 
 const { Option } = Select;
 
@@ -37,7 +35,6 @@ const ImportForm = injectIntl(observer((props) => {
   } = useImportAppServiceStore();
   const record = useMemo(() => importDs.current || importDs.records[0], [importDs.current]);
   const [hasFailed, setHasFailed] = useState(false);
-
   useEffect(() => {
     setHasFailed(false);
   }, [record.get('platformType')]);
@@ -124,24 +121,33 @@ const ImportForm = injectIntl(observer((props) => {
     });
   }
 
+  function handleClick(value) {
+    record.set('platformType', value);
+  }
+
   return (
     <div className={`${prefixCls}-import-wrap`}>
-      <Form record={record}>
-        <SelectBox className={`${prefixCls}-import-wrap-select`} name="platformType" onOption={handleOptionProps}>
-          {map(IMPORT_METHOD, (item) => (
-            <Option value={item} key={item}>
-              <Tooltip title={hasMarket || item !== 'market' ? '' : '未安装【应用市场】插件，无法使用此功能'}>
-                <span className={`${prefixCls}-import-wrap-radio`}>
-                  <Tips
-                    helpText={formatMessage({ id: `${intlPrefix}.${item}.tips` })}
-                    title={formatMessage({ id: `${intlPrefix}.import.type.${item}` })}
-                  />
-                </span>
-              </Tooltip>
-            </Option>
-          ))}
-        </SelectBox>
-      </Form>
+      <div className={`${prefixCls}-select-custom-list`}>
+        <SelectCustom
+          mode="multip"
+          data={IMPORT_METHOD}
+          customChildren={(item) => (
+            <div className={`${prefixCls}-select-custom-wrap`}>
+              <div><img src={item.img} style={{ width: '50px', height: '50px' }} /></div>
+              <div>
+                <Tooltip title={hasMarket || item.type !== 'market' ? '' : '未安装【应用市场】插件，无法使用此功能'}>
+                  <div className={`${prefixCls}-select-custom-title`}>
+                    {formatMessage({ id: `${intlPrefix}.import.type.${item.type}` })}
+                  </div>
+                  <div className={`${prefixCls}-select-custom-tip`}>
+                    {formatMessage({ id: `${intlPrefix}.${item.type}.tips` })}
+                  </div>
+                </Tooltip>
+              </div>
+            </div>
+          )}
+        />
+      </div>
       {record.get('platformType') === 'share' || record.get('platformType') === 'market' ? (
         <>
           <PlatForm checkData={checkData} />
@@ -153,12 +159,19 @@ const ImportForm = injectIntl(observer((props) => {
         </>
       ) : (
         <Form record={record} style={{ width: '3.6rem' }}>
-          {record.get('platformType') === 'github' && (
-            <SelectBox name="isTemplate">
-              <Option value>{formatMessage({ id: `${intlPrefix}.github.system` })}</Option>
-              <Option value={false}>{formatMessage({ id: `${intlPrefix}.github.custom` })}</Option>
-            </SelectBox>
-          )}
+          {record.get('platformType') === 'github'
+            ? (
+              <SelectBox name="isTemplate">
+                <Option value>{formatMessage({ id: `${intlPrefix}.github.system` })}</Option>
+                <Option value={false}>{formatMessage({ id: `${intlPrefix}.github.custom` })}</Option>
+              </SelectBox>
+            )
+            : (
+              <SelectBox name="isGitLabTemplate">
+                <Option value>{formatMessage({ id: `${intlPrefix}.gitlab.simple` })}</Option>
+                <Option value={false}>{formatMessage({ id: `${intlPrefix}.gitlab.move` })}</Option>
+              </SelectBox>
+            )}
           {record.get('platformType') === 'github' && record.get('isTemplate') && (
             <Select name="githubTemplate" searchable />
           )}

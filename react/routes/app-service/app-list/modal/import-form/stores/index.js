@@ -10,6 +10,10 @@ import ImportTableDataSet from './ImportTableDataSet';
 import selectedDataSet from './SelectedDataSet';
 import useStore from './useStore';
 import MarketSelectedDataSet from './MarketSelectedDataSet';
+import shareImage from '../../../../images/share.svg';
+import marketImage from '../../../../images/market.svg';
+import githubImage from '../../../../images/github.svg';
+import gitlabImage from '../../../../images/gitlab.svg';
 
 const Store = createContext();
 
@@ -64,7 +68,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
 
     const value = {
       ...props,
-      IMPORT_METHOD: isSaaS ? ['share', 'github', 'gitlab'] : ['share', 'market', 'github', 'gitlab'],
+      IMPORT_METHOD: isSaaS ? [{ type: 'share', img: shareImage }, { type: 'github', img: gitlabImage }, { type: 'gitlab', img: gitlabImage }] : [{ type: 'share', img: shareImage }, { type: 'market', img: marketImage }, { type: 'github', img: githubImage }, { type: 'gitlab', img: gitlabImage }],
       importDs,
       importTableDs,
       selectedDs,

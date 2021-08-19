@@ -1,3 +1,5 @@
+/* eslint-disable default-case */
+/* eslint-disable import/no-anonymous-default-export */
 import { axios } from '@choerodon/boot';
 import map from 'lodash/map';
 import pick from 'lodash/pick';
@@ -51,6 +53,7 @@ export default ({
         return formatMessage({ id: 'checkCodeReg' });
       }
     }
+    return false;
   }
 
   async function checkName(value) {
@@ -70,6 +73,7 @@ export default ({
         return formatMessage({ id: 'nameCanNotHasSpaces' });
       }
     }
+    return false;
   }
 
   function handleUpdate({ record, name, value }) {
@@ -191,6 +195,7 @@ export default ({
             if (record.get('platformType') === 'gitlab' || record.get('platformType') === 'github') {
               return formatMessage({ id: `${intlPrefix}.url.${record.get('platformType')}.clone` });
             }
+            return false;
           },
         },
       },
@@ -209,6 +214,12 @@ export default ({
         label: formatMessage({ id: `${intlPrefix}.github.source` }),
       },
       {
+        name: 'isGitLabTemplate',
+        type: 'bool',
+        defaultValue: false,
+        label: formatMessage({ id: `${intlPrefix}.github.source` }),
+      },
+      {
         name: 'githubTemplate',
         type: 'string',
         textField: 'name',
@@ -217,6 +228,13 @@ export default ({
           lookupUrl: ({ record }) => (record.get('platformType') === 'github' ? `/devops/v1/projects/${projectId}/app_service/list_service_templates` : ''),
           required: ({ record }) => record.get('platformType') === 'github' && record.get('isTemplate'),
         },
+        label: formatMessage({ id: `${intlPrefix}.github.template` }),
+      },
+      {
+        name: 'gitlabTemplate',
+        type: 'string',
+        textField: 'name',
+        valueField: 'path',
         label: formatMessage({ id: `${intlPrefix}.github.template` }),
       },
     ],
