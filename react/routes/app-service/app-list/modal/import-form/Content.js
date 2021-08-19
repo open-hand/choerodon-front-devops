@@ -129,7 +129,7 @@ const ImportForm = injectIntl(observer((props) => {
     <div className={`${prefixCls}-import-wrap`}>
       <div className={`${prefixCls}-select-custom-list`}>
         <SelectCustom
-          mode="multip"
+          onClickCallback={(value) => handleClick(value)}
           data={IMPORT_METHOD}
           customChildren={(item) => (
             <div className={`${prefixCls}-select-custom-wrap`}>
