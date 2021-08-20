@@ -3,7 +3,7 @@ import React, {
   Fragment, useState, useEffect, useMemo,
 } from 'react';
 import {
-  Form, TextField, Select, SelectBox, Tooltip,
+  Form, TextField, Select, SelectBox, Tooltip, Icon,
 } from 'choerodon-ui/pro';
 import { injectIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
