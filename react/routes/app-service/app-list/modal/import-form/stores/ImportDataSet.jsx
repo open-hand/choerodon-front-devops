@@ -233,12 +233,6 @@ export default ({
         defaultValue: false,
       },
       {
-        name: 'isGitLabTemplate',
-        type: 'bool',
-        defaultValue: false,
-        label: formatMessage({ id: `${intlPrefix}.github.source` }),
-      },
-      {
         name: 'githubTemplate',
         type: 'string',
         textField: 'name',
@@ -256,8 +250,7 @@ export default ({
         valueField: 'id',
         label: 'GitLab Group',
         required: true,
-        lookupAxiosConfig: (data) => (groupsApiConfig.getGroups())
-        ,
+        lookupAxiosConfig: (data) => (groupsApiConfig.getGroups()),
       },
     ],
     events: {
