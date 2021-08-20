@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, {
   Fragment, useState, useEffect, useMemo,
 } from 'react';
@@ -5,12 +6,14 @@ import {
   Form, TextField, Select, SelectBox, Tooltip,
 } from 'choerodon-ui/pro';
 import { injectIntl } from 'react-intl';
+import { NewTips } from '@choerodon/components';
 import { observer } from 'mobx-react-lite';
 import { Choerodon } from '@choerodon/boot';
 import keys from 'lodash/keys';
 import countBy from 'lodash/countBy';
 import pickBy from 'lodash/pickBy';
 import isEmpty from 'lodash/isEmpty';
+import { camelCase } from 'lodash';
 import PlatForm from './Platform';
 import Tips from '../../../../../components/new-tips';
 import { useImportAppServiceStore } from './stores';
@@ -172,28 +175,53 @@ const ImportForm = injectIntl(observer((props) => {
                   <Option value>{formatMessage({ id: `${intlPrefix}.gitlab.simple` })}</Option>
                   <Option value={false}>{formatMessage({ id: `${intlPrefix}.gitlab.move` })}</Option>
                 </SelectBox>
-                <Select name="gitlabTemplate" searchable searchMatcher="search" optionRenderer={({ data, text, value }) => (<option>{data.name(data.path)}</option>)} />
+                <Select
+                  width="50%"
+                  onOption={(param) => ({
+                    disabled: param.record.data.bindFlag,
+                  })}
+                  name="gitlabTemplate"
+                  searchable
+                  searchMatcher="search"
+                  optionRenderer={({ record: current, text, value }) => (
+                    <Tooltip title={current.get('bindFlag') ? '该Group已经存在关联的Choerodon项目，无法执行迁移操作' : ''}>
+                      `$
+                      {text}
+                      ($
+                      {current.get('path')}
+                      )`
+                    </Tooltip>
+                  )}
+                />
+                {/* <div>
+                  <NewTips
+                    helpText="此处仅项目所有者可以设置；默认为是，即触发用户在没有该部署任务的环境权限时，将会直接使用管理员账户触发部署；若选择为否，触发成员在没有环境权限时，将会直接跳过此部署任务。"
+                    style={{
+
+                    }}
+                  />
+                </div> */}
               </div>
             )}
           {record.get('platformType') === 'github' && record.get('isTemplate') && (
             <Select name="githubTemplate" searchable />
           )}
-          { (record.get('isGitLabTemplate') || !record.get('platformType') === 'gitlab') && (
-          <TextField
-            name="repositoryUrl"
-            disabled={(record.get('platformType') === 'github') && record.get('isTemplate')}
-            addonAfter={record.get('platformType') === 'github' && record.get('isTemplate')
-              ? null
-              : <Tips helpText={formatMessage({ id: `${intlPrefix}.address.${record.get('platformType')}.tips` })} />}
-          />
+          {(record.get('isGitLabTemplate') || !record.get('platformType') === 'gitlab') && (
+            <TextField
+              name="repositoryUrl"
+              disabled={(record.get('platformType') === 'github') && record.get('isTemplate')}
+              addonAfter={record.get('platformType') === 'github' && record.get('isTemplate')
+                ? null
+                : <Tips helpText={formatMessage({ id: `${intlPrefix}.address.${record.get('platformType')}.tips` })} />}
+            />
           )}
           {(record.get('platformType') === 'gitlab' && record.get('isGitLabTemplate')) && <TextField name="accessToken" />}
           {(record.get('isGitLabTemplate') || !record.get('platformType') === 'gitlab') && (
-          <>
-            <Select name="type" clearButton={false} />
-            <TextField name="name" />
-            <TextField name="code" />
-          </>
+            <>
+              <Select name="type" clearButton={false} />
+              <TextField name="name" />
+              <TextField name="code" />
+            </>
           )}
         </Form>
       )}
