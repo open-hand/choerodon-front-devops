@@ -17,7 +17,7 @@ export default (props: any) => {
     <StoreProvider {...props}>
       <Switch>
         <Route exact path={match.url} component={AppHomePage} />
-        <Route exact path={`${match.url}/detail/:id/:source/:deployType/:status`} component={AppDetail} />
+        <Route exact path={`${match.url}/detail/:appId/:appSource/:deployType/:status`} component={AppDetail} />
         <Route path="*" component={nomatch} />
       </Switch>
     </StoreProvider>

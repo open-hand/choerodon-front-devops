@@ -1,0 +1,53 @@
+@prefixCls: c7ncd-app-center-appDetail;
+
+.@{prefixCls}-instance-pods {
+
+  .column-containers-detail {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.@{prefixCls}-pods-popover {
+
+  .column-container-mt {
+    margin-bottom: .08rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.@{prefixCls}-pod-ready {
+
+  &-cancel {
+    color: #f44336;
+    margin-right: 6px;
+    font-size: 18px;
+  }
+
+  &-check {
+    color: #00bf96;
+    margin-right: 6px;
+    font-size: 18px;
+  }
+
+  &-unavailable {
+    color: #f44336;
+    margin-right: 6px;
+    font-size: 18px;
+  }
+
+  &-available {
+    color: #00bf96;
+    margin-right: 6px;
+    font-size: 18px;
+  }
+
+  &-health {
+    color: #ffb100;
+    margin-right: 6px;
+    font-size: 18px;
+  }
+}

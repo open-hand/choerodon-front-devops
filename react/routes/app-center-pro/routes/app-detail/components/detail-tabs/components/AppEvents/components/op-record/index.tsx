@@ -5,18 +5,19 @@ import { observer } from 'mobx-react-lite';
 import { Icon, Tooltip } from 'choerodon-ui';
 import map from 'lodash/map';
 import classnames from 'classnames';
-import UserInfo from '../../../../../../../../components/userInfo/UserInfo';
-import { useAppCenterInstanceStore } from '../../../stores';
+import { UserInfo } from '@choerodon/components';
+import { useAppEventStore } from '../../stores';
 
 import './index.less';
+import { useAppDetailTabsStore } from '../../../../stores';
 
-const ICON_TYPE_MAPPING = {
+const ICON_TYPE_MAPPING:any = {
   failed: 'cancel',
   operating: 'timelapse',
   success: 'check_circle',
 };
 
-const OpCard = ({ index, record, isActive, intlPrefix, prefixCls, formatMessage, onClick, effectCommandId }) => {
+const OpCard = ({ index, record, isActive, intlPrefix, prefixCls, formatMessage, onClick, effectCommandId }:any) => {
   const podKeys = useMemo(() => (['type', 'createTime', 'status', 'loginName', 'realName', 'userImage', 'podEventVO']), []);
   const [
     type,
@@ -60,41 +61,45 @@ const OpCard = ({ index, record, isActive, intlPrefix, prefixCls, formatMessage,
       <div className="operation-record-step">
         <i className="operation-record-icon" />
       </div>
-      <div className="operation-record-user"><UserInfo name={realName} id={loginName} avatar={userImage} /></div>
+      <div className="operation-record-user"><UserInfo realName={realName} loginName={loginName} avatar={userImage} /></div>
       <div className="operation-record-time">{createTime}</div>
     </div>
   );
 };
 
-const OpRecord = observer(({ handleClick, active }) => {
+const OpRecord = observer(({ handleClick, active }:any) => {
   const rowRef = useRef(null);
 
   const {
-    intl: { formatMessage },
-    casesDs,
-    baseDs,
+    appEventsDs,
+    appDetailsDs,
+  } = useAppDetailTabsStore();
+
+  const {
+    formatMessage,
     intlPrefix,
     prefixCls,
-  } = useAppCenterInstanceStore();
+  } = useAppEventStore();
+
   const [cardActive, setCardActive] = useState(null);
 
-  function handleRecordClick(commandId, isIgnore) {
+  function handleRecordClick(commandId:any, isIgnore:any) {
     setCardActive(commandId);
     handleClick(commandId, isIgnore);
   }
 
   function renderOperation() {
     let realActive = cardActive || active;
-    const isExist = casesDs.find((r) => r.get('commandId') === realActive);
+    const isExist = appEventsDs.find((r:any) => r.get('commandId') === realActive);
 
     if (!realActive || !isExist) {
-      const firstRecord = casesDs.get(0);
-      realActive = firstRecord.get('commandId');
+      const firstRecord = appEventsDs.get(0);
+      realActive = firstRecord?.get('commandId');
     }
 
     return (
       <div ref={rowRef} className="cases-record-detail">
-        {casesDs.map((record, index) => {
+        {appEventsDs.map((record:any, index:any) => {
           const commandId = record.get('commandId');
           return <OpCard
             index={index}
@@ -105,7 +110,7 @@ const OpRecord = observer(({ handleClick, active }) => {
             prefixCls={prefixCls}
             intlPrefix={intlPrefix}
             onClick={handleRecordClick}
-            effectCommandId={baseDs.current && baseDs.current.get('effectCommandId')}
+            effectCommandId={appDetailsDs.current && appDetailsDs.current.get('effectCommandId')}
           />;
         })}
       </div>
