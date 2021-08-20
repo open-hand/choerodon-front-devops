@@ -158,7 +158,7 @@ const ImportForm = injectIntl(observer((props) => {
           )}
         </>
       ) : (
-        <Form record={record} style={{ width: '3.6rem' }}>
+        <Form record={record} style={{ width: (record.get('platformType') === 'gitlab' && !record.get('isGitLabTemplate')) ? '' : '3.6rem' }}>
           {record.get('platformType') === 'github'
             ? (
               <SelectBox name="isTemplate">
@@ -167,25 +167,34 @@ const ImportForm = injectIntl(observer((props) => {
               </SelectBox>
             )
             : (
-              <SelectBox name="isGitLabTemplate">
-                <Option value>{formatMessage({ id: `${intlPrefix}.gitlab.simple` })}</Option>
-                <Option value={false}>{formatMessage({ id: `${intlPrefix}.gitlab.move` })}</Option>
-              </SelectBox>
+              <div style={{ display: 'flex' }}>
+                <SelectBox name="isGitLabTemplate">
+                  <Option value>{formatMessage({ id: `${intlPrefix}.gitlab.simple` })}</Option>
+                  <Option value={false}>{formatMessage({ id: `${intlPrefix}.gitlab.move` })}</Option>
+                </SelectBox>
+                <Select name="gitlabTemplate" searchable searchMatcher="search" optionRenderer={({ data, text, value }) => (<option>{data.name(data.path)}</option>)} />
+              </div>
             )}
           {record.get('platformType') === 'github' && record.get('isTemplate') && (
             <Select name="githubTemplate" searchable />
           )}
+          { (record.get('isGitLabTemplate') || !record.get('platformType') === 'gitlab') && (
           <TextField
             name="repositoryUrl"
-            disabled={record.get('platformType') === 'github' && record.get('isTemplate')}
+            disabled={(record.get('platformType') === 'github') && record.get('isTemplate')}
             addonAfter={record.get('platformType') === 'github' && record.get('isTemplate')
               ? null
               : <Tips helpText={formatMessage({ id: `${intlPrefix}.address.${record.get('platformType')}.tips` })} />}
           />
-          {record.get('platformType') === 'gitlab' && <TextField name="accessToken" />}
-          <Select name="type" clearButton={false} />
-          <TextField name="name" />
-          <TextField name="code" />
+          )}
+          {(record.get('platformType') === 'gitlab' && record.get('isGitLabTemplate')) && <TextField name="accessToken" />}
+          {(record.get('isGitLabTemplate') || !record.get('platformType') === 'gitlab') && (
+          <>
+            <Select name="type" clearButton={false} />
+            <TextField name="name" />
+            <TextField name="code" />
+          </>
+          )}
         </Form>
       )}
     </div>

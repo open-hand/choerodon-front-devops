@@ -211,19 +211,19 @@ export default ({
         name: 'isTemplate',
         type: 'bool',
         defaultValue: true,
-        label: formatMessage({ id: `${intlPrefix}.github.source` }),
+        label: formatMessage({ id: `${intlPrefix}.import.type` }),
       },
       {
         name: 'isGitLabTemplate',
         type: 'bool',
         defaultValue: false,
-        label: formatMessage({ id: `${intlPrefix}.github.source` }),
+        label: formatMessage({ id: `${intlPrefix}.import.type` }),
       },
       {
         name: 'githubTemplate',
         type: 'string',
         textField: 'name',
-        valueField: 'path',
+        valueField: 'id',
         dynamicProps: {
           lookupUrl: ({ record }) => (record.get('platformType') === 'github' ? `/devops/v1/projects/${projectId}/app_service/list_service_templates` : ''),
           required: ({ record }) => record.get('platformType') === 'github' && record.get('isTemplate'),
@@ -232,10 +232,16 @@ export default ({
       },
       {
         name: 'gitlabTemplate',
-        type: 'string',
+        type: 'object',
         textField: 'name',
-        valueField: 'path',
-        label: formatMessage({ id: `${intlPrefix}.github.template` }),
+        valueField: 'id',
+        label: 'GitLab Group',
+        required: true,
+        lookupAxiosConfig: (data) => ({
+          url: '/devops/v1/projects/215874867621597184/groups/owned_expect_current',
+          method: 'get',
+        })
+        ,
       },
     ],
     events: {
