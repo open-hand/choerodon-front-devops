@@ -3,7 +3,7 @@ import React, {
   Fragment, useState, useEffect, useMemo,
 } from 'react';
 import {
-  Form, TextField, Select, SelectBox, Tooltip,
+  Form, TextField, Select, SelectBox, Tooltip, Icon,
 } from 'choerodon-ui/pro';
 import { injectIntl } from 'react-intl';
 import { NewTips } from '@choerodon/components';
@@ -134,6 +134,9 @@ const ImportForm = injectIntl(observer((props) => {
         <SelectCustom
           onClickCallback={(value) => handleClick(value)}
           data={IMPORT_METHOD}
+          identity="type"
+          mode="single"
+          customShadow={(item, isSelected) => (isSelected ? <Icon type="info" /> : <Icon type="check" />)}
           customChildren={(item) => (
             <div className={`${prefixCls}-select-custom-wrap`}>
               <div><img src={item.img} style={{ width: '50px', height: '50px' }} /></div>
