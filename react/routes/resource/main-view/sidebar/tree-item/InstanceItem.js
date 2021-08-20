@@ -6,7 +6,7 @@ import { Action, Choerodon, axios } from '@choerodon/boot';
 import { Modal } from 'choerodon-ui/pro';
 import isEmpty from 'lodash/isEmpty';
 import eventStopProp from '../../../../../utils/eventStopProp';
-import PodCircle from '../../components/pod-circle';
+import PodCircle from '../../../../../components/pod-circle';
 import { useResourceStore } from '../../../stores';
 import { useTreeItemStore } from './stores';
 import { handlePromptError } from '../../../../../utils';

@@ -9,7 +9,6 @@ import { Button, Spin } from 'choerodon-ui';
 import _ from 'lodash';
 import ReactCodeMirror from 'react-codemirror';
 import Operation from './op-record';
-import { useResourceStore } from '../../../../stores';
 import { useAppCenterInstanceStore } from '../../stores';
 
 import 'codemirror/lib/codemirror.css';
@@ -160,6 +159,7 @@ const Cases = observer(() => {
     intl: { formatMessage },
     casesDs,
   } = useAppCenterInstanceStore();
+
   const [currentCommandId, setCurrentCommandId] = useState(null);
   const [expandKeys, setExpandKeys] = useState([]);
   const [ignore, setIgnore] = useState(false);

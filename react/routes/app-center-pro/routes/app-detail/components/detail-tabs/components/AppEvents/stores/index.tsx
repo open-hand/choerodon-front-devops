@@ -3,17 +3,17 @@ import React, {
 } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
-import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
+import { DataSet } from '@/interface';
 
 interface ContextProps {
-  subfixCls: string,
+  prefixCls: string,
   intlPrefix: string,
   formatMessage(arg0: object, arg1?: object): string,
 }
 
 const Store = createContext({} as ContextProps);
 
-export function useAppDetailsStore() {
+export function useAppEventStore() {
   return useContext(Store);
 }
 
@@ -22,27 +22,13 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     children,
     intl: { formatMessage },
     AppState: { currentMenuType: { projectId } },
-    match: {
-      params: {
-        appId, appSource, deployType, status,
-      },
-    },
   } = props;
-
-  console.log(appId, appSource, deployType, status);
-
-  const {
-    prefixCls,
-    mainTabKeys: typeTabKeys,
-    intlPrefix,
-  } = useAppCenterProStore();
 
   const value = {
     ...props,
-    subfixCls: `${prefixCls}-appDetail`,
     formatMessage,
-    typeTabKeys,
-    intlPrefix,
+    intlPrefix: 'c7ncd.deployment',
+    prefixCls: 'c7ncd-app-events',
   };
   return (
     <Store.Provider value={value}>

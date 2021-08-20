@@ -1,15 +1,19 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
-import { getWrapBounds, getPathAttr, getStrokeWidth, arraySum } from './util';
+import {
+  getWrapBounds, getPathAttr, getStrokeWidth, arraySum,
+} from './util';
 
 const BASE_COLOR = '#e3e3e3';
 
-export const DrawArc = ({ d, stroke, strokeWidth }) => <path
-  fill="none"
-  stroke={stroke}
-  strokeWidth={strokeWidth}
-  d={d}
-/>;
+export const DrawArc = ({ d, stroke, strokeWidth }) => (
+  <path
+    fill="none"
+    stroke={stroke}
+    strokeWidth={strokeWidth}
+    d={d}
+  />
+);
 
 DrawArc.propTypes = {
   d: PropTypes.string.isRequired,
@@ -17,13 +21,17 @@ DrawArc.propTypes = {
   strokeWidth: PropTypes.number.isRequired,
 };
 
-export const DrawText = ({ text, y, isBold, ...props }) => (<text
-  x="50%"
-  y={y}
-  {...props}
->
-  {isBold ? <tspan fontWeight="bold">{text}</tspan> : text}
-</text>);
+export const DrawText = ({
+  text, y, isBold, ...props
+}) => (
+  <text
+    x="50%"
+    y={y}
+    {...props}
+  >
+    {isBold ? <tspan fontWeight="bold">{text}</tspan> : text}
+  </text>
+);
 
 DrawText.propTypes = {
   y: PropTypes.number,
@@ -35,12 +43,14 @@ DrawText.defaultProps = {
   isBold: false,
 };
 
-export const DrawSvg = ({ bounds, children }) => <svg
-  xmlns="http://www.w3.org/2000/svg"
-  {...bounds}
->
-  {children}
-</svg>;
+export const DrawSvg = ({ bounds, children }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    {...bounds}
+  >
+    {children}
+  </svg>
+);
 
 DrawSvg.propTypes = {
   bounds: PropTypes.shape({
@@ -57,16 +67,18 @@ export const DrawCircle = ({ bounds, radius, color = BASE_COLOR }) => {
   const strokeWidth = getStrokeWidth(radius);
   const realRadius = radius - strokeWidth;
 
-  return <DrawSvg bounds={bounds}>
-    <circle
-      cx="50%"
-      cy="50%"
-      fill="none"
-      r={realRadius}
-      stroke={color}
-      strokeWidth={strokeWidth}
-    />
-  </DrawSvg>;
+  return (
+    <DrawSvg bounds={bounds}>
+      <circle
+        cx="50%"
+        cy="50%"
+        fill="none"
+        r={realRadius}
+        stroke={color}
+        strokeWidth={strokeWidth}
+      />
+    </DrawSvg>
+  );
 };
 
 DrawCircle.propTypes = {
@@ -91,7 +103,7 @@ const PodCircle = memo(({ size, style, dataSource }) => {
     ...style,
   };
 
-  const width = bounds.width;
+  const { width } = bounds;
   const radius = width / 2;
 
   if (!Array.isArray(dataSource) || !dataSource.length) {
@@ -103,15 +115,17 @@ const PodCircle = memo(({ size, style, dataSource }) => {
 
   if (!total) {
     return <DrawCircle bounds={bounds} radius={radius} />;
-  } else if (values.includes(total)) {
+  }
+  if (values.includes(total)) {
     const circle = dataSource.find(({ value }) => (value === total));
     return <DrawCircle bounds={bounds} radius={radius} color={circle.stroke} />;
-  } else {
-    const pathAttr = getPathAttr(radius, dataSource, total);
-    return <DrawSvg bounds={bounds}>
-      {pathAttr.map(({ name, ...props }) => <DrawArc key={name} {...props} />)}
-    </DrawSvg>;
   }
+  const pathAttr = getPathAttr(radius, dataSource, total);
+  return (
+    <DrawSvg bounds={bounds}>
+      {pathAttr.map(({ name, ...props }) => <DrawArc key={name} {...props} />)}
+    </DrawSvg>
+  );
 });
 
 PodCircle.propTypes = {

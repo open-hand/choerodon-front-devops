@@ -9,7 +9,7 @@ import {
 import isEqual from 'lodash/isEqual';
 import pick from 'lodash/pick';
 import PageTitle from '../../../../../components/page-title';
-import PodCircle from '../../components/pod-circle';
+import PodCircle from '../../../../../components/pod-circle';
 import Modals from './modals';
 import { useResourceStore } from '../../../stores';
 import { useMainStore } from '../../stores';
