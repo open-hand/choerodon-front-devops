@@ -10,7 +10,6 @@ const AppDetail = React.lazy(() => import('./app-detail'));
 
 export default (props: any) => {
   const { match } = props;
-
   return (
     <StoreProvider {...props}>
       <Switch>
