@@ -5,7 +5,7 @@ import {
 } from 'choerodon-ui/pro';
 import { Spin } from 'choerodon-ui';
 import _ from 'lodash';
-import { HeaderButtons } from '@choerodon/master';
+import { Loading } from '@choerodon/components';
 import Operation from './components/op-record';
 
 import 'codemirror/lib/codemirror.css';
@@ -116,14 +116,14 @@ const Cases = observer(() => {
     );
   }
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
-    <>
-      <div className={`${prefixCls}-instance-cases`}>
-        <Spin spinning={loading}>
-          {getContent()}
-        </Spin>
-      </div>
-    </>
+    <div className={`${prefixCls}-instance-cases`}>
+      {getContent()}
+    </div>
   );
 });
 

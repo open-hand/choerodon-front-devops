@@ -5,7 +5,7 @@ interface EnvOptionsProps {
   projectId: number,
 }
 
-export default ({ projectId }: EnvOptionsProps): DataSetProps => ({
+export default ({ projectId }: EnvOptionsProps): any => ({
   autoCreate: false,
   autoQuery: false,
   selection: false,

@@ -16,20 +16,72 @@ const AppItem = ({
   subfixCls:string
 }) => {
   const {
+    mainStore,
+    typeTabKeys,
+  } = useAppHomePageStore();
 
+  const {
+    envName,
+    envId,
+    name,
+    id,
+    hostId,
+    iamUserDTO = {},
+    code,
+    rdupmType,
+    operationType, // 制品来源
   } = record.toData();
+
+  const {
+    imageUrl,
+    creationDate,
+    ldap,
+    loginName,
+    realName,
+    email,
+  } = iamUserDTO;
+
+  const currentType = mainStore.getCurrentTypeTabKey;
+
+  const deployTypeId = currentType === typeTabKeys.ENV_TAB ? envId : hostId;
 
   const history = useHistory();
   const { search, pathname } = useLocation();
 
-  const renderAction = () => <Action />;
+  const renderAction = () => {
+    const data = [
+      {
+        service: [],
+        text: '启用',
+        // action: () => handleDelete({ record: tableRecord }),
+      },
+      {
+        service: [],
+        text: '停用',
+        // action: () => handleDelete({ record: tableRecord }),
+      },
+      {
+        service: [],
+        text: '删除',
+        // action: () => handleDelete({ record: tableRecord }),
+      },
+    ];
+    return <Action data={data} />;
+  };
 
   function handleLinkToAppDetail() {
     history.push({
-      pathname: `${pathname}/detail/123456/market/env/success`,
+      pathname: `${pathname}/detail/${id}/${operationType || 'host'}/${currentType}/${deployTypeId}/success`,
       search,
     });
   }
+
+  const renderDeployObj:any = () => {
+    if (currentType === typeTabKeys.ENV_TAB) {
+      return rdupmType === 'chart' ? 'Chart包' : '部署组';
+    }
+    return 'jar包';
+  };
 
   return (
     <div className={`${subfixCls}-list-card`}>
@@ -42,18 +94,18 @@ const AppItem = ({
           onClick={handleLinkToAppDetail}
           className={`${subfixCls}-list-card-appname`}
         >
-          DevOps服务
+          {name || '-'}
         </span>
-        <AppType type="hzero" />
+        <AppType type={operationType} />
       </header>
       <main>
         <div>
           <span>应用编码</span>
-          <span>devops-app</span>
+          <span>{code || '-'}</span>
         </div>
         <div>
           <span>部署对象</span>
-          <span>Chart包</span>
+          <span>{renderDeployObj()}</span>
         </div>
         <div>
           <span>主机</span>
@@ -61,14 +113,18 @@ const AppItem = ({
         </div>
         <div>
           <span>环境</span>
-          <span>Prod环境</span>
+          <span>{envName || '-'}</span>
         </div>
         <div>
           <span>创建</span>
-          <div>
-            <UserInfo realName="wengkaimin" />
-            <span />
-            <TimePopover content="" />
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+          >
+            <UserInfo avatar={imageUrl} realName={realName} loginName={ldap ? loginName : email} />
+            <span>创建于</span>
+            <TimePopover content={creationDate} />
           </div>
         </div>
       </main>
@@ -91,7 +147,7 @@ const AppCardContent = () => {
           renderList()
         }
       </div>
-      <CardPagination hideOnSinglePage className={`${subfixCls}-list-pagination`} dataSet={listDs} showFirstAndLastBtn />
+      <CardPagination hideOnSinglePage className={`${subfixCls}-list-pagination`} dataSet={listDs as any} showFirstAndLastBtn />
     </>
   );
 };

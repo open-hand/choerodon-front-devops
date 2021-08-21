@@ -9,13 +9,12 @@ import { Choerodon } from '@choerodon/boot';
 import {
   Tooltip, Button, Icon, Popover, Spin,
 } from 'choerodon-ui';
-import { useAppCenterDetailStore } from '@/routes/app-center/app-detail/stores';
-import { useAppCenterInstanceStore } from '@/routes/app-center/app-detail/components/instance/stores';
 import { formatDate } from '@/utils';
-import Pods from './pods';
-import DetailsSidebar from './sidebar';
-
+import Pods from './components/pods';
+import DetailsSidebar from './components/sidebar';
 import './index.less';
+import { useAppDetailTabsStore } from '../../stores';
+import { useAppDetailsStore } from '../../../../stores';
 
 const Label = ({ name, value }:any) => (
   <Tooltip title={`键-${name} 值-${value}`}>
@@ -34,46 +33,33 @@ const Label = ({ name, value }:any) => (
 
 export default observer(() => {
   const [visible, setVisible] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
 
   const {
-    mainStore: {
-      getSelectedEnv: {
-        id: envId,
-      },
-    },
-  } = useAppCenterDetailStore();
-
-  const {
-    intlPrefix,
-    detailsStore,
-    detailsStore: {
+    runDetailsStore,
+    runDetailsStore: {
       getResources,
       getLoading,
       getTargetCount: targetCount,
     },
-    baseDs,
-    AppState: {
-      currentMenuType: {
-        projectId,
-      },
-    },
-    InstanceListDataSet,
-    intl,
-  } = useAppCenterInstanceStore();
+    intlPrefix,
+    projectId,
+    formatMessage,
+    appDetailsDs,
+    refresh,
+    appDs,
+  } = useAppDetailTabsStore();
+
+  const {
+    deployTypeId: envId,
+    appId,
+  } = useAppDetailsStore();
 
   useEffect(() => () => {
-    detailsStore.setResources({});
+    runDetailsStore.setResources({});
   }, []);
 
-  const refresh = () => {
-    baseDs.query();
-    // TODO 这里缺少了treeDs.query
-    detailsStore.loadResource(projectId, InstanceListDataSet.current?.get('version'));
-  };
-
   const changeTargetCount = (count:any) => {
-    detailsStore.setTargetCount(count);
+    runDetailsStore.setTargetCount(count);
   };
 
   /**
@@ -82,10 +68,9 @@ export default observer(() => {
    * @param {*} id
    * @param {*} name
    */
-  const handleClick = async (type:any, id:any, name:any) => {
-    setIsDisabled(true);
-    const result = await detailsStore.loadDeploymentsJson(type, projectId, id, name);
-    detailsStore.loadDeploymentsYaml(type, projectId, id, name);
+  const handleClick = async (type:any, name:any) => {
+    const result = await runDetailsStore.loadDeploymentsJson(type, projectId, appId, name);
+    runDetailsStore.loadDeploymentsYaml(type, projectId, appId, name);
     if (result) {
       setVisible(true);
     } else {
@@ -94,11 +79,10 @@ export default observer(() => {
   };
 
   const getDeployContent = (podType:any) => {
-    const instanceId = InstanceListDataSet.current?.get('version');
     let status:any;
     let connect:any;
     let instanceStatus:any;
-    const record = baseDs.current;
+    const record = appDetailsDs.current;
     if (record) {
       status = record.get('effectCommandStatus');
       connect = record.get('connect');
@@ -220,7 +204,7 @@ export default observer(() => {
             <Button
               className="c7ncd-detail-btn"
               type="primary"
-              onClick={(isDisabled ? null : () => handleClick(podType, instanceId, name)) as any}
+              onClick={(() => handleClick(podType, name))}
             >
               <FormattedMessage id="detailMore" />
             </Button>
@@ -234,9 +218,9 @@ export default observer(() => {
             status={status}
             instanceStatus={instanceStatus}
             handleChangeCount={changeTargetCount}
-            store={detailsStore}
+            store={runDetailsStore}
             envId={envId}
-            refresh={refresh}
+            refresh={() => refresh(() => appDs.query())}
           />
         </div>
       );
@@ -335,7 +319,7 @@ export default observer(() => {
 
   const hideSidebar = () => {
     setVisible(false);
-    detailsStore.setDeployments([]);
+    runDetailsStore.setDeployments([]);
   };
 
   const contentList = [{
@@ -376,8 +360,8 @@ export default observer(() => {
       <DetailsSidebar
         visible={visible}
         onClose={hideSidebar}
-        detailsStore={detailsStore}
-        intl={intl}
+        runDetailsStore={runDetailsStore}
+        formatMessage={formatMessage}
       />
       )}
     </>

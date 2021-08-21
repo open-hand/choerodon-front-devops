@@ -14,6 +14,8 @@ const { TabPane } = Tabs;
 
 const AppEvent = React.lazy(() => import('./components/AppEvents'));
 const PodDetail = React.lazy(() => import('./components/PodsDetails'));
+const RunDetails = React.lazy(() => import('./components/RunDetails'));
+const ResourceConfig = React.lazy(() => import('./components/ResourceConfig'));
 
 const DetailsTabs = () => {
   const {
@@ -29,8 +31,8 @@ const DetailsTabs = () => {
   const tabContent = useMemo(() => ({
     [APP_EVENT]: <AppEvent />,
     [POD_DETAILS]: <PodDetail />,
-    [RUNNING_DETAILS]: 'sdasd',
-    [RESOURCE]: 'dsadas',
+    [RUNNING_DETAILS]: <RunDetails />,
+    [RESOURCE]: <ResourceConfig />,
     [HOST_RUNNING_DETAILS]: 'dsadsa',
   }), []);
 
