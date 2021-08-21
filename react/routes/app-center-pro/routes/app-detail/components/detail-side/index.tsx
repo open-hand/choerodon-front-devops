@@ -1,5 +1,7 @@
+/* eslint-disable max-len */
 import PodCircle from '@/components/pod-circle';
 import React from 'react';
+import { observer } from 'mobx-react-lite';
 import { UserInfo, TimePopover, StatusTag } from '@choerodon/components';
 import { useAppDetailsStore } from '../../stores';
 import './index.less';
@@ -7,7 +9,39 @@ import './index.less';
 const DetailAside = () => {
   const {
     subfixCls,
+    appDs,
+    deployType: currentType,
   } = useAppDetailsStore();
+
+  const {
+    appServiceCode,
+    appServiceName,
+    envName,
+    deployWay,
+    chartSource,
+    creationDate,
+    rdupmType,
+    objectStatus,
+    iamUserDTO = {},
+    podRunningCount,
+    podUnlinkCount,
+    podCount,
+  } = appDs.current?.toData() || {};
+
+  const {
+    imageUrl,
+    ldap,
+    loginName,
+    realName,
+    email,
+  } = iamUserDTO;
+
+  const renderDeployObj:any = () => {
+    if (currentType === 'env') {
+      return rdupmType === 'chart' ? 'Chart包' : '部署组';
+    }
+    return 'jar包';
+  };
 
   return (
     <div className={`${subfixCls}-aside`}>
@@ -20,34 +54,34 @@ const DetailAside = () => {
           }}
           dataSource={[{
             name: 'running',
-            value: 20,
+            value: podRunningCount,
             stroke: '#0bc2a8',
           }, {
             name: 'unlink',
-            value: 2,
+            value: podCount - podRunningCount,
             stroke: '#fbb100',
           }]}
         />
-        <span className={`${subfixCls}-aside-name`}>demo应用</span>
+        <span className={`${subfixCls}-aside-name`}>{appServiceName}</span>
       </header>
       <main>
         <h3>详情</h3>
         <div className={`${subfixCls}-aside-main-content`}>
           <div>
             <span>应用编码</span>
-            <span>devops-app</span>
+            <span>{appServiceCode}</span>
           </div>
           <div>
             <span>环境</span>
-            <span>Staging环境</span>
+            <span>{envName}</span>
           </div>
           <div>
             <span>部署方式</span>
-            <span>容器部署</span>
+            <span>{deployWay}</span>
           </div>
           <div>
             <span>部署对象</span>
-            <span>部署组</span>
+            <span>{renderDeployObj()}</span>
           </div>
           <div>
             <span>Chart来源</span>
@@ -84,9 +118,9 @@ const DetailAside = () => {
           <div>
             <span>创建信息</span>
             <div className={`${subfixCls}-aside-main-userinfo`}>
-              <UserInfo realName="wengkaimin" />
+              <UserInfo realName={realName} loginName={ldap ? loginName : email} avatar={imageUrl} />
               <span>创建于</span>
-              <TimePopover content="" />
+              <TimePopover content={creationDate} />
             </div>
           </div>
         </div>
@@ -95,4 +129,4 @@ const DetailAside = () => {
   );
 };
 
-export default DetailAside;
+export default observer(DetailAside);

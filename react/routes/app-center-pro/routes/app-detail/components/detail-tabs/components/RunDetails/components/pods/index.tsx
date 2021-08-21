@@ -24,22 +24,17 @@ export default class Pods extends PureComponent {
   operatePodCount = debounce((count) => {
     const {
       store,
-      envId,
       name,
-      AppState: {
-        currentMenuType: {
-          id: projectId,
-        },
-      },
       refresh,
       podType,
     } = this.props;
+
     const KIND_TYPE = {
       deploymentVOS: 'Deployment',
       daemonSetVOS: 'DaemonSet',
       statefulSetVOS: 'StatefulSet',
     };
-    store.operatePodCount(projectId, envId, name, count, KIND_TYPE[podType])
+    store.operatePodCount(name, count, KIND_TYPE[podType])
       .then(() => {
         refresh();
       })

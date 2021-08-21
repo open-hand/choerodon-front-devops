@@ -6,8 +6,8 @@ import {
   Button, Modal, Collapse, Spin,
 } from 'choerodon-ui';
 // import Store from '../../stores';
+import YamlEditor from '@/components/yamlEditor';
 import SimpleTable from './SimpleTable';
-import YamlEditor from '../../../../../../../../components/yamlEditor';
 
 import './index.less';
 
@@ -380,9 +380,7 @@ export default class DetailsSidebar extends Component {
       json,
       yaml,
       detailsStore,
-      intl: {
-        formatMessage: contextFormat,
-      },
+      formatMessage: contextFormat,
     } = this.props;
     const { activeKey, isExpand, isJson } = this.state;
 

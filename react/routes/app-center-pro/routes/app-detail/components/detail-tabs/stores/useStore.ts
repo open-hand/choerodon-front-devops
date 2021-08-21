@@ -1,5 +1,5 @@
 import { useLocalStore } from 'mobx-react-lite';
-import { APP_EVENT } from './CONST';
+import { APP_EVENT, POD_DETAILS } from './CONST';
 
 export default function useStore() {
   return useLocalStore(() => ({

@@ -1,14 +1,23 @@
 import React, {
-  createContext, useMemo, useContext, useEffect, useCallback,
+  createContext, useContext, useMemo,
 } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
+import useDataSet from '@/hooks/useDataSet';
+import { DataSet } from '@/interface';
+import AppDataSet from './AppDataSet';
 
 interface ContextProps {
   subfixCls: string,
   intlPrefix: string,
   formatMessage(arg0: object, arg1?: object): string,
+  deployTypeId:string,
+  appId:string,
+  appSource:string
+  deployType:string
+  status:string
+  appDs:DataSet
 }
 
 const Store = createContext({} as ContextProps);
@@ -24,12 +33,12 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     AppState: { currentMenuType: { projectId } },
     match: {
       params: {
-        appId, appSource, deployType, status,
+        appId, appSource, deployType, status, deployTypeId,
       },
     },
   } = props;
 
-  console.log(appId, appSource, deployType, status);
+  console.log(appId, appSource, deployType, status, deployTypeId);
 
   const {
     prefixCls,
@@ -37,12 +46,20 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     intlPrefix,
   } = useAppCenterProStore();
 
+  const appDs = useMemo(() => new DataSet(AppDataSet({ appId })), [appId]);
+
   const value = {
     ...props,
     subfixCls: `${prefixCls}-appDetail`,
     formatMessage,
     typeTabKeys,
     intlPrefix,
+    deployTypeId,
+    appId,
+    appSource,
+    deployType,
+    status,
+    appDs,
   };
   return (
     <Store.Provider value={value}>

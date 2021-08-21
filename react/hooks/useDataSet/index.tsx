@@ -2,6 +2,7 @@
 import { useMemo, useRef, useCallback } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { DataSetProps } from 'choerodon-ui/pro//lib/data-set/DataSet';
+import useLatest from '../useLatest';
 
 type QueryProps<T> = {
   beforeQuery?:(...args:any[])=>any,
@@ -11,10 +12,10 @@ type QueryProps<T> = {
 }
 
 function useDataSet<T>(dataSetProps:DataSetProps, deps: any[]) {
-  const dsRef = useRef(dataSetProps);
-  const depsRef = useRef(deps);
+  const dsRef = useLatest(dataSetProps);
+  const depsRef = useLatest(deps);
 
-  const dataSet:DataSet = useMemo(() => new DataSet(dsRef.current), depsRef.current);
+  const dataSet:DataSet = useMemo(() => new DataSet(dsRef.current), [depsRef.current]);
 
   const query = useCallback(async (props?:QueryProps<T>) => {
     const {

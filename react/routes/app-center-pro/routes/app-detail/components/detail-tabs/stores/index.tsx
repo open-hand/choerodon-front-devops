@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, {
   createContext, useMemo, useContext, useEffect, useCallback,
 } from 'react';
@@ -13,11 +14,15 @@ import {
   deployGroupKeys,
   hostKeys,
   POD_DETAILS,
+  RESOURCE,
+  RUNNING_DETAILS,
 } from './CONST';
 import useStore, { StoreProps } from './useStore';
-import AppEventsDataSet from './AppDetailsDataSet';
-import AppDetailsDataSet from './AppEventsDataSet';
+import runningDetailsStore, { StoreProps as DetailsStoreProps } from './RunningDetailsStore';
+import AppDetailsDataSet from './AppDetailsDataSet';
+import AppEventsDataSet from './AppEventsDataSet';
 import PodsDetailsDataSet from './PodsDetailsDataSet';
+import ResourceConfigDs from './ResourceConfigDataSet';
 
 interface ContextProps {
   subfixCls: string,
@@ -25,11 +30,14 @@ interface ContextProps {
   formatMessage(arg0: object, arg1?: object): string,
   tabKeys: {name: string, key: string}[],
   appDetailTabStore: StoreProps,
-  refresh: () => void,
+  refresh: (callback?:CallableFunction) => void,
+  appDs:DataSet,
   appDetailsDs: DataSet,
   appEventsDs: DataSet,
   podDetailsDs: DataSet,
-  appEventQuery: (...args:any[]) => any,
+  runDetailsStore: DetailsStoreProps,
+  resourceConfigDs: DataSet,
+  // appEventQuery: (...args:any[]) => any,
   appDetailsQuery: (...args:any[]) => any;
   podDetialsQuery:(...args:any[]) => any;
   projectId: string,
@@ -50,40 +58,62 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
 
   const {
     subfixCls,
+    appDs,
+    appId: appCenterId,
+    deployTypeId: hostOrEnvId,
+    deployType,
   } = useAppDetailsStore();
 
   const intlPrefix = 'c7ncd.deployment';
 
   const tabKeys = useMemo(() => [...deployGroupKeys, ...hostKeys], []);
 
-  const [appEventsDs, appEventQuery] = useDataSet(AppEventsDataSet(), []);
-
   const [appDetailsDs, appDetailsQuery] = useDataSet(AppDetailsDataSet(), []);
 
-  const [podDetailsDs, podDetialsQuery] = useDataSet(PodsDetailsDataSet({
+  // 应用事件
+  const appEventsDs = useMemo(() => new DataSet(AppEventsDataSet({ appCenterId, projectId })), [appCenterId, projectId]);
+
+  // pod详情
+  const podDetailsDs = useMemo(() => new DataSet(PodsDetailsDataSet({
     formatMessage,
     intlPrefix,
-  }), []);
+    appCenterId,
+    projectId,
+    envId: hostOrEnvId,
+  })), [appCenterId, projectId]);
+
+  // 资源配置
+  const resourceConfigDs = useMemo(() => new DataSet(ResourceConfigDs({ projectId, appCenterId })), [appCenterId, projectId]);
+
+  // 运行详情
+  const runDetailsStore = runningDetailsStore({ projectId, appCenterId, envId: hostOrEnvId });
 
   const appDetailTabStore = useStore();
 
-  const refresh = usePersistFn(() => {
+  const refresh = useCallback((callback?:CallableFunction) => {
+    appDetailsQuery();
     switch (appDetailTabStore.currentTabKey) {
       case APP_EVENT:
-        appEventQuery();
-        appDetailsQuery();
+        appEventsDs.query();
         break;
       case POD_DETAILS:
-        podDetialsQuery();
+        podDetailsDs.query();
+        break;
+      case RUNNING_DETAILS:
+        runDetailsStore.loadResource();
+        break;
+      case RESOURCE:
+        resourceConfigDs.query();
         break;
       default:
         break;
     }
-  });
+    typeof callback === 'function' && callback();
+  }, [appDetailTabStore.currentTabKey, appDetailsQuery, appEventsDs, podDetailsDs, runDetailsStore]);
 
   useEffect(() => {
     refresh();
-  }, [appDetailTabStore.currentTabKey]);
+  }, [refresh]);
 
   const value = {
     ...props,
@@ -94,9 +124,10 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     appDetailTabStore,
     appEventsDs,
     appDetailsDs,
-    appEventQuery,
+    runDetailsStore,
+    resourceConfigDs,
+    // appEventQuery,
     appDetailsQuery,
-    podDetialsQuery,
     refresh,
     projectId,
     podDetailsDs,

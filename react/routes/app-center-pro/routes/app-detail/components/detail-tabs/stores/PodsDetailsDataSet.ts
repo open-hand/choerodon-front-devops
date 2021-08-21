@@ -1,24 +1,36 @@
 /* eslint-disable import/no-anonymous-default-export */
-export default ({ formatMessage, intlPrefix }:{
+export default ({
+  formatMessage, intlPrefix, projectId, appCenterId, envId,
+}:{
   formatMessage(arg0: object, arg1?: object): string,
-  intlPrefix:string
+  intlPrefix:string,
+  projectId:string,
+  appCenterId:string,
+  envId:string
 }):any => ({
   selection: false,
+  autoQuery: false,
+  paging: true,
   pageSize: 10,
   transport: {
     read: ({ data }: {
       data: any,
-    }) => ({
-      url: 'devops/v1/projects/159349538124681216/pods/page_by_options?page=0&size=10&app_service_id=159349909575643136&env_id=213042113808347136&instance_id=216159092320714752',
+    }) => (appCenterId ? ({
+      url: `devops/v1/projects/${projectId}/deploy_app_center/${appCenterId}/env_pods_page`,
       method: 'post',
       data: {
         params: [],
         searchParam: {},
       },
-    }),
-    destroyed: {
-      // url: `devops/v1/projects/${projectId}/pods/${podId}?env_id=${envId}`,
-      method: 'delete',
+    }) : {}),
+    destroy: ({ data }: {
+      data: any,
+    }) => {
+      const podId = data[0].id;
+      return {
+        url: `devops/v1/projects/${projectId}/pods/${podId}?env_id=${envId}`,
+        method: 'delete',
+      };
     },
   },
   fields: [
