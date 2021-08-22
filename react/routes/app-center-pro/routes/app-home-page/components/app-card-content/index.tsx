@@ -1,9 +1,9 @@
 /* eslint-disable max-len */
 import React from 'react';
-import { Record } from '@/interface';
 import { Action } from '@choerodon/master';
 import { useHistory, useLocation } from 'react-router';
 import { UserInfo, TimePopover, CardPagination } from '@choerodon/components';
+import { Record } from '@/interface';
 import AppType from '@/routes/app-center-pro/components/AppType';
 import { useAppHomePageStore } from '../../stores';
 import './index.less';
@@ -71,7 +71,7 @@ const AppItem = ({
 
   function handleLinkToAppDetail() {
     history.push({
-      pathname: `${pathname}/detail/${id}/${operationType || 'host'}/${currentType}/${deployTypeId}/success`,
+      pathname: `${pathname}/detail/${id}/${operationType || 'host'}/${currentType}/${deployTypeId}/${rdupmType}/success`,
       search,
     });
   }

@@ -2,9 +2,9 @@ import React, { useEffect, useMemo } from 'react';
 import {
   Page, HeaderButtons, Header, Breadcrumb, Content,
 } from '@choerodon/boot';
-import EmptyPage from '@/components/empty-page';
 import { Loading } from '@choerodon/components';
 import { observer } from 'mobx-react-lite';
+import EmptyPage from '@/components/empty-page';
 import { openAppCreateModal } from '../../components/OpenAppCreateModal';
 import './index.less';
 import QueryfieldBar from './components/queryfield-bar';
@@ -17,10 +17,6 @@ const AppHomePage = () => {
     mainStore,
     listDs,
   } = useAppHomePageStore();
-
-  useEffect(() => {
-
-  }, []);
 
   const renderHeaderBtns = () => {
     const items = [

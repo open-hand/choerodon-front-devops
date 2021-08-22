@@ -1,7 +1,7 @@
-@import '~choerodon-ui/lib/style/themes/default';
+@import "~choerodon-ui/lib/style/themes/default";
 
 .c7ncd-instance-details {
-  padding: 0 .2rem 0 .16rem;
+  padding: 0 0.2rem 0 0.16rem;
   overflow: auto;
 
   &-inner {
@@ -14,47 +14,47 @@
   }
 
   &-title {
-    margin-bottom: .16rem;
-    border-bottom: 1px solid rgba(0, 0, 0, .12);
-    font-size: .15rem;
+    margin-bottom: 0.16rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    font-size: 0.15rem;
     color: var(--text-color);
     font-weight: 500;
 
     span {
-      line-height: .28rem;
+      line-height: 0.28rem;
     }
   }
 
   &-panel {
-    margin-bottom: .1rem;
+    margin-bottom: 0.1rem;
   }
 
   &-grid {
     display: grid;
     grid-template-columns: 2fr minmax(1.1rem, 1fr);
     justify-content: space-between;
-    grid-column-gap: .36rem;
-    margin-bottom: .1rem;
+    grid-column-gap: 0.36rem;
+    margin-bottom: 0.1rem;
   }
 
   &-item {
     display: grid;
     grid-template-columns: minmax(2.8rem, 1fr) minmax(2.4rem, 1fr);
     justify-content: space-between;
-    grid-gap: .06rem .36rem;
+    grid-gap: 0.06rem 0.36rem;
   }
 
   &-block,
   &-inline {
     display: grid;
-    grid-template-columns: .88rem 1fr;
+    grid-template-columns: 0.88rem 1fr;
     justify-content: space-between;
-    grid-gap: .1rem;
+    grid-gap: 0.1rem;
   }
 
   &-block {
-    grid-template-columns: .68rem 1fr;
-    margin-bottom: .12rem;
+    grid-template-columns: 0.68rem 1fr;
+    margin-bottom: 0.12rem;
     width: 100%;
     font-weight: 500;
   }
@@ -72,7 +72,7 @@
 
   &-label {
     display: grid;
-    grid-template-columns: 1fr .24rem;
+    grid-template-columns: 1fr 0.24rem;
 
     .c7ncd-deployment-popover-labels {
       display: flex;
@@ -85,7 +85,7 @@
         text-overflow: ellipsis;
 
         & + span {
-          margin-left: .2rem;
+          margin-left: 0.2rem;
         }
       }
     }
@@ -93,7 +93,7 @@
 
   &-port {
     display: grid;
-    grid-template-columns: .6rem .24rem;
+    grid-template-columns: 0.6rem 0.24rem;
   }
 }
 
@@ -105,17 +105,17 @@
 
   &_Pending {
     color: #4d90fe;
-    background: rgba(77, 144, 254, .20);
+    background: rgba(77, 144, 254, 0.2);
   }
 
   &_Lost {
     color: rgba(0, 0, 0, 0.54);
-    background: rgba(0, 0, 0, .08);
+    background: rgba(0, 0, 0, 0.08);
   }
 
   &_Bound {
     color: #0bc2a8;
-    background: rgba(11, 194, 168, .2);
+    background: rgba(11, 194, 168, 0.2);
   }
 
   &_undefined {
@@ -149,5 +149,5 @@
   font-size: 18px;
   font-weight: 600;
   color: @primary-color;
-  margin-left: .02rem;
+  margin-left: 0.02rem;
 }

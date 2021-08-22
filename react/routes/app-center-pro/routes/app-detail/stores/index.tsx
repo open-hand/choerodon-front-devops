@@ -7,6 +7,7 @@ import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
 import useDataSet from '@/hooks/useDataSet';
 import { DataSet } from '@/interface';
 import AppDataSet from './AppDataSet';
+import { getAppCategories } from '@/routes/app-center-pro/utils';
 
 interface ContextProps {
   subfixCls: string,
@@ -18,6 +19,10 @@ interface ContextProps {
   deployType:string
   status:string
   appDs:DataSet
+  appCatergory:{
+    name:string,
+    code:string,
+  }
 }
 
 const Store = createContext({} as ContextProps);
@@ -33,12 +38,12 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     AppState: { currentMenuType: { projectId } },
     match: {
       params: {
-        appId, appSource, deployType, status, deployTypeId,
+        appId, appSource, deployType, status, deployTypeId, rdupmType,
       },
     },
   } = props;
 
-  console.log(appId, appSource, deployType, status, deployTypeId);
+  console.log(appId, appSource, deployType, status, deployTypeId, rdupmType);
 
   const {
     prefixCls,
@@ -47,6 +52,8 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   } = useAppCenterProStore();
 
   const appDs = useMemo(() => new DataSet(AppDataSet({ appId })), [appId]);
+
+  const appCatergory = getAppCategories(rdupmType, deployType);
 
   const value = {
     ...props,
@@ -60,6 +67,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     deployType,
     status,
     appDs,
+    appCatergory,
   };
   return (
     <Store.Provider value={value}>

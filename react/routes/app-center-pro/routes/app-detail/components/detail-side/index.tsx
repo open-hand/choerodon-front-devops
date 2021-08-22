@@ -1,16 +1,19 @@
 /* eslint-disable max-len */
-import PodCircle from '@/components/pod-circle';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { UserInfo, TimePopover, StatusTag } from '@choerodon/components';
+import EnvItem from '@/components/env-item';
+import PodCircle from '@/components/pod-circle';
 import { useAppDetailsStore } from '../../stores';
 import './index.less';
+import { getAppCategories } from '@/routes/app-center-pro/utils';
 
 const DetailAside = () => {
   const {
     subfixCls,
     appDs,
-    deployType: currentType,
+    deployType,
+    appCatergory,
   } = useAppDetailsStore();
 
   const {
@@ -36,18 +39,11 @@ const DetailAside = () => {
     email,
   } = iamUserDTO;
 
-  const renderDeployObj:any = () => {
-    if (currentType === 'env') {
-      return rdupmType === 'chart' ? 'Chart包' : '部署组';
-    }
-    return 'jar包';
-  };
-
   return (
     <div className={`${subfixCls}-aside`}>
       <header>
         <PodCircle
-          // @ts-expect-error
+        // @ts-expect-error
           style={{
             width: 22,
             height: 22,
@@ -73,7 +69,8 @@ const DetailAside = () => {
           </div>
           <div>
             <span>环境</span>
-            <span>{envName}</span>
+            {/* @ts-expect-error */}
+            <span><EnvItem name={envName} /></span>
           </div>
           <div>
             <span>部署方式</span>
@@ -81,7 +78,7 @@ const DetailAside = () => {
           </div>
           <div>
             <span>部署对象</span>
-            <span>{renderDeployObj()}</span>
+            <span>{appCatergory.name}</span>
           </div>
           <div>
             <span>Chart来源</span>
