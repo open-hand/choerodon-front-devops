@@ -1,12 +1,18 @@
+/* eslint-disable max-len */
 import React, { useMemo } from 'react';
 import { HeaderButtons } from '@choerodon/master';
+import { observer } from 'mobx-react-lite';
 import { useAppDetailTabsStore } from '../../stores';
-import { openModifyValueModal } from './modal';
+import { openModifyValueModal } from './components/modify-values';
 import { useAppDetailsStore } from '../../../../stores';
+import { openNetWorkFormModal } from './components/create-network';
+import { openDomainFormModal } from './components/domain-form';
+import { openRedeploy } from './components/reDeploy';
 
 const DetailsTabsHeaderButtons = () => {
   const {
     refresh,
+    projectId,
   } = useAppDetailTabsStore();
 
   const {
@@ -17,6 +23,18 @@ const DetailsTabsHeaderButtons = () => {
   } = useAppDetailsStore();
 
   const appRecord = appDs.current;
+
+  const {
+    appServiceVersionId,
+    appServiceId,
+    instanceId,
+    chartSource,
+    commandVersion,
+  } = appRecord?.toData() || {};
+
+  const isMarket = chartSource === 'market';
+
+  const isMiddleware = chartSource === 'middleware';
 
   const headerBtnsItems = useMemo(() => ([
     {
@@ -43,9 +61,21 @@ const DetailsTabsHeaderButtons = () => {
       groupBtnItems: [
         {
           name: '创建网络',
+          handler: () => {
+            openNetWorkFormModal({
+              envId: hostOrEnvId, appServiceId, refresh,
+            });
+          },
         },
         {
           name: '创建域名',
+          handler: () => {
+            openDomainFormModal({
+              envId: hostOrEnvId,
+              appServiceId,
+              refresh,
+            });
+          },
         },
       ],
     },
@@ -56,11 +86,11 @@ const DetailsTabsHeaderButtons = () => {
           name: '修改Values',
           // icon: 'rate_review1',
           handler: () => openModifyValueModal({
-            appServiceVersionId: appRecord?.get('effectCommandId'),
-            appServiceId: appRecord?.get('appServiceId'),
-            instanceId: appCenterId,
-            isMarket: appRecord?.get('chartSource') === 'market',
-            isMiddleware: appRecord?.get('chartSource') === 'middleware',
+            appServiceVersionId,
+            appServiceId,
+            instanceId,
+            isMarket,
+            isMiddleware,
             envId: hostOrEnvId,
           }),
         },
@@ -71,6 +101,12 @@ const DetailsTabsHeaderButtons = () => {
         {
           name: '重新部署',
           // icon: 'redeploy_line',
+          handler: () => openRedeploy({
+            appServiceId,
+            commandVersion,
+            projectId,
+            refresh,
+          }),
         },
         {
           name: '启用应用',
@@ -91,9 +127,9 @@ const DetailsTabsHeaderButtons = () => {
       iconOnly: true,
       handler: refresh,
     },
-  ]), [refresh]);
+  ]), [appServiceId, appServiceVersionId, hostOrEnvId, instanceId, isMarket, isMiddleware, refresh]);
 
   return <HeaderButtons showClassName items={headerBtnsItems} />;
 };
 
-export default DetailsTabsHeaderButtons;
+export default observer(DetailsTabsHeaderButtons);
