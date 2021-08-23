@@ -44,7 +44,7 @@ const OpCard = ({ index, record, isActive, intlPrefix, prefixCls, formatMessage,
         <Tooltip title={formatMessage({ id: status })}>
           <Icon type={ICON_TYPE_MAPPING[status]} className={`${prefixCls}-cases-status-${status}`} />
         </Tooltip>
-        <FormattedMessage id={`${intlPrefix}.instance.cases.${type}`} />
+        <FormattedMessage id={`${intlPrefix}.instance.app.${type}`} />
         {effectCommandId && effectCommandId === commandId && (
           <div className={`${prefixCls}-cases-record-effectCommand`}>
             <span className={`${prefixCls}-cases-record-effectCommand-text`}>

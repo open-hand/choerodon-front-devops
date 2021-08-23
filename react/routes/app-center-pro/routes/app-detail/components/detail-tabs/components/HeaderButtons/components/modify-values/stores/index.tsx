@@ -1,29 +1,22 @@
 import React, {
-  createContext, useContext,
+  createContext, useMemo, useContext, useEffect, useCallback,
 } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
-import {
-  DEPLOY_TYPE,
-} from './CONST';
+import { DataSet } from '@/interface';
+import ValuesDataset from './ValuesDataSet';
 
 interface ContextProps {
   prefixCls: string,
-  intlPrefix: string,
   formatMessage(arg0: object, arg1?: object): string,
-  getAppCategories:(
-    rdupmType:string,
-    deployType:string
-  ) => {name:string, code:string}
-  mainTabKeys: {
-    ENV_TAB: 'env',
-    HOST_TAB: 'host',
-  }
+  valuesDs:DataSet,
+  projectId:string,
+  [fields:string]:any
 }
 
 const Store = createContext({} as ContextProps);
 
-export function useAppCenterProStore() {
+export function useModifyValuesStore() {
   return useContext(Store);
 }
 
@@ -32,17 +25,26 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     children,
     intl: { formatMessage },
     AppState: { currentMenuType: { projectId } },
+    appServiceVersionId,
+    instanceId,
+    isMarket,
   } = props;
 
-  const mainTabKeys = DEPLOY_TYPE;
+  const valuesDs = useMemo(() => new DataSet(ValuesDataset({
+    projectId,
+    instanceId,
+    appServiceVersionId,
+    isMarket,
+  })), [appServiceVersionId, instanceId, isMarket, projectId]);
 
   const value = {
     ...props,
-    prefixCls: 'c7ncd-app-center',
-    intlPrefix: 'c7ncd.appCenter',
     formatMessage,
-    mainTabKeys,
+    valuesDs,
+    prefixCls: 'c7ncd-modify_values',
+    projectId,
   };
+
   return (
     <Store.Provider value={value}>
       {children}

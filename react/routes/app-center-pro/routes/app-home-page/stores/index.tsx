@@ -3,8 +3,8 @@ import React, {
 } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
-import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
 import { DataSet } from 'choerodon-ui/pro';
+import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
 import EnvOptionsDataSet from '@/routes/app-center-pro/stores/EnvOptionsDataSet';
 import HostOptionsDataSet from '@/routes/app-center-pro/stores/HostOptionsDataSet';
 import { DataSet as DataSetProps } from '@/interface';

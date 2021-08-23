@@ -5,9 +5,8 @@ import React, {
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
-import useDataSet from '@/hooks/useDataSet';
-import { usePersistFn } from 'ahooks';
 import { observer } from 'mobx-react-lite';
+import useDataSet from '@/hooks/useDataSet';
 import { useAppDetailsStore } from '../../../stores';
 import {
   APP_EVENT,
@@ -80,7 +79,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     appCenterId,
     projectId,
     envId: hostOrEnvId,
-  })), [appCenterId, projectId]);
+  })), [appCenterId, projectId, hostOrEnvId]);
 
   // 资源配置
   const resourceConfigDs = useMemo(() => new DataSet(ResourceConfigDs({ projectId, appCenterId })), [appCenterId, projectId]);
