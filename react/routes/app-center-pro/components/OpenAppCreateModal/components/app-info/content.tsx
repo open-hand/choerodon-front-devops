@@ -48,13 +48,13 @@ const Index = () => {
         <CustomSelect
           onClickCallback={(value) => handleChangeField(
             AppInfoDataSet,
-            mapping.deployMode.name,
+            mapping.deployMode.name as string,
             value.value,
           )}
           data={deployModeOptionsData}
           identity="value"
           mode="single"
-          customChildren={(item): ReactElement => (
+          customChildren={(item): any => (
             <div className="c7ncd-appCenterPro-appInfo__form__customItem">
               <img src={item.img} alt="" />
               <div className="c7ncd-appCenterPro-appInfo__form__customItem--right">
@@ -77,13 +77,13 @@ const Index = () => {
         <CustomSelect
           onClickCallback={(value) => handleChangeField(
             AppInfoDataSet,
-            mapping.deployProductType.name,
+            mapping.deployProductType.name as string,
             value.value,
           )}
           data={deployProductOptionsData}
           identity="value"
           mode="single"
-          customChildren={(item): ReactElement => (
+          customChildren={(item): any => (
             <div className="c7ncd-appCenterPro-appInfo__form__customItem">
               <div className="c7ncd-appCenterPro-appInfo__form__customItem--right">
                 <p className="c7ncd-appCenterPro-appInfo__form__customItem--right__name">{ item.name }</p>

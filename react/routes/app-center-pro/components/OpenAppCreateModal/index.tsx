@@ -6,6 +6,7 @@ import { Modal, Button } from 'choerodon-ui/pro';
 import { Steps } from 'choerodon-ui';
 import AppInfo from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-info';
 import AppConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config';
+import ResourceConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/resource-config';
 
 const appCreateModalKey = Modal.key();
 
@@ -24,6 +25,7 @@ const AppCreateForm = (props: any) => {
 
   const appInfoRef = useRef();
   const appConfigRef = useRef();
+  const resourceConfigRef = useRef();
 
   const stepData = useRef([{
     title: '应用信息',
@@ -37,6 +39,9 @@ const AppCreateForm = (props: any) => {
     data: null,
   }, {
     title: '资源配置',
+    ref: resourceConfigRef,
+    children: <ResourceConfig cRef={resourceConfigRef} />,
+    data: null,
   }]);
 
   const [current, setCurrent] = useState(0);

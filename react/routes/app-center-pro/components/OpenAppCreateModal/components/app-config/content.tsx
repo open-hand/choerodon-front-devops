@@ -1,13 +1,15 @@
-import React, { ReactElement, useImperativeHandle } from 'react';
+import React, { ReactDOM, ReactElement, useImperativeHandle } from 'react';
 import { Form, Select } from 'choerodon-ui/pro';
 import { CustomSelect } from '@choerodon/components';
+import { observer } from 'mobx-react-lite';
 import { chartSourceData, mapping } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config/stores/appConfigDataSet';
 import YamlEditor from '@/components/yamlEditor';
 import { useAppConfigStore } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config/stores';
+import StatusDot from '@/components/status-dot';
 
 import './index.less';
 
-const Index = () => {
+const Index = observer(() => {
   const {
     AppConfigDataSet,
     cRef,
@@ -21,7 +23,83 @@ const Index = () => {
       }
       return flag;
     },
+    handleInit: (data: object) => {
+      if (data) {
+        AppConfigDataSet.loadData([data]);
+      }
+    },
   }));
+
+  const handleChangeField = (ds: any, name: string, value: string) => {
+    ds.current.set(name, value);
+  };
+
+  const renderAppService = (ds: any) => {
+    switch (ds.current.get(mapping.chartSource.name)) {
+      case (chartSourceData[0].value): case (chartSourceData[1].value): {
+        return (
+          <Select
+            name={mapping.hzeroVersion.name}
+            colSpan={1}
+          />
+        );
+        break;
+      }
+      case (chartSourceData[2].value): case (chartSourceData[3].value): {
+        return (
+          <Select
+            name={mapping.marketVersion.name}
+            colSpan={1}
+          />
+        );
+        break;
+      }
+      default: {
+        return '';
+        break;
+      }
+    }
+  };
+
+  const renderVersion = (ds: any) => {
+    switch (ds.current.get(mapping.chartSource.name)) {
+      case (chartSourceData[0].value): case (chartSourceData[1].value): {
+        return (
+          <Select
+            name={mapping.serviceVersion.name}
+            colSpan={1}
+          />
+        );
+        break;
+      }
+      case (chartSourceData[2].value): case (chartSourceData[3].value): {
+        return (
+          <Select
+            name={mapping.marketServiceVersion.name}
+            colSpan={1}
+          />
+        );
+        break;
+      }
+      default: {
+        return '';
+        break;
+      }
+    }
+  };
+
+  const renderEnvOption = ({ record, text }: any) => (
+    <>
+      <StatusDot
+        // @ts-ignore
+        connect={record.get('connect')}
+        synchronize={record.get('synchro')}
+        active={record.get('active')}
+        size="small"
+      />
+      {text}
+    </>
+  );
 
   return (
     <div className="c7ncd-appCenterPro-appConfig">
@@ -30,11 +108,15 @@ const Index = () => {
       </p>
       <div className="c7ncd-appCenterPro-appConfig__selectContainer">
         <CustomSelect
-          onClickCallback={(value) => console.log(value)}
+          onClickCallback={(value) => handleChangeField(
+            AppConfigDataSet,
+            mapping.chartSource.name as string,
+            value.value,
+          )}
           data={chartSourceData}
           identity="value"
           mode="single"
-          customChildren={(item): ReactElement => (
+          customChildren={(item): any => (
             <div className="c7ncd-appCenterPro-appConfig__selectContainer__item">
               <img src={item.img} alt="" />
               <p>{item.name}</p>
@@ -47,22 +129,24 @@ const Index = () => {
         dataSet={AppConfigDataSet}
         columns={3}
       >
-        <Select
-          name={mapping.hzeroVersion.name}
-          colSpan={1}
-        />
-        <Select
-          name={mapping.serviceVersion.name}
-          colSpan={1}
-        />
+        {
+          renderAppService(AppConfigDataSet)
+        }
+        {
+          renderVersion(AppConfigDataSet)
+        }
         <Select
           name={mapping.env.name}
           colSpan={1}
+          optionRenderer={renderEnvOption}
+          onOption={({ record }) => ({
+            disabled: !(record.get('connect') && record.get('synchro') && record.get('permission')),
+          })}
         />
       </Form>
       <YamlEditor />
     </div>
   );
-};
+});
 
 export default Index;
