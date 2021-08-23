@@ -1,17 +1,17 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
-import appInfoDataSet
-  from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-info/stores/appInfoDataSet';
+import appConfigDataSet
+  from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config/stores/appConfigDataSet';
 
 interface ContextType {
   children: any,
-  AppInfoDataSet: any,
+  AppConfigDataSet: any,
   cRef: any,
 }
 
 const Store = createContext({} as ContextType);
 
-export function useAppInfoStore() {
+export function useAppConfigStore() {
   return useContext(Store);
 }
 
@@ -20,11 +20,11 @@ export const StoreProvider = (props: any) => {
     children,
   } = props;
 
-  const AppInfoDataSet = useMemo(() => new DataSet(appInfoDataSet()), []);
+  const AppConfigDataSet = useMemo(() => new DataSet(appConfigDataSet()), []);
 
   const value = {
     ...props,
-    AppInfoDataSet,
+    AppConfigDataSet,
   };
 
   return (
