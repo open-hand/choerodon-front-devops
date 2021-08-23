@@ -7,6 +7,7 @@ interface ContextType {
   children: any,
   cRef: any,
   NetworkConfigDataSet: any,
+  envId: string,
 }
 
 const Store = createContext({} as ContextType);

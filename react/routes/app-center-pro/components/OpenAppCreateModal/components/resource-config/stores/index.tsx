@@ -4,6 +4,7 @@ import { DataSet } from 'choerodon-ui/pro';
 interface ContextType {
   children: any,
   cRef: any,
+  envId: string,
 }
 
 const Store = createContext({} as ContextType);

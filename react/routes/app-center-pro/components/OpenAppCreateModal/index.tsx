@@ -7,6 +7,7 @@ import { Steps } from 'choerodon-ui';
 import AppInfo from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-info';
 import AppConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config';
 import ResourceConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/resource-config';
+import { mapping } from './components/app-config/stores/appConfigDataSet';
 
 const appCreateModalKey = Modal.key();
 
@@ -30,17 +31,22 @@ const AppCreateForm = (props: any) => {
   const stepData = useRef([{
     title: '应用信息',
     ref: appInfoRef,
-    children: <AppInfo cRef={appInfoRef} />,
+    children: () => <AppInfo cRef={appInfoRef} />,
     data: null,
   }, {
     title: '应用配置',
     ref: appConfigRef,
-    children: <AppConfig cRef={appConfigRef} />,
+    children: () => <AppConfig cRef={appConfigRef} />,
     data: null,
   }, {
     title: '资源配置',
     ref: resourceConfigRef,
-    children: <ResourceConfig cRef={resourceConfigRef} />,
+    children: ({ envId }: any) => (
+      <ResourceConfig
+        cRef={resourceConfigRef}
+        envId={envId}
+      />
+    ),
     data: null,
   }]);
 
@@ -96,7 +102,9 @@ const AppCreateForm = (props: any) => {
         {handleRenderStep()}
       </Steps>
       {
-        stepData.current[current].children
+        stepData.current[current].children(current === 2 ? ({
+          envId: stepData?.current?.[1]?.data?.[mapping.env.name as string],
+        }) : {})
       }
     </div>
   );

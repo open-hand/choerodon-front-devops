@@ -11,13 +11,17 @@ import './index.less';
 const Index = observer(() => {
   const {
     NetworkConfigDataSet,
+    envId,
   } = useNetworkConfig();
 
   return (
     <div className="c7ncd-appCenterPro-newConfig">
       <p className="c7ncd-appCenterPro-newConfig__title">网络配置 (Service)</p>
       <Form dataSet={NetworkConfigDataSet}>
-        <TextField name={mapping.netName.name} />
+        <TextField
+          name={mapping.netName.name}
+          disabled={!envId}
+        />
       </Form>
     </div>
   );
