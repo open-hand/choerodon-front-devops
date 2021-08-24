@@ -3,7 +3,7 @@ import React, {
   Fragment, useState, useEffect, useMemo,
 } from 'react';
 import {
-  Form, TextField, Select, SelectBox, Tooltip, Icon,
+  Form, TextField, Select, SelectBox, Tooltip,
 } from 'choerodon-ui/pro';
 import { injectIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
@@ -137,7 +137,7 @@ const ImportForm = injectIntl(observer((props) => {
   }
 
   function handleClick(value) {
-    record.set('platformType', value);
+    record.set('platformType', value.type);
   }
 
   return (
