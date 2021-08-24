@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable no-nested-ternary */
 /* eslint-disable default-case */
 /* eslint-disable import/no-anonymous-default-export */
 import { axios } from '@choerodon/boot';
@@ -16,6 +18,17 @@ function getRequestData(appServiceList) {
   }));
   return res;
 }
+function getGitlabRequestData(appServiceList) {
+  const res = map(appServiceList, ({
+    id, serverName, name, type,
+  }) => ({
+    gitlabProjectId: id,
+    name: serverName,
+    code: name,
+    type,
+  }));
+  return res;
+}
 
 function getMarketRequestData(appServiceList) {
   const res = map(appServiceList, ({
@@ -29,12 +42,12 @@ function getMarketRequestData(appServiceList) {
 }
 
 function isGit({ record }) {
-  const flag = record.get('platformType') === 'github' || record.get('platformType') === 'gitlab';
+  const flag = record.get('platformType') === 'github' || (record.get('platformType') === 'gitlab' && record.get('isGitLabTemplate'));
   return flag;
 }
 
 export default ({
-  intlPrefix, formatMessage, projectId, serviceTypeDs, selectedDs, importTableDs, marketSelectedDs,
+  intlPrefix, formatMessage, projectId, serviceTypeDs, selectedDs, importTableDs, marketSelectedDs, gitlabSelectedDs,
 }) => {
   async function checkCode(value) {
     const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
@@ -124,7 +137,7 @@ export default ({
         let res;
         switch (platformType) {
           case 'gitlab':
-            res = pick(data, ['code', 'name', 'type', 'accessToken', 'repositoryUrl']);
+            res = getGitlabRequestData(gitlabSelectedDs.toData());
             break;
           case 'github':
             url = `${url}${data.isTemplate ? '?is_template=true' : ''}`;
@@ -141,8 +154,8 @@ export default ({
         return ({
           url: platformType === 'market'
             ? `/devops/v1/project/${projectId}/market/app/import`
-            : `/devops/v1/projects/${projectId}/app_service/import/${url}`,
-          method: 'post',
+            : platformType === 'gitlab' ? `/devops/v1/projects/${projectId}/app_service/batch_transfer` : `/devops/v1/projects/${projectId}/app_service/import/${url}`,
+          method: platformType === 'gitlab' ? 'put' : 'post',
           data: res,
         });
       },
@@ -203,7 +216,7 @@ export default ({
         name: 'accessToken',
         type: 'string',
         dynamicProps: {
-          required: ({ record }) => record.get('platformType') === 'gitlab',
+          required: ({ record }) => record.get('platformType') === 'gitlab' && record.get('isGitLabTemplate'),
         },
         label: formatMessage({ id: `${intlPrefix}.token` }),
       },

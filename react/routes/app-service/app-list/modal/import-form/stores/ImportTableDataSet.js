@@ -3,6 +3,7 @@ import forEach from 'lodash/forEach';
 export default ({ intlPrefix, formatMessage, projectId }) => ({
   autoQuery: false,
   pageSize: 20,
+  dataToJson: false,
   transport: {
     read: ({ data }) => {
       // eslint-disable-next-line camelcase

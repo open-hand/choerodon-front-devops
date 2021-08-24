@@ -1,5 +1,5 @@
 import React, {
-  createContext, useContext, useEffect, useMemo,
+  createContext, useContext, useMemo,
 } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
@@ -10,6 +10,7 @@ import ImportTableDataSet from './ImportTableDataSet';
 import selectedDataSet from './SelectedDataSet';
 import useStore from './useStore';
 import MarketSelectedDataSet from './MarketSelectedDataSet';
+import { GitlabSelectedDs, TypeOptionDs } from './GitlabSelectedDs';
 import shareImage from '../../../../images/share.svg';
 import marketImage from '../../../../images/market.svg';
 import githubImage from '../../../../images/github.svg';
@@ -56,6 +57,10 @@ export const StoreProvider = injectIntl(inject('AppState')(
     const marketSelectedDs = useMemo(() => new DataSet(MarketSelectedDataSet({
       intlPrefix, formatMessage, projectId, importStore,
     })), [projectId]);
+    const typeOptionDs = useMemo(() => new DataSet(TypeOptionDs()), []);
+    const gitlabSelectedDs = useMemo(() => new DataSet(GitlabSelectedDs({
+      intlPrefix, formatMessage, projectId, importStore, typeOptionDs,
+    })), [projectId]);
     const importDs = useMemo(() => new DataSet(ImportDataSet({
       intlPrefix,
       formatMessage,
@@ -64,6 +69,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       selectedDs,
       importTableDs,
       marketSelectedDs,
+      gitlabSelectedDs,
     })), [projectId]);
 
     const value = {
@@ -74,6 +80,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       selectedDs,
       importStore,
       marketSelectedDs,
+      gitlabSelectedDs,
       hasMarket,
     };
     return (

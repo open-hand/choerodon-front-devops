@@ -10,6 +10,7 @@ import { Icon, Tooltip } from 'choerodon-ui';
 
 import SourceTable from './SourceTable';
 import MarketSourceTable from './components/market-table';
+import GitlabSourceTable from './components/gitlab-table';
 import Tips from '../../../../../components/new-tips';
 import { useImportAppServiceStore } from './stores';
 
@@ -18,6 +19,7 @@ const { Option } = Select;
 
 const modalKey1 = Modal.key();
 const marketModalKey = Modal.key();
+const gitlabModalKey = Modal.key();
 const modalStyle1 = {
   width: 740,
 };
@@ -33,6 +35,7 @@ const Platform = injectIntl(observer(({ checkData }) => {
     selectedDs,
     importStore,
     marketSelectedDs,
+    gitlabSelectedDs,
   } = useImportAppServiceStore();
   const importRecord = useMemo(() => importDs.current || importDs.records[0], [importDs.current]);
 
@@ -78,6 +81,22 @@ const Platform = injectIntl(observer(({ checkData }) => {
     });
   }
 
+  function openGitLabModal() {
+    Modal.open({
+      key: gitlabModalKey,
+      drawer: true,
+      title: formatMessage({ id: `${intlPrefix}.add` }),
+      children: <GitlabSourceTable selectedDs={gitlabSelectedDs} importRecord={importRecord} />,
+      okText: formatMessage({ id: 'add' }),
+      afterClose: () => {
+        importTableDs.removeAll();
+        if (gitlabSelectedDs.length) {
+          checkData();
+        }
+      },
+    });
+  }
+
   function renderVersion({ record }) {
     return (
       <Select
@@ -99,10 +118,39 @@ const Platform = injectIntl(observer(({ checkData }) => {
     );
   }
 
+  function renderSelect(record) {
+    return (
+      <Select name="type" record={record}>
+        <Option value="普通服务">普通服务</Option>
+        <Option value="测试服务">测试服务</Option>
+      </Select>
+    );
+  }
+
   function handleDelete() {
-    const ds = importRecord?.get('platformType') === 'market' ? marketSelectedDs : selectedDs;
+    let ds;
+    if (importRecord?.get('platformType') === 'market') {
+      ds = marketSelectedDs;
+    }
+    if (importRecord?.get('platformType') === 'share') {
+      ds = selectedDs;
+    }
+    if (importRecord?.get('platformType') === 'gitlab') {
+      ds = gitlabSelectedDs;
+    }
     ds.remove(ds.current, false);
     ds.length && checkData();
+  }
+  function handleClick() {
+    if (importRecord?.get('platformType') === 'share') {
+      openModal();
+    }
+    if (importRecord?.get('platformType') === 'market') {
+      openMarketModal();
+    }
+    if (importRecord?.get('platformType') === 'gitlab') {
+      openGitLabModal();
+    }
   }
 
   return (
@@ -110,12 +158,12 @@ const Platform = injectIntl(observer(({ checkData }) => {
       <Button
         funcType="raised"
         icon="add"
-        onClick={importRecord?.get('platformType') === 'share' ? openModal : openMarketModal}
+        onClick={handleClick}
         className="platform-button"
       >
         <FormattedMessage id={`${intlPrefix}.add`} />
       </Button>
-      {importRecord?.get('platformType') === 'share' ? (
+      {importRecord?.get('platformType') === 'share' && (
         <Table
           dataSet={selectedDs}
           queryBar="none"
@@ -126,7 +174,8 @@ const Platform = injectIntl(observer(({ checkData }) => {
           <Column name="projectName" width="1.5rem" header={formatMessage({ id: `${intlPrefix}.belong.${importRecord.get('platformType')}` })} />
           <Column renderer={renderAction} width="0.7rem" />
         </Table>
-      ) : (
+      )}
+      {importRecord?.get('platformType') === 'market' && (
         <Table
           dataSet={marketSelectedDs}
           queryBar="none"
@@ -138,6 +187,23 @@ const Platform = injectIntl(observer(({ checkData }) => {
           <Column name="sourceProject" tooltip="overflow" />
           <Column renderer={renderAction} width="0.7rem" />
         </Table>
+      )}
+      {importRecord?.get('platformType') === 'gitlab' && (
+      <>
+        <Table
+          dataSet={gitlabSelectedDs}
+          queryBar="none"
+        >
+          <Column name="serverName" editor />
+          <Column name="name" />
+          <Column
+            name="type"
+            editor={renderSelect}
+          />
+          <Column name="lastActivityAt" editor />
+          <Column renderer={renderAction} width="0.7rem" />
+        </Table>
+      </>
       )}
     </div>
   );

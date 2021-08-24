@@ -2,8 +2,10 @@ import React from 'react';
 import { StoreProvider } from './stores';
 import Content from './Content';
 
-export default (props) => (
+const Index = (props: any) => (
   <StoreProvider {...props}>
     <Content />
   </StoreProvider>
 );
+
+export default Index;

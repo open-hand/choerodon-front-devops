@@ -538,6 +538,8 @@ const appService = {
   'c7ncd.appService.import.type.market': '市场应用',
   'c7ncd.appService.import.type.github': '从GitHub导入',
   'c7ncd.appService.import.type.gitlab': '从GitLab导入',
+  'c7ncd.appService.gitlab.updateDate': '最新更新',
+  'c7ncd.appService.gitlab.name': '仓库名称',
   'c7ncd.appService.url.gitlab': 'GitLab地址',
   'c7ncd.appService.url.github': 'GitHub地址',
   'c7ncd.appService.url.gitlab.clone': 'GitLab仓库克隆地址',
