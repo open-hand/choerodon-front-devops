@@ -115,7 +115,7 @@ const HzeroDeployDetail = observer(() => {
   };
   const renderInstanceCode = (record: any) => (
     <div style={{ display: 'flex' }}>
-      <div style={record.get('appStatus') === 'deleted' ? { opacity: '0.5' } : { color: '#415BC9' }} onClick={() => toInstanceDetail(record)}>
+      <div role="none" style={record.get('appStatus') === 'deleted' ? { opacity: '0.5' } : { color: '#415BC9' }} onClick={() => toInstanceDetail(record)}>
         {record.get('instanceCode')}
       </div>
       <div>{record.get('appStatus') === 'deleted' ? getStatusTag(record.get('appStatus')) : ''}</div>
