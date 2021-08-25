@@ -10,6 +10,83 @@
   border-radius: 4px;
   border: 1px solid #d9e6f2;
   padding: 8px 16px;
+  &-miniBtn {
+    width: 20px !important;
+    height: 20px !important;
+    margin-left: 3px;
+    > i {
+      font-size: 12px !important;
+    }
+  }
+  .net-expend-icon {
+    line-height: 0.2rem;
+    font-size: 0.18rem;
+    font-weight: 600;
+    color: #3f51b5;
+  }
+  .net-target-ip {
+    margin-left: 0.08rem;
+  }
+  .net-target-item {
+    background: rgba(0, 0, 0, 0.08);
+    border-radius: 0.1rem;
+    padding: 0 0.1rem;
+    height: 0.2rem;
+    line-height: 0.2rem;
+    margin-bottom: 0.08rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  .net-target-item-failed {
+    color: #d50000;
+    background: rgba(244, 67, 54, 0.3) !important;
+  }
+  .net-target-wrap {
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    & > .net-target-item {
+      margin-bottom: 0;
+      white-space: nowrap;
+    }
+  }
+  .net-config-content {
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    .net-config-type {
+      line-height: 0.2rem;
+      width: fit-content;
+    }
+
+    .net-config-item {
+      margin-bottom: 0.06rem;
+      white-space: nowrap;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .net-config-wrap {
+      display: flex;
+
+      .net-type-title {
+        flex: none;
+        margin-right: 0.16rem;
+        min-width: 0.92rem;
+        margin-bottom: 0.06rem;
+      }
+    }
+
+    & > .net-config-item {
+      margin-bottom: 0;
+    }
+  }
   button {
     border-radius: 50% !important;
   }
@@ -19,13 +96,6 @@
     flex-direction: column;
     > span {
       font-weight: 400;
-      button {
-        width: 20px !important;
-        height: 20px !important;
-        > i {
-          font-size: 12px !important;
-        }
-      }
       &:first-of-type {
         font-size: 14px;
         color: var(--text-color);
@@ -42,6 +112,10 @@
 }
 
 .@{prefixCls}-resourceConfig {
+  &-page {
+    text-align: right;
+    margin-top: 10px;
+  }
   .c7n-empty-page {
     img {
       width: 80% !important;
