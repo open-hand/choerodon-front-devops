@@ -276,4 +276,4 @@ const appConfigDataSet = () => ({
 
 export default appConfigDataSet;
 
-export { mapping, chartSourceData };
+export { mapping, chartSourceData, envDataSet };

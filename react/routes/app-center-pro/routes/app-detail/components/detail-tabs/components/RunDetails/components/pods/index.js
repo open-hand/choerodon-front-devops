@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { PureComponent, Fragment } from 'react';
 import { inject } from 'mobx-react';
 import { FormattedMessage, injectIntl } from 'react-intl';

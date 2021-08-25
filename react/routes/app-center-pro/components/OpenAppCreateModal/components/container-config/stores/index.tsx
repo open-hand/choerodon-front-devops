@@ -1,15 +1,17 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
+import conGroupDataSet
+  from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config/stores/conGroupDataSet';
 
 interface ContextType {
-  children: any,
   cRef: any,
-  envId: string,
+  children: any,
+  ConGroupDataSet: any,
 }
 
 const Store = createContext({} as ContextType);
 
-export function useResourceConfigStore() {
+export function useContainerConfig() {
   return useContext(Store);
 }
 
@@ -18,8 +20,11 @@ export const StoreProvider = (props: any) => {
     children,
   } = props;
 
+  const ConGroupDataSet = useMemo(() => new DataSet(conGroupDataSet()), []);
+
   const value = {
     ...props,
+    ConGroupDataSet,
   };
 
   return (
