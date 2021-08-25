@@ -20,12 +20,13 @@ type DomainModalProps = {
 }
 
 export const openDomainFormModal = (props:DomainModalProps) => {
+  const isModify = props.ingressId;
   Modal.open({
     key: modalKey,
     drawer: true,
-    title: '创建域名',
+    title: isModify ? '修改域名' : '创建域名',
     children: <DomainForm {...props} />,
-    okText: '创建',
+    okText: isModify ? '修改' : '创建',
     style: {
       width: 740,
     },
