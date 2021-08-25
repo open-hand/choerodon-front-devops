@@ -72,6 +72,6 @@ export default class AppCenterApi {
   }
 
   static getAppListByHost(projectId: number) {
-    return `/devops/v1/projects/${projectId}/app_service/app_center/host/app/list`;
+    return `/devops/v1/projects/${projectId}/hosts/apps/paging`;
   }
 }

@@ -10,8 +10,10 @@ import useDataSet from '@/hooks/useDataSet';
 import { useAppDetailsStore } from '../../../stores';
 import {
   APP_EVENT,
+  chartKeys,
   deployGroupKeys,
   hostKeys,
+  HOST_RUNNING_DETAILS,
   POD_DETAILS,
   RESOURCE,
   RUNNING_DETAILS,
@@ -22,6 +24,10 @@ import AppDetailsDataSet from './AppDetailsDataSet';
 import AppEventsDataSet from './AppEventsDataSet';
 import PodsDetailsDataSet from './PodsDetailsDataSet';
 import ResourceConfigDs from './ResourceConfigDataSet';
+import { getAppCategories, getChartSourceGroup } from '@/routes/app-center-pro/utils';
+import {
+  CHART_CATERGORY, DEPLOY_CATERGORY, HOST_CATERGORY, IS_HOST, IS_MARKET, IS_SERVICE,
+} from '@/routes/app-center-pro/stores/CONST';
 
 interface ContextProps {
   subfixCls: string,
@@ -30,14 +36,10 @@ interface ContextProps {
   tabKeys: {name: string, key: string}[],
   appDetailTabStore: StoreProps,
   refresh: (callback?:CallableFunction) => void,
-  appDs:DataSet,
-  appDetailsDs: DataSet,
   appEventsDs: DataSet,
   podDetailsDs: DataSet,
   runDetailsStore: DetailsStoreProps,
   resourceConfigDs: DataSet,
-  // appEventQuery: (...args:any[]) => any,
-  appDetailsQuery: (...args:any[]) => any;
   podDetialsQuery:(...args:any[]) => any;
   projectId: string,
 }
@@ -57,17 +59,36 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
 
   const {
     subfixCls,
-    appDs,
     appId: appCenterId,
     deployTypeId: hostOrEnvId,
     deployType,
+    appSource,
   } = useAppDetailsStore();
 
   const intlPrefix = 'c7ncd.deployment';
 
-  const tabKeys = useMemo(() => [...deployGroupKeys, ...hostKeys], []);
+  // 区分部署组还是chart包还是jar包
+  const appCatergory = getAppCategories(appSource, deployType);
 
-  const [appDetailsDs, appDetailsQuery] = useDataSet(AppDetailsDataSet(), []);
+  const tabKeys = useMemo(() => {
+    let current: any[] = [];
+    switch (appCatergory?.code) {
+      case CHART_CATERGORY:
+        current = chartKeys;
+        break;
+      case DEPLOY_CATERGORY:
+        current = deployGroupKeys;
+        break;
+      case HOST_CATERGORY:
+        current = hostKeys;
+        break;
+      default:
+        break;
+    }
+    return current;
+  }, [appSource, deployType]);
+
+  const [appDetailsDs] = useDataSet(AppDetailsDataSet(), []);
 
   // 应用事件
   const appEventsDs = useMemo(() => new DataSet(AppEventsDataSet({ appCenterId, projectId })), [appCenterId, projectId]);
@@ -87,10 +108,9 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
   // 运行详情
   const runDetailsStore = runningDetailsStore({ projectId, appCenterId, envId: hostOrEnvId });
 
-  const appDetailTabStore = useStore();
+  const appDetailTabStore = useStore({ defaultKey: tabKeys[0] });
 
-  const refresh = useCallback((callback?:CallableFunction) => {
-    appDetailsQuery();
+  const refresh = useCallback((callback?:CallableFunction, refreshDetails?:boolean) => {
     switch (appDetailTabStore.currentTabKey) {
       case APP_EVENT:
         appEventsDs.query();
@@ -108,7 +128,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
         break;
     }
     typeof callback === 'function' && callback();
-  }, [appDetailTabStore.currentTabKey, appDetailsQuery, appEventsDs, podDetailsDs, runDetailsStore]);
+  }, [appDetailTabStore.currentTabKey, appEventsDs, podDetailsDs, resourceConfigDs, runDetailsStore]);
 
   useEffect(() => {
     refresh();
@@ -125,8 +145,6 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     appDetailsDs,
     runDetailsStore,
     resourceConfigDs,
-    // appEventQuery,
-    appDetailsQuery,
     refresh,
     projectId,
     podDetailsDs,

@@ -1,13 +1,13 @@
+/* eslint-disable max-len */
 import React, {
   createContext, useContext, useMemo,
 } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
-import useDataSet from '@/hooks/useDataSet';
 import { DataSet } from '@/interface';
 import AppDataSet from './AppDataSet';
-import { getAppCategories } from '@/routes/app-center-pro/utils';
+import { getAppCategories, getChartSourceGroup } from '@/routes/app-center-pro/utils';
 
 interface ContextProps {
   subfixCls: string,
@@ -23,6 +23,7 @@ interface ContextProps {
     name:string,
     code:string,
   }
+  appChartSourceGroup: string
 }
 
 const Store = createContext({} as ContextProps);
@@ -51,9 +52,12 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     intlPrefix,
   } = useAppCenterProStore();
 
-  const appDs = useMemo(() => new DataSet(AppDataSet({ appId })), [appId]);
+  const appDs = useMemo(() => new DataSet(AppDataSet({ appId, projectId, deployType })), [appId, deployType, projectId]);
 
+  // 部署对象
   const appCatergory = getAppCategories(rdupmType, deployType);
+  // 制品来源
+  const appChartSourceGroup = getChartSourceGroup(appSource, deployType);
 
   const value = {
     ...props,
@@ -68,6 +72,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     status,
     appDs,
     appCatergory,
+    appChartSourceGroup,
   };
   return (
     <Store.Provider value={value}>

@@ -7,6 +7,10 @@ import PodCircle from '@/components/pod-circle';
 import { useAppDetailsStore } from '../../stores';
 import './index.less';
 import { getAppCategories } from '@/routes/app-center-pro/utils';
+import {
+  CHART_CATERGORY,
+  CHART_HZERO, CHART_MARKET, CHART_MIDDLEWARE, CHART_NORMAL, CHART_REPO, CHART_SHARE, CHART_UPLOAD, ENV_TAB, HOST_TAB,
+} from '@/routes/app-center-pro/stores/CONST';
 
 const DetailAside = () => {
   const {
@@ -14,21 +18,40 @@ const DetailAside = () => {
     appDs,
     deployType,
     appCatergory,
+    formatMessage,
   } = useAppDetailsStore();
 
   const {
+    name,
+    code,
+
     appServiceCode,
     appServiceName,
-    envName,
     deployWay,
+
+    sourceType,
     chartSource,
+
     creationDate,
     rdupmType,
     objectStatus,
-    iamUserDTO = {},
+    creator = {},
     podRunningCount,
     podUnlinkCount,
     podCount,
+
+    envActive,
+    envName,
+    envId,
+    envCode,
+    envConnected,
+
+    versionName,
+
+    hostName,
+    hostId,
+    status: hostStatus,
+    prodJarInfoVO,
   } = appDs.current?.toData() || {};
 
   const {
@@ -37,81 +60,155 @@ const DetailAside = () => {
     loginName,
     realName,
     email,
-  } = iamUserDTO;
+  } = creator;
+
+  const getChartSourceName:any = {
+    [CHART_HZERO]: 'HZERO服务',
+    [CHART_MARKET]: '市场服务',
+    [CHART_MIDDLEWARE]: '中间件',
+    [CHART_SHARE]: '共享服务',
+    [CHART_REPO]: '项目制品库',
+    [CHART_NORMAL]: '项目服务',
+    [CHART_UPLOAD]: '本地上传',
+  };
+
+  function getVersionName() {
+    let message = '';
+    switch (objectStatus) {
+      case 'failed':
+        message = formatMessage({ id: 'deploy_failed' });
+        break;
+      case 'operating':
+        message = formatMessage({ id: 'pending' });
+        break;
+      default:
+        break;
+    }
+    return <StatusTag name={message} colorCode={objectStatus} />;
+  }
+
+  const renderChartDetails = () => (
+    <>
+      <div>
+        <span>Chart来源</span>
+        <div className={`${subfixCls}-aside-main-chart-source`}>
+          <span>
+            {appServiceName}
+            应用服务
+          </span>
+          <span>
+            (服务来源：
+            {getChartSourceName[chartSource]}
+            <br />
+            服务编码：
+            {appServiceCode}
+            )
+          </span>
+        </div>
+      </div>
+      <div>
+        <span>Chart版本</span>
+        {versionName || getVersionName()}
+      </div>
+    </>
+  );
+
+  const renderEnv = () => (
+    <div>
+      <span>环境</span>
+      <span style={{
+        display: 'flex',
+        alignItems: 'center',
+      }}
+      >
+        {/* @ts-expect-error */}
+        <EnvItem connect={envConnected} active={envActive} name={envName} />
+      </span>
+    </div>
+  );
+
+  const renderHost = () => (
+    <div>
+      <span>主机</span>
+      <span>{hostName || '-'}</span>
+    </div>
+  );
+
+  const renderJar = () => (
+    <>
+      <div>
+        <span>Jar包来源</span>
+        <div className={`${subfixCls}-aside-main-chart-source`}>
+          <span>
+            {getChartSourceName[sourceType]}
+          </span>
+          <span>
+            (artifactId：
+            {prodJarInfoVO?.artifactId}
+            <br />
+            groupId：
+            {prodJarInfoVO?.groupId}
+            )
+            <br />
+            Jar包版本：
+            {prodJarInfoVO?.artifactId}
+          </span>
+        </div>
+      </div>
+    </>
+  );
+
+  const renderStatus = () => {
+    if (deployType === HOST_TAB) {
+      return <StatusTag name={hostStatus} colorCode={hostStatus} />;
+    }
+    return (
+      <PodCircle
+        // @ts-expect-error
+        style={{
+          width: 22,
+          height: 22,
+        }}
+        dataSource={[{
+          name: 'running',
+          value: podRunningCount,
+          stroke: '#0bc2a8',
+        }, {
+          name: 'unlink',
+          value: podCount - podRunningCount,
+          stroke: '#fbb100',
+        }]}
+      />
+    );
+  };
 
   return (
     <div className={`${subfixCls}-aside`}>
       <header>
-        <PodCircle
-        // @ts-expect-error
-          style={{
-            width: 22,
-            height: 22,
-          }}
-          dataSource={[{
-            name: 'running',
-            value: podRunningCount,
-            stroke: '#0bc2a8',
-          }, {
-            name: 'unlink',
-            value: podCount - podRunningCount,
-            stroke: '#fbb100',
-          }]}
-        />
-        <span className={`${subfixCls}-aside-name`}>{appServiceName}</span>
+        {renderStatus()}
+        <span className={`${subfixCls}-aside-name`}>{name || '-'}</span>
       </header>
       <main>
         <h3>详情</h3>
         <div className={`${subfixCls}-aside-main-content`}>
           <div>
             <span>应用编码</span>
-            <span>{appServiceCode}</span>
+            <span>{code || '-'}</span>
           </div>
-          <div>
-            <span>环境</span>
-            {/* @ts-expect-error */}
-            <span><EnvItem name={envName} /></span>
-          </div>
+          {deployType === ENV_TAB && renderEnv()}
+          {deployType === HOST_TAB && renderHost()}
           <div>
             <span>部署方式</span>
-            <span>{deployWay}</span>
+            <span>{deployWay || '主机部署' || '-'}</span>
           </div>
           <div>
             <span>部署对象</span>
-            <span>{appCatergory.name}</span>
+            <span>{appCatergory?.name || '-'}</span>
           </div>
-          <div>
-            <span>Chart来源</span>
-            <div className={`${subfixCls}-aside-main-chart-source`}>
-              <span>
-                XXX应用服务
-              </span>
-              <span>
-                (服务来源：项目服务
-                服务编码：proj-1)
-              </span>
-            </div>
-          </div>
-          <div>
-            <span>Chart版本</span>
-            <StatusTag name="部署中" colorCode="pending" />
-          </div>
-          <div>
-            <span>Jar包来源</span>
-            <div className={`${subfixCls}-aside-main-chart-source`}>
-              <span>
-                项目制品库
-              </span>
-              <span>
-                (服务来源：项目服务
-                服务编码：proj-1)
-              </span>
-            </div>
-          </div>
-          <div>
-            <span>Jar包版本</span>
-            <span>1.0.0</span>
-          </div>
+          { appCatergory?.code === CHART_CATERGORY && renderChartDetails()}
+          {
+            deployType === HOST_TAB && renderJar()
+          }
           <div>
             <span>创建信息</span>
             <div className={`${subfixCls}-aside-main-userinfo`}>

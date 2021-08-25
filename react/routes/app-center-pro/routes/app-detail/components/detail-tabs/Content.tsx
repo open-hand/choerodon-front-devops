@@ -9,6 +9,7 @@ import {
   APP_EVENT, HOST_RUNNING_DETAILS, POD_DETAILS, RESOURCE, RUNNING_DETAILS,
 } from './stores/CONST';
 import DetailsTabsHeaderButtons from './components/HeaderButtons';
+import { useAppDetailsStore } from '../../stores';
 
 const { TabPane } = Tabs;
 
@@ -16,6 +17,7 @@ const AppEvent = React.lazy(() => import('./components/AppEvents'));
 const PodDetail = React.lazy(() => import('./components/PodsDetails'));
 const RunDetails = React.lazy(() => import('./components/RunDetails'));
 const ResourceConfig = React.lazy(() => import('./components/ResourceConfig'));
+const RunDetailsOfHost = React.lazy(() => import('./components/RunDetailsOfHost'));
 
 const DetailsTabs = () => {
   const {
@@ -33,7 +35,7 @@ const DetailsTabs = () => {
     [POD_DETAILS]: <PodDetail />,
     [RUNNING_DETAILS]: <RunDetails />,
     [RESOURCE]: <ResourceConfig />,
-    [HOST_RUNNING_DETAILS]: 'dsadsa',
+    [HOST_RUNNING_DETAILS]: <RunDetailsOfHost />,
   }), []);
 
   return (

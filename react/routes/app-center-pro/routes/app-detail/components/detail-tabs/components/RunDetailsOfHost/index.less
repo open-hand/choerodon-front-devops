@@ -1,0 +1,33 @@
+@prefixCls: c7ncd-app-center-appDetail-runDetailsOfHost;
+
+.@{prefixCls} {
+  display: flex;
+  align-items: center;
+  height: fit-content;
+  background: #f5f6fa;
+  border-radius: 4px;
+  border: 1px solid #d9e6f2;
+  padding: 8px 16px;
+  > div {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    .c7ncd-status-tag {
+      width: fit-content;
+    }
+    > span {
+      font-weight: 400;
+      &:first-of-type:not(.c7ncd-status-tag) {
+        font-size: 14px;
+        color: var(--text-color);
+      }
+      &:nth-of-type(2) {
+        font-size: 12px;
+        color: var(--text-color3);
+      }
+    }
+    > span + span {
+      margin-top: 4px;
+    }
+  }
+}
