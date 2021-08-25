@@ -1,18 +1,20 @@
+/* eslint-disable max-len */
 import React, { Fragment, useEffect, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
 import compact from 'lodash/compact';
 import { SelectBox, Select, Form } from 'choerodon-ui/pro';
+import { UserInfo } from '@choerodon/components';
 import DynamicSelect from '../../../../../components/dynamic-select-new';
-import UserInfo from '../../../../../components/userInfo';
-
 
 import './index.less';
 
 const { Option } = Select;
 
 export default observer((props) => {
-  const { dataSet, nonePermissionDs, refresh, baseDs, store, projectId, formatMessage, prefixCls, intlPrefix, modal } = props;
+  const {
+    dataSet, nonePermissionDs, refresh, baseDs, store, projectId, formatMessage, intlPrefix, modal,
+  } = props;
 
   const record = useMemo(() => baseDs.current, [baseDs.current]);
 
@@ -61,16 +63,15 @@ export default observer((props) => {
   });
 
   function renderUserOption({ record: optionRecord }) {
-    return <UserInfo name={optionRecord.get('realName') || ''} id={record.get('loginName')} />;
+    return <UserInfo realName={optionRecord.get('realName') || ''} loginName={record.get('loginName')} />;
   }
-  
 
   function renderer({ optionRecord }) {
-    return <UserInfo name={optionRecord.get('realName') || ''} id={record.get('loginName')} />;
+    return <UserInfo realName={optionRecord.get('realName') || ''} loginName={record.get('loginName')} />;
   }
 
   return (
-    <Fragment>
+    <>
       <Form record={record}>
         <SelectBox name="skipCheckPermission">
           <Option value>{formatMessage({ id: `${intlPrefix}.member.all` })}</Option>
@@ -79,7 +80,7 @@ export default observer((props) => {
       </Form>
       {record && !record.get('skipCheckPermission') && (
         <DynamicSelect
-          selectDataSet={dataSet} 
+          selectDataSet={dataSet}
           optionsRenderer={renderUserOption}
           optionsDataSet={nonePermissionDs}
           renderer={renderer}
@@ -87,6 +88,6 @@ export default observer((props) => {
           addText={formatMessage({ id: `${intlPrefix}.add.member` })}
         />
       )}
-    </Fragment>
+    </>
   );
 });

@@ -39,10 +39,11 @@ const isHostGroup = [CHART_HOST];
 // app status
 const APP_STATUS = {
   ACTIVE: 'active',
-  STOP: 'stop',
+  STOP: 'stopped',
   OPERATING: 'operating',
   SUCCESS: 'success',
   FAILED: 'failed',
+  RUNNING: 'running',
 };
 
 export {

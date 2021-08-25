@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 import { Icon, Tooltip } from 'choerodon-ui';
 import map from 'lodash/map';
 import classnames from 'classnames';
-import UserInfo from '../../../../../../../../components/userInfo/UserInfo';
+import { UserInfo } from '@choerodon/components';
 import { useAppCenterInstanceStore } from '../../../stores';
 
 import './index.less';
@@ -60,7 +60,7 @@ const OpCard = ({ index, record, isActive, intlPrefix, prefixCls, formatMessage,
       <div className="operation-record-step">
         <i className="operation-record-icon" />
       </div>
-      <div className="operation-record-user"><UserInfo name={realName} id={loginName} avatar={userImage} /></div>
+      <div className="operation-record-user"><UserInfo realName={realName} loginName={loginName} avatar={userImage} /></div>
       <div className="operation-record-time">{createTime}</div>
     </div>
   );

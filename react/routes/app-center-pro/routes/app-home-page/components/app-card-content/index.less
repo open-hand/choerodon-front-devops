@@ -2,7 +2,7 @@
 
 .@{prefixCls} {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(10px, 1fr));
   grid-template-rows: max-content;
   column-gap: 0.14rem;
   row-gap: 0.12rem;
@@ -40,10 +40,14 @@
           font-weight: 400;
           &:first-of-type {
             color: var(--text-color3);
-            width: 73px;
+            flex-basis: 73px;
+            flex-shrink: 0;
           }
           &:nth-of-type(2) {
             color: var(--text-color);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
         }
       }
@@ -56,6 +60,10 @@
       font-weight: 500;
       color: #5365ea;
       cursor: pointer;
+      max-width: 85%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       &:hover {
         text-decoration: underline;
       }

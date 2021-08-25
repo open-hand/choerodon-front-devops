@@ -17,7 +17,6 @@ interface ContextProps {
   appId:string,
   appSource:string
   deployType:string
-  status:string
   appDs:DataSet
   appCatergory:{
     name:string,
@@ -39,12 +38,12 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     AppState: { currentMenuType: { projectId } },
     match: {
       params: {
-        appId, appSource, deployType, status, deployTypeId, rdupmType,
+        appId, appSource, deployType, deployTypeId, rdupmType,
       },
     },
   } = props;
 
-  console.log(appId, appSource, deployType, status, deployTypeId, rdupmType);
+  console.log(appId, appSource, deployType, deployTypeId, rdupmType);
 
   const {
     prefixCls,
@@ -56,7 +55,8 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
 
   // 部署对象
   const appCatergory = getAppCategories(rdupmType, deployType);
-  // 制品来源
+
+  // 制品来源分组，3大组
   const appChartSourceGroup = getChartSourceGroup(appSource, deployType);
 
   const value = {
@@ -69,7 +69,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     appId,
     appSource,
     deployType,
-    status,
     appDs,
     appCatergory,
     appChartSourceGroup,
