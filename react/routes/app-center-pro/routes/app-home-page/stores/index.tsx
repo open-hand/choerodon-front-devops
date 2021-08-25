@@ -24,6 +24,7 @@ interface ContextProps {
     ENV_TAB: 'env',
     HOST_TAB: 'host',
   }
+  refresh:(...args:any[])=>any
 }
 
 const Store = createContext({} as ContextProps);
@@ -84,6 +85,10 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     loadHostData();
   }, []);
 
+  const refresh = () => {
+    listDs.query();
+  };
+
   const value = {
     ...props,
     subfixCls: `${prefixCls}-homepage`,
@@ -94,6 +99,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     searchDs,
     ALL_ENV_KEY,
     intlPrefix,
+    refresh,
   };
   return (
     <Store.Provider value={value}>

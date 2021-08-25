@@ -44,14 +44,13 @@ export default observer(() => {
     intlPrefix,
     projectId,
     formatMessage,
-    appDetailsDs,
     refresh,
-    appDs,
   } = useAppDetailTabsStore();
 
   const {
     deployTypeId: envId,
     appId,
+    appDs,
   } = useAppDetailsStore();
 
   useEffect(() => () => {
@@ -82,10 +81,10 @@ export default observer(() => {
     let status:any;
     let connect:any;
     let instanceStatus:any;
-    const record = appDetailsDs.current;
+    const record = appDs.current;
     if (record) {
       status = record.get('effectCommandStatus');
-      connect = record.get('connect');
+      connect = record.get('envConnected');
       instanceStatus = record.get('status');
     }
     const POD_TYPE:any = {

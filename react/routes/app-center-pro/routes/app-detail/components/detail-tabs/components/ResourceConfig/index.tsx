@@ -1,7 +1,7 @@
 import React from 'react';
 import { Loading, EmptyPage } from '@choerodon/components';
-import NoData from '@/routes/app-center-pro/assets/nodata.png';
 import { observer } from 'mobx-react-lite';
+import NoData from '@/routes/app-center-pro/assets/nodata.png';
 import ConfigItem from './components/ConfigItem';
 import { useAppDetailTabsStore } from '../../stores';
 import './index.less';

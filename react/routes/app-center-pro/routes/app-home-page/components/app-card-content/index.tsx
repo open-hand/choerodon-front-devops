@@ -1,12 +1,17 @@
 /* eslint-disable max-len */
 import React from 'react';
 import { Action } from '@choerodon/master';
+import { observer } from 'mobx-react-lite';
+
 import { useHistory, useLocation } from 'react-router';
 import { UserInfo, TimePopover, CardPagination } from '@choerodon/components';
 import { Record } from '@/interface';
+
 import AppType from '@/routes/app-center-pro/components/AppType';
 import { useAppHomePageStore } from '../../stores';
 import './index.less';
+import { getAppCategories } from '@/routes/app-center-pro/utils';
+import { CHART_HOST } from '@/routes/app-center-pro/stores/CONST';
 
 const AppItem = ({
   record,
@@ -21,15 +26,23 @@ const AppItem = ({
   } = useAppHomePageStore();
 
   const {
-    envName,
-    envId,
     name,
     id,
+
+    envName,
+    envId,
+
     hostId,
-    iamUserDTO = {},
+    hostName,
+
+    creator = {},
+
     code,
-    rdupmType,
-    operationType, // 制品来源
+    rdupmType, // 部署对象
+    operationType, // 操作类型
+    chartSource, // 制品来源
+
+    status, // 应用状态
   } = record.toData();
 
   const {
@@ -39,11 +52,15 @@ const AppItem = ({
     loginName,
     realName,
     email,
-  } = iamUserDTO;
+  } = creator;
 
   const currentType = mainStore.getCurrentTypeTabKey;
 
-  const deployTypeId = currentType === typeTabKeys.ENV_TAB ? envId : hostId;
+  const isEnv = currentType === typeTabKeys.ENV_TAB;
+
+  const isHost = currentType === typeTabKeys.HOST_TAB;
+
+  const deployTypeId = isEnv ? envId : hostId;
 
   const history = useHistory();
   const { search, pathname } = useLocation();
@@ -71,17 +88,12 @@ const AppItem = ({
 
   function handleLinkToAppDetail() {
     history.push({
-      pathname: `${pathname}/detail/${id}/${operationType || 'host'}/${currentType}/${deployTypeId}/${rdupmType}/success`,
+      pathname: `${pathname}/detail/${id}/${chartSource || CHART_HOST}/${currentType}/${deployTypeId}/${rdupmType}/${status}`,
       search,
     });
   }
 
-  const renderDeployObj:any = () => {
-    if (currentType === typeTabKeys.ENV_TAB) {
-      return rdupmType === 'chart' ? 'Chart包' : '部署组';
-    }
-    return 'jar包';
-  };
+  const catergory = getAppCategories(rdupmType, currentType);
 
   return (
     <div className={`${subfixCls}-list-card`}>
@@ -105,21 +117,28 @@ const AppItem = ({
         </div>
         <div>
           <span>部署对象</span>
-          <span>{renderDeployObj()}</span>
+          <span>{catergory.name}</span>
         </div>
+        {isHost && (
         <div>
           <span>主机</span>
-          <span>UAT主机</span>
+          <span>{hostName}</span>
         </div>
-        <div>
-          <span>环境</span>
-          <span>{envName || '-'}</span>
-        </div>
+        )}
+        {
+          isEnv && (
+          <div>
+            <span>环境</span>
+            <span>{envName || '-'}</span>
+          </div>
+          )
+        }
         <div>
           <span>创建</span>
           <div style={{
             display: 'flex',
             alignItems: 'center',
+            whiteSpace: 'nowrap',
           }}
           >
             <UserInfo avatar={imageUrl} realName={realName} loginName={ldap ? loginName : email} />
@@ -152,4 +171,4 @@ const AppCardContent = () => {
   );
 };
 
-export default AppCardContent;
+export default observer(AppCardContent);

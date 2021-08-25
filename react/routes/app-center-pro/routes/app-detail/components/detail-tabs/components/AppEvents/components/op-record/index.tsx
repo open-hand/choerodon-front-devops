@@ -10,6 +10,7 @@ import { useAppEventStore } from '../../stores';
 
 import './index.less';
 import { useAppDetailTabsStore } from '../../../../stores';
+import { useAppDetailsStore } from '@/routes/app-center-pro/routes/app-detail/stores';
 
 const ICON_TYPE_MAPPING:any = {
   failed: 'cancel',
@@ -72,8 +73,11 @@ const OpRecord = observer(({ handleClick, active }:any) => {
 
   const {
     appEventsDs,
-    appDetailsDs,
   } = useAppDetailTabsStore();
+
+  const {
+    appDs,
+  } = useAppDetailsStore();
 
   const {
     formatMessage,
@@ -110,7 +114,7 @@ const OpRecord = observer(({ handleClick, active }:any) => {
             prefixCls={prefixCls}
             intlPrefix={intlPrefix}
             onClick={handleRecordClick}
-            effectCommandId={appDetailsDs.current && appDetailsDs.current.get('effectCommandId')}
+            effectCommandId={appDs.current && appDs.current?.get('effectCommandId')}
           />;
         })}
       </div>

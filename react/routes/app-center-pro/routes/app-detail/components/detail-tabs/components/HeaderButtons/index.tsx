@@ -8,6 +8,8 @@ import { useAppDetailsStore } from '../../../../stores';
 import { openNetWorkFormModal } from './components/create-network';
 import { openDomainFormModal } from './components/domain-form';
 import { openRedeploy } from './components/reDeploy';
+import { openChangeActive } from './components/app-status-toggle';
+import { openMarketUpgradeModal } from './components/app-upgrade';
 
 const DetailsTabsHeaderButtons = () => {
   const {
@@ -20,19 +22,22 @@ const DetailsTabsHeaderButtons = () => {
     appId: appCenterId,
     deployTypeId: hostOrEnvId,
     deployType,
+    status: appStatus,
   } = useAppDetailsStore();
 
   const appRecord = appDs.current;
 
   const {
     appServiceVersionId,
+    appServiceName,
     appServiceId,
     instanceId,
     chartSource,
     commandVersion,
+    name,
   } = appRecord?.toData() || {};
 
-  const isMarket = chartSource === 'market';
+  const isMarket = chartSource === 'market' || chartSource === 'hzero';
 
   const isMiddleware = chartSource === 'middleware';
 
@@ -97,6 +102,15 @@ const DetailsTabsHeaderButtons = () => {
         {
           name: '升级',
           // icon: 'rate_review1',
+          handler: () => openMarketUpgradeModal({
+            instanceId,
+            appServiceId,
+            appServiceName,
+            envId: hostOrEnvId,
+            appServiceVersionId,
+            callback: refresh,
+            isMiddleware,
+          }),
         },
         {
           name: '重新部署',
@@ -111,10 +125,26 @@ const DetailsTabsHeaderButtons = () => {
         {
           name: '启用应用',
           // icon: 'check',
+          handler: () => openChangeActive({
+            active: 'start',
+            name,
+            callback: refresh,
+            projectId,
+            envId: hostOrEnvId,
+            instanceId,
+          }),
         },
         {
           name: '停用应用',
           // icon: 'do_not_disturb_alt',
+          handler: () => openChangeActive({
+            active: 'stop',
+            name,
+            callback: refresh,
+            projectId,
+            envId: hostOrEnvId,
+            instanceId,
+          }),
         },
         {
           name: '删除应用',
@@ -127,7 +157,7 @@ const DetailsTabsHeaderButtons = () => {
       iconOnly: true,
       handler: refresh,
     },
-  ]), [appServiceId, appServiceVersionId, hostOrEnvId, instanceId, isMarket, isMiddleware, refresh]);
+  ]), [appServiceId, appServiceVersionId, commandVersion, hostOrEnvId, instanceId, isMarket, isMiddleware, projectId, refresh]);
 
   return <HeaderButtons showClassName items={headerBtnsItems} />;
 };

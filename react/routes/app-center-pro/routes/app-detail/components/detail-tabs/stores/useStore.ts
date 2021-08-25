@@ -1,9 +1,14 @@
 import { useLocalStore } from 'mobx-react-lite';
-import { APP_EVENT, POD_DETAILS } from './CONST';
+import { APP_EVENT } from './CONST';
 
-export default function useStore() {
+export default function useStore({ defaultKey }:{
+  defaultKey: {
+    name: string,
+    key: string
+  }
+}) {
   return useLocalStore(() => ({
-    currentTabKey: APP_EVENT,
+    currentTabKey: defaultKey?.key || APP_EVENT,
     setCurrentTabKey(value:string) {
       this.currentTabKey = value;
     },
