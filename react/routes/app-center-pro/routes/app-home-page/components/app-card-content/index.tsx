@@ -5,24 +5,37 @@ import { observer } from 'mobx-react-lite';
 
 import { useHistory, useLocation } from 'react-router';
 import { UserInfo, TimePopover, CardPagination } from '@choerodon/components';
+import { Tooltip } from 'choerodon-ui/pro';
 import { Record } from '@/interface';
-
 import AppType from '@/routes/app-center-pro/components/AppType';
 import { useAppHomePageStore } from '../../stores';
 import './index.less';
-import { getAppCategories } from '@/routes/app-center-pro/utils';
-import { CHART_HOST } from '@/routes/app-center-pro/stores/CONST';
+import { getAppCategories, getChartSourceGroup } from '@/routes/app-center-pro/utils';
+import {
+  APP_STATUS, CHART_HOST, IS_HOST, IS_MARKET, IS_SERVICE,
+} from '@/routes/app-center-pro/stores/CONST';
+import { openChangeActive } from '@/components/app-status-toggle';
+import { openDelete } from '@/routes/app-center-pro/components/app-deletion';
+import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
 
-const AppItem = ({
+const AppItem = observer(({
   record,
   subfixCls,
+  refresh,
 }: {
   record: Record
   subfixCls:string
+  refresh:(...agrs:any[])=>any
 }) => {
+  const {
+    deletionStore,
+    deleteHostApp,
+  } = useAppCenterProStore();
+
   const {
     mainStore,
     typeTabKeys,
+    projectId,
   } = useAppHomePageStore();
 
   const {
@@ -42,7 +55,9 @@ const AppItem = ({
     operationType, // 操作类型
     chartSource, // 制品来源
 
-    status, // 应用状态
+    status: appStatus, // 应用状态
+    objectId: instanceId,
+    code: instanceName,
   } = record.toData();
 
   const {
@@ -63,32 +78,114 @@ const AppItem = ({
   const deployTypeId = isEnv ? envId : hostId;
 
   const history = useHistory();
+
   const { search, pathname } = useLocation();
 
+  const toggleActive = (active:'stop' | 'start') => openChangeActive({
+    active,
+    name,
+    callback: refresh,
+    projectId,
+    envId,
+    instanceId,
+  });
+
+  const handleDelete = () => {
+    isEnv ? openDelete({
+      envId, instanceId, instanceName, callback: refresh, projectId, deletionStore,
+    }) : deleteHostApp(hostId, id);
+  };
+
+  const stopObj = {
+    service: [],
+    text: '停用',
+    action: () => toggleActive('stop'),
+  };
+
+  const activeObj = {
+    service: [],
+    text: '启用',
+    // action: () => handleDelete({ record: tableRecord }),
+    action: () => toggleActive('start'),
+  };
+
+  const deleteObj = {
+    service: [],
+    text: '删除',
+    action: handleDelete,
+  };
+
+  const getIsServicesActionData = () => {
+    let data:any = [];
+    switch (appStatus) {
+      case APP_STATUS.ACTIVE:
+        data = [stopObj, deleteObj];
+        break;
+      case APP_STATUS.FAILED:
+        data = [deleteObj];
+        break;
+      case APP_STATUS.STOP:
+        data = [activeObj, deleteObj];
+        break;
+
+      default:
+        break;
+    }
+    return data;
+  };
+
+  const getIsMarketActionData = () => {
+    let data:any = [];
+    switch (appStatus) {
+      case APP_STATUS.ACTIVE:
+        data = [stopObj, deleteObj];
+        break;
+      case APP_STATUS.STOP:
+        data = [activeObj, deleteObj];
+        break;
+      default:
+        break;
+    }
+    return data;
+  };
+
+  const getIsHostActionData = () => {
+    let data:any = [];
+    switch (appStatus) {
+      case APP_STATUS.SUCCESS:
+      case APP_STATUS.FAILED:
+        data = [deleteObj];
+        break;
+      default:
+        break;
+    }
+    return data;
+  };
+
   const renderAction = () => {
-    const data = [
-      {
-        service: [],
-        text: '启用',
-        // action: () => handleDelete({ record: tableRecord }),
-      },
-      {
-        service: [],
-        text: '停用',
-        // action: () => handleDelete({ record: tableRecord }),
-      },
-      {
-        service: [],
-        text: '删除',
-        // action: () => handleDelete({ record: tableRecord }),
-      },
-    ];
-    return <Action data={data} />;
+    const whichGroup = getChartSourceGroup({
+      chartSource, currentType,
+    }as any);
+    let data = [];
+    switch (whichGroup) {
+      case IS_SERVICE:
+        data = getIsServicesActionData();
+        break;
+      case IS_MARKET:
+        data = getIsMarketActionData();
+        break;
+      case IS_HOST:
+        data = getIsHostActionData();
+        break;
+      default:
+        break;
+    }
+    return data.length ? <Action data={data} /> : '';
   };
 
   function handleLinkToAppDetail() {
     history.push({
-      pathname: `${pathname}/detail/${id}/${chartSource || CHART_HOST}/${currentType}/${deployTypeId}/${rdupmType}/${status}`,
+      pathname: `${pathname}/detail/${id}/${chartSource || CHART_HOST}/${currentType}/${deployTypeId}/${rdupmType}`,
       search,
     });
   }
@@ -101,19 +198,23 @@ const AppItem = ({
         {renderAction()}
       </aside>
       <header>
-        <span
-          role="none"
-          onClick={handleLinkToAppDetail}
-          className={`${subfixCls}-list-card-appname`}
-        >
-          {name || '-'}
-        </span>
+        <Tooltip title={name}>
+          <span
+            role="none"
+            onClick={handleLinkToAppDetail}
+            className={`${subfixCls}-list-card-appname`}
+          >
+            {name || '-'}
+          </span>
+        </Tooltip>
         <AppType type={operationType} />
       </header>
       <main>
         <div>
           <span>应用编码</span>
-          <span>{code || '-'}</span>
+          <Tooltip title={code}>
+            <span>{code || '-'}</span>
+          </Tooltip>
         </div>
         <div>
           <span>部署对象</span>
@@ -122,42 +223,42 @@ const AppItem = ({
         {isHost && (
         <div>
           <span>主机</span>
-          <span>{hostName}</span>
+          <Tooltip title={hostName}>
+            <span>{hostName}</span>
+          </Tooltip>
         </div>
         )}
         {
           isEnv && (
           <div>
             <span>环境</span>
-            <span>{envName || '-'}</span>
+            <Tooltip title={envName}>
+              <span>{envName || '-'}</span>
+            </Tooltip>
           </div>
           )
         }
         <div>
-          <span>创建</span>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            whiteSpace: 'nowrap',
-          }}
-          >
-            <UserInfo avatar={imageUrl} realName={realName} loginName={ldap ? loginName : email} />
-            <span>创建于</span>
-            <TimePopover content={creationDate} />
-          </div>
+          <span>创建者</span>
+          <UserInfo avatar={imageUrl} realName={realName} loginName={ldap ? loginName : email} />
+        </div>
+        <div>
+          <span>创建时间</span>
+          <TimePopover content={creationDate} />
         </div>
       </main>
     </div>
   );
-};
+});
 
 const AppCardContent = () => {
   const {
     subfixCls,
     listDs,
+    refresh,
   } = useAppHomePageStore();
 
-  const renderList = () => listDs.map((record:Record) => <AppItem subfixCls={subfixCls} record={record} key={record.id} />);
+  const renderList = () => listDs.map((record:Record) => <AppItem refresh={refresh} subfixCls={subfixCls} record={record} key={record.id} />);
 
   return (
     <>

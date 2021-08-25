@@ -122,27 +122,6 @@ function openPipelineReferenceModal({
   });
 }
 
-// async function openDelete({
-//   envId, instanceId, intanceName, callback, projectId, name,
-// }:{
-//   projectId:string,
-//   envId:string,
-//   instanceId:string,
-//   intanceName:string,
-//   callback:CallableFunction,
-//   name:string,
-// }) {
-//   const hasPipelineReference = await checkPipelineReference({
-//     projectId,
-//     instanceId,
-//   });
-//   if (!isEmpty(hasPipelineReference)) {
-//     openPipelineReferenceModal({ active: 'delete', name, hasPipelineReference });
-//   } else {
-//     openDeleteModal(envId, instanceId, intanceName, 'instance', callback);
-//   }
-// }
-
 export async function openChangeActive({
   active,
   name,

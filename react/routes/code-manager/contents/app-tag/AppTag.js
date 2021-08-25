@@ -9,7 +9,7 @@ import {
 } from 'choerodon-ui/pro';
 import { Collapse } from 'choerodon-ui';
 import { Action, Page, Permission } from '@choerodon/boot';
-import UserInfo from '../../../../components/userInfo';
+import { UserInfo } from '@choerodon/components';
 import TimePopover from '../../../../components/timePopover';
 import EmptyPage from '../../../../components/empty-page';
 import Loading from '../../../../components/loading';
@@ -216,7 +216,7 @@ export default observer((props) => {
               <span className="c7n-divide-point">&bull;</span>
               <span className="c7n-tag-panel-person">
                 <UserInfo
-                  name={authorName || ''}
+                  realName={authorName || ''}
                   avatar={commitUserImage}
                 />
               </span>

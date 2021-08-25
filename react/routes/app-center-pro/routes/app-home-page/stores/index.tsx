@@ -20,6 +20,7 @@ interface ContextProps {
   listDs: DataSetProps,
   mainStore: StoreProps,
   ALL_ENV_KEY: string,
+  projectId:string,
   typeTabKeys: {
     ENV_TAB: 'env',
     HOST_TAB: 'host',
@@ -99,6 +100,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     searchDs,
     ALL_ENV_KEY,
     intlPrefix,
+    projectId,
     refresh,
   };
   return (

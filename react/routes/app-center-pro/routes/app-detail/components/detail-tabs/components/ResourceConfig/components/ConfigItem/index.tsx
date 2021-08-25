@@ -18,7 +18,7 @@ const ResourceConfigItem:React.FC<Props> = ({
 
   const [expand, setExpand] = useState<boolean>(false);
 
-  const renderChildren = () => children.map((value:any) => (
+  const renderChildren = () => children?.map((value:any) => (
     <ConfigItemChild subfixCls={subfixCls} />
   ));
 

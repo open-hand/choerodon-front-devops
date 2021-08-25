@@ -48,10 +48,12 @@ const DetailAside = () => {
 
     versionName,
 
+    // 这些是主机特有的
     hostName,
     hostId,
     status: hostStatus,
     prodJarInfoVO,
+    devopsHostCommandDTO,
   } = appDs.current?.toData() || {};
 
   const {
@@ -148,10 +150,10 @@ const DetailAside = () => {
             <br />
             groupId：
             {prodJarInfoVO?.groupId}
-            )
             <br />
             Jar包版本：
-            {prodJarInfoVO?.artifactId}
+            {prodJarInfoVO?.version}
+            )
           </span>
         </div>
       </div>
@@ -160,7 +162,18 @@ const DetailAside = () => {
 
   const renderStatus = () => {
     if (deployType === HOST_TAB) {
-      return <StatusTag name={hostStatus} colorCode={hostStatus} />;
+      const operateStatus = devopsHostCommandDTO?.status;
+      const error = devopsHostCommandDTO?.error;
+      return (operateStatus && !(operateStatus === 'success') && (
+        <StatusTag
+          style={{
+            marginLeft: '5px',
+          }}
+          ellipsisTitle={error}
+          colorCode={operateStatus}
+          name={operateStatus === 'operating' ? '执行中' : '失败'}
+        />
+      ));
     }
     return (
       <PodCircle
