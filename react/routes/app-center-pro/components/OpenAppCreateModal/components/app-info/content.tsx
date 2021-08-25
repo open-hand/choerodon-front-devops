@@ -1,12 +1,13 @@
 import React, { ReactElement, useImperativeHandle } from 'react';
 import { Form, SelectBox, TextField } from 'choerodon-ui/pro';
 import { CustomSelect } from '@choerodon/components';
+import { observer } from 'mobx-react-lite';
 import { useAppInfoStore } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-info/stores';
 import { mapping, deployModeOptionsData, deployProductOptionsData } from './stores/appInfoDataSet';
 
 import './index.less';
 
-const Index = () => {
+const Index = observer(() => {
   const {
     AppInfoDataSet,
     cRef,
@@ -46,6 +47,7 @@ const Index = () => {
         newLine
       >
         <CustomSelect
+          defaultSelectedKeys={AppInfoDataSet.current.get(mapping.deployMode.name)}
           onClickCallback={(value) => handleChangeField(
             AppInfoDataSet,
             mapping.deployMode.name as string,
@@ -75,6 +77,7 @@ const Index = () => {
         newLine
       >
         <CustomSelect
+          defaultSelectedKeys={AppInfoDataSet.current.get(mapping.deployProductType.name)}
           onClickCallback={(value) => handleChangeField(
             AppInfoDataSet,
             mapping.deployProductType.name as string,
@@ -95,6 +98,6 @@ const Index = () => {
       </div>
     </Form>
   );
-};
+});
 
 export default Index;
