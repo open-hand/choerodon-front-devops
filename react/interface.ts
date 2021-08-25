@@ -19,7 +19,7 @@ import { ShowHelp } from 'choerodon-ui/pro/lib/field/enum';
 import { UploadFile } from 'choerodon-ui/pro/lib/upload/interface';
 import { ResizeType } from 'choerodon-ui/pro/lib/text-area/enum';
 import { Placements } from 'choerodon-ui/pro/lib/dropdown/enum';
-import { FieldProps } from 'choerodon-ui/pro/lib/data-set/field';
+import { FieldProps } from 'choerodon-ui/pro/lib/data-set/Field';
 
 interface UserDTOProps {
   realName: string,
