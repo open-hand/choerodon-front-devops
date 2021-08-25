@@ -4,13 +4,13 @@ import React, {
 import { observer } from 'mobx-react-lite';
 import {
   Form,
-  TextField,
-  SelectBox,
   Icon,
   Output,
   Tooltip,
 } from 'choerodon-ui/pro';
 import classnames from 'classnames';
+import { StatusTag } from '@choerodon/components';
+import { useHistory } from 'react-router';
 import {
   Record, LabelLayoutType, LabelAlignType,
 } from '@/interface';
@@ -19,6 +19,7 @@ import { deployRecordApi } from '@/api';
 import STATUS_TYPE from '@/constants/STATUS_TYPE';
 import Loading from '@/components/loading';
 import { useHzeroDeployDetailStore } from './stores';
+import { getConsumeDuration } from '@/utils/getDuration';
 
 import './index.less';
 
@@ -35,6 +36,8 @@ const HzeroDeployDetail = observer(() => {
     refresh,
     handleHzeroStop,
   } = useHzeroDeployDetailStore();
+
+  const history = useHistory();
 
   useEffect(() => {
     switch (status) {
@@ -100,6 +103,24 @@ const HzeroDeployDetail = observer(() => {
     serviceDs.current?.set('valueFailed', flag);
   }, [serviceDs.current]);
 
+  const getStatusTag = useCallback((state) => (
+    <StatusTag
+      colorCode={state || ''}
+      name={state ? formatMessage({ id: `${intlPrefix}.status.${state}` }) : 'unKnown'}
+      style={{ width: '40px', marginLeft: '10px' }}
+    />
+  ), []);
+  const toInstanceDetail = (record: any) => {
+    history.push(`/devops/application-center/detail/:appId/env/${formDs.current?.get('environmentDTO')?.id}`);
+  };
+  const renderInstanceCode = (record: any) => (
+    <div style={{ display: 'flex' }}>
+      <div style={record.get('appStatus') === 'deleted' ? { opacity: '0.5' } : { color: '#415BC9' }} onClick={() => toInstanceDetail(record)}>
+        {record.get('instanceCode')}
+      </div>
+      <div>{record.get('appStatus') === 'deleted' ? getStatusTag(record.get('appStatus')) : ''}</div>
+    </div>
+  );
   if (formDs.status === 'loading') {
     return <Loading display />;
   }
@@ -108,11 +129,11 @@ const HzeroDeployDetail = observer(() => {
     <div className={`${prefixCls} ${prefixCls}-detail`}>
       <Form
         dataSet={formDs}
-        columns={3}
+        columns={2}
         labelLayout={'horizontal' as LabelLayoutType}
         labelAlign={'left' as LabelAlignType}
-        labelWidth={130}
         className={`${prefixCls}-detail-form`}
+        labelWidth="auto"
       >
         <Output
           name="type"
@@ -148,10 +169,12 @@ const HzeroDeployDetail = observer(() => {
               columns={2}
               labelLayout={'horizontal' as LabelLayoutType}
               labelAlign={'left' as LabelAlignType}
-              labelWidth={130}
+              labelWidth="auto"
             >
               <Output name="mktServiceVersion" />
-              <Output name="instanceCode" />
+              <Output label="实例名称" value={renderInstanceCode(serviceDs.current)} />
+              <Output name="startTime" />
+              <Output label="部署耗时" value={getConsumeDuration(serviceDs.current?.get('startTime'), serviceDs.current?.get('endTime'))} />
             </Form>
             <YamlEditor
               colSpan={2}
