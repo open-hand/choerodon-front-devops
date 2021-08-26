@@ -2,7 +2,6 @@
 import React, { useMemo } from 'react';
 import { HeaderButtons } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
-import { useHistory, useLocation } from 'react-router';
 import { useAppDetailTabsStore } from '../../stores';
 import { openModifyValueModal } from '@/components/modify-values';
 import { useAppDetailsStore } from '../../../../stores';
@@ -21,18 +20,17 @@ const DetailsTabsHeaderButtons = () => {
   const {
     deleteHostApp,
     deletionStore,
+    goBackHomeBaby,
   } = useAppCenterProStore();
+
   const {
     refresh,
     projectId,
   } = useAppDetailTabsStore();
 
-  const history = useHistory();
-  const location = useLocation();
-
   const {
     appDs,
-    appId: appCenterId,
+    appId,
     deployTypeId: hostOrEnvId,
     deployType,
     appCatergory,
@@ -49,6 +47,8 @@ const DetailsTabsHeaderButtons = () => {
     commandVersion,
     name,
     objectStatus: appStatus,
+    devopsHostCommandDTO = {},
+    sourceType,
   } = appRecord?.toData() || {};
 
   const isMarket = chartSource === 'market' || chartSource === 'hzero';
@@ -56,7 +56,7 @@ const DetailsTabsHeaderButtons = () => {
   const isMiddleware = chartSource === 'middleware';
 
   const whichGroup = getChartSourceGroup(
-    chartSource, deployType,
+    chartSource || sourceType, deployType,
   );
 
   // 修改应用（3种分类）
@@ -65,12 +65,12 @@ const DetailsTabsHeaderButtons = () => {
     switch (appCatergory.code) {
       case CHART_CATERGORY:
         obj = {
-          name: '修改应用（chart包）',
+          name: '修改应用',
         };
         break;
       case DEPLOY_CATERGORY:
         obj = {
-          name: '修改应用（部署组）',
+          name: '修改应用',
           // icon: 'add_comment-o',
           groupBtnItems: [
             {
@@ -84,7 +84,7 @@ const DetailsTabsHeaderButtons = () => {
         break;
       case HOST_CATERGORY:
         obj = {
-          name: '修改应用（jar包）',
+          name: '修改应用',
         };
         break;
       default:
@@ -183,12 +183,10 @@ const DetailsTabsHeaderButtons = () => {
       deployType === ENV_TAB ? deletionStore.openDeleteModal({
         envId: hostOrEnvId,
         instanceId,
-        callback: () => {
-          history.push({ pathname: '/devops/application-center', search: location.search });
-        },
+        callback: goBackHomeBaby,
         instanceName: name,
         type: 'instance',
-      }) : deleteHostApp(hostOrEnvId, instanceId);
+      }) : deleteHostApp(hostOrEnvId, appId, goBackHomeBaby);
     },
   };
 
@@ -210,7 +208,8 @@ const DetailsTabsHeaderButtons = () => {
   // 更多操作
   const moreOpts = (() => {
     let btnsGroup:any[] = [];
-    switch (appStatus) {
+    const currentStatus = deployType === ENV_TAB ? appStatus : devopsHostCommandDTO?.status;
+    switch (currentStatus) {
       case APP_STATUS.ACTIVE:
         btnsGroup = [stopApp, deleteApp];
         break;
@@ -224,10 +223,10 @@ const DetailsTabsHeaderButtons = () => {
       default:
         break;
     }
-    return btnsGroup.length ? {
+    return btnsGroup.length ? [{
       name: '更多操作',
       groupBtnItems: btnsGroup,
-    } : null;
+    }] : [];
   })();
 
   // 项目分组
@@ -235,11 +234,11 @@ const DetailsTabsHeaderButtons = () => {
     let data:any = [];
     switch (appStatus) {
       case APP_STATUS.ACTIVE:
-        data = [modifyValues, modifyAppObj, redeploy, createSource, moreOpts];
+        data = [modifyValues, modifyAppObj, redeploy, createSource, ...moreOpts];
         break;
       case APP_STATUS.FAILED:
       case APP_STATUS.STOP:
-        data = [moreOpts];
+        data = [...moreOpts];
         break;
       default:
         break;
@@ -252,10 +251,10 @@ const DetailsTabsHeaderButtons = () => {
     let data:any = [];
     switch (appStatus) {
       case APP_STATUS.ACTIVE:
-        data = [modifyValues, upGrade, redeploy, moreOpts];
+        data = [modifyValues, upGrade, redeploy, ...moreOpts];
         break;
       case APP_STATUS.STOP:
-        data = [moreOpts];
+        data = [...moreOpts];
         break;
       default:
         break;
@@ -266,10 +265,10 @@ const DetailsTabsHeaderButtons = () => {
   // 主机分组
   const getIsHostActionData = () => {
     let data:any = [];
-    switch (appStatus) {
+    switch (devopsHostCommandDTO?.status) {
       case APP_STATUS.SUCCESS:
       case APP_STATUS.FAILED:
-        data = [modifyAppObj, moreOpts];
+        data = [modifyAppObj, ...moreOpts];
         break;
       default:
         break;
@@ -295,7 +294,7 @@ const DetailsTabsHeaderButtons = () => {
     return [...data, {
       icon: 'refresh',
       iconOnly: true,
-      handler: refresh,
+      handler: () => refresh(true),
     }];
   };
 

@@ -5,7 +5,7 @@
 // 3. 否者就是 jar包，主机的
 
 import {
-  CHART_CATERGORY, DEPLOY_CATERGORY, HOST_CATERGORY, isHostGroup, isMarketGroup, isServiceGroup, IS_HOST, IS_MARKET, IS_SERVICE,
+  CHART_CATERGORY, DEPLOY_CATERGORY, HOST_CATERGORY, HOST_TAB, isHostGroup, isMarketGroup, isServiceGroup, IS_HOST, IS_MARKET, IS_SERVICE,
 } from '../stores/CONST';
 
 // Chart包，部署组，还是jar包
@@ -34,7 +34,7 @@ const getChartSourceGroup = (chartSource:string, deployType = 'env') => {
   if (isMarketGroup.includes(chartSource)) {
     return IS_MARKET;
   }
-  if (isHostGroup.includes(chartSource)) return IS_HOST;
+  if (deployType === HOST_TAB) return IS_HOST;
   if (isServiceGroup.includes(chartSource)) {
     return IS_SERVICE;
   }
