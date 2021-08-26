@@ -123,6 +123,7 @@ const AppItem = observer(({
   const getIsServicesActionData = () => {
     let data:any = [];
     switch (appStatus) {
+      case APP_STATUS.RUNNING:
       case APP_STATUS.ACTIVE:
         data = [stopObj, deleteObj];
         break;
@@ -142,6 +143,7 @@ const AppItem = observer(({
   const getIsMarketActionData = () => {
     let data:any = [];
     switch (appStatus) {
+      case APP_STATUS.RUNNING:
       case APP_STATUS.ACTIVE:
         data = [stopObj, deleteObj];
         break;

@@ -104,7 +104,7 @@ export default observer(() => {
 
     const getDeploy = (item:any) => {
       const {
-        name, age, devopsEnvPodVOS, ports, labels,
+        name, age, devopsEnvPodVOS, ports, labels, instanceId,
       } = item;
       const replica = `${item[available] || 0} available / ${item[current] || 0} current / ${item[desired] || 0} desired`;
       const podCount = computedPodCount(devopsEnvPodVOS);
@@ -207,7 +207,7 @@ export default observer(() => {
             <Button
               className="c7ncd-detail-btn"
               type="primary"
-              onClick={(() => handleClick(podType, name, record?.get('instanceId')))}
+              onClick={(() => handleClick(podType, name, instanceId))}
             >
               <FormattedMessage id="detailMore" />
             </Button>

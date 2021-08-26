@@ -22,7 +22,7 @@ export default ({ envDs, hostDs, ALL_ENV_KEY }: SearchProps): any => ({
       name: 'params',
     },
     {
-      name: 'envId',
+      name: 'env_id',
       textField: 'name',
       valueField: 'id',
       defaultValue: ALL_ENV_KEY,
@@ -31,14 +31,14 @@ export default ({ envDs, hostDs, ALL_ENV_KEY }: SearchProps): any => ({
           record: Record
         }) => {
           const isEnv = record.get('typeKey') === ENV_TAB;
-          const current = record.get('envId');
+          const current = record.get('env_id');
           return !isEnv && Number(current) ? 'never' : 'always';
         },
       },
       options: envDs,
     },
     {
-      name: 'hostId',
+      name: 'host_id',
       textField: 'name',
       valueField: 'id',
       defaultValue: ALL_ENV_KEY,
@@ -47,7 +47,7 @@ export default ({ envDs, hostDs, ALL_ENV_KEY }: SearchProps): any => ({
           record: Record
         }) => {
           const isHost = record.get('typeKey') === HOST_TAB;
-          const current = record.get('envId');
+          const current = record.get('host_id');
           return !isHost && Number(current) ? 'never' : 'always';
         },
       },

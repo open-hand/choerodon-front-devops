@@ -1,10 +1,9 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Spin } from 'choerodon-ui';
-import { Choerodon, axios } from '@choerodon/boot';
+import { Spin, message } from 'choerodon-ui';
+import { axios } from '@choerodon/boot';
 import YamlEditor from '@/components/yamlEditor';
 import InterceptMask from '@/components/intercept-mask';
-import { handlePromptError } from '@/utils';
 
 import './index.less';
 import { useModifyValuesStore } from './stores';
@@ -21,19 +20,15 @@ const ValueModalContent = observer(() => {
     appServiceId,
     appServiceVersionId,
     envId,
-  } = useModifyValuesStore();
-
-  const [isDisabled, setIsDisabled] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const {
     valuesDs,
     projectId,
   } = useModifyValuesStore();
 
-  const yaml = valuesDs.current?.get('yaml');
+  const [value, setValue] = useState('');
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  modal.handleOk(handleOk);
+  const yaml = valuesDs.current?.get('yaml');
 
   function upgrade(data:any) {
     const url = isMiddleware
@@ -47,7 +42,7 @@ const ValueModalContent = observer(() => {
     setIsLoading(true);
 
     const data:any = {
-      values: yaml || '',
+      values: value || yaml || '',
       instanceId,
       type: 'update',
       environmentId: envId,
@@ -62,18 +57,18 @@ const ValueModalContent = observer(() => {
     }
 
     try {
-      const result = await upgrade(data);
-      if (handlePromptError(result)) {
-        Choerodon.prompt('修改成功.');
-        refresh();
-      } else {
-        Choerodon.prompt('修改失败.');
+      const res = await upgrade(data);
+      if (res && res.failed) {
+        message.error('修改失败');
         return false;
       }
+      modal.close();
+      message.success('修改成功');
+      refresh();
       return true;
     } catch (e) {
-      Choerodon.handleResponseError(e);
-      return false;
+      modal.close();
+      throw new Error(e);
     }
   }
 
@@ -82,13 +77,15 @@ const ValueModalContent = observer(() => {
   }
 
   function handleChange(nextValue:string) {
-    valuesDs.current?.set('yaml', nextValue);
+    setValue(nextValue);
   }
 
   function handleEnableNext(flag:boolean) {
     setIsDisabled(flag);
     toggleOkDisabled(flag);
   }
+
+  modal.handleOk(handleOk);
 
   return (
     <>
@@ -106,7 +103,7 @@ const ValueModalContent = observer(() => {
       <Spin spinning={valuesDs.status === 'loading'}>
         <YamlEditor
           readOnly={false}
-          value={yaml || ''}
+          value={value || yaml || ''}
           originValue={yaml}
           onValueChange={handleChange}
           handleEnableNext={handleEnableNext}
