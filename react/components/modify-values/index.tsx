@@ -1,15 +1,14 @@
 import React from 'react';
 import { Modal } from 'choerodon-ui/pro';
+import { observer } from 'mobx-react-lite';
 import { StoreProvider } from './stores';
 import FormContent from './Content';
 
-function Modify(props:any) {
-  return (
-    <StoreProvider {...props}>
-      <FormContent />
-    </StoreProvider>
-  );
-}
+const Modify = observer((props:any) => (
+  <StoreProvider {...props}>
+    <FormContent />
+  </StoreProvider>
+));
 
 const valuesKey = Modal.key();
 

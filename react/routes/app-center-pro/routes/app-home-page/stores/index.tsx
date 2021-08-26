@@ -68,7 +68,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
       permission: true,
       connect: true,
     }]);
-    searchDs.current?.init('envId', ALL_ENV_KEY);
+    searchDs.current?.init('env_id', ALL_ENV_KEY);
   }, []);
 
   const loadHostData = useCallback(async () => {
@@ -77,7 +77,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
       name: '全部主机',
       id: ALL_ENV_KEY,
     }]);
-    searchDs.current?.init('hostId', ALL_ENV_KEY);
+    searchDs.current?.init('host_id', ALL_ENV_KEY);
   }, []);
 
   useEffect(() => {

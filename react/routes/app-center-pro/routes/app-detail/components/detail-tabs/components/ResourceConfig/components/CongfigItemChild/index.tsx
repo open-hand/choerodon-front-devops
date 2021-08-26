@@ -65,14 +65,14 @@ const ConfigItemChild = (props:any) => {
   return (
     <div className={`${subfixCls}-resourceConfig-main`}>
       <div>
-        <StatusIcon
-          name={name}
-          status={status}
-          error={error}
-          clickAble={false}
-          // onClick={() => openDomainEdit(itemId)}
-          // permissionCode={['choerodon.code.project.deploy.app-deployment.resource.ps.domain-detail']}
-        />
+        <span>
+          <StatusIcon
+            name={name}
+            status={status}
+            error={error}
+            clickAble={false}
+          />
+        </span>
         <span>
           域名名称
         </span>

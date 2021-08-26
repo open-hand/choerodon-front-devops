@@ -2,6 +2,9 @@
 import React, { useMemo } from 'react';
 import { HeaderButtons } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
+import { Modal } from 'choerodon-ui/pro';
+import DeployGroupConfigModal from '@/routes/app-center-pro/components/OpenAppCreateModal/components/deploy-group-config';
+import DeployGroupAppModal from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config';
 import { useAppDetailTabsStore } from '../../stores';
 import { openModifyValueModal } from '@/components/modify-values';
 import { useAppDetailsStore } from '../../../../stores';
@@ -12,9 +15,19 @@ import { openChangeActive } from '@/components/app-status-toggle';
 import { openMarketUpgradeModal } from '@/components/app-upgrade';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
 import {
-  APP_STATUS, CHART_CATERGORY, DEPLOY_CATERGORY, ENV_TAB, HOST_CATERGORY, IS_HOST, IS_MARKET, IS_SERVICE,
+  APP_STATUS,
+  CHART_CATERGORY,
+  DEPLOY_CATERGORY,
+  ENV_TAB,
+  HOST_CATERGORY,
+  IS_HOST,
+  IS_MARKET,
+  IS_SERVICE,
 } from '@/routes/app-center-pro/stores/CONST';
 import { getChartSourceGroup } from '@/routes/app-center-pro/utils';
+
+const deployGroupConfig = Modal.key();
+const deployGroupApp = Modal.key();
 
 const DetailsTabsHeaderButtons = () => {
   const {
@@ -59,6 +72,26 @@ const DetailsTabsHeaderButtons = () => {
     chartSource || sourceType, deployType,
   );
 
+  // 部署组修改容器配置
+  function openDeployGroupConfig() {
+    Modal.open({
+      key: deployGroupConfig,
+      title: '修改容器配置',
+      children: <DeployGroupConfigModal />,
+      okText: '修改',
+    });
+  }
+
+  // 部署组修改应用
+  function openDeployGroupApp() {
+    Modal.open({
+      key: deployGroupApp,
+      title: '修改应用',
+      children: <DeployGroupAppModal />,
+      okText: '修改',
+    });
+  }
+
   // 修改应用（3种分类）
   const modifyAppObj = useMemo(() => {
     let obj;
@@ -75,9 +108,11 @@ const DetailsTabsHeaderButtons = () => {
           groupBtnItems: [
             {
               name: '修改应用配置',
+              handler: openDeployGroupApp,
             },
             {
               name: '修改容器配置',
+              handler: openDeployGroupConfig,
             },
           ],
         };
@@ -140,7 +175,7 @@ const DetailsTabsHeaderButtons = () => {
     name: '重新部署',
     icon: 'redeploy_line',
     handler: () => openRedeploy({
-      appServiceId,
+      appServiceId: instanceId,
       commandVersion,
       projectId,
       refresh,
@@ -210,6 +245,7 @@ const DetailsTabsHeaderButtons = () => {
     let btnsGroup:any[] = [];
     const currentStatus = deployType === ENV_TAB ? appStatus : devopsHostCommandDTO?.status;
     switch (currentStatus) {
+      case APP_STATUS.RUNNING:
       case APP_STATUS.ACTIVE:
         btnsGroup = [stopApp, deleteApp];
         break;
@@ -233,6 +269,7 @@ const DetailsTabsHeaderButtons = () => {
   const getIsServicesActionData = () => {
     let data:any = [];
     switch (appStatus) {
+      case APP_STATUS.RUNNING:
       case APP_STATUS.ACTIVE:
         data = [modifyValues, modifyAppObj, redeploy, createSource, ...moreOpts];
         break;
@@ -250,6 +287,7 @@ const DetailsTabsHeaderButtons = () => {
   const getIsMarketActionData = () => {
     let data:any = [];
     switch (appStatus) {
+      case APP_STATUS.RUNNING:
       case APP_STATUS.ACTIVE:
         data = [modifyValues, upGrade, redeploy, ...moreOpts];
         break;
@@ -294,7 +332,7 @@ const DetailsTabsHeaderButtons = () => {
     return [...data, {
       icon: 'refresh',
       iconOnly: true,
-      handler: () => refresh(true),
+      handler: refresh,
     }];
   };
 

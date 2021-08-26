@@ -88,9 +88,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
         break;
     }
     return current;
-  }, [appSource, deployType]);
-
-  const [appDetailsDs] = useDataSet(AppDetailsDataSet(), []);
+  }, [appCatergory?.code]);
 
   // 应用事件
   const appEventsDs = useMemo(() => new DataSet(AppEventsDataSet({ appCenterId, projectId })), [appCenterId, projectId]);
@@ -112,7 +110,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
 
   const appDetailTabStore = useStore({ defaultKey: tabKeys[0] });
 
-  const refresh = useCallback((refreshDetails?:boolean, callback?:CallableFunction) => {
+  const refresh = (refreshDetails?:boolean, callback?:CallableFunction) => {
     refreshDetails && appDs.query();
     switch (appDetailTabStore.currentTabKey) {
       case APP_EVENT:
@@ -131,11 +129,11 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
         break;
     }
     typeof callback === 'function' && callback();
-  }, [appDetailTabStore.currentTabKey, appEventsDs, podDetailsDs, resourceConfigDs, runDetailsStore]);
+  };
 
   useEffect(() => {
     refresh();
-  }, []);
+  }, [appDetailTabStore.currentTabKey]);
 
   const value = {
     ...props,
@@ -145,7 +143,6 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     tabKeys,
     appDetailTabStore,
     appEventsDs,
-    appDetailsDs,
     runDetailsStore,
     resourceConfigDs,
     refresh,
