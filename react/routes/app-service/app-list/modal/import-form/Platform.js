@@ -122,8 +122,8 @@ const Platform = injectIntl(observer(({ checkData }) => {
   function renderSelect(record) {
     return (
       <Select name="type" record={record}>
-        <Option value="普通服务">普通服务</Option>
-        <Option value="测试服务">测试服务</Option>
+        <Option value="normal">普通服务</Option>
+        <Option value="test">测试服务</Option>
       </Select>
     );
   }
@@ -191,6 +191,12 @@ const Platform = injectIntl(observer(({ checkData }) => {
       )}
       {importRecord?.get('platformType') === 'gitlab' && (
         <>
+          {!importRecord?.get('isGitLabTemplate')
+          && (
+          <blockquote className="c7ncd-import-gitlab-activate-note">
+            {formatMessage({ id: 'c7ncd.import.gitlab.activate.note' })}
+          </blockquote>
+          )}
           <Table
             dataSet={gitlabSelectedDs}
             queryBar="none"
@@ -198,10 +204,7 @@ const Platform = injectIntl(observer(({ checkData }) => {
             <Column name="serverName" editor />
             <Column
               name="name"
-              editor={(record, name) => {
-                console.log(record);
-                return <TextField readOnly name="name" />;
-              }}
+              editor={(record, name) => <TextField readOnly name="name" />}
             />
             <Column
               name="type"

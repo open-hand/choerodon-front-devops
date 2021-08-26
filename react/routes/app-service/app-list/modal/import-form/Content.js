@@ -162,7 +162,6 @@ const ImportForm = injectIntl(observer((props) => {
     return (
       <div className={`${prefixCls}-option-child`}>
         {formatMessage({ id: `${intlPrefix}.import.type` })}
-        <div className={`${prefixCls}-newtips`}><NewTips showHelp helpText="etcd类型的节点建议为单数， 以避免脑裂" /></div>
       </div>
     );
   }
@@ -220,13 +219,13 @@ const ImportForm = injectIntl(observer((props) => {
                   <Option value>
                     <div className={`${prefixCls}-option-child`}>
                       {formatMessage({ id: `${intlPrefix}.gitlab.simple` })}
-                      <div className={`${prefixCls}-newtips`}><NewTips showHelp helpText="etcd类型的节点建议为单数， 以避免脑裂" /></div>
+                      <div className={`${prefixCls}-newtips`}><NewTips showHelp helpText="选择后，将对目标仓库执行克隆操作，以此来生成新的应用服务" /></div>
                     </div>
                   </Option>
                   <Option value={false}>
                     <div className={`${prefixCls}-option-child`}>
                       {formatMessage({ id: `${intlPrefix}.gitlab.move` })}
-                      <div className={`${prefixCls}-newtips`}><NewTips showHelp helpText="etcd类型的节点建议为单数， 以避免脑裂" /></div>
+                      <div className={`${prefixCls}-newtips`}><NewTips showHelp helpText="此操作将用于从【未与Choerodon猪齿鱼项目关联】的GitLab Group中批量迁移代码仓库至当前项目。注意：成功迁移后，原代码仓库将从原来的Group中消失" /></div>
                     </div>
                   </Option>
                 </SelectBox>
@@ -235,7 +234,7 @@ const ImportForm = injectIntl(observer((props) => {
                     onOption={(param) => ({
                       disabled: param.record.data.bindFlag,
                     })}
-                    addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.address.${record.get('platformType')}.tips` })} />}
+                    addonAfter={<Tips helpText="此处支持模糊搜索；您需要输入目标Group的名称来进行搜索。此处仅能选中当前用户拥有Owner权限且【未与Choerodon猪齿鱼项目关联】的Group。" />}
                     name="gitlabTemplate"
                     searchable
                     searchMatcher="params"

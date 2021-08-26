@@ -1608,6 +1608,7 @@ const cluster = {
   'c7ncd.cluster.activate.coped': '已复制',
   'c7ncd.cluster.activate.desc': '复制下文代码至Kubernetes运行，与平台建立链接',
   'c7ncd.cluster.activate.note': '注意：操作前请确保集群中helm指令为 v3.2.0 及以上版本。若未达到要求版本，请先更新helm指令后再进行以下操作。',
+  'c7ncd.import.gitlab.activate.note': '注意：迁移操作执行成功后，代码仓库将从原来的Group中迁移至当前项目对应的Group，且操作不可撤销。',
   'c7ncd.cluster.check.failed':
     '只能由小写字母、数字、"-"组成，且以小写字母开头，不能以"-"结尾',
   'c7ncd.cluster.check.exist': '已存在',
