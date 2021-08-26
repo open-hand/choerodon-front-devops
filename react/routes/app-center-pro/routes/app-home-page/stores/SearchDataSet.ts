@@ -32,7 +32,7 @@ export default ({ envDs, hostDs, ALL_ENV_KEY }: SearchProps): any => ({
         }) => {
           const isEnv = record.get('typeKey') === ENV_TAB;
           const current = record.get('env_id');
-          return !isEnv && Number(current) ? 'never' : 'always';
+          return isEnv && Number(current) ? 'never' : 'always';
         },
       },
       options: envDs,
@@ -48,7 +48,7 @@ export default ({ envDs, hostDs, ALL_ENV_KEY }: SearchProps): any => ({
         }) => {
           const isHost = record.get('typeKey') === HOST_TAB;
           const current = record.get('host_id');
-          return !isHost && Number(current) ? 'never' : 'always';
+          return isHost && Number(current) ? 'never' : 'always';
         },
       },
       options: hostDs,

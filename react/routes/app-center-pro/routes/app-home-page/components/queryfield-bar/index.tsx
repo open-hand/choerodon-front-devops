@@ -80,7 +80,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
           {mainStore.getCurrentTypeTabKey === typeTabKeys.ENV_TAB ? (
             <Select
               prefix="环境:"
-              name="envId"
+              name="env_id"
               colSpan={3}
               searchable
               optionRenderer={renderEnvOption}
@@ -90,7 +90,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
           ) : (
             <Select
               prefix="主机:"
-              name="hostId"
+              name="host_id"
               colSpan={3}
               searchable
               optionRenderer={renderHostOption}
