@@ -51,9 +51,9 @@ const DetailsTabsHeaderButtons = () => {
 
   const isMiddleware = chartSource === 'middleware';
 
-  const whichGroup = getChartSourceGroup({
+  const whichGroup = getChartSourceGroup(
     chartSource, deployType,
-  }as any);
+  );
 
   // 修改应用（3种分类）
   const modifyAppObj = useMemo(() => {
@@ -222,7 +222,7 @@ const DetailsTabsHeaderButtons = () => {
       name: '更多操作',
       groupBtnItems: btnsGroup,
     } : null;
-  }, []);
+  }, [activeApp, appStatus, deleteApp, stopApp]);
 
   // 项目分组
   const getIsServicesActionData = () => {
@@ -291,7 +291,7 @@ const DetailsTabsHeaderButtons = () => {
       iconOnly: true,
       handler: refresh,
     }];
-  }, []);
+  }, [getIsHostActionData, getIsMarketActionData, getIsServicesActionData, refresh, whichGroup]);
 
   return <HeaderButtons showClassName items={headerBtnsItems} />;
 };

@@ -17,6 +17,7 @@ interface ContextProps {
   appId:string,
   appSource:string
   deployType:string
+  rdupmType:string
   appDs:DataSet
   appCatergory:{
     name:string,
@@ -72,6 +73,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     appDs,
     appCatergory,
     appChartSourceGroup,
+    rdupmType,
   };
   return (
     <Store.Provider value={value}>

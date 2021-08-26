@@ -2,6 +2,7 @@
 import { useLocalStore } from 'mobx-react-lite';
 import { axios, Choerodon } from '@choerodon/boot';
 import { handlePromptError } from '@/utils';
+import { CHART_CATERGORY, DEPLOY_CATERGORY } from '@/routes/app-center-pro/stores/CONST';
 
 export default function useStore({ projectId, appCenterId, envId }:any) {
   return useLocalStore(() => ({
@@ -62,16 +63,23 @@ export default function useStore({ projectId, appCenterId, envId }:any) {
    * @param instance
    * @param name
    */
-    async loadDeploymentsJson(type: string | number, project: any, instance: any, name: any) {
+    async loadDeploymentsJson(type: string | number, project: any, instance: any, name: any, groupType:string) {
       const URL_TYPE:any = {
         deploymentVOS: `deployment_detail_json?deployment_name=${name}`,
         statefulSetVOS: `stateful_set_detail_json?stateful_set_name=${name}`,
         daemonSetVOS: `daemon_set_detail_json?daemon_set_name=${name}`,
       };
 
+      let url;
+      if (groupType === CHART_CATERGORY) {
+        url = `devops/v1/projects/${project}/app_service_instances/${instance}/${URL_TYPE[type]}`;
+      } else if (groupType === DEPLOY_CATERGORY) {
+        url = `devops/v1/projects/${project}/deployments/${instance}/detail_json`;
+      }
+
       try {
         const data = await axios
-          .get(`devops/v1/projects/${project}/app_service_instances/${instance}/${URL_TYPE[type]}`);
+          .get(url);
         const res = handlePromptError(data);
         if (res) {
           this.setDeployments(data);
@@ -91,16 +99,22 @@ export default function useStore({ projectId, appCenterId, envId }:any) {
    * @param instance
    * @param name
    */
-    async loadDeploymentsYaml(type: string | number, project: any, instance: any, name: any) {
+    async loadDeploymentsYaml(type: string | number, project: any, instance: any, name: any, groupType:string) {
       const URL_TYPE:any = {
         deploymentVOS: `deployment_detail_yaml?deployment_name=${name}`,
         statefulSetVOS: `stateful_set_detail_yaml?stateful_set_name=${name}`,
         daemonSetVOS: `daemon_set_detail_yaml?daemon_set_name=${name}`,
       };
+      let url;
+      if (groupType === CHART_CATERGORY) {
+        url = `devops/v1/projects/${project}/app_service_instances/${instance}/${URL_TYPE[type]}`;
+      } else if (groupType === DEPLOY_CATERGORY) {
+        url = `devops/v1/projects/${project}/deployments/${instance}/detail_yaml`;
+      }
 
       try {
         const data = await axios
-          .get(`devops/v1/projects/${project}/app_service_instances/${instance}/${URL_TYPE[type]}`);
+          .get(url);
         const res = handlePromptError(data);
         if (res) {
           this.setDeploymentsYaml(data.detail || '');
