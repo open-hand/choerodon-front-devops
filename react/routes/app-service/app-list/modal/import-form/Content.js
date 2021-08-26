@@ -145,7 +145,6 @@ const ImportForm = injectIntl(observer((props) => {
     return (
       <div className={`${prefixCls}-option-child`}>
         {formatMessage({ id: `${intlPrefix}.import.type` })}
-        <div className={`${prefixCls}-newtips`}><NewTips showHelp helpText="etcd类型的节点建议为单数， 以避免脑裂" /></div>
       </div>
     );
   }
