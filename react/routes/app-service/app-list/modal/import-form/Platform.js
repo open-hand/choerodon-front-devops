@@ -1,12 +1,13 @@
 import React, {
-  Fragment, useCallback, useState, useEffect, useMemo,
+  useMemo,
 } from 'react';
 import {
   Table, Modal, Select, Button,
+  TextField,
 } from 'choerodon-ui/pro';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
-import { Icon, Tooltip } from 'choerodon-ui';
+import { Tooltip } from 'choerodon-ui';
 
 import SourceTable from './SourceTable';
 import MarketSourceTable from './components/market-table';
@@ -189,21 +190,27 @@ const Platform = injectIntl(observer(({ checkData }) => {
         </Table>
       )}
       {importRecord?.get('platformType') === 'gitlab' && (
-      <>
-        <Table
-          dataSet={gitlabSelectedDs}
-          queryBar="none"
-        >
-          <Column name="serverName" editor />
-          <Column name="name" />
-          <Column
-            name="type"
-            editor={renderSelect}
-          />
-          <Column name="lastActivityAt" editor />
-          <Column renderer={renderAction} width="0.7rem" />
-        </Table>
-      </>
+        <>
+          <Table
+            dataSet={gitlabSelectedDs}
+            queryBar="none"
+          >
+            <Column name="serverName" editor />
+            <Column
+              name="name"
+              editor={(record, name) => {
+                console.log(record);
+                return <TextField readOnly name="name" />;
+              }}
+            />
+            <Column
+              name="type"
+              editor={renderSelect}
+            />
+            <Column name="lastActivityAt" editor />
+            <Column renderer={renderAction} width="0.7rem" />
+          </Table>
+        </>
       )}
     </div>
   );

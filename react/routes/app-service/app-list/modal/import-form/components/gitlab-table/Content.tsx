@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import React, { useMemo, useEffect, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Table, Pagination,
 } from 'choerodon-ui/pro';
@@ -10,6 +10,7 @@ import { useGitlabTableStore } from './stores';
 import {
   TableQueryBarType,
 } from '@/interface';
+import './index.less';
 
 const { Column } = Table;
 
@@ -18,6 +19,7 @@ const GitlabSourceTable = observer(() => {
     modal,
     tableDs,
     selectedDs,
+    prefixCls,
   } = useGitlabTableStore();
   tableDs.forEach((titem) => {
     selectedDs.forEach((sitem) => {
@@ -50,7 +52,7 @@ const GitlabSourceTable = observer(() => {
   // }
 
   return (
-    <div>
+    <div className={`${prefixCls}-table-wrap`}>
       <Table
         dataSet={tableDs}
         pagination={false}

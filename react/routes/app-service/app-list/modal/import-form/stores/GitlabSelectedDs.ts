@@ -2,23 +2,25 @@
 import { axios } from '@choerodon/boot';
 import includes from 'lodash/includes';
 import { DataSet } from 'choerodon-ui/pro';
- const TypeOptionDs=()=>{
-  return({fields: [
+const TypeOptionDs = () => {
+  return ({
+    fields: [
       { name: 'text', type: 'string' },
       { name: 'value', type: 'string' },
-  ],
-  data: [{
+    ],
+    data: [{
       text: '普通服务',
       value: '普通服务',
-  }, {
+    }, {
       text: '测试服务',
       value: '测试服务',
-  }],
-})};
-const GitlabSelectedDs= ({ intlPrefix, formatMessage, projectId, importStore,typeOptionDataSet }:any) => {
-  function handleUpdate({ dataSet, record, name }:any) {
+    }],
+  })
+};
+const GitlabSelectedDs = ({ intlPrefix, formatMessage, projectId, importStore }: any) => {
+  function handleUpdate({ dataSet, record, name }: any) {
     if (name === 'name' || name === 'code') {
-      dataSet.forEach((eachRecord:any) => {
+      dataSet.forEach((eachRecord: any) => {
         if (record.id !== eachRecord.id) {
           eachRecord.getField(name).checkValidity();
         }
@@ -26,13 +28,13 @@ const GitlabSelectedDs= ({ intlPrefix, formatMessage, projectId, importStore,typ
     }
   }
 
-  async function checkCode(value:any, name:any, record:any) {
+  async function checkCode(value: any, name: any, record: any) {
     const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
+    debugger
     if (value && pa.test(value)) {
       const dataSet = record.dataSet;
-      const repeatRecord = dataSet.find((eachRecord:any) => eachRecord.id !== record.id && eachRecord.get('code') === value);
+      const repeatRecord = dataSet.find((eachRecord: any) => eachRecord.id !== record.id && eachRecord.get('code') === value);
       const { listCode } = importStore.getRepeatData || {};
-     
       if (repeatRecord) {
         return formatMessage({ id: 'checkCodeExist' });
       }
@@ -54,19 +56,19 @@ const GitlabSelectedDs= ({ intlPrefix, formatMessage, projectId, importStore,typ
     }
   }
 
-  async function checkName(value:any, name:any, record:any) {
+  async function checkName(value: any, name: any, record: any) {
     const pa = /^\S+$/;
     if (pa.test(value)) {
       const { listName } = importStore.getRepeatData || {};
       const dataSet = record.dataSet;
-      const repeatRecord = dataSet.find((eachRecord:any) => eachRecord.id !== record.id && eachRecord.get('name') === value);
-      const repeatName = dataSet.find((eachRecord:any) => eachRecord.id !== record.id && eachRecord.get('serverName') === value);
-      console.log('repeatName',repeatName);
+      const repeatRecord = dataSet.find((eachRecord: any) => eachRecord.id !== record.id && eachRecord.get('name') === value);
+      const repeatName = dataSet.find((eachRecord: any) => eachRecord.id !== record.id && eachRecord.get('serverName') === value);
+      console.log('repeatName', repeatName);
       if (repeatRecord) {
         return formatMessage({ id: 'checkNameExist' });
       }
       if (repeatName) {
-        return formatMessage({ id: 'checkCodeExist' });
+        return formatMessage({ id: 'checkNameExist' });
       }
       if (includes(listName, value)) {
         return formatMessage({ id: 'checkNameExist' });
@@ -81,16 +83,16 @@ const GitlabSelectedDs= ({ intlPrefix, formatMessage, projectId, importStore,typ
           return formatMessage({ id: `${intlPrefix}.name.failed` });
         }
       }
-    }else{
+    } else {
       return formatMessage({ id: 'nameCanNotHasSpaces' });
     }
   }
 
   return ({
-    autoQuery: false,
     selection: false,
     paging: false,
     transport: {},
+    datatojson: true,
     expandField: 'expand',
     fields: [
       { name: 'id', type: 'string' },
@@ -98,7 +100,7 @@ const GitlabSelectedDs= ({ intlPrefix, formatMessage, projectId, importStore,typ
         name: 'serverName',
         type: 'string',
         validator: checkName,
-        required:true,
+        required: true,
         maxLength: 40,
         label: formatMessage({ id: `${intlPrefix}.name` }),
       },
@@ -113,13 +115,13 @@ const GitlabSelectedDs= ({ intlPrefix, formatMessage, projectId, importStore,typ
         name: 'type',
         type: 'string',
         label: formatMessage({ id: `${intlPrefix}.type` }),
-        defaultValue:'普通服务',
+        defaultValue: '普通服务',
       },
-      { name: 'lastActivityAt',type:'string', label: formatMessage({ id: 'updateDate' }) },
+      { name: 'lastActivityAt', type: 'string', label: formatMessage({ id: 'updateDate' }) },
     ],
     events: {
       update: handleUpdate,
     },
   });
 };
-export {TypeOptionDs,GitlabSelectedDs};
+export { TypeOptionDs, GitlabSelectedDs };

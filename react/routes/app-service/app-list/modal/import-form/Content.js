@@ -43,8 +43,8 @@ const ImportForm = injectIntl(observer((props) => {
   }, [record.get('platformType')]);
 
   modal.handleOk(async () => {
+    let ds;
     if (record.get('platformType') === 'share' || record.get('platformType') === 'market' || (record.get('platformType') === 'gitlab' && !record.get('isGitLabTemplate'))) {
-      let ds;
       if (record.get('platformType') === 'market') {
         ds = marketSelectedDs;
       }
@@ -85,8 +85,13 @@ const ImportForm = injectIntl(observer((props) => {
       );
       validateResult = results.every((result) => result);
     } else {
-      validateResult = await selectedDs.validate();
-      validateResult = await gitlabSelectedDs.validate();
+      if (record.get('platformType') === 'share') {
+        validateResult = await selectedDs.validate();
+      }
+      if (record.get('platformType') === 'gitlab') {
+        validateResult = await gitlabSelectedDs.validate();
+      }
+
       importStore.setSkipCheck(false);
     }
     return validateResult;
