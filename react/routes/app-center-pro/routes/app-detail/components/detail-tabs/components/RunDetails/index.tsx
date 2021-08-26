@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, {
   useState, useEffect,
 } from 'react';
@@ -51,6 +52,7 @@ export default observer(() => {
     deployTypeId: envId,
     appId,
     appDs,
+    appCatergory,
   } = useAppDetailsStore();
 
   useEffect(() => () => {
@@ -67,9 +69,11 @@ export default observer(() => {
    * @param {*} id
    * @param {*} name
    */
-  const handleClick = async (type:any, name:any) => {
-    const result = await runDetailsStore.loadDeploymentsJson(type, projectId, appId, name);
-    runDetailsStore.loadDeploymentsYaml(type, projectId, appId, name);
+  const handleClick = async (type:any, name:any, instanceId:string) => {
+    // chart包的和部署组的接口不一样
+    const groupType = appCatergory.code;
+    const result = await runDetailsStore.loadDeploymentsJson(type, projectId, instanceId, name, groupType);
+    runDetailsStore.loadDeploymentsYaml(type, projectId, instanceId, name, groupType);
     if (result) {
       setVisible(true);
     } else {
@@ -203,7 +207,7 @@ export default observer(() => {
             <Button
               className="c7ncd-detail-btn"
               type="primary"
-              onClick={(() => handleClick(podType, name))}
+              onClick={(() => handleClick(podType, name, record?.get('instanceId')))}
             >
               <FormattedMessage id="detailMore" />
             </Button>

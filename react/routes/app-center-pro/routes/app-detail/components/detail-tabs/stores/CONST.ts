@@ -8,7 +8,7 @@ const RESOURCE = 'resource';
 
 const HOST_RUNNING_DETAILS = 'host_running_details';
 
-const chartKeys = [
+const deployGroupKeys = [
   {
     key: APP_EVENT,
     name: '应用事件',
@@ -23,8 +23,8 @@ const chartKeys = [
   },
 ];
 
-const deployGroupKeys = [
-  ...chartKeys,
+const chartKeys = [
+  ...deployGroupKeys,
   {
     key: RESOURCE,
     name: '资源配置',

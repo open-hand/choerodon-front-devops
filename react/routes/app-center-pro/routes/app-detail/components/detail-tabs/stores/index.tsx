@@ -62,13 +62,14 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     appId: appCenterId,
     deployTypeId: hostOrEnvId,
     deployType,
+    rdupmType,
     appSource,
   } = useAppDetailsStore();
 
   const intlPrefix = 'c7ncd.deployment';
 
   // 区分部署组还是chart包还是jar包
-  const appCatergory = getAppCategories(appSource, deployType);
+  const appCatergory = getAppCategories(rdupmType, deployType);
 
   const tabKeys = useMemo(() => {
     let current: any[] = [];

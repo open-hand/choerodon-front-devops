@@ -223,12 +223,12 @@ const DetailAside = () => {
             deployType === HOST_TAB && renderJar()
           }
           <div>
-            <span>创建信息</span>
-            <div className={`${subfixCls}-aside-main-userinfo`}>
-              <UserInfo realName={realName} loginName={ldap ? loginName : email} avatar={imageUrl} />
-              <span>创建于</span>
-              <TimePopover content={creationDate} />
-            </div>
+            <span>创建时间</span>
+            <TimePopover content={creationDate} />
+          </div>
+          <div>
+            <span>创建者</span>
+            <UserInfo realName={realName} loginName={ldap ? loginName : email} avatar={imageUrl} />
           </div>
         </div>
       </main>

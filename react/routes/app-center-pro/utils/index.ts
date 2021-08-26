@@ -35,7 +35,9 @@ const getChartSourceGroup = (chartSource:string, deployType = 'env') => {
     return IS_MARKET;
   }
   if (isHostGroup.includes(chartSource)) return IS_HOST;
-  if (isServiceGroup.includes(chartSource)) return IS_SERVICE;
+  if (isServiceGroup.includes(chartSource)) {
+    return IS_SERVICE;
+  }
   return 'unknown_group';
 };
 

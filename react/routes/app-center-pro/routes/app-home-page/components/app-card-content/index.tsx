@@ -6,6 +6,7 @@ import { observer } from 'mobx-react-lite';
 import { useHistory, useLocation } from 'react-router';
 import { UserInfo, TimePopover, CardPagination } from '@choerodon/components';
 import { Tooltip } from 'choerodon-ui/pro';
+import EnvItem from '@/components/env-item';
 import { Record } from '@/interface';
 import AppType from '@/routes/app-center-pro/components/AppType';
 import { useAppHomePageStore } from '../../stores';
@@ -44,6 +45,8 @@ const AppItem = observer(({
 
     envName,
     envId,
+    envConnected,
+    envActive,
 
     hostId,
     hostName,
@@ -58,11 +61,12 @@ const AppItem = observer(({
     status: appStatus, // 应用状态
     objectId: instanceId,
     code: instanceName,
+
+    creationDate,
   } = record.toData();
 
   const {
     imageUrl,
-    creationDate,
     ldap,
     loginName,
     realName,
@@ -163,9 +167,9 @@ const AppItem = observer(({
   };
 
   const renderAction = () => {
-    const whichGroup = getChartSourceGroup({
+    const whichGroup = getChartSourceGroup(
       chartSource, currentType,
-    }as any);
+    );
     let data = [];
     switch (whichGroup) {
       case IS_SERVICE:
@@ -233,7 +237,8 @@ const AppItem = observer(({
           <div>
             <span>环境</span>
             <Tooltip title={envName}>
-              <span>{envName || '-'}</span>
+              {/* @ts-expect-error */}
+              <EnvItem connect={envConnected} active={envActive} name={envName} />
             </Tooltip>
           </div>
           )
