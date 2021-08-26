@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Icon } from 'choerodon-ui';
-import { Record, DataSet } from '@/interface';
+import { Button } from 'choerodon-ui/pro';
+import { Record, DataSet, FuncType } from '@/interface';
 import { mapping } from '../../stores/conGroupDataSet';
 
 import './index.less';
@@ -34,6 +35,13 @@ const Index = ({
       className={`c7ncd-appCenterPro-conGroup ${className}`}
     >
       {renderDataSource()}
+      <div
+        style={{
+          padding: '13px 10px',
+        }}
+      >
+        <Button funcType={'flat' as FuncType} icon="add">添加容器</Button>
+      </div>
     </div>
   );
 };
