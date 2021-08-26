@@ -223,7 +223,7 @@ export default observer(() => {
             handleChangeCount={changeTargetCount}
             store={runDetailsStore}
             envId={envId}
-            refresh={() => refresh(() => appDs.query())}
+            refresh={() => refresh(true)}
           />
         </div>
       );

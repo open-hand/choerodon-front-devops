@@ -50,6 +50,7 @@ const AppItem = observer(({
 
     hostId,
     hostName,
+    devopsHostCommandDTO,
 
     creator = {},
 
@@ -155,7 +156,7 @@ const AppItem = observer(({
 
   const getIsHostActionData = () => {
     let data:any = [];
-    switch (appStatus) {
+    switch (devopsHostCommandDTO?.status) {
       case APP_STATUS.SUCCESS:
       case APP_STATUS.FAILED:
         data = [deleteObj];

@@ -35,7 +35,7 @@ interface ContextProps {
   formatMessage(arg0: object, arg1?: object): string,
   tabKeys: {name: string, key: string}[],
   appDetailTabStore: StoreProps,
-  refresh: (callback?:CallableFunction) => void,
+  refresh: (refreshDetails?:boolean, callback?:CallableFunction) => void,
   appEventsDs: DataSet,
   podDetailsDs: DataSet,
   runDetailsStore: DetailsStoreProps,
@@ -64,6 +64,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     deployType,
     rdupmType,
     appSource,
+    appDs,
   } = useAppDetailsStore();
 
   const intlPrefix = 'c7ncd.deployment';
@@ -111,7 +112,8 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
 
   const appDetailTabStore = useStore({ defaultKey: tabKeys[0] });
 
-  const refresh = useCallback((callback?:CallableFunction, refreshDetails?:boolean) => {
+  const refresh = useCallback((refreshDetails?:boolean, callback?:CallableFunction) => {
+    refreshDetails && appDs.query();
     switch (appDetailTabStore.currentTabKey) {
       case APP_EVENT:
         appEventsDs.query();
