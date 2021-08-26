@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable import/no-anonymous-default-export */
 import { DataSetProps, DataSet } from '@/interface';
 import AppCenterApis from '@/routes/app-center/apis';
@@ -15,7 +16,7 @@ export default ({ projectId, searchDs }: ListProps): any => ({
   pageSize: 6,
   queryDataSet: searchDs,
   transport: {
-    read: ({ data }: { data: { typeKey: string } }) => {
+    read: ({ data }: { data: { typeKey: string, envId:number | string, hostId:number | string } }) => {
       const { typeKey } = data || {};
       return ({
         url: typeKey === 'env' ? AppCenterApis.getAppList(projectId) : AppCenterApis.getAppListByHost(projectId),
