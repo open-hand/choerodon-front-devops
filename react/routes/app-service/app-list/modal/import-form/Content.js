@@ -153,6 +153,15 @@ const ImportForm = injectIntl(observer((props) => {
     record.set('platformType', value.type);
   }
 
+  function renderGitlabTemplate() {
+    return (
+      <div className={`${prefixCls}-option-child`}>
+        {formatMessage({ id: `${intlPrefix}.import.type` })}
+        <div className={`${prefixCls}-newtips`}><NewTips showHelp helpText="etcd类型的节点建议为单数， 以避免脑裂" /></div>
+      </div>
+    );
+  }
+
   return (
     <div className={`${prefixCls}-import-wrap`}>
       <div className={`${prefixCls}-select-custom-list`}>
@@ -202,7 +211,7 @@ const ImportForm = injectIntl(observer((props) => {
             )
             : (
               <div style={{ display: 'flex', height: '50px' }}>
-                <SelectBox name="isGitLabTemplate">
+                <SelectBox name="isGitLabTemplate" label={renderGitlabTemplate()}>
                   <Option value>
                     <div className={`${prefixCls}-option-child`}>
                       {formatMessage({ id: `${intlPrefix}.gitlab.simple` })}

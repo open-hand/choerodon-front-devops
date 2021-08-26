@@ -230,7 +230,6 @@ export default ({
         name: 'isGitLabTemplate',
         type: 'bool',
         defaultValue: false,
-        label: formatMessage({ id: `${intlPrefix}.import.type` }),
       },
       {
         name: 'githubTemplate',
