@@ -2,6 +2,7 @@
 import React, { useMemo } from 'react';
 import { HeaderButtons } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
+import { useHistory, useLocation } from 'react-router';
 import { useAppDetailTabsStore } from '../../stores';
 import { openModifyValueModal } from '@/components/modify-values';
 import { useAppDetailsStore } from '../../../../stores';
@@ -25,6 +26,9 @@ const DetailsTabsHeaderButtons = () => {
     refresh,
     projectId,
   } = useAppDetailTabsStore();
+
+  const history = useHistory();
+  const location = useLocation();
 
   const {
     appDs,
@@ -179,7 +183,9 @@ const DetailsTabsHeaderButtons = () => {
       deployType === ENV_TAB ? deletionStore.openDeleteModal({
         envId: hostOrEnvId,
         instanceId,
-        callback: refresh,
+        callback: () => {
+          history.push({ pathname: '/devops/application-center', search: location.search });
+        },
         instanceName: name,
         type: 'instance',
       }) : deleteHostApp(hostOrEnvId, instanceId);
@@ -202,7 +208,7 @@ const DetailsTabsHeaderButtons = () => {
   };
 
   // 更多操作
-  const moreOpts = useMemo(() => {
+  const moreOpts = (() => {
     let btnsGroup:any[] = [];
     switch (appStatus) {
       case APP_STATUS.ACTIVE:
@@ -222,7 +228,7 @@ const DetailsTabsHeaderButtons = () => {
       name: '更多操作',
       groupBtnItems: btnsGroup,
     } : null;
-  }, [activeApp, appStatus, deleteApp, stopApp]);
+  })();
 
   // 项目分组
   const getIsServicesActionData = () => {
@@ -271,7 +277,7 @@ const DetailsTabsHeaderButtons = () => {
     return data;
   };
 
-  const headerBtnsItems = useMemo(() => {
+  const headerBtnsItems = () => {
     let data = [];
     switch (whichGroup) {
       case IS_MARKET:
@@ -291,9 +297,9 @@ const DetailsTabsHeaderButtons = () => {
       iconOnly: true,
       handler: refresh,
     }];
-  }, [getIsHostActionData, getIsMarketActionData, getIsServicesActionData, refresh, whichGroup]);
+  };
 
-  return <HeaderButtons showClassName items={headerBtnsItems} />;
+  return <HeaderButtons showClassName items={headerBtnsItems()} />;
 };
 
 export default observer(DetailsTabsHeaderButtons);

@@ -44,8 +44,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     },
   } = props;
 
-  console.log(appId, appSource, deployType, deployTypeId, rdupmType);
-
   const {
     prefixCls,
     mainTabKeys: typeTabKeys,

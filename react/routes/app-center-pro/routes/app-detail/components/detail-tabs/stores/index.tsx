@@ -133,7 +133,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
 
   useEffect(() => {
     refresh();
-  }, [refresh]);
+  }, []);
 
   const value = {
     ...props,
