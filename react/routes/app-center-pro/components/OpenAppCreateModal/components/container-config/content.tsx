@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useImperativeHandle } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Record } from '@/interface';
 import ContainerGroup from './components/container-group';
@@ -11,7 +11,19 @@ import './index.less';
 const Index = observer(() => {
   const {
     ConGroupDataSet,
+    cRef,
   } = useContainerConfig();
+
+  useImperativeHandle(cRef, () => ({
+    handleOk: async () => {
+      const flag = await ConGroupDataSet.validate();
+      if (flag) {
+        return true;
+      }
+      return false;
+    },
+  }));
+
   return (
     <div className="c7ncd-appCenterPro-conConfig">
       <ContainerGroup
