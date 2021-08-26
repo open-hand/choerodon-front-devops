@@ -106,19 +106,19 @@ const HzeroDeployDetail = observer(() => {
   const getStatusTag = useCallback((state) => (
     <StatusTag
       colorCode={state || ''}
-      name={state ? formatMessage({ id: `${intlPrefix}.status.${state}` }) : 'unKnown'}
+      name={state ? formatMessage({ id: `${intlPrefix}.status.deleted` }) : 'unKnown'}
       style={{ width: '40px', marginLeft: '10px' }}
     />
   ), []);
   const toInstanceDetail = (record: any) => {
-    history.push(`/devops/application-center/detail/:appId/env/${formDs.current?.get('environmentDTO')?.id}`);
+    history.push(`/devops/application-center/detail/${record.get('appId')}/env/${formDs.current?.get('environmentDTO')?.id}`);
   };
   const renderInstanceCode = (record: any) => (
     <div style={{ display: 'flex' }}>
-      <div role="none" style={record.get('appStatus') === 'deleted' ? { opacity: '0.5' } : { color: '#415BC9' }} onClick={() => toInstanceDetail(record)}>
+      <div role="none" style={(record.get('appStatus') === 'deleted' || record.get('appStatus') === 'notExist') ? { opacity: '0.5' } : { color: '#415BC9' }} onClick={() => toInstanceDetail(record)}>
         {record.get('instanceCode')}
       </div>
-      <div>{record.get('appStatus') === 'deleted' ? getStatusTag(record.get('appStatus')) : ''}</div>
+      <div>{(record.get('appStatus') === 'deleted' || record.get('appStatus') === 'notExist') ? getStatusTag(record.get('appStatus')) : ''}</div>
     </div>
   );
   if (formDs.status === 'loading') {

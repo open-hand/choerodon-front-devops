@@ -39,6 +39,10 @@ export default ({
       name: 'appStatus',
       required: true,
     },
+    {
+      name: 'appId',
+      required: true,
+    },
     { name: 'value' },
   ],
 });
