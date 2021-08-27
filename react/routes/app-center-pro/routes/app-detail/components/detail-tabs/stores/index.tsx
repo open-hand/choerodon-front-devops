@@ -13,20 +13,18 @@ import {
   chartKeys,
   deployGroupKeys,
   hostKeys,
-  HOST_RUNNING_DETAILS,
   POD_DETAILS,
   RESOURCE,
   RUNNING_DETAILS,
 } from './CONST';
 import useStore, { StoreProps } from './useStore';
 import runningDetailsStore, { StoreProps as DetailsStoreProps } from './RunningDetailsStore';
-import AppDetailsDataSet from './AppDetailsDataSet';
 import AppEventsDataSet from './AppEventsDataSet';
 import PodsDetailsDataSet from './PodsDetailsDataSet';
 import ResourceConfigDs from './ResourceConfigDataSet';
-import { getAppCategories, getChartSourceGroup } from '@/routes/app-center-pro/utils';
+import { getAppCategories } from '@/routes/app-center-pro/utils';
 import {
-  CHART_CATERGORY, DEPLOY_CATERGORY, HOST_CATERGORY, IS_HOST, IS_MARKET, IS_SERVICE,
+  CHART_CATERGORY, DEPLOY_CATERGORY, HOST_CATERGORY,
 } from '@/routes/app-center-pro/stores/CONST';
 
 interface ContextProps {
@@ -91,7 +89,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
   }, [appCatergory?.code]);
 
   // 应用事件
-  const appEventsDs = useMemo(() => new DataSet(AppEventsDataSet({ appCenterId, projectId })), [appCenterId, projectId]);
+  const appEventsDs = useMemo(() => new DataSet(AppEventsDataSet({ appCenterId })), [appCenterId]);
 
   // pod详情
   const podDetailsDs = useMemo(() => new DataSet(PodsDetailsDataSet({

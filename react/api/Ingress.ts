@@ -28,6 +28,14 @@ class IngressApi extends Api<IngressApi> {
       },
     });
   }
+
+  // 删除实例
+  deleteInstance(id:string) {
+    return this.request({
+      method: 'delete',
+      url: `/${id}`,
+    });
+  }
 }
 
 const ingressApi = new IngressApi();

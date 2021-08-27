@@ -1,7 +1,8 @@
+import { deployAppCenterApiConfig } from '@/api';
+
 /* eslint-disable import/no-anonymous-default-export */
 export default ({
   appCenterId,
-  projectId,
 }:any):any => ({
   autoQuery: false,
   selection: false,
@@ -22,9 +23,6 @@ export default ({
     { name: 'versionName', type: 'string' },
   ],
   transport: {
-    read: appCenterId ? {
-      method: 'get',
-      url: `/devops/v1/projects/${projectId}/deploy_app_center/${appCenterId}/env_event`,
-    } : {},
+    read: appCenterId ? deployAppCenterApiConfig.loadEvents(appCenterId) : {},
   },
 });

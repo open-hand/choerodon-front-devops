@@ -10,6 +10,7 @@ import {
 } from './CONST';
 
 import useDeletionStore, { StoreProps } from './deletionStore';
+import { hostApi } from '@/api';
 
 interface ContextProps {
   prefixCls: string,
@@ -50,17 +51,13 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   // 专门针对环境的应用删除的弹窗
   const deletionStore = useDeletionStore();
 
-  function jarDelete(hostId: string, instanceId: string) {
-    return axios.delete(`/devops/v1/projects/${projectId}/hosts/${hostId}/java_process/${instanceId}`);
-  }
-
   function goBackHomeBaby() {
     history.push({ pathname: '/devops/application-center', search: location.search });
   }
 
   async function deleteHostApp(hostId: string, instanceId: string, callback?:CallableFunction) {
     try {
-      const res = await jarDelete(hostId, instanceId);
+      const res = await hostApi.jarDelete(hostId, instanceId);
       if (res && res?.failed) {
         return res;
       }

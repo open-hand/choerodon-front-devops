@@ -15,6 +15,13 @@ class CertificationsApi extends Api<CertificationsApi> {
       },
     });
   }
+
+  deleteInstance(id:string) {
+    return this.request({
+      url: `${this.prefix}?cert_id=${id}`,
+      method: 'delete',
+    });
+  }
 }
 
 const certificationsApi = new CertificationsApi();

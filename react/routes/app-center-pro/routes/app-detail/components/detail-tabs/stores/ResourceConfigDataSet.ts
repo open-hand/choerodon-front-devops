@@ -1,5 +1,6 @@
+import { deployAppCenterApiConfig } from '@/api';
+
 const ResourceConfigDs = ({
-  projectId,
   appCenterId,
 }:{
   projectId:string
@@ -8,9 +9,7 @@ const ResourceConfigDs = ({
   autoQuery: false,
   pageSize: 10,
   transport: {
-    read: {
-      url: `devops/v1/projects/${projectId}/deploy_app_center/${appCenterId}/env_chart_service`,
-    },
+    read: deployAppCenterApiConfig.loadEnvChartService(appCenterId),
   },
 });
 

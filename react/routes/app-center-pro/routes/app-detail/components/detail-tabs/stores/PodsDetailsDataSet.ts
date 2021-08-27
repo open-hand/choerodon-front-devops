@@ -1,3 +1,5 @@
+import { deployAppCenterApiConfig, podsApiConfig } from '@/api';
+
 /* eslint-disable import/no-anonymous-default-export */
 export default ({
   formatMessage, intlPrefix, projectId, appCenterId, envId,
@@ -15,22 +17,12 @@ export default ({
   transport: {
     read: ({ data }: {
       data: any,
-    }) => (appCenterId ? ({
-      url: `devops/v1/projects/${projectId}/deploy_app_center/${appCenterId}/env_pods_page`,
-      method: 'post',
-      data: {
-        params: [],
-        searchParam: {},
-      },
-    }) : {}),
+    }) => (appCenterId ? deployAppCenterApiConfig.loadPodsPage(appCenterId) : {}),
     destroy: ({ data }: {
       data: any,
     }) => {
       const podId = data[0].id;
-      return {
-        url: `devops/v1/projects/${projectId}/pods/${podId}?env_id=${envId}`,
-        method: 'delete',
-      };
+      return podsApiConfig.deletePods(podId, envId);
     },
   },
   fields: [
