@@ -111,7 +111,7 @@ const HzeroDeployDetail = observer(() => {
     />
   ), []);
   const toInstanceDetail = (record: any) => {
-    history.push(`/devops/application-center/detail/${record.get('appId')}/env/${formDs.current?.get('environmentDTO')?.id}`);
+    history.push(`/devops/application-center/detail/${record.get('appId')}/hzero/env/${formDs.current?.get('environmentDTO')?.id}/chart`);
   };
   const renderInstanceCode = (record: any) => (
     <div style={{ display: 'flex' }}>
