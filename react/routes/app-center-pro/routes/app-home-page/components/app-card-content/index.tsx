@@ -102,20 +102,19 @@ const AppItem = observer(({
   };
 
   const stopObj = {
-    service: [],
+    service: ['choerodon.code.project.deploy.app-deployment.application-center.app-toggle-status'],
     text: '停用',
     action: () => toggleActive('stop'),
   };
 
   const activeObj = {
-    service: [],
+    service: ['choerodon.code.project.deploy.app-deployment.application-center.app-toggle-status'],
     text: '启用',
-    // action: () => handleDelete({ record: tableRecord }),
     action: () => toggleActive('start'),
   };
 
   const deleteObj = {
-    service: [],
+    service: ['choerodon.code.project.deploy.app-deployment.application-center.app-delete'],
     text: '删除',
     action: handleDelete,
   };

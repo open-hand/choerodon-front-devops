@@ -160,6 +160,7 @@ const DetailsTabsHeaderButtons = () => {
   const modifyValues = {
     name: '修改Values',
     icon: 'rate_review1',
+    permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-values-modify'],
     handler: () => openModifyValueModal({
       appServiceVersionId,
       appServiceId,
@@ -174,6 +175,7 @@ const DetailsTabsHeaderButtons = () => {
   const redeploy = {
     name: '重新部署',
     icon: 'redeploy_line',
+    permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-redeploy'],
     handler: () => openRedeploy({
       appServiceId: instanceId,
       commandVersion,
@@ -186,6 +188,7 @@ const DetailsTabsHeaderButtons = () => {
   const activeApp = {
     name: '启用应用',
     // icon: 'check',
+    permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-toggle-status'],
     handler: () => openChangeActive({
       active: 'start',
       name,
@@ -200,6 +203,7 @@ const DetailsTabsHeaderButtons = () => {
   const stopApp = {
     name: '停用应用',
     // icon: 'do_not_disturb_alt',
+    permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-toggle-status'],
     handler: () => openChangeActive({
       active: 'stop',
       name,
@@ -214,6 +218,7 @@ const DetailsTabsHeaderButtons = () => {
   const deleteApp = {
     name: '删除应用',
     // icon: 'delete_forever-o',
+    permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-delete'],
     handler: () => {
       deployType === ENV_TAB ? deletionStore.openDeleteModal({
         envId: hostOrEnvId,
@@ -229,6 +234,7 @@ const DetailsTabsHeaderButtons = () => {
   const upGrade = {
     name: '升级',
     icon: 'rate_review1',
+    permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-upgrade'],
     handler: () => openMarketUpgradeModal({
       instanceId,
       appServiceId,
@@ -332,7 +338,7 @@ const DetailsTabsHeaderButtons = () => {
     return [...data, {
       icon: 'refresh',
       iconOnly: true,
-      handler: refresh,
+      handler: () => appDs.query(),
     }];
   };
 

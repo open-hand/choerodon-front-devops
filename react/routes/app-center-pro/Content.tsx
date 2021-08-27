@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 import React, { useMemo } from 'react';
 import { Route, Switch } from 'react-router';
+import { PermissionRoute } from '@choerodon/master';
 import { nomatch } from '@choerodon/boot';
 import map from 'lodash/map';
 
@@ -52,7 +53,7 @@ const AppCenterPro = observer(() => {
       {deleteModals}
       <Switch>
         <Route exact path={match.url} component={AppHomePage} />
-        <Route exact path={`${match.url}/detail/:appId/:chartSource/:deployType/:deployTypeId/:rdupmType`} component={AppDetail} />
+        <PermissionRoute service={['choerodon.code.project.deploy.app-deployment.application-center.details']} exact path={`${match.url}/detail/:appId/:chartSource/:deployType/:deployTypeId/:rdupmType`} component={AppDetail} />
         <Route path="*" component={nomatch} />
       </Switch>
     </>

@@ -44,7 +44,7 @@ class DeployAppCenterApi extends Api<DeployAppCenterApi> {
   loadEnvChartService(appCenterId:string) {
     return this.request({
       url: `${this.prefix}/${appCenterId}/env_chart_service`,
-      method: 'get',
+      method: 'post',
     });
   }
 

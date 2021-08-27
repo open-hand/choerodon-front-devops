@@ -67,15 +67,15 @@ function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
             component={DeployReports}
           />
           <PermissionRoute
-            service={[]}
+            service={['choerodon.code.project.deploy.app-deployment.application-center.default']}
             path={`${match.url}/application-center`}
             component={AppCenter}
           />
-          <PermissionRoute
+          {/* <PermissionRoute
             service={[]}
             path={`${match.url}/application-center2`}
             component={AppCenter2}
-          />
+          /> */}
           <Route path="*" component={nomatch} />
         </Switch>
         <ModalContainer />
