@@ -17,7 +17,7 @@ class HostApi extends Api<HostApi> {
   // 删除jar包
   jarDelete(hostId:string, instanceId:string) {
     return this.request({
-      url: `${this.prefix}/${hostId}/java_process/${instanceId}`,
+      url: `${this.prefix}/apps/${instanceId}`,
       method: 'delete',
     });
   }
@@ -29,7 +29,7 @@ class HostApi extends Api<HostApi> {
     });
   }
 
-  // load app detail of host
+  // 查询主机下的应用实例详情
   loadHostAppDetail(appId:string) {
     return this.request({
       url: `${this.prefix}/apps/${appId}`,

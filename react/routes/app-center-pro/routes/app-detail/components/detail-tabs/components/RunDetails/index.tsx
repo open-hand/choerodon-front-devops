@@ -223,7 +223,7 @@ export default observer(() => {
             handleChangeCount={changeTargetCount}
             store={runDetailsStore}
             envId={envId}
-            refresh={() => refresh(true)}
+            refresh={refresh}
           />
         </div>
       );

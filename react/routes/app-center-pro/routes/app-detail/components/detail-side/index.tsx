@@ -6,10 +6,17 @@ import EnvItem from '@/components/env-item';
 import PodCircle from '@/components/pod-circle';
 import { useAppDetailsStore } from '../../stores';
 import './index.less';
-import { getAppCategories } from '@/routes/app-center-pro/utils';
 import {
   CHART_CATERGORY,
-  CHART_HZERO, CHART_MARKET, CHART_MIDDLEWARE, CHART_NORMAL, CHART_REPO, CHART_SHARE, CHART_UPLOAD, ENV_TAB, HOST_TAB,
+  CHART_HZERO,
+  CHART_MARKET,
+  CHART_MIDDLEWARE,
+  CHART_NORMAL,
+  CHART_REPO,
+  CHART_SHARE,
+  CHART_UPLOAD,
+  ENV_TAB,
+  HOST_TAB,
 } from '@/routes/app-center-pro/stores/CONST';
 
 const DetailAside = () => {
@@ -52,8 +59,11 @@ const DetailAside = () => {
     hostName,
     hostId,
     status: hostStatus,
-    prodJarInfoVO,
+    // prodJarInfoVO,
     devopsHostCommandDTO,
+    artifactId,
+    groupId,
+    version,
   } = appDs.current?.toData() || {};
 
   const {
@@ -77,6 +87,9 @@ const DetailAside = () => {
   function getVersionName() {
     let message = '';
     switch (objectStatus) {
+      case 'running':
+        message = formatMessage({ id: 'running' });
+        break;
       case 'failed':
         message = formatMessage({ id: 'deploy_failed' });
         break;
@@ -146,13 +159,13 @@ const DetailAside = () => {
           </span>
           <span>
             (artifactId：
-            {prodJarInfoVO?.artifactId}
+            {artifactId}
             <br />
             groupId：
-            {prodJarInfoVO?.groupId}
+            {groupId}
             <br />
             Jar包版本：
-            {prodJarInfoVO?.version}
+            {version}
             )
           </span>
         </div>
