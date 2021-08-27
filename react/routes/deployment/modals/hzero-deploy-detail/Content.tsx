@@ -118,7 +118,7 @@ const HzeroDeployDetail = observer(() => {
       <div role="none" style={(record.get('appStatus') === 'deleted' || record.get('appStatus') === 'notExist') ? { opacity: '0.5' } : { color: '#415BC9' }} onClick={() => toInstanceDetail(record)}>
         {record.get('instanceCode')}
       </div>
-      <div>{(record.get('appStatus') === 'deleted' || record.get('appStatus') === 'notExist') ? getStatusTag(record.get('appStatus')) : ''}</div>
+      <div>{record.get('appStatus') === 'deleted' ? getStatusTag(record.get('appStatus')) : ''}</div>
     </div>
   );
   if (formDs.status === 'loading') {
