@@ -78,7 +78,7 @@ class DeleteModal extends Component {
     } = this.props;
 
     this.setState({ checkLoading: true });
-    const result = await store.deleteCheck(projectId, envId, objectType)
+    const result = await store.deleteCheck(envId, objectType)
       .catch(() => {
         this.setState({ checkLoading: false });
       });
@@ -125,7 +125,7 @@ class DeleteModal extends Component {
 
     this.setState({ canSendMessage: false, isError: false });
 
-    await store.sendMessage(projectId, envId, objectId, notificationId, objectType)
+    await store.sendMessage(envId, objectId, notificationId, objectType)
       .catch((e) => {
         Choerodon.handleResponseError(e);
       });
@@ -168,7 +168,7 @@ class DeleteModal extends Component {
     } = this.props;
     this.setState({ loading: true });
     try {
-      const res = await store.deleteData(projectId, objectId, objectType, envId);
+      const res = await store.deleteData(objectId, objectType, envId);
       if (handlePromptError(res)) {
         store.removeDeleteModal(objectId, objectType);
         if (flag) {
@@ -213,7 +213,7 @@ class DeleteModal extends Component {
 
     validateFields((err, { captcha }) => {
       if (!err) {
-        store.validateCaptcha(projectId, envId, objectId, captcha, objectType)
+        store.validateCaptcha(envId, objectId, captcha, objectType)
           .then((data) => {
             if (data && data.failed) {
               this.setState({ isError: true, canDelete: false });

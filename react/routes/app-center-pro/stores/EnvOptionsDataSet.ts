@@ -1,19 +1,12 @@
-import { DataSetProps } from '@/interface';
-import AppCenterApis from '@/routes/app-center/apis';
+/* eslint-disable import/no-anonymous-default-export */
+import { environmentApiConfig } from '@/api';
 
-interface EnvOptionsProps {
-  projectId: number,
-}
-
-export default ({ projectId }: EnvOptionsProps): any => ({
+export default (): any => ({
   autoCreate: false,
   autoQuery: false,
   selection: false,
   paging: false,
   transport: {
-    read: {
-      url: AppCenterApis.getEnvList(projectId),
-      method: 'get',
-    },
+    read: environmentApiConfig.loadEnvList(),
   },
 });

@@ -1,5 +1,5 @@
 /* eslint-disable import/no-anonymous-default-export */
-import { DataSetProps, DataSet, Record } from '@/interface';
+import { DataSet, Record } from '@/interface';
 import { ENV_TAB, HOST_TAB } from '@/routes/app-center-pro/stores/CONST';
 
 interface SearchProps {

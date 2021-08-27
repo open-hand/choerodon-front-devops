@@ -51,14 +51,13 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const ALL_ENV_KEY = '0';
   const mainStore = useStore({ defaultTypeTabKey });
 
-  const envDs = useMemo(() => new DataSet(EnvOptionsDataSet({ projectId })), [projectId]);
-  const hostDs = useMemo(() => new DataSet(HostOptionsDataSet({ projectId })), [projectId]);
+  const envDs = useMemo(() => new DataSet(EnvOptionsDataSet()), []);
+  const hostDs = useMemo(() => new DataSet(HostOptionsDataSet()), []);
   const searchDs = useMemo(() => new DataSet(SearchDataSet({ envDs, hostDs, ALL_ENV_KEY })), []);
 
   const listDs = useMemo(() => new DataSet(ListDataSet({
-    projectId,
     searchDs,
-  })), [projectId]);
+  })), []);
 
   const loadEnvData = useCallback(async () => {
     await envDs.query();

@@ -3,6 +3,10 @@ import { useLocalStore } from 'mobx-react-lite';
 import { axios, Choerodon } from '@choerodon/boot';
 import { handlePromptError } from '@/utils';
 import { CHART_CATERGORY, DEPLOY_CATERGORY } from '@/routes/app-center-pro/stores/CONST';
+import { appServiceInstanceApi, appServiceInstanceApiConfig, deployAppCenterApi } from '@/api';
+import { deploymentsApiConfig } from '@/api/Deployments';
+
+type DeploymentJsonType = 'deploymentVOS'| 'statefulSetVOS' |'daemonSetVOS'
 
 export default function useStore({ projectId, appCenterId, envId }:any) {
   return useLocalStore(() => ({
@@ -63,23 +67,15 @@ export default function useStore({ projectId, appCenterId, envId }:any) {
    * @param instance
    * @param name
    */
-    async loadDeploymentsJson(type: string | number, project: any, instance: any, name: any, groupType:string) {
-      const URL_TYPE:any = {
-        deploymentVOS: `deployment_detail_json?deployment_name=${name}`,
-        statefulSetVOS: `stateful_set_detail_json?stateful_set_name=${name}`,
-        daemonSetVOS: `daemon_set_detail_json?daemon_set_name=${name}`,
-      };
-
-      let url;
+    async loadDeploymentsJson(type: DeploymentJsonType, instance: any, name: any, groupType:string) {
+      let axiosConfig;
       if (groupType === CHART_CATERGORY) {
-        url = `devops/v1/projects/${project}/app_service_instances/${instance}/${URL_TYPE[type]}`;
+        axiosConfig = appServiceInstanceApiConfig.loadDeploymentsJson(type, name, instance);
       } else if (groupType === DEPLOY_CATERGORY) {
-        url = `devops/v1/projects/${project}/deployments/${instance}/detail_json`;
+        axiosConfig = deploymentsApiConfig.getDeploymentsJson(instance);
       }
-
       try {
-        const data = await axios
-          .get(url);
+        const data = await axios(axiosConfig);
         const res = handlePromptError(data);
         if (res) {
           this.setDeployments(data);
@@ -99,17 +95,12 @@ export default function useStore({ projectId, appCenterId, envId }:any) {
    * @param instance
    * @param name
    */
-    async loadDeploymentsYaml(type: string | number, project: any, instance: any, name: any, groupType:string) {
-      const URL_TYPE:any = {
-        deploymentVOS: `deployment_detail_yaml?deployment_name=${name}`,
-        statefulSetVOS: `stateful_set_detail_yaml?stateful_set_name=${name}`,
-        daemonSetVOS: `daemon_set_detail_yaml?daemon_set_name=${name}`,
-      };
+    async loadDeploymentsYaml(type:DeploymentJsonType, instance: any, name: any, groupType:string) {
       let url;
       if (groupType === CHART_CATERGORY) {
-        url = `devops/v1/projects/${project}/app_service_instances/${instance}/${URL_TYPE[type]}`;
+        url = appServiceInstanceApiConfig.loadDeploymentsYaml(type, name, instance);
       } else if (groupType === DEPLOY_CATERGORY) {
-        url = `devops/v1/projects/${project}/deployments/${instance}/detail_yaml`;
+        url = deploymentsApiConfig.getDeploymentsYaml(instance);
       }
 
       try {
@@ -130,18 +121,14 @@ export default function useStore({ projectId, appCenterId, envId }:any) {
     },
 
     operatePodCount(name: any, num: any, kind: any) {
-      return axios
-        .put(
-          `devops/v1/projects/${projectId}/app_service_instances/operate_pod_count?envId=${envId}&name=${name}&count=${num}&kind=${kind}`,
-        );
+      return appServiceInstanceApi.operatePodCount(name, num, kind, envId);
     },
 
     async loadResource() {
       this.setLoading(true);
 
       try {
-        const data = await axios
-          .get(`devops/v1/projects/${projectId}/deploy_app_center/${appCenterId}/env_resources`);
+        const data = await deployAppCenterApi.loadEnvSource(appCenterId);
         const res = handlePromptError(data);
         if (res) {
           this.setResources(data);
