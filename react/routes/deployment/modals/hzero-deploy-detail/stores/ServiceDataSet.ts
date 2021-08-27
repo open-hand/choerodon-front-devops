@@ -26,6 +26,23 @@ export default ({
       label: formatMessage({ id: 'instanceName' }),
       required: true,
     },
+    {
+      name: 'startTime',
+      label: formatMessage({ id: `${intlPrefix}.deploymentStartTime` }),
+      required: true,
+    },
+    {
+      name: 'endTime',
+      required: true,
+    },
+    {
+      name: 'appStatus',
+      required: true,
+    },
+    {
+      name: 'appId',
+      required: true,
+    },
     { name: 'value' },
   ],
 });
