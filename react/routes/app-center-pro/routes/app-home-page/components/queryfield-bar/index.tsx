@@ -6,7 +6,6 @@ import {
 import { CustomTabs } from '@choerodon/components';
 import map from 'lodash/map';
 import { LabelLayoutType, RecordObjectProps } from '@/interface';
-import { useAppCenterListStore } from '@/routes/app-center/app-list/stores';
 import EnvOption from '@/components/env-option';
 
 import './index.less';
