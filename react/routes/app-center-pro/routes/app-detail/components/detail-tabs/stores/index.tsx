@@ -110,7 +110,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
 
   const appDetailTabStore = useStore({ defaultKey: tabKeys[0] });
 
-  const refresh = (refreshDetails?:boolean, callback?:CallableFunction) => {
+  const refresh = useCallback((refreshDetails?:boolean, callback?:CallableFunction) => {
     refreshDetails && appDs.query();
     switch (appDetailTabStore.currentTabKey) {
       case APP_EVENT:
@@ -129,11 +129,11 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
         break;
     }
     typeof callback === 'function' && callback();
-  };
+  }, [appDetailTabStore.currentTabKey]);
 
   useEffect(() => {
     refresh();
-  }, [appDetailTabStore.currentTabKey]);
+  }, [refresh]);
 
   const value = {
     ...props,
