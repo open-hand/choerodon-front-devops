@@ -31,10 +31,10 @@ const getAppCategories = (rdupmType:string, deployType = 'env') => {
 
 // 制品来源分未3大类
 const getChartSourceGroup = (chartSource:string, deployType = 'env') => {
+  if (deployType === HOST_TAB) return IS_HOST;
   if (isMarketGroup.includes(chartSource)) {
     return IS_MARKET;
   }
-  if (deployType === HOST_TAB) return IS_HOST;
   if (isServiceGroup.includes(chartSource)) {
     return IS_SERVICE;
   }
