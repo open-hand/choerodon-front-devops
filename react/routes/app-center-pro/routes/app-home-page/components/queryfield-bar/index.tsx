@@ -69,14 +69,6 @@ const ContentHeader: React.FC<any> = observer((): any => {
           labelLayout={'horizontal' as LabelLayoutType}
           labelWidth={1}
         >
-          <TextField
-            clearButton
-            name="params"
-            colSpan={4}
-            placeholder="请输入搜索条件"
-            prefix={<Icon type="search" />}
-            onClear={refresh}
-          />
           {mainStore.getCurrentTypeTabKey === typeTabKeys.ENV_TAB ? (
             <Select
               prefix="环境:"
@@ -97,6 +89,15 @@ const ContentHeader: React.FC<any> = observer((): any => {
               onClear={refresh}
             />
           )}
+          <TextField
+            clearButton
+            name="params"
+            colSpan={4}
+            placeholder="请输入搜索条件"
+            prefix={<Icon type="search" />}
+            onClear={refresh}
+          />
+
         </Form>
         <Button
           onClick={refresh}
