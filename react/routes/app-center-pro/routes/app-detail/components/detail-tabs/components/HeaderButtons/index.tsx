@@ -14,6 +14,7 @@ import { openRedeploy } from '@/components/reDeploy';
 import { openChangeActive } from '@/components/app-status-toggle';
 import { openMarketUpgradeModal } from '@/components/app-upgrade';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
+import { openHostAppConfigModal } from '../../../../../../components/OpenAppCreateModal/components/host-app-config';
 import {
   APP_STATUS,
   CHART_CATERGORY,
@@ -101,12 +102,12 @@ const DetailsTabsHeaderButtons = () => {
       case CHART_CATERGORY:
         obj = {
           name: '修改应用',
+          icon: 'add_comment-o',
         };
         break;
       case DEPLOY_CATERGORY:
         obj = {
           name: '修改应用',
-          // icon: 'add_comment-o',
           groupBtnItems: [
             {
               name: '修改应用配置',
@@ -122,6 +123,8 @@ const DetailsTabsHeaderButtons = () => {
       case HOST_CATERGORY:
         obj = {
           name: '修改应用',
+          handler: openHostAppConfigModal,
+          icon: 'add_comment-o',
         };
         break;
       default:
