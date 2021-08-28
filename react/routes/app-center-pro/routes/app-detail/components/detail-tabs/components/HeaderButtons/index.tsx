@@ -26,6 +26,7 @@ import {
   IS_SERVICE,
 } from '@/routes/app-center-pro/stores/CONST';
 import { getAppCategories, getChartSourceGroup } from '@/routes/app-center-pro/utils';
+import { openAppConfigModal } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config';
 
 const deployGroupConfig = Modal.key();
 const deployGroupApp = Modal.key();
@@ -104,6 +105,9 @@ const DetailsTabsHeaderButtons = () => {
         obj = {
           name: '修改应用',
           icon: 'add_comment-o',
+          handler: () => {
+            openAppConfigModal(appDs.toData() || {}, refresh);
+          },
         };
         break;
       case DEPLOY_CATERGORY:
