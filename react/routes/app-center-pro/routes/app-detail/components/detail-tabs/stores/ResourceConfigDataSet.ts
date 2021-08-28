@@ -1,35 +1,15 @@
+import { deployAppCenterApiConfig } from '@/api';
+
 const ResourceConfigDs = ({
-  projectId,
   appCenterId,
 }:{
   projectId:string
   appCenterId:string,
 }) => ({
   autoQuery: false,
-  // data: [
-  //   {
-  //     id: 1,
-  //     name: 2121,
-  //     children: [],
-  //   },
-  //   {
-  //     id: 2,
-  //     name: 2121,
-  //     children: [
-  //       {
-  //         id: 3,
-  //       },
-  //       {
-  //         id: 4,
-  //       },
-  //     ],
-  //   },
-
-  // ],
+  pageSize: 10,
   transport: {
-    read: {
-      url: `devops/v1/projects/${projectId}/deploy_app_center/${appCenterId}/env_chart_service`,
-    },
+    read: deployAppCenterApiConfig.loadEnvChartService(appCenterId),
   },
 });
 

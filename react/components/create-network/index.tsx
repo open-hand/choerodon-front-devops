@@ -19,15 +19,16 @@ type NetWorkFormProps = {
 }
 
 export const openNetWorkFormModal = (props:NetWorkFormProps) => {
+  const isModify = props.networkId;
   Modal.open({
     key: modalKey,
     drawer: true,
-    title: '创建网络',
+    title: isModify ? '修改网络' : '创建网络',
     children: <NetWorkForm {...props} />,
     style: {
       width: 740,
     },
-    okText: '创建',
+    okText: isModify ? '修改' : '创建',
   });
 };
 

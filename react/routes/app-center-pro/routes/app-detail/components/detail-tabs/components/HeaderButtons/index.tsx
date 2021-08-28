@@ -2,6 +2,9 @@
 import React, { useMemo } from 'react';
 import { HeaderButtons } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
+import { Modal } from 'choerodon-ui/pro';
+import DeployGroupConfigModal from '@/routes/app-center-pro/components/OpenAppCreateModal/components/deploy-group-config';
+import DeployGroupAppModal from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config';
 import { useAppDetailTabsStore } from '../../stores';
 import { openModifyValueModal } from '@/components/modify-values';
 import { useAppDetailsStore } from '../../../../stores';
@@ -12,15 +15,27 @@ import { openChangeActive } from '@/components/app-status-toggle';
 import { openMarketUpgradeModal } from '@/components/app-upgrade';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
 import {
-  APP_STATUS, CHART_CATERGORY, DEPLOY_CATERGORY, ENV_TAB, HOST_CATERGORY, IS_HOST, IS_MARKET, IS_SERVICE,
+  APP_STATUS,
+  CHART_CATERGORY,
+  DEPLOY_CATERGORY,
+  ENV_TAB,
+  HOST_CATERGORY,
+  IS_HOST,
+  IS_MARKET,
+  IS_SERVICE,
 } from '@/routes/app-center-pro/stores/CONST';
 import { getChartSourceGroup } from '@/routes/app-center-pro/utils';
+
+const deployGroupConfig = Modal.key();
+const deployGroupApp = Modal.key();
 
 const DetailsTabsHeaderButtons = () => {
   const {
     deleteHostApp,
     deletionStore,
+    goBackHomeBaby,
   } = useAppCenterProStore();
+
   const {
     refresh,
     projectId,
@@ -28,7 +43,7 @@ const DetailsTabsHeaderButtons = () => {
 
   const {
     appDs,
-    appId: appCenterId,
+    appId,
     deployTypeId: hostOrEnvId,
     deployType,
     appCatergory,
@@ -45,15 +60,37 @@ const DetailsTabsHeaderButtons = () => {
     commandVersion,
     name,
     objectStatus: appStatus,
+    devopsHostCommandDTO = {},
+    sourceType,
   } = appRecord?.toData() || {};
 
   const isMarket = chartSource === 'market' || chartSource === 'hzero';
 
   const isMiddleware = chartSource === 'middleware';
 
-  const whichGroup = getChartSourceGroup({
-    chartSource, deployType,
-  }as any);
+  const whichGroup = getChartSourceGroup(
+    chartSource || sourceType, deployType,
+  );
+
+  // 部署组修改容器配置
+  function openDeployGroupConfig() {
+    Modal.open({
+      key: deployGroupConfig,
+      title: '修改容器配置',
+      children: <DeployGroupConfigModal />,
+      okText: '修改',
+    });
+  }
+
+  // 部署组修改应用
+  function openDeployGroupApp() {
+    Modal.open({
+      key: deployGroupApp,
+      title: '修改应用',
+      children: <DeployGroupAppModal />,
+      okText: '修改',
+    });
+  }
 
   // 修改应用（3种分类）
   const modifyAppObj = useMemo(() => {
@@ -61,26 +98,28 @@ const DetailsTabsHeaderButtons = () => {
     switch (appCatergory.code) {
       case CHART_CATERGORY:
         obj = {
-          name: '修改应用（chart包）',
+          name: '修改应用',
         };
         break;
       case DEPLOY_CATERGORY:
         obj = {
-          name: '修改应用（部署组）',
+          name: '修改应用',
           // icon: 'add_comment-o',
           groupBtnItems: [
             {
               name: '修改应用配置',
+              handler: openDeployGroupApp,
             },
             {
               name: '修改容器配置',
+              handler: openDeployGroupConfig,
             },
           ],
         };
         break;
       case HOST_CATERGORY:
         obj = {
-          name: '修改应用（jar包）',
+          name: '修改应用',
         };
         break;
       default:
@@ -121,6 +160,7 @@ const DetailsTabsHeaderButtons = () => {
   const modifyValues = {
     name: '修改Values',
     icon: 'rate_review1',
+    permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-values-modify'],
     handler: () => openModifyValueModal({
       appServiceVersionId,
       appServiceId,
@@ -135,8 +175,9 @@ const DetailsTabsHeaderButtons = () => {
   const redeploy = {
     name: '重新部署',
     icon: 'redeploy_line',
+    permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-redeploy'],
     handler: () => openRedeploy({
-      appServiceId,
+      appServiceId: instanceId,
       commandVersion,
       projectId,
       refresh,
@@ -147,6 +188,7 @@ const DetailsTabsHeaderButtons = () => {
   const activeApp = {
     name: '启用应用',
     // icon: 'check',
+    permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-toggle-status'],
     handler: () => openChangeActive({
       active: 'start',
       name,
@@ -161,6 +203,7 @@ const DetailsTabsHeaderButtons = () => {
   const stopApp = {
     name: '停用应用',
     // icon: 'do_not_disturb_alt',
+    permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-toggle-status'],
     handler: () => openChangeActive({
       active: 'stop',
       name,
@@ -175,14 +218,15 @@ const DetailsTabsHeaderButtons = () => {
   const deleteApp = {
     name: '删除应用',
     // icon: 'delete_forever-o',
+    permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-delete'],
     handler: () => {
       deployType === ENV_TAB ? deletionStore.openDeleteModal({
         envId: hostOrEnvId,
         instanceId,
-        callback: refresh,
+        callback: goBackHomeBaby,
         instanceName: name,
         type: 'instance',
-      }) : deleteHostApp(hostOrEnvId, instanceId);
+      }) : deleteHostApp(hostOrEnvId, appId, goBackHomeBaby);
     },
   };
 
@@ -190,6 +234,7 @@ const DetailsTabsHeaderButtons = () => {
   const upGrade = {
     name: '升级',
     icon: 'rate_review1',
+    permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-upgrade'],
     handler: () => openMarketUpgradeModal({
       instanceId,
       appServiceId,
@@ -202,9 +247,11 @@ const DetailsTabsHeaderButtons = () => {
   };
 
   // 更多操作
-  const moreOpts = useMemo(() => {
+  const moreOpts = (() => {
     let btnsGroup:any[] = [];
-    switch (appStatus) {
+    const currentStatus = deployType === ENV_TAB ? appStatus : devopsHostCommandDTO?.status;
+    switch (currentStatus) {
+      case APP_STATUS.RUNNING:
       case APP_STATUS.ACTIVE:
         btnsGroup = [stopApp, deleteApp];
         break;
@@ -218,22 +265,23 @@ const DetailsTabsHeaderButtons = () => {
       default:
         break;
     }
-    return btnsGroup.length ? {
+    return btnsGroup.length ? [{
       name: '更多操作',
       groupBtnItems: btnsGroup,
-    } : null;
-  }, []);
+    }] : [];
+  })();
 
   // 项目分组
   const getIsServicesActionData = () => {
     let data:any = [];
     switch (appStatus) {
+      case APP_STATUS.RUNNING:
       case APP_STATUS.ACTIVE:
-        data = [modifyValues, modifyAppObj, redeploy, createSource, moreOpts];
+        data = [modifyValues, modifyAppObj, redeploy, createSource, ...moreOpts];
         break;
       case APP_STATUS.FAILED:
       case APP_STATUS.STOP:
-        data = [moreOpts];
+        data = [...moreOpts];
         break;
       default:
         break;
@@ -245,11 +293,12 @@ const DetailsTabsHeaderButtons = () => {
   const getIsMarketActionData = () => {
     let data:any = [];
     switch (appStatus) {
+      case APP_STATUS.RUNNING:
       case APP_STATUS.ACTIVE:
-        data = [modifyValues, upGrade, redeploy, moreOpts];
+        data = [modifyValues, upGrade, redeploy, ...moreOpts];
         break;
       case APP_STATUS.STOP:
-        data = [moreOpts];
+        data = [...moreOpts];
         break;
       default:
         break;
@@ -260,10 +309,10 @@ const DetailsTabsHeaderButtons = () => {
   // 主机分组
   const getIsHostActionData = () => {
     let data:any = [];
-    switch (appStatus) {
+    switch (devopsHostCommandDTO?.status) {
       case APP_STATUS.SUCCESS:
       case APP_STATUS.FAILED:
-        data = [modifyAppObj, moreOpts];
+        data = [modifyAppObj, ...moreOpts];
         break;
       default:
         break;
@@ -271,7 +320,7 @@ const DetailsTabsHeaderButtons = () => {
     return data;
   };
 
-  const headerBtnsItems = useMemo(() => {
+  const headerBtnsItems = () => {
     let data = [];
     switch (whichGroup) {
       case IS_MARKET:
@@ -289,11 +338,11 @@ const DetailsTabsHeaderButtons = () => {
     return [...data, {
       icon: 'refresh',
       iconOnly: true,
-      handler: refresh,
+      handler: () => appDs.query(),
     }];
-  }, []);
+  };
 
-  return <HeaderButtons showClassName items={headerBtnsItems} />;
+  return <HeaderButtons showClassName items={headerBtnsItems()} />;
 };
 
 export default observer(DetailsTabsHeaderButtons);

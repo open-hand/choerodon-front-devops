@@ -15,6 +15,13 @@ class ServiceApi extends Api<ServiceApi> {
       },
     });
   }
+
+  deleteInstance(id:string) {
+    return this.request({
+      url: `${this.prefix}/${id}`,
+      method: 'delete',
+    });
+  }
 }
 
 const serviceApi = new ServiceApi();

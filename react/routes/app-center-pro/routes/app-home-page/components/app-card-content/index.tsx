@@ -6,6 +6,7 @@ import { observer } from 'mobx-react-lite';
 import { useHistory, useLocation } from 'react-router';
 import { UserInfo, TimePopover, CardPagination } from '@choerodon/components';
 import { Tooltip } from 'choerodon-ui/pro';
+import EnvItem from '@/components/env-item';
 import { Record } from '@/interface';
 import AppType from '@/routes/app-center-pro/components/AppType';
 import { useAppHomePageStore } from '../../stores';
@@ -44,9 +45,12 @@ const AppItem = observer(({
 
     envName,
     envId,
+    envConnected,
+    envActive,
 
     hostId,
     hostName,
+    devopsHostCommandDTO,
 
     creator = {},
 
@@ -58,11 +62,12 @@ const AppItem = observer(({
     status: appStatus, // 应用状态
     objectId: instanceId,
     code: instanceName,
+
+    creationDate,
   } = record.toData();
 
   const {
     imageUrl,
-    creationDate,
     ldap,
     loginName,
     realName,
@@ -97,20 +102,19 @@ const AppItem = observer(({
   };
 
   const stopObj = {
-    service: [],
+    service: ['choerodon.code.project.deploy.app-deployment.application-center.app-toggle-status'],
     text: '停用',
     action: () => toggleActive('stop'),
   };
 
   const activeObj = {
-    service: [],
+    service: ['choerodon.code.project.deploy.app-deployment.application-center.app-toggle-status'],
     text: '启用',
-    // action: () => handleDelete({ record: tableRecord }),
     action: () => toggleActive('start'),
   };
 
   const deleteObj = {
-    service: [],
+    service: ['choerodon.code.project.deploy.app-deployment.application-center.app-delete'],
     text: '删除',
     action: handleDelete,
   };
@@ -118,6 +122,7 @@ const AppItem = observer(({
   const getIsServicesActionData = () => {
     let data:any = [];
     switch (appStatus) {
+      case APP_STATUS.RUNNING:
       case APP_STATUS.ACTIVE:
         data = [stopObj, deleteObj];
         break;
@@ -137,6 +142,7 @@ const AppItem = observer(({
   const getIsMarketActionData = () => {
     let data:any = [];
     switch (appStatus) {
+      case APP_STATUS.RUNNING:
       case APP_STATUS.ACTIVE:
         data = [stopObj, deleteObj];
         break;
@@ -151,7 +157,7 @@ const AppItem = observer(({
 
   const getIsHostActionData = () => {
     let data:any = [];
-    switch (appStatus) {
+    switch (devopsHostCommandDTO?.status) {
       case APP_STATUS.SUCCESS:
       case APP_STATUS.FAILED:
         data = [deleteObj];
@@ -163,9 +169,9 @@ const AppItem = observer(({
   };
 
   const renderAction = () => {
-    const whichGroup = getChartSourceGroup({
+    const whichGroup = getChartSourceGroup(
       chartSource, currentType,
-    }as any);
+    );
     let data = [];
     switch (whichGroup) {
       case IS_SERVICE:
@@ -233,7 +239,8 @@ const AppItem = observer(({
           <div>
             <span>环境</span>
             <Tooltip title={envName}>
-              <span>{envName || '-'}</span>
+              {/* @ts-expect-error */}
+              <EnvItem connect={envConnected} active={envActive} name={envName} />
             </Tooltip>
           </div>
           )

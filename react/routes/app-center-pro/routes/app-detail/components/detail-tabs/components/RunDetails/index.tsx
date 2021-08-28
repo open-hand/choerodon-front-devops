@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, {
   useState, useEffect,
 } from 'react';
@@ -51,6 +52,7 @@ export default observer(() => {
     deployTypeId: envId,
     appId,
     appDs,
+    appCatergory,
   } = useAppDetailsStore();
 
   useEffect(() => () => {
@@ -67,9 +69,11 @@ export default observer(() => {
    * @param {*} id
    * @param {*} name
    */
-  const handleClick = async (type:any, name:any) => {
-    const result = await runDetailsStore.loadDeploymentsJson(type, projectId, appId, name);
-    runDetailsStore.loadDeploymentsYaml(type, projectId, appId, name);
+  const handleClick = async (type:any, name:any, instanceId:string) => {
+    // chart包的和部署组的接口不一样
+    const groupType = appCatergory.code;
+    const result = await runDetailsStore.loadDeploymentsJson(type, instanceId, name, groupType);
+    runDetailsStore.loadDeploymentsYaml(type, instanceId, name, groupType);
     if (result) {
       setVisible(true);
     } else {
@@ -100,7 +104,7 @@ export default observer(() => {
 
     const getDeploy = (item:any) => {
       const {
-        name, age, devopsEnvPodVOS, ports, labels,
+        name, age, devopsEnvPodVOS, ports, labels, instanceId,
       } = item;
       const replica = `${item[available] || 0} available / ${item[current] || 0} current / ${item[desired] || 0} desired`;
       const podCount = computedPodCount(devopsEnvPodVOS);
@@ -203,7 +207,7 @@ export default observer(() => {
             <Button
               className="c7ncd-detail-btn"
               type="primary"
-              onClick={(() => handleClick(podType, name))}
+              onClick={(() => handleClick(podType, name, instanceId))}
             >
               <FormattedMessage id="detailMore" />
             </Button>
@@ -219,7 +223,7 @@ export default observer(() => {
             handleChangeCount={changeTargetCount}
             store={runDetailsStore}
             envId={envId}
-            refresh={() => refresh(() => appDs.query())}
+            refresh={refresh}
           />
         </div>
       );

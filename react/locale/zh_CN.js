@@ -798,6 +798,9 @@ const deploy = {
   'c7ncd.deploy.type.auto': '流水线',
   'c7ncd.deploy.type.baseComponent': '基础组件',
   'c7ncd.deploy.type.hzero': 'HZERO',
+  'c7ncd.deploy.hzero.deploymentStartTime': '开始部署时间',
+  'c7ncd.deploy.hzero.deploymentConsumeTime': '部署耗时',
+  'c7ncd.deploy.hzero.status.deleted': '已删除',
   'c7ncd.deploy.source.deploy': '部署来源',
   'c7ncd.deploy.source.deploy.currentProject': '本项目',
   'c7ncd.deploy.source.deploy.share': '共享',
@@ -2851,7 +2854,6 @@ const zhCN = {
   'deploymentConfig.cover.title': '覆盖至部署配置',
   'deploymentConfig.cover.des':
     '是否将此次修改覆盖至部署配置？覆盖后，您在下次部署过程中，选中该部署配置时，便能使用到此次修改的最新配置信息。',
-
   // 流水线执行总览
   'pipelineRecord.header': '流水线执行总览',
   'pipelineRecord.status.deleted': '已删除',

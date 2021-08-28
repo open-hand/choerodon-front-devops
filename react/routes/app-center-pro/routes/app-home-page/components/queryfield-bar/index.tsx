@@ -6,7 +6,6 @@ import {
 import { CustomTabs } from '@choerodon/components';
 import map from 'lodash/map';
 import { LabelLayoutType, RecordObjectProps } from '@/interface';
-import { useAppCenterListStore } from '@/routes/app-center/app-list/stores';
 import EnvOption from '@/components/env-option';
 
 import './index.less';
@@ -80,7 +79,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
           {mainStore.getCurrentTypeTabKey === typeTabKeys.ENV_TAB ? (
             <Select
               prefix="环境:"
-              name="envId"
+              name="env_id"
               colSpan={3}
               searchable
               optionRenderer={renderEnvOption}
@@ -90,7 +89,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
           ) : (
             <Select
               prefix="主机:"
-              name="hostId"
+              name="host_id"
               colSpan={3}
               searchable
               optionRenderer={renderHostOption}

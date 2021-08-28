@@ -5,6 +5,7 @@ import { Modal } from 'choerodon-ui/pro';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { StoreProps } from '@/routes/app-center-pro/stores/deletionStore';
+import { appServiceInstanceApi } from '@/api';
 
 type openDeleteProps = {
   envId:string
@@ -17,12 +18,11 @@ type openDeleteProps = {
 
 type activeType = 'stop' | 'start' | 'delete';
 
-const stopKey = Modal.key();
 const stopKey2 = Modal.key();
 
-async function checkPipelineReference({ projectId, instanceId }:Pick<openDeleteProps, 'projectId' | 'instanceId'>) {
+async function checkPipelineReference({ instanceId }:Pick<openDeleteProps, 'instanceId'>) {
   try {
-    const res = await axios.get(`/devops/v1/projects/${projectId}/app_service_instances/${instanceId}/pipeline_reference`);
+    const res = await appServiceInstanceApi.checkPipelineReference(instanceId);
     if (res && res.pipelineName) {
       return res;
     }
@@ -55,7 +55,7 @@ async function openDelete({
   envId, instanceName, instanceId, callback, projectId, deletionStore,
 }:openDeleteProps) {
   const hasPipelineReference = await checkPipelineReference({
-    instanceId, projectId,
+    instanceId,
   });
   if (!isEmpty(hasPipelineReference)) {
     openPipelineReferenceModal({ active: 'delete', hasPipelineReference, instanceName });

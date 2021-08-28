@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
+import { observer } from 'mobx-react-lite';
 import { DataSet } from '@/interface';
 import ValuesDataset from './ValuesDataSet';
 
@@ -20,7 +21,7 @@ export function useModifyValuesStore() {
   return useContext(Store);
 }
 
-export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
+export const StoreProvider = injectIntl(inject('AppState')(observer((props: any) => {
   const {
     children,
     intl: { formatMessage },
@@ -50,4 +51,4 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
       {children}
     </Store.Provider>
   );
-}));
+})));

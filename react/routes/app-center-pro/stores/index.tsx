@@ -4,10 +4,13 @@ import React, {
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { axios } from '@choerodon/master';
+import { useHistory, useLocation } from 'react-router';
 import {
   DEPLOY_TYPE,
 } from './CONST';
+
 import useDeletionStore, { StoreProps } from './deletionStore';
+import { hostApi } from '@/api';
 
 interface ContextProps {
   prefixCls: string,
@@ -23,7 +26,8 @@ interface ContextProps {
   }
   deletionStore: StoreProps
   match:any
-  deleteHostApp: (hostId:string, instanceId:string) => any
+  deleteHostApp: (hostId:string, instanceId:string, callback?:CallableFunction) => any
+  goBackHomeBaby: (...args:any[])=>any
 }
 
 const Store = createContext({} as ContextProps);
@@ -41,19 +45,23 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
 
   const mainTabKeys = DEPLOY_TYPE;
 
+  const history = useHistory();
+  const location = useLocation();
+
   // 专门针对环境的应用删除的弹窗
   const deletionStore = useDeletionStore();
 
-  function jarDelete(hostId: string, instanceId: string) {
-    return axios.delete(`/devops/v1/projects/${projectId}/hosts/${hostId}/java_process/${instanceId}`);
+  function goBackHomeBaby() {
+    history.push({ pathname: '/devops/application-center', search: location.search });
   }
 
-  async function deleteHostApp(hostId: string, instanceId: string) {
+  async function deleteHostApp(hostId: string, instanceId: string, callback?:CallableFunction) {
     try {
-      const res = await jarDelete(hostId, instanceId);
+      const res = await hostApi.jarDelete(hostId, instanceId);
       if (res && res?.failed) {
         return res;
       }
+      typeof callback === 'function' && callback();
       return res;
     } catch (error) {
       throw new Error(error);
@@ -68,6 +76,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     mainTabKeys,
     deletionStore,
     deleteHostApp,
+    goBackHomeBaby,
   };
   return (
     <Store.Provider value={value}>
