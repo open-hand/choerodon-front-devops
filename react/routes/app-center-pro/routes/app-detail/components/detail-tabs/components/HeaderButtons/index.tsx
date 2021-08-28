@@ -48,6 +48,7 @@ const DetailsTabsHeaderButtons = () => {
     deployType,
     appCatergory,
     rdupmType,
+    appId,
   } = useAppDetailsStore();
 
   const appRecord = appDs.current;
@@ -123,7 +124,9 @@ const DetailsTabsHeaderButtons = () => {
       case HOST_CATERGORY:
         obj = {
           name: '修改应用',
-          handler: openHostAppConfigModal,
+          handler: () => {
+            openHostAppConfigModal(appRecord?.toData() || {}, refresh);
+          },
           icon: 'add_comment-o',
         };
         break;
@@ -131,7 +134,7 @@ const DetailsTabsHeaderButtons = () => {
         break;
     }
     return obj;
-  }, [appCatergory.code]);
+  }, [appCatergory.code, appRecord, refresh]);
 
   // 创建资源
   const createSource = useMemo(() => (
