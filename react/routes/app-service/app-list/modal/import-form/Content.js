@@ -43,7 +43,6 @@ const ImportForm = injectIntl(observer((props) => {
 
   const selectedDataSet = { market: marketSelectedDs, share: selectedDs, gitlab: gitlabSelectedDs };
   modal.handleOk(async () => {
-    let ds;
     if (record.get('platformType') === 'share' || record.get('platformType') === 'market' || (record.get('platformType') === 'gitlab' && !record.get('isGitLabTemplate'))) {
       const ds = selectedDataSet[record.get('platformType')];
       if (!ds.length) return true;
