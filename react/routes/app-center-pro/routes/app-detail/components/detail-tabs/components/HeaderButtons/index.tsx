@@ -125,7 +125,7 @@ const DetailsTabsHeaderButtons = () => {
         obj = {
           name: '修改应用',
           handler: () => {
-            openHostAppConfigModal(appId, refresh);
+            openHostAppConfigModal(appRecord?.toData() || {}, refresh);
           },
           icon: 'add_comment-o',
         };
@@ -134,7 +134,7 @@ const DetailsTabsHeaderButtons = () => {
         break;
     }
     return obj;
-  }, [appCatergory.code]);
+  }, [appCatergory.code, appRecord, refresh]);
 
   // 创建资源
   const createSource = useMemo(() => (
