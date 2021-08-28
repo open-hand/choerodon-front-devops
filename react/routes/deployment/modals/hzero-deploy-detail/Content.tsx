@@ -113,14 +113,18 @@ const HzeroDeployDetail = observer(() => {
   const toInstanceDetail = (record: any) => {
     history.push(`/devops/application-center/detail/${record.get('appId')}/hzero/env/${formDs.current?.get('environmentDTO')?.id}/chart`);
   };
-  const renderInstanceCode = (record: any) => (
-    <div style={{ display: 'flex' }}>
-      <div role="none" style={(record.get('appStatus') === 'deleted' || record.get('appStatus') === 'notExist') ? { opacity: '0.5' } : { color: '#415BC9' }} onClick={() => toInstanceDetail(record)}>
-        {record.get('instanceCode')}
+
+  const renderInstanceCode = (record: any) => {
+    const currentAppStatus = record.get('appStatus');
+    return (
+      <div style={{ display: 'flex' }}>
+        <div role="none" style={(currentAppStatus === 'deleted' || currentAppStatus === 'notExist') ? { opacity: '0.5' } : { color: '#415BC9' }} onClick={() => toInstanceDetail(record)}>
+          {record.get('instanceCode')}
+        </div>
+        <div>{currentAppStatus === 'deleted' ? getStatusTag(currentAppStatus) : ''}</div>
       </div>
-      <div>{record.get('appStatus') === 'deleted' ? getStatusTag(record.get('appStatus')) : ''}</div>
-    </div>
-  );
+    );
+  };
   if (formDs.status === 'loading') {
     return <Loading display />;
   }

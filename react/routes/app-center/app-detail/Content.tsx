@@ -4,16 +4,15 @@ import {
   Breadcrumb, Content, Page,
 } from '@choerodon/boot';
 import {
-  Modal, Spin, Form, Select, Tabs,
+  Spin, Form, Select, Tabs,
 } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
-import { CustomTabs } from '@choerodon/components';
+import { CustomTabs, Loading } from '@choerodon/components';
 import { useAppCenterDetailStore } from '@/routes/app-center/app-detail/stores';
 import AppTypeLogo from '@/routes/app-center/components/type-logo';
 import EnvOption from '@/components/env-option';
 import { EnvDataProps, HostDataProps } from '@/routes/app-center/app-detail/stores/useStore';
-import Loading from '@/components/loading';
 import { RecordObjectProps, LabelLayoutType } from '@/interface';
 
 import './index.less';

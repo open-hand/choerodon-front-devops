@@ -2,9 +2,9 @@ import React, {
   Fragment, useState, useEffect, useMemo,
 } from 'react';
 import {
-  Form, TextField, Select, SelectBox, Spin, Tooltip,
+  Form, TextField, Select, SelectBox, Tooltip,
 } from 'choerodon-ui/pro';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { Choerodon } from '@choerodon/boot';
 import keys from 'lodash/keys';
