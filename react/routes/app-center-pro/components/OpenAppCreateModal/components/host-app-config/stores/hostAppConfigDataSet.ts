@@ -12,6 +12,16 @@ import { hostApiConfig } from '@/api/Host';
 const mapping: {
   [key: string]: FieldProps
 } = {
+  appName: {
+    name: 'appName',
+    type: 'string' as FieldType,
+    label: '应用名称',
+  },
+  appCode: {
+    name: 'appCode',
+    type: 'string' as FieldType,
+    label: '应用编码',
+  },
   host: {
     name: 'hostId',
     type: 'string' as FieldType,
@@ -43,7 +53,10 @@ const mapping: {
   },
   jarSource: {
     name: 'sourceType',
+    label: 'jar包来源',
     type: 'string' as FieldType,
+    textField: 'name',
+    valueField: 'value',
     options: new DataSet({
       data: productSourceData,
     }),

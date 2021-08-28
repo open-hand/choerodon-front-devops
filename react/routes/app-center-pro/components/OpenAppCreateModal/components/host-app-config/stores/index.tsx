@@ -7,6 +7,8 @@ interface ContextType {
   children: any,
   cRef: any,
   HostAppConfigDataSet: any,
+  refresh?: Function,
+  detail?: string | object,
 }
 
 const Store = createContext({} as ContextType);
