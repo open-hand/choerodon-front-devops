@@ -136,18 +136,6 @@ const ImportForm = injectIntl(observer((props) => {
     );
   }
 
-  function handleClick(value) {
-    record.set('platformType', value.type);
-  }
-
-  function renderGitlabTemplate() {
-    return (
-      <div className={`${prefixCls}-option-child`}>
-        {formatMessage({ id: `${intlPrefix}.import.type` })}
-      </div>
-    );
-  }
-
   return (
     <div className={`${prefixCls}-import-wrap`}>
       <div className={`${prefixCls}-select-custom-list`}>

@@ -133,34 +133,6 @@ export default ({
     selection: false,
     paging: false,
     transport: {
-      // create: ({ data: [data] }) => {
-      //   const { platformType } = data;
-      //   let url = 'external';
-      //   let res;
-      //   switch (platformType) {
-      //     case 'gitlab':
-      //       res = getGitlabRequestData(gitlabSelectedDs.toData());
-      //       break;
-      //     case 'github':
-      //       url = `${url}${data.isTemplate ? '?is_template=true' : ''}`;
-      //       res = pick(data, ['code', 'name', 'type', 'repositoryUrl']);
-      //       break;
-      //     case 'share':
-      //       url = 'internal';
-      //       res = getRequestData(selectedDs.toData());
-      //       break;
-      //     case 'market':
-      //       res = getMarketRequestData(marketSelectedDs.toData());
-      //       break;
-      //   }
-      //   return ({
-      //     url: platformType === 'market'
-      //       ? `/devops/v1/project/${projectId}/market/app/import`
-      //       : platformType === 'gitlab' ? `/devops/v1/projects/${projectId}/app_service/batch_transfer` : `/devops/v1/projects/${projectId}/app_service/import/${url}`,
-      //     method: platformType === 'gitlab' ? 'put' : 'post',
-      //     data: res,
-      //   });
-      // },
       create: ({ data: [data] }) => {
         const { platformType } = data;
         let url = 'external';

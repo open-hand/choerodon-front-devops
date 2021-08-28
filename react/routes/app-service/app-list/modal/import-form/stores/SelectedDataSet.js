@@ -113,7 +113,7 @@ export default ({ intlPrefix, formatMessage, projectId, importStore }) => {
         textField: 'version',
         valueField: 'id',
         dynamicProps: {
-          lookupAxiosConfig: getLookUpConfig,
+          lookupAxiosConfig:getLookUpConfig,
         },
         label: formatMessage({ id: `${intlPrefix}.version` }),
         required: true,
