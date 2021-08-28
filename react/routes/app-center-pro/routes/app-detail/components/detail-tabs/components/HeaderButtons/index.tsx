@@ -307,7 +307,7 @@ const DetailsTabsHeaderButtons = () => {
     switch (appStatus) {
       case APP_STATUS.RUNNING:
       case APP_STATUS.ACTIVE:
-        data = [modifyValues, upGrade, redeploy, ...moreOpts];
+        data = [modifyValues, modifyAppObj, upGrade, redeploy, ...moreOpts];
         break;
       case APP_STATUS.STOP:
         data = [...moreOpts];
