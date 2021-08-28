@@ -1,4 +1,5 @@
 import { DataSet } from 'choerodon-ui/pro';
+import omit from 'lodash/omit';
 import { DataSetProps, FieldProps, FieldType } from '@/interface';
 import {
   productSourceData,
@@ -13,12 +14,12 @@ const mapping: {
   [key: string]: FieldProps
 } = {
   appName: {
-    name: 'appName',
+    name: 'name',
     type: 'string' as FieldType,
     label: '应用名称',
   },
   appCode: {
-    name: 'appCode',
+    name: 'code',
     type: 'string' as FieldType,
     label: '应用编码',
   },
@@ -63,7 +64,7 @@ const mapping: {
     defaultValue: productSourceData[0].value,
   },
   nexus: {
-    name: 'nexus',
+    name: 'nexusId',
     type: 'string' as FieldType,
     label: 'Nexus服务',
     textField: 'serverName',
@@ -295,6 +296,18 @@ const mapping: {
 const hostAppConfigDataSet = (): DataSetProps => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((i) => mapping[i]),
+  transport: {
+    update: ({ data: [data] }) => {
+      const res = data;
+      res.prodJarInfoVO = {
+        ...res.prodJarInfoVO,
+        [mapping.jarVersion.name as string]: res[mapping.jarVersion.name as string],
+      };
+      res.appName = res[mapping.appName.name as string];
+      res.appCode = res[mapping.appCode.name as string];
+      return deployApiConfig.deployJava(res);
+    },
+  },
   events: {
     update: async ({ record, name, value }: any) => {
       switch (name) {
