@@ -129,7 +129,7 @@ const DetailsTabsHeaderButtons = () => {
         obj = {
           name: '修改应用',
           handler: () => {
-            openHostAppConfigModal(appRecord?.toData()[0] || {}, refresh);
+            openHostAppConfigModal(appRecord?.toData() || {}, refresh);
           },
           icon: 'add_comment-o',
         };
