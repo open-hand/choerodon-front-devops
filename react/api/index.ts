@@ -10,3 +10,6 @@ export * from './Secret';
 export * from './Hosts';
 export * from './DeployAppCenter';
 export * from './Pods';
+export * from './Market';
+export * from './Groups';
+export * from './AppService';

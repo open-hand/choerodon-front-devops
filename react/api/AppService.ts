@@ -11,6 +11,36 @@ class AppServiceApi extends Api<AppServiceApi> {
       url: `${this.prefix}/list_all_app_services?deploy_only=${deployOnly}&service_type=${serviceType}&type=${type}`,
     });
   }
+
+  checkName(value:string) {
+    return this.request({
+      method: 'get',
+      url: `${this.prefix}/check_name?name=${encodeURIComponent(value)}`,
+    });
+  }
+
+  checkCode(value:string) {
+    return this.request({
+      method: 'get',
+      url: `${this.prefix}/check_code?code=${value}`,
+    });
+  }
+
+  batchTransfer(res:any) {
+    return this.request({
+      method: 'put',
+      url: `${this.prefix}/batch_transfer`,
+      data: res,
+    });
+  }
+
+  Import(url:string, res:any) {
+    return this.request({
+      method: 'post',
+      url: `${this.prefix}/import/${url}`,
+      data: res,
+    });
+  }
 }
 
 const appServiceApi = new AppServiceApi();

@@ -29,12 +29,12 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     projectId,
     intl: { formatMessage },
     importRecord,
+    selectedDs,
   } = props;
   const intlPrefix = 'c7ncd.appService.gitlab';
   const gitlabGroupValue = importRecord.get('gitlabTemplate')?.id;
-  console.log('gitlabGroupValue', gitlabGroupValue);
   const tableDs = useMemo(() => new DataSet(gitlabDataSet({
-    formatMessage, projectId, gitlabGroupValue, intlPrefix,
+    formatMessage, projectId, gitlabGroupValue, intlPrefix, selectedDs,
   })), [projectId]);
 
   const value = {

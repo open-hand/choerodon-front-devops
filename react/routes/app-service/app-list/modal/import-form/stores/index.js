@@ -71,10 +71,10 @@ export const StoreProvider = injectIntl(inject('AppState')(
       marketSelectedDs,
       gitlabSelectedDs,
     })), [projectId]);
-
+    const IMPORT_METHOD_LIST = isSaaS ? [{ type: 'share', img: shareImage }, { type: 'github', img: gitlabImage }, { type: 'gitlab', img: gitlabImage }] : [{ type: 'share', img: shareImage }, { type: 'market', img: marketImage }, { type: 'github', img: githubImage }, { type: 'gitlab', img: gitlabImage }];
     const value = {
       ...props,
-      IMPORT_METHOD: isSaaS ? [{ type: 'share', img: shareImage }, { type: 'github', img: gitlabImage }, { type: 'gitlab', img: gitlabImage }] : [{ type: 'share', img: shareImage }, { type: 'market', img: marketImage }, { type: 'github', img: githubImage }, { type: 'gitlab', img: gitlabImage }],
+      IMPORT_METHOD: IMPORT_METHOD_LIST,
       importDs,
       importTableDs,
       selectedDs,

@@ -1,4 +1,5 @@
-import { FieldType } from '@/interface';
+/* eslint-disable no-param-reassign */
+import { FieldType, DataSet } from '@/interface';
 
 /* eslint-disable import/no-anonymous-default-export */
 interface TableProps {
@@ -6,9 +7,10 @@ interface TableProps {
   projectId: string,
   gitlabGroupValue:string,
   intlPrefix:string,
+  selectedDs:DataSet,
 }
 export default ({
-  intlPrefix, formatMessage, projectId, gitlabGroupValue,
+  intlPrefix, formatMessage, projectId, gitlabGroupValue, selectedDs,
 }: TableProps) => ({
   autoQuery: true,
   pageSize: 10,
@@ -35,4 +37,16 @@ export default ({
   ],
   queryFields: [
   ],
+  // DS 事件回调
+  events: {
+    load: ({ dataSet }:any) => {
+      dataSet.forEach((titem:any) => {
+        selectedDs.forEach((sitem:any) => {
+          if (titem.toJSONData().name === sitem.toJSONData().name) {
+            titem.isSelected = true;
+          }
+        });
+      });
+    },
+  },
 });

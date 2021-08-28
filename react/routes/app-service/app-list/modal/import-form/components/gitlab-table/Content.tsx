@@ -21,27 +21,14 @@ const GitlabSourceTable = observer(() => {
     selectedDs,
     prefixCls,
   } = useGitlabTableStore();
-  tableDs.forEach((titem) => {
-    selectedDs.forEach((sitem) => {
-      if (titem.toJSONData().name === sitem.toJSONData().name) {
-        titem.isSelected = true;
-      }
-    });
-  });
-  const selectedId = useMemo(() => selectedDs.map((record) => record.get('id')), [selectedDs]);
+  const selectedId = useMemo(() => selectedDs.map((record) => record.get('name')), [selectedDs]);
   modal.handleOk(() => {
-    const records: any[] = [];
-    const newSelectedId: any[] = [];
     forEach(tableDs.selected, (record: any) => {
-      if (!includes(selectedId, record.get('id'))) {
+      if (!includes(selectedId, record.get('name'))) {
         record.set('type', '普通服务');
-        records.push(record);
+        selectedDs.push(record);
       }
-      newSelectedId.push(record.get('id'));
     });
-    const deleteRecords = selectedDs.filter((record) => !includes(newSelectedId, record.get('id')));
-    selectedDs.remove(deleteRecords);
-    selectedDs.push(...records);
   });
 
   const [total, setTotal] = useState(11);

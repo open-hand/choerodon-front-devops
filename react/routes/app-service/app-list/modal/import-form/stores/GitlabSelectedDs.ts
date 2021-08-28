@@ -2,6 +2,7 @@
 import { axios } from '@choerodon/boot';
 import includes from 'lodash/includes';
 import { DataSet } from 'choerodon-ui/pro';
+import {appServiceApi} from '@/api/AppService';
 const TypeOptionDs = () => {
   return ({
     fields: [
@@ -29,8 +30,7 @@ const GitlabSelectedDs = ({ intlPrefix, formatMessage, projectId, importStore }:
   }
 
   async function checkCode(value: any, name: any, record: any) {
-    const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
-    debugger
+    const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/
     if (value && pa.test(value)) {
       const dataSet = record.dataSet;
       const repeatRecord = dataSet.find((eachRecord: any) => eachRecord.id !== record.id && eachRecord.get('code') === value);
@@ -43,7 +43,7 @@ const GitlabSelectedDs = ({ intlPrefix, formatMessage, projectId, importStore }:
       }
       if (!importStore.getSkipCheck) {
         try {
-          const res = await axios.get(`/devops/v1/projects/${projectId}/app_service/check_code?code=${value}`);
+          const res = await appServiceApi.checkCode(value);
           if ((res && res.failed) || !res) {
             return formatMessage({ id: 'checkCodeExist' });
           }
@@ -75,7 +75,7 @@ const GitlabSelectedDs = ({ intlPrefix, formatMessage, projectId, importStore }:
       }
       if (!importStore.getSkipCheck) {
         try {
-          const res = await axios.get(`/devops/v1/projects/${projectId}/app_service/check_name?name=${encodeURIComponent(value)}`);
+          const res = await appServiceApi.checkName(value);
           if ((res && res.failed) || !res) {
             return formatMessage({ id: 'checkNameExist' });
           }

@@ -12,11 +12,11 @@ import keys from 'lodash/keys';
 import countBy from 'lodash/countBy';
 import pickBy from 'lodash/pickBy';
 import isEmpty from 'lodash/isEmpty';
-import { NewTips } from '@choerodon/components';
+import { NewTips, CustomSelect } from '@choerodon/components';
 import PlatForm from './Platform';
 import Tips from '../../../../../components/new-tips';
 import { useImportAppServiceStore } from './stores';
-import SelectCustom from '../../../components/select-custom';
+import detailTabs from '@/routes/app-center-pro/routes/app-detail/components/detail-tabs';
 
 const { Option } = Select;
 
@@ -42,18 +42,10 @@ const ImportForm = injectIntl(observer((props) => {
     setHasFailed(false);
   }, [record.get('platformType')]);
 
+  const selectedDataSet = { market: marketSelectedDs, share: selectedDs, gitlab: gitlabSelectedDs };
   modal.handleOk(async () => {
-    let ds;
     if (record.get('platformType') === 'share' || record.get('platformType') === 'market' || (record.get('platformType') === 'gitlab' && !record.get('isGitLabTemplate'))) {
-      if (record.get('platformType') === 'market') {
-        ds = marketSelectedDs;
-      }
-      if (record.get('platformType') === 'share') {
-        ds = selectedDs;
-      }
-      if (record.get('platformType') === 'gitlab') {
-        ds = gitlabSelectedDs;
-      }
+      const ds = selectedDataSet[record.get('platformType')];
       if (!ds.length) return true;
       if (!await validateDs()) {
         return false;
@@ -85,29 +77,14 @@ const ImportForm = injectIntl(observer((props) => {
       );
       validateResult = results.every((result) => result);
     } else {
-      if (record.get('platformType') === 'share') {
-        validateResult = await selectedDs.validate();
-      }
-      if (record.get('platformType') === 'gitlab') {
-        validateResult = await gitlabSelectedDs.validate();
-      }
-
+      validateResult = await selectedDataSet[record.get('platformType')].validate();
       importStore.setSkipCheck(false);
     }
     return validateResult;
   }
 
   async function checkData() {
-    let ds;
-    if (record.get('platformType') === 'market') {
-      ds = marketSelectedDs;
-    }
-    if (record.get('platformType') === 'share') {
-      ds = selectedDs;
-    }
-    if (record.get('platformType') === 'gitlab') {
-      ds = gitlabSelectedDs;
-    }
+    const ds = selectedDataSet[record.get('platformType')];
     const lists = ds.toData();
     const {
       listCode, listName, repeatName, repeatCode,
@@ -169,7 +146,7 @@ const ImportForm = injectIntl(observer((props) => {
   return (
     <div className={`${prefixCls}-import-wrap`}>
       <div className={`${prefixCls}-select-custom-list`}>
-        <SelectCustom
+        <CustomSelect
           onClickCallback={(value) => handleClick(value)}
           data={IMPORT_METHOD}
           identity="type"
