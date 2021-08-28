@@ -1,4 +1,4 @@
-import React, { useImperativeHandle } from 'react';
+import React, { useImperativeHandle, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Form, Select, Button, TextField, Output,
@@ -28,7 +28,35 @@ const Index = observer(() => {
     HostAppConfigDataSet,
     cRef,
     detail,
+    modal,
+    refresh,
   } = useHostAppConfigStore();
+
+  useEffect(() => {
+    if (typeof (detail) === 'object') {
+      HostAppConfigDataSet.loadData([{
+        ...detail,
+        ...detail?.prodJarInfoVO || {},
+        value: Base64.decode(detail.value),
+      }]);
+    }
+    console.log(detail);
+  }, []);
+
+  const handleOk = async () => {
+    const res = await HostAppConfigDataSet.submit();
+    if (res !== false) {
+      if (refresh) {
+        refresh();
+      }
+      return true;
+    }
+    return false;
+  };
+
+  if (modal) {
+    modal.handleOk(handleOk);
+  }
 
   const setData = (data: any) => {
     const newData = data;
@@ -38,6 +66,7 @@ const Index = observer(() => {
       [mapping.groupId.name as string]: newData[mapping.groupId.name as string],
       [mapping.artifactId.name as string]: newData[mapping.artifactId.name as string],
       [mapping.jarVersion.name as string]: newData[mapping.jarVersion.name as string],
+      [mapping.nexus.name as string]: newData[mapping.nexus.name as string],
     };
     newData[mapping.value.name as string] = Base64.encode(newData[mapping.value.name as string]);
     newData.deployObjectId = newData[
@@ -62,10 +91,22 @@ const Index = observer(() => {
         case productSourceData[0].value: {
           return (
             <Form className="c7ncd-appCenterPro-conDetail__form" columns={3} record={dataSource}>
-              <Select name={mapping.nexus.name} />
-              <Select name={mapping.projectProductRepo.name} />
-              <Select name={mapping.groupId.name} />
-              <Select name={mapping.artifactId.name} />
+              <Select
+                name={mapping.nexus.name}
+                disabled={Boolean(detail)}
+              />
+              <Select
+                name={mapping.projectProductRepo.name}
+                disabled={Boolean(detail)}
+              />
+              <Select
+                name={mapping.groupId.name}
+                disabled={Boolean(detail)}
+              />
+              <Select
+                name={mapping.artifactId.name}
+                disabled={Boolean(detail)}
+              />
               <Select name={mapping.jarVersion.name} />
             </Form>
           );
@@ -152,6 +193,7 @@ const Index = observer(() => {
         name={mapping.appName.name}
       />
       <TextField
+        disabled
         name={mapping.appCode.name}
       />
     </>
@@ -166,6 +208,7 @@ const Index = observer(() => {
         <Select
           name={mapping.host.name}
           optionRenderer={renderHostOption}
+          disabled={Boolean(detail)}
           onOption={({ record: hostRecord }) => ({
             disabled: !hostRecord.get('connect'),
           })}

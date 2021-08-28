@@ -4,11 +4,15 @@ import hostAppConfigDataSet
   from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-app-config/stores/hostAppConfigDataSet';
 
 interface ContextType {
+  modal?: any,
   children: any,
   cRef: any,
   HostAppConfigDataSet: any,
   refresh?: Function,
-  detail?: string | object,
+  detail?: string | {
+    value: string,
+    prodJarInfoVO: object,
+  },
 }
 
 const Store = createContext({} as ContextType);
