@@ -518,6 +518,10 @@ const conGroupDataSet = (): DataSetProps => ({
   events: {
     update: ({ record, name, value }: any) => {
       switch (name) {
+        case mapping.productType.name: {
+          record.set(mapping.productSource.name, productSourceData[0].value);
+          break;
+        }
         case mapping.productSource.name: {
           record.set(mapping.marketAppVersion.name, '');
           record.set(mapping.marketServiceVersion.name, '');

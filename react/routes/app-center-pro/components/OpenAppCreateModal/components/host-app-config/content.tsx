@@ -1,6 +1,8 @@
 import React, { useImperativeHandle } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Form, Select, Button } from 'choerodon-ui/pro';
+import {
+  Form, Select, Button, TextField, Output,
+} from 'choerodon-ui/pro';
 import { Upload } from 'choerodon-ui';
 import { CustomSelect, ChunkUploader } from '@choerodon/components';
 import { Base64 } from 'js-base64';
@@ -14,6 +16,7 @@ import {
 
 import '../container-config/components/container-detail/index.less';
 import StatusDot from '@/components/status-dot';
+import { LabelAlignType, LabelLayoutType } from '@/interface';
 
 const jarSource = [
   ...JSON.parse(JSON.stringify(productSourceData)).splice(0, 3),
@@ -24,6 +27,7 @@ const Index = observer(() => {
   const {
     HostAppConfigDataSet,
     cRef,
+    detail,
   } = useHostAppConfigStore();
 
   const setData = (data: any) => {
@@ -89,7 +93,7 @@ const Index = observer(() => {
                 // disabled={!ImportFileDataSet?.current?.get(mapping().folderId.name)}
                 suffix=".jar"
                 accept=".jar"
-                prefixPatch="/devops"
+                prefixPatch="/hfle"
                 showUploadList={false}
                 callback={(str: string) => {
                   console.log(str);
@@ -142,9 +146,23 @@ const Index = observer(() => {
     </>
   );
 
+  const renderDetailForm = () => detail && (
+    <>
+      <TextField
+        name={mapping.appName.name}
+      />
+      <TextField
+        name={mapping.appCode.name}
+      />
+    </>
+  );
+
   return (
     <div className="c7ncd-appCenterPro-hostAppConfig">
       <Form columns={3} dataSet={HostAppConfigDataSet}>
+        {
+          renderDetailForm()
+        }
         <Select
           name={mapping.host.name}
           optionRenderer={renderHostOption}
@@ -153,25 +171,38 @@ const Index = observer(() => {
           })}
         />
       </Form>
-      <div className="c7ncd-appCenterPro-conDetail__productType">
-        <CustomSelect
-          onClickCallback={
-            (value) => HostAppConfigDataSet.current.set(mapping.jarSource.name, value.value)
-          }
-          selectedKeys={HostAppConfigDataSet.current.get(mapping.jarSource.name)}
-          data={jarSource}
-          identity="value"
-          mode="single"
-          customChildren={(item) => (
-            <div className="c7ncd-appCenterPro-conDetail__productSource__item">
-              <img src={item.img} alt="" />
-              <p>
-                {item.name}
-              </p>
-            </div>
-          )}
-        />
-      </div>
+      {
+        detail ? (
+          <Form
+            columns={3}
+            dataSet={HostAppConfigDataSet}
+            labelLayout={'horizontal' as LabelLayoutType}
+            labelAlign={'left' as LabelAlignType}
+          >
+            <Output name={mapping.jarSource.name} />
+          </Form>
+        ) : (
+          <div className="c7ncd-appCenterPro-conDetail__productType">
+            <CustomSelect
+              onClickCallback={
+                (value) => HostAppConfigDataSet.current.set(mapping.jarSource.name, value.value)
+              }
+              selectedKeys={HostAppConfigDataSet.current.get(mapping.jarSource.name)}
+              data={jarSource}
+              identity="value"
+              mode="single"
+              customChildren={(item) => (
+                <div className="c7ncd-appCenterPro-conDetail__productSource__item">
+                  <img src={item.img} alt="" />
+                  <p>
+                    {item.name}
+                  </p>
+                </div>
+              )}
+            />
+          </div>
+        )
+      }
       { renderFormByProductSource() }
       <YamlEditor
         readOnly={false}
