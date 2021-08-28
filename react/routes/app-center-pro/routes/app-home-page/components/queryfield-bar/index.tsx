@@ -31,6 +31,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
 
   const handleTypeChange = (key:string) => {
     listDs.setQueryParameter('typeKey', key);
+    searchDs.current?.set('typeKey', key);
     mainStore.setCurrentTypeTabKey(key);
     refresh();
   };
