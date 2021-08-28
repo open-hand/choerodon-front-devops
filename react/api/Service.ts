@@ -8,7 +8,7 @@ class ServiceApi extends Api<ServiceApi> {
   checkEnvName(id: string, name: string) {
     return this.request({
       method: 'get',
-      url: `${this.prefix}/checkName`,
+      url: `${this.prefix}/check_name`,
       params: {
         env_id: id,
         name,

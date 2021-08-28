@@ -36,7 +36,7 @@ const mapping: {
   [key: string]: FieldProps
 } = {
   env: {
-    name: 'env',
+    name: 'envId',
     type: 'string' as FieldType,
     label: '环境',
     options: new DataSet(envDataSet),
@@ -45,13 +45,13 @@ const mapping: {
     required: true,
   },
   podNum: {
-    name: 'podNum',
+    name: 'replicas',
     type: 'number' as FieldType,
     label: 'Pod总数',
     required: true,
   },
   MaxSurge: {
-    name: 'MaxSurge',
+    name: 'maxSurge',
     type: 'string' as FieldType,
     label: 'MaxSurge',
     required: true,
@@ -60,7 +60,7 @@ const mapping: {
     validator: checkPercentNum,
   },
   MaxUnavailable: {
-    name: 'MaxUnavailable',
+    name: 'maxUnavailable',
     type: 'string' as FieldType,
     label: 'MaxUnavailable',
     required: true,
@@ -69,7 +69,7 @@ const mapping: {
     validator: checkPercentNum,
   },
   DNSPolicy: {
-    name: 'DNSPolicy',
+    name: 'dnsPolicy',
     type: 'string' as FieldType,
     label: 'DNS Policy',
     required: true,
@@ -91,13 +91,13 @@ const mapping: {
     }),
   },
   Nameservers: {
-    name: 'Nameservers',
+    name: 'nameServers',
     type: 'string' as FieldType,
     label: 'Nameservers',
     validator: (value) => checkIp(value, 3),
   },
   Searches: {
-    name: 'Searches',
+    name: 'searches',
     type: 'string' as FieldType,
     label: 'Searches',
     validator: (value) => checkIp(value, 6),

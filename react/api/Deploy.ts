@@ -40,6 +40,24 @@ class DeployApi extends Api<DeployApi> {
       data,
     });
   }
+
+  getValue(id: string) {
+    return this.request({
+      method: 'get',
+      url: `/market/v1/projects/${this.projectId}/deploy/values`,
+      params: {
+        deploy_object_id: id,
+      },
+    });
+  }
+
+  deployJava(data: any) {
+    return this.request({
+      method: 'post',
+      url: `${this.prefix}/java`,
+      data,
+    });
+  }
 }
 
 const deployApi = new DeployApi();

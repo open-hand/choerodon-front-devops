@@ -6,18 +6,43 @@ import {
 } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config/stores/conGroupDataSet';
 import { nexusApiConfig } from '@/api/Nexus';
 import { rdupmApiApiConfig } from '@/api/Rdupm';
-import { deployApiConfig } from '@/api';
+import { deployApi, deployApiConfig } from '@/api';
+import { hostApiConfig } from '@/api/Host';
 
 const mapping: {
   [key: string]: FieldProps
 } = {
   host: {
-    name: 'host',
+    name: 'hostId',
     type: 'string' as FieldType,
     label: '主机',
+    required: true,
+    textField: 'name',
+    valueField: 'id',
+    options: new DataSet({
+      autoQuery: true,
+      transport: {
+        read: () => ({
+          ...hostApiConfig.getHosts(),
+          transformResponse: (res) => {
+            let newRes = res;
+            try {
+              newRes = JSON.parse(newRes);
+              newRes.content = newRes.content.map((i: any) => ({
+                ...i,
+                connect: i.hostStatus === 'connected',
+              }));
+              return newRes;
+            } catch (e) {
+              return newRes;
+            }
+          },
+        }),
+      },
+    }),
   },
   jarSource: {
-    name: 'jarSource',
+    name: 'sourceType',
     type: 'string' as FieldType,
     options: new DataSet({
       data: productSourceData,
@@ -38,7 +63,7 @@ const mapping: {
     lookupAxiosConfig: () => nexusApiConfig.getServerList(),
   },
   projectProductRepo: {
-    name: 'projectProductRepo',
+    name: 'repositoryId',
     type: 'object' as FieldType,
     label: '项目制品库',
     textField: 'neRepositoryName',
@@ -130,11 +155,11 @@ const mapping: {
     },
   },
   jarVersion: {
-    name: 'jarVersion',
+    name: 'version',
     type: 'string' as FieldType,
     label: 'jar包版本',
     textField: 'version',
-    valueField: 'id',
+    valueField: 'version',
     dynamicProps: {
       required: ({ record }) => record?.get(
           mapping.jarSource.name,
@@ -205,7 +230,7 @@ const mapping: {
   },
   marketServiceVersion: {
     name: 'marketServiceVersion',
-    type: 'string' as FieldType,
+    type: 'object' as FieldType,
     label: '市场服务及版本',
     textField: 'marketServiceName',
     valueField: 'id',
@@ -220,11 +245,37 @@ const mapping: {
         if (record?.get(mapping.marketAppVersion.name)) {
           return ({
             ...deployApiConfig.deployVersion(record?.get(mapping.marketAppVersion.name), 'image'),
+            transformResponse: (res: any) => {
+              function init(dt: any) {
+                return dt.map((d: any) => {
+                  const newD = d;
+                  newD.id = newD.marketServiceDeployObjectVO.id;
+                  return d;
+                });
+              }
+              let newRes = res;
+              try {
+                newRes = JSON.parse(res);
+                return init(newRes);
+              } catch (e) {
+                return init(newRes);
+              }
+            },
           });
         }
         return undefined;
       },
     },
+  },
+  value: {
+    name: 'value',
+    type: 'string' as FieldType,
+    defaultValue: '# java -jar指令\n'
+      + '# 不可删除${jar}\n'
+      + '# java -jar 后台运行参数会自动添加 不需要在重复添加\n'
+      + '# 其余参数可参考可根据需要添加\n'
+      + 'java -jar ${jar}\n'
+      + '# 相关文件存放目录：jar包下载目录为$HOME/choerodon/实例id/temp-jar/, 日志存放目录为$HOME/choerodon/实例id/temp-jar/',
   },
 };
 
@@ -232,7 +283,7 @@ const hostAppConfigDataSet = (): DataSetProps => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((i) => mapping[i]),
   events: {
-    update: ({ record, name, value }: any) => {
+    update: async ({ record, name, value }: any) => {
       switch (name) {
         case mapping.jarSource.name: {
           record.set(mapping.marketAppVersion.name, '');

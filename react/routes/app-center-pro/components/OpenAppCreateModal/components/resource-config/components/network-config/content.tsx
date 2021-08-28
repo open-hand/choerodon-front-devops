@@ -24,7 +24,17 @@ const Index = observer(() => {
       const configFlag = await NetworkConfigDataSet.validate();
       const portsFlag = await PortsDataSet.validate();
       if (configFlag && portsFlag) {
-        return true;
+        const configData = NetworkConfigDataSet.current.toData();
+        if (!configData[mapping.netName.name as string]) {
+          return null;
+        }
+        return ({
+          [mapping.netName.name as string]: configData[mapping.netName.name as string],
+          [mapping.netType.name as string]: configData[mapping.netType.name as string],
+          [mapping.externalIp.name as string]: configData[mapping.externalIp.name as string].join(','),
+          [mapping.externalIp.name as string]: configData[mapping.externalIp.name as string].join(','),
+          ports: PortsDataSet.toData(),
+        });
       }
       return false;
     },

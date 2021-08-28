@@ -24,7 +24,7 @@ const AppHomePage = () => {
       {
         name: '创建应用',
         icon: 'playlist_add',
-        handler: openAppCreateModal,
+        handler: () => openAppCreateModal(refresh),
         // display: !isHost,
       },
       {

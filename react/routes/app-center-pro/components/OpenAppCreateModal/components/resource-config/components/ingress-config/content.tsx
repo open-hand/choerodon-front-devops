@@ -26,7 +26,25 @@ const Index = observer(() => {
       const pathFlag = await PathListDataSet.validate();
       const annotationFlag = await AnnotationDataSet.validate();
       if (ingressFlag && pathFlag && annotationFlag) {
-        return true;
+        const ingressData = IngressDataSet.current.toData();
+        const annotationData = AnnotationDataSet.toData();
+        const annotation = {};
+        annotationData.forEach((item: any) => {
+          // @ts-ignore
+          annotation[item.key as string] = item.value;
+        });
+        if (!ingressData.name) {
+          return null;
+        }
+        return ({
+          name: ingressData.name,
+          domain: ingressData.domain,
+          pathList: PathListDataSet.toData(),
+          annotation,
+          // ingress: IngressDataSet.toData(),
+          // path: PathListDataSet.toData(),
+          // annotation: AnnotationDataSet.toData(),
+        });
       }
       return false;
     },

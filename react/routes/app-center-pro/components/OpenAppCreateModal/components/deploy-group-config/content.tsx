@@ -80,7 +80,11 @@ const Index = observer(() => {
               </div>
               {
                 ds.records.length > 1 && (
-                  <Icon className="c7ncd-appCenterPro-deployGroup__options__item__delete" type="delete" />
+                  <Icon
+                    className="c7ncd-appCenterPro-deployGroup__options__item__delete"
+                    type="delete"
+                    onClick={() => ds.delete([optionRecord], false)}
+                  />
                 )
               }
             </div>
@@ -92,6 +96,7 @@ const Index = observer(() => {
         colSpan={1}
         funcType={'flat' as FuncType}
         icon="add"
+        onClick={() => ds.create()}
       >
         {`添加${label}`}
       </Button>

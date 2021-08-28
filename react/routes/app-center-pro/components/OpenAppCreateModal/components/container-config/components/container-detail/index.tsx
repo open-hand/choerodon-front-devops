@@ -197,7 +197,20 @@ const Index = observer(({
                     <TextField name="key" />
                     <span style={{ margin: '0 3px' }}>=</span>
                     <TextField name="value" />
-                    <Icon style={{ marginLeft: 7 }} type="delete" />
+                    {
+                      (dataSource
+                        ?.getField(mapping.enVariable.name)
+                        ?.options?.records?.length || 0) > 1 && (
+                        <Icon
+                          type="delete"
+                          style={{
+                            marginLeft: 7,
+                          }}
+                          onClick={() => dataSource
+                            ?.getField(mapping.enVariable.name)?.options?.delete([record], false)}
+                        />
+                      )
+                    }
                   </div>
                 </Form>
               ))
@@ -208,6 +221,7 @@ const Index = observer(({
             style={{
               width: 'auto',
             }}
+            onClick={() => dataSource?.getField(mapping.enVariable.name)?.options?.create()}
           >
             添加环境变量
           </Button>
@@ -225,11 +239,24 @@ const Index = observer(({
             {
               dataSource
                 ?.getField(mapping.portConfig.name)?.options?.records.map((record: Record) => (
-                  <Form columns={3} record={record}>
-                    <Select name={portMapping.agreement.name} />
-                    <Select name={portMapping.name.name} />
-                    <Select name={portMapping.port.name} />
-                  </Form>
+                  <>
+                    <Form columns={4} record={record}>
+                      <Select className="c7ncd-appCenterPro-conDetail__portConfig__form__select" name={portMapping.agreement.name} />
+                      <TextField className="c7ncd-appCenterPro-conDetail__portConfig__form__select" name={portMapping.name.name} />
+                      <NumberField className="c7ncd-appCenterPro-conDetail__portConfig__form__select" name={portMapping.port.name} />
+                      {
+                        (dataSource
+                          ?.getField(mapping.portConfig.name)
+                          ?.options?.records?.length || 0) > 1 && (
+                          <Icon
+                            type="delete"
+                            onClick={() => dataSource
+                              ?.getField(mapping.portConfig.name)?.options?.delete([record], false)}
+                          />
+                        )
+                      }
+                    </Form>
+                  </>
                 ))
             }
             <Button
@@ -238,6 +265,7 @@ const Index = observer(({
               style={{
                 width: 'auto',
               }}
+              onClick={() => dataSource?.getField(mapping.portConfig.name)?.options?.create()}
             >
               添加端口
             </Button>
@@ -259,47 +287,59 @@ const Index = observer(({
     }];
   };
 
+  console.log(dataSource?.get(mapping.productSource.name));
+
   return (
     <div
       className={`c7ncd-appCenterPro-conDetail ${className}`}
     >
       <p>制品类型</p>
       <div className="c7ncd-appCenterPro-conDetail__productType">
-        <CustomSelect
-          onClickCallback={
-            (value) => handleChangeRecord((mapping.productType.name as string), value.value)
-          }
-          data={productTypeData}
-          identity="value"
-          mode="single"
-          customChildren={(item) => (
-            <div className="c7ncd-appCenterPro-conDetail__productType__item">
-              <img src={item.img} alt="" />
-              <span>
-                {item.name}
-              </span>
-            </div>
-          )}
-        />
+        {
+          dataSource && (
+            <CustomSelect
+              onClickCallback={
+                (value) => handleChangeRecord((mapping.productType.name as string), value.value)
+              }
+              selectedKeys={dataSource?.get(mapping.productType.name)}
+              data={productTypeData}
+              identity="value"
+              mode="single"
+              customChildren={(item) => (
+                <div className="c7ncd-appCenterPro-conDetail__productType__item">
+                  <img src={item.img} alt="" />
+                  <span>
+                    {item.name}
+                  </span>
+                </div>
+              )}
+            />
+          )
+        }
       </div>
       <p style={{ marginTop: 20 }}>镜像来源</p>
       <div className="c7ncd-appCenterPro-conDetail__productType">
-        <CustomSelect
-          onClickCallback={
-            (value) => handleChangeRecord((mapping.productSource.name as string), value.value)
-          }
-          data={getProductSourceData()}
-          identity="value"
-          mode="single"
-          customChildren={(item) => (
-            <div className="c7ncd-appCenterPro-conDetail__productSource__item">
-              <img src={item.img} alt="" />
-              <p>
-                {item.name}
-              </p>
-            </div>
-          )}
-        />
+        {
+          dataSource && (
+            <CustomSelect
+              onClickCallback={
+                (value) => handleChangeRecord((mapping.productSource.name as string), value.value)
+              }
+              selectedKeys={dataSource?.get(mapping.productSource.name)}
+              data={getProductSourceData()}
+              identity="value"
+              mode="single"
+              customChildren={(item) => (
+                <div className="c7ncd-appCenterPro-conDetail__productSource__item">
+                  <img src={item.img} alt="" />
+                  <p>
+                    {item.name}
+                  </p>
+                </div>
+              )}
+            />
+          )
+        }
       </div>
       { renderFormByProductSource() }
       <CollapseContainer

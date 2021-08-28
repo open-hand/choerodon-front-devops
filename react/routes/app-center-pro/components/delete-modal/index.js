@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component, Fragment } from 'react';
 import { observer, inject } from 'mobx-react';
 import { injectIntl, FormattedMessage } from 'react-intl';
@@ -18,10 +19,12 @@ const { Item: FormItem } = Form;
 @inject('AppState')
 @observer
 class DeleteModal extends Component {
+  // eslint-disable-next-line react/static-property-placement
   static propTypes = {
     objectType: PropTypes.string.isRequired,
     visible: PropTypes.bool.isRequired,
     title: PropTypes.string.isRequired,
+    // eslint-disable-next-line react/require-default-props
     objectId: PropTypes.number,
     envId: PropTypes.number.isRequired,
   };

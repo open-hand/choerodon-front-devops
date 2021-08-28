@@ -113,6 +113,7 @@ const Index = observer(() => {
             mapping.chartSource.name as string,
             value.value,
           )}
+          selectedKeys={AppConfigDataSet.current.get(mapping.chartSource.name)}
           data={chartSourceData}
           identity="value"
           mode="single"
@@ -144,7 +145,11 @@ const Index = observer(() => {
           })}
         />
       </Form>
-      <YamlEditor />
+      <YamlEditor
+        readOnly={false}
+        value={AppConfigDataSet.current.get(mapping.value.name)}
+        onValueChange={(value: string) => AppConfigDataSet.current.set(mapping.value.name, value)}
+      />
     </div>
   );
 });
