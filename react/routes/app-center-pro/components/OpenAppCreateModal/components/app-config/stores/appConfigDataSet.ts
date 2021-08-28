@@ -2,9 +2,10 @@ import { FieldProps } from 'choerodon-ui/pro/lib/data-set/field';
 import { FieldType } from 'choerodon-ui/pro/lib/data-set/enum';
 import { DataSet } from 'choerodon-ui/pro';
 import { appServiceApiConfig } from '@/api/AppService';
-import { deployApiConfig } from '@/api/Deploy';
+import { deployApiConfig, deployApi } from '@/api/Deploy';
 import { appServiceVersionApiConfig } from '@/api/AppServiceVersions';
 import { environmentApiConfig } from '@/api/Environment';
+import { appServiceInstanceApi } from '@/api';
 import hzero from '../images/hzero.png';
 import market from '../images/market.png';
 import project from '../images/project.png';
@@ -135,6 +136,22 @@ const marketServiceVersionOptionDs = {
   transport: {
     read: ({ data }: any) => ({
       ...deployApiConfig.deployVersion(data.version, 'image'),
+      transformResponse: (res: any) => {
+        function init(dt: any) {
+          return dt.map((d: any) => {
+            const newD = d;
+            newD.id = newD.marketServiceDeployObjectVO.id;
+            return d;
+          });
+        }
+        let newRes = res;
+        try {
+          newRes = JSON.parse(res);
+          return init(newRes);
+        } catch (e) {
+          return init(newRes);
+        }
+      },
     }),
   },
 };
@@ -157,7 +174,7 @@ const mapping: {
     defaultValue: chartSourceData[0].value,
   },
   hzeroVersion: {
-    name: 'hzeroVersion',
+    name: 'appServiceId',
     type: 'string' as FieldType,
     label: '应用服务',
     textField: 'name',
@@ -169,7 +186,7 @@ const mapping: {
     },
   },
   marketVersion: {
-    name: 'marketVersion',
+    name: 'marketAppServiceId',
     type: 'string' as FieldType,
     label: '市场应用及版本',
     textField: 'versionNumber',
@@ -181,7 +198,7 @@ const mapping: {
     },
   },
   serviceVersion: {
-    name: 'serviceVersion',
+    name: 'appServiceVersionId',
     type: 'string' as FieldType,
     label: '服务版本',
     textField: 'version',
@@ -192,9 +209,14 @@ const mapping: {
         .includes(record.get(mapping.chartSource.name)),
     },
   },
-  marketServiceVersion: {
-    name: 'marketServiceVersion',
+  value: {
+    name: 'values',
     type: 'string' as FieldType,
+    defaultValue: '',
+  },
+  marketServiceVersion: {
+    name: 'marketDeployObjectId',
+    type: 'object' as FieldType,
     label: '市场服务及版本',
     textField: 'marketServiceName',
     valueField: 'id',
@@ -205,7 +227,7 @@ const mapping: {
     },
   },
   env: {
-    name: 'env',
+    name: 'environmentId',
     type: 'string' as FieldType,
     label: '环境',
     required: true,
@@ -219,14 +241,15 @@ const appConfigDataSet = () => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((i) => mapping[i]),
   events: {
-    update: ({
+    update: async ({
       dataSet,
       name,
       value,
+      record,
     }: {
       dataSet: any,
       name: string,
-      value: string,
+      value: any,
       record: any,
     }) => {
       switch (name) {
@@ -264,6 +287,16 @@ const appConfigDataSet = () => ({
             dataSet.getField(mapping.marketServiceVersion.name).options.setQueryParameter('version', value);
             dataSet.getField(mapping.marketServiceVersion.name).options.query();
           }
+          break;
+        }
+        case mapping.serviceVersion.name: {
+          const res = await appServiceInstanceApi.getDeployValue(value);
+          record.set(mapping.value.name, res?.yaml);
+          break;
+        }
+        case mapping.marketServiceVersion.name: {
+          const res = await deployApi.getValue(value.id);
+          record.set(mapping.value.name, res?.value);
           break;
         }
         default: {

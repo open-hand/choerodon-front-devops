@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useImperativeHandle } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Form, Select, Button } from 'choerodon-ui/pro';
 import { Upload } from 'choerodon-ui';
-import { CustomSelect } from '@choerodon/components';
+import { CustomSelect, ChunkUploader } from '@choerodon/components';
+import { Base64 } from 'js-base64';
 import { useHostAppConfigStore } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-app-config/stores';
 import { mapping } from './stores/hostAppConfigDataSet';
+import YamlEditor from '@/components/yamlEditor';
 import {
   productSourceData,
   productTypeData,
 } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config/stores/conGroupDataSet';
 
 import '../container-config/components/container-detail/index.less';
+import StatusDot from '@/components/status-dot';
 
 const jarSource = [
   ...JSON.parse(JSON.stringify(productSourceData)).splice(0, 3),
@@ -20,7 +23,33 @@ const jarSource = [
 const Index = observer(() => {
   const {
     HostAppConfigDataSet,
+    cRef,
   } = useHostAppConfigStore();
+
+  const setData = (data: any) => {
+    const newData = data;
+    newData.prodJarInfoVO = {
+      [mapping.projectProductRepo.name as string]: newData[
+        mapping.projectProductRepo.name as string]?.repositoryId,
+      [mapping.groupId.name as string]: newData[mapping.groupId.name as string],
+      [mapping.artifactId.name as string]: newData[mapping.artifactId.name as string],
+      [mapping.jarVersion.name as string]: newData[mapping.jarVersion.name as string],
+    };
+    newData[mapping.value.name as string] = Base64.encode(newData[mapping.value.name as string]);
+    newData.deployObjectId = newData[
+      mapping.marketServiceVersion.name as string]?.marketServiceDeployObjectVO?.id;
+    return newData;
+  };
+
+  useImperativeHandle(cRef, () => ({
+    handleOk: async () => {
+      const flag = await HostAppConfigDataSet.validate();
+      if (flag) {
+        return setData(HostAppConfigDataSet.current.toData());
+      }
+      return false;
+    },
+  }));
 
   const renderFormByProductSource = () => {
     const dataSource = HostAppConfigDataSet?.current;
@@ -48,11 +77,29 @@ const Index = observer(() => {
         case productSourceData[5].value: {
           return (
             <Form className="c7ncd-appCenterPro-conDetail__form">
-              <Upload>
-                <Button icon="file_upload">
-                  上传文件
-                </Button>
-              </Upload>
+              <ChunkUploader
+                callbackWhenLoadingChange={(loadingIf: boolean) => {
+                  console.log(loadingIf);
+                  // modal.update({
+                  //   okProps: {
+                  //     disabled: loadingIf,
+                  //   },
+                  // });
+                }}
+                // disabled={!ImportFileDataSet?.current?.get(mapping().folderId.name)}
+                suffix=".jar"
+                accept=".jar"
+                prefixPatch="/devops"
+                showUploadList={false}
+                callback={(str: string) => {
+                  console.log(str);
+                }}
+              />
+              {/* <Upload> */}
+              {/*  <Button icon="file_upload"> */}
+              {/*    上传文件 */}
+              {/*  </Button> */}
+              {/* </Upload> */}
             </Form>
           );
         }
@@ -83,16 +130,35 @@ const Index = observer(() => {
     return '';
   };
 
+  const renderHostOption = ({ record, text }: any) => (
+    <>
+      <StatusDot
+        // @ts-ignore
+        size="small"
+        synchronize
+        connect={record.get('connect')}
+      />
+      {text}
+    </>
+  );
+
   return (
     <div className="c7ncd-appCenterPro-hostAppConfig">
       <Form columns={3} dataSet={HostAppConfigDataSet}>
-        <Select name={mapping.host.name} />
+        <Select
+          name={mapping.host.name}
+          optionRenderer={renderHostOption}
+          onOption={({ record: hostRecord }) => ({
+            disabled: !hostRecord.get('connect'),
+          })}
+        />
       </Form>
       <div className="c7ncd-appCenterPro-conDetail__productType">
         <CustomSelect
           onClickCallback={
             (value) => HostAppConfigDataSet.current.set(mapping.jarSource.name, value.value)
           }
+          selectedKeys={HostAppConfigDataSet.current.get(mapping.jarSource.name)}
           data={jarSource}
           identity="value"
           mode="single"
@@ -107,6 +173,13 @@ const Index = observer(() => {
         />
       </div>
       { renderFormByProductSource() }
+      <YamlEditor
+        readOnly={false}
+        value={HostAppConfigDataSet.current.get(mapping.value.name)}
+        onValueChange={(value: string) => {
+          HostAppConfigDataSet.current.set(mapping.value.name, value);
+        }}
+      />
     </div>
   );
 });

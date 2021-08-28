@@ -19,7 +19,7 @@ import { appServiceVersionApiConfig } from '@/api/AppServiceVersions';
 import { nexusApiConfig } from '@/api/Nexus';
 
 const productTypeData = [{
-  value: 'image',
+  value: 'docker',
   name: '镜像',
   img: docker,
 }, {
@@ -29,7 +29,7 @@ const productTypeData = [{
 }];
 
 const productSourceData = [{
-  value: 'projectProduct',
+  value: 'currentProject',
   name: '项目制品库',
   img: projectproduct,
 }, {
@@ -55,16 +55,21 @@ const productSourceData = [{
 }];
 
 const repoTypeData = [{
-  value: 'private',
+  value: true,
   name: '私有',
 }, {
-  value: 'public',
+  value: false,
   name: '公开',
 }];
 
 const mapping: {
   [key: string]: FieldProps
 } = {
+  edit: {
+    name: 'edit',
+    type: 'boolean' as FieldType,
+    defaultValue: false,
+  },
   name: {
     name: 'name',
     type: 'string' as FieldType,
@@ -76,7 +81,7 @@ const mapping: {
     defaultValue: false,
   },
   productType: {
-    name: 'productType',
+    name: 'type',
     type: 'string' as FieldType,
     defaultValue: productTypeData[0].value,
     options: new DataSet({
@@ -125,7 +130,7 @@ const mapping: {
     },
   },
   imageVersion: {
-    name: 'imageVersion',
+    name: 'tag',
     type: 'string' as FieldType,
     label: '镜像版本',
     textField: 'tagName',
@@ -196,7 +201,7 @@ const mapping: {
   },
   marketServiceVersion: {
     name: 'marketServiceVersion',
-    type: 'string' as FieldType,
+    type: 'object' as FieldType,
     label: '市场服务及版本',
     textField: 'marketServiceName',
     valueField: 'id',
@@ -218,7 +223,7 @@ const mapping: {
     },
   },
   shareAppService: {
-    name: 'shareAppService',
+    name: 'appServiceId',
     type: 'string' as FieldType,
     label: '共享应用服务',
     dynamicProps: {
@@ -261,7 +266,7 @@ const mapping: {
     }),
   },
   shareServiceVersion: {
-    name: 'shareServiceVersion',
+    name: 'appServiceVersionId',
     type: 'string' as FieldType,
     label: '服务版本',
     textField: 'version',
@@ -285,7 +290,7 @@ const mapping: {
 
   },
   repoAddress: {
-    name: 'repoAddress',
+    name: 'customImageName',
     type: 'string' as FieldType,
     label: '仓库地址',
     dynamicProps: {
@@ -296,8 +301,8 @@ const mapping: {
     },
   },
   repoType: {
-    name: 'repoType',
-    type: 'string' as FieldType,
+    name: 'privateRepository',
+    type: 'boolean' as FieldType,
     label: '仓库类型',
     textField: 'name',
     valueField: 'value',
@@ -337,7 +342,7 @@ const mapping: {
     },
   },
   nexus: {
-    name: 'nexus',
+    name: 'serverName',
     type: 'string' as FieldType,
     label: 'Nexus服务',
     textField: 'serverName',
@@ -351,7 +356,7 @@ const mapping: {
     lookupAxiosConfig: () => nexusApiConfig.getServerList(),
   },
   projectProductRepo: {
-    name: 'projectProductRepo',
+    name: 'repositoryId',
     type: 'object' as FieldType,
     label: '项目制品库',
     textField: 'neRepositoryName',
@@ -446,11 +451,11 @@ const mapping: {
     },
   },
   jarVersion: {
-    name: 'jarVersion',
+    name: 'version',
     type: 'string' as FieldType,
     label: 'jar包版本',
     textField: 'version',
-    valueField: 'id',
+    valueField: 'version',
     dynamicProps: {
       required: ({ record }) => record?.get(mapping.productType.name) === productTypeData[1].value
         && record?.get(
@@ -476,22 +481,22 @@ const mapping: {
     },
   },
   CPUReserved: {
-    name: 'CPUReserved',
+    name: 'requestCpu',
     type: 'number' as FieldType,
     label: 'CPU预留',
   },
   CPULimit: {
-    name: 'CPULimit',
+    name: 'limitCpu',
     type: 'number' as FieldType,
-    label: 'CPU预留',
+    label: 'CPU上线',
   },
   memoryReserved: {
-    name: 'memoryReserved',
+    name: 'requestMemory',
     type: 'number' as FieldType,
     label: '内存预留',
   },
   memoryLimit: {
-    name: 'memoryLimit',
+    name: 'limitMemory',
     type: 'number' as FieldType,
     label: '内存上限',
   },

@@ -20,6 +20,33 @@ class AppServiceInstanceApi extends Api<AppServiceInstanceApi> {
       },
     });
   }
+
+  createAppServiceInstance(data: any) {
+    return this.request({
+      method: 'post',
+      url: this.prefix,
+      data,
+    });
+  }
+
+  getDeployValue(versionId: string) {
+    return this.request({
+      method: 'get',
+      url: `${this.prefix}/deploy_value`,
+      params: {
+        type: 'create',
+        version_id: versionId,
+      },
+    });
+  }
+
+  createMarketAppService(data: any) {
+    return this.request({
+      method: 'post',
+      url: `${this.prefix}/market/instances`,
+      data,
+    });
+  }
 }
 
 const appServiceInstanceApi = new AppServiceInstanceApi();

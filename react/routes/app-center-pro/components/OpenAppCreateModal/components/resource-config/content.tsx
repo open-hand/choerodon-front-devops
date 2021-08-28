@@ -21,8 +21,11 @@ const Index = observer(() => {
     handleOk: async () => {
       const netFlag = await (netRef?.current as any)?.handleOk();
       const ingressFlag = await (ingressRef?.current as any)?.handleOk();
-      if (netFlag && ingressFlag) {
-        return true;
+      if (netFlag !== false && ingressFlag !== false) {
+        return ({
+          devopsServiceReqVO: netFlag,
+          devopsIngressVO: ingressFlag,
+        });
       }
       return false;
     },
