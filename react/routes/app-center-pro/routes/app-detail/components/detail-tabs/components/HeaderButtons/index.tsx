@@ -14,6 +14,7 @@ import { openRedeploy } from '@/components/reDeploy';
 import { openChangeActive } from '@/components/app-status-toggle';
 import { openMarketUpgradeModal } from '@/components/app-upgrade';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
+import { openHostAppConfigModal } from '../../../../../../components/OpenAppCreateModal/components/host-app-config';
 import {
   APP_STATUS,
   CHART_CATERGORY,
@@ -24,7 +25,7 @@ import {
   IS_MARKET,
   IS_SERVICE,
 } from '@/routes/app-center-pro/stores/CONST';
-import { getChartSourceGroup } from '@/routes/app-center-pro/utils';
+import { getAppCategories, getChartSourceGroup } from '@/routes/app-center-pro/utils';
 
 const deployGroupConfig = Modal.key();
 const deployGroupApp = Modal.key();
@@ -32,8 +33,8 @@ const deployGroupApp = Modal.key();
 const DetailsTabsHeaderButtons = () => {
   const {
     deleteHostApp,
-    deletionStore,
     goBackHomeBaby,
+    deleteEnvApp,
   } = useAppCenterProStore();
 
   const {
@@ -43,10 +44,10 @@ const DetailsTabsHeaderButtons = () => {
 
   const {
     appDs,
-    appId,
     deployTypeId: hostOrEnvId,
     deployType,
     appCatergory,
+    rdupmType,
   } = useAppDetailsStore();
 
   const appRecord = appDs.current;
@@ -62,6 +63,8 @@ const DetailsTabsHeaderButtons = () => {
     objectStatus: appStatus,
     devopsHostCommandDTO = {},
     sourceType,
+    instanceName,
+    objectName,
   } = appRecord?.toData() || {};
 
   const isMarket = chartSource === 'market' || chartSource === 'hzero';
@@ -99,12 +102,12 @@ const DetailsTabsHeaderButtons = () => {
       case CHART_CATERGORY:
         obj = {
           name: '修改应用',
+          icon: 'add_comment-o',
         };
         break;
       case DEPLOY_CATERGORY:
         obj = {
           name: '修改应用',
-          // icon: 'add_comment-o',
           groupBtnItems: [
             {
               name: '修改应用配置',
@@ -120,6 +123,8 @@ const DetailsTabsHeaderButtons = () => {
       case HOST_CATERGORY:
         obj = {
           name: '修改应用',
+          handler: openHostAppConfigModal,
+          icon: 'add_comment-o',
         };
         break;
       default:
@@ -220,13 +225,13 @@ const DetailsTabsHeaderButtons = () => {
     // icon: 'delete_forever-o',
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-delete'],
     handler: () => {
-      deployType === ENV_TAB ? deletionStore.openDeleteModal({
+      deployType === ENV_TAB ? deleteEnvApp({
+        appCatergoryCode: getAppCategories(rdupmType, deployType).code,
         envId: hostOrEnvId,
         instanceId,
+        instanceName: instanceName || objectName,
         callback: goBackHomeBaby,
-        instanceName: name,
-        type: 'instance',
-      }) : deleteHostApp(hostOrEnvId, appId, goBackHomeBaby);
+      }) : deleteHostApp(hostOrEnvId, instanceId, goBackHomeBaby);
     },
   };
 

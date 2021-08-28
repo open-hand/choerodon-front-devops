@@ -6,11 +6,22 @@ import { injectIntl } from 'react-intl';
 import { axios } from '@choerodon/master';
 import { useHistory, useLocation } from 'react-router';
 import {
-  DEPLOY_TYPE,
+  CHART_CATERGORY,
+  DEPLOY_TYPE, ENV_TAB,
 } from './CONST';
 
 import useDeletionStore, { StoreProps } from './deletionStore';
 import { hostApi } from '@/api';
+import { openDelete } from '../components/app-deletion';
+import { deploymentsApi } from '@/api/Deployments';
+
+type deletEnvProps ={
+  appCatergoryCode:string,
+  envId:string,
+  instanceId:string,
+  instanceName:string,
+  callback:(...args:[])=>any,
+}
 
 interface ContextProps {
   prefixCls: string,
@@ -27,6 +38,7 @@ interface ContextProps {
   deletionStore: StoreProps
   match:any
   deleteHostApp: (hostId:string, instanceId:string, callback?:CallableFunction) => any
+  deleteEnvApp: (props:deletEnvProps)=>any
   goBackHomeBaby: (...args:any[])=>any
 }
 
@@ -68,6 +80,38 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     }
   }
 
+  async function deleteDeployGroupApp({
+    instanceId, callback,
+  }:{
+    instanceId:string,
+    callback:(...args:[])=>any
+  }) {
+    try {
+      const res = await deploymentsApi.deleleDeployGroupApp(instanceId);
+      if (res && res.failed) {
+        return res;
+      }
+      callback();
+      return true;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async function deleteEnvApp({
+    appCatergoryCode, envId, instanceId, instanceName, callback,
+  }:deletEnvProps) {
+    if (appCatergoryCode === CHART_CATERGORY) {
+      openDelete({
+        envId, instanceId, instanceName, callback, projectId, deletionStore,
+      });
+    } else {
+      deleteDeployGroupApp({
+        instanceId, callback,
+      });
+    }
+  }
+
   const value = {
     ...props,
     prefixCls: 'c7ncd-app-center',
@@ -76,6 +120,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     mainTabKeys,
     deletionStore,
     deleteHostApp,
+    deleteEnvApp,
     goBackHomeBaby,
   };
   return (

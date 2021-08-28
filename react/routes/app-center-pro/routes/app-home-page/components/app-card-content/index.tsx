@@ -29,8 +29,8 @@ const AppItem = observer(({
   refresh:(...agrs:any[])=>any
 }) => {
   const {
-    deletionStore,
     deleteHostApp,
+    deleteEnvApp,
   } = useAppCenterProStore();
 
   const {
@@ -96,9 +96,13 @@ const AppItem = observer(({
   });
 
   const handleDelete = () => {
-    isEnv ? openDelete({
-      envId, instanceId, instanceName, callback: refresh, projectId, deletionStore,
-    }) : deleteHostApp(hostId, id);
+    isEnv ? deleteEnvApp({
+      appCatergoryCode: getAppCategories(rdupmType, currentType).code,
+      envId,
+      instanceId,
+      instanceName,
+      callback: refresh,
+    }) : deleteHostApp(hostId, instanceId);
   };
 
   const stopObj = {
@@ -132,7 +136,6 @@ const AppItem = observer(({
       case APP_STATUS.STOP:
         data = [activeObj, deleteObj];
         break;
-
       default:
         break;
     }
