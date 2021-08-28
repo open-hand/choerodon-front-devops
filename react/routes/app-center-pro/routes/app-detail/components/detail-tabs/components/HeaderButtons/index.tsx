@@ -106,7 +106,7 @@ const DetailsTabsHeaderButtons = () => {
           name: '修改应用',
           icon: 'add_comment-o',
           handler: () => {
-            openAppConfigModal(appDs.toData() || {}, refresh);
+            openAppConfigModal(appRecord?.toData() || {}, refresh);
           },
         };
         break;
@@ -129,7 +129,7 @@ const DetailsTabsHeaderButtons = () => {
         obj = {
           name: '修改应用',
           handler: () => {
-            openHostAppConfigModal(appRecord?.toData() || {}, refresh);
+            openHostAppConfigModal(appRecord?.toData()[0] || {}, refresh);
           },
           icon: 'add_comment-o',
         };
@@ -238,7 +238,7 @@ const DetailsTabsHeaderButtons = () => {
         instanceId,
         instanceName: instanceName || objectName,
         callback: goBackHomeBaby,
-      }) : deleteHostApp(hostOrEnvId, instanceId, goBackHomeBaby);
+      }) : deleteHostApp(hostOrEnvId, appId, goBackHomeBaby);
     },
   };
 
