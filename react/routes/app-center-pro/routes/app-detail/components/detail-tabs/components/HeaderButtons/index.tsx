@@ -48,6 +48,7 @@ const DetailsTabsHeaderButtons = () => {
     deployType,
     appCatergory,
     rdupmType,
+    appId,
   } = useAppDetailsStore();
 
   const appRecord = appDs.current;
@@ -123,7 +124,9 @@ const DetailsTabsHeaderButtons = () => {
       case HOST_CATERGORY:
         obj = {
           name: '修改应用',
-          handler: openHostAppConfigModal,
+          handler: () => {
+            openHostAppConfigModal(appId, refresh);
+          },
           icon: 'add_comment-o',
         };
         break;
