@@ -127,7 +127,7 @@ const Platform = injectIntl(observer(({ checkData }) => {
     );
   }
   const currentPlatFormType = importRecord?.get('platformType');
-  const platFormTypeOpts = {
+  const platFormTypeOpts = {
     share: {
       ds: selectedDs,
       openModal,
@@ -188,11 +188,11 @@ const Platform = injectIntl(observer(({ checkData }) => {
       {importRecord?.get('platformType') === 'gitlab' && (
         <>
           {!importRecord?.get('isGitLabTemplate')
-          && (
-          <blockquote className="c7ncd-import-gitlab-activate-note">
-            {formatMessage({ id: 'c7ncd.import.gitlab.activate.note' })}
-          </blockquote>
-          )}
+            && (
+              <blockquote className="c7ncd-import-gitlab-activate-note">
+                {formatMessage({ id: 'c7ncd.import.gitlab.activate.note' })}
+              </blockquote>
+            )}
           <Table
             dataSet={gitlabSelectedDs}
             queryBar="none"

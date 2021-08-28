@@ -12,21 +12,21 @@ class AppServiceApi extends Api<AppServiceApi> {
     });
   }
 
-  checkName(value:string) {
+  checkName(value: string) {
     return this.request({
       method: 'get',
       url: `${this.prefix}/check_name?name=${encodeURIComponent(value)}`,
     });
   }
 
-  checkCode(value:string) {
+  checkCode(value: string) {
     return this.request({
       method: 'get',
       url: `${this.prefix}/check_code?code=${value}`,
     });
   }
 
-  batchTransfer(res:any) {
+  batchTransfer(res: any) {
     return this.request({
       method: 'put',
       url: `${this.prefix}/batch_transfer`,
@@ -34,7 +34,7 @@ class AppServiceApi extends Api<AppServiceApi> {
     });
   }
 
-  Import(url:string, res:any) {
+  Import(url: string, res: any) {
     return this.request({
       method: 'post',
       url: `${this.prefix}/import/${url}`,
@@ -42,7 +42,7 @@ class AppServiceApi extends Api<AppServiceApi> {
     });
   }
 
-  batchCheck(res:any) {
+  batchCheck(res: any) {
     return this.request({
       method: 'post',
       url: `${this.prefix}/batch_check`,
@@ -50,14 +50,14 @@ class AppServiceApi extends Api<AppServiceApi> {
     });
   }
 
-  pageByMode(share:any, url:string) {
+  pageByMode(share: any, url: string) {
     return this.request({
       method: 'get',
       url: `${this.prefix}/page_by_mode?share=${share || true}${url}`,
     });
   }
 
-  listProjectsByShare(isShare:any) {
+  listProjectsByShare(isShare: any) {
     return this.request({
       method: 'get',
       url: `${this.prefix}/list_project_by_share?share=${isShare}`,
