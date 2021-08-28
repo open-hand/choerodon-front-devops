@@ -1,6 +1,7 @@
 import { useLocalStore } from 'mobx-react-lite';
 import { axios, Choerodon } from '@choerodon/boot';
 import { handlePromptError } from '../../../../../../utils';
+import { appServiceApi } from '@/api/AppService';
 
 export default function useStore() {
   return useLocalStore(() => ({
@@ -33,7 +34,7 @@ export default function useStore() {
 
     async batchCheck(projectId, listCode, listName) {
       try {
-        const res = await axios.post(`/devops/v1/projects/${projectId}/app_service/batch_check`, JSON.stringify({ listCode, listName }));
+        const res = await appServiceApi.batchCheck(JSON.stringify({ listCode, listName }));
         if (handlePromptError(res)) {
           this.setRepeatData(res);
           return res;
@@ -47,7 +48,7 @@ export default function useStore() {
 
     async loadAllProject(projectId, isShare) {
       try {
-        const res = await axios.get(`/devops/v1/projects/${projectId}/app_service/list_project_by_share?share=${isShare}`);
+        const res = await appServiceApi.listProjectsByShare(isShare);
         if (handlePromptError(res)) {
           this.setAllProject(res);
         }

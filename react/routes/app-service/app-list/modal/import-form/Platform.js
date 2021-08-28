@@ -126,31 +126,28 @@ const Platform = injectIntl(observer(({ checkData }) => {
       </Select>
     );
   }
-
+  const currentPlatFormType = importRecord?.get('platformType');
+  const platFormTypeOpts = {
+    share: {
+      ds: selectedDs,
+      openModal,
+    },
+    gitlab: {
+      ds: gitlabSelectedDs,
+      openModal: openGitLabModal,
+    },
+    market: {
+      ds: marketSelectedDs,
+      openModal: openMarketModal,
+    },
+  };
   function handleDelete() {
-    let ds;
-    if (importRecord?.get('platformType') === 'market') {
-      ds = marketSelectedDs;
-    }
-    if (importRecord?.get('platformType') === 'share') {
-      ds = selectedDs;
-    }
-    if (importRecord?.get('platformType') === 'gitlab') {
-      ds = gitlabSelectedDs;
-    }
+    const { ds } = platFormTypeOpts[currentPlatFormType];
     ds.remove(ds.current, false);
     ds.length && checkData();
   }
   function handleClick() {
-    if (importRecord?.get('platformType') === 'share') {
-      openModal();
-    }
-    if (importRecord?.get('platformType') === 'market') {
-      openMarketModal();
-    }
-    if (importRecord?.get('platformType') === 'gitlab') {
-      openGitLabModal();
-    }
+    (platFormTypeOpts[currentPlatFormType].openModal)();
   }
 
   return (

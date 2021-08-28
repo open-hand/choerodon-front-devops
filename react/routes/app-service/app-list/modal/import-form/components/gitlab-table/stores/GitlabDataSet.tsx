@@ -1,6 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { FieldType, DataSet } from '@/interface';
-
+import {
+  groupsApiConfig,
+} from '@/api';
 /* eslint-disable import/no-anonymous-default-export */
 interface TableProps {
   formatMessage(arg0: object, arg1?: object): string,
@@ -15,10 +17,7 @@ export default ({
   autoQuery: true,
   pageSize: 10,
   transport: {
-    read: ({ data, params }: any) => ({
-      url: `/devops/v1/projects/215874867621597184/groups/${gitlabGroupValue}/projects`,
-      method: 'get',
-    }),
+    read: ({ data, params }: any) => (groupsApiConfig.getProjects(gitlabGroupValue)),
   },
   fields: [
     { name: 'name', label: formatMessage({ id: `${intlPrefix}.name` }) },

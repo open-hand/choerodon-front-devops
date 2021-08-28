@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import {
   Table, Pagination,
 } from 'choerodon-ui/pro';
@@ -30,13 +30,6 @@ const GitlabSourceTable = observer(() => {
       }
     });
   });
-
-  const [total, setTotal] = useState(11);
-
-  // function handleChange(page: number, pageSize: number) {
-  //   setTotal(6);
-  //   console.log('[pagination]', page, pageSize);
-  // }
 
   return (
     <div className={`${prefixCls}-table-wrap`}>

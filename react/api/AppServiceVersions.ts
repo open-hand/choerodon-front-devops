@@ -20,6 +20,15 @@ class AppServiceVersionsApi extends Api<AppServiceVersionsApi> {
       },
     });
   }
+
+  getLookUpConfig(
+    appServiceId: string,
+  ) {
+    return this.request({
+      url: `${this.prefix}/page_by_options?app_service_id=${appServiceId}&deploy_only=false&do_page=true&page=1&size=40`,
+      method: 'post',
+    });
+  }
 }
 
 const appServiceVersionApi = new AppServiceVersionsApi();

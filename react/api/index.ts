@@ -13,3 +13,4 @@ export * from './Pods';
 export * from './Market';
 export * from './Groups';
 export * from './AppService';
+export * from './AppServiceVersions';

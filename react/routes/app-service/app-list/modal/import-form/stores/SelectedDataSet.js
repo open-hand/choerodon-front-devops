@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { axios } from '@choerodon/boot';
 import includes from 'lodash/includes';
+import { appServiceVersionApiConfig } from '@/api';
 
 export default ({ intlPrefix, formatMessage, projectId, importStore }) => {
   function handleUpdate({ dataSet, record, name, value, oldValue }) {
@@ -13,6 +14,9 @@ export default ({ intlPrefix, formatMessage, projectId, importStore }) => {
     }
   }
 
+  function getLookUpConfig({ record }) {
+    return appServiceVersionApiConfig.getLookUpConfig(record.get('id'));
+  }
   async function checkCode(value, name, record) {
     const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
     if (value && pa.test(value)) {
@@ -27,7 +31,7 @@ export default ({ intlPrefix, formatMessage, projectId, importStore }) => {
       }
       if (!importStore.getSkipCheck) {
         try {
-          const res = await axios.get(`/devops/v1/projects/${projectId}/app_service/check_code?code=${value}`);
+          const res = await appServiceApi.checkCode(value);
           if ((res && res.failed) || !res) {
             return formatMessage({ id: 'checkCodeExist' });
           }
@@ -54,7 +58,7 @@ export default ({ intlPrefix, formatMessage, projectId, importStore }) => {
       }
       if (!importStore.getSkipCheck) {
         try {
-          const res = await axios.get(`/devops/v1/projects/${projectId}/app_service/check_name?name=${encodeURIComponent(value)}`);
+          const res = await appServiceApi.checkName(value);
           if ((res && res.failed) || !res) {
             return formatMessage({ id: 'checkNameExist' });
           }
@@ -65,13 +69,6 @@ export default ({ intlPrefix, formatMessage, projectId, importStore }) => {
     } else {
       return formatMessage({ id: 'nameCanNotHasSpaces' });
     }
-  }
-
-  function getLookUpConfig({ record }) {
-    return {
-      url: `/devops/v1/projects/${projectId}/app_service_versions/page_by_options?app_service_id=${record.get('id')}&deploy_only=false&do_page=true&page=1&size=40`,
-      method: 'post',
-    };
   }
 
   return ({
@@ -116,7 +113,7 @@ export default ({ intlPrefix, formatMessage, projectId, importStore }) => {
         textField: 'version',
         valueField: 'id',
         dynamicProps: {
-          lookupAxiosConfig: getLookUpConfig,
+          lookupAxiosConfig:getLookUpConfig,
         },
         label: formatMessage({ id: `${intlPrefix}.version` }),
         required: true,

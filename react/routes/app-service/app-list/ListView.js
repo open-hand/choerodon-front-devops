@@ -460,16 +460,6 @@ const ListView = withRouter(observer((props) => {
                   }}
                   onClick={() => setSelectedAppService(record.toData())}
                 >
-                  {/*<span*/}
-                  {/*  className="c7ncd-appService-item-icon"*/}
-                  {/*  style={{*/}
-                  {/*    backgroundImage: record.get('imgUrl') ? `url(${record.get('imgUrl')})` : 'unset',*/}
-                  {/*  }}*/}
-                  {/*>*/}
-                  {/*  {*/}
-                  {/*    !record.get('imgUrl') && record.get('name').substring(0,1).toUpperCase()*/}
-                  {/*  }*/}
-                  {/*</span>*/}
                   <div className="c7ncd-appService-item-center">
                     <div className="c7ncd-appService-item-center-line" style={{ justifyContent: 'space-between' }}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>

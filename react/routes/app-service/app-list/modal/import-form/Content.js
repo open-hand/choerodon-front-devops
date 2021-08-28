@@ -16,7 +16,6 @@ import { NewTips, CustomSelect } from '@choerodon/components';
 import PlatForm from './Platform';
 import Tips from '../../../../../components/new-tips';
 import { useImportAppServiceStore } from './stores';
-import detailTabs from '@/routes/app-center-pro/routes/app-detail/components/detail-tabs';
 
 const { Option } = Select;
 
@@ -123,12 +122,6 @@ const ImportForm = injectIntl(observer((props) => {
     return {
       listCode, listName, repeatName, repeatCode,
     };
-  }
-
-  function handleOptionProps({ record: optionRecord }) {
-    return ({
-      disabled: optionRecord.get('value') === 'market' && !hasMarket,
-    });
   }
 
   function handleClick(value) {

@@ -11,6 +11,13 @@ class GroupsApi extends Api<GroupsApi> {
       url: `${this.prefix}/owned_expect_current`,
     });
   }
+
+  getProjects(gitlabGroupValue:string) {
+    return this.request({
+      method: 'get',
+      url: `${this.prefix}/${gitlabGroupValue}/projects`,
+    });
+  }
 }
 
 const groupsApi = new GroupsApi();

@@ -41,6 +41,28 @@ class AppServiceApi extends Api<AppServiceApi> {
       data: res,
     });
   }
+
+  batchCheck(res:any) {
+    return this.request({
+      method: 'post',
+      url: `${this.prefix}/batch_check`,
+      data: res,
+    });
+  }
+
+  pageByMode(share:any, url:string) {
+    return this.request({
+      method: 'get',
+      url: `${this.prefix}/page_by_mode?share=${share || true}${url}`,
+    });
+  }
+
+  listProjectsByShare(isShare:any) {
+    return this.request({
+      method: 'get',
+      url: `${this.prefix}/list_project_by_share?share=${isShare}`,
+    });
+  }
 }
 
 const appServiceApi = new AppServiceApi();

@@ -63,7 +63,6 @@ const GitlabSelectedDs = ({ intlPrefix, formatMessage, projectId, importStore }:
       const dataSet = record.dataSet;
       const repeatRecord = dataSet.find((eachRecord: any) => eachRecord.id !== record.id && eachRecord.get('name') === value);
       const repeatName = dataSet.find((eachRecord: any) => eachRecord.id !== record.id && eachRecord.get('serverName') === value);
-      console.log('repeatName', repeatName);
       if (repeatRecord) {
         return formatMessage({ id: 'checkNameExist' });
       }
