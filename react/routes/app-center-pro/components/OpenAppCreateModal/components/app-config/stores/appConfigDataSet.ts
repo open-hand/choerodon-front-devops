@@ -12,7 +12,7 @@ import project from '../images/project.png';
 import share from '../images/share.png';
 
 const chartSourceData = [{
-  value: 'project',
+  value: 'normal',
   name: '项目服务',
   img: project,
 }, {
@@ -167,11 +167,26 @@ const envDataSet = {
 const mapping: {
   [key: string]: FieldProps;
 } = {
+  appName: {
+    name: 'name',
+    type: 'string' as FieldType,
+    label: '应用名称',
+  },
+  appCode: {
+    name: 'code',
+    type: 'string' as FieldType,
+    label: '应用编码',
+  },
   chartSource: {
     name: 'chartSource',
     type: 'string' as FieldType,
     label: 'Chart包来源',
+    valueField: 'value',
+    textField: 'name',
     defaultValue: chartSourceData[0].value,
+    options: new DataSet({
+      data: chartSourceData,
+    }),
   },
   hzeroVersion: {
     name: 'appServiceId',
@@ -203,10 +218,19 @@ const mapping: {
     label: '服务版本',
     textField: 'version',
     valueField: 'id',
-    options: new DataSet(serviceVersionOptionDs),
+    // options: new DataSet(serviceVersionOptionDs),
     dynamicProps: {
       required: ({ record }) => [chartSourceData[0].value, chartSourceData[1].value]
         .includes(record.get(mapping.chartSource.name)),
+      lookupAxiosConfig: ({ record }) => {
+        if (record.get(mapping.hzeroVersion.name)) {
+          return ({
+            ...appServiceVersionApiConfig
+              .getVersions(record.get(mapping.hzeroVersion.name), true, true),
+          });
+        }
+        return undefined;
+      },
     },
   },
   value: {
@@ -240,6 +264,13 @@ const mapping: {
 const appConfigDataSet = () => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((i) => mapping[i]),
+  transport: {
+    update: ({ data: [data] }: any) => appServiceInstanceApi.updateAppServiceInstance({
+      ...data,
+      appName: data[mapping.appName.name as string],
+      appCode: data[mapping.appCode.name as string],
+    }),
+  },
   events: {
     update: async ({
       dataSet,
@@ -273,13 +304,6 @@ const appConfigDataSet = () => ({
           dataSet.current.set(mapping.marketVersion.name, undefined);
           dataSet.current.set(mapping.serviceVersion.name, undefined);
           dataSet.current.set(mapping.marketServiceVersion.name, undefined);
-          break;
-        }
-        case mapping.hzeroVersion.name: {
-          if (value) {
-            dataSet.getField(mapping.serviceVersion.name).options.setQueryParameter('appServiceId', value);
-            dataSet.getField(mapping.serviceVersion.name).options.query();
-          }
           break;
         }
         case mapping.marketVersion.name: {

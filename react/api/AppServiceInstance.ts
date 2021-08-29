@@ -31,6 +31,14 @@ class AppServiceInstanceApi extends Api<AppServiceInstanceApi> {
     });
   }
 
+  updateAppServiceInstance(data: any) {
+    return this.request({
+      method: 'put',
+      url: this.prefix,
+      data,
+    });
+  }
+
   getDeployValue(versionId: string) {
     return this.request({
       method: 'get',
@@ -101,6 +109,13 @@ class AppServiceInstanceApi extends Api<AppServiceInstanceApi> {
     return this.request({
       url: `/operate_pod_count?envId=${envId}&name=${name}&count=${num}&kind=${kind}`,
       method: 'put',
+    });
+  }
+
+  getValues(instanceId: string, appServiceVersionId: string) {
+    return this.request({
+      method: 'get',
+      url: `${this.prefix}/${instanceId}/appServiceVersion/${appServiceVersionId}/upgrade_value`,
     });
   }
 }
