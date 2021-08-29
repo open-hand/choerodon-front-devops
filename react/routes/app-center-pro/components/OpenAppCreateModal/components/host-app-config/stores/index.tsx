@@ -12,6 +12,10 @@ interface ContextType {
   detail?: string | {
     value: string,
     prodJarInfoVO: object,
+    marketDeployObjectInfoVO: {
+      mktAppVersionId: string,
+      mktDeployObjectId: string,
+    }
   },
 }
 

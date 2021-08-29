@@ -1,5 +1,6 @@
 import { DataSet } from 'choerodon-ui/pro';
 import omit from 'lodash/omit';
+import { Base64 } from 'js-base64';
 import { DataSetProps, FieldProps, FieldType } from '@/interface';
 import {
   productSourceData,
@@ -108,7 +109,8 @@ const mapping: {
         if (record?.get(mapping.projectProductRepo.name)) {
           return ({
             ...rdupmApiApiConfig.getGroupId(
-              record?.get(mapping.projectProductRepo.name).repositoryId,
+              record?.get(mapping.projectProductRepo.name).repositoryId
+              || record?.get(mapping.projectProductRepo.name),
             ),
             transformResponse: (res) => {
               function init(data: any) {
@@ -145,7 +147,8 @@ const mapping: {
         if (record?.get(mapping.projectProductRepo.name)) {
           return ({
             ...rdupmApiApiConfig.getArtifactId(
-              record?.get(mapping.projectProductRepo.name).repositoryId,
+              record?.get(mapping.projectProductRepo.name).repositoryId
+              || record?.get(mapping.projectProductRepo.name),
             ),
             transformResponse: (res) => {
               function init(data: any) {
@@ -188,7 +191,8 @@ const mapping: {
             ...rdupmApiApiConfig.getJarVersion({
               artifactId: record?.get(mapping.artifactId.name),
               groupId: record?.get(mapping.groupId.name),
-              repositoryId: record?.get(mapping.projectProductRepo.name).repositoryId,
+              repositoryId: record?.get(mapping.projectProductRepo.name).repositoryId
+                || record?.get(mapping.projectProductRepo.name),
               repositoryName: record?.get(mapping.projectProductRepo.name).neRepositoryName,
             }),
           });
@@ -264,7 +268,7 @@ const mapping: {
                 return dt.map((d: any) => {
                   const newD = d;
                   newD.id = newD.marketServiceDeployObjectVO.id;
-                  return d;
+                  return newD;
                 });
               }
               let newRes = res;
@@ -305,6 +309,7 @@ const hostAppConfigDataSet = (): DataSetProps => ({
       };
       res.appName = res[mapping.appName.name as string];
       res.appCode = res[mapping.appCode.name as string];
+      res.value = Base64.encode(res.value);
       return deployApiConfig.deployJava(res);
     },
   },

@@ -7,6 +7,14 @@ interface ContextType {
   children: any,
   AppConfigDataSet: any,
   cRef: any,
+  modal?: any,
+  refresh?: Function,
+  detail?: string | {
+    value: string,
+    prodJarInfoVO: object,
+    instanceId: string,
+    appServiceVersionId: string,
+  },
 }
 
 const Store = createContext({} as ContextType);

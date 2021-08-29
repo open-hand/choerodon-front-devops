@@ -1,19 +1,57 @@
-import React, { ReactDOM, ReactElement, useImperativeHandle } from 'react';
-import { Form, Select } from 'choerodon-ui/pro';
+import React, {
+  ReactDOM, ReactElement, useEffect, useImperativeHandle,
+} from 'react';
+import {
+  Form, Select, TextField, Output,
+} from 'choerodon-ui/pro';
 import { CustomSelect } from '@choerodon/components';
 import { observer } from 'mobx-react-lite';
 import { chartSourceData, mapping } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config/stores/appConfigDataSet';
 import YamlEditor from '@/components/yamlEditor';
 import { useAppConfigStore } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config/stores';
 import StatusDot from '@/components/status-dot';
+import { appServiceInstanceApi } from '@/api';
 
 import './index.less';
+import { LabelAlignType, LabelLayoutType } from '@/interface';
 
 const Index = observer(() => {
   const {
     AppConfigDataSet,
     cRef,
+    detail,
+    modal,
+    refresh,
   } = useAppConfigStore();
+
+  useEffect(() => {
+    async function init() {
+      if (typeof (detail) === 'object') {
+        const res = await appServiceInstanceApi
+          .getValues(detail.instanceId, detail.appServiceVersionId);
+        AppConfigDataSet.loadData([{
+          ...detail,
+          [mapping.value.name as string]: res.yaml,
+        }]);
+      }
+    }
+    init();
+  }, []);
+
+  const handleOk = async () => {
+    const res = await AppConfigDataSet.submit();
+    if (res !== false) {
+      if (refresh) {
+        refresh();
+      }
+      return true;
+    }
+    return false;
+  };
+
+  if (modal) {
+    modal.handleOk(handleOk);
+  }
 
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
@@ -103,28 +141,55 @@ const Index = observer(() => {
 
   return (
     <div className="c7ncd-appCenterPro-appConfig">
-      <p className="c7ncd-appCenterPro-appInfo__form__title">
-        Chart包来源
-      </p>
-      <div className="c7ncd-appCenterPro-appConfig__selectContainer">
-        <CustomSelect
-          onClickCallback={(value) => handleChangeField(
-            AppConfigDataSet,
-            mapping.chartSource.name as string,
-            value.value,
-          )}
-          selectedKeys={AppConfigDataSet.current.get(mapping.chartSource.name)}
-          data={chartSourceData}
-          identity="value"
-          mode="single"
-          customChildren={(item): any => (
-            <div className="c7ncd-appCenterPro-appConfig__selectContainer__item">
-              <img src={item.img} alt="" />
-              <p>{item.name}</p>
-            </div>
-          )}
-        />
-      </div>
+      {
+        detail ? (
+          <Form columns={3} dataSet={AppConfigDataSet}>
+            <TextField
+              name={mapping.appName.name}
+            />
+            <TextField
+              disabled
+              name={mapping.appCode.name}
+            />
+          </Form>
+        ) : (
+          <p className="c7ncd-appCenterPro-appInfo__form__title">
+            Chart包来源
+          </p>
+        )
+      }
+      {
+        detail ? (
+          <Form
+            columns={3}
+            dataSet={AppConfigDataSet}
+            labelLayout={'horizontal' as LabelLayoutType}
+            labelAlign={'left' as LabelAlignType}
+          >
+            <Output name={mapping.chartSource.name} />
+          </Form>
+        ) : (
+          <div className="c7ncd-appCenterPro-appConfig__selectContainer">
+            <CustomSelect
+              onClickCallback={(value) => handleChangeField(
+                AppConfigDataSet,
+                mapping.chartSource.name as string,
+                value.value,
+              )}
+              selectedKeys={AppConfigDataSet.current.get(mapping.chartSource.name)}
+              data={chartSourceData}
+              identity="value"
+              mode="single"
+              customChildren={(item): any => (
+                <div className="c7ncd-appCenterPro-appConfig__selectContainer__item">
+                  <img src={item.img} alt="" />
+                  <p>{item.name}</p>
+                </div>
+              )}
+            />
+          </div>
+        )
+      }
       <Form
         className="c7ncd-appCenterPro-appConfig__form"
         dataSet={AppConfigDataSet}
@@ -139,6 +204,7 @@ const Index = observer(() => {
         <Select
           name={mapping.env.name}
           colSpan={1}
+          disabled={Boolean(detail)}
           optionRenderer={renderEnvOption}
           onOption={({ record }) => ({
             disabled: !(record.get('connect') && record.get('synchro') && record.get('permission')),

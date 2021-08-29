@@ -22,6 +22,6 @@ class AppServiceVersionsApi extends Api<AppServiceVersionsApi> {
   }
 }
 
-const appServiceVersijonApi = new AppServiceVersionsApi();
+const appServiceVersionApi = new AppServiceVersionsApi();
 const appServiceVersionApiConfig = new AppServiceVersionsApi(true);
-export { appServiceVersijonApi, appServiceVersionApiConfig };
+export { appServiceVersionApi, appServiceVersionApiConfig };

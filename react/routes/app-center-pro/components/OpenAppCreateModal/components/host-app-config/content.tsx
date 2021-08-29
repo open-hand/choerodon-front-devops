@@ -37,7 +37,11 @@ const Index = observer(() => {
       HostAppConfigDataSet.loadData([{
         ...detail,
         ...detail?.prodJarInfoVO || {},
-        value: Base64.decode(detail.value),
+        value: detail.value ? Base64.decode(detail.value) : '',
+        [mapping.marketAppVersion.name as string]: detail
+          ?.marketDeployObjectInfoVO?.mktAppVersionId,
+        [mapping.marketServiceVersion.name as string]: detail
+          ?.marketDeployObjectInfoVO?.mktDeployObjectId,
       }]);
     }
     console.log(detail);
@@ -68,9 +72,16 @@ const Index = observer(() => {
       [mapping.jarVersion.name as string]: newData[mapping.jarVersion.name as string],
       [mapping.nexus.name as string]: newData[mapping.nexus.name as string],
     };
+    newData.marketDeployObjectInfoVO = {
+      mktDeployObjectId: newData[
+        mapping.marketServiceVersion.name as string]?.marketServiceDeployObjectVO?.id,
+      mktAppVersionId: newData[
+        mapping.marketServiceVersion.name as string]
+        ?.marketServiceDeployObjectVO?.marketAppVersionId,
+    };
     newData[mapping.value.name as string] = Base64.encode(newData[mapping.value.name as string]);
-    newData.deployObjectId = newData[
-      mapping.marketServiceVersion.name as string]?.marketServiceDeployObjectVO?.id;
+    // newData.deployObjectId = newData[
+    //   mapping.marketServiceVersion.name as string]?.marketServiceDeployObjectVO?.id;
     return newData;
   };
 
