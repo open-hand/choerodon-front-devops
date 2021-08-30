@@ -102,10 +102,8 @@ export default function useStore({ projectId, appCenterId, envId }:any) {
       } else if (groupType === DEPLOY_CATERGORY) {
         url = deploymentsApiConfig.getDeploymentsYaml(instance);
       }
-
       try {
-        const data = await axios
-          .get(url);
+        const data = await axios(url);
         const res = handlePromptError(data);
         if (res) {
           this.setDeploymentsYaml(data.detail || '');
