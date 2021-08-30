@@ -119,7 +119,7 @@ const HzeroDeployDetail = observer(() => {
     return (
       <div style={{ display: 'flex' }}>
         <div role="none" style={(currentAppStatus === 'deleted' || currentAppStatus === 'notExist') ? { opacity: '0.5' } : { color: '#415BC9' }} onClick={() => toInstanceDetail(record)}>
-          {record.get('instanceCode')}
+          {record.get('instanceCode') ? record.get('instanceCode') : '-'}
         </div>
         <div>{currentAppStatus === 'deleted' ? getStatusTag(currentAppStatus) : ''}</div>
       </div>
@@ -175,10 +175,10 @@ const HzeroDeployDetail = observer(() => {
               labelAlign={'left' as LabelAlignType}
               labelWidth="auto"
             >
-              <Output name="mktServiceVersion" />
+              <Output name="mktServiceVersion" renderer={({ value }) => (value || '-')} />
               <Output label="实例名称" value={renderInstanceCode(serviceDs.current)} />
-              <Output name="startTime" />
-              <Output label="部署耗时" value={getConsumeDuration(serviceDs.current?.get('startTime'), serviceDs.current?.get('endTime'))} />
+              <Output name="startTime" renderer={({ value }) => (value || '-')} />
+              <Output label="部署耗时" value={serviceDs.current?.get('startTime') ? getConsumeDuration(serviceDs.current?.get('startTime'), serviceDs.current?.get('endTime')) : '-'} />
             </Form>
             <YamlEditor
               colSpan={2}
