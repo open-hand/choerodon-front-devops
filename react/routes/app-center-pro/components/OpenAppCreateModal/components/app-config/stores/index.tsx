@@ -14,6 +14,7 @@ interface ContextType {
     prodJarInfoVO: object,
     instanceId: string,
     appServiceVersionId: string,
+    chartSource: string,
   },
 }
 
