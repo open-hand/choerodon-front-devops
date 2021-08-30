@@ -64,7 +64,11 @@ const ConfigItemChild = (props:any) => {
 
   return (
     <div className={`${subfixCls}-resourceConfig-main`}>
-      <div>
+      <div style={{
+        minWidth: '107px',
+        maxWidth: '107px',
+      }}
+      >
         <span>
           <StatusIcon
             name={name}

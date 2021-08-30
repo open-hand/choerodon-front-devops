@@ -450,6 +450,14 @@ export default class DetailsSidebar extends Component {
         title={formatMessage({ id: `ist.deploy.${detail ? detail.kind : 'Deployment'}.detail` })}
       >
         <div className="c7ncd-expand-btn-wrap">
+          {isJson && !['Job', 'CronJob'].includes(detail.kind) && (
+          <Button
+            className="c7ncd-expand-btn"
+            onClick={this.handleExpandAll}
+          >
+            <FormattedMessage id={isExpand ? 'collapseAll' : 'expandAll'} />
+          </Button>
+          )}
           <Button
             className="c7ncd-deploy-detail-type-btn"
             onClick={this.handleChangeType}
@@ -459,14 +467,6 @@ export default class DetailsSidebar extends Component {
           >
             <FormattedMessage id={`ist.deploy.type.${isJson ? 'yaml' : 'json'}`} />
           </Button>
-          {isJson && !['Job', 'CronJob'].includes(detail.kind) && (
-          <Button
-            className="c7ncd-expand-btn"
-            onClick={this.handleExpandAll}
-          >
-            <FormattedMessage id={isExpand ? 'collapseAll' : 'expandAll'} />
-          </Button>
-          )}
         </div>
         {isJson && !['Job', 'CronJob'].includes(detail.kind) ? (
           <Collapse

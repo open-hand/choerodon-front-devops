@@ -7,6 +7,7 @@ import ConfigItem from './components/ConfigItem';
 import { useAppDetailTabsStore } from '../../stores';
 import './index.less';
 import { useAppDetailsStore } from '../../../../stores';
+import TabEmptyPage from '../TabEmptyPage';
 
 const ResourceConfig = () => {
   const {
@@ -24,14 +25,7 @@ const ResourceConfig = () => {
   const getContent = () => {
     if (!resourceConfigDs.length) {
       return (
-        <EmptyPage
-          image={NoData}
-          description={(
-            <>
-              当前应用下暂无资源配置信息
-            </>
-          )}
-        />
+        <TabEmptyPage text="当前应用下暂无资源配置信息" />
       );
     }
     return resourceConfigDs.map((record:any) => <ConfigItem connect={connect} formatMessage={formatMessage} data={record.toData()} subfixCls={subfixCls} key={record.get('id')} />);

@@ -14,6 +14,7 @@ import './index.less';
 import InstanceEvent from './components/intance-event';
 import { useAppEventStore } from './stores';
 import { useAppDetailTabsStore } from '../../stores';
+import TabEmptyPage from '../TabEmptyPage';
 
 const Cases = observer(() => {
   const {
@@ -107,12 +108,7 @@ const Cases = observer(() => {
       );
     }
     return (
-      <div className={`${prefixCls}-event-empty`}>
-        <Icon type="info" className={`${prefixCls}-event-empty-icon`} />
-        <span className={`${prefixCls}-event-empty-text`}>
-          {formatMessage({ id: `${intlPrefix}.instance.cases.empty` })}
-        </span>
-      </div>
+      <TabEmptyPage text={formatMessage({ id: `${intlPrefix}.instance.cases.empty` })} />
     );
   }
 

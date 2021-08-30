@@ -308,7 +308,11 @@ const ResourceConfigItem:React.FC<Props> = ({
   return (
     <div className={`${subfixCls}-resourceConfig-item`}>
       <main className={`${subfixCls}-resourceConfig-main`}>
-        <div>
+        <div style={{
+          minWidth: '120px',
+          maxWidth: '120px',
+        }}
+        >
           {renderName()}
           <span>
             网络名称（Service）
