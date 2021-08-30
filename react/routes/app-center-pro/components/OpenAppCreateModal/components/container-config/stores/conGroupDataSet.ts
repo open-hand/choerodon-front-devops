@@ -89,7 +89,7 @@ const mapping: {
     }),
   },
   productSource: {
-    name: 'productSource',
+    name: 'sourceType',
     type: 'string' as FieldType,
     options: new DataSet({
       data: productSourceData,
@@ -488,7 +488,7 @@ const mapping: {
   CPULimit: {
     name: 'limitCpu',
     type: 'number' as FieldType,
-    label: 'CPU上线',
+    label: 'CPU上限',
   },
   memoryReserved: {
     name: 'requestMemory',
@@ -508,7 +508,15 @@ const mapping: {
   enVariable: {
     name: 'enVariable',
     type: 'object' as FieldType,
-    options: new DataSet(optionDataSet()),
+    options: new DataSet(optionDataSet(/[-._a-zA-Z][-._a-zA-Z0-9]*/)),
+  },
+  fileName: {
+    name: 'fileName',
+    type: 'string' as FieldType,
+  },
+  jarFileDownloadUrl: {
+    name: 'jarFileDownloadUrl',
+    type: 'string' as FieldType,
   },
 };
 

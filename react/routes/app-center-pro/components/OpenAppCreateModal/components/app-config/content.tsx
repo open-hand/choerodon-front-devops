@@ -48,6 +48,8 @@ const Index = observer(() => {
         AppConfigDataSet.loadData([{
           ...detail,
           [mapping.value.name as string]: res.yaml,
+          [mapping.marketVersion.name as string]: detail?.mktAppVersionId,
+          [mapping.marketServiceVersion.name as string]: detail?.mktDeployObjectId,
         }]);
       }
     }
@@ -192,7 +194,7 @@ const Index = observer(() => {
                 mapping.chartSource.name as string,
                 value.value,
               )}
-              selectedKeys={AppConfigDataSet.current.get(mapping.chartSource.name)}
+              defaultSelectedKeys={AppConfigDataSet.current.get(mapping.chartSource.name)}
               data={chartSourceData}
               identity="value"
               mode="single"

@@ -295,6 +295,14 @@ const mapping: {
       + 'java -jar ${jar}\n'
       + '# 相关文件存放目录：jar包下载目录为$HOME/choerodon/实例id/temp-jar/, 日志存放目录为$HOME/choerodon/实例id/temp-jar/',
   },
+  uploadUrl: {
+    name: 'jarFileUrl',
+    type: 'string' as FieldType,
+  },
+  fileName: {
+    name: 'fileName',
+    type: 'string' as FieldType,
+  },
 };
 
 const hostAppConfigDataSet = (): DataSetProps => ({

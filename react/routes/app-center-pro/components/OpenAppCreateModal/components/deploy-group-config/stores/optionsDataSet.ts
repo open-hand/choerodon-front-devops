@@ -1,11 +1,21 @@
 import { FieldProps, DataSetProps } from '@/interface';
 
-const optionDataSet = (): DataSetProps => ({
+const optionDataSet = (keyPatter?: any): DataSetProps => ({
   autoCreate: true,
   fields: [{
     name: 'key',
     type: 'string',
     label: '键',
+    validator: (value: string) => {
+      if (value && keyPatter) {
+        const patt = keyPatter;
+        if (patt.test(value)) {
+          return true;
+        }
+        return '格式校验失败';
+      }
+      return true;
+    },
     dynamicProps: {
       required: ({ record }) => record.get('value'),
     },

@@ -15,6 +15,8 @@ interface ContextType {
     instanceId: string,
     appServiceVersionId: string,
     chartSource: string,
+    mktAppVersionId: string,
+    mktDeployObjectId: string,
   },
 }
 

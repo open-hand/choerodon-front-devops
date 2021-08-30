@@ -1,10 +1,13 @@
+/* eslint-disable */
+// @ts-nocheck
 import React from 'react';
 import {
   Form, TextField, Button, SelectBox, NumberField, Select,
 } from 'choerodon-ui/pro';
+import { inject } from 'mobx-react';
 import { Icon, Upload } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
-import { CustomSelect } from '@choerodon/components';
+import { CustomSelect, ChunkUploader } from '@choerodon/components';
 import { productTypeData, productSourceData, mapping } from '../../stores/conGroupDataSet';
 import { mapping as portMapping } from '../../stores/portConfigDataSet';
 import { Record, FuncType } from '@/interface';
@@ -18,12 +21,14 @@ const jarSource = [
   productSourceData[5],
 ];
 
-const Index = observer(({
+const Index = inject('AppState')(observer(({
   className,
   dataSource,
+  AppState: { currentMenuType: { organizationId } },
 }: {
   className?: string;
   dataSource: Record
+  AppState?: any,
 }) => {
   const renderFormByProductSource = () => {
     if (dataSource) {
@@ -112,13 +117,41 @@ const Index = observer(({
             }
             case productSourceData[5].value: {
               return (
-                <Form className="c7ncd-appCenterPro-conDetail__form">
-                  <Upload>
-                    <Button icon="file_upload">
-                      上传文件
-                    </Button>
-                  </Upload>
-                </Form>
+                <>
+                  <Form className="c7ncd-appCenterPro-conDetail__form">
+                    <ChunkUploader
+                      callbackWhenLoadingChange={(loadingIf: boolean) => {
+                        console.log(loadingIf);
+                        // modal.update({
+                        //   okProps: {
+                        //     disabled: loadingIf,
+                        //   },
+                        // });
+                      }}
+                      combineUrl={`${window._env_.API_HOST}/hfle/v1/${organizationId}/upload/fragment-combine`}
+                      // disabled={!ImportFileDataSet?.current?.get(mapping().folderId.name)}
+                      suffix=".jar"
+                      paramsData={{
+                        bucketName: 'devops-service',
+                      }}
+                      accept=".jar"
+                      prefixPatch="/hfle"
+                      showUploadList
+                      onSuccess={(res, file) => {
+                        dataSource.set(mapping.fileName.name, file.name);
+                      }}
+                      callback={(str: string) => {
+                        dataSource.set(mapping.jarFileDownloadUrl.name as string, str);
+                      }}
+                    />
+                  </Form>
+                  { dataSource.get(mapping.jarFileDownloadUrl.name) && (
+                    <p className="c7ncd-appCenterPro-conDetail__fileName">
+                      <Icon type="attach_file" />
+                      {dataSource.get(mapping.fileName.name)}
+                    </p>
+                  ) }
+                </>
               );
             }
             default: {
@@ -301,11 +334,11 @@ const Index = observer(({
               onClickCallback={
                 (value) => handleChangeRecord((mapping.productType.name as string), value.value)
               }
-              selectedKeys={dataSource?.get(mapping.productType.name)}
+              defaultSelectedKeys={dataSource?.get(mapping.productType.name)}
               data={productTypeData}
               identity="value"
               mode="single"
-              customChildren={(item) => (
+              customChildren={(item): any => (
                 <div className="c7ncd-appCenterPro-conDetail__productType__item">
                   <img src={item.img} alt="" />
                   <span>
@@ -325,11 +358,11 @@ const Index = observer(({
               onClickCallback={
                 (value) => handleChangeRecord((mapping.productSource.name as string), value.value)
               }
-              selectedKeys={dataSource?.get(mapping.productSource.name)}
+              defaultSelectedKeys={dataSource?.get(mapping.productSource.name)}
               data={getProductSourceData()}
               identity="value"
               mode="single"
-              customChildren={(item) => (
+              customChildren={(item): any => (
                 <div className="c7ncd-appCenterPro-conDetail__productSource__item">
                   <img src={item.img} alt="" />
                   <p>
@@ -365,7 +398,7 @@ const Index = observer(({
       />
     </div>
   );
-});
+}));
 
 Index.defaultProps = {
   className: '',

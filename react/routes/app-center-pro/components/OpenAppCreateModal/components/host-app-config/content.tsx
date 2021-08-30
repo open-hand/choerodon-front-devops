@@ -1,9 +1,11 @@
+/* eslint-disable */
+// @ts-nocheck
 import React, { useImperativeHandle, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Form, Select, Button, TextField, Output,
 } from 'choerodon-ui/pro';
-import { Upload } from 'choerodon-ui';
+import { Upload, Icon } from 'choerodon-ui';
 import { CustomSelect, ChunkUploader } from '@choerodon/components';
 import { Base64 } from 'js-base64';
 import { useHostAppConfigStore } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-app-config/stores';
@@ -13,6 +15,8 @@ import {
   productSourceData,
   productTypeData,
 } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config/stores/conGroupDataSet';
+
+import './index.less';
 
 import '../container-config/components/container-detail/index.less';
 import StatusDot from '@/components/status-dot';
@@ -30,6 +34,7 @@ const Index = observer(() => {
     detail,
     modal,
     refresh,
+    AppState: { currentMenuType: { organizationId } },
   } = useHostAppConfigStore();
 
   useEffect(() => {
@@ -37,6 +42,7 @@ const Index = observer(() => {
       HostAppConfigDataSet.loadData([{
         ...detail,
         ...detail?.prodJarInfoVO || {},
+        ...detail?.fileInfoVO || {},
         value: detail.value ? Base64.decode(detail.value) : '',
         [mapping.marketAppVersion.name as string]: detail
           ?.marketDeployObjectInfoVO?.mktAppVersionId,
@@ -72,6 +78,10 @@ const Index = observer(() => {
       [mapping.jarVersion.name as string]: newData[mapping.jarVersion.name as string],
       [mapping.nexus.name as string]: newData[mapping.nexus.name as string],
     };
+    newData.fileInfoVO = {
+      [mapping.uploadUrl.name as string]: newData[mapping.uploadUrl.name as string],
+      [mapping.fileName.name as string]: newData[mapping.fileName.name as string],
+    }
     newData.marketDeployObjectInfoVO = {
       mktDeployObjectId: newData[
         mapping.marketServiceVersion.name as string]?.marketServiceDeployObjectVO?.id,
@@ -132,31 +142,46 @@ const Index = observer(() => {
         }
         case productSourceData[5].value: {
           return (
-            <Form className="c7ncd-appCenterPro-conDetail__form">
-              <ChunkUploader
-                callbackWhenLoadingChange={(loadingIf: boolean) => {
-                  console.log(loadingIf);
-                  // modal.update({
-                  //   okProps: {
-                  //     disabled: loadingIf,
-                  //   },
-                  // });
-                }}
-                // disabled={!ImportFileDataSet?.current?.get(mapping().folderId.name)}
-                suffix=".jar"
-                accept=".jar"
-                prefixPatch="/hfle"
-                showUploadList={false}
-                callback={(str: string) => {
-                  console.log(str);
-                }}
-              />
-              {/* <Upload> */}
-              {/*  <Button icon="file_upload"> */}
-              {/*    上传文件 */}
-              {/*  </Button> */}
-              {/* </Upload> */}
-            </Form>
+            <>
+              <Form className="c7ncd-appCenterPro-conDetail__form">
+                <ChunkUploader
+                  callbackWhenLoadingChange={(loadingIf: boolean) => {
+                    console.log(loadingIf);
+                    // modal.update({
+                    //   okProps: {
+                    //     disabled: loadingIf,
+                    //   },
+                    // });
+                  }}
+                  combineUrl={`${window._env_.API_HOST}/hfle/v1/${organizationId}/upload/fragment-combine`}
+                  // disabled={!ImportFileDataSet?.current?.get(mapping().folderId.name)}
+                  suffix=".jar"
+                  paramsData={{
+                    bucketName: 'devops-service',
+                  }}
+                  accept=".jar"
+                  prefixPatch="/hfle"
+                  showUploadList={true}
+                  onSuccess={(res, file) => {
+                    dataSource.set(mapping.fileName.name, file.name);
+                  }}
+                  callback={(str: string) => {
+                    dataSource.set(mapping.uploadUrl.name, str);
+                  }}
+                />
+                {/* <Upload> */}
+                {/*  <Button icon="file_upload"> */}
+                {/*    上传文件 */}
+                {/*  </Button> */}
+                {/* </Upload> */}
+              </Form>
+                { dataSource.get(mapping.uploadUrl.name) && (
+                  <p className="c7ncd-appCenterPro-hostAppConfig__fileName">
+                    <Icon type="attach_file" />
+                    {dataSource.get(mapping.fileName.name)}
+                  </p>
+                ) }
+            </>
           );
         }
         // case productSourceData[1].value: case productSourceData[2].value: {
@@ -241,11 +266,11 @@ const Index = observer(() => {
               onClickCallback={
                 (value) => HostAppConfigDataSet.current.set(mapping.jarSource.name, value.value)
               }
-              selectedKeys={HostAppConfigDataSet.current.get(mapping.jarSource.name)}
+              defaultSelectedKeys={HostAppConfigDataSet.current.get(mapping.jarSource.name)}
               data={jarSource}
               identity="value"
               mode="single"
-              customChildren={(item) => (
+              customChildren={(item): any => (
                 <div className="c7ncd-appCenterPro-conDetail__productSource__item">
                   <img src={item.img} alt="" />
                   <p>
