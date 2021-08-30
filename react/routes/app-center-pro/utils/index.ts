@@ -5,7 +5,7 @@
 // 3. 否者就是 jar包，主机的
 
 import {
-  CHART_CATERGORY, DEPLOY_CATERGORY, HOST_CATERGORY, HOST_TAB, isHostGroup, isMarketGroup, isServiceGroup, IS_HOST, IS_MARKET, IS_SERVICE,
+  CHART_CATERGORY, DEPLOY_CATERGORY, ENV_TAB, HOST_CATERGORY, HOST_TAB, isHostGroup, isMarketGroup, isServiceGroup, IS_HOST, IS_MARKET, IS_SERVICE,
 } from '../stores/CONST';
 
 // Chart包，部署组，还是jar包
@@ -31,6 +31,7 @@ const getAppCategories = (rdupmType:string, deployType = 'env') => {
 
 // 制品来源分未3大类
 const getChartSourceGroup = (chartSource:string, deployType = 'env') => {
+  if (deployType === ENV_TAB && !chartSource) return IS_MARKET;
   if (deployType === HOST_TAB) return IS_HOST;
   if (isMarketGroup.includes(chartSource)) {
     return IS_MARKET;
