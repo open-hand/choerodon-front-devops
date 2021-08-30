@@ -312,6 +312,7 @@ const DetailsTabsHeaderButtons = () => {
         data = [modifyValues, modifyAppObj, upGrade, redeploy, ...moreOpts];
         break;
       case APP_STATUS.STOP:
+      case APP_STATUS.FAILED:
         data = [...moreOpts];
         break;
       default:
