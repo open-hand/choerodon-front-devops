@@ -16,6 +16,7 @@ import DetailsSidebar from './components/sidebar';
 import './index.less';
 import { useAppDetailTabsStore } from '../../stores';
 import { useAppDetailsStore } from '../../../../stores';
+import TabEmptyPage from '../TabEmptyPage';
 
 const Label = ({ name, value }:any) => (
   <Tooltip title={`键-${name} 值-${value}`}>
@@ -352,9 +353,7 @@ export default observer(() => {
         <div className="c7ncd-instance-details">
           <div className="c7ncd-instance-details-inner">
             {!hasContent ? (
-              <div className="c7ncd-instance-details-empty">
-                <FormattedMessage id={`${intlPrefix}.instance.detail.empty`} />
-              </div>
+              <TabEmptyPage text={<FormattedMessage id={`${intlPrefix}.instance.detail.empty`} />} />
             ) : getContent(contentList)}
           </div>
         </div>
