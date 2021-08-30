@@ -131,7 +131,14 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     loadData();
   }, [loadData]);
 
-  const refresh = () => appDs.query();
+  const refresh = async () => {
+    try {
+      const res = await appDs.query();
+      return res;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
 
   const value = {
     ...props,
