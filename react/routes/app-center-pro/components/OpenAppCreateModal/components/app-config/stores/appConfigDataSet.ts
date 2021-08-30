@@ -11,7 +11,11 @@ import market from '../images/market.png';
 import project from '../images/project.png';
 import share from '../images/share.png';
 
-const chartSourceData = [{
+const chartSourceData: {
+  value: string,
+  name: string,
+  img: any,
+}[] = [{
   value: 'normal',
   name: '项目服务',
   img: project,

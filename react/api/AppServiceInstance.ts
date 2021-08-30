@@ -118,6 +118,16 @@ class AppServiceInstanceApi extends Api<AppServiceInstanceApi> {
       url: `${this.prefix}/${instanceId}/appServiceVersion/${appServiceVersionId}/upgrade_value`,
     });
   }
+
+  getMarketValues(instanceId: string, deployObjectId?: string) {
+    return this.request({
+      method: 'get',
+      url: `${this.prefix}/${instanceId}/upgrade_value`,
+      params: {
+        market_deploy_object_id: deployObjectId,
+      },
+    });
+  }
 }
 
 const appServiceInstanceApi = new AppServiceInstanceApi();

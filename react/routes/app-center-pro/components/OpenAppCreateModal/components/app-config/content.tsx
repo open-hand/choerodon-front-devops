@@ -24,11 +24,27 @@ const Index = observer(() => {
     refresh,
   } = useAppConfigStore();
 
+  const getValues = async (chartSource: string, detailData: any) => {
+    switch (chartSource) {
+      case (chartSourceData[0].value): case (chartSourceData[1].value): {
+        const res = await appServiceInstanceApi
+          .getValues(detailData.instanceId, detailData.appServiceVersionId);
+        return res;
+        break;
+      }
+      default: {
+        const res = await appServiceInstanceApi
+          .getMarketValues(detailData.instanceId, detailData.appServiceVersionId);
+        return res;
+        break;
+      }
+    }
+  };
+
   useEffect(() => {
     async function init() {
       if (typeof (detail) === 'object') {
-        const res = await appServiceInstanceApi
-          .getValues(detail.instanceId, detail.appServiceVersionId);
+        const res = await getValues(detail?.chartSource, detail);
         AppConfigDataSet.loadData([{
           ...detail,
           [mapping.value.name as string]: res.yaml,
