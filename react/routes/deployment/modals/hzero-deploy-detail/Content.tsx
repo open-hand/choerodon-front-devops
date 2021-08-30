@@ -110,10 +110,14 @@ const HzeroDeployDetail = observer(() => {
       style={{ width: '40px', marginLeft: '10px' }}
     />
   ), []);
+  const currentAppStatusList = ['deleted', 'notExist'];
   const toInstanceDetail = (record: any) => {
+    if (currentAppStatusList.includes(record.get('appStatus'))) {
+      return;
+    }
     history.push(`/devops/application-center/detail/${record.get('appId')}/hzero/env/${formDs.current?.get('environmentDTO')?.id}/chart`);
   };
-  const currentAppStatusList = ['deleted', 'notExist'];
+
   const renderInstanceCode = (record: any) => {
     const currentAppStatus = record.get('appStatus');
     return (
