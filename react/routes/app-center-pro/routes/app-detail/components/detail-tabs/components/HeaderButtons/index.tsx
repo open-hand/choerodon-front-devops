@@ -15,6 +15,8 @@ import { openChangeActive } from '@/components/app-status-toggle';
 import { openMarketUpgradeModal } from '@/components/app-upgrade';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
 import { openHostAppConfigModal } from '../../../../../../components/OpenAppCreateModal/components/host-app-config';
+import { openContainerConfigModal } from '../../../../../../components/OpenAppCreateModal/components/container-config';
+import { openDeployGroupConfigModal } from '../../../../../../components/OpenAppCreateModal/components/deploy-group-config';
 import {
   APP_STATUS,
   CHART_CATERGORY,
@@ -116,11 +118,11 @@ const DetailsTabsHeaderButtons = () => {
           groupBtnItems: [
             {
               name: '修改应用配置',
-              handler: openDeployGroupApp,
+              handler: () => openDeployGroupConfigModal(appRecord?.toData(), refresh),
             },
             {
               name: '修改容器配置',
-              handler: openDeployGroupConfig,
+              handler: () => openContainerConfigModal(appRecord?.toData(), refresh),
             },
           ],
         };

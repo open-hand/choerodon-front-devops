@@ -113,10 +113,10 @@ const DetailAside = () => {
           </span>
           <span>
             (服务来源：
-            {getChartSourceName[chartSource]}
+            {getChartSourceName[chartSource] || 'UNKNOWN'}
             <br />
             服务编码：
-            {appServiceCode}
+            {appServiceCode || '-'}
             )
           </span>
         </div>
@@ -159,13 +159,13 @@ const DetailAside = () => {
           </span>
           <span>
             (artifactId：
-            {artifactId}
+            {artifactId || '-'}
             <br />
             groupId：
-            {groupId}
+            {groupId || '-'}
             <br />
             Jar包版本：
-            {version}
+            {version || '-'}
             )
           </span>
         </div>
