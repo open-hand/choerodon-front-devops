@@ -157,17 +157,21 @@ const DetailAside = () => {
           <span>
             {getChartSourceName[sourceType]}
           </span>
-          <span>
-            (artifactId：
-            {artifactId || '-'}
-            <br />
-            groupId：
-            {groupId || '-'}
-            <br />
-            Jar包版本：
-            {version || '-'}
+          {
+            sourceType !== CHART_UPLOAD && (
+              <span>
+                (artifactId：
+                {artifactId || '-'}
+                <br />
+                groupId：
+                {groupId || '-'}
+                <br />
+                Jar包版本：
+                {version || '-'}
+                )
+              </span>
             )
-          </span>
+          }
         </div>
       </div>
     </>
