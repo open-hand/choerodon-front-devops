@@ -16,7 +16,6 @@ import {
   APP_STATUS, CHART_HOST, IS_HOST, IS_MARKET, IS_SERVICE,
 } from '@/routes/app-center-pro/stores/CONST';
 import { openChangeActive } from '@/components/app-status-toggle';
-import { openDelete } from '@/routes/app-center-pro/components/app-deletion';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
 
 const AppItem = observer(({
@@ -151,6 +150,9 @@ const AppItem = observer(({
         break;
       case APP_STATUS.STOP:
         data = [activeObj, deleteObj];
+        break;
+      case APP_STATUS.FAILED:
+        data = [deleteObj];
         break;
       default:
         break;
