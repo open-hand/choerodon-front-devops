@@ -33,7 +33,7 @@ const IS_SERVICE = 'project_service_group';
 const IS_HOST = 'all_group';
 
 const isMarketGroup = [CHART_MARKET, CHART_HZERO, CHART_MIDDLEWARE];
-const isServiceGroup = [CHART_SHARE, CHART_NORMAL, CHART_REPO, ''];
+const isServiceGroup = [CHART_SHARE, CHART_NORMAL, CHART_REPO];
 const isHostGroup = [CHART_HOST];
 
 // app status
