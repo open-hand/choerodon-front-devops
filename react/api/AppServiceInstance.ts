@@ -58,6 +58,14 @@ class AppServiceInstanceApi extends Api<AppServiceInstanceApi> {
     });
   }
 
+  updateMarketAppService(instanceId: string, data: any) {
+    return this.request({
+      method: 'put',
+      url: `${this.prefix}/market/instances/${instanceId}`,
+      data,
+    });
+  }
+
   // 删除实例
   deleteInstance(id:string) {
     return this.request({

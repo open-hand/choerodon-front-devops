@@ -248,10 +248,28 @@ const mapping: {
     label: '市场服务及版本',
     textField: 'marketServiceName',
     valueField: 'id',
-    options: new DataSet(marketServiceVersionOptionDs),
     dynamicProps: {
       required: ({ record }) => ![chartSourceData[0].value, chartSourceData[1].value]
         .includes(record.get(mapping.chartSource.name)),
+      lookupAxiosConfig: ({ record }) => (record.get(mapping.marketVersion.name) ? ({
+        ...deployApiConfig.deployVersion(record.get(mapping.marketVersion.name), 'image'),
+        transformResponse: (res: any) => {
+          function init(dt: any) {
+            return dt.map((d: any) => {
+              const newD = d;
+              newD.id = newD.marketServiceDeployObjectVO.id;
+              return d;
+            });
+          }
+          let newRes = res;
+          try {
+            newRes = JSON.parse(res);
+            return init(newRes);
+          } catch (e) {
+            return init(newRes);
+          }
+        },
+      }) : undefined),
     },
   },
   env: {
@@ -269,11 +287,25 @@ const appConfigDataSet = () => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((i) => mapping[i]),
   transport: {
-    update: ({ data: [data] }: any) => appServiceInstanceApi.updateAppServiceInstance({
-      ...data,
-      appName: data[mapping.appName.name as string],
-      appCode: data[mapping.appCode.name as string],
-    }),
+    update: ({ data: [data] }: any) => {
+      if ([chartSourceData[0].value, chartSourceData[1].value]
+        .includes(data[mapping.chartSource.name as string])) {
+        return appServiceInstanceApi.updateAppServiceInstance({
+          ...data,
+          appName: data[mapping.appName.name as string],
+          appCode: data[mapping.appCode.name as string],
+        });
+      }
+      return appServiceInstanceApi.updateMarketAppService(
+        data.instanceId,
+        {
+          ...data,
+          appName: data[mapping.appName.name as string],
+          appCode: data[mapping.appCode.name as string],
+          marketAppServiceId: data[mapping.hzeroVersion.name as string],
+        },
+      );
+    },
   },
   events: {
     update: async ({
@@ -308,13 +340,6 @@ const appConfigDataSet = () => ({
           dataSet.current.set(mapping.marketVersion.name, undefined);
           dataSet.current.set(mapping.serviceVersion.name, undefined);
           dataSet.current.set(mapping.marketServiceVersion.name, undefined);
-          break;
-        }
-        case mapping.marketVersion.name: {
-          if (value) {
-            dataSet.getField(mapping.marketServiceVersion.name).options.setQueryParameter('version', value);
-            dataSet.getField(mapping.marketServiceVersion.name).options.query();
-          }
           break;
         }
         case mapping.serviceVersion.name: {

@@ -1,4 +1,4 @@
-import React, { useImperativeHandle } from 'react';
+import React, { useEffect, useImperativeHandle } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Form, Select, NumberField, TextField, Icon, Button,
@@ -20,7 +20,30 @@ const Index = observer(() => {
     LabelsDataSet,
     NodeLabelsDataSet,
     HostAliasesDataSet,
+    detail,
+    modal,
+    refresh,
   } = useDeployGroupConfigStore();
+
+  const setOptionsDs = (data: any) => {
+    OptionDataSet.loadData(Object.entries(data).map((item: any) => ({
+      key: item[0],
+      value: item[1],
+    })));
+  };
+
+  useEffect(() => {
+    if (typeof (detail) === 'object') {
+      setOptionsDs(detail.appConfig.options);
+      DeployGroupConfigDataSet.loadData([{
+        ...detail,
+        ...detail.appConfig,
+        [mapping.env.name as string]: detail.environmentId,
+      }]);
+      console.log(detail);
+    }
+    console.log(detail);
+  }, []);
 
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
@@ -119,7 +142,14 @@ const Index = observer(() => {
   return (
     <div className="c7ncd-appCenterPro-deployGroup">
       <Form columns={3} dataSet={DeployGroupConfigDataSet}>
+        {
+          detail && [
+            <TextField name={mapping.appName.name} />,
+            <TextField name={mapping.appCode.name} />,
+          ]
+        }
         <Select
+          newLine
           colSpan={1}
           name={mapping.env.name}
           optionRenderer={renderEnvOption}

@@ -35,6 +35,16 @@ const checkIp = async (value: string, num: number) => {
 const mapping: {
   [key: string]: FieldProps
 } = {
+  appName: {
+    name: 'name',
+    type: 'string' as FieldType,
+    label: '应用名称',
+  },
+  appCode: {
+    name: 'code',
+    type: 'string' as FieldType,
+    label: '应用编码',
+  },
   env: {
     name: 'envId',
     type: 'string' as FieldType,

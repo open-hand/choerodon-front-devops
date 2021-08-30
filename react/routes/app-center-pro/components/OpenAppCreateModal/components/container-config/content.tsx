@@ -55,6 +55,8 @@ const Index = observer(() => {
       sourceType: newD[mapping.productSource.name as string],
       deployObjectId: newD[mapping.marketServiceVersion.name as string]
         ?.marketServiceDeployObjectVO?.id,
+      [mapping.jarFileDownloadUrl.name as string]:
+        newD[mapping.jarFileDownloadUrl.name as string],
       prodJarInfoVO: {
         [mapping.nexus.name as string]: newD[mapping.nexus.name as string],
         [mapping.projectProductRepo.name as string]: newD[

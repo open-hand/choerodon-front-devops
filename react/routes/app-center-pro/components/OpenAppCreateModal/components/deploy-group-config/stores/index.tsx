@@ -14,6 +14,9 @@ interface ContextType {
   LabelsDataSet: any,
   NodeLabelsDataSet: any,
   HostAliasesDataSet: any,
+  modal?: any,
+  detail?: any,
+  refresh?: Function,
 }
 
 const Store = createContext({} as ContextType);
@@ -30,8 +33,8 @@ export const StoreProvider = (props: any) => {
 
   const DeployGroupConfigDataSet = useMemo(() => new DataSet(deployGroupConfigDataSet()), []);
   const OptionDataSet = useMemo(() => new DataSet(optionDataSet()), []);
-  const AnnotationsDataSet = useMemo(() => new DataSet(optionDataSet()), []);
-  const LabelsDataSet = useMemo(() => new DataSet(optionDataSet()), []);
+  const AnnotationsDataSet = useMemo(() => new DataSet(optionDataSet(/^([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$/)), []);
+  const LabelsDataSet = useMemo(() => new DataSet(optionDataSet(/^([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$/)), []);
   const NodeLabelsDataSet = useMemo(() => new DataSet(optionDataSet()), []);
   const HostAliasesDataSet = useMemo(() => new DataSet(optionDataSet()), []);
 
