@@ -113,14 +113,18 @@ const HzeroDeployDetail = observer(() => {
   const toInstanceDetail = (record: any) => {
     history.push(`/devops/application-center/detail/${record.get('appId')}/hzero/env/${formDs.current?.get('environmentDTO')?.id}/chart`);
   };
-  const renderInstanceCode = (record: any) => (
-    <div style={{ display: 'flex' }}>
-      <div role="none" style={(record.get('appStatus') === 'deleted' || record.get('appStatus') === 'notExist') ? { opacity: '0.5' } : { color: '#415BC9' }} onClick={() => toInstanceDetail(record)}>
-        {record.get('instanceCode')}
+  const currentAppStatusList = ['deleted', 'notExist'];
+  const renderInstanceCode = (record: any) => {
+    const currentAppStatus = record.get('appStatus');
+    return (
+      <div style={{ display: 'flex' }}>
+        <div role="none" style={currentAppStatusList.includes(currentAppStatus) ? { opacity: '0.5' } : { color: '#415BC9' }} onClick={() => toInstanceDetail(record)}>
+          {record.get('instanceCode') || '-'}
+        </div>
+        <div>{currentAppStatus === 'deleted' ? getStatusTag(currentAppStatus) : ''}</div>
       </div>
-      <div>{record.get('appStatus') === 'deleted' ? getStatusTag(record.get('appStatus')) : ''}</div>
-    </div>
-  );
+    );
+  };
   if (formDs.status === 'loading') {
     return <Loading display />;
   }
@@ -171,10 +175,10 @@ const HzeroDeployDetail = observer(() => {
               labelAlign={'left' as LabelAlignType}
               labelWidth="auto"
             >
-              <Output name="mktServiceVersion" />
+              <Output name="mktServiceVersion" renderer={({ value }) => (value || '-')} />
               <Output label="实例名称" value={renderInstanceCode(serviceDs.current)} />
-              <Output name="startTime" />
-              <Output label="部署耗时" value={getConsumeDuration(serviceDs.current?.get('startTime'), serviceDs.current?.get('endTime'))} />
+              <Output name="startTime" renderer={({ value }) => (value || '-')} />
+              <Output label="部署耗时" value={serviceDs.current?.get('startTime') ? getConsumeDuration(serviceDs.current?.get('startTime'), serviceDs.current?.get('endTime')) : '-'} />
             </Form>
             <YamlEditor
               colSpan={2}
