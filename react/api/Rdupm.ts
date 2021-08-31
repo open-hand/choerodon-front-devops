@@ -80,8 +80,8 @@ class RdupmApi extends Api<RdupmApi> {
       method: 'get',
       url: `/rdupm/v1/nexus-components/${this.getOrgId}/project/${this.getProjectId}`,
       params: {
-        artifactId,
-        groupId,
+        name: artifactId,
+        group: groupId,
         repositoryId,
         repositoryName,
       },
