@@ -90,7 +90,7 @@ export default observer(() => {
     if (record) {
       status = record.get('effectCommandStatus');
       connect = record.get('envConnected');
-      instanceStatus = record.get('status');
+      instanceStatus = record.get('objectStatus');
     }
     const POD_TYPE:any = {
       // 确保“当前/需要/可提供”的顺序
