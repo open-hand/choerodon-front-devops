@@ -73,7 +73,6 @@ const EditItem = (props) => {
           jobDetail={jobDetail}
           appServiceId={appServiceName}
           appServiceName={appServiceName}
-          handleOk={handleEditOk}
           PipelineCreateFormDataSet={PipelineCreateFormDataSet}
           AppServiceOptionsDs={AppServiceOptionsDs}
           image={image}
@@ -89,8 +88,6 @@ const EditItem = (props) => {
           appServiceId={appServiceName}
           appServiceName={appServiceName}
           pipelineStageMainSource={getStepData}
-          PipelineCreateFormDataSet={PipelineCreateFormDataSet}
-          handleOk={handleEditOk}
           columnIndex={columnIndex}
           witchColumnJobIndex={witchColumnJobIndex}
           sequence={sequence}
@@ -124,7 +121,7 @@ const EditItem = (props) => {
   const isCdDisabled = useMemo(() => (typeof edit === 'boolean' && !edit && stageType === 'CD'), [edit, stageType]);
 
   const renderOptsBtn = () => {
-    const toolText = '该用户没有部署任务对应的环境权限，无法修改或删除';
+    const toolText = '该用户没有部署任务对应的环境权限，无法修改';
     return (
       <>
         <Tooltip title={isCdDisabled && toolText}>
@@ -134,16 +131,14 @@ const EditItem = (props) => {
             shape="circle"
             size="small"
             icon="mode_edit"
-            onClick={openEditJobModal}
           />
         </Tooltip>
-        <Tooltip title={toolText}>
+        <Tooltip>
           <Button
             className={`${prefixCls}-btnGroup-btn`}
             shape="circle"
             size="small"
             icon="delete_forever"
-            onClick={openDeleteJobModal}
           />
         </Tooltip>
       </>
