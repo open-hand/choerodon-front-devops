@@ -160,7 +160,7 @@ const TreeMenu = observer(() => {
 
   return (
     <nav style={bounds} className={`${prefixCls}-sidebar`}>
-      <SidebarHeading />
+      {/* <SidebarHeading /> */}
       <div className={`${prefixCls}-sidebar-menu`}>
         <TreeView
           ds={treeDs}

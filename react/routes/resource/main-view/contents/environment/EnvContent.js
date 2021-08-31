@@ -25,6 +25,7 @@ const EnvContent = observer(() => {
     treeDs,
     resourceStore,
   } = useResourceStore();
+
   const {
     intl: { formatMessage },
     baseInfoDs,
@@ -53,7 +54,9 @@ const EnvContent = observer(() => {
       const active = record.get('active');
       const connect = record.get('connect');
       const clusterName = record.get('clusterName');
-      return { id, name, active, connect, clusterName };
+      return {
+        id, name, active, connect, clusterName,
+      };
     }
     return null;
   }
@@ -61,7 +64,9 @@ const EnvContent = observer(() => {
   useEffect(() => {
     const currentBase = getCurrent();
     if (currentBase) {
-      const { id, name, active, connect } = currentBase;
+      const {
+        id, name, active, connect,
+      } = currentBase;
       const menuItem = treeDs.find((item) => item.get('key') === String(id));
       if (menuItem) {
         // 清除已经停用的环境
@@ -82,25 +87,8 @@ const EnvContent = observer(() => {
     }
   });
 
-  function getTitle() {
-    const current = getCurrent();
-    if (current) {
-      return <EnvItem isTitle name={current.name} connect={current.connect} formatMessage={formatMessage} clusterName={current.clusterName} />;
-    }
-    return null;
-  }
-
-  function getFallBack() {
-    const {
-      name,
-      connect,
-    } = resourceStore.getSelectedMenu;
-    return <EnvItem isTitle name={name} connect={connect} />;
-  }
-
   return (
     <div className={`${prefixCls}-environment`}>
-      <PageTitle fallback={getFallBack()} content={getTitle()} />
       <Tabs
         animated={false}
         activeKey={envStore.getTabKey}
@@ -130,19 +118,23 @@ const EnvContent = observer(() => {
             <Polaris />
           </Suspense>
         </TabPane>
-        {envStore.getPermission && <TabPane
+        {envStore.getPermission && (
+        <TabPane
           key={ASSIGN_TAB}
-          tab={<Tips
-            helpText={formatMessage({ id: `${intlPrefix}.permission.tab.tips` })}
-            title={formatMessage({ id: `${intlPrefix}.environment.tabs.assignPermissions` })}
-          />}
+          tab={(
+            <Tips
+              helpText={formatMessage({ id: `${intlPrefix}.permission.tab.tips` })}
+              title={formatMessage({ id: `${intlPrefix}.environment.tabs.assignPermissions` })}
+            />
+)}
         >
           <Suspense fallback={<Spin />}>
             <Permissions />
           </Suspense>
-          </TabPane>}
+        </TabPane>
+        )}
       </Tabs>
-      <Modals />
+      {/* <Modals /> */}
     </div>
   );
 });

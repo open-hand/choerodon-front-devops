@@ -73,12 +73,8 @@ const MainView = observer(() => {
   const { mainStore } = useMainStore();
   const rootRef = useRef(null);
 
-  const { getSelectedMenu: { parentId }, getSelectedMenu } = resourceStore;
+  const { getSelectedMenu: { parentId } } = resourceStore;
   const { getDeleteArr } = mainStore;
-
-  useEffect(() => {
-    console.log(getSelectedMenu);
-  }, [getSelectedMenu]);
 
   const deleteModals = useMemo(() => (
     map(getDeleteArr, ({
