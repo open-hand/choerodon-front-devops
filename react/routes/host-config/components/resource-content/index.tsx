@@ -4,10 +4,10 @@ import {
   Progress, Tabs,
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
+import { EmptyPage } from '@choerodon/components';
 import { Size } from '@/interface';
 import AppIngressTable from '@/components/app-ingress-table';
 import { useHostConfigStore } from '@/routes/host-config/stores';
-import { EmptyPage } from '@choerodon/components';
 // @ts-ignore
 import EmptySvg from '@/routes/host-config/images/empty-page.svg';
 import PermissionTable from './PermissionTable';

@@ -5,7 +5,7 @@ const DsBasicObj = {
     {
       type: 'string',
       name: 'name',
-      label: '名称',
+      label: '应用名称',
     },
     {
       type: 'string',
@@ -30,12 +30,12 @@ const DsBasicObj = {
     {
       type: 'object',
       name: 'deployer',
-      label: '部署者',
+      label: '创建者',
     },
     {
       type: 'string',
       name: 'creationDate',
-      label: '部署时间',
+      label: '创建时间',
     },
   ],
   queryFields: [

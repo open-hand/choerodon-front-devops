@@ -121,16 +121,15 @@ const AppIngress = observer(() => {
     return <Action data={actionData} />;
   }, [handleDelete, handleRestart, handleStart, openStopModal]);
 
-  const renderType = ({ record }:any) => {
+  const renderType = ({ record }: any) => {
     const instanceType = record.get('instanceType');
-
     const isIntance = (['normal_process', 'java_process'].includes(instanceType));
     const tagName = isIntance ? '实例进程' : 'Docker';
     const tagColor = isIntance ? 'running' : 'success';
     return <StatusTag colorCode={tagColor} name={tagName} type="border" />;
   };
 
-  const renderName = ({ record, text }:any) => {
+  const renderName = ({ record, text }: any) => {
     const devopsHostCommandDTO = record.get('devopsHostCommandDTO');
     const operateStatus = devopsHostCommandDTO?.status;
     const error = devopsHostCommandDTO?.error;
@@ -145,24 +144,24 @@ const AppIngress = observer(() => {
           </span>
         </Tooltip>
         {operateStatus && !(operateStatus === 'success') && (
-        <StatusTag
-          style={{
-            marginLeft: '5px',
-          }}
-          ellipsisTitle={error}
-          colorCode={operateStatus}
-          name={operateStatus === 'operating' ? '执行中' : '失败'}
-        />
+          <StatusTag
+            style={{
+              marginLeft: '5px',
+            }}
+            ellipsisTitle={error}
+            colorCode={operateStatus}
+            name={operateStatus === 'operating' ? '执行中' : '失败'}
+          />
         )}
       </>
     );
   };
 
-  const renderStatus = ({ record, text }:any) => (
+  const renderStatus = ({ record, text }: any) => (
     text ? <StatusTag colorCode={text} name={text?.toUpperCase() || 'UNKNOWN'} /> : ''
   );
 
-  const renderUser = ({ value }:any) => {
+  const renderUser = ({ value }: any) => {
     if (!value) {
       return null;
     }
