@@ -42,7 +42,7 @@ const AppHomePage = () => {
     }
     if (listDs && !listDs.length) {
       // @ts-expect-error
-      return <EmptyPage title="暂无数据" describe="暂无应用服务，请关联应用服务" access />;
+      return <EmptyPage title="暂无应用" describe="暂无应用，请创建" access />;
     }
     return <AppCardContent />;
   }, [listDs, listDs.length, listDs.status]);
