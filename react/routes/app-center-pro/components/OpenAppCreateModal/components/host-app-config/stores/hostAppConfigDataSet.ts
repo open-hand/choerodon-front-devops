@@ -310,7 +310,11 @@ const hostAppConfigDataSet = (): DataSetProps => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((i) => mapping[i]),
   transport: {
-    update: ({ data: [data] }) => deployApiConfig.deployJava(setData(data)),
+    update: ({ data: [data] }) => deployApiConfig.deployJava({
+      ...setData(data),
+      appName: data[mapping.appName.name as string],
+      appCode: data[mapping.appCode.name as string],
+    }),
   },
   events: {
     update: async ({ record, name, value }: any) => {
