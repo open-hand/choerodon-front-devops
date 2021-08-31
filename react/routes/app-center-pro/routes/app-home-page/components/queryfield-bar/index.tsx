@@ -37,11 +37,22 @@ const ContentHeader: React.FC<any> = observer((): any => {
   };
 
   const renderEnvOption = useCallback(({ record, text, value }) => (
-    value === ALL_ENV_KEY ? text : <EnvOption record={record} text={text} />
+    value === ALL_ENV_KEY ? (
+      <span style={{ paddingLeft: '12px' }}>
+        {text}
+      </span>
+    ) : <EnvOption record={record} text={text} />
   ), []);
 
   const renderHostOption = useCallback(({ record, text, value }) => (
-    value === ALL_ENV_KEY ? text : <EnvOption connect={record.get('hostStatus') === 'connected'} text={text} />
+    value === ALL_ENV_KEY ? (
+      <span style={{
+        paddingLeft: '12px',
+      }}
+      >
+        {text}
+      </span>
+    ) : <EnvOption connect={record.get('hostStatus') === 'connected'} text={text} />
   ), []);
 
   const renderOptionProperty = useCallback(({ record: envRecord }: RecordObjectProps) => ({

@@ -277,15 +277,19 @@ const AppItem = observer(({
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          lineHeight: 1.2,
+          lineHeight: 1.1,
           whiteSpace: 'nowrap',
           overflow: 'hidden',
         }}
         >
           <span>创建</span>
           <UserInfo avatar={imageUrl} realName={realName} loginName={ldap ? loginName : email} />
-          &nbsp;
-          <TimePopover content={creationDate} />
+          <TimePopover
+            style={{
+              marginLeft: '4px',
+            }}
+            content={creationDate}
+          />
         </div>
       </main>
     </div>
