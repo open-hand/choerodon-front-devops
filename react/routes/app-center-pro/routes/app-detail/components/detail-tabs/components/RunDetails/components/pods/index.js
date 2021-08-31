@@ -144,7 +144,6 @@ export default class Pods extends PureComponent {
   render() {
     const {
       podType,
-      status,
       connect,
       name,
       count: { sum },
@@ -162,8 +161,7 @@ export default class Pods extends PureComponent {
       && sum !== currentPodTargetCount
       && connect;
     const descIsEnable = instanceStatus === 'stopped' || !connect
-      || currentPodTargetCount <= 1
-      || status !== 'success';
+      || currentPodTargetCount <= 1;
 
     const increaseDisabled = !(connect && instanceStatus !== 'stopped');
     return (
