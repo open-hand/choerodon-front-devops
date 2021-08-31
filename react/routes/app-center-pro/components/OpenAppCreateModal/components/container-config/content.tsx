@@ -147,11 +147,23 @@ const Index = observer(() => {
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
       const flag = await ConGroupDataSet.validate();
-      const flag2 = await ConGroupDataSet
-        .current.getField(mapping.portConfig.name).options.validate();
-      const flag3 = await ConGroupDataSet
-        .current.getField(mapping.enVariable.name).options.validate();
-      if (flag && flag2 && flag3) {
+      const arr: any[] = [];
+      let flag2 = true;
+      ConGroupDataSet.records.forEach((record: any) => {
+        arr.push(record.getField(mapping.portConfig.name).options.validate());
+        arr.push(record.getField(mapping.enVariable.name).options.validate());
+      });
+      for await (const x of arr) {
+        const res = await x;
+        if (!res) {
+          flag2 = false;
+        }
+      }
+      // const flag2 = await ConGroupDataSet
+      //   .current.getField(mapping.portConfig.name).options.validate();
+      // const flag3 = await ConGroupDataSet
+      //   .current.getField(mapping.enVariable.name).options.validate();
+      if (flag && flag2) {
         return setReturnData(
           ConGroupDataSet,
         );
