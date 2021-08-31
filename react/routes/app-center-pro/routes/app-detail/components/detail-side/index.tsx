@@ -64,6 +64,7 @@ const DetailAside = () => {
     artifactId,
     groupId,
     version,
+    fileInfoVO,
   } = appDs.current?.toData() || {};
 
   const {
@@ -174,6 +175,14 @@ const DetailAside = () => {
           }
         </div>
       </div>
+      {sourceType === CHART_UPLOAD && (
+      <div>
+        <span>Jar包名称</span>
+        <span>
+          <a href={fileInfoVO?.jarFileUrl} target="_blank" rel="noreferrer">{fileInfoVO?.fileName}</a>
+        </span>
+      </div>
+      )}
     </>
   );
 
