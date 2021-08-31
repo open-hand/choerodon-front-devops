@@ -10,7 +10,7 @@ import {
 } from 'choerodon-ui/pro';
 import classnames from 'classnames';
 import { StatusTag } from '@choerodon/components';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import {
   Record, LabelLayoutType, LabelAlignType,
 } from '@/interface';
@@ -38,6 +38,7 @@ const HzeroDeployDetail = observer(() => {
   } = useHzeroDeployDetailStore();
 
   const history = useHistory();
+  const { search } = useLocation();
 
   useEffect(() => {
     switch (status) {
@@ -115,7 +116,7 @@ const HzeroDeployDetail = observer(() => {
     if (currentAppStatusList.includes(record.get('appStatus'))) {
       return;
     }
-    history.push(`/devops/application-center/detail/${record.get('appId')}/hzero/env/${formDs.current?.get('environmentDTO')?.id}/chart`);
+    history.push({ pathname: `/devops/application-center/detail/${record.get('appId')}/hzero/env/${formDs.current?.get('environmentDTO')?.id}/chart`, search });
   };
 
   const renderInstanceCode = (record: any) => {
