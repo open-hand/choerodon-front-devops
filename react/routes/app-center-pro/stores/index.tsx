@@ -5,6 +5,7 @@ import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { axios } from '@choerodon/master';
 import { useHistory, useLocation } from 'react-router';
+import { Modal } from 'choerodon-ui/pro';
 import {
   CHART_CATERGORY,
   DEPLOY_TYPE, ENV_TAB,
@@ -98,6 +99,21 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     }
   }
 
+  function openDeleteGroupModal({
+    instanceId, callback,
+  }:{
+    instanceId:string,
+    callback:(...args:[])=>any
+  }) {
+    Modal.open({
+      key: Modal.key(),
+      title: '删除应用',
+      children: '确认删除此应用吗？',
+      okText: '删除',
+      onOk: () => deleteDeployGroupApp({ instanceId, callback }),
+    });
+  }
+
   async function deleteEnvApp({
     appCatergoryCode, envId, instanceId, instanceName, callback,
   }:deletEnvProps) {
@@ -106,7 +122,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
         envId, instanceId, instanceName, callback, projectId, deletionStore,
       });
     } else {
-      deleteDeployGroupApp({
+      openDeleteGroupModal({
         instanceId, callback,
       });
     }

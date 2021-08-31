@@ -3,8 +3,6 @@ import React, { useMemo } from 'react';
 import { HeaderButtons } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
-import DeployGroupConfigModal from '@/routes/app-center-pro/components/OpenAppCreateModal/components/deploy-group-config';
-import DeployGroupAppModal from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config';
 import { useAppDetailTabsStore } from '../../stores';
 import { openModifyValueModal } from '@/components/modify-values';
 import { useAppDetailsStore } from '../../../../stores';
@@ -29,9 +27,6 @@ import {
 } from '@/routes/app-center-pro/stores/CONST';
 import { getAppCategories, getChartSourceGroup } from '@/routes/app-center-pro/utils';
 import { openAppConfigModal } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config';
-
-const deployGroupConfig = Modal.key();
-const deployGroupApp = Modal.key();
 
 const DetailsTabsHeaderButtons = () => {
   const {
@@ -78,26 +73,6 @@ const DetailsTabsHeaderButtons = () => {
   const whichGroup = getChartSourceGroup(
     chartSource || sourceType, deployType,
   );
-
-  // 部署组修改容器配置
-  function openDeployGroupConfig() {
-    Modal.open({
-      key: deployGroupConfig,
-      title: '修改容器配置',
-      children: <DeployGroupConfigModal />,
-      okText: '修改',
-    });
-  }
-
-  // 部署组修改应用
-  function openDeployGroupApp() {
-    Modal.open({
-      key: deployGroupApp,
-      title: '修改应用',
-      children: <DeployGroupAppModal />,
-      okText: '修改',
-    });
-  }
 
   // 修改应用（3种分类）
   const modifyAppObj = useMemo(() => {
@@ -231,7 +206,6 @@ const DetailsTabsHeaderButtons = () => {
   // 删除应用
   const deleteApp = {
     name: '删除应用',
-    // icon: 'delete_forever-o',
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-delete'],
     handler: () => {
       deployType === ENV_TAB ? deleteEnvApp({
@@ -285,13 +259,33 @@ const DetailsTabsHeaderButtons = () => {
     }] : [];
   })();
 
+  const getRunningHeaderItemsOfServices = () => {
+    let data = [];
+    if (appCatergory.code === DEPLOY_CATERGORY) {
+      data = [modifyAppObj, createSource, ...moreOpts];
+    } else {
+      data = [modifyValues, modifyAppObj, redeploy, createSource, ...moreOpts];
+    }
+    return data;
+  };
+
+  const getRunningHeaderItemsOfMarket = () => {
+    let data = [];
+    if (appCatergory.code === DEPLOY_CATERGORY) {
+      data = [modifyAppObj, createSource, ...moreOpts];
+    } else {
+      data = [modifyValues, modifyAppObj, upGrade, redeploy, ...moreOpts];
+    }
+    return data;
+  };
+
   // 项目分组
   const getIsServicesActionData = () => {
     let data:any = [];
     switch (appStatus) {
       case APP_STATUS.RUNNING:
       case APP_STATUS.ACTIVE:
-        data = [modifyValues, modifyAppObj, redeploy, createSource, ...moreOpts];
+        data = getRunningHeaderItemsOfServices();
         break;
       case APP_STATUS.FAILED:
       case APP_STATUS.STOP:
@@ -309,7 +303,7 @@ const DetailsTabsHeaderButtons = () => {
     switch (appStatus) {
       case APP_STATUS.RUNNING:
       case APP_STATUS.ACTIVE:
-        data = [modifyValues, modifyAppObj, upGrade, redeploy, ...moreOpts];
+        data = getRunningHeaderItemsOfMarket();
         break;
       case APP_STATUS.STOP:
       case APP_STATUS.FAILED:
