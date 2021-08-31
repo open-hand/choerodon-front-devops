@@ -7,7 +7,6 @@ import { useResourceStore } from './stores';
 
 function Resource() {
   const {
-    permissions,
     resourceStore: { getShowHeader },
   } = useResourceStore();
 

@@ -107,7 +107,7 @@ const AppItem = observer(({
       instanceId,
       instanceName,
       callback: refresh,
-    }) : deleteHostApp(hostId, id);
+    }) : deleteHostApp(hostId, id, refresh);
   };
 
   const stopObj = {
