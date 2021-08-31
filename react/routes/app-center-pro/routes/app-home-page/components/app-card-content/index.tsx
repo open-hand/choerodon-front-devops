@@ -10,6 +10,8 @@ import EnvItem from '@/components/env-item';
 import { Record } from '@/interface';
 import AppType from '@/routes/app-center-pro/components/AppType';
 import { useAppHomePageStore } from '../../stores';
+import PodCircle from '@/components/pod-circle';
+
 import './index.less';
 import { getAppCategories, getChartSourceGroup } from '@/routes/app-center-pro/utils';
 import {
@@ -63,6 +65,10 @@ const AppItem = observer(({
     code: instanceName,
 
     creationDate,
+
+    podRunningCount,
+    podUnlinkCount,
+    podCount,
   } = record.toData();
 
   const {
@@ -101,7 +107,7 @@ const AppItem = observer(({
       instanceId,
       instanceName,
       callback: refresh,
-    }) : deleteHostApp(hostId, id);
+    }) : deleteHostApp(hostId, id, refresh);
   };
 
   const stopObj = {
@@ -209,6 +215,24 @@ const AppItem = observer(({
         {renderAction()}
       </aside>
       <header>
+        {isEnv && (
+        <PodCircle
+          // @ts-expect-error
+          style={{
+            width: 20,
+            height: 20,
+          }}
+          dataSource={[{
+            name: 'running',
+            value: podRunningCount,
+            stroke: '#0bc2a8',
+          }, {
+            name: 'unlink',
+            value: podCount - podRunningCount,
+            stroke: '#fbb100',
+          }]}
+        />
+        )}
         <Tooltip title={name}>
           <span
             role="none"

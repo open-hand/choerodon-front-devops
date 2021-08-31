@@ -64,7 +64,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
       <div className={`${newPrefixCls}-form-wrap`}>
         <Form
           dataSet={searchDs}
-          columns={7}
+          columns={3}
           className={`${newPrefixCls}-form`}
           labelLayout={'horizontal' as LabelLayoutType}
           labelWidth={1}
@@ -77,7 +77,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
               searchable
               optionRenderer={renderEnvOption}
               onOption={renderOptionProperty}
-              onClear={refresh}
+              onChange={refresh}
             />
           ) : (
             <Select
@@ -86,9 +86,17 @@ const ContentHeader: React.FC<any> = observer((): any => {
               colSpan={3}
               searchable
               optionRenderer={renderHostOption}
-              onClear={refresh}
+              onChange={refresh}
             />
           )}
+        </Form>
+        <Form
+          dataSet={searchDs}
+          columns={4}
+          className={`${newPrefixCls}-form`}
+          labelLayout={'horizontal' as LabelLayoutType}
+          labelWidth={1}
+        >
           <TextField
             clearButton
             name="params"
@@ -97,7 +105,6 @@ const ContentHeader: React.FC<any> = observer((): any => {
             prefix={<Icon type="search" />}
             onClear={refresh}
           />
-
         </Form>
         <Button
           onClick={refresh}
