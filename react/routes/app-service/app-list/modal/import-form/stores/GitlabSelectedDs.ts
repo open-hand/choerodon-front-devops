@@ -1,7 +1,5 @@
 /* eslint-disable */
-import { axios } from '@choerodon/boot';
 import includes from 'lodash/includes';
-import { DataSet } from 'choerodon-ui/pro';
 import {appServiceApi} from '@/api/AppService';
 const TypeOptionDs = () => {
   return ({
@@ -11,14 +9,14 @@ const TypeOptionDs = () => {
     ],
     data: [{
       text: '普通服务',
-      value: '普通服务',
+      value: 'normal',
     }, {
       text: '测试服务',
-      value: '测试服务',
+      value: 'test',
     }],
   })
 };
-const GitlabSelectedDs = ({ intlPrefix, formatMessage, projectId, importStore }: any) => {
+const GitlabSelectedDs = ({ intlPrefix, formatMessage, projectId, importStore, typeOptionDs}: any) => {
   function handleUpdate({ dataSet, record, name }: any) {
     if (name === 'name' || name === 'code') {
       dataSet.forEach((eachRecord: any) => {
@@ -114,7 +112,9 @@ const GitlabSelectedDs = ({ intlPrefix, formatMessage, projectId, importStore }:
         name: 'type',
         type: 'string',
         label: formatMessage({ id: `${intlPrefix}.type` }),
-        defaultValue: 'normal',
+        textField:'text',
+        valueField:'value',
+        options: typeOptionDs,
       },
       { name: 'lastActivityAt', type: 'string', label: formatMessage({ id: 'updateDate' }) },
     ],

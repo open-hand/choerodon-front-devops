@@ -15,7 +15,6 @@ import Tips from '../../../../../components/new-tips';
 import { useImportAppServiceStore } from './stores';
 
 const { Column } = Table;
-const { Option } = Select;
 
 const modalKey1 = Modal.key();
 const marketModalKey = Modal.key();
@@ -120,10 +119,7 @@ const Platform = injectIntl(observer(({ checkData }) => {
 
   function renderSelect(record) {
     return (
-      <Select name="type" record={record}>
-        <Option value="normal">普通服务</Option>
-        <Option value="test">测试服务</Option>
-      </Select>
+      <Select name="type" record={record} />
     );
   }
   const currentPlatFormType = importRecord?.get('platformType');

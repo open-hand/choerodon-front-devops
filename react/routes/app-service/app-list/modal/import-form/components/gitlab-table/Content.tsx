@@ -25,7 +25,7 @@ const GitlabSourceTable = observer(() => {
   modal.handleOk(() => {
     forEach(tableDs.selected, (record: any) => {
       if (!includes(selectedId, record.get('name'))) {
-        record.set('type', '普通服务');
+        record.set('type', 'normal');
         selectedDs.push(record);
       }
     });
