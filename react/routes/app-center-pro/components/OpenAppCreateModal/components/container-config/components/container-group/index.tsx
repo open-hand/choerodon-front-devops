@@ -84,7 +84,10 @@ const Index = observer(({
         <Button
           funcType={'flat' as FuncType}
           icon="add"
-          onClick={() => dataSource.create()}
+          onClick={() => dataSource.create({
+            [mapping.name.name as string]: `container-${dataSource.records.length + 1}`,
+            [mapping.edit.name as string]: true,
+          })}
         >
           添加容器
         </Button>

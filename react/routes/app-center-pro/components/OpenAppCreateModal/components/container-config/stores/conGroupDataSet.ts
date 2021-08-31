@@ -76,6 +76,7 @@ const mapping: {
     name: 'name',
     type: 'string' as FieldType,
     defaultValue: 'container-1',
+    required: true,
   },
   focus: {
     name: 'focus',
