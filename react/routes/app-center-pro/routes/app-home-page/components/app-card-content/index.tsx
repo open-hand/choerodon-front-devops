@@ -282,10 +282,10 @@ const AppItem = observer(({
           overflow: 'hidden',
         }}
         >
-          <span>创建者</span>
+          <span>创建</span>
           <UserInfo avatar={imageUrl} realName={realName} loginName={ldap ? loginName : email} />
+          &nbsp;
           <TimePopover content={creationDate} />
-          创建
         </div>
       </main>
     </div>

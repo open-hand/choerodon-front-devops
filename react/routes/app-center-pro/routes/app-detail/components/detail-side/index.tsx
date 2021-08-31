@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 import React from 'react';
 import { observer } from 'mobx-react-lite';
+import { Tooltip } from 'choerodon-ui/pro';
 import { UserInfo, TimePopover, StatusTag } from '@choerodon/components';
 import EnvItem from '@/components/env-item';
 import PodCircle from '@/components/pod-circle';
@@ -100,7 +101,11 @@ const DetailAside = () => {
       default:
         break;
     }
-    return <StatusTag name={message} colorCode={objectStatus} />;
+    return (
+      <Tooltip title={objectStatus === 'operating' && `部署版本"${versionName}"`}>
+        <StatusTag name={message} colorCode={objectStatus} />
+      </Tooltip>
+    );
   }
 
   const renderChartDetails = () => (
