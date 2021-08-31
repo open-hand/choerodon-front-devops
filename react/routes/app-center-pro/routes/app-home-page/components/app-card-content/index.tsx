@@ -4,21 +4,23 @@ import { Action } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 
 import { useHistory, useLocation } from 'react-router';
-import { UserInfo, TimePopover, CardPagination } from '@choerodon/components';
+import {
+  UserInfo, TimePopover, CardPagination, StatusTag,
+} from '@choerodon/components';
 import { Tooltip } from 'choerodon-ui/pro';
 import EnvItem from '@/components/env-item';
 import { Record } from '@/interface';
 import AppType from '@/routes/app-center-pro/components/AppType';
 import { useAppHomePageStore } from '../../stores';
-import PodCircle from '@/components/pod-circle';
 
 import './index.less';
 import { getAppCategories, getChartSourceGroup } from '@/routes/app-center-pro/utils';
 import {
-  APP_STATUS, CHART_HOST, IS_HOST, IS_MARKET, IS_SERVICE,
+  APP_STATUS, CHART_HOST, HOST_TAB, IS_HOST, IS_MARKET, IS_SERVICE,
 } from '@/routes/app-center-pro/stores/CONST';
 import { openChangeActive } from '@/components/app-status-toggle';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
+import EnvOrHostStatusIcon from '@/routes/app-center-pro/components/EnvOrHostStatusIcon';
 
 const AppItem = observer(({
   record,
@@ -215,24 +217,13 @@ const AppItem = observer(({
         {renderAction()}
       </aside>
       <header>
-        {isEnv && (
-        <PodCircle
-          // @ts-expect-error
-          style={{
-            width: 20,
-            height: 20,
-          }}
-          dataSource={[{
-            name: 'running',
-            value: podRunningCount,
-            stroke: '#0bc2a8',
-          }, {
-            name: 'unlink',
-            value: podCount - podRunningCount,
-            stroke: '#fbb100',
-          }]}
+        <EnvOrHostStatusIcon
+          hostError={devopsHostCommandDTO?.error}
+          hostStatus={devopsHostCommandDTO?.status}
+          podRunningCount={podRunningCount}
+          podCount={podCount}
+          currentType={currentType}
         />
-        )}
         <Tooltip title={name}>
           <span
             role="none"

@@ -3,6 +3,7 @@ import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Tooltip } from 'choerodon-ui/pro';
 import { UserInfo, TimePopover, StatusTag } from '@choerodon/components';
+import EnvOrHostStatusIcon from '../../../../components/EnvOrHostStatusIcon';
 import EnvItem from '@/components/env-item';
 import PodCircle from '@/components/pod-circle';
 import { useAppDetailsStore } from '../../stores';
@@ -224,7 +225,14 @@ const DetailAside = () => {
   return (
     <div className={`${subfixCls}-aside`}>
       <header>
-        {renderStatus()}
+        <EnvOrHostStatusIcon
+          hostError={devopsHostCommandDTO?.error}
+          hostStatus={devopsHostCommandDTO?.status}
+          podRunningCount={podRunningCount}
+          podCount={podCount}
+          // @ts-expect-error
+          currentType={deployType}
+        />
         <span className={`${subfixCls}-aside-name`}>{name || '-'}</span>
       </header>
       <main>
