@@ -1,7 +1,8 @@
+/* eslint-disable import/no-anonymous-default-export */
+import { assign, isEqual } from 'lodash';
 import { DataSet, DataSetProps } from '@/interface';
 import HostConfigApis from '@/routes/host-config/apis/DeployApis';
 import { StoreProps } from '@/routes/host-config/stores/useStore';
-import { assign, isEqual } from 'lodash';
 
 interface ListProps {
   projectId: number,

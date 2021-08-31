@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import omit from 'lodash/omit';
 import forEach from 'lodash/forEach';
 import map from 'lodash/map';
@@ -33,15 +34,17 @@ const mapping = {
   },
   deployObject: {
     value: 'deployObjectType',
-    options: [{
-      value: 'image',
-      label: 'Docker镜像',
-      img: dockerImg,
-    }, {
-      value: 'jar',
-      label: 'jar应用',
-      img: jarImg,
-    }],
+    options: [
+      {
+        value: 'image',
+        label: 'Docker镜像',
+        img: dockerImg,
+      },
+      {
+        value: 'jar',
+        label: 'jar应用',
+        img: jarImg,
+      }],
   },
   projectImageRepo: {
     value: 'repoId',
@@ -233,7 +236,7 @@ export default (({
           } = value.marketServiceDeployObjectVO;
           record.set('instanceName', getRandomName(devopsAppServiceCode || hzeroServiceCode || ''));
           record.get(mapping.deployWay.value) === mapping.deployWay.options[0].value
-          && deployStore.loadMarketDeployValue(projectId, deployObjectId);
+            && deployStore.loadMarketDeployValue(projectId, deployObjectId);
         } else {
           record.get('instanceName') && record.set('instanceName', null);
         }
@@ -275,7 +278,7 @@ export default (({
           } = value.marketServiceDeployObjectVO;
           record.set('instanceName', getRandomName(devopsAppServiceCode || hzeroServiceCode || ''));
           record.get(mapping.deployWay.value) === mapping.deployWay.options[0].value
-          && deployStore.loadMarketDeployValue(projectId, deployObjectId);
+            && deployStore.loadMarketDeployValue(projectId, deployObjectId);
         } else {
           record.get('instanceName') && record.set('instanceName', null);
         }
@@ -466,7 +469,7 @@ export default (({
             res.name = data.name;
           }
         } else if (deploySource === mapping.deploySource.options[2].value) {
-        //  hzero
+          //  hzero
           res.appSource = 'hzero';
           res.sourceType = 'hzero';
           res[mapping.hzeroAppVersion.name] = data[mapping.hzeroAppVersion.name]?.id;
@@ -478,14 +481,14 @@ export default (({
             res.name = data[mapping.containerName.value];
             res.imageInfo = {
               deployObjectId:
-              data[mapping.hzeroServiceVersion.name]?.marketServiceDeployObjectVO?.id,
+                data[mapping.hzeroServiceVersion.name]?.marketServiceDeployObjectVO?.id,
               [mapping.containerName.value]: data[mapping.containerName.value],
               value: Base64.encode(deployUseStore.getImageYaml),
             };
           } else {
             res.prodJarInfoVO = {
               deployObjectId:
-              data[mapping.hzeroServiceVersion.name]?.marketServiceDeployObjectVO?.id,
+                data[mapping.hzeroServiceVersion.name]?.marketServiceDeployObjectVO?.id,
               name: data.name,
               [mapping.workPath.value]: data[mapping.workPath.value],
               value: Base64.encode(deployUseStore.getJarYaml),
@@ -638,7 +641,7 @@ export default (({
           required: ({ record }) => getRequired({ record })
             && !getIsMarket({ record })
             && !getIsHzero({ record })
-          && (record.get(mapping.deployObject.value) === mapping.deployObject.options[0].value),
+            && (record.get(mapping.deployObject.value) === mapping.deployObject.options[0].value),
         },
         lookupAxiosConfig: () => ({
           method: 'get',
@@ -864,13 +867,13 @@ export default (({
             method: 'get',
             url:
               record.get(mapping.projectProduct.value)
-            && record.get(mapping.groupId.value)
-            && record.get(mapping.artifactId.value)
-                && `/rdupm/v1/nexus-components/${organizationId}/project/${projectId}?page=0&size=10&repositoryId=${record.get(mapping.projectProduct.value)}&repositoryName=${(function () {
-                  const repositoryId = record.get(mapping.projectProduct.value);
-                  const { lookup } = record.getField(mapping.projectProduct.value);
-                  return lookup.find((l) => l.repositoryId === repositoryId).neRepositoryName;
-                }())}&groupId=${record.get(mapping.groupId.value)}&artifactId=${record.get(mapping.artifactId.value)}`,
+              && record.get(mapping.groupId.value)
+              && record.get(mapping.artifactId.value)
+              && `/rdupm/v1/nexus-components/${organizationId}/project/${projectId}?page=0&size=10&repositoryId=${record.get(mapping.projectProduct.value)}&repositoryName=${(function () {
+                const repositoryId = record.get(mapping.projectProduct.value);
+                const { lookup } = record.getField(mapping.projectProduct.value);
+                return lookup.find((l) => l.repositoryId === repositoryId).neRepositoryName;
+              }())}&groupId=${record.get(mapping.groupId.value)}&artifactId=${record.get(mapping.artifactId.value)}`,
           }),
         },
       },
@@ -967,7 +970,7 @@ export default (({
         dynamicProps: {
           required: ({ record }) => ((record.get(mapping.deployWay.value)
             === mapping.deployWay.options[0].value && record.get('appServiceSource') === 'market_service'))
-          || (getRequired({ record }) && getIsMarket({ record })),
+            || (getRequired({ record }) && getIsMarket({ record })),
         },
         ignore: 'always',
       },
@@ -980,7 +983,7 @@ export default (({
         dynamicProps: {
           required: ({ record }) => ((record.get(mapping.deployWay.value)
             === mapping.deployWay.options[0].value && record.get('appServiceSource') === 'market_service'))
-          || (getRequired({ record }) && getIsMarket({ record })),
+            || (getRequired({ record }) && getIsMarket({ record })),
         },
         options: marketServiceOptionsDs,
       },
