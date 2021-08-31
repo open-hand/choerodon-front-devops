@@ -15,6 +15,14 @@ class DevopsDeployGroupApi extends Api<DevopsDeployGroupApi> {
       data,
     });
   }
+
+  updateContainer(data: any) {
+    return this.request({
+      method: 'post',
+      url: `${this.prefix}/update_container`,
+      data,
+    });
+  }
 }
 
 const devopsDeployGroupApi = new DevopsDeployGroupApi();

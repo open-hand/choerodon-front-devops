@@ -2,15 +2,18 @@ import React, { useState } from 'react';
 import { Icon } from 'choerodon-ui';
 
 import './index.less';
+import Tips from '@/components/new-tips';
 
 const Index = ({
   title,
   content,
   style,
+  helpText,
 }: {
   title: string,
   content: any,
   style?: object,
+  helpText?: string,
 }) => {
   const [collapse, setCollapse] = useState(false);
 
@@ -36,6 +39,13 @@ const Index = ({
         <span className="c7ncd-collapseCon__header__title">
           {title}
         </span>
+        {
+          helpText && (
+            <span style={{ marginLeft: 10 }}>
+              <Tips helpText={helpText} />
+            </span>
+          )
+        }
       </div>
       {
         !collapse && content
@@ -46,6 +56,7 @@ const Index = ({
 
 Index.defaultProps = {
   style: {},
+  helpText: '',
 };
 
 export default Index;

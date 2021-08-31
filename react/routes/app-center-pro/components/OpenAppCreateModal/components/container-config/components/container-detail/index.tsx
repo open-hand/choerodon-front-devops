@@ -15,11 +15,18 @@ import CollapseContainer from '../../../deploy-group-config/components/collapse-
 
 import './index.less';
 
-const imageSource = JSON.parse(JSON.stringify(productSourceData)).splice(0, 5);
-const jarSource = [
-  ...JSON.parse(JSON.stringify(productSourceData)).splice(0, 3),
-  productSourceData[5],
-];
+console.log(productSourceData);
+
+let imageSource;
+let jarSource;
+
+if (productSourceData) {
+  imageSource = JSON.parse(JSON.stringify(productSourceData)).splice(0, 5);
+  jarSource = [
+    ...JSON.parse(JSON.stringify(productSourceData)).splice(0, 3),
+    productSourceData[5],
+  ]
+}
 
 const Index = inject('AppState')(observer(({
   className,
@@ -178,6 +185,7 @@ const Index = inject('AppState')(observer(({
                   style={{
                     marginBottom: 20,
                   }}
+                  helpText="用于设置容器的访问策略"
                   title="端口配置"
                   content={getPortConfigRender()}
                 />

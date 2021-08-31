@@ -27,6 +27,33 @@ const jarSource = [
   productSourceData[5],
 ];
 
+const setData = (data: any) => {
+  const newData = data;
+  newData.prodJarInfoVO = {
+    [mapping.projectProductRepo.name as string]: newData[
+      mapping.projectProductRepo.name as string]?.repositoryId,
+    [mapping.groupId.name as string]: newData[mapping.groupId.name as string],
+    [mapping.artifactId.name as string]: newData[mapping.artifactId.name as string],
+    [mapping.jarVersion.name as string]: newData[mapping.jarVersion.name as string],
+    [mapping.nexus.name as string]: newData[mapping.nexus.name as string],
+  };
+  newData.fileInfoVO = {
+    [mapping.uploadUrl.name as string]: newData[mapping.uploadUrl.name as string],
+    [mapping.fileName.name as string]: newData[mapping.fileName.name as string],
+  }
+  newData.marketDeployObjectInfoVO = {
+    mktDeployObjectId: newData[
+      mapping.marketServiceVersion.name as string]?.marketServiceDeployObjectVO?.id,
+    mktAppVersionId: newData[
+      mapping.marketServiceVersion.name as string]
+      ?.marketServiceDeployObjectVO?.marketAppVersionId,
+  };
+  newData[mapping.value.name as string] = Base64.encode(newData[mapping.value.name as string]);
+  // newData.deployObjectId = newData[
+  //   mapping.marketServiceVersion.name as string]?.marketServiceDeployObjectVO?.id;
+  return newData;
+};
+
 const Index = observer(() => {
   const {
     HostAppConfigDataSet,
@@ -50,7 +77,6 @@ const Index = observer(() => {
           ?.marketDeployObjectInfoVO?.mktDeployObjectId,
       }]);
     }
-    console.log(detail);
   }, []);
 
   const handleOk = async () => {
@@ -68,32 +94,7 @@ const Index = observer(() => {
     modal.handleOk(handleOk);
   }
 
-  const setData = (data: any) => {
-    const newData = data;
-    newData.prodJarInfoVO = {
-      [mapping.projectProductRepo.name as string]: newData[
-        mapping.projectProductRepo.name as string]?.repositoryId,
-      [mapping.groupId.name as string]: newData[mapping.groupId.name as string],
-      [mapping.artifactId.name as string]: newData[mapping.artifactId.name as string],
-      [mapping.jarVersion.name as string]: newData[mapping.jarVersion.name as string],
-      [mapping.nexus.name as string]: newData[mapping.nexus.name as string],
-    };
-    newData.fileInfoVO = {
-      [mapping.uploadUrl.name as string]: newData[mapping.uploadUrl.name as string],
-      [mapping.fileName.name as string]: newData[mapping.fileName.name as string],
-    }
-    newData.marketDeployObjectInfoVO = {
-      mktDeployObjectId: newData[
-        mapping.marketServiceVersion.name as string]?.marketServiceDeployObjectVO?.id,
-      mktAppVersionId: newData[
-        mapping.marketServiceVersion.name as string]
-        ?.marketServiceDeployObjectVO?.marketAppVersionId,
-    };
-    newData[mapping.value.name as string] = Base64.encode(newData[mapping.value.name as string]);
-    // newData.deployObjectId = newData[
-    //   mapping.marketServiceVersion.name as string]?.marketServiceDeployObjectVO?.id;
-    return newData;
-  };
+
 
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
@@ -177,8 +178,20 @@ const Index = observer(() => {
               </Form>
                 { dataSource.get(mapping.uploadUrl.name) && (
                   <p className="c7ncd-appCenterPro-hostAppConfig__fileName">
-                    <Icon type="attach_file" />
-                    {dataSource.get(mapping.fileName.name)}
+                    <span>
+                      <Icon type="attach_file" />
+                      {dataSource.get(mapping.fileName.name)}
+                    </span>
+                    <Icon
+                      onClick={() => {
+                        dataSource.set(mapping.fileName.name, '');
+                        dataSource.set(mapping.uploadUrl.name, '');
+                      }}
+                      type="close"
+                      style={{
+                        cursor: 'pointer',
+                      }}
+                    />
                   </p>
                 ) }
             </>
@@ -295,3 +308,5 @@ const Index = observer(() => {
 });
 
 export default Index;
+
+export { setData };

@@ -55,6 +55,26 @@ class DeployAppCenterApi extends Api<DeployAppCenterApi> {
       method: 'get',
     });
   }
+
+  checkAppName(name: string) {
+    return this.request({
+      method: 'get',
+      url: `${this.prefix}/check_name`,
+      params: {
+        name,
+      },
+    });
+  }
+
+  checkAppCode(code: string) {
+    return this.request({
+      method: 'get',
+      url: `${this.prefix}/check_code`,
+      params: {
+        code,
+      },
+    });
+  }
 }
 
 const deployAppCenterApi = new DeployAppCenterApi();
