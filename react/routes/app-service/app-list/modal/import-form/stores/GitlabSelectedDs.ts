@@ -114,7 +114,7 @@ const GitlabSelectedDs = ({ intlPrefix, formatMessage, projectId, importStore }:
         name: 'type',
         type: 'string',
         label: formatMessage({ id: `${intlPrefix}.type` }),
-        defaultValue: '普通服务',
+        defaultValue: 'normal',
       },
       { name: 'lastActivityAt', type: 'string', label: formatMessage({ id: 'updateDate' }) },
     ],
