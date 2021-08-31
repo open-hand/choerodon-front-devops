@@ -15,7 +15,7 @@ const EnvironmentItem = memo(({
       synchronize={synchronize}
       size={isTitle ? 'normal' : 'small'}
     />
-    {isTitle ? <span className="c7ncd-env-title">{name}</span> : <span className="c7ncd-env-title-default">name</span>}
+    {isTitle ? <span className="c7ncd-env-title">{name}</span> : <span className="c7ncd-env-title-default">{name}</span>}
     {clusterName ? (
       <span className="c7ncd-env-cluster">
         (

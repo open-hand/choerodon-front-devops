@@ -154,26 +154,21 @@ const DetailAside = () => {
     <>
       <div>
         <span>Jar包来源</span>
-        <div className={`${subfixCls}-aside-main-chart-source`}>
-          <span>
-            {getChartSourceName[sourceType]}
-          </span>
-          {
-            sourceType !== CHART_UPLOAD && (
-              <span>
-                (artifactId：
-                {artifactId || '-'}
-                <br />
-                groupId：
-                {groupId || '-'}
-                <br />
-                Jar包版本：
-                {version || '-'}
-                )
-              </span>
-            )
-          }
-        </div>
+        <span>
+          {getChartSourceName[sourceType]}
+        </span>
+      </div>
+      <div>
+        <span>artifactId：</span>
+        <span>{artifactId || '-'}</span>
+      </div>
+      <div>
+        <span>groupId：</span>
+        <span>{groupId || '-'}</span>
+      </div>
+      <div>
+        <span>Jar包版本：</span>
+        <span>{version || '-'}</span>
       </div>
       {sourceType === CHART_UPLOAD && (
       <div>
