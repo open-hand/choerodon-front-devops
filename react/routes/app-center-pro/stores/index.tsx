@@ -38,7 +38,7 @@ interface ContextProps {
   }
   deletionStore: StoreProps
   match:any
-  deleteHostApp: (hostId:string, instanceId:string, callback?:CallableFunction) => any
+  openDeleteHostAppModal: (hostId:string, instanceId:string, callback?:CallableFunction) => any
   deleteEnvApp: (props:deletEnvProps)=>any
   goBackHomeBaby: (...args:any[])=>any
 }
@@ -66,6 +66,16 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
 
   function goBackHomeBaby() {
     history.push({ pathname: '/devops/application-center', search: location.search });
+  }
+
+  function openDeleteHostAppModal(hostId: string, instanceId: string, callback?:CallableFunction) {
+    Modal.open({
+      key: Modal.key(),
+      title: '删除应用',
+      children: '确认删除此应用吗？',
+      okText: '删除',
+      onOk: () => deleteHostApp(hostId, instanceId, callback),
+    });
   }
 
   async function deleteHostApp(hostId: string, instanceId: string, callback?:CallableFunction) {
@@ -135,7 +145,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     formatMessage,
     mainTabKeys,
     deletionStore,
-    deleteHostApp,
+    openDeleteHostAppModal,
     deleteEnvApp,
     goBackHomeBaby,
   };

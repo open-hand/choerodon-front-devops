@@ -115,7 +115,7 @@ class AppServiceInstanceApi extends Api<AppServiceInstanceApi> {
   // opreate pods count
   operatePodCount(name: string, num: string, kind: string, envId:string) {
     return this.request({
-      url: `/operate_pod_count?envId=${envId}&name=${name}&count=${num}&kind=${kind}`,
+      url: `${this.prefix}/operate_pod_count?envId=${envId}&name=${name}&count=${num}&kind=${kind}`,
       method: 'put',
     });
   }

@@ -34,6 +34,7 @@ interface ContextProps {
   tabKeys: {name: string, key: string}[],
   appDetailTabStore: StoreProps,
   refresh: (refreshDetails?:boolean, callback?:CallableFunction) => void,
+  loadData: (...args:any[])=>any
   appEventsDs: DataSet,
   podDetailsDs: DataSet,
   runDetailsStore: DetailsStoreProps,
@@ -153,6 +154,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     refresh,
     projectId,
     podDetailsDs,
+    loadData,
   };
   return (
     <Store.Provider value={value}>
