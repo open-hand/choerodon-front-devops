@@ -210,11 +210,10 @@ const ImportForm = injectIntl(observer((props) => {
                     searchMatcher="params"
                     optionRenderer={({ record: current, text, value }) => (
                       <Tooltip title={current.get('bindFlag') ? '该Group已经存在关联的Choerodon项目，无法执行迁移操作' : ''}>
-                        `
                         {text}
                         (
                         {current.get('path')}
-                        )`
+                        )
                       </Tooltip>
                     )}
                   />
