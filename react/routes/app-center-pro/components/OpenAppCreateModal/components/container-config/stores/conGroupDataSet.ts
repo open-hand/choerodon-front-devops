@@ -533,7 +533,7 @@ const mapping: {
     type: 'string' as FieldType,
   },
   jarFileDownloadUrl: {
-    name: 'jarFileDownloadUrl',
+    name: 'jarFileUrl',
     type: 'string' as FieldType,
   },
 };
