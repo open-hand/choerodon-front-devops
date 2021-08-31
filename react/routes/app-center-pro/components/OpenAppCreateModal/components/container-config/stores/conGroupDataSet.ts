@@ -360,7 +360,7 @@ const mapping: {
     },
   },
   nexus: {
-    name: 'serverName',
+    name: 'nexusId',
     type: 'string' as FieldType,
     label: 'Nexus服务',
     textField: 'serverName',

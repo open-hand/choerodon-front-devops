@@ -30,7 +30,7 @@ const setReturnData = (data: any) => data.records.map((d: any) => {
   }
   newD.dockerDeployVO = {
     sourceType: newD[mapping.productSource.name as string],
-    deployObjectId: newD[mapping.marketServiceVersion.name as string].id
+    deployObjectId: newD[mapping.marketServiceVersion.name as string]?.id
       || newD[mapping.marketServiceVersion.name as string],
     mktAppVersionId: newD[mapping.marketAppVersion.name as string],
     [mapping.shareAppService.name as string]: newD[mapping.shareAppService.name as string],
@@ -50,15 +50,23 @@ const setReturnData = (data: any) => data.records.map((d: any) => {
   };
   newD.jarDeployVO = {
     sourceType: newD[mapping.productSource.name as string],
-    deployObjectId: newD[mapping.marketServiceVersion.name as string].id
+    deployObjectId: newD[mapping.marketServiceVersion.name as string]?.id
       || newD[mapping.marketServiceVersion.name as string],
     mktAppVersionId: newD[mapping.marketAppVersion.name as string],
     [mapping.jarFileDownloadUrl.name as string]:
       newD[mapping.jarFileDownloadUrl.name as string],
+    fileInfoVO: {
+      [mapping.jarFileDownloadUrl.name as string]:
+        newD[mapping.jarFileDownloadUrl.name as string],
+      [mapping.fileName.name as string]:
+        newD[mapping.fileName.name as string],
+    },
     prodJarInfoVO: {
       [mapping.nexus.name as string]: newD[mapping.nexus.name as string],
       [mapping.projectProductRepo.name as string]: newD[
-        mapping.projectProductRepo.name as string]?.repositoryId,
+        mapping.projectProductRepo.name as string]?.repositoryId
+      || newD[
+        mapping.projectProductRepo.name as string],
       [mapping.groupId.name as string]: newD[mapping.groupId.name as string],
       [mapping.artifactId.name as string]: newD[mapping.artifactId.name as string],
       [mapping.jarVersion.name as string]: newD[mapping.jarVersion.name as string],
@@ -92,6 +100,7 @@ const Index = observer(() => {
         ...item.dockerDeployVO.imageInfo,
         ...item.jarDeployVO,
         ...item.jarDeployVO.prodJarInfoVO,
+        ...item.jarDeployVO.fileInfoVO,
         [mapping.projectImageRepo.name as string]: {
           repoId: item.dockerDeployVO.imageInfo.repoId,
           repoName: item.dockerDeployVO.imageInfo.repoName,

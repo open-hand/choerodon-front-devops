@@ -154,8 +154,20 @@ const Index = inject('AppState')(observer(({
                   </Form>
                   { dataSource.get(mapping.jarFileDownloadUrl.name) && (
                     <p className="c7ncd-appCenterPro-conDetail__fileName">
-                      <Icon type="attach_file" />
-                      {dataSource.get(mapping.fileName.name)}
+                      <span>
+                        <Icon type="attach_file" />
+                        {dataSource.get(mapping.fileName.name)}
+                      </span>
+                      <Icon
+                        onClick={() => {
+                          dataSource.set(mapping.fileName.name, '');
+                          dataSource.set(mapping.jarFileDownloadUrl.name, '');
+                        }}
+                        type="close"
+                        style={{
+                          cursor: 'pointer',
+                        }}
+                      />
                     </p>
                   ) }
                 </>

@@ -31,7 +31,9 @@ const setData = (data: any) => {
   const newData = data;
   newData.prodJarInfoVO = {
     [mapping.projectProductRepo.name as string]: newData[
-      mapping.projectProductRepo.name as string]?.repositoryId,
+      mapping.projectProductRepo.name as string]?.repositoryId
+    || newData[
+      mapping.projectProductRepo.name as string],
     [mapping.groupId.name as string]: newData[mapping.groupId.name as string],
     [mapping.artifactId.name as string]: newData[mapping.artifactId.name as string],
     [mapping.jarVersion.name as string]: newData[mapping.jarVersion.name as string],
@@ -64,6 +66,18 @@ const Index = observer(() => {
     AppState: { currentMenuType: { organizationId } },
   } = useHostAppConfigStore();
 
+  const queryMarketAppVersionOptions = (data: any, ds: any) => {
+    if (data[mapping.jarSource.name] === 'hzero') {
+      const optionsDs = ds.current?.getField(mapping.marketAppVersion.name).options;
+      optionsDs.setQueryParameter('type', 'hzero');
+      optionsDs.query();
+    } else {
+      const optionsDs = ds.current?.getField(mapping.marketAppVersion.name).options;
+      optionsDs.setQueryParameter('type', 'common');
+      optionsDs.query();
+    }
+  }
+
   useEffect(() => {
     if (typeof (detail) === 'object') {
       HostAppConfigDataSet.loadData([{
@@ -76,6 +90,7 @@ const Index = observer(() => {
         [mapping.marketServiceVersion.name as string]: detail
           ?.marketDeployObjectInfoVO?.mktDeployObjectId,
       }]);
+      queryMarketAppVersionOptions(detail, HostAppConfigDataSet);
     }
   }, []);
 

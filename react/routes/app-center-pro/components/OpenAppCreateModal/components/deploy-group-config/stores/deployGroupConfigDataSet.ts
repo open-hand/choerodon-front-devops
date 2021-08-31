@@ -88,6 +88,8 @@ const mapping: {
     label: 'DNS Policy',
     required: true,
     defaultValue: 'ClusterFirst',
+    valueField: 'value',
+    textField: 'name',
     options: new DataSet({
       data: [{
         value: 'ClusterFirst',
