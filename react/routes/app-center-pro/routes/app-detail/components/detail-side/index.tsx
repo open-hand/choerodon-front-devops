@@ -187,41 +187,6 @@ const DetailAside = () => {
     </>
   );
 
-  const renderStatus = () => {
-    if (deployType === HOST_TAB) {
-      const operateStatus = devopsHostCommandDTO?.status;
-      const error = devopsHostCommandDTO?.error;
-      return (operateStatus && !(operateStatus === 'success') && (
-        <StatusTag
-          style={{
-            marginLeft: '5px',
-          }}
-          ellipsisTitle={error}
-          colorCode={operateStatus}
-          name={operateStatus === 'operating' ? '执行中' : '失败'}
-        />
-      ));
-    }
-    return (
-      <PodCircle
-        // @ts-expect-error
-        style={{
-          width: 22,
-          height: 22,
-        }}
-        dataSource={[{
-          name: 'running',
-          value: podRunningCount,
-          stroke: '#0bc2a8',
-        }, {
-          name: 'unlink',
-          value: podCount - podRunningCount,
-          stroke: '#fbb100',
-        }]}
-      />
-    );
-  };
-
   return (
     <div className={`${subfixCls}-aside`}>
       <header>

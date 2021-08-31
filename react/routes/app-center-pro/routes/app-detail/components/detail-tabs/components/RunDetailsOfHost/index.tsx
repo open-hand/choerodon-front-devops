@@ -24,7 +24,7 @@ const RunDetailsOfHost = () => {
   return (
     <div className={prefixCls}>
       <div>
-        <StatusTag colorCode={status} name={status?.toUpperCase()} />
+        {status ? <StatusTag colorCode={status} name={status?.toUpperCase()} /> : '-'}
         <span>状态</span>
       </div>
       <div>

@@ -9,7 +9,6 @@ import {
   APP_EVENT, HOST_RUNNING_DETAILS, POD_DETAILS, RESOURCE, RUNNING_DETAILS,
 } from './stores/CONST';
 import DetailsTabsHeaderButtons from './components/HeaderButtons';
-import { useAppDetailsStore } from '../../stores';
 
 const { TabPane } = Tabs;
 

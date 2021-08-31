@@ -32,7 +32,7 @@ const AppItem = observer(({
   refresh:(...agrs:any[])=>any
 }) => {
   const {
-    deleteHostApp,
+    openDeleteHostAppModal,
     deleteEnvApp,
   } = useAppCenterProStore();
 
@@ -109,7 +109,7 @@ const AppItem = observer(({
       instanceId,
       instanceName,
       callback: refresh,
-    }) : deleteHostApp(hostId, id, refresh);
+    }) : openDeleteHostAppModal(hostId, id, refresh);
   };
 
   const stopObj = {

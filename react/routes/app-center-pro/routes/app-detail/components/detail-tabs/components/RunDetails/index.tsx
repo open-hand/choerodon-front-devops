@@ -46,7 +46,7 @@ export default observer(() => {
     intlPrefix,
     projectId,
     formatMessage,
-    refresh,
+    loadData,
   } = useAppDetailTabsStore();
 
   const {
@@ -224,7 +224,7 @@ export default observer(() => {
             handleChangeCount={changeTargetCount}
             store={runDetailsStore}
             envId={envId}
-            refresh={refresh}
+            refresh={loadData}
           />
         </div>
       );

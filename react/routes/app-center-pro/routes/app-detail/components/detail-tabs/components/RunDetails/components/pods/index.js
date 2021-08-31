@@ -160,13 +160,12 @@ export default class Pods extends PureComponent {
     // 修改过pod数
     const show = textDisplay
       && sum !== currentPodTargetCount
-      && connect
-      && status === 'success';
+      && connect;
     const descIsEnable = instanceStatus === 'stopped' || !connect
       || currentPodTargetCount <= 1
       || status !== 'success';
 
-    const increaseDisabled = !(connect && status === 'success' && instanceStatus !== 'stopped');
+    const increaseDisabled = !(connect && instanceStatus !== 'stopped');
     return (
       <div className="c7ncd-pod">
         <div className="c7ncd-pod-wrap">
@@ -180,7 +179,7 @@ export default class Pods extends PureComponent {
               </div>
 
               <Tooltip
-                title={instanceStatus !== 'stopped' && connect && currentPodTargetCount === 1 && status === 'success' ? formatMessage({ id: 'c7ncd.deployment.pod.disabled.tops' }) : ''}
+                title={instanceStatus !== 'stopped' && connect && currentPodTargetCount === 1 ? formatMessage({ id: 'c7ncd.deployment.pod.disabled.tops' }) : ''}
                 placement="bottom"
               >
                 <div role="none" className={`c7ncd-pod-btn ${descIsEnable ? 'c7ncd-pod-btn-disabled' : ''}`} onClick={!descIsEnable ? this.handleDecrease : () => {}}>

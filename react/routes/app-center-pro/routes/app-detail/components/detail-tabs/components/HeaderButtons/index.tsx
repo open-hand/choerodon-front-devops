@@ -30,7 +30,7 @@ import { openAppConfigModal } from '@/routes/app-center-pro/components/OpenAppCr
 
 const DetailsTabsHeaderButtons = () => {
   const {
-    deleteHostApp,
+    openDeleteHostAppModal,
     goBackHomeBaby,
     deleteEnvApp,
   } = useAppCenterProStore();
@@ -214,7 +214,7 @@ const DetailsTabsHeaderButtons = () => {
         instanceId,
         instanceName: instanceName || objectName,
         callback: goBackHomeBaby,
-      }) : deleteHostApp(hostOrEnvId, appId, goBackHomeBaby);
+      }) : openDeleteHostAppModal(hostOrEnvId, appId, goBackHomeBaby);
     },
   };
 
@@ -262,7 +262,7 @@ const DetailsTabsHeaderButtons = () => {
   const getRunningHeaderItemsOfServices = () => {
     let data = [];
     if (appCatergory.code === DEPLOY_CATERGORY) {
-      data = [modifyAppObj, createSource, ...moreOpts];
+      data = [modifyAppObj, ...moreOpts];
     } else {
       data = [modifyValues, modifyAppObj, redeploy, createSource, ...moreOpts];
     }
@@ -272,7 +272,7 @@ const DetailsTabsHeaderButtons = () => {
   const getRunningHeaderItemsOfMarket = () => {
     let data = [];
     if (appCatergory.code === DEPLOY_CATERGORY) {
-      data = [modifyAppObj, createSource, ...moreOpts];
+      data = [modifyAppObj, ...moreOpts];
     } else {
       data = [modifyValues, modifyAppObj, upGrade, redeploy, ...moreOpts];
     }
