@@ -1,5 +1,6 @@
 import React, { useEffect, useImperativeHandle, useState } from 'react';
 import { observer } from 'mobx-react-lite';
+import { message } from 'choerodon-ui';
 import { Record } from '@/interface';
 import ContainerGroup from './components/container-group';
 import ContainerDetail from './components/container-detail';
@@ -125,17 +126,25 @@ const Index = observer(() => {
   }, []);
 
   const handleOk = async () => {
-    const result = setReturnData(ConGroupDataSet);
-    ConGroupDataSet.setQueryParameter('data', {
-      ...extraData,
-      containerConfig: result,
-    });
-    const res = await ConGroupDataSet.submit();
-    if (res !== false) {
-      if (refresh) {
-        refresh();
+    const {
+      flag,
+      flag2,
+      flag3,
+    } = await currentValidate();
+    if (flag && flag2 && flag3) {
+      const result = setReturnData(ConGroupDataSet);
+      ConGroupDataSet.setQueryParameter('data', {
+        ...extraData,
+        containerConfig: result,
+      });
+      const res = await ConGroupDataSet.submit();
+      if (res !== false) {
+        if (refresh) {
+          refresh();
+        }
+        return true;
       }
-      return true;
+      return false;
     }
     return false;
   };
@@ -144,26 +153,48 @@ const Index = observer(() => {
     modal.handleOk(handleOk);
   }
 
+  const currentValidate = async () => {
+    const flag = await ConGroupDataSet.validate();
+    const arr: any[] = [];
+    let flag2 = true;
+    let flag3 = true;
+    let name = '';
+    ConGroupDataSet.records.forEach((record: any) => {
+      arr.push(record.getField(mapping.portConfig.name).options.validate());
+      arr.push(record.getField(mapping.enVariable.name).options.validate());
+      if (record.get(mapping.name.name) !== name) {
+        name = record.get(mapping.name.name);
+      } else {
+        flag3 = false;
+      }
+    });
+    for await (const x of arr) {
+      const res = await x;
+      if (!res) {
+        flag2 = false;
+      }
+    }
+    if (!flag3) {
+      message.error('容器名称不能重复');
+    }
+    if (!flag || !flag2) {
+      message.error('存在必填字段未配置');
+    }
+    return ({
+      flag,
+      flag2,
+      flag3,
+    });
+  };
+
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
-      const flag = await ConGroupDataSet.validate();
-      const arr: any[] = [];
-      let flag2 = true;
-      ConGroupDataSet.records.forEach((record: any) => {
-        arr.push(record.getField(mapping.portConfig.name).options.validate());
-        arr.push(record.getField(mapping.enVariable.name).options.validate());
-      });
-      for await (const x of arr) {
-        const res = await x;
-        if (!res) {
-          flag2 = false;
-        }
-      }
-      // const flag2 = await ConGroupDataSet
-      //   .current.getField(mapping.portConfig.name).options.validate();
-      // const flag3 = await ConGroupDataSet
-      //   .current.getField(mapping.enVariable.name).options.validate();
-      if (flag && flag2) {
+      const {
+        flag,
+        flag2,
+        flag3,
+      } = await currentValidate();
+      if (flag && flag2 && flag3) {
         return setReturnData(
           ConGroupDataSet,
         );
