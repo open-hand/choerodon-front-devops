@@ -28,6 +28,89 @@ const {
   },
 } = CONSTANTS;
 
+const setKeyValue = (obj: { [key: string]: any }, key: string, value: any) => {
+  // eslint-disable-next-line no-param-reassign
+  obj[key] = value;
+};
+
+const getAppConfigData = ({
+  options,
+  appConfig,
+  annotations,
+  labels,
+  nodeLabels,
+  hostAliases,
+}: any) => {
+  function setData(data: any): object {
+    const result: {
+      [key: string]: any
+    } = {};
+    data.forEach((i: any) => {
+      if (i?.key && i?.value) {
+        result[i.key as string] = i.value;
+      }
+    });
+    return result;
+  }
+  const res = {};
+  setKeyValue(
+    res,
+    'options',
+    setData(options),
+  );
+  setKeyValue(
+    res,
+    deployGroupConfigMapping.podNum.name as string,
+    appConfig[deployGroupConfigMapping.podNum.name as string],
+  );
+  setKeyValue(
+    res,
+    deployGroupConfigMapping.MaxSurge.name as string,
+    appConfig[deployGroupConfigMapping.MaxSurge.name as string],
+  );
+  setKeyValue(
+    res,
+    deployGroupConfigMapping.MaxUnavailable.name as string,
+    appConfig[deployGroupConfigMapping.MaxUnavailable.name as string],
+  );
+  setKeyValue(
+    res,
+    deployGroupConfigMapping.DNSPolicy.name as string,
+    appConfig[deployGroupConfigMapping.DNSPolicy.name as string],
+  );
+  setKeyValue(
+    res,
+    deployGroupConfigMapping.Nameservers.name as string,
+    appConfig[deployGroupConfigMapping.Nameservers.name as string],
+  );
+  setKeyValue(
+    res,
+    deployGroupConfigMapping.Searches.name as string,
+    appConfig[deployGroupConfigMapping.Searches.name as string],
+  );
+  setKeyValue(
+    res,
+    'annotations',
+    setData(annotations),
+  );
+  setKeyValue(
+    res,
+    'labels',
+    setData(labels),
+  );
+  setKeyValue(
+    res,
+    'nodeSelector',
+    setData(nodeLabels),
+  );
+  setKeyValue(
+    res,
+    'hostAlias',
+    setData(hostAliases),
+  );
+  return res;
+};
+
 const AppCreateForm = (props: any) => {
   const {
     modal,
@@ -145,11 +228,6 @@ const AppCreateForm = (props: any) => {
     }
   };
 
-  const setKeyValue = (obj: { [key: string]: any }, key: string, value: any) => {
-    // eslint-disable-next-line no-param-reassign
-    obj[key] = value;
-  };
-
   const handleSetSubmitDataByAppConfig = ({
     appConfigData,
     submitData,
@@ -227,84 +305,6 @@ const AppCreateForm = (props: any) => {
     ...submitData,
     ...resourceConfigData,
   });
-
-  const getAppConfigData = ({
-    options,
-    appConfig,
-    annotations,
-    labels,
-    nodeLabels,
-    hostAliases,
-  }: any) => {
-    function setData(data: any): object {
-      const result: {
-        [key: string]: any
-      } = {};
-      data.forEach((i: any) => {
-        if (i?.key && i?.value) {
-          result[i.key as string] = i.value;
-        }
-      });
-      return result;
-    }
-    const res = {};
-    setKeyValue(
-      res,
-      'options',
-      setData(options),
-    );
-    setKeyValue(
-      res,
-      deployGroupConfigMapping.podNum.name as string,
-      appConfig[deployGroupConfigMapping.podNum.name as string],
-    );
-    setKeyValue(
-      res,
-      deployGroupConfigMapping.MaxSurge.name as string,
-      appConfig[deployGroupConfigMapping.MaxSurge.name as string],
-    );
-    setKeyValue(
-      res,
-      deployGroupConfigMapping.MaxUnavailable.name as string,
-      appConfig[deployGroupConfigMapping.MaxUnavailable.name as string],
-    );
-    setKeyValue(
-      res,
-      deployGroupConfigMapping.DNSPolicy.name as string,
-      appConfig[deployGroupConfigMapping.DNSPolicy.name as string],
-    );
-    setKeyValue(
-      res,
-      deployGroupConfigMapping.Nameservers.name as string,
-      appConfig[deployGroupConfigMapping.Nameservers.name as string],
-    );
-    setKeyValue(
-      res,
-      deployGroupConfigMapping.Searches.name as string,
-      appConfig[deployGroupConfigMapping.Searches.name as string],
-    );
-    setKeyValue(
-      res,
-      'annotations',
-      setData(annotations),
-    );
-    setKeyValue(
-      res,
-      'labels',
-      setData(labels),
-    );
-    setKeyValue(
-      res,
-      'nodeSelector',
-      setData(nodeLabels),
-    );
-    setKeyValue(
-      res,
-      'hostAlias',
-      setData(hostAliases),
-    );
-    return res;
-  };
 
   const handleSetSubmitDataByDeployGroupConfig = ({
     appConfigData,
@@ -550,3 +550,5 @@ export function openAppCreateModal(refresh: Function) {
     // onCancel: handleOk,
   });
 }
+
+export { setKeyValue, getAppConfigData };

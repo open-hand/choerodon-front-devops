@@ -14,6 +14,7 @@ const Index = observer(({
   className?: string;
   dataSource: DataSet,
 }) => {
+  console.log(dataSource);
   useEffect(() => {
     if (dataSource?.records?.length && dataSource?.records?.length === 1) {
       dataSource.records[0].set((mapping.focus.name as string), true);

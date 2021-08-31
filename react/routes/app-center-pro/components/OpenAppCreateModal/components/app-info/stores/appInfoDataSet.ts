@@ -12,23 +12,23 @@ const {
 const deployModeOptionsData = [{
   value: 'container',
   name: '容器部署',
-  description: '描述',
+  description: '支持将Chart包或工作负载部署至k8s集群',
   img: container,
 }, {
   value: 'host',
   name: '主机部署',
-  description: '描述',
+  description: '支持将制品库或本地的制品部署至主机',
   img: host,
 }];
 
 const deployProductOptionsData = [{
   value: 'chart',
   name: 'Chart包',
-  description: '描述',
+  description: '通过Helm将Chart包部署至k8s集群',
 }, {
   value: 'deployGroup',
   name: '部署组',
-  description: '描述',
+  description: '通过创建与配置Deployment部署应用至k8s集群',
 }];
 
 const mapping: {
@@ -40,13 +40,14 @@ const mapping: {
     label: '应用名称',
     required: true,
     maxLength: 64,
+    // validator: handleValidateAppName
   },
   appCode: {
     name: 'appCode',
     type: 'string' as FieldType,
     label: '应用编码',
     required: true,
-    maxLength: 64,
+    maxLength: 53,
     validator: async (value) => {
       const flag = LCLETTER_NUM.test(value);
       if (flag) {

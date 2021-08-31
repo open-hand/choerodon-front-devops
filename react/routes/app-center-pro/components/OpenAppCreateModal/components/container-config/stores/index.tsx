@@ -7,6 +7,9 @@ interface ContextType {
   cRef: any,
   children: any,
   ConGroupDataSet: any,
+  modal?: any,
+  detail?: any,
+  refresh?: Function,
 }
 
 const Store = createContext({} as ContextType);

@@ -1,6 +1,10 @@
 import { DataSet } from 'choerodon-ui/pro';
 import { FieldProps, FieldType } from '@/interface';
 import { envDataSet } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config/stores/appConfigDataSet';
+import { deployApiConfig } from '@/api';
+import { setData } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-app-config/content';
+import { setKeyValue, getAppConfigData } from '@/routes/app-center-pro/components/OpenAppCreateModal';
+import { devopsDeployGroupApiConfig } from '@/api/DevopsDeployGroup';
 
 const checkPercentNum = async (value: string) => {
   const patt1 = new RegExp(/^\d+%$/);
@@ -116,6 +120,33 @@ const mapping: {
 
 const deployGroupConfigDataSet = () => ({
   autoCreate: true,
+  transport: {
+    update: (data: any) => {
+      const {
+        annotations,
+        hostAliases,
+        labels,
+        nodeLabels,
+        options,
+      } = data.dataSet.queryParameter.dsList;
+      const d = data.data[0];
+      d.appName = d.name;
+      d.appCode = d.code;
+      setKeyValue(
+        d,
+        'appConfig',
+        getAppConfigData({
+          options,
+          appConfig: d,
+          annotations,
+          labels,
+          nodeLabels,
+          hostAliases,
+        }),
+      );
+      return devopsDeployGroupApiConfig.createDeployGroup('update', d);
+    },
+  },
   fields: Object.keys(mapping).map((i) => mapping[i]),
 });
 

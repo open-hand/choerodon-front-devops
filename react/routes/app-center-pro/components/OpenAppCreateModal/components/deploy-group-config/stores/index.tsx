@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { createContext, useContext, useMemo } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import deployGroupConfigDataSet

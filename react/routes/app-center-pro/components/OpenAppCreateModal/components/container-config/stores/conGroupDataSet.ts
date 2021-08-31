@@ -17,6 +17,8 @@ import { deployApiConfig } from '@/api';
 import { appServiceApiConfig } from '@/api/AppService';
 import { appServiceVersionApiConfig } from '@/api/AppServiceVersions';
 import { nexusApiConfig } from '@/api/Nexus';
+import { devopsDeployGroupApiConfig } from '@/api/DevopsDeployGroup';
+import { setReturnData } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config/content';
 
 const productTypeData = [{
   value: 'docker',
@@ -111,11 +113,11 @@ const mapping: {
     lookupAxiosConfig: () => rdupmApiApiConfig.getProjectImageRepo(),
   },
   image: {
-    name: 'image',
+    name: 'imageName',
     type: 'object' as FieldType,
     label: '镜像',
     textField: 'imageName',
-    valueField: 'imageId',
+    valueField: 'imageName',
     dynamicProps: {
       required: ({ record }) => record?.get(mapping.productType.name) === productTypeData[0].value
         && record?.get(
@@ -147,7 +149,7 @@ const mapping: {
         if (record?.get(mapping.projectImageRepo.name) && record?.get(mapping.image.name)) {
           return rdupmApiApiConfig.getImageVersion(
             record?.get(mapping.projectImageRepo.name).repoName,
-            record?.get(mapping.image.name).imageName,
+            record?.get(mapping.image.name).imageName || record?.get(mapping.image.name),
           );
         }
         return undefined;
@@ -216,6 +218,22 @@ const mapping: {
         if (record?.get(mapping.marketAppVersion.name)) {
           return ({
             ...deployApiConfig.deployVersion(record?.get(mapping.marketAppVersion.name), 'image'),
+            transformResponse: (res: any) => {
+              function init(dt: any) {
+                return dt.map((d: any) => {
+                  const newD = d;
+                  newD.id = newD.marketServiceDeployObjectVO.id;
+                  return d;
+                });
+              }
+              let newRes = res;
+              try {
+                newRes = JSON.parse(res);
+                return init(newRes);
+              } catch (e) {
+                return init(newRes);
+              }
+            },
           });
         }
         return undefined;
@@ -523,6 +541,10 @@ const mapping: {
 const conGroupDataSet = (): DataSetProps => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((i) => mapping[i]),
+  transport: {
+    update: (data) => devopsDeployGroupApiConfig
+      .updateContainer((data?.dataSet?.queryParameter as any)?.data),
+  },
   events: {
     update: ({ record, name, value }: any) => {
       switch (name) {

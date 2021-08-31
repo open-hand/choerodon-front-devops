@@ -10,6 +10,7 @@ import { nexusApiConfig } from '@/api/Nexus';
 import { rdupmApiApiConfig } from '@/api/Rdupm';
 import { deployApi, deployApiConfig } from '@/api';
 import { hostApiConfig } from '@/api/Host';
+import { setData } from '../content';
 
 const mapping: {
   [key: string]: FieldProps
@@ -262,7 +263,7 @@ const mapping: {
       lookupAxiosConfig: ({ record }) => {
         if (record?.get(mapping.marketAppVersion.name)) {
           return ({
-            ...deployApiConfig.deployVersion(record?.get(mapping.marketAppVersion.name), 'image'),
+            ...deployApiConfig.deployVersion(record?.get(mapping.marketAppVersion.name), 'jar'),
             transformResponse: (res: any) => {
               function init(dt: any) {
                 return dt.map((d: any) => {
@@ -309,17 +310,7 @@ const hostAppConfigDataSet = (): DataSetProps => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((i) => mapping[i]),
   transport: {
-    update: ({ data: [data] }) => {
-      const res = data;
-      res.prodJarInfoVO = {
-        ...res.prodJarInfoVO,
-        [mapping.jarVersion.name as string]: res[mapping.jarVersion.name as string],
-      };
-      res.appName = res[mapping.appName.name as string];
-      res.appCode = res[mapping.appCode.name as string];
-      res.value = Base64.encode(res.value);
-      return deployApiConfig.deployJava(res);
-    },
+    update: ({ data: [data] }) => deployApiConfig.deployJava(setData(data)),
   },
   events: {
     update: async ({ record, name, value }: any) => {
