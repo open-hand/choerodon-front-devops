@@ -4,9 +4,9 @@ import React, {
 import { injectIntl } from 'react-intl';
 import { inject } from 'mobx-react';
 import { DataSet } from 'choerodon-ui/pro';
+import some from 'lodash/some';
 import ListDataSet from '@/routes/host-config/stores/ListDataSet';
 import SearchDataSet from '@/routes/host-config/stores/SearchDataSet';
-import some from 'lodash/some';
 import AppInstanceTableDataSet from '@/routes/host-config/stores/AppInstanceTableDataSet';
 import { DataSet as DataSetProps, DataSetSelection } from '@/interface';
 import UsageDataSet from '@/routes/host-config/stores/UsageDataSet';
@@ -20,12 +20,12 @@ interface ContextProps {
   projectId: number,
   listDs: DataSet,
   searchDs: DataSet,
-  hostTabKeys:{
-    key:string,
-    text:string,
+  hostTabKeys: {
+    key: string,
+    text: string,
   }[],
-  refresh():void,
-  mainStore:StoreProps,
+  refresh(): void,
+  mainStore: StoreProps,
   showTestTab: boolean,
   tabKey: {
     DEPLOY_TAB: 'deploy',
@@ -120,7 +120,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     loadData,
   })), [projectId]);
 
-  const refresh = useCallback(async (callback?:CallableFunction) => {
+  const refresh = useCallback(async (callback?: CallableFunction) => {
     await listDs.query();
     typeof callback === 'function' && callback();
     const hostId = mainStore.getSelectedHost?.id;

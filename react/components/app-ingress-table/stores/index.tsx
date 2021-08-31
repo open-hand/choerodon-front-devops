@@ -45,7 +45,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       appIngressDataset.queryFields = queryFields;
       if (!appIngressDataset?.transport?.destroy) {
         appIngressDataset.transport.destroy = ({ data: [data] }:any) => ({
-          url: data?.instanceType === 'docker_process' ? HostConfigApi.dockerDelete(projectId, data.hostId, data.id) : HostConfigApi.jarDelete(projectId, data.hostId, data.id),
+          url: data?.code === 'docker_process' ? HostConfigApi.dockerDelete(projectId, data.hostId, data.id) : HostConfigApi.jarDelete(projectId, data.hostId, data.id),
           method: 'delete',
         });
       }

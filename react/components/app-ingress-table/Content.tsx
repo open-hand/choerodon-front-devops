@@ -62,13 +62,7 @@ const AppIngress = observer(() => {
   }, []);
 
   const handleDelete = useCallback(async ({ record: tableRecord }) => {
-    const modalProps = {
-      title: '删除应用实例',
-      children: `确定删除应用实例“${tableRecord.get('name')}”吗？`,
-      okText: formatMessage({ id: 'delete' }),
-    };
     appIngressDataset.setQueryParameter('instanceType', tableRecord.get('instanceType'));
-    const res = await appIngressDataset.delete(tableRecord, modalProps);
     refresh();
   }, [appIngressDataset, refresh]);
 
@@ -121,14 +115,6 @@ const AppIngress = observer(() => {
     return <Action data={actionData} />;
   }, [handleDelete, handleRestart, handleStart, openStopModal]);
 
-  const renderType = ({ record }: any) => {
-    const instanceType = record.get('instanceType');
-    const isIntance = (['normal_process', 'java_process'].includes(instanceType));
-    const tagName = isIntance ? '实例进程' : 'Docker';
-    const tagColor = isIntance ? 'running' : 'success';
-    return <StatusTag colorCode={tagColor} name={tagName} type="border" />;
-  };
-
   const renderName = ({ record, text }: any) => {
     const devopsHostCommandDTO = record.get('devopsHostCommandDTO');
     const operateStatus = devopsHostCommandDTO?.status;
@@ -157,7 +143,7 @@ const AppIngress = observer(() => {
     );
   };
 
-  const renderStatus = ({ record, text }: any) => (
+  const renderStatus = ({ text }: any) => (
     text ? <StatusTag colorCode={text} name={text?.toUpperCase() || 'UNKNOWN'} /> : ''
   );
 
@@ -175,6 +161,7 @@ const AppIngress = observer(() => {
     return <UserInfo realName={realName} loginName={ldap ? loginName : email} avatar={imageUrl} />;
   };
 
+  // 主机管理应用实例
   return (
     <Table
       dataSet={appIngressDataset}
@@ -184,11 +171,11 @@ const AppIngress = observer(() => {
     >
       <Column name="name" renderer={renderName} />
       <Column renderer={renderAction} width={55} />
-      <Column name="instanceType" renderer={renderType} width={90} />
+      <Column name="code" width={90} />
       <Column name="status" renderer={renderStatus} />
       <Column name="pid" width={80} />
       <Column name="ports" width={80} renderer={({ value }) => <Tooltip title={value}>{value}</Tooltip>} />
-      <Column name="deployer" renderer={renderUser} />
+      <Column name="creator" renderer={renderUser} />
       <Column name="creationDate" renderer={({ text }) => <TimePopover content={text} />} />
     </Table>
   );

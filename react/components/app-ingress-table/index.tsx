@@ -1,6 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
-import { DataSet } from '@/interface';
 import React from 'react';
+import { DataSet } from '@/interface';
 import Content from './Content';
 import { StoreProvider } from './stores';
 
