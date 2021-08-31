@@ -1,4 +1,7 @@
-import React, { createContext, useContext, useEffect, useMemo } from 'react';
+/* eslint-disable max-len */
+import React, {
+  createContext, useContext, useEffect, useMemo,
+} from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';

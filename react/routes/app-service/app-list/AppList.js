@@ -5,7 +5,7 @@ import { Page } from '@choerodon/boot';
 import { Modal } from 'choerodon-ui/pro';
 import checkPermission from '../../../utils/checkPermission';
 import ListView from './ListView';
-import EmptyShown, { EmptyLoading } from './EmptyShown';
+import EmptyShown from './EmptyShown';
 import { useAppTopStore } from '../stores';
 import { useAppServiceStore } from './stores';
 import CreateForm from '../modals/creat-form';
@@ -19,7 +19,6 @@ const importModalKey = Modal.key();
 
 const AppService = withRouter(observer(() => {
   const {
-    listPermissions,
     appServiceStore,
     intlPrefix,
     prefixCls,
@@ -98,11 +97,8 @@ const AppService = withRouter(observer(() => {
 
   function getContent() {
     const {
-      getLoading,
       getHasApp: hasApp,
     } = appServiceStore;
-    //
-    // if (getLoading || loading) return <EmptyLoading formatMessage={formatMessage} />;
 
     let content;
     if (!hasApp) {

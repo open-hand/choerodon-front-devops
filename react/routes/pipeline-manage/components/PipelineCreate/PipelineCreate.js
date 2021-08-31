@@ -252,7 +252,7 @@ const PipelineCreate = observer(() => {
                     <p style={{ margin: 0 }}>
                       {`同时，支持使用动态参数及各种变量，例如：\${CI_PIPELINE_ID}-\${C7N_BRANCH} ，则表示命名规则为：gitlab流水线id+分支名。
 更多支持的变量，请参考 `}
-                      <a style={{ color: 'cornflowerblue' }} target="_blank" href="https://docs.gitlab.com/ee/ci/variables/predefined_variables.html">GitLab变量</a>
+                      <a style={{ color: 'cornflowerblue' }} target="_blank" href="https://docs.gitlab.com/ee/ci/variables/predefined_variables.html" rel="noreferrer">GitLab变量</a>
                     </p>,
                   ]}
                   />

@@ -1,5 +1,5 @@
 import React, {
-  createContext, useContext, useEffect, useMemo,
+  createContext, useContext, useMemo,
 } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
@@ -10,6 +10,11 @@ import ImportTableDataSet from './ImportTableDataSet';
 import selectedDataSet from './SelectedDataSet';
 import useStore from './useStore';
 import MarketSelectedDataSet from './MarketSelectedDataSet';
+import { GitlabSelectedDs, TypeOptionDs } from './GitlabSelectedDs';
+import shareImage from '../../../../images/share.svg';
+import marketImage from '../../../../images/market.svg';
+import githubImage from '../../../../images/github.svg';
+import gitlabImage from '../../../../images/gitlab.svg';
 
 const Store = createContext();
 
@@ -52,6 +57,10 @@ export const StoreProvider = injectIntl(inject('AppState')(
     const marketSelectedDs = useMemo(() => new DataSet(MarketSelectedDataSet({
       intlPrefix, formatMessage, projectId, importStore,
     })), [projectId]);
+    const typeOptionDs = useMemo(() => new DataSet(TypeOptionDs()), []);
+    const gitlabSelectedDs = useMemo(() => new DataSet(GitlabSelectedDs({
+      intlPrefix, formatMessage, projectId, importStore, typeOptionDs,
+    })), [projectId]);
     const importDs = useMemo(() => new DataSet(ImportDataSet({
       intlPrefix,
       formatMessage,
@@ -60,16 +69,18 @@ export const StoreProvider = injectIntl(inject('AppState')(
       selectedDs,
       importTableDs,
       marketSelectedDs,
+      gitlabSelectedDs,
     })), [projectId]);
-
+    const IMPORT_METHOD_LIST = isSaaS ? [{ type: 'share', img: shareImage }, { type: 'github', img: gitlabImage }, { type: 'gitlab', img: gitlabImage }] : [{ type: 'share', img: shareImage }, { type: 'market', img: marketImage }, { type: 'github', img: githubImage }, { type: 'gitlab', img: gitlabImage }];
     const value = {
       ...props,
-      IMPORT_METHOD: isSaaS ? ['share', 'github', 'gitlab'] : ['share', 'market', 'github', 'gitlab'],
+      IMPORT_METHOD: IMPORT_METHOD_LIST,
       importDs,
       importTableDs,
       selectedDs,
       importStore,
       marketSelectedDs,
+      gitlabSelectedDs,
       hasMarket,
     };
     return (

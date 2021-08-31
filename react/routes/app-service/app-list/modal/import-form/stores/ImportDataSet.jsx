@@ -1,6 +1,12 @@
-import { axios } from '@choerodon/boot';
+/* eslint-disable max-len */
+/* eslint-disable no-nested-ternary */
+/* eslint-disable default-case */
+/* eslint-disable import/no-anonymous-default-export */
 import map from 'lodash/map';
 import pick from 'lodash/pick';
+import {
+  appServiceApiConfig, marketApiConfig, appServiceApi, groupsApiConfig,
+} from '@/api';
 
 function getRequestData(appServiceList) {
   const res = map(appServiceList, ({
@@ -11,6 +17,17 @@ function getRequestData(appServiceList) {
     appCode: code,
     type,
     versionId,
+  }));
+  return res;
+}
+function getGitlabRequestData(appServiceList) {
+  const res = map(appServiceList, ({
+    id, serverName, name, type,
+  }) => ({
+    gitlabProjectId: id,
+    name: serverName,
+    code: name,
+    type,
   }));
   return res;
 }
@@ -27,19 +44,19 @@ function getMarketRequestData(appServiceList) {
 }
 
 function isGit({ record }) {
-  const flag = record.get('platformType') === 'github' || record.get('platformType') === 'gitlab';
+  const flag = record.get('platformType') === 'github' || (record.get('platformType') === 'gitlab' && record.get('isGitLabTemplate'));
   return flag;
 }
 
 export default ({
-  intlPrefix, formatMessage, projectId, serviceTypeDs, selectedDs, importTableDs, marketSelectedDs,
+  intlPrefix, formatMessage, projectId, serviceTypeDs, selectedDs, importTableDs, marketSelectedDs, gitlabSelectedDs,
 }) => {
   async function checkCode(value) {
     const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
     if (value) {
       if (pa.test(value)) {
         try {
-          const res = await axios.get(`/devops/v1/projects/${projectId}/app_service/check_code?code=${value}`);
+          const res = await appServiceApi.checkCode(value);
           if ((res && res.failed) || !res) {
             return formatMessage({ id: 'checkCodeExist' });
           }
@@ -51,6 +68,7 @@ export default ({
         return formatMessage({ id: 'checkCodeReg' });
       }
     }
+    return false;
   }
 
   async function checkName(value) {
@@ -58,7 +76,7 @@ export default ({
     if (value) {
       if (pa.test(value)) {
         try {
-          const res = await axios.get(`/devops/v1/projects/${projectId}/app_service/check_name?name=${encodeURIComponent(value)}`);
+          const res = await appServiceApi.checkName(value);
           if ((res && res.failed) || !res) {
             return formatMessage({ id: 'checkNameExist' });
           }
@@ -70,6 +88,7 @@ export default ({
         return formatMessage({ id: 'nameCanNotHasSpaces' });
       }
     }
+    return false;
   }
 
   function handleUpdate({ record, name, value }) {
@@ -118,29 +137,28 @@ export default ({
         const { platformType } = data;
         let url = 'external';
         let res;
+        let result;
         switch (platformType) {
           case 'gitlab':
-            res = pick(data, ['code', 'name', 'type', 'accessToken', 'repositoryUrl']);
+            res = getGitlabRequestData(gitlabSelectedDs.toData());
+            result = appServiceApiConfig.batchTransfer(res);
             break;
           case 'github':
-            url = `${url}${data.isTemplate ? '?is_template=true' : ''}`;
             res = pick(data, ['code', 'name', 'type', 'repositoryUrl']);
+            url = `${url}${data.isTemplate ? '?is_template=true' : ''}`;
+            result = appServiceApiConfig.Import(url, res);
             break;
           case 'share':
-            url = 'internal';
             res = getRequestData(selectedDs.toData());
+            url = 'internal';
+            result = appServiceApiConfig.Import(url, res);
             break;
           case 'market':
             res = getMarketRequestData(marketSelectedDs.toData());
+            result = marketApiConfig.Import(url, res);
             break;
         }
-        return ({
-          url: platformType === 'market'
-            ? `/devops/v1/project/${projectId}/market/app/import`
-            : `/devops/v1/projects/${projectId}/app_service/import/${url}`,
-          method: 'post',
-          data: res,
-        });
+        return result;
       },
     },
     fields: [
@@ -191,6 +209,7 @@ export default ({
             if (record.get('platformType') === 'gitlab' || record.get('platformType') === 'github') {
               return formatMessage({ id: `${intlPrefix}.url.${record.get('platformType')}.clone` });
             }
+            return false;
           },
         },
       },
@@ -198,7 +217,7 @@ export default ({
         name: 'accessToken',
         type: 'string',
         dynamicProps: {
-          required: ({ record }) => record.get('platformType') === 'gitlab',
+          required: ({ record }) => record.get('platformType') === 'gitlab' && record.get('isGitLabTemplate'),
         },
         label: formatMessage({ id: `${intlPrefix}.token` }),
       },
@@ -206,18 +225,32 @@ export default ({
         name: 'isTemplate',
         type: 'bool',
         defaultValue: true,
-        label: formatMessage({ id: `${intlPrefix}.github.source` }),
+        label: formatMessage({ id: `${intlPrefix}.import.type` }),
+      },
+      {
+        name: 'isGitLabTemplate',
+        type: 'bool',
+        defaultValue: false,
       },
       {
         name: 'githubTemplate',
         type: 'string',
         textField: 'name',
-        valueField: 'path',
+        valueField: 'id',
         dynamicProps: {
           lookupUrl: ({ record }) => (record.get('platformType') === 'github' ? `/devops/v1/projects/${projectId}/app_service/list_service_templates` : ''),
           required: ({ record }) => record.get('platformType') === 'github' && record.get('isTemplate'),
         },
         label: formatMessage({ id: `${intlPrefix}.github.template` }),
+      },
+      {
+        name: 'gitlabTemplate',
+        type: 'object',
+        textField: 'name',
+        valueField: 'id',
+        label: 'GitLab Group',
+        required: true,
+        lookupAxiosConfig: (data) => (groupsApiConfig.getGroups()),
       },
     ],
     events: {

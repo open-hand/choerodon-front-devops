@@ -1,8 +1,8 @@
-import { axios } from '@choerodon/boot';
 import includes from 'lodash/includes';
 import {
   DataSetProps, Record, DataSet, FieldType,
 } from '@/interface';
+import { appServiceApi } from '@/api/AppService';
 
 interface TableProps {
   intlPrefix: string,
@@ -51,7 +51,7 @@ export default ({
       }
       if (!importStore.getSkipCheck) {
         try {
-          const res = await axios.get(`/devops/v1/projects/${projectId}/app_service/check_code?code=${value}`);
+          const res = await appServiceApi.checkCode(value);
           if ((res && res.failed) || !res) {
             return formatMessage({ id: 'checkCodeExist' });
           }
@@ -79,7 +79,7 @@ export default ({
       if (!importStore.getSkipCheck) {
         try {
           importStore.setSkipCheck(true);
-          const res = await axios.get(`/devops/v1/projects/${projectId}/app_service/check_name?name=${encodeURIComponent(value)}`);
+          const res = await appServiceApi.checkName(value);
           if ((res && res.failed) || !res) {
             return formatMessage({ id: 'checkNameExist' });
           }

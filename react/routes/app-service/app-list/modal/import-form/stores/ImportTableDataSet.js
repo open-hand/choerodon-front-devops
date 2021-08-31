@@ -1,8 +1,12 @@
 import forEach from 'lodash/forEach';
+import {
+  appServiceApiConfig,
+} from '@/api';
 
 export default ({ intlPrefix, formatMessage, projectId }) => ({
   autoQuery: false,
   pageSize: 20,
+  dataToJson: false,
   transport: {
     read: ({ data }) => {
       // eslint-disable-next-line camelcase
@@ -11,10 +15,7 @@ export default ({ intlPrefix, formatMessage, projectId }) => ({
       forEach({ search_project_id, param }, (value, key) => {
         value && (url = `${url}&${key}=${value}`);
       });
-      return ({
-        url: `/devops/v1/projects/${projectId}/app_service/page_by_mode?share=${share || true}${url}`,
-        method: 'get',
-      });
+      return (appServiceApiConfig.pageByMode(share, url));
     },
   },
   fields: [
