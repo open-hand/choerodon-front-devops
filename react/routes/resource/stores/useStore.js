@@ -4,11 +4,10 @@ import {
   map, isEmpty, forEach, omit, pick, concat,
 } from 'lodash';
 import {
-  itemTypeMappings, viewTypeMappings, RES_TYPES, ENV_KEYS,
+  viewTypeMappings, RES_TYPES, ENV_KEYS,
 } from './mappings';
 
-const { IST_VIEW_TYPE } = viewTypeMappings;
-const { APP_ITEM, IST_ITEM } = itemTypeMappings;
+const { RES_VIEW_TYPE } = viewTypeMappings;
 
 export default function useStore(viewType) {
   return useLocalStore(() => ({
@@ -21,7 +20,7 @@ export default function useStore(viewType) {
     },
 
     selectedMenu: {},
-    viewType: viewType || IST_VIEW_TYPE,
+    viewType: viewType || RES_VIEW_TYPE,
     setSelectedMenu(data) {
       this.selectedMenu = data;
     },
@@ -138,30 +137,6 @@ export default function useStore(viewType) {
       const expandsKeys = this.expandedKeys;
       this.childrenDataMap.clear();
       this.parentDataMap.clear();
-      const flatInstanceData = (data, prevKey = '', itemType = APP_ITEM, parentNode) => {
-        const items = [];
-        forEach(data, (node) => {
-          const children = node.instances;
-          const peerNode = omit(node, ['instances']);
-          const key = prevKey ? `${prevKey}**${node.id}` : String(node.id);
-          const item = {
-            ...peerNode,
-            name: node.name || node.code,
-            expand: expandsKeys.includes(key),
-            parentId: prevKey || '0',
-            itemType,
-            key,
-            isLeaf: isEmpty(children),
-          };
-          flatted.push(item);
-          items.push(item);
-          this.parentDataMap.set(key, parentNode);
-          if (!isEmpty(children)) {
-            flatInstanceData(children, key, IST_ITEM, item);
-          }
-        });
-        this.childrenDataMap.set(prevKey, items);
-      };
       const flatResourceData = (data) => {
         forEach(data, (node) => {
           const envInfo = pick(node, ENV_KEYS);
@@ -208,17 +183,7 @@ export default function useStore(viewType) {
           this.childrenDataMap.set(envKey, groups);
         });
       };
-      if (this.viewType === IST_VIEW_TYPE) {
-        forEach(allData, (node) => {
-          const children = node.childrenData;
-          const key = String(node.id);
-          if (!isEmpty(children)) {
-            flatInstanceData(children, key, APP_ITEM, node);
-          }
-        });
-      } else {
-        flatResourceData(allData);
-      }
+      flatResourceData(allData);
       const realData = concat(allData, flatted);
       this.setAllTreeData(realData);
       this.setLoadedKeys([]);

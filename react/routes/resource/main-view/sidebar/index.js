@@ -26,10 +26,6 @@ const TreeMenu = observer(() => {
     resourceStore,
     AppState: { currentMenuType: { projectId, organizationId, name: projectName } },
     intl: { formatMessage },
-    viewTypeMappings: {
-      RES_VIEW_TYPE,
-      IST_VIEW_TYPE,
-    },
   } = useResourceStore();
   const { mainStore } = useMainStore();
 
