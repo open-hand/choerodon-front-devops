@@ -1,4 +1,4 @@
-import React, { useImperativeHandle } from 'react';
+import React, { useEffect, useImperativeHandle, useState } from 'react';
 import {
   Form, TextField, SelectBox, Select, Button,
 } from 'choerodon-ui/pro';
@@ -39,6 +39,7 @@ const Index = observer(() => {
       return false;
     },
     getNetName: () => NetworkConfigDataSet.current.get(mapping.netName.name),
+    getPorts: () => PortsDataSet.toData(),
   }));
 
   function handleRemovePort(portRecord: any) {
@@ -71,12 +72,14 @@ const Index = observer(() => {
       </Form>
       {
         PortsDataSet.records.map((portRecord: any) => (
-          <Form record={portRecord} key={portRecord.id} columns={5}>
+          <Form record={portRecord} key={portRecord.id} columns={4}>
             {
               NetworkConfigDataSet.current.get('type') !== 'ClusterIP'
               && <TextField name="nodePort" />
             }
-            <TextField name="port" />
+            <TextField
+              name="port"
+            />
             <TextField name="targetPort" />
             {
               NetworkConfigDataSet.current.get('type') === 'NodePort'

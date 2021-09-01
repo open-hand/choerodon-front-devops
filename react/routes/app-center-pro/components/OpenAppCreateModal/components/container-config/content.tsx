@@ -5,7 +5,7 @@ import { Record } from '@/interface';
 import ContainerGroup from './components/container-group';
 import ContainerDetail from './components/container-detail';
 import { useContainerConfig } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config/stores';
-import { mapping } from './stores/conGroupDataSet';
+import { mapping, productTypeData, productSourceData } from './stores/conGroupDataSet';
 import { mapping as portMapping } from './stores/portConfigDataSet';
 import { setOptionsDs } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/deploy-group-config/content';
 
@@ -158,6 +158,13 @@ const Index = observer(() => {
     ConGroupDataSet.records.forEach((record: any) => {
       arr.push(record.getField(mapping.portConfig.name).options.validate());
       arr.push(record.getField(mapping.enVariable.name).options.validate());
+      if (record.get(mapping.productType.name) === productTypeData[1].value) {
+        if (record.get(mapping.productSource.name) === productSourceData[5].value) {
+          if (!record.get(mapping.fileName.name) || !record.get(mapping.jarFileDownloadUrl.name)) {
+            flag2 = false;
+          }
+        }
+      }
       if (record.get(mapping.name.name) !== name) {
         name = record.get(mapping.name.name);
       } else {

@@ -15,6 +15,7 @@ interface ContextType {
   AnnotationDataSet: any,
   cRef: any,
   netName: string,
+  portsList: any,
 }
 
 const Store = createContext({} as ContextType);
