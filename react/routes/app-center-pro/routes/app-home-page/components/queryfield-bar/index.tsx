@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { useCallback, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
@@ -10,6 +11,7 @@ import EnvOption from '@/components/env-option';
 
 import './index.less';
 import { useAppHomePageStore } from '../../stores';
+import { ENV_TAB, HOST_TAB } from '@/routes/app-center-pro/stores/CONST';
 
 const ContentHeader: React.FC<any> = observer((): any => {
   const {
@@ -21,19 +23,13 @@ const ContentHeader: React.FC<any> = observer((): any => {
     searchDs,
     intlPrefix,
     formatMessage,
+    refresh,
   } = useAppHomePageStore();
 
   const newPrefixCls = useMemo(() => `${subfixCls}-search`, []);
 
-  const refresh = useCallback(() => {
-    listDs.query();
-  }, []);
-
-  const handleTypeChange = (key:string) => {
-    listDs.setQueryParameter('typeKey', key);
-    searchDs.current?.set('typeKey', key);
-    mainStore.setCurrentTypeTabKey(key);
-    refresh();
+  const handleTypeChange = (key:typeof ENV_TAB | typeof HOST_TAB) => {
+    refresh(key);
   };
 
   const renderEnvOption = useCallback(({ record, text, value }) => (
@@ -63,7 +59,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
     <div className={newPrefixCls}>
       <CustomTabs
         onChange={(
-          e: React.MouseEvent<HTMLDivElement, MouseEvent>, tabName: string, tabKey: string,
+          e: React.MouseEvent<HTMLDivElement, MouseEvent>, tabName: string, tabKey: typeof ENV_TAB | typeof HOST_TAB,
         ) => handleTypeChange(tabKey)}
         data={map(typeTabKeys, (value, key) => ({
           name: formatMessage({ id: `${intlPrefix}.tab.${key}` }),
@@ -118,7 +114,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
           />
         </Form>
         <Button
-          onClick={refresh}
+          onClick={() => refresh()}
           className={`${newPrefixCls}-btn`}
           disabled={listDs.status === 'loading'}
         >
