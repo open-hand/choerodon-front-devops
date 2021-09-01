@@ -40,6 +40,7 @@ const Index = observer(({
       {
         record.get('edit') ? (
           <TextField
+            autoFocus
             value={record.get('name')}
             onChange={(value) => record.set('name', value)}
             onBlur={() => {

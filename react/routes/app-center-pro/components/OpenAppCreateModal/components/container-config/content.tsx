@@ -126,12 +126,8 @@ const Index = observer(() => {
   }, []);
 
   const handleOk = async () => {
-    const {
-      flag,
-      flag2,
-      flag3,
-    } = await currentValidate();
-    if (flag && flag2 && flag3) {
+    const flag = await currentValidate();
+    if (flag) {
       const result = setReturnData(ConGroupDataSet);
       ConGroupDataSet.setQueryParameter('data', {
         ...extraData,
@@ -178,23 +174,28 @@ const Index = observer(() => {
       message.error('容器名称不能重复');
     }
     if (!flag || !flag2) {
+      const error = ConGroupDataSet.getValidationErrors();
+      if (error && error.length > 0) {
+        ConGroupDataSet.records.forEach((record: any) => {
+          if (record.id === error[0].record.id) {
+            record.set('focus', true);
+          } else {
+            record.set('focus', false);
+          }
+        });
+      }
       message.error('存在必填字段未配置');
     }
-    return ({
-      flag,
-      flag2,
-      flag3,
-    });
+    if (flag && flag2 && flag3) {
+      return true;
+    }
+    return false;
   };
 
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
-      const {
-        flag,
-        flag2,
-        flag3,
-      } = await currentValidate();
-      if (flag && flag2 && flag3) {
+      const flag = await currentValidate();
+      if (flag) {
         return setReturnData(
           ConGroupDataSet,
         );

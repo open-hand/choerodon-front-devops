@@ -1,4 +1,6 @@
-import React, { useImperativeHandle, useRef } from 'react';
+import React, {
+  useImperativeHandle, useRef, useEffect, useState,
+} from 'react';
 import { observer } from 'mobx-react-lite';
 import NetworkConfig
   from '@/routes/app-center-pro/components/OpenAppCreateModal/components/resource-config/components/network-config';
@@ -17,6 +19,8 @@ const Index = observer(() => {
   const netRef = useRef();
   const ingressRef = useRef();
 
+  const [netName, setNetName] = useState('');
+
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
       const netFlag = await (netRef?.current as any)?.handleOk();
@@ -31,13 +35,17 @@ const Index = observer(() => {
     },
   }));
 
+  useEffect(() => {
+    setNetName((netRef?.current as any)?.getNetName());
+  }, [(netRef?.current as any)?.getNetName()]);
+
   return (
     <div className="c7ncd-appCenterPro-reConfig">
       <div className="c7ncd-appCenterPro-reConfig__network">
         <NetworkConfig cRef={netRef} envId={envId} />
       </div>
       <div className="c7ncd-appCenterPro-reConfig__ingress">
-        <IngressConfig cRef={ingressRef} envId={envId} />
+        <IngressConfig netName={netName} cRef={ingressRef} envId={envId} />
       </div>
     </div>
   );

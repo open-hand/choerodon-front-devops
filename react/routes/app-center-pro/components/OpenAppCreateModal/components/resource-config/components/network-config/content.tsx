@@ -38,6 +38,7 @@ const Index = observer(() => {
       }
       return false;
     },
+    getNetName: () => NetworkConfigDataSet.current.get(mapping.netName.name),
   }));
 
   function handleRemovePort(portRecord: any) {
@@ -51,7 +52,7 @@ const Index = observer(() => {
 
   return (
     <div className="c7ncd-appCenterPro-newConfig">
-      <p className="c7ncd-appCenterPro-newConfig__title">网络配置 (Service)</p>
+      <p className="c7ncd-appCenterPro-newConfig__title">网络 (Service)</p>
       <Form dataSet={NetworkConfigDataSet}>
         <TextField
           name={mapping.netName.name}
@@ -101,7 +102,7 @@ const Index = observer(() => {
       <Button
         color={'primary' as ButtonColor}
         funcType={'flat' as FuncType}
-        onClick={handlePortAdd}
+        onClick={() => handlePortAdd()}
         icon="add"
       >
         添加端口

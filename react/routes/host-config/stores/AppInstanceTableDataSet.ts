@@ -5,6 +5,7 @@ import { hostApiConfig } from '@/api/Hosts';
 interface ListProps {
   formatMessage(arg0: object, arg1?: object): string,
   intlPrefix: string,
+  projectId: any,
 }
 
 export default ({ formatMessage, intlPrefix }: ListProps): DataSetProps => ({
