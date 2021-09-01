@@ -75,19 +75,25 @@ const Index = inject('AppState')(observer(({
                 <Form className="c7ncd-appCenterPro-conDetail__form" columns={2} record={dataSource}>
                   <TextField name={mapping.repoAddress.name} />
                   <div className="c7ncd-appCenterPro-conDetail__form__col">
-                    <TextField
-                      name={mapping.imageVersion.name}
+                    <div
                       style={{
                         flex: 1,
                       }}
-                    />
-                    <SelectBox
+                    >
+                      <TextField
+                        name={mapping.imageVersion.name}
+                      />
+                    </div>
+                    <div
                       style={{
                         flex: 1,
                         marginLeft: 20,
                       }}
-                      name={mapping.repoType.name}
-                    />
+                    >
+                      <SelectBox
+                        name={mapping.repoType.name}
+                      />
+                    </div>
                   </div>
                   <TextField name={mapping.username.name} />
                   <TextField name={mapping.password.name} />

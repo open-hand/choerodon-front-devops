@@ -30,9 +30,10 @@ export function useHostAppConfigStore() {
 export const StoreProvider = inject('AppState')((props: any) => {
   const {
     children,
+    modal,
   } = props;
 
-  const HostAppConfigDataSet = useMemo(() => new DataSet(hostAppConfigDataSet()), []);
+  const HostAppConfigDataSet = useMemo(() => new DataSet(hostAppConfigDataSet(modal)), [modal]);
 
   const value = {
     ...props,

@@ -20,6 +20,7 @@ const Index = observer(() => {
   const ingressRef = useRef();
 
   const [netName, setNetName] = useState('');
+  const [portsList, setPortsList] = useState([]);
 
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
@@ -39,13 +40,28 @@ const Index = observer(() => {
     setNetName((netRef?.current as any)?.getNetName());
   }, [(netRef?.current as any)?.getNetName()]);
 
+  useEffect(() => {
+    const data = (netRef?.current as any)?.getPorts();
+    if (data && data.length > 0) {
+      const mapData = (netRef?.current as any)?.getPorts().map((item: any) => item.port || '');
+      if (JSON.stringify(mapData) !== JSON.stringify(portsList)) {
+        setPortsList(mapData);
+      }
+    }
+  }, [(netRef?.current as any)?.getPorts()]);
+
   return (
     <div className="c7ncd-appCenterPro-reConfig">
       <div className="c7ncd-appCenterPro-reConfig__network">
         <NetworkConfig cRef={netRef} envId={envId} />
       </div>
       <div className="c7ncd-appCenterPro-reConfig__ingress">
-        <IngressConfig netName={netName} cRef={ingressRef} envId={envId} />
+        <IngressConfig
+          netName={netName}
+          cRef={ingressRef}
+          envId={envId}
+          portsList={portsList}
+        />
       </div>
     </div>
   );

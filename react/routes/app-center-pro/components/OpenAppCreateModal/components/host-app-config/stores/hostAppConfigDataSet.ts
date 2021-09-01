@@ -12,6 +12,31 @@ import { deployApi, deployApiConfig } from '@/api';
 import { hostApiConfig } from '@/api/Host';
 import { setData } from '../content';
 
+const updateModalProps = (record: any, modal: any) => {
+  if (record.get(mapping.jarSource.name) === productSourceData[5].value) {
+    if (!record.get(mapping.uploadUrl.name)
+      || !record.get(mapping.fileName.name)) {
+      modal.update({
+        okProps: {
+          disabled: true,
+        },
+      });
+    } else {
+      modal.update({
+        okProps: {
+          disabled: false,
+        },
+      });
+    }
+  } else {
+    modal.update({
+      okProps: {
+        disabled: false,
+      },
+    });
+  }
+};
+
 const mapping: {
   [key: string]: FieldProps
 } = {
@@ -306,7 +331,7 @@ const mapping: {
   },
 };
 
-const hostAppConfigDataSet = (): DataSetProps => ({
+const hostAppConfigDataSet = (modal: any): DataSetProps => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((i) => mapping[i]),
   transport: {
@@ -322,6 +347,7 @@ const hostAppConfigDataSet = (): DataSetProps => ({
         case mapping.jarSource.name: {
           record.set(mapping.marketAppVersion.name, '');
           record.set(mapping.marketServiceVersion.name, '');
+          updateModalProps(record, modal);
           switch (value) {
             case productSourceData[1].value: {
               const optionsDs = record?.getField(mapping.marketAppVersion.name).options;
@@ -339,6 +365,14 @@ const hostAppConfigDataSet = (): DataSetProps => ({
               break;
             }
           }
+          break;
+        }
+        case mapping.uploadUrl.name: {
+          updateModalProps(record, modal);
+          break;
+        }
+        case mapping.fileName.name: {
+          updateModalProps(record, modal);
           break;
         }
         default: {

@@ -155,6 +155,7 @@ const AppCreateForm = (props: any) => {
           return (
             <HostAppConfig
               cRef={appConfigRef}
+              modal={modal}
             />
           );
           break;
@@ -459,6 +460,15 @@ const AppCreateForm = (props: any) => {
         changeStepDisplay(res);
       }
       if (current < stepData.current.filter((i) => i.display).length - 1) {
+        if (current + 1 === stepData.current.filter((i) => i.display).length - 1) {
+          modal.update({
+            okText: '创建',
+          });
+        } else {
+          modal.update({
+            okText: '下一步',
+          });
+        }
         setCurrent(current + 1);
       } else {
         try {
@@ -478,6 +488,9 @@ const AppCreateForm = (props: any) => {
   const handlePre = () => {
     const newCurrent = current - 1;
     setCurrent(newCurrent);
+    modal.update({
+      okText: '下一步',
+    });
     setTimeout(() => {
       const data = stepData.current?.[newCurrent].data;
       (stepData.current?.[newCurrent]?.ref?.current as any)?.handleInit(data);

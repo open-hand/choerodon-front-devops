@@ -19,6 +19,7 @@ const Index = observer(() => {
     AnnotationDataSet,
     cRef,
     netName,
+    portsList,
   } = useIngressConfig();
 
   useEffect(() => {
@@ -73,6 +74,8 @@ const Index = observer(() => {
     AnnotationDataSet.create();
   }
 
+  console.log(portsList);
+
   return (
     <div className="c7ncd-appCenterPro-ingressConfig">
       <p className="c7ncd-appCenterPro-newConfig__title">域名（Ingress)</p>
@@ -88,7 +91,7 @@ const Index = observer(() => {
             <TextField name="path" colSpan={2} disabled={!IngressDataSet.current.get('domain')} />
             <TextField name="serviceName" colSpan={2} disabled />
             <Select name="servicePort" disabled={!pathRecord.get('serviceName')}>
-              {map(pathRecord.get('ports'), (port) => <Option value={port} key={port}>{port}</Option>)}
+              {map(portsList || [], (port) => <Option value={port} key={port}>{port}</Option>)}
             </Select>
             {PathListDataSet.records.length > 1 ? (
               <Button

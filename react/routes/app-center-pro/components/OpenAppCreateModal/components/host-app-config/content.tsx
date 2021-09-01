@@ -105,11 +105,9 @@ const Index = observer(() => {
     return false;
   };
 
-  if (modal) {
+  if (detail && modal) {
     modal.handleOk(handleOk);
   }
-
-
 
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
