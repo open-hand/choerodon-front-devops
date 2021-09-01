@@ -80,6 +80,8 @@ const EditItem = (props) => {
           witchColumnJobIndex={witchColumnJobIndex}
           sequence={sequence}
           index={index}
+          // eslint-disable-next-line react/jsx-no-bind
+          handleOk={handleEditOk}
         />
       ) : (
         <AddCDTask
@@ -92,6 +94,8 @@ const EditItem = (props) => {
           witchColumnJobIndex={witchColumnJobIndex}
           sequence={sequence}
           index={index}
+          // eslint-disable-next-line react/jsx-no-bind
+          handleOk={handleEditOk}
         />
       ),
 
@@ -131,6 +135,8 @@ const EditItem = (props) => {
             shape="circle"
             size="small"
             icon="mode_edit"
+            // eslint-disable-next-line react/jsx-no-bind
+            onClick={openEditJobModal}
           />
         </Tooltip>
         <Tooltip>
@@ -139,6 +145,8 @@ const EditItem = (props) => {
             shape="circle"
             size="small"
             icon="delete_forever"
+            // eslint-disable-next-line react/jsx-no-bind
+            onClick={openDeleteJobModal}
           />
         </Tooltip>
       </>
