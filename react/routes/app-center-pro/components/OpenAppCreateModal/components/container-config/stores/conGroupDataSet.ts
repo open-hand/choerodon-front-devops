@@ -1,5 +1,7 @@
 import { DataSet } from 'choerodon-ui/pro';
-import { DataSetProps, FieldProps, FieldType } from '@/interface';
+import {
+  DataSetProps, FieldProps, FieldType, Record,
+} from '@/interface';
 import docker from '../images/docker.svg';
 import jar from '../images/jar.svg';
 import projectproduct from '../images/projectproduct.png';
@@ -19,6 +21,30 @@ import { appServiceVersionApiConfig } from '@/api/AppServiceVersions';
 import { nexusApiConfig } from '@/api/Nexus';
 import { devopsDeployGroupApiConfig } from '@/api/DevopsDeployGroup';
 import { setReturnData } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config/content';
+
+const checkReserved = async (
+  value: string,
+  record: Record,
+  limitName: string,
+  isLimit: boolean = false,
+) => {
+  if (value) {
+    if (record.get(limitName)) {
+      if (isLimit) {
+        if (Number(value) < Number(record.get(limitName))) {
+          return '预留不可大于上线';
+        }
+        return true;
+      }
+      if (Number(value) > Number(record.get(limitName))) {
+        return '预留不可大于上线';
+      }
+      return true;
+    }
+    return true;
+  }
+  return true;
+};
 
 const productTypeData = [{
   value: 'docker',
@@ -345,7 +371,8 @@ const mapping: {
       required: ({ record }) => record?.get(mapping.productType.name) === productTypeData[0].value
         && record?.get(
           mapping.productSource.name,
-        ) === productSourceData[4].value,
+        ) === productSourceData[4].value
+        && record.get(mapping.repoType.name) === repoTypeData[0].value,
     },
   },
   password: {
@@ -357,7 +384,8 @@ const mapping: {
       required: ({ record }) => record?.get(mapping.productType.name) === productTypeData[0].value
         && record?.get(
           mapping.productSource.name,
-        ) === productSourceData[4].value,
+        ) === productSourceData[4].value
+        && record.get(mapping.repoType.name) === repoTypeData[0].value,
     },
   },
   nexus: {
@@ -503,21 +531,41 @@ const mapping: {
     name: 'requestCpu',
     type: 'number' as FieldType,
     label: 'CPU预留',
+    validator: (
+      value: string,
+      name: string,
+      record: Record,
+    ) => checkReserved(value, record, mapping.CPULimit.name as string),
   },
   CPULimit: {
     name: 'limitCpu',
     type: 'number' as FieldType,
     label: 'CPU上限',
+    validator: (
+      value: string,
+      name: string,
+      record: Record,
+    ) => checkReserved(value, record, mapping.CPUReserved.name as string, true),
   },
   memoryReserved: {
     name: 'requestMemory',
     type: 'number' as FieldType,
     label: '内存预留',
+    validator: (
+      value: string,
+      name: string,
+      record: Record,
+    ) => checkReserved(value, record, mapping.memoryLimit.name as string),
   },
   memoryLimit: {
     name: 'limitMemory',
     type: 'number' as FieldType,
     label: '内存上限',
+    validator: (
+      value: string,
+      name: string,
+      record: Record,
+    ) => checkReserved(value, record, mapping.memoryReserved.name as string, true),
   },
   portConfig: {
     name: 'portConfig',

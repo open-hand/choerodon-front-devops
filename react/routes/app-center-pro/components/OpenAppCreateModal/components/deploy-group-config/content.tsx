@@ -177,7 +177,9 @@ const Index = observer(() => {
         active={record.get('active')}
         size="small"
       />
-      {text}
+      <span style={{ marginLeft: 4 }}>
+        {text}
+      </span>
     </>
   );
 
@@ -264,7 +266,8 @@ const Index = observer(() => {
         style={{
           marginBottom: 20,
         }}
-        title="注解（Annotations）"
+        defaultCollapse
+        title="注解（Annotations)"
         helpText="即 kubernetes 中的 annotations，详情请参考 kubernetes 文档。"
         content={getKeyValueRenderByDs(AnnotationsDataSet, '注解')}
       />
@@ -272,7 +275,8 @@ const Index = observer(() => {
         style={{
           marginBottom: 20,
         }}
-        title="标签（Labels）"
+        defaultCollapse
+        title="标签（Label)"
         helpText="即 kubernetes中的Labels，详情请参考 kubernetes 文档。"
         content={getKeyValueRenderByDs(LabelsDataSet, '标签')}
       />
@@ -280,11 +284,13 @@ const Index = observer(() => {
         style={{
           marginBottom: 20,
         }}
+        defaultCollapse
         title="节点选择标签"
         helpText="节点选择标签即 kubernetes 中的 nodeSelector，详情请参考 kubernetes文档。"
         content={getKeyValueRenderByDs(NodeLabelsDataSet, '标签')}
       />
       <CollapseContainer
+        defaultCollapse
         title="HostAliases"
         helpText="HostAliases 向 Pod /etc/hosts 文件添加条目，详情请参考 k8s 的 HostAliases文档。"
         content={getKeyValueRenderByDs(HostAliasesDataSet, 'HostAliases')}

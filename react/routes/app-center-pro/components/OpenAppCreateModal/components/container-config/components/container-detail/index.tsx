@@ -279,6 +279,8 @@ const Index = inject('AppState')(observer(({
             icon="add"
             style={{
               width: 'auto',
+              position: 'relative',
+              top: 10,
             }}
             onClick={() => dataSource?.getField(mapping.enVariable.name)?.options?.create()}
           >
@@ -323,6 +325,8 @@ const Index = inject('AppState')(observer(({
               icon="add"
               style={{
                 width: 'auto',
+                position: 'relative',
+                top: 10,
               }}
               onClick={() => dataSource?.getField(mapping.portConfig.name)?.options?.create()}
             >
