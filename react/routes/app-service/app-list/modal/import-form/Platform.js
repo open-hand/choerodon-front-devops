@@ -153,7 +153,7 @@ const Platform = injectIntl(observer(({ checkData, disabled }) => {
         icon="add"
         onClick={handleClick}
         className="platform-button"
-        disabled={!disabled}
+        disabled={importRecord.get('platformType') === 'gitlab' && !disabled}
       >
         <FormattedMessage id={`${intlPrefix}.add`} />
       </Button>
