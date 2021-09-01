@@ -11,6 +11,7 @@ import { DataSet as DataSetProps } from '@/interface';
 import useStore, { StoreProps } from './useStore';
 import SearchDataSet from './SearchDataSet';
 import ListDataSet from './ListDataSet';
+import { ENV_TAB, HOST_TAB } from '@/routes/app-center-pro/stores/CONST';
 
 interface ContextProps {
   subfixCls: string,
@@ -25,7 +26,7 @@ interface ContextProps {
     ENV_TAB: 'env',
     HOST_TAB: 'host',
   }
-  refresh:(...args:any[])=>any
+  refresh:(key?: typeof ENV_TAB | typeof HOST_TAB)=>any
 }
 
 const Store = createContext({} as ContextProps);
@@ -85,7 +86,12 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     loadHostData();
   }, []);
 
-  const refresh = () => {
+  const refresh = (key?: typeof ENV_TAB | typeof HOST_TAB) => {
+    if (key) {
+      listDs.setQueryParameter('typeKey', key);
+      searchDs.current?.set('typeKey', key);
+      mainStore.setCurrentTypeTabKey(key);
+    }
     listDs.query();
   };
 
