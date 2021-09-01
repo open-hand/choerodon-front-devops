@@ -364,7 +364,7 @@ const Index = inject('AppState')(observer(({
               onClickCallback={
                 (value) => handleChangeRecord((mapping.productType.name as string), value.value)
               }
-              defaultSelectedKeys={dataSource?.get(mapping.productType.name)}
+              selectedKeys={dataSource?.get(mapping.productType.name)}
               data={productTypeData}
               identity="value"
               mode="single"
@@ -388,7 +388,7 @@ const Index = inject('AppState')(observer(({
               onClickCallback={
                 (value) => handleChangeRecord((mapping.productSource.name as string), value.value)
               }
-              defaultSelectedKeys={dataSource?.get(mapping.productSource.name)}
+              selectedKeys={dataSource?.get(mapping.productSource.name)}
               data={getProductSourceData()}
               identity="value"
               mode="single"
