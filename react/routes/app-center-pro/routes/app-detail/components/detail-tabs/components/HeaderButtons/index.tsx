@@ -27,6 +27,7 @@ import {
 } from '@/routes/app-center-pro/stores/CONST';
 import { getAppCategories, getChartSourceGroup } from '@/routes/app-center-pro/utils';
 import { openAppConfigModal } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config';
+import AppCenterProServices from '@/routes/app-center-pro/services';
 
 const DetailsTabsHeaderButtons = () => {
   const {
@@ -176,15 +177,15 @@ const DetailsTabsHeaderButtons = () => {
   // 启用应用
   const activeApp = {
     name: '启用应用',
-    // icon: 'check',
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-toggle-status'],
-    handler: () => openChangeActive({
+    handler: () => AppCenterProServices.toggleActive({
       active: 'start',
       name,
-      callback: refresh,
+      refresh,
       projectId,
       envId: hostOrEnvId,
       instanceId,
+      appCatergoryCode: appCatergory.code,
     }),
   };
 
@@ -193,13 +194,14 @@ const DetailsTabsHeaderButtons = () => {
     name: '停用应用',
     // icon: 'do_not_disturb_alt',
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-toggle-status'],
-    handler: () => openChangeActive({
+    handler: () => AppCenterProServices.toggleActive({
       active: 'stop',
       name,
-      callback: refresh,
+      refresh,
       projectId,
       envId: hostOrEnvId,
       instanceId,
+      appCatergoryCode: appCatergory.code,
     }),
   };
 
