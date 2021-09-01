@@ -26,6 +26,14 @@ class DeploymentsApi extends Api<DeploymentsApi> {
       method: 'get',
     });
   }
+
+  // 部署组启停用
+  toggleDeployStatus(instanceId:string | number, active: 'stop' | 'start') {
+    return this.request({
+      url: `${this.prefix}/${instanceId}/${active}`,
+      method: 'put',
+    });
+  }
 }
 
 const deploymentsApi = new DeploymentsApi();

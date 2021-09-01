@@ -16,10 +16,11 @@ import { useAppHomePageStore } from '../../stores';
 import './index.less';
 import { getAppCategories, getChartSourceGroup } from '@/routes/app-center-pro/utils';
 import {
-  APP_STATUS, CHART_HOST, HOST_TAB, IS_HOST, IS_MARKET, IS_SERVICE,
+  APP_STATUS, CHART_CATERGORY, CHART_HOST, HOST_TAB, IS_HOST, IS_MARKET, IS_SERVICE,
 } from '@/routes/app-center-pro/stores/CONST';
 import { openChangeActive } from '@/components/app-status-toggle';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
+import AppCenterProServices from '../../../../services';
 import EnvOrHostStatusIcon from '@/routes/app-center-pro/components/EnvOrHostStatusIcon';
 
 const AppItem = observer(({
@@ -91,20 +92,13 @@ const AppItem = observer(({
 
   const history = useHistory();
 
-  const { search, pathname } = useLocation();
+  const appCatergoryCode = getAppCategories(rdupmType, currentType).code;
 
-  const toggleActive = (active:'stop' | 'start') => openChangeActive({
-    active,
-    name,
-    callback: refresh,
-    projectId,
-    envId,
-    instanceId,
-  });
+  const { search, pathname } = useLocation();
 
   const handleDelete = () => {
     isEnv ? deleteEnvApp({
-      appCatergoryCode: getAppCategories(rdupmType, currentType).code,
+      appCatergoryCode,
       envId,
       instanceId,
       instanceName,
@@ -115,13 +109,29 @@ const AppItem = observer(({
   const stopObj = {
     service: ['choerodon.code.project.deploy.app-deployment.application-center.app-toggle-status'],
     text: '停用',
-    action: () => toggleActive('stop'),
+    action: () => AppCenterProServices.toggleActive({
+      active: 'stop',
+      refresh,
+      name,
+      instanceId,
+      envId,
+      appCatergoryCode,
+      projectId,
+    }),
   };
 
   const activeObj = {
     service: ['choerodon.code.project.deploy.app-deployment.application-center.app-toggle-status'],
     text: '启用',
-    action: () => toggleActive('start'),
+    action: () => AppCenterProServices.toggleActive({
+      active: 'start',
+      refresh,
+      name,
+      instanceId,
+      envId,
+      appCatergoryCode,
+      projectId,
+    }),
   };
 
   const deleteObj = {
