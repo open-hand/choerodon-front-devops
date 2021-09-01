@@ -292,7 +292,7 @@ const Index = observer(() => {
               onClickCallback={
                 (value) => HostAppConfigDataSet.current.set(mapping.jarSource.name, value.value)
               }
-              defaultSelectedKeys={HostAppConfigDataSet.current.get(mapping.jarSource.name)}
+              selectedKeys={HostAppConfigDataSet.current.get(mapping.jarSource.name)}
               data={jarSource}
               identity="value"
               mode="single"

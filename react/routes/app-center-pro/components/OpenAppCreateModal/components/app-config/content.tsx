@@ -194,7 +194,7 @@ const Index = observer(() => {
                 mapping.chartSource.name as string,
                 value.value,
               )}
-              defaultSelectedKeys={AppConfigDataSet.current.get(mapping.chartSource.name)}
+              selectedKeys={AppConfigDataSet.current.get(mapping.chartSource.name)}
               data={chartSourceData}
               identity="value"
               mode="single"

@@ -47,7 +47,7 @@ const Index = observer(() => {
         newLine
       >
         <CustomSelect
-          defaultSelectedKeys={AppInfoDataSet.current.get(mapping.deployMode.name)}
+          selectedKeys={AppInfoDataSet.current.get(mapping.deployMode.name)}
           onClickCallback={(value) => handleChangeField(
             AppInfoDataSet,
             mapping.deployMode.name as string,
@@ -80,7 +80,7 @@ const Index = observer(() => {
               newLine
             >
               <CustomSelect
-                defaultSelectedKeys={AppInfoDataSet.current.get(mapping.deployProductType.name)}
+                selectedKeys={AppInfoDataSet.current.get(mapping.deployProductType.name)}
                 onClickCallback={(value) => handleChangeField(
                   AppInfoDataSet,
                   mapping.deployProductType.name as string,
