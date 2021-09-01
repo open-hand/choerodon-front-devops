@@ -32,8 +32,12 @@ const GitlabSelectedDs = ({ intlPrefix, formatMessage, projectId, importStore, t
     if (value && pa.test(value)) {
       const dataSet = record.dataSet;
       const repeatRecord = dataSet.find((eachRecord: any) => eachRecord.id !== record.id && eachRecord.get('code') === value);
+      const repeatCode = dataSet.find((eachRecord: any) => eachRecord.id !== record.id && eachRecord.get('name') === value);
       const { listCode } = importStore.getRepeatData || {};
       if (repeatRecord) {
+        return formatMessage({ id: 'checkCodeExist' });
+      }
+      if (repeatCode) {
         return formatMessage({ id: 'checkCodeExist' });
       }
       if (includes(listCode, value)) {
