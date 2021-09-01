@@ -43,10 +43,10 @@ const ImportForm = injectIntl(observer((props) => {
   useEffect(() => {
     modal.update({
       okProps: {
-        disabled: gitlabSelectedDs.length === 0,
+        disabled: record.get('platformType') === 'gitlab' && gitlabSelectedDs.length === 0,
       },
     });
-  }, [gitlabSelectedDs.length]);
+  }, [gitlabSelectedDs.length, record.get('platformType')]);
   const selectedDataSet = { market: marketSelectedDs, share: selectedDs, gitlab: gitlabSelectedDs };
   modal.handleOk(async () => {
     if (record.get('platformType') === 'share' || record.get('platformType') === 'market' || (record.get('platformType') === 'gitlab' && !record.get('isGitLabTemplate'))) {
