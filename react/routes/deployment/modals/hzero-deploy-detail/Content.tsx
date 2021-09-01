@@ -116,6 +116,7 @@ const HzeroDeployDetail = observer(() => {
     if (currentAppStatusList.includes(record.get('appStatus'))) {
       return;
     }
+    modal.close();
     history.push({ pathname: `/devops/application-center/detail/${record.get('appId')}/hzero/env/${formDs.current?.get('environmentDTO')?.id}/chart`, search });
   };
 
@@ -123,7 +124,7 @@ const HzeroDeployDetail = observer(() => {
     const currentAppStatus = record.get('appStatus');
     return (
       <div style={{ display: 'flex' }}>
-        <div role="none" style={currentAppStatusList.includes(currentAppStatus) ? { opacity: '0.5' } : { color: '#415BC9' }} onClick={() => toInstanceDetail(record)}>
+        <div role="none" className={currentAppStatusList.includes(currentAppStatus) ? 'normal' : 'click'} onClick={() => toInstanceDetail(record)}>
           {record.get('instanceCode') || '-'}
         </div>
         <div>{currentAppStatus === 'deleted' ? getStatusTag(currentAppStatus) : ''}</div>
@@ -183,7 +184,7 @@ const HzeroDeployDetail = observer(() => {
               <Output name="mktServiceVersion" renderer={({ value }) => (value || '-')} />
               <Output label="实例名称" value={renderInstanceCode(serviceDs.current)} />
               <Output name="startTime" renderer={({ value }) => (value || '-')} />
-              <Output label="部署耗时" value={serviceDs.current?.get('startTime') ? getConsumeDuration(serviceDs.current?.get('startTime'), serviceDs.current?.get('endTime')) : '-'} />
+              <Output label="部署耗时" value={(serviceDs.current?.get('startTime') && serviceDs.current?.get('endTime')) ? getConsumeDuration(serviceDs.current?.get('startTime'), serviceDs.current?.get('endTime')) : '-'} />
             </Form>
             <YamlEditor
               colSpan={2}
