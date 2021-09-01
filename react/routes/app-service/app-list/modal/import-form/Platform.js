@@ -23,7 +23,7 @@ const modalStyle1 = {
   width: 740,
 };
 
-const Platform = injectIntl(observer(({ checkData }) => {
+const Platform = injectIntl(observer(({ checkData, disabled }) => {
   const {
     AppState: { currentMenuType: { projectId } },
     intl: { formatMessage },
@@ -153,6 +153,7 @@ const Platform = injectIntl(observer(({ checkData }) => {
         icon="add"
         onClick={handleClick}
         className="platform-button"
+        disabled={!disabled}
       >
         <FormattedMessage id={`${intlPrefix}.add`} />
       </Button>
