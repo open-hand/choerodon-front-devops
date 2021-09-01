@@ -14,6 +14,7 @@ interface ContextType {
   PathListDataSet: any,
   AnnotationDataSet: any,
   cRef: any,
+  netName: string,
 }
 
 const Store = createContext({} as ContextType);

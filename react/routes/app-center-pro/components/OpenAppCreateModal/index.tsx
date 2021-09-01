@@ -167,7 +167,7 @@ const AppCreateForm = (props: any) => {
     },
     data: null,
   }, {
-    title: '资源配置',
+    title: '网络配置',
     ref: resourceConfigRef,
     display: true,
     children: ({ envId, deployMode, deployType }: any) => {
@@ -213,7 +213,7 @@ const AppCreateForm = (props: any) => {
   const changeStepDataTitle = (data: any) => {
     if (data[(infoMapping?.deployProductType?.name) as string]
       === deployProductOptionsData[0].value) {
-      stepData.current[2].title = '资源配置';
+      stepData.current[2].title = '网络配置';
     } else if (data[(infoMapping?.deployProductType?.name) as string]
       === deployProductOptionsData[1].value) {
       stepData.current[2].title = '容器配置';

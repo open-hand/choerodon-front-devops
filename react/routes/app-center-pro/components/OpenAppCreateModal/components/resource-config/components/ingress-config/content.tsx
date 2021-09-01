@@ -1,4 +1,4 @@
-import React, { useImperativeHandle } from 'react';
+import React, { useImperativeHandle, useEffect } from 'react';
 import {
   Form, TextField, SelectBox, Select, Button, TextArea,
 } from 'choerodon-ui/pro';
@@ -18,7 +18,14 @@ const Index = observer(() => {
     PathListDataSet,
     AnnotationDataSet,
     cRef,
+    netName,
   } = useIngressConfig();
+
+  useEffect(() => {
+    PathListDataSet.records.forEach((record: any) => {
+      record.set('serviceName', netName);
+    });
+  }, [netName]);
 
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
@@ -68,7 +75,7 @@ const Index = observer(() => {
 
   return (
     <div className="c7ncd-appCenterPro-ingressConfig">
-      <p className="c7ncd-appCenterPro-newConfig__title">域名配置（Ingress)</p>
+      <p className="c7ncd-appCenterPro-newConfig__title">域名（Ingress)</p>
       <Form dataSet={IngressDataSet}>
         <TextField name="name" disabled={!envId} />
         <SelectBox name="isNormal" />
@@ -97,7 +104,7 @@ const Index = observer(() => {
         funcType={'flat' as FuncType}
         color={'primary' as ButtonColor}
         icon="add"
-        onClick={handleAddPath}
+        onClick={() => handleAddPath()}
       >
         添加路径
       </Button>
@@ -138,7 +145,7 @@ const Index = observer(() => {
         funcType={'flat' as FuncType}
         color={'primary' as ButtonColor}
         icon="add"
-        onClick={handleAddAnnotation}
+        onClick={() => handleAddAnnotation()}
       >
         添加Annotation
       </Button>
