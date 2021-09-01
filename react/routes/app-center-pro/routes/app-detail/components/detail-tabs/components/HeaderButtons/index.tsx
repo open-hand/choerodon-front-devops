@@ -2,14 +2,12 @@
 import React, { useMemo } from 'react';
 import { HeaderButtons } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
-import { Modal } from 'choerodon-ui/pro';
 import { useAppDetailTabsStore } from '../../stores';
 import { openModifyValueModal } from '@/components/modify-values';
 import { useAppDetailsStore } from '../../../../stores';
 import { openNetWorkFormModal } from '@/components/create-network';
 import { openDomainFormModal } from '@/components/domain-form';
 import { openRedeploy } from '@/components/reDeploy';
-import { openChangeActive } from '@/components/app-status-toggle';
 import { openMarketUpgradeModal } from '@/components/app-upgrade';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
 import { openHostAppConfigModal } from '../../../../../../components/OpenAppCreateModal/components/host-app-config';
