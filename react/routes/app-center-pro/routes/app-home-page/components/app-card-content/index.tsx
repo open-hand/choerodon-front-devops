@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 
 import { useHistory, useLocation } from 'react-router';
 import {
-  UserInfo, TimePopover, CardPagination, StatusTag,
+  UserInfo, TimePopover, CardPagination,
 } from '@choerodon/components';
 import { Tooltip } from 'choerodon-ui/pro';
 import EnvItem from '@/components/env-item';
@@ -16,9 +16,8 @@ import { useAppHomePageStore } from '../../stores';
 import './index.less';
 import { getAppCategories, getChartSourceGroup } from '@/routes/app-center-pro/utils';
 import {
-  APP_STATUS, CHART_CATERGORY, CHART_HOST, HOST_TAB, IS_HOST, IS_MARKET, IS_SERVICE,
+  APP_STATUS, CHART_HOST, IS_HOST, IS_MARKET, IS_SERVICE,
 } from '@/routes/app-center-pro/stores/CONST';
-import { openChangeActive } from '@/components/app-status-toggle';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
 import AppCenterProServices from '../../../../services';
 import EnvOrHostStatusIcon from '@/routes/app-center-pro/components/EnvOrHostStatusIcon';
@@ -92,7 +91,9 @@ const AppItem = observer(({
 
   const history = useHistory();
 
-  const appCatergoryCode = getAppCategories(rdupmType, currentType).code;
+  const catergory = getAppCategories(rdupmType, currentType);
+
+  const appCatergoryCode = catergory.code;
 
   const { search, pathname } = useLocation();
 
@@ -218,8 +219,6 @@ const AppItem = observer(({
       search,
     });
   }
-
-  const catergory = getAppCategories(rdupmType, currentType);
 
   return (
     <div className={`${subfixCls}-list-card`}>
