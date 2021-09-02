@@ -61,6 +61,12 @@ export default function DeployConfig() {
           children: formatMessage({ id: `${intlPrefix}.config.delete.des` }),
           okText: formatMessage({ id: 'delete' }),
           onOk: () => handleDelete(record),
+          footer: ((okBtn: any, cancelBtn: any) => (
+            <>
+              {cancelBtn}
+              {okBtn}
+            </>
+          )),
         };
         deleteModal.update(modalProps);
       } else if (!res.failed) {
@@ -68,6 +74,11 @@ export default function DeployConfig() {
           children: formatMessage({ id: `${intlPrefix}.config.delete.describe` }),
           okCancel: false,
           okText: formatMessage({ id: 'iknow' }),
+          footer: ((OkBtn: any) => (
+            <>
+              {OkBtn}
+            </>
+          )),
         });
       } else {
         deleteModal.close();
