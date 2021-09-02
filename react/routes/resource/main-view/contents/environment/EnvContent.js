@@ -126,7 +126,7 @@ const EnvContent = observer(() => {
               helpText={formatMessage({ id: `${intlPrefix}.permission.tab.tips` })}
               title={formatMessage({ id: `${intlPrefix}.environment.tabs.assignPermissions` })}
             />
-)}
+          )}
         >
           <Suspense fallback={<Spin />}>
             <Permissions />

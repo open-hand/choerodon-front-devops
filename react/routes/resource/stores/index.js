@@ -4,10 +4,8 @@ import React, {
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { withRouter } from 'react-router-dom';
-import { TabCode } from '@choerodon/master';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
-import { useQueryString } from '@choerodon/components';
 import queryString from 'query-string';
 import { viewTypeMappings, itemTypeMappings } from './mappings';
 import TreeDataSet from './TreeDataSet';
@@ -24,7 +22,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
   observer((props) => {
     const {
       intl: { formatMessage },
-      AppState: { currentMenuType: { id, organizationId, name: projectName } },
+      AppState: { currentMenuType: { id: projectId, organizationId, name: projectName } },
       children,
       location: { state, search },
     } = props;
@@ -38,11 +36,11 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
     const treeDs = useMemo(() => new DataSet(TreeDataSet({
       store: resourceStore,
       type: viewType,
-      projectId: id,
+      projectId,
       formatMessage,
       organizationId,
       projectName,
-    })), [viewType, id]);
+    })), [viewType, projectId]);
 
     useEffect(() => {
       // NOTE: 1、部署或实例视图的部署后跳转至实例视图实例层。2、资源视图的部署后跳转至资源视图实例层。
@@ -87,6 +85,8 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       itemTypes,
       resourceStore,
       treeDs,
+      projectId,
+      formatMessage,
     };
     return (
       <Store.Provider value={value}>

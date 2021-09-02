@@ -1,4 +1,4 @@
-export default ({ formatMessage, intlPrefix }) => ({
+export default ({ formatMessage, intlPrefix }:any):any => ({
   selection: false,
   pageSize: 10,
   transport: {

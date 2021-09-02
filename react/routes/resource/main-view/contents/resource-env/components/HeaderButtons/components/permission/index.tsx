@@ -1,9 +1,11 @@
 import React from 'react';
 import { StoreProvider } from './stores';
-import EnvContent from './EnvContent';
+import EnvContent from './Content';
 
-export default (props) => (
+const Index = (props:any) => (
   <StoreProvider {...props}>
     <EnvContent />
   </StoreProvider>
 );
+
+export default Index;

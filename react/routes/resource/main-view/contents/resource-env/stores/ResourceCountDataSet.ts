@@ -1,4 +1,11 @@
-export default () => ({
+import { environmentApiConfig } from '@/api';
+
+/* eslint-disable import/no-anonymous-default-export */
+export default ({
+  id,
+}:{
+  id: string
+}):any => ({
   autoQuery: true,
   selection: false,
   paging: false,
@@ -17,8 +24,6 @@ export default () => ({
     { name: 'stoppedInstanceCount', type: 'number' },
   ],
   transport: {
-    read: {
-      method: 'get',
-    },
+    read: environmentApiConfig.loadResourceCount(id),
   },
 });

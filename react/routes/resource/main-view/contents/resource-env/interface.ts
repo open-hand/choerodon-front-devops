@@ -1,0 +1,8 @@
+export type instanceMappingsType = 'instanceCount'
+| 'serviceCount'
+| 'ingressCount'
+| 'certificationCount'
+| 'configMapCount'
+| 'secretCount'
+| 'workloadCount'
+| 'podCount'

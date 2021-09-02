@@ -1,4 +1,4 @@
-export default (formatMessage, intlPrefix) => ({
+export default (formatMessage:any, intlPrefix:string):any => ({
   autoQuery: false,
   selection: false,
   paging: false,

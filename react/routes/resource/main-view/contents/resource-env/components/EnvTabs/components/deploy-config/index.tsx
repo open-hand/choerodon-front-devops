@@ -3,13 +3,12 @@ import { Action, Choerodon } from '@choerodon/boot';
 import {
   Table, Modal, Tooltip, Spin,
 } from 'choerodon-ui/pro';
-import TimePopover from '../../../../../components/time-popover';
-import UserInfo from '../../../../../components/userInfo';
-import ClickText from '../../../../../components/click-text';
-import DeployConfigForm from '../../../../../components/deploy-config-form';
-import { handlePromptError } from '../../../../../utils';
-import { useEnvironmentStore } from './stores';
-import { useResourceStore } from '../../../stores';
+import { UserInfo, TimePopover } from '@choerodon/components';
+import ClickText from '@/components/click-text';
+import DeployConfigForm from '@/components/deploy-config-form';
+import { handlePromptError } from '@/utils';
+import { useResourceStore } from '../../../../../../../stores';
+import { useREStore } from '../../../../stores';
 
 const { Column } = Table;
 const deleteModalKey = Modal.key();
@@ -21,16 +20,16 @@ export default function DeployConfig() {
     minWidth: '2rem',
   }), []);
   const {
-    prefixCls,
     intlPrefix,
+    formatMessage,
+    projectId,
   } = useResourceStore();
+
   const {
-    AppState: { currentMenuType: { id: projectId } },
     envStore,
-    intl: { formatMessage },
     configDs,
     baseInfoDs,
-  } = useEnvironmentStore();
+  } = useREStore();
 
   const disabled = useMemo(() => {
     const record = baseInfoDs.current;
@@ -62,25 +61,13 @@ export default function DeployConfig() {
           children: formatMessage({ id: `${intlPrefix}.config.delete.des` }),
           okText: formatMessage({ id: 'delete' }),
           onOk: () => handleDelete(record),
-          footer: ((okBtn, cancelBtn) => (
-            <>
-              {cancelBtn}
-              {okBtn}
-            </>
-          )),
         };
-        // configDs.delete(record, modalProps);
         deleteModal.update(modalProps);
       } else if (!res.failed) {
         deleteModal.update({
           children: formatMessage({ id: `${intlPrefix}.config.delete.describe` }),
           okCancel: false,
           okText: formatMessage({ id: 'iknow' }),
-          footer: ((OkBtn) => (
-            <>
-              {OkBtn}
-            </>
-          )),
         });
       } else {
         deleteModal.close();
@@ -91,7 +78,7 @@ export default function DeployConfig() {
     }
   }
 
-  async function handleDelete(record) {
+  async function handleDelete(record:any) {
     try {
       const res = await envStore.deleteRecord(projectId, record.get('id'));
       if (handlePromptError(res, false)) {
@@ -105,7 +92,7 @@ export default function DeployConfig() {
     }
   }
 
-  function openModifyModal(record) {
+  function openModifyModal(record:any) {
     const valueId = record.get('id');
     const envRecord = baseInfoDs.current;
     const envId = envRecord.get('id');
@@ -124,7 +111,7 @@ export default function DeployConfig() {
     });
   }
 
-  function renderName({ value, record }) {
+  function renderName({ value, record }:any) {
     return (
       <ClickText
         permissionCode={['choerodon.code.project.deploy.app-deployment.resource.ps.update-deploy-config']}
@@ -146,16 +133,16 @@ export default function DeployConfig() {
     return <Action data={actionData} />;
   }
 
-  function renderUser({ value, record }) {
+  function renderUser({ value, record }:any) {
     const url = record.get('createUserUrl');
-    return <UserInfo name={value || ''} avatar={url} />;
+    return <UserInfo realName={value || ''} avatar={url} />;
   }
 
-  function renderDate({ value }) {
-    return value ? <TimePopover datetime={value} /> : null;
+  function renderDate({ value }:any) {
+    return value ? <TimePopover content={value} /> : null;
   }
 
-  function renderDescription({ value }) {
+  function renderDescription({ value }:any) {
     return (
       <Tooltip title={value}>
         {value}

@@ -1,36 +1,28 @@
 import { useLocalStore } from 'mobx-react-lite';
 import { axios, Choerodon } from '@choerodon/boot';
-import checkPermission from '../../../../../../utils/checkPermission';
-import { handlePromptError } from '../../../../../../utils';
+import checkPermission from '@/utils/checkPermission';
+import { handlePromptError } from '@/utils';
 
-export default function useStore({ defaultTab }) {
+export default function useStore({ defaultTab }:any) {
   return useLocalStore(() => ({
     tabKey: defaultTab,
 
-    setTabKey(data) {
+    setTabKey(data: any) {
       this.tabKey = data;
     },
     get getTabKey() {
       return this.tabKey;
     },
     hasPermission: false,
-    setPermission(data) {
+    setPermission(data: any) {
       this.hasPermission = data;
     },
     get getPermission() {
       return this.hasPermission;
     },
 
-    value: '',
-    setValue(value) {
-      this.value = value;
-    },
-    get getValue() {
-      return this.value;
-    },
-
     hasInstance: false,
-    setHasInstance(data) {
+    setHasInstance(data: any) {
       this.hasInstance = data;
     },
     get getHasInstance() {
@@ -38,14 +30,15 @@ export default function useStore({ defaultTab }) {
     },
 
     polarisLoading: true,
-    setPolarisLoading(flag) {
+    setPolarisLoading(flag: any) {
       this.polarisLoading = flag;
     },
     get getPolarisLoading() {
       return this.polarisLoading;
     },
 
-    async checkPermission({ projectId, organizationId }) {
+    async checkPermission({ projectId, organizationId }:any) {
+      // @ts-expect-error
       const res = await checkPermission({
         code: 'choerodon.code.project.deploy.app-deployment.resource.ps.permission',
         organizationId,
@@ -54,25 +47,14 @@ export default function useStore({ defaultTab }) {
       this.setPermission(res);
     },
 
-    async loadValue(projectId, id) {
-      try {
-        const res = await axios.get(`/devops/v1/projects/${projectId}/app_service_versions/value?app_service_id=${id}`);
-        if (handlePromptError(res)) {
-          this.setValue(res);
-        }
-      } catch (e) {
-        Choerodon.handleResponseError(e);
-      }
-    },
-
-    checkDelete(projectId, id) {
+    checkDelete(projectId: any, id: any) {
       return axios.get(`/devops/v1/projects/${projectId}/deploy_value/check_delete?value_id=${id}`);
     },
-    deleteRecord(projectId, id) {
+    deleteRecord(projectId: any, id: any) {
       return axios.delete(`/devops/v1/projects/${projectId}/deploy_value?value_id=${id}`);
     },
 
-    async checkHasInstance(projectId, envId) {
+    async checkHasInstance(projectId: any, envId: any) {
       try {
         this.setPolarisLoading(true);
         const res = await axios.get(`devops/v1/projects/${projectId}/app_service_instances/count_by_options?env_id=${envId}&status=&app_service_id=`);
@@ -87,7 +69,7 @@ export default function useStore({ defaultTab }) {
       }
     },
 
-    async ManualScan(projectId, envId) {
+    async ManualScan(projectId: any, envId: any) {
       try {
         const res = await axios.post(`/devops/v1/projects/${projectId}/polaris/envs/${envId}`);
         const result = handlePromptError(res);
