@@ -87,7 +87,7 @@ function ConfigItem({
             envId={record.get('parentId').split('**')[0]}
             intlPrefix={intlPrefix}
             title="cipher"
-            store={secretStore}
+            type="secret"
             refresh={freshMenu}
           />,
           okText: formatMessage({ id: 'save' }),

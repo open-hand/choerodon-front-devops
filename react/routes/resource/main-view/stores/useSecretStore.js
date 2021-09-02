@@ -24,9 +24,8 @@ export default function useStore() {
       const { id } = data;
       if (id) {
         return axios.put(`/devops/v1/projects/${projectId}/secret`, JSON.stringify(data));
-      } else {
-        return axios.post(`/devops/v1/projects/${projectId}/secret`, JSON.stringify(data));
       }
+      return axios.post(`/devops/v1/projects/${projectId}/secret`, JSON.stringify(data));
     },
 
     checkName(projectId, envId, name) {
