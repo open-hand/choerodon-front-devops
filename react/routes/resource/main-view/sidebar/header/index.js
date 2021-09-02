@@ -1,8 +1,5 @@
-import React, { useCallback, useMemo } from 'react';
+import React from 'react';
 import { runInAction } from 'mobx';
-import { Button } from 'choerodon-ui/pro';
-import { Permission } from '@choerodon/boot';
-import { observer } from 'mobx-react-lite';
 import { C7NTabs } from '@choerodon/components';
 import { useResourceStore } from '../../../stores';
 
@@ -18,13 +15,7 @@ const SidebarHeader = () => {
     prefixCls,
     intl: { formatMessage },
     resourceStore,
-    treeDs,
   } = useResourceStore();
-  const buttonProps = useMemo(() => ({
-    disabled: treeDs.status === 'loading',
-    color: 'primary',
-    funcType: 'flat',
-  }), [treeDs.status]);
 
   function handleChoose(choose) {
     runInAction(() => {
@@ -66,24 +57,6 @@ const SidebarHeader = () => {
           }]}
         />
       </div>
-      {/* <Button */}
-      {/*  {...buttonProps} */}
-      {/*  onClick={chooseInstance} */}
-      {/*  className={getViewType === IST_VIEW_TYPE ? `${prefixCls}-sidebar-active` : ''} */}
-      {/* > */}
-      {/*  {formatMessage({ id: `${intlPrefix}.viewer.${IST_VIEW_TYPE}` })} */}
-      {/* </Button> */}
-      {/* <Permission */}
-      {/*  service={['choerodon.code.project.deploy.app-deployment.resource.ps.resource']} */}
-      {/* > */}
-      {/*  <Button */}
-      {/*    {...buttonProps} */}
-      {/*    onClick={chooseResource} */}
-      {/*    className={getViewType === RES_VIEW_TYPE ? `${prefixCls}-sidebar-active` : ''} */}
-      {/*  > */}
-      {/*    {formatMessage({ id: `${intlPrefix}.viewer.${RES_VIEW_TYPE}` })} */}
-      {/*  </Button> */}
-      {/* </Permission> */}
     </div>
   );
 };

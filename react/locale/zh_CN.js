@@ -199,7 +199,7 @@ const commonField = {
   permission_addTime: '添加时间',
 
   // 资源树名称
-  instances: '实例',
+  instances: 'Chart应用',
   services: '网络',
   ingresses: '域名',
   certifications: '证书',
@@ -210,7 +210,7 @@ const commonField = {
   workload: '工作负载',
 
   // 资源树目录名称
-  instances_group: '实例',
+  instances_group: 'Chart应用',
   services_group: '网络',
   ingresses_group: '域名',
   certifications_group: '证书',

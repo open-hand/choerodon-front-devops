@@ -100,6 +100,7 @@ const InstanceContent = observer(() => {
     baseDs,
   } = useInstanceStore();
   const viewType = resourceStore.getViewType;
+
   const { getSelectedMenu: { key: selectedKey } } = resourceStore;
 
   function handleChange(key) {
