@@ -1,13 +1,12 @@
 import React from 'react';
 import { Table } from 'choerodon-ui/pro';
 import { Tooltip } from 'choerodon-ui';
-import TimePopover from '../../../../../../components/time-popover';
+import { NewTips, TimePopover } from '@choerodon/components';
 import SyncSituation from './SyncSituation';
-import { useResourceStore } from '../../../../stores';
-import { useEnvironmentStore } from '../stores';
-import Tips from '../../../../../../components/new-tips';
+import { useResourceStore } from '../../../../../../../stores';
 
 import './index.less';
+import { useREStore } from '../../../../stores';
 
 const { Column } = Table;
 
@@ -15,12 +14,12 @@ export default function Situation() {
   const {
     prefixCls,
     intlPrefix,
-    intl: { formatMessage },
+    formatMessage,
   } = useResourceStore();
 
-  const { gitopsLogDs } = useEnvironmentStore();
+  const { gitopsLogDs } = useREStore();
 
-  function renderMsg({ value }) {
+  function renderMsg({ value }:any) {
     return (
       <Tooltip title={value} placement="topLeft">
         {value}
@@ -28,7 +27,7 @@ export default function Situation() {
     );
   }
 
-  function renderFileLink({ record }) {
+  function renderFileLink({ record }:any) {
     const url = record.get('fileUrl');
     const path = record.get('filePath');
     return (
@@ -42,7 +41,7 @@ export default function Situation() {
     );
   }
 
-  function renderCommit({ record }) {
+  function renderCommit({ record }:any) {
     const url = record.get('commitUrl');
     const commit = record.get('commit');
     return (
@@ -56,26 +55,27 @@ export default function Situation() {
     );
   }
 
-  function renderTime({ value }) {
-    return <TimePopover datetime={value} />;
+  function renderTime({ value }:any) {
+    return <TimePopover content={value} />;
   }
 
   return (
     <div className={`${prefixCls}-environment-sync`}>
       <SyncSituation />
       <div className={`${prefixCls}-environment-sync-table-title`}>
-        <Tips
+        <NewTips
           title={formatMessage({ id: `${intlPrefix}.environment.error.logs` })}
           helpText={formatMessage({ id: `${intlPrefix}.environment.error.tips` })}
         />
       </div>
       <Table
+        // @ts-expect-error
         locale={{
           emptyText: formatMessage({ id: 'c7ncd.env.sync.empty' }),
         }}
         dataSet={gitopsLogDs}
         border={false}
-        queryBar="none"
+        queryBar={'none' as any}
       >
         <Column name="error" renderer={renderMsg} />
         <Column name="filePath" renderer={renderFileLink} />

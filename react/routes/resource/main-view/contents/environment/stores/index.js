@@ -1,10 +1,13 @@
-import React, { createContext, useMemo, useContext, useEffect } from 'react';
+/* eslint-disable max-len */
+import React, {
+  createContext, useMemo, useContext, useEffect,
+} from 'react';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
 import getTablePostData from '../../../../../../utils/getTablePostData';
-import PermissionsDataSet from './PermissionsDataSet';
+// import PermissionsDataSet from './PermissionsDataSet';
 import GitopsLogDataSet from './GitopsLogDataSet';
 import GitopsSyncDataSet from './GitopsSyncDataSet';
 import RetryDataSet from './RetryDataSet';
@@ -15,6 +18,7 @@ import ConfigFormDataSet from './ConfigFormDataSet';
 import { useMainStore } from '../../../stores';
 import SummaryDataSet from './SummaryDataSet';
 import PolarisNumDataSet from './PalarisNumDataSet';
+import { useREStore } from '../../resource-env/stores';
 
 const Store = createContext();
 
@@ -29,6 +33,11 @@ export const StoreProvider = injectIntl(inject('AppState')(
       AppState: { currentMenuType: { id: projectId, organizationId, type: resourceType } },
       children,
     } = props;
+
+    const {
+      permissionsDs,
+    } = useREStore();
+
     const {
       intlPrefix,
       resourceStore: { getSelectedMenu: { id } },
@@ -44,16 +53,17 @@ export const StoreProvider = injectIntl(inject('AppState')(
       ASSIGN_TAB: 'assign',
       POLARIS_TAB: 'polaris',
     }), []);
+
     const envStore = useStore({ defaultTab: tabs.SYNC_TAB });
-    const permissionsDs = useMemo(() => new DataSet(PermissionsDataSet({ formatMessage, intlPrefix })), []);
+    // const permissionsDs = useMemo(() => new DataSet(PermissionsDataSet({ formatMessage, intlPrefix })), []);
     const gitopsLogDs = useMemo(() => new DataSet(GitopsLogDataSet({ formatMessage, intlPrefix })), []);
     const gitopsSyncDs = useMemo(() => new DataSet(GitopsSyncDataSet()), []);
     const retryDs = useMemo(() => new DataSet(RetryDataSet()), []);
+
     const configDs = useMemo(() => new DataSet(ConfigDataSet({ formatMessage, intlPrefix })), []);
-    const configFormDs = useMemo(() => new DataSet(ConfigFormDataSet({ formatMessage, intlPrefix, projectId, store: envStore, envId: id })), [projectId, id]);
+
     const istSummaryDs = useMemo(() => new DataSet(SummaryDataSet()), []);
     const polarisNumDS = useMemo(() => new DataSet(PolarisNumDataSet()), []);
-
 
     function queryData() {
       const tabKey = envStore.getTabKey;
@@ -132,7 +142,6 @@ export const StoreProvider = injectIntl(inject('AppState')(
       gitopsSyncDs,
       retryDs,
       configDs,
-      configFormDs,
       envStore,
       intlPrefix,
       polarisNumDS,
@@ -143,5 +152,5 @@ export const StoreProvider = injectIntl(inject('AppState')(
         {children}
       </Store.Provider>
     );
-  })
+  }),
 ));

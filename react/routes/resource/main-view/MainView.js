@@ -1,6 +1,5 @@
 import React, {
   useRef, lazy, Suspense, useMemo,
-  useEffect,
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
@@ -15,7 +14,6 @@ import { useMainStore } from './stores';
 import './index.less';
 
 // 实例视图
-const EnvContent = lazy(() => import('./contents/environment'));
 const AppContent = lazy(() => import('./contents/application'));
 const IstContent = lazy(() => import('./contents/instance'));
 
@@ -100,7 +98,8 @@ const MainView = observer(() => {
     } = resourceStore;
     if (!itemType) return <Loading display />;
     const cmMaps = {
-      [ENV_ITEM]: getViewType === IST_VIEW_TYPE ? <EnvContent /> : <ResourceEnvContent />,
+      // [ENV_ITEM]: getViewType === IST_VIEW_TYPE ? <EnvContent /> : <ResourceEnvContent />,
+      [ENV_ITEM]: <ResourceEnvContent />,
       [APP_ITEM]: <AppContent />,
       [IST_ITEM]: <IstContent />,
       [SERVICES_GROUP]: <NetworkContent />,

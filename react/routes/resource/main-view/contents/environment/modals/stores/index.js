@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useMemo, useEffect } from 'react';
+import React, {
+  createContext, useContext, useMemo, useEffect,
+} from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
@@ -30,7 +32,9 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props) => {
 
   const linkServiceDs = useMemo(() => new DataSet({
     fields: [
-      { name: 'appServiceId', type: 'string', textField: 'name', valueField: 'id', label: formatMessage({ id: `${intlPrefix}.app-service` }), required: true },
+      {
+        name: 'appServiceId', type: 'string', textField: 'name', valueField: 'id', label: formatMessage({ id: `${intlPrefix}.app-service` }), required: true,
+      },
     ],
   }), [projectId]);
 
@@ -47,6 +51,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props) => {
     nonePermissionDs.transport.read.url = `/devops/v1/projects/${projectId}/envs/${id}/permission/list_non_related`;
     linkServiceOptionsDs.transport.read.url = `/devops/v1/projects/${projectId}/env/app_services/non_related_app_service?env_id=${id}`;
   }, [projectId, id]);
+
   const value = {
     ...props,
     modalStore,

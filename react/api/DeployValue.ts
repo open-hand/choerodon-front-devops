@@ -5,6 +5,22 @@ class DeployValueApi extends Api<DeployValueApi> {
     return `/devops/v1/projects/${this.projectId}/deploy_value`;
   }
 
+  deleteDeployValue(valueId: string, data: any) {
+    return this.request({
+      method: 'delete',
+      url: `${this.prefix}?value_id=${valueId}`,
+      data,
+    });
+  }
+
+  loadDeployValue(envId: string, data:any) {
+    return this.request({
+      method: 'post',
+      url: `${this.prefix}/page_by_options?env_id=${envId}`,
+      data,
+    });
+  }
+
   getValueIdList({
     appServiceId,
     envId,
@@ -30,5 +46,6 @@ class DeployValueApi extends Api<DeployValueApi> {
 }
 
 const deployValueApi = new DeployValueApi();
-const deployValueApiConfig = new DeployValueApi(true);
-export { deployValueApi, deployValueApiConfig };
+const deployValueConfigApi = new DeployValueApi(true);
+
+export { deployValueApi, deployValueConfigApi };

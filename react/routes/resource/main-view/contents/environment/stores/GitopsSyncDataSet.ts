@@ -1,4 +1,4 @@
-export default () => ({
+export default ():any => ({
   selection: false,
   paging: false,
   dataKey: null,
