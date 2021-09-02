@@ -120,23 +120,6 @@ const IstModals = injectIntl(observer(() => {
     });
   }
 
-  function openDetailModal() {
-    Modal.open({
-      key: detailKey,
-      title: formatMessage({ id: `${intlPrefix}.modal.detail` }),
-      drawer: true,
-      okCancel: false,
-      okText: formatMessage({ id: 'close' }),
-      style: { width: 380 },
-      children: <DetailsModal
-        record={baseDs.current}
-        intlPrefix={intlPrefix}
-        prefixCls={prefixCls}
-        formatMessage={formatMessage}
-      />,
-    });
-  }
-
   function openMarketUpgradeModal() {
     const record = baseDs.current;
     if (!record) return;
