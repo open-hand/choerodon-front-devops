@@ -8,6 +8,7 @@ import { useIstListStore } from '../stores';
 import useDeployStore from '../../../../../deployment/stores/useStore';
 import Deploy from '../../../../../deployment/modals/deploy';
 import BatchDeploy from '../../../../../deployment/modals/batch-deploy';
+import { openAppCreateModal } from '@/components/open-appCreate';
 
 const modalStyle = {
   width: '26%',
@@ -44,6 +45,7 @@ const CustomModals = observer(() => {
     treeDs.query();
     istListDs.query();
   }
+
   function openDeploy() {
     Modal.open({
       key: deployKey,
@@ -93,25 +95,34 @@ const CustomModals = observer(() => {
     const envRecord = treeDs.find((record) => record.get('key') === parentId);
     const connect = envRecord && envRecord.get('connect');
     const configDisabled = !connect;
-    return [{
-      permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.resource-deploy'],
-      disabled: configDisabled,
-      name: formatMessage({ id: `${intlPrefixDeploy}.manual` }),
-      icon: 'cloud_done-o',
-      handler: openDeploy,
-      display: true,
-    }, {
-      permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.resource-batch'],
-      disabled: configDisabled,
-      name: formatMessage({ id: `${intlPrefixDeploy}.batch` }),
-      icon: 'cloud_done-o',
-      handler: openBatchDeploy,
-      display: true,
-    }, {
-      icon: 'refresh',
-      handler: refresh,
-      display: true,
-    }];
+    return [
+    //   {
+    //   permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.resource-deploy'],
+    //   disabled: configDisabled,
+    //   name: formatMessage({ id: `${intlPrefixDeploy}.manual` }),
+    //   icon: 'cloud_done-o',
+    //   handler: openDeploy,
+    //   display: true,
+    // },
+      {
+        permissions: [],
+        disabled: configDisabled,
+        name: '创建应用',
+        icon: 'playlist_add',
+        handler: () => openAppCreateModal(refresh),
+      },
+      {
+        permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.resource-batch'],
+        disabled: configDisabled,
+        name: '批量创建Chart应用',
+        icon: 'library_add-o',
+        handler: openBatchDeploy,
+      },
+      {
+        icon: 'refresh',
+        handler: refresh,
+      },
+    ];
   }, [formatMessage, refresh]);
 
   return <HeaderButtons items={buttons} showClassName />;
