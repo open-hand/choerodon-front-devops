@@ -31,7 +31,6 @@ const EnvContent = observer(() => {
       ASSIGN_TAB,
       POLARIS_TAB,
     },
-    tabs,
     envStore,
   } = useREStore();
 
