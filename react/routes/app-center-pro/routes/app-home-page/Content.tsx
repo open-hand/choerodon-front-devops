@@ -29,7 +29,7 @@ const AppHomePage = () => {
       {
         icon: 'refresh',
         display: true,
-        handler: refresh,
+        handler: () => refresh(),
       },
     ];
     return <HeaderButtons items={items} />;
