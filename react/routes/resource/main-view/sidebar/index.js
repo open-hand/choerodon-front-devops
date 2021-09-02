@@ -6,8 +6,7 @@ import {
   uniqBy, toUpper, forEach, isEmpty, get, some,
 } from 'lodash';
 import setEnvRecentItem from '../../../../utils/setEnvRecentItem';
-import { itemTypeMappings, RES_TYPES } from '../../stores/mappings';
-import SidebarHeading from './header';
+import { itemTypeMappings } from '../../stores/mappings';
 import setTreeMenuSelect from '../../../../utils/setTreeMenuSelect';
 import TreeView from '../../../../components/tree-view';
 import TreeItem from './tree-item';

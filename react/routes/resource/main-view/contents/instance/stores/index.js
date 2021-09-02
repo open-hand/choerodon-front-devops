@@ -11,8 +11,8 @@ import CasesDataSet from './CasesDataSet';
 import PodsDataset from './PodsDataSet';
 import DetailsStore from './DetailsStore';
 import useStore from './useStore';
-import openWarnModal from '../../../../../../utils/openWarnModal';
-import getTablePostData from '../../../../../../utils/getTablePostData';
+import openWarnModal from '@/utils/openWarnModal';
+import getTablePostData from '@/utils/getTablePostData';
 
 const Store = createContext();
 
