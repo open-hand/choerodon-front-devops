@@ -25,17 +25,12 @@ const REModals = observer(() => {
 
   const {
     intlPrefix,
-    prefixCls,
     intl: { formatMessage },
-    treeDs,
     resourceStore: { getSelectedMenu: { id } },
   } = useResourceStore();
 
   const {
     baseInfoDs,
-    resourceCountDs,
-    gitopsLogDs,
-    gitopsSyncDs,
     mainStore: {
       autoDeployMsg: {
         existAutoDeploy = false,
@@ -48,17 +43,10 @@ const REModals = observer(() => {
     name,
     permissionsDs,
     nonePermissionDs,
+    refresh,
   } = useREStore();
 
   const record = baseInfoDs.current;
-
-  function refresh() {
-    baseInfoDs.query();
-    resourceCountDs.query();
-    treeDs.query();
-    gitopsSyncDs.query();
-    gitopsLogDs.query();
-  }
 
   function linkToConfig() {
     const url = record && record.get('gitlabUrl');
