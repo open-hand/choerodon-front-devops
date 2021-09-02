@@ -5,7 +5,7 @@ import {
 import { Loading } from '@choerodon/components';
 import { observer } from 'mobx-react-lite';
 import EmptyPage from '@/components/empty-page';
-import { openAppCreateModal } from '../../components/OpenAppCreateModal';
+import { openAppCreateModal } from '@/components/open-appCreate';
 import './index.less';
 import QueryfieldBar from './components/queryfield-bar';
 import { useAppHomePageStore } from './stores';
@@ -40,7 +40,7 @@ const AppHomePage = () => {
       return <Loading display />;
     }
     if (listDs && !listDs.length) {
-      // @ts-expect-error
+      // @ts-ignore
       return <EmptyPage title="暂无应用" describe="暂无应用，请创建" access />;
     }
     return <AppCardContent />;
