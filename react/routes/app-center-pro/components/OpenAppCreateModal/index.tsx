@@ -19,15 +19,7 @@ import { ENV_TAB, HOST_TAB } from '@/routes/app-center-pro/stores/CONST';
 
 import './index.less';
 
-const appCreateModalKey = Modal.key();
-
 const { Step } = Steps;
-
-const {
-  MODAL_WIDTH: {
-    MAX,
-  },
-} = CONSTANTS;
 
 const setKeyValue = (obj: { [key: string]: any }, key: string, value: any) => {
   // eslint-disable-next-line no-param-reassign
@@ -116,6 +108,7 @@ const AppCreateForm = (props: any) => {
   const {
     modal,
     refresh,
+    isDeploy,
   } = props;
 
   const appInfoRef = useRef();
@@ -557,18 +550,24 @@ const AppCreateForm = (props: any) => {
   );
 };
 
-export function openAppCreateModal(refresh: Function) {
-  Modal.open({
-    key: appCreateModalKey,
-    title: '创建应用',
-    children: <AppCreateForm refresh={refresh} />,
-    okText: '下一步',
-    drawer: true,
-    style: {
-      width: MAX,
-    },
-    // onCancel: handleOk,
-  });
-}
+AppCreateForm.defaultProps = {
+  isDeploy: false,
+};
+
+export default AppCreateForm;
+
+// export function openAppCreateModal(refresh: Function) {
+//   Modal.open({
+//     key: appCreateModalKey,
+//     title: '创建应用',
+//     children: <AppCreateForm refresh={refresh} />,
+//     okText: '下一步',
+//     drawer: true,
+//     style: {
+//       width: MAX,
+//     },
+//     // onCancel: handleOk,
+//   });
+// }
 
 export { setKeyValue, getAppConfigData };
