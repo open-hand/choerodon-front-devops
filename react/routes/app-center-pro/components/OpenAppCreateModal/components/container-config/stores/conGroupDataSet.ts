@@ -74,7 +74,7 @@ const productSourceData = [{
   img: shareService,
 }, {
   value: 'custom',
-  name: '自定义仓库',
+  name: '自定义镜像',
   img: custom,
 }, {
   value: 'upload',
@@ -161,7 +161,7 @@ const mapping: {
   imageVersion: {
     name: 'tag',
     type: 'string' as FieldType,
-    label: '镜像版本',
+    label: 'Tag',
     textField: 'tagName',
     valueField: 'tagName',
     dynamicProps: {
@@ -337,7 +337,7 @@ const mapping: {
   repoAddress: {
     name: 'customImageName',
     type: 'string' as FieldType,
-    label: '仓库地址',
+    label: '镜像地址',
     dynamicProps: {
       required: ({ record }) => record?.get(mapping.productType.name) === productTypeData[0].value
         && record?.get(

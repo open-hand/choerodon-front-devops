@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 import {
   Form, Select, Button, TextField, Output,
 } from 'choerodon-ui/pro';
-import { Upload, Icon } from 'choerodon-ui';
+import { Upload, Icon, Button as OldButton } from 'choerodon-ui';
 import { CustomSelect, ChunkUploader } from '@choerodon/components';
 import { Base64 } from 'js-base64';
 import { useHostAppConfigStore } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-app-config/stores';
@@ -17,6 +17,7 @@ import {
 } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config/stores/conGroupDataSet';
 
 import './index.less';
+import '../container-config/components/container-detail/index.less';
 
 import '../container-config/components/container-detail/index.less';
 import StatusDot from '@/components/status-dot';
@@ -182,7 +183,12 @@ const Index = observer(() => {
                   callback={(str: string) => {
                     dataSource.set(mapping.uploadUrl.name, str);
                   }}
-                />
+                >
+                  <OldButton
+                    type="dashed"
+                    icon="file_upload"
+                  >上传文件</OldButton>
+                </ChunkUploader>
                 {/* <Upload> */}
                 {/*  <Button icon="file_upload"> */}
                 {/*    上传文件 */}
@@ -190,19 +196,22 @@ const Index = observer(() => {
                 {/* </Upload> */}
               </Form>
                 { dataSource.get(mapping.uploadUrl.name) && (
-                  <p className="c7ncd-appCenterPro-hostAppConfig__fileName">
-                    <span>
-                      <Icon type="attach_file" />
-                      {dataSource.get(mapping.fileName.name)}
-                    </span>
+                  <p className="c7ncd-appCenterPro-conDetail__fileName">
+                      <span className="c7ncd-appCenterPro-conDetail__fileName__fileIcon">
+                        <Icon type="attach_file" />
+                        <span>
+                          {dataSource.get(mapping.fileName.name)}
+                        </span>
+                      </span>
                     <Icon
                       onClick={() => {
                         dataSource.set(mapping.fileName.name, '');
-                        dataSource.set(mapping.uploadUrl.name, '');
+                        dataSource.set(mapping.uploadFile.name, '');
                       }}
-                      type="close"
+                      type="delete"
                       style={{
                         cursor: 'pointer',
+                        color: '#5365EA',
                       }}
                     />
                   </p>
@@ -279,6 +288,8 @@ const Index = observer(() => {
       {
         detail ? (
           <Form
+            className="c7ncd-appCenterPro-hostAppConfig__colonForm"
+            useColon
             columns={3}
             dataSet={HostAppConfigDataSet}
             labelLayout={'horizontal' as LabelLayoutType}

@@ -136,11 +136,11 @@ const Index = observer(() => {
             record={optionRecord}
           >
             <div className="c7ncd-appCenterPro-deployGroup__options__item">
-              <div>
+              <div className="c7ncd-appCenterPro-deployGroup__options__item__fieldDiv">
                 <TextField name="key" />
               </div>
               <span className="c7ncd-appCenterPro-deployGroup__options__item__equal">=</span>
-              <div>
+              <div className="c7ncd-appCenterPro-deployGroup__options__item__fieldDiv">
                 <TextField name="value" />
               </div>
               {
@@ -158,7 +158,6 @@ const Index = observer(() => {
       }
       <Button
         // @ts-ignore
-        colSpan={1}
         funcType={'flat' as FuncType}
         icon="add"
         onClick={() => ds.create()}
@@ -177,14 +176,25 @@ const Index = observer(() => {
         active={record.get('active')}
         size="small"
       />
-      <span style={{ marginLeft: 4 }}>
+      <span
+        style={{
+          marginLeft: 4,
+          position: 'relative',
+          top: 1,
+        }}
+      >
         {text}
       </span>
     </>
   );
 
   return (
-    <div className="c7ncd-appCenterPro-deployGroup">
+    <div
+      className="c7ncd-appCenterPro-deployGroup"
+      style={{
+        marginTop: detail ? 'unset' : '30px',
+      }}
+    >
       <Form columns={3} dataSet={DeployGroupConfigDataSet}>
         {
           detail && [
@@ -211,6 +221,7 @@ const Index = observer(() => {
         style={{
           marginBottom: 20,
         }}
+        defaultCollapse
         title="高级配置"
         content={(
           <Form columns={3} dataSet={DeployGroupConfigDataSet}>
