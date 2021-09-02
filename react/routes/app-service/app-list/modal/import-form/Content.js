@@ -43,10 +43,10 @@ const ImportForm = injectIntl(observer((props) => {
   useEffect(() => {
     modal.update({
       okProps: {
-        disabled: record.get('platformType') === 'gitlab' && gitlabSelectedDs.length === 0,
+        disabled: (record.get('platformType') === 'gitlab' && !record.get('isGitLabTemplate')) && gitlabSelectedDs.length === 0,
       },
     });
-  }, [gitlabSelectedDs.length, record.get('platformType')]);
+  }, [gitlabSelectedDs.length, record.get('platformType'), record.get('isGitLabTemplate')]);
   const selectedDataSet = { market: marketSelectedDs, share: selectedDs, gitlab: gitlabSelectedDs };
   modal.handleOk(async () => {
     if (record.get('platformType') === 'share' || record.get('platformType') === 'market' || (record.get('platformType') === 'gitlab' && !record.get('isGitLabTemplate'))) {
@@ -171,16 +171,7 @@ const ImportForm = injectIntl(observer((props) => {
           )}
         />
       </div>
-      {record.get('platformType') === 'share' || record.get('platformType') === 'market' ? (
-        <>
-          <PlatForm checkData={checkData} />
-          {hasFailed && (
-            <span className={`${prefixCls}-import-wrap-failed`}>
-              {formatMessage({ id: `${intlPrefix}.platform.failed` })}
-            </span>
-          )}
-        </>
-      ) : (
+      {(record.get('platformType') === 'gitlab' || record.get('platformType') === 'github') && (
         <Form record={record}>
           {record.get('platformType') === 'github'
             ? (
@@ -190,7 +181,7 @@ const ImportForm = injectIntl(observer((props) => {
               </SelectBox>
             )
             : (
-              <div style={{ display: 'flex', height: '50px' }}>
+              <div style={{ display: 'flex', height: !record.get('isGitLabTemplate') ? '30px' : '50px' }}>
                 <SelectBox name="isGitLabTemplate" label={renderGitlabTemplate()}>
                   <Option value>
                     <div className={`${prefixCls}-option-child`}>
@@ -205,6 +196,8 @@ const ImportForm = injectIntl(observer((props) => {
                     </div>
                   </Option>
                 </SelectBox>
+                {!record.get('isGitLabTemplate')
+                && (
                 <div style={{ width: '40%' }}>
                   <Select
                     disabled={gitlabSelectedDs.length !== 0}
@@ -225,9 +218,9 @@ const ImportForm = injectIntl(observer((props) => {
                     )}
                   />
                 </div>
+                )}
               </div>
             )}
-          {(record.get('platformType') === 'gitlab' && !record.get('isGitLabTemplate')) && <PlatForm checkData={checkData} disabled={record.get('gitlabTemplate')} />}
           <Form columns={3}>
             {record.get('platformType') === 'github' && record.get('isTemplate') && (
             <Select name="githubTemplate" searchable colSpan={1} />
@@ -250,14 +243,20 @@ const ImportForm = injectIntl(observer((props) => {
               <TextField name="code" colSpan={1} />
             </>
             )}
-            {hasFailed && (
-            <span className={`${prefixCls}-import-wrap-failed`}>
-              {formatMessage({ id: `${intlPrefix}.platform.failed` })}
-            </span>
-            )}
           </Form>
         </Form>
       )}
+      {(record.get('platformType') === 'share' || record.get('platformType') === 'market' || (record.get('platformType') === 'gitlab' && !record.get('isGitLabTemplate'))) && (
+        <>
+          <PlatForm checkData={checkData} disabled={record.get('gitlabTemplate')} />
+          {hasFailed && (
+            <span className={`${prefixCls}-import-wrap-failed`}>
+              {formatMessage({ id: `${intlPrefix}.platform.failed` })}
+            </span>
+          )}
+        </>
+      )}
+
     </div>
   );
 }));
