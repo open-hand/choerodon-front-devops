@@ -1,8 +1,9 @@
 import { useLocalStore } from 'mobx-react-lite';
-import { axios } from '@choerodon/boot';
 import { handlePromptError } from '@/utils';
+import { configMapApi, secretApi } from '@/api';
+import { keyValueType } from '../interface';
 
-export default function useStore() {
+export default function useStore(type?:keyValueType) {
   return useLocalStore(() => ({
     singleData: {},
     setSingleData(data:object) {
@@ -12,24 +13,25 @@ export default function useStore() {
       return this.singleData;
     },
 
-    async loadSingleData(projectId:string, id:string) {
-      const res = await axios.get(`/devops/v1/projects/${projectId}/secret/${id}?to_decode=true`);
+    async loadSingleData(id:string) {
+      const res = type === 'secret' ? await secretApi.loadSingleData(id) : await configMapApi.loadSingleData(id);
       if (handlePromptError(res)) {
         this.setSingleData(res);
       }
       return res;
     },
 
-    postKV(projectId:string, data:any) {
+    postKV(data:any) {
       const { id } = data;
+      const stringData = JSON.stringify(data);
       if (id) {
-        return axios.put(`/devops/v1/projects/${projectId}/secret`, JSON.stringify(data));
+        return type === 'secret' ? secretApi.putSecret(stringData) : configMapApi.putConfigMap(stringData);
       }
-      return axios.post(`/devops/v1/projects/${projectId}/secret`, JSON.stringify(data));
+      return type === 'secret' ? secretApi.postSecret(stringData) : configMapApi.postConfigMap(stringData);
     },
 
-    checkName(projectId:string, envId:string, name:string) {
-      return axios(`/devops/v1/projects/${projectId}/secret/${envId}/check_name?secret_name=${name}`);
+    checkName(envId:string, name:string) {
+      return type === 'secret' ? secretApi.checkName(envId, name) : configMapApi.checkName(envId, name);
     },
   }));
 }

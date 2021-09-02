@@ -108,7 +108,7 @@ const ConfigMap = observer((props) => {
         title="mapping"
         id={ConfigMapTableDs.current.get('id')}
         envId={parentId}
-        store={formStore}
+        store='configMap'
         intlPrefix={intlPrefix}
         refresh={refresh}
       />,

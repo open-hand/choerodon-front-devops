@@ -25,7 +25,6 @@ const HostConfig = React.lazy(() => import('./routes/host-config'));
 const OrgTemplate = React.lazy(() => import('./routes/app-template/OrgIndex'));
 const SiteTemplate = React.lazy(() => import('./routes/app-template/SiteIndex'));
 const AppCenter = React.lazy(() => import('./routes/app-center-pro'));
-const AppCenter2 = React.lazy(() => import('./routes/app-center'));
 
 function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
   const IntlProviderAsync = useMemo(() => asyncLocaleProvider(language, () => import(`./locale/${language}`)), []);
@@ -71,11 +70,6 @@ function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
             path={`${match.url}/application-center`}
             component={AppCenter}
           />
-          {/* <PermissionRoute
-            service={[]}
-            path={`${match.url}/application-center2`}
-            component={AppCenter2}
-          /> */}
           <Route path="*" component={nomatch} />
         </Switch>
         <ModalContainer />

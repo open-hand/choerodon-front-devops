@@ -88,7 +88,7 @@ function ConfigItem({
             intlPrefix={intlPrefix}
             modeSwitch
             title="configMap"
-            store={configMapStore}
+            type="configMap"
             refresh={freshMenu}
           />,
           okText: formatMessage({ id: 'save' }),
