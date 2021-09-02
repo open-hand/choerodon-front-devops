@@ -13,6 +13,13 @@ class DeployValueApi extends Api<DeployValueApi> {
     });
   }
 
+  checkDelete(valueId:string) {
+    return this.request({
+      method: 'get',
+      url: `${this.prefix}/check_delete?value_id=${valueId}`,
+    });
+  }
+
   loadDeployValue(envId: string, data:any) {
     return this.request({
       method: 'post',

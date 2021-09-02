@@ -47,13 +47,6 @@ export default function useStore({ defaultTab }:any) {
       this.setPermission(res);
     },
 
-    checkDelete(projectId: any, id: any) {
-      return axios.get(`/devops/v1/projects/${projectId}/deploy_value/check_delete?value_id=${id}`);
-    },
-    deleteRecord(projectId: any, id: any) {
-      return axios.delete(`/devops/v1/projects/${projectId}/deploy_value?value_id=${id}`);
-    },
-
     async checkHasInstance(projectId: any, envId: any) {
       try {
         this.setPolarisLoading(true);
