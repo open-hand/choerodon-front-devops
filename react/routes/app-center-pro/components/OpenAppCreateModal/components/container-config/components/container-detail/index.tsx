@@ -5,7 +5,7 @@ import {
   Form, TextField, Button, SelectBox, NumberField, Select,
 } from 'choerodon-ui/pro';
 import { inject } from 'mobx-react';
-import { Icon, Upload } from 'choerodon-ui';
+import { Icon, Upload, Button as OldButton } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { CustomSelect, ChunkUploader } from '@choerodon/components';
 import { productTypeData, productSourceData, mapping } from '../../stores/conGroupDataSet';
@@ -156,22 +156,30 @@ const Index = inject('AppState')(observer(({
                       callback={(str: string) => {
                         dataSource.set(mapping.jarFileDownloadUrl.name as string, str);
                       }}
-                    />
+                    >
+                      <OldButton
+                        type="dashed"
+                        icon="file_upload"
+                      >上传文件</OldButton>
+                    </ChunkUploader>
                   </Form>
                   { dataSource.get(mapping.jarFileDownloadUrl.name) && (
                     <p className="c7ncd-appCenterPro-conDetail__fileName">
-                      <span>
+                      <span className="c7ncd-appCenterPro-conDetail__fileName__fileIcon">
                         <Icon type="attach_file" />
-                        {dataSource.get(mapping.fileName.name)}
+                        <span>
+                          {dataSource.get(mapping.fileName.name)}
+                        </span>
                       </span>
                       <Icon
                         onClick={() => {
                           dataSource.set(mapping.fileName.name, '');
                           dataSource.set(mapping.jarFileDownloadUrl.name, '');
                         }}
-                        type="close"
+                        type="delete"
                         style={{
                           cursor: 'pointer',
+                          color: '#5365EA',
                         }}
                       />
                     </p>
@@ -247,7 +255,7 @@ const Index = inject('AppState')(observer(({
   const getEnvVariableRender = () => {
     if (dataSource) {
       return (
-        <Form columns={2}>
+        <Form className="c7ncd-appCenterPro-conDetail__nestForm" columns={2}>
           {
             dataSource
               ?.getField(mapping.enVariable.name)?.options?.records.map((record: Record) => (
@@ -264,6 +272,7 @@ const Index = inject('AppState')(observer(({
                           type="delete"
                           style={{
                             marginLeft: 7,
+                            color: '#5365ea',
                           }}
                           onClick={() => dataSource
                             ?.getField(mapping.enVariable.name)?.options?.delete([record], false)}
@@ -296,7 +305,7 @@ const Index = inject('AppState')(observer(({
     if (dataSource) {
       if (dataSource?.getField && dataSource?.getField(mapping.portConfig.name)?.options) {
         return (
-          <Form columns={2}>
+          <Form className="c7ncd-appCenterPro-conDetail__nestForm" columns={2}>
             {
               dataSource
                 ?.getField(mapping.portConfig.name)?.options?.records.map((record: Record) => (
@@ -311,6 +320,9 @@ const Index = inject('AppState')(observer(({
                           ?.options?.records?.length || 0) > 1 && (
                           <Icon
                             type="delete"
+                            style={{
+                              color: '#5365ea',
+                            }}
                             onClick={() => dataSource
                               ?.getField(mapping.portConfig.name)?.options?.delete([record], false)}
                           />
