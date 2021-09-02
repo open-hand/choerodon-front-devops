@@ -7,6 +7,7 @@ interface ContextType {
   children: any,
   AppInfoDataSet: any,
   cRef: any,
+  isDeploy?: boolean,
 }
 
 const Store = createContext({} as ContextType);

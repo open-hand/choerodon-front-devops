@@ -109,6 +109,7 @@ const AppCreateForm = (props: any) => {
     modal,
     refresh,
     isDeploy,
+    envId: propsEnvId,
   } = props;
 
   const appInfoRef = useRef();
@@ -121,7 +122,12 @@ const AppCreateForm = (props: any) => {
     title: '应用信息',
     display: true,
     ref: appInfoRef,
-    children: () => <AppInfo cRef={appInfoRef} />,
+    children: () => (
+      <AppInfo
+        cRef={appInfoRef}
+        isDeploy={isDeploy}
+      />
+    ),
     data: null,
   }, {
     title: '应用配置',

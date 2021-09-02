@@ -11,6 +11,7 @@ const Index = observer(() => {
   const {
     AppInfoDataSet,
     cRef,
+    isDeploy,
   } = useAppInfoStore();
 
   useImperativeHandle(cRef, () => ({
@@ -43,7 +44,9 @@ const Index = observer(() => {
       <div
         className="c7ncd-appCenterPro-appInfo__form__selectContainer"
         // @ts-ignore
-        colSpan={2}
+        colSpan={
+          isDeploy ? 1 : 2
+        }
         newLine
       >
         <CustomSelect
@@ -53,7 +56,12 @@ const Index = observer(() => {
             mapping.deployMode.name as string,
             value.value,
           )}
-          data={deployModeOptionsData}
+          data={deployModeOptionsData.filter((option) => {
+            if (isDeploy && option.value === deployModeOptionsData[1].value) {
+              return false;
+            }
+            return true;
+          })}
           identity="value"
           mode="single"
           customChildren={(item): any => (
@@ -70,7 +78,11 @@ const Index = observer(() => {
       {
         AppInfoDataSet.current.get(mapping.deployMode.name) === deployModeOptionsData[0].value && (
           <>
-            <p className="c7ncd-appCenterPro-appInfo__form__title">
+            <p
+              className="c7ncd-appCenterPro-appInfo__form__title"
+              // @ts-ignore
+              newLine
+            >
               部署制品类型
             </p>
             <div

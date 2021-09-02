@@ -11,7 +11,9 @@ const {
   },
 } = CONSTANTS;
 
-export function openAppCreateModal(refresh: Function, isDeploy?: boolean) {
+function openAppCreateModal(refresh: Function, isDeploy: boolean, envId: string): void;
+function openAppCreateModal(refresh: Function): void;
+function openAppCreateModal(refresh: Function, isDeploy?: boolean, envId?: string) {
   Modal.open({
     key: appCreateModalKey,
     title: '创建应用',
@@ -19,6 +21,7 @@ export function openAppCreateModal(refresh: Function, isDeploy?: boolean) {
       <AppCreateForm
         refresh={refresh}
         isDeploy={isDeploy || false}
+        envId={envId}
       />
     ),
     okText: '下一步',
@@ -29,3 +32,5 @@ export function openAppCreateModal(refresh: Function, isDeploy?: boolean) {
     // onCancel: handleOk,
   });
 }
+
+export { openAppCreateModal };
