@@ -37,20 +37,23 @@ const ImportForm = injectIntl(observer((props) => {
   } = useImportAppServiceStore();
   const record = useMemo(() => importDs.current || importDs.records[0], [importDs.current]);
   const [hasFailed, setHasFailed] = useState(false);
+  const isGitLabTemplate = record.get('isGitLabTemplate');
+  const platformType = record.get('platformType');
+  const isTemplate = record.get('isTemplate');
   useEffect(() => {
     setHasFailed(false);
-  }, [record.get('platformType')]);
+  }, [platformType]);
   useEffect(() => {
     modal.update({
       okProps: {
-        disabled: (record.get('platformType') === 'gitlab' && !record.get('isGitLabTemplate')) && gitlabSelectedDs.length === 0,
+        disabled: (platformType === 'gitlab' && !isGitLabTemplate) && gitlabSelectedDs.length === 0,
       },
     });
-  }, [gitlabSelectedDs.length, record.get('platformType'), record.get('isGitLabTemplate')]);
+  }, [gitlabSelectedDs.length, platformType, isGitLabTemplate]);
   const selectedDataSet = { market: marketSelectedDs, share: selectedDs, gitlab: gitlabSelectedDs };
   modal.handleOk(async () => {
-    if (record.get('platformType') === 'share' || record.get('platformType') === 'market' || (record.get('platformType') === 'gitlab' && !record.get('isGitLabTemplate'))) {
-      const ds = selectedDataSet[record.get('platformType')];
+    if (platformType === 'share' || platformType === 'market' || (platformType === 'gitlab' && !isGitLabTemplate)) {
+      const ds = selectedDataSet[platformType];
       if (!ds.length) return true;
       if (!await validateDs()) {
         return false;
@@ -76,20 +79,20 @@ const ImportForm = injectIntl(observer((props) => {
   async function validateDs() {
     let validateResult = false;
     // 因为市场服务应用通过ds.loadData方法添加，调用ds.validate不会触发每条record的校验
-    if (record.get('platformType') === 'market') {
+    if (platformType === 'market') {
       const results = await Promise.all(
         marketSelectedDs.map((eachRecord) => eachRecord.validate(true)),
       );
       validateResult = results.every((result) => result);
     } else {
-      validateResult = await selectedDataSet[record.get('platformType')].validate();
+      validateResult = await selectedDataSet[platformType].validate();
       importStore.setSkipCheck(false);
     }
     return validateResult;
   }
 
   async function checkData() {
-    const ds = selectedDataSet[record.get('platformType')];
+    const ds = selectedDataSet[platformType];
     const lists = ds.toData();
     const {
       listCode, listName, repeatName, repeatCode,
@@ -114,7 +117,7 @@ const ImportForm = injectIntl(observer((props) => {
   function getRepeatData(lists) {
     let nameData;
     let codeData;
-    if (record.get('platformType') === 'gitlab') {
+    if (platformType === 'gitlab') {
       nameData = countBy(lists, 'servername');
       codeData = countBy(lists, 'name');
     } else {
@@ -171,9 +174,9 @@ const ImportForm = injectIntl(observer((props) => {
           )}
         />
       </div>
-      {(record.get('platformType') === 'gitlab' || record.get('platformType') === 'github') && (
+      {(platformType === 'gitlab' || platformType === 'github') && (
         <Form record={record}>
-          {record.get('platformType') === 'github'
+          {platformType === 'github'
             ? (
               <SelectBox name="isTemplate">
                 <Option value>{formatMessage({ id: `${intlPrefix}.github.system` })}</Option>
@@ -181,7 +184,7 @@ const ImportForm = injectIntl(observer((props) => {
               </SelectBox>
             )
             : (
-              <div style={{ display: 'flex', height: !record.get('isGitLabTemplate') ? '30px' : '50px' }}>
+              <div style={{ display: 'flex', height: !isGitLabTemplate ? '30px' : '50px' }}>
                 <SelectBox name="isGitLabTemplate" label={renderGitlabTemplate()}>
                   <Option value>
                     <div className={`${prefixCls}-option-child`}>
@@ -196,7 +199,7 @@ const ImportForm = injectIntl(observer((props) => {
                     </div>
                   </Option>
                 </SelectBox>
-                {!record.get('isGitLabTemplate')
+                {!isGitLabTemplate
                 && (
                 <div style={{ width: '40%' }}>
                   <Select
@@ -222,31 +225,31 @@ const ImportForm = injectIntl(observer((props) => {
               </div>
             )}
           <Form columns={3}>
-            {record.get('platformType') === 'github' && record.get('isTemplate') && (
+            {platformType === 'github' && isTemplate && (
             <Select name="githubTemplate" searchable colSpan={1} />
             )}
-            {(record.get('platformType') === 'github' || record.get('isGitLabTemplate')) && (
+            {(platformType === 'github' || isGitLabTemplate) && (
             <TextField
               colSpan={1}
               name="repositoryUrl"
-              disabled={(record.get('platformType') === 'github') && record.get('isTemplate')}
-              addonAfter={record.get('platformType') === 'github' && record.get('isTemplate')
+              disabled={(platformType === 'github') && isTemplate}
+              addonAfter={platformType === 'github' && isTemplate
                 ? null
-                : <Tips helpText={formatMessage({ id: `${intlPrefix}.address.${record.get('platformType')}.tips` })} />}
+                : <Tips helpText={formatMessage({ id: `${intlPrefix}.address.${platformType}.tips` })} />}
             />
             )}
-            {(record.get('platformType') === 'gitlab' && record.get('isGitLabTemplate')) && <TextField name="accessToken" colSpan={1} />}
-            {(record.get('isGitLabTemplate') || record.get('platformType') === 'github') && (
+            {(platformType === 'gitlab' && isGitLabTemplate) && <TextField name="accessToken" colSpan={1} />}
+            {(isGitLabTemplate || platformType === 'github') && (
             <>
-              {((record.get('platformType') === 'github') && !record.get('isTemplate')) ? <Select name="type" clearButton={false} colSpan={1} /> : <Select name="type" clearButton={false} colSpan={1} newLine />}
-              {((record.get('platformType') === 'github') && !record.get('isTemplate')) ? <TextField name="name" colSpan={1} newLine /> : <TextField name="name" />}
+              {((platformType === 'github') && !isTemplate) ? <Select name="type" clearButton={false} colSpan={1} /> : <Select name="type" clearButton={false} colSpan={1} newLine />}
+              {((platformType === 'github') && !isTemplate) ? <TextField name="name" colSpan={1} newLine /> : <TextField name="name" />}
               <TextField name="code" colSpan={1} />
             </>
             )}
           </Form>
         </Form>
       )}
-      {(record.get('platformType') === 'share' || record.get('platformType') === 'market' || (record.get('platformType') === 'gitlab' && !record.get('isGitLabTemplate'))) && (
+      {(platformType === 'share' || platformType === 'market' || (platformType === 'gitlab' && !isGitLabTemplate)) && (
         <>
           <PlatForm checkData={checkData} disabled={record.get('gitlabTemplate')} />
           {hasFailed && (
