@@ -26,7 +26,6 @@ export const StoreProvider = injectIntl(inject('AppState')(
       children,
       intlPrefix,
       deployStore,
-      envId,
     } = props;
 
     const envOptionsDs = useMemo(() => new DataSet(OptionsDataSet()), []);
