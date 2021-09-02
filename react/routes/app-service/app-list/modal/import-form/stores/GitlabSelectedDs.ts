@@ -1,6 +1,6 @@
 /* eslint-disable */
 import includes from 'lodash/includes';
-import {appServiceApi} from '@/api/AppService';
+import { appServiceApi } from '@/api/AppService';
 const TypeOptionDs = () => {
   return ({
     fields: [
@@ -16,9 +16,9 @@ const TypeOptionDs = () => {
     }],
   })
 };
-const GitlabSelectedDs = ({ intlPrefix, formatMessage, projectId, importStore, typeOptionDs}: any) => {
+const GitlabSelectedDs = ({ intlPrefix, formatMessage, projectId, importStore, typeOptionDs }: any) => {
   function handleUpdate({ dataSet, record, name }: any) {
-    if (name === 'name' || name === 'code') {
+    if (name === 'serverName' || name === 'name') {
       dataSet.forEach((eachRecord: any) => {
         if (record.id !== eachRecord.id) {
           eachRecord.getField(name).checkValidity();
@@ -31,12 +31,8 @@ const GitlabSelectedDs = ({ intlPrefix, formatMessage, projectId, importStore, t
     const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/
     if (value && pa.test(value)) {
       const dataSet = record.dataSet;
-      const repeatRecord = dataSet.find((eachRecord: any) => eachRecord.id !== record.id && eachRecord.get('code') === value);
       const repeatCode = dataSet.find((eachRecord: any) => eachRecord.id !== record.id && eachRecord.get('name') === value);
       const { listCode } = importStore.getRepeatData || {};
-      if (repeatRecord) {
-        return formatMessage({ id: 'checkCodeExist' });
-      }
       if (repeatCode) {
         return formatMessage({ id: 'checkCodeExist' });
       }
@@ -60,14 +56,10 @@ const GitlabSelectedDs = ({ intlPrefix, formatMessage, projectId, importStore, t
 
   async function checkName(value: any, name: any, record: any) {
     const pa = /^\S+$/;
-    if (pa.test(value)) {
+    if (value && pa.test(value)) {
       const { listName } = importStore.getRepeatData || {};
       const dataSet = record.dataSet;
-      const repeatRecord = dataSet.find((eachRecord: any) => eachRecord.id !== record.id && eachRecord.get('name') === value);
       const repeatName = dataSet.find((eachRecord: any) => eachRecord.id !== record.id && eachRecord.get('serverName') === value);
-      if (repeatRecord) {
-        return formatMessage({ id: 'checkNameExist' });
-      }
       if (repeatName) {
         return formatMessage({ id: 'checkNameExist' });
       }
@@ -109,6 +101,7 @@ const GitlabSelectedDs = ({ intlPrefix, formatMessage, projectId, importStore, t
         name: 'name',
         type: 'string',
         validator: checkCode,
+        required: true,
         maxLength: 30,
         label: formatMessage({ id: `${intlPrefix}.code` }),
       },
@@ -116,8 +109,8 @@ const GitlabSelectedDs = ({ intlPrefix, formatMessage, projectId, importStore, t
         name: 'type',
         type: 'string',
         label: formatMessage({ id: `${intlPrefix}.type` }),
-        textField:'text',
-        valueField:'value',
+        textField: 'text',
+        valueField: 'value',
         options: typeOptionDs,
       },
       { name: 'lastActivityAt', type: 'string', label: formatMessage({ id: 'updateDate' }) },
