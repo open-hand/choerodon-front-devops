@@ -13,9 +13,9 @@ import { useMainStore } from './stores';
 
 import './index.less';
 
-// // 实例视图
+// 实例视图
 // const AppContent = lazy(() => import('./contents/application'));
-// const IstContent = lazy(() => import('./contents/instance'));
+const IstContent = lazy(() => import('./contents/instance'));
 
 // 资源视图
 const ResourceEnvContent = lazy(() => import('./contents/resource-env'));
@@ -44,7 +44,7 @@ const MainView = observer(() => {
     itemTypes: {
       ENV_ITEM,
       // APP_ITEM,
-      // IST_ITEM,
+      IST_ITEM,
       SERVICES_ITEM,
       INGRESS_ITEM,
       CERT_ITEM,
@@ -96,7 +96,7 @@ const MainView = observer(() => {
       // [ENV_ITEM]: getViewType === IST_VIEW_TYPE ? <EnvContent /> : <ResourceEnvContent />,
       [ENV_ITEM]: <ResourceEnvContent />,
       // [APP_ITEM]: <AppContent />,
-      // [IST_ITEM]: <IstContent />,
+      [IST_ITEM]: <IstContent />,
       [SERVICES_GROUP]: <NetworkContent />,
       [INGRESS_GROUP]: <IngressContent />,
       [CERT_GROUP]: <CertContent />,

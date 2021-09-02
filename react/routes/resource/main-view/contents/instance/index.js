@@ -3,7 +3,7 @@ import { Permission } from '@choerodon/boot';
 import { StoreProvider } from './stores';
 import InstanceContent from './InstanceContent';
 
-export default (props) => (
+const index = (props) => (
   <Permission
     service={[
       'choerodon.code.project.deploy.app-deployment.resource.ps.events-tab',
@@ -16,3 +16,4 @@ export default (props) => (
     </StoreProvider>
   </Permission>
 );
+export default index;
