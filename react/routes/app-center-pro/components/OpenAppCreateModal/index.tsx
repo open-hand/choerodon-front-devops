@@ -15,6 +15,7 @@ import { mapping as infoMapping, deployProductOptionsData, deployModeOptionsData
 import { appServiceInstanceApi, deployApi } from '@/api';
 import { mapping as deployGroupConfigMapping } from './components/deploy-group-config/stores/deployGroupConfigDataSet';
 import { devopsDeployGroupApi } from '@/api/DevopsDeployGroup';
+import { ENV_TAB, HOST_TAB } from '@/routes/app-center-pro/stores/CONST';
 
 import './index.less';
 
@@ -354,6 +355,7 @@ const AppCreateForm = (props: any) => {
   };
 
   const handleSubmit = async () => {
+    let key;
     let submitData = {};
     const appInfoData = stepData.current[0].data;
     const appConfigData = stepData.current[1].data;
@@ -377,6 +379,7 @@ const AppCreateForm = (props: any) => {
       );
       switch (appInfoData[infoMapping.deployMode.name as string]) {
         case deployModeOptionsData[0].value: {
+          key = ENV_TAB;
           switch (appInfoData[infoMapping.deployProductType.name as string]) {
             case deployProductOptionsData[0].value: {
               const { res, request: newRequest } = handleSetSubmitDataByAppConfig({
@@ -410,6 +413,7 @@ const AppCreateForm = (props: any) => {
           break;
         }
         case deployModeOptionsData[1].value: {
+          key = HOST_TAB;
           submitData = {
             ...submitData,
             // @ts-ignore
@@ -448,7 +452,10 @@ const AppCreateForm = (props: any) => {
         break;
       }
     }
-    return result;
+    return ({
+      key,
+      result,
+    });
   };
 
   const handleNext = async () => {
@@ -472,8 +479,8 @@ const AppCreateForm = (props: any) => {
         setCurrent(current + 1);
       } else {
         try {
-          await handleSubmit();
-          refresh();
+          const { key } = await handleSubmit();
+          refresh(key);
           return true;
         } catch (e) {
           return false;
