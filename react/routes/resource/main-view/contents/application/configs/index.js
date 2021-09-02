@@ -4,11 +4,9 @@ import { Action } from '@choerodon/boot';
 import { Modal, Table } from 'choerodon-ui/pro';
 import KeyValueModal from '@/components/key-value';
 import MouserOverWrapper from '../../../../../../components/MouseOverWrapper/MouserOverWrapper';
-import StatusTags from '../../../../../../components/status-tag';
 import TimePopover from '../../../../../../components/timePopover/TimePopover';
 import { useResourceStore } from '../../../../stores';
 import { useApplicationStore } from '../stores';
-import ClickText from '../../../../../../components/click-text';
 import { useMainStore } from '../../../stores';
 
 import './index.less';
@@ -56,7 +54,7 @@ const AppConfigs = observer(() => {
         id={record.get('id')}
         envId={parentId}
         appId={id}
-        store={mappingStore}
+        type="configMap"
         refresh={refresh}
       />,
       okText: formatMessage({ id: 'save' }),

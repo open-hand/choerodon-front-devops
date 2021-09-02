@@ -24,9 +24,10 @@ export const StoreProvider = injectIntl(inject('AppState')((props:any) => {
     envId,
     children,
     title,
+    type,
   } = props;
 
-  const store = useSelectStore();
+  const store = useSelectStore(type);
 
   const KeyValueDataSet = useMemo(() => new DataSet(keyValueDataSet()), []);
   const FormDataSet = useMemo(() => new DataSet(formDataSet({

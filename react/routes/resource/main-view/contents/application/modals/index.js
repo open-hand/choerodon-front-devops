@@ -113,7 +113,7 @@ const AppModals = observer(() => {
         title={type}
         envId={parentId}
         appId={id}
-        store={type === MAPPING_TAB ? mappingStore : cipherStore}
+        type={type === MAPPING_TAB ? 'configMap' : 'secret'}
         refresh={() => setTabKey(type)}
       />,
       okText: formatMessage({ id: 'create' }),

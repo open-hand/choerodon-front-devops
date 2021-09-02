@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useMemo, useEffect } from 'react';
+import React, {
+  createContext, useContext, useMemo, useEffect,
+} from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
@@ -14,7 +16,6 @@ export function useKeyValueStore() {
   return useContext(Store);
 }
 
-
 export const StoreProvider = injectIntl(inject('AppState')(
   observer((props) => {
     const { AppState: { currentMenuType: { id } }, children } = props;
@@ -23,7 +24,6 @@ export const StoreProvider = injectIntl(inject('AppState')(
       resourceStore: { getSelectedMenu: { parentId }, setUpTarget, getUpTarget },
       itemTypes: { MAP_GROUP },
     } = useResourceStore();
-    
 
     const ConfigMapTableDs = useMemo(() => new DataSet(ConfigMapTableDataSet({ formatMessage })), []);
     const formStore = useConfigMapStore();
@@ -72,5 +72,5 @@ export const StoreProvider = injectIntl(inject('AppState')(
         {children}
       </Store.Provider>
     );
-  })
+  }),
 ));
