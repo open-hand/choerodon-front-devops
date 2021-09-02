@@ -13,7 +13,7 @@ import GitopsLogDataSet from './GitopsLogDataSet';
 import GitopsSyncDataSet from './GitopsSyncDataSet';
 import RetryDataSet from './RetryDataSet';
 import PermissionsDataSet from './PermissionsDataSet';
-import useStore, { } from './useStore';
+import useStore from './useStore';
 import ConfigDataSet from './ConfigDataSet';
 import SummaryDataSet from './SummaryDataSet';
 import PolarisNumDataSet from './PalarisNumDataSet';
@@ -36,7 +36,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       children,
     } = props;
 
-    const { resourceStore: { getSelectedMenu: { id, name } }, intlPrefix } = useResourceStore();
+    const { resourceStore: { getSelectedMenu: { id, name } }, intlPrefix, treeDs } = useResourceStore();
 
     const {
       baseInfoDs, mainStore, key,
@@ -105,6 +105,13 @@ export const StoreProvider = injectIntl(inject('AppState')(
       }
     }
 
+    function refresh() {
+      baseInfoDs.query();
+      resourceCountDs.query();
+      treeDs.query();
+      loadTabData();
+    }
+
     useEffect(() => {
       loadTabData();
     }, [projectId, id, envStore.getTabKey]);
@@ -132,6 +139,9 @@ export const StoreProvider = injectIntl(inject('AppState')(
 
       polarisNumDS,
       istSummaryDs,
+
+      loadTabData,
+      refresh,
 
       mainStore,
       key,
