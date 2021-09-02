@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import {
   Page, HeaderButtons, Header, Breadcrumb, Content,
 } from '@choerodon/boot';
@@ -14,7 +14,6 @@ import AppCardContent from './components/app-card-content';
 const AppHomePage = () => {
   const {
     subfixCls,
-    mainStore,
     listDs,
     refresh,
   } = useAppHomePageStore();
