@@ -72,7 +72,7 @@ const Index = observer(() => {
       </Form>
       {
         PortsDataSet.records.map((portRecord: any) => (
-          <Form record={portRecord} key={portRecord.id} columns={4}>
+          <Form record={portRecord} key={portRecord.id} columns={5}>
             {
               NetworkConfigDataSet.current.get('type') !== 'ClusterIP'
               && <TextField name="nodePort" />
@@ -91,6 +91,11 @@ const Index = observer(() => {
                   funcType={'flat' as FuncType}
                   icon="delete"
                   onClick={() => handleRemovePort(portRecord)}
+                  // @ts-ignore
+                  style={{
+                    position: 'relative',
+                    top: 10,
+                  }}
                   // @ts-ignore
                   colSpan={3}
                 />
