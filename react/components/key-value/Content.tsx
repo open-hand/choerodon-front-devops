@@ -223,7 +223,7 @@ const FormView = observer(() => {
         return false;
       }
       try {
-        const res = await store.postKV(projectId, postData);
+        const res = await store.postKV(postData);
         if (handlePromptError(res)) {
           refresh();
           return true;
