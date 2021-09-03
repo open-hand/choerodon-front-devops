@@ -44,7 +44,6 @@ const KeyValueModals = observer(() => {
       children: <KeyValueModal
         title="cipher"
         envId={parentId}
-        type="secret"
         intlPrefix={intlPrefix}
         refresh={refresh}
       />,

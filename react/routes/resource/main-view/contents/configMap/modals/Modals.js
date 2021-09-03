@@ -45,7 +45,6 @@ const KeyValueModals = observer(() => {
         modeSwitch
         title="configMap"
         envId={parentId}
-        type="configMap"
         intlPrefix={intlPrefix}
         refresh={refresh}
       />,
