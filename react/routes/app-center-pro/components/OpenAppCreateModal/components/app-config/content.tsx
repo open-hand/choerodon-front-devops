@@ -165,31 +165,7 @@ const Index = observer(() => {
     <div className="c7ncd-appCenterPro-appConfig">
       {
         detail ? (
-          <Form columns={3} dataSet={AppConfigDataSet}>
-            <TextField
-              name={mapping.appName.name}
-            />
-            <TextField
-              disabled
-              name={mapping.appCode.name}
-            />
-          </Form>
-        ) : (
-          <p className="c7ncd-appCenterPro-appInfo__form__title">
-            Chart包来源
-          </p>
-        )
-      }
-      {
-        detail ? (
-          <Form
-            columns={3}
-            dataSet={AppConfigDataSet}
-            labelLayout={'horizontal' as LabelLayoutType}
-            labelAlign={'left' as LabelAlignType}
-          >
-            <Output name={mapping.chartSource.name} />
-          </Form>
+          ''
         ) : (
           <div className="c7ncd-appCenterPro-appConfig__selectContainer">
             <CustomSelect
@@ -217,6 +193,21 @@ const Index = observer(() => {
         dataSet={AppConfigDataSet}
         columns={3}
       >
+        {
+          detail ? [
+            <TextField
+              name={mapping.appName.name}
+            />,
+            <TextField
+              disabled
+              name={mapping.appCode.name}
+            />,
+            <Select
+              name={mapping.chartSource.name}
+              disabled
+            />,
+          ] : ''
+        }
         {
           renderAppService(AppConfigDataSet)
         }
