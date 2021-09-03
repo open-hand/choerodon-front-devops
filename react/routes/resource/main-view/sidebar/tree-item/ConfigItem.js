@@ -87,8 +87,7 @@ function ConfigItem({
             envId={record.get('parentId').split('**')[0]}
             intlPrefix={intlPrefix}
             modeSwitch
-            title="configMap"
-            type="configMap"
+            title="mapping"
             refresh={freshMenu}
           />,
           okText: formatMessage({ id: 'save' }),

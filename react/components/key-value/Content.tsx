@@ -27,12 +27,6 @@ const FormView = observer(() => {
     appId,
     store,
     intl: { formatMessage },
-    AppState: {
-      currentMenuType: {
-        projectId,
-        name: menuName,
-      },
-    },
     title,
     modeSwitch,
     intlPrefix,
