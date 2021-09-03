@@ -87,10 +87,10 @@ const Index = observer(() => {
       </Form>
       {
         PathListDataSet.records.map((pathRecord: any) => (
-          <Form columns={6} record={pathRecord}>
+          <Form columns={7} record={pathRecord}>
             <TextField name="path" colSpan={2} disabled={!IngressDataSet.current.get('domain')} />
             <TextField name="serviceName" colSpan={2} disabled />
-            <Select name="servicePort" disabled={!pathRecord.get('serviceName')}>
+            <Select colSpan={2} name="servicePort" disabled={!pathRecord.get('serviceName')}>
               {map(portsList || [], (port) => <Option value={port} key={port}>{port}</Option>)}
             </Select>
             {PathListDataSet.records.length > 1 ? (
@@ -111,7 +111,14 @@ const Index = observer(() => {
       >
         添加路径
       </Button>
-      <p className="c7ncd-appCenterPro-newConfig__title">Annotations</p>
+      <p
+        className="c7ncd-appCenterPro-newConfig__title"
+        style={{
+          marginTop: 20,
+        }}
+      >
+        Annotations
+      </p>
       {
         AnnotationDataSet.records.map((annotationRecord: any) => (
           <Form
@@ -120,13 +127,20 @@ const Index = observer(() => {
             style={{ width: '103.3%' }}
             key={annotationRecord.id}
           >
-            <TextField name="key" colSpan={13} />
-            <span>=</span>
+            <TextField name="key" colSpan={12} />
+            <span
+              style={{
+                position: 'relative',
+                top: 15,
+              }}
+            >
+              =
+            </span>
             <TextArea
               name="value"
               autoSize={{ minRows: 1 }}
               resize={'vertical' as ResizeType}
-              colSpan={13}
+              colSpan={12}
             />
             {AnnotationDataSet.records.length > 1 ? (
               <Button
