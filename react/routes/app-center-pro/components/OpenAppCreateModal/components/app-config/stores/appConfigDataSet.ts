@@ -35,6 +35,7 @@ const chartSourceData: {
 
 const appServiceOptionsDs = {
   autoQuery: true,
+  paging: false,
   fields: [{
     name: 'groupName',
     type: 'string',
