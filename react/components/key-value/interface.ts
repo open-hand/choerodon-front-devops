@@ -1,1 +1,1 @@
-export type keyValueType = 'secret'|'configMap'
+export type keyValueType = 'cipher'|'mapping'

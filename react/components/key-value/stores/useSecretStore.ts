@@ -14,7 +14,7 @@ export default function useStore(type?:keyValueType) {
     },
 
     async loadSingleData(id:string) {
-      const res = type === 'secret' ? await secretApi.loadSingleData(id) : await configMapApi.loadSingleData(id);
+      const res = type === 'cipher' ? await secretApi.loadSingleData(id) : await configMapApi.loadSingleData(id);
       if (handlePromptError(res)) {
         this.setSingleData(res);
       }
@@ -25,13 +25,13 @@ export default function useStore(type?:keyValueType) {
       const { id } = data;
       const stringData = JSON.stringify(data);
       if (id) {
-        return type === 'secret' ? secretApi.putSecret(stringData) : configMapApi.putConfigMap(stringData);
+        return type === 'cipher' ? secretApi.putSecret(stringData) : configMapApi.putConfigMap(stringData);
       }
-      return type === 'secret' ? secretApi.postSecret(stringData) : configMapApi.postConfigMap(stringData);
+      return type === 'cipher' ? secretApi.postSecret(stringData) : configMapApi.postConfigMap(stringData);
     },
 
     checkName(envId:string, name:string) {
-      return type === 'secret' ? secretApi.checkName(envId, name) : configMapApi.checkName(envId, name);
+      return type === 'cipher' ? secretApi.checkName(envId, name) : configMapApi.checkName(envId, name);
     },
   }));
 }

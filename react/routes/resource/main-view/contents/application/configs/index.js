@@ -54,7 +54,6 @@ const AppConfigs = observer(() => {
         id={record.get('id')}
         envId={parentId}
         appId={id}
-        type="configMap"
         refresh={refresh}
       />,
       okText: formatMessage({ id: 'save' }),
