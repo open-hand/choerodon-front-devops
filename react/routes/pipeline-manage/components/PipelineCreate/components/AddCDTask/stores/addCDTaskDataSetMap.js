@@ -1,3 +1,5 @@
+import { DataSet } from 'choerodon-ui/pro';
+
 const map = {
   // 主机来源name
   hostSource: 'hostSource',
@@ -39,4 +41,33 @@ const map = {
   notifyWay: 'notifyWay',
 };
 
+const typeData = [{
+  value: 'chart',
+  name: '容器部署-Chart包',
+}];
+
+const deployWayData = [{
+  value: 'new',
+  name: '新建应用',
+}, {
+  value: 'update',
+  name: '更新应用',
+}];
+
+const fieldMap = {
+  deployWay: {
+    textField: 'name',
+    valueField: 'value',
+    defaultValue: deployWayData[0].value,
+    name: 'deployWay',
+    type: 'string',
+    label: '部署方式',
+    options: new DataSet({
+      data: deployWayData,
+    }),
+  },
+};
+
 export default map;
+
+export { typeData, fieldMap, deployWayData };

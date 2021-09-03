@@ -3,7 +3,7 @@ import uuidV1 from 'uuid/v1';
 import { axios } from '@choerodon/boot';
 import forEach from 'lodash/forEach';
 import JSONbig from 'json-bigint';
-import addCDTaskDataSetMap from './addCDTaskDataSetMap';
+import addCDTaskDataSetMap, { fieldMap } from './addCDTaskDataSetMap';
 
 function getDefaultInstanceName(appServiceCode) {
   return appServiceCode
@@ -692,6 +692,9 @@ export default (
       dynamicProps: {
         disabled: ({ record }) => !record.get(addCDTaskDataSetMap.alarm),
       },
+    },
+    {
+      ...fieldMap.deployWay,
     },
   ],
 });

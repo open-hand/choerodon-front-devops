@@ -1,6 +1,4 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-template-curly-in-string */
+/* eslint-disable */
 import React, { useEffect, useState, useCallback } from 'react';
 import {
   Form,
@@ -23,7 +21,9 @@ import JSONbig from 'json-bigint';
 import { get } from 'lodash';
 import DeployConfig from '@/components/deploy-config-form';
 import StatusDot from '@/components/status-dot';
-import addCDTaskDataSetMap from './stores/addCDTaskDataSetMap';
+import DeployChart from './components/deploy-chart';
+import addCDTaskDataSetMap, { typeData, fieldMap, deployWayData } from './stores/addCDTaskDataSetMap';
+
 import { useAddCDTaskStore } from './stores';
 import YamlEditor from '../../../../../../components/yamlEditor';
 import Tips from '../../../../../../components/new-tips';
@@ -77,6 +77,7 @@ export default observer(() => {
     columnIndex,
     witchColumnJobIndex,
     index: taskIndex,
+    DeployChartDataSet,
   } = useAddCDTaskStore();
 
   const [branchsList, setBranchsList] = useState([]);
@@ -1097,6 +1098,12 @@ export default observer(() => {
           }
         </Form>,
       ],
+      [typeData[0].value]: [
+        <div className="addcdTask-divided" />,
+        <DeployChart
+          dataSet={DeployChartDataSet}
+        />,
+      ],
     };
     return obj[ADDCDTaskDataSet?.current?.get('type')];
   };
@@ -1283,6 +1290,7 @@ export default observer(() => {
               name: ADDCDTaskDataSet.current.get('name') || undefined,
               [addCDTaskDataSetMap.alarm]: false,
               [addCDTaskDataSetMap.whetherBlock]: true,
+              [fieldMap.deployWay.name]: deployWayData[0].value,
             };
             if (data === 'cdHost' && relatedJobOpts
               && relatedJobOpts.length === 1) {
@@ -1298,6 +1306,7 @@ export default observer(() => {
           <Option value="cdAudit">人工卡点</Option>
           <Option value={addCDTaskDataSetMap.apiTest}>API测试</Option>
           <Option value={addCDTaskDataSetMap.externalStuck}>外部卡点</Option>
+          <Option value={typeData[0].value}>{typeData[0].name}</Option>
         </Select>
         <TextField colSpan={2} name="name" />
         <TextField colSpan={1} name="glyyfw" />
@@ -1380,17 +1389,17 @@ export default observer(() => {
             </Select>,
           ]
         }
-        {ADDCDTaskDataSet?.current?.get('type') === 'cdDeploy' && [
-          <Select
-            colSpan={1}
-            name="envId"
-            optionRenderer={optionRenderer}
-            // renderer={renderer}
-            onOption={({ record }) => ({
-              disabled: !record.get('connected'),
-            })}
-          />,
-          isProjectOwner && (
+        {
+          ADDCDTaskDataSet?.current?.get('type') === typeData[0].value && [
+            <Select
+              colSpan={1}
+              name="envId"
+              optionRenderer={optionRenderer}
+              // renderer={renderer}
+              onOption={({ record }) => ({
+                disabled: !record.get('connected'),
+              })}
+            />,
             <div
               className="addcdTask-whetherBlock addcdTask-triggersTasks"
               style={{
@@ -1412,7 +1421,43 @@ export default observer(() => {
                   left: '195px',
                 }}
               />
-            </div>
+            </div>,
+            <SelectBox name={fieldMap.deployWay.name} />,
+          ]
+        }
+        {ADDCDTaskDataSet?.current?.get('type') === 'cdDeploy' && [
+          <Select
+            colSpan={1}
+            name="envId"
+            optionRenderer={optionRenderer}
+            // renderer={renderer}
+            onOption={({ record }) => ({
+              disabled: !record.get('connected'),
+            })}
+          />,
+          isProjectOwner && (
+          <div
+            className="addcdTask-whetherBlock addcdTask-triggersTasks"
+            style={{
+              position: 'relative',
+            }}
+            colSpan={2}
+          >
+            <SelectBox
+              name={addCDTaskDataSetMap.triggersTasks.name}
+            >
+              <Option value={addCDTaskDataSetMap.triggersTasks.values[0]}>是</Option>
+              <Option value={addCDTaskDataSetMap.triggersTasks.values[1]}>否</Option>
+            </SelectBox>
+            <NewTips
+              helpText="此处仅项目所有者可以设置；默认为是，即触发用户在没有该部署任务的环境权限时，将会直接使用管理员账户触发部署；若选择为否，触发成员在没有环境权限时，将会直接跳过此部署任务。"
+              style={{
+                position: 'absolute',
+                top: '7px',
+                left: '195px',
+              }}
+            />
+          </div>
           ),
           <SelectBox
             className="addcdTask-mode"
