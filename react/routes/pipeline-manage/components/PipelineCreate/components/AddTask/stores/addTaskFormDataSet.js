@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import { DataSet } from 'choerodon-ui/pro';
 
 export default (
@@ -23,7 +24,6 @@ export default (
       type: 'string',
       label: '任务类型',
       required: true,
-      defaultValue: 'build',
     }, {
       name: 'name',
       type: 'string',
