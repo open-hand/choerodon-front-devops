@@ -126,7 +126,7 @@ const Index = observer(() => {
       switch (dataSource.get(mapping.jarSource.name)) {
         case productSourceData[0].value: {
           return (
-            <Form className="c7ncd-appCenterPro-conDetail__form" columns={3} record={dataSource}>
+            <>
               <Select
                 name={mapping.nexus.name}
                 disabled={Boolean(detail)}
@@ -144,21 +144,20 @@ const Index = observer(() => {
                 disabled={Boolean(detail)}
               />
               <Select name={mapping.jarVersion.name} />
-            </Form>
+            </>
           );
         }
         case productSourceData[1].value: case productSourceData[2].value: {
           return (
-            <Form className="c7ncd-appCenterPro-conDetail__form" columns={3} record={dataSource}>
+            <>
               <Select name={mapping.marketAppVersion.name} />
               <Select name={mapping.marketServiceVersion.name} />
-            </Form>
+            </>
           );
         }
         case productSourceData[5].value: {
           return (
             <>
-              <Form className="c7ncd-appCenterPro-conDetail__form">
                 <ChunkUploader
                   callbackWhenLoadingChange={(loadingIf: boolean) => {
                     console.log(loadingIf);
@@ -194,7 +193,6 @@ const Index = observer(() => {
                 {/*    上传文件 */}
                 {/*  </Button> */}
                 {/* </Upload> */}
-              </Form>
                 { dataSource.get(mapping.uploadUrl.name) && (
                   <p className="c7ncd-appCenterPro-conDetail__fileName">
                       <span className="c7ncd-appCenterPro-conDetail__fileName__fileIcon">
@@ -272,32 +270,8 @@ const Index = observer(() => {
 
   return (
     <div className="c7ncd-appCenterPro-hostAppConfig">
-      <Form columns={3} dataSet={HostAppConfigDataSet}>
-        {
-          renderDetailForm()
-        }
-        <Select
-          name={mapping.host.name}
-          optionRenderer={renderHostOption}
-          disabled={Boolean(detail)}
-          onOption={({ record: hostRecord }) => ({
-            disabled: !hostRecord.get('connect'),
-          })}
-        />
-      </Form>
       {
-        detail ? (
-          <Form
-            className="c7ncd-appCenterPro-hostAppConfig__colonForm"
-            useColon
-            columns={3}
-            dataSet={HostAppConfigDataSet}
-            labelLayout={'horizontal' as LabelLayoutType}
-            labelAlign={'left' as LabelAlignType}
-          >
-            <Output name={mapping.jarSource.name} />
-          </Form>
-        ) : (
+        detail ? '' : (
           <div className="c7ncd-appCenterPro-conDetail__productType">
             <CustomSelect
               onClickCallback={
@@ -319,7 +293,28 @@ const Index = observer(() => {
           </div>
         )
       }
-      { renderFormByProductSource() }
+      <Form className="c7ncd-appCenterPro-conDetail__form" columns={3} record={HostAppConfigDataSet?.current}>
+        {
+          renderDetailForm()
+        }
+        <Select
+          name={mapping.host.name}
+          optionRenderer={renderHostOption}
+          disabled={Boolean(detail)}
+          onOption={({ record: hostRecord }) => ({
+            disabled: !hostRecord.get('connect'),
+          })}
+        />
+        {
+          detail && (
+            <Select
+              name={mapping.jarSource.name}
+              disabled
+            />
+          )
+        }
+        { renderFormByProductSource() }
+      </Form>
       <YamlEditor
         readOnly={false}
         value={HostAppConfigDataSet.current.get(mapping.value.name)}
