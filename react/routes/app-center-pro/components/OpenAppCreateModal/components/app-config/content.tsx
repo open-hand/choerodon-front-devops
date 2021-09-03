@@ -153,7 +153,11 @@ const Index = observer(() => {
         active={record.get('active')}
         size="small"
       />
-      {text}
+      <span
+        className="c7ncd-appCenterPro-appConfig__env__text"
+      >
+        {text}
+      </span>
     </>
   );
 

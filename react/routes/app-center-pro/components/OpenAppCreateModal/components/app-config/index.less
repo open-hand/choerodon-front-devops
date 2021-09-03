@@ -1,4 +1,11 @@
 .c7ncd-appCenterPro-appConfig {
+  &__env {
+    &__text {
+      margin: 0 0 0 4px;
+      position: relative;
+      top: 1px;
+    }
+  }
   &__selectContainer {
     margin-top: 8px;
     display: flex;
@@ -9,10 +16,13 @@
     &__item {
       border: 1px solid var(--divider);
       border-radius: 4px;
-      padding: 8px 20px;
+      padding: 8px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      p {
+        margin-bottom: 0;
+      }
       img {
         width: 40px;
         p {
