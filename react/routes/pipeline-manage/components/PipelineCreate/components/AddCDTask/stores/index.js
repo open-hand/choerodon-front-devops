@@ -3,6 +3,7 @@ import React, { createContext, useContext, useMemo } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
+import deployChartDataSet from './deployChartDataSet';
 import addCDTaskDataSet from './addCDTaskDataSet';
 import useStore from './useStore';
 
@@ -30,11 +31,13 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
 
   const ADDCDTaskUseStore = useStore();
   const ADDCDTaskDataSet = useMemo(() => new DataSet(addCDTaskDataSet(projectId, PipelineCreateFormDataSet, organizationId, ADDCDTaskUseStore, appServiceCode, random)), [ADDCDTaskUseStore, random]);
+  const DeployChartDataSet = useMemo(() => new DataSet(deployChartDataSet(ADDCDTaskDataSet)), []);
 
   const value = {
     ...props,
     ADDCDTaskUseStore,
     ADDCDTaskDataSet,
+    DeployChartDataSet,
   };
 
   return (
