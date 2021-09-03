@@ -18,7 +18,9 @@ const TreeItemName = memo(({
     'c7ncd-treemenu-text-disabled': disabled,
     'c7ncd-treemenu-text-ml': headSpace,
   });
-
+  const decribe = {
+    工作负载: 'WorkLoad', 网络: 'Service', 域名: 'Ingress', 配置映射: 'ConfigMap', 密文: 'Secret',
+  };
   return (
     <span className={textClass}>
       {index > -1 ? (
@@ -26,6 +28,8 @@ const TreeItemName = memo(({
           {beforeStr}
           <span className="c7ncd-treemenu-text-highlight">{currentStr}</span>
           {afterStr}
+          {decribe[afterStr] ? ` (${decribe[afterStr]})` : ''}
+
         </>
       ) : name}
       {disabled && <i className="c7ncd-treemenu-disabled" />}
