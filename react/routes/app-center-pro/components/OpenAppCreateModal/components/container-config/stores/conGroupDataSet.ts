@@ -186,8 +186,14 @@ const mapping: {
   marketAppVersion: {
     name: 'marketAppVersion',
     type: 'string' as FieldType,
-    label: '市场应用及版本',
+    label: '',
     dynamicProps: {
+      label: ({ record }) => {
+        if (record.get(mapping.productSource.name) === productSourceData[1].value) {
+          return '市场应用及版本';
+        }
+        return 'Hzero应用及版本';
+      },
       required: ({ record }) => [
         productSourceData[1].value,
         productSourceData[2].value,
@@ -235,6 +241,12 @@ const mapping: {
     textField: 'marketServiceName',
     valueField: 'id',
     dynamicProps: {
+      label: ({ record }) => {
+        if (record.get(mapping.productSource.name) === productSourceData[1].value) {
+          return '市场服务及版本';
+        }
+        return 'Hzero服务及版本';
+      },
       required: ({ record }) => [
         productSourceData[1].value,
         productSourceData[2].value,
