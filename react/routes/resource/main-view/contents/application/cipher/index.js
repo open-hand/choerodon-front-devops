@@ -60,7 +60,6 @@ const Cipher = observer(() => {
         id={record.get('id')}
         envId={parentId}
         appId={id}
-        type="secret"
         refresh={refresh}
       />,
       okText: formatMessage({ id: 'save' }),

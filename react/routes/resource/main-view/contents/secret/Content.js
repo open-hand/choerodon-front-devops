@@ -111,7 +111,6 @@ const ConfigMap = observer((props) => {
         title="cipher"
         id={SecretTableDs.current.get('id')}
         envId={parentId}
-        type="secret"
         intlPrefix={intlPrefix}
         refresh={refresh}
       />,
