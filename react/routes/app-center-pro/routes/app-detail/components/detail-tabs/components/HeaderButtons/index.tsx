@@ -32,6 +32,7 @@ const DetailsTabsHeaderButtons = () => {
     openDeleteHostAppModal,
     goBackHomeBaby,
     deleteEnvApp,
+    formatMessage,
   } = useAppCenterProStore();
 
   const {
@@ -63,6 +64,9 @@ const DetailsTabsHeaderButtons = () => {
     sourceType,
     instanceName,
     objectName,
+
+    upgradeAvailable,
+    currentVersionAvailable,
   } = appRecord?.toData() || {};
 
   const isMarket = chartSource === 'market' || chartSource === 'hzero';
@@ -227,7 +231,12 @@ const DetailsTabsHeaderButtons = () => {
   const upGrade = {
     name: '升级',
     icon: 'rate_review1',
+    disabled: !upgradeAvailable || !currentVersionAvailable,
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-upgrade'],
+    tooltipsConfig: {
+      placement: 'bottom',
+      title: (!upgradeAvailable || !currentVersionAvailable) ? formatMessage({ id: `c7ncd.deployment.instance.disable.message${upgradeAvailable ? '.upgrade' : ''}` }) : '',
+    },
     handler: () => openMarketUpgradeModal({
       instanceId,
       appServiceId,

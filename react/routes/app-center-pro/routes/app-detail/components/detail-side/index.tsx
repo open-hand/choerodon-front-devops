@@ -174,7 +174,11 @@ const DetailAside = () => {
       </div>
       <div>
         <span>Jar包版本：</span>
-        <span>{version || '-'}</span>
+        <span>
+          <Tooltip title={version}>
+            {version || '-'}
+          </Tooltip>
+        </span>
       </div>
       {sourceType === CHART_UPLOAD && (
       <div>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="35px" viewBox="0 0 18 35" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组 2</title>
+    <g id="部署-应用中心" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="应用中心-环境" transform="translate(-500.000000, -186.000000)">
+            <g id="编组-2" transform="translate(500.000000, 186.000000)">
+                <path d="M0,0 L18,0 L18,31.763932 C18,32.8685015 17.1045695,33.763932 16,33.763932 C15.6895098,33.763932 15.3832837,33.6916418 15.1055728,33.5527864 L0,26 L0,26 L0,0 Z" id="矩形" fill="#9DC2FF" transform="translate(9.000000, 17.500000) scale(-1, 1) translate(-9.000000, -17.500000) "></path>
+                <path d="M0,0 L18,0 L18,31.763932 C18,32.8685015 17.1045695,33.763932 16,33.763932 C15.6895098,33.763932 15.3832837,33.6916418 15.1055728,33.5527864 L0,26 L0,26 L0,0 Z" id="矩形" fill="#71A6FE"></path>
+                <text id="可-升-级" font-family="PingFangSC-Medium, PingFang SC" font-size="8" font-weight="400" line-spacing="8" fill="#FFFFFF">
+                    <tspan x="5" y="10.5">可</tspan>
+                    <tspan x="5" y="18.5">升</tspan>
+                    <tspan x="5" y="26.5">级</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>
