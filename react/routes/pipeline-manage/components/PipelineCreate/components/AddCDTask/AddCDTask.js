@@ -27,14 +27,20 @@ import addCDTaskDataSetMap, {
   fieldMap,
   deployWayData,
 } from "./stores/addCDTaskDataSetMap";
+<<<<<<< react/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/AddCDTask.js
 import { mapping } from './stores/deployChartDataSet';
+=======
+>>>>>>> react/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/AddCDTask.js
 
 import { useAddCDTaskStore } from "./stores";
 import YamlEditor from "../../../../../../components/yamlEditor";
 import Tips from "../../../../../../components/new-tips";
 import "./index.less";
+<<<<<<< react/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/AddCDTask.js
 import deployChartDataSet
   from "@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/deployChartDataSet";
+=======
+>>>>>>> react/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/AddCDTask.js
 
 let currentSize = 10;
 
@@ -242,7 +248,11 @@ export default observer(() => {
     ADDCDTaskDataSet?.current?.get("deploySource"),
   ]);
 
+<<<<<<< react/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/AddCDTask.js
   function getMetadata(ds, deployChartData) {
+=======
+  function getMetadata(ds) {
+>>>>>>> react/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/AddCDTask.js
     if (ds.type === "cdDeploy") {
       ds.value = Base64.encode(valueIdValues);
       // 如果部署模式是新建 则删掉多余的实例id
@@ -349,6 +359,7 @@ export default observer(() => {
         ds.jarDeploy.workingPath = ds.workingPath;
       }
     }
+<<<<<<< react/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/AddCDTask.js
     if (ds.type === typeData[0].value) {
       ds.skipCheckPermission = !ds.checkEnvPermissionFlag;
       ds.deployObjectType = ds.type;
@@ -357,6 +368,9 @@ export default observer(() => {
         ...deployChartData,
       }
     }
+=======
+
+>>>>>>> react/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/AddCDTask.js
     ds.appServiceId = PipelineCreateFormDataSet.current.get("appServiceId");
     return JSON.stringify(ds).replace(/"/g, "'");
   }
@@ -391,7 +405,11 @@ export default observer(() => {
             : ds.triggerValue,
       };
       if (ds.type !== "cdAudit") {
+<<<<<<< react/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/AddCDTask.js
         data.metadata = getMetadata(ds, deployChartData);
+=======
+        data.metadata = getMetadata(ds);
+>>>>>>> react/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/AddCDTask.js
       }
       handleOk(data);
       return true;
@@ -767,6 +785,7 @@ export default observer(() => {
   /**
    * 修改配置信息事件
    */
+<<<<<<< react/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/AddCDTask.js
   const handleChangeValueIdValues = (data) => {
     const {
       value,
@@ -776,6 +795,12 @@ export default observer(() => {
     let tempValues = value ? value : valueIdValues;
     const item = (valueIdList ? valueIdList : ADDCDTaskUseStore.getValueIdList).find(
       (i) => String(i.id) === String(valueId ? valueId : ADDCDTaskDataSet.current.get("valueId"))
+=======
+  const handleChangeValueIdValues = () => {
+    let tempValues = valueIdValues;
+    const item = ADDCDTaskUseStore.getValueIdList.find(
+      (i) => String(i.id) === String(ADDCDTaskDataSet.current.get("valueId"))
+>>>>>>> react/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/AddCDTask.js
     );
     Modal.open({
       key: Modal.key(),
@@ -805,9 +830,15 @@ export default observer(() => {
       okText: "修改",
       onOk: async () => {
         await axios.post(`/devops/v1/projects/${projectId}/deploy_value`, {
+<<<<<<< react/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/AddCDTask.js
           ...(valueIdList ? valueIdList : ADDCDTaskUseStore.getValueIdList).find(
             (i) =>
               String(i.id) === String(valueId ? valueId :  ADDCDTaskDataSet.current.get("valueId"))
+=======
+          ...ADDCDTaskUseStore.getValueIdList.find(
+            (i) =>
+              String(i.id) === String(ADDCDTaskDataSet.current.get("valueId"))
+>>>>>>> react/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/AddCDTask.js
           ),
           value: tempValues,
         });
@@ -1218,12 +1249,16 @@ export default observer(() => {
       ],
       [typeData[0].value]: [
         <div className="addcdTask-divided" />,
+<<<<<<< react/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/AddCDTask.js
         <DeployChart
           dataSet={DeployChartDataSet}
           optionRenderValueId={optionRenderValueId}
           rendererValueId={rendererValueId}
           handleChangeValueIdValues={handleChangeValueIdValues}
         />,
+=======
+        <DeployChart dataSet={DeployChartDataSet} />,
+>>>>>>> react/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/AddCDTask.js
       ],
     };
     return obj[ADDCDTaskDataSet?.current?.get("type")];
