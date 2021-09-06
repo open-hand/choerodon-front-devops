@@ -378,7 +378,6 @@ const mapping: {
     name: 'username',
     type: 'string' as FieldType,
     label: '用户名',
-    required: true,
     dynamicProps: {
       required: ({ record }) => record?.get(mapping.productType.name) === productTypeData[0].value
         && record?.get(
@@ -391,7 +390,6 @@ const mapping: {
     name: 'password',
     type: 'string' as FieldType,
     label: '密码',
-    required: true,
     dynamicProps: {
       required: ({ record }) => record?.get(mapping.productType.name) === productTypeData[0].value
         && record?.get(
@@ -646,5 +644,5 @@ const conGroupDataSet = (): DataSetProps => ({
 export default conGroupDataSet;
 
 export {
-  mapping, productTypeData, productSourceData,
+  mapping, productTypeData, productSourceData, repoTypeData,
 };
