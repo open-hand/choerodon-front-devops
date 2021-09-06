@@ -263,7 +263,7 @@ const Index = observer(() => {
                 addonAfter={<Tips helpText="定义域名的搜索域列表。可选，Kubernetes 最多允许 6 个搜索域。" />}
               />
             </Form>
-            <p>
+            <p style={{ fontWeight: 500 }}>
               Options
               <span>
                 <Tips helpText="定义域名解析配置文件的其他选项，常见的有 timeout、attempts 和 ndots 等等。" />
