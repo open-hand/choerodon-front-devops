@@ -283,6 +283,9 @@ const Index = observer(() => {
                 })}
               />
             </Form>
+            <p>
+              jar包来源
+            </p>
             <div className="c7ncd-appCenterPro-conDetail__productType">
               <CustomSelect
                 onClickCallback={

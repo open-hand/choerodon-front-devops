@@ -3,7 +3,7 @@ import uuidV1 from 'uuid/v1';
 import { axios } from '@choerodon/boot';
 import forEach from 'lodash/forEach';
 import JSONbig from 'json-bigint';
-import addCDTaskDataSetMap, { fieldMap } from './addCDTaskDataSetMap';
+import addCDTaskDataSetMap, { fieldMap, typeData } from './addCDTaskDataSetMap';
 
 function getDefaultInstanceName(appServiceCode) {
   return appServiceCode
@@ -40,6 +40,7 @@ export default (
   useStore,
   appServiceCode,
   random,
+  valueIdDataSet,
 ) => ({
   autoCreate: true,
   fields: [
@@ -103,11 +104,10 @@ export default (
       name: 'envId',
       type: 'string',
       label: '环境名称',
-      required: true,
       textField: 'name',
       valueField: 'id',
       dynamicProps: {
-        required: ({ record }) => record.get('type') === 'cdDeploy',
+        required: ({ record }) => [typeData[0].value, 'cdDeploy'].includes(record.get('type')),
       },
       lookupAxiosConfig: () => ({
         method: 'get',
@@ -697,4 +697,25 @@ export default (
       ...fieldMap.deployWay,
     },
   ],
+  events: {
+    update: ({ name, value, record }) => {
+      switch (name) {
+        case 'envId': {
+          if (record.get('type') === typeData[0].value) {
+            valueIdDataSet.setQueryParameter('data', {
+              appServiceId: PipelineCreateFormDataSet.current.get('appServiceId'),
+              envId: value,
+              random: Math.random(),
+              createValueRandom: useStore.getValueIdRandom,
+            });
+            valueIdDataSet.query();
+          }
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    },
+  },
 });

@@ -271,7 +271,7 @@ export default observer((props) => {
   const CDMenu = (
     <Menu onClick={menuSelect}>
       <SubMenu title="容器部署">
-        <Menu.Item key="1">Chart包</Menu.Item>
+        <Menu.Item key="chart">Chart包</Menu.Item>
         <Menu.Item key="2">部署组</Menu.Item>
       </SubMenu>
       <Menu.Item key="cdHost">主机部署</Menu.Item>

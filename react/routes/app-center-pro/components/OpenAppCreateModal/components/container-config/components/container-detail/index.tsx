@@ -398,7 +398,11 @@ const Index = inject('AppState')(observer(({
           )
         }
       </div>
-      <p style={{ marginTop: 20 }}>镜像来源</p>
+      <p style={{ marginTop: 20 }}>
+        {
+          dataSource?.get(mapping.productType.name) === productTypeData[0].value ? '镜像来源' : 'jar包来源'
+        }
+      </p>
       <div className="c7ncd-appCenterPro-conDetail__productType">
         {
           dataSource && (
