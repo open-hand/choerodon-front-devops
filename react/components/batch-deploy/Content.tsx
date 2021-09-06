@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events,max-len, jsx-a11y/no-static-element-interactions */
 
 import React, {
-  useEffect, useState, useMemo,
+  Fragment, useEffect, useState, useMemo,
 } from 'react';
 import {
   Button, Form, Icon, Select, TextField,
@@ -9,12 +9,13 @@ import {
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
-import YamlEditor from '../../../../components/yamlEditor';
-import StatusDot from '../../../../components/status-dot';
-import Tips from '../../../../components/new-tips';
-import NetworkForm from './NetworkForm';
-import DomainForm from './DomainForm';
+import { NewTips as Tips } from '@choerodon/components';
+import YamlEditor from '@/components/yamlEditor';
+import StatusDot from '@/components/status-dot';
+import NetworkForm from './components/NetworkForm';
+import DomainForm from './components/DomianForm';
 import { useBatchDeployStore } from './stores';
+import { Record } from '@/interface';
 
 import './index.less';
 
@@ -28,7 +29,7 @@ const BatchDeployModal = injectIntl(observer(() => {
     intlPrefix,
     prefixCls,
     modal,
-    intl: { formatMessage },
+    formatMessage,
     envId,
   } = useBatchDeployStore();
 
@@ -42,7 +43,7 @@ const BatchDeployModal = injectIntl(observer(() => {
 
   useEffect(() => {
     if (envId) {
-      record.init('environmentId', envId);
+      record?.init('environmentId', envId);
     }
   }, [envId]);
 
@@ -73,20 +74,21 @@ const BatchDeployModal = injectIntl(observer(() => {
     }
   });
 
-  function ChangeConfigValue(value) {
-    record.set('values', value);
+  function ChangeConfigValue(value: any) {
+    record?.set('values', value);
   }
 
-  function handleEnableNext(flag) {
+  function handleEnableNext(flag: boolean | ((prevState: boolean) => boolean)) {
     setHasYamlFailed(flag);
   }
 
-  function renderEnvOption({ record: envRecord, text, value }) {
+  function renderEnvOption({ record: envRecord, text, value }:any) {
     return (
       <>
         {value && (
         <StatusDot
-          connect={envRecord.get('connect')}
+          // @ts-expect-error
+          connect={envRecord.get('connect') as any}
           synchronize={envRecord.get('synchro')}
           active={envRecord.get('active')}
           size="small"
@@ -97,28 +99,28 @@ const BatchDeployModal = injectIntl(observer(() => {
     );
   }
 
-  function renderOptionProperty({ record: envRecord }) {
+  function renderOptionProperty({ record: envRecord }:any) {
     const isAvailable = envRecord.get('connect') && envRecord.get('synchro') && envRecord.get('permission');
     return ({
       disabled: !isAvailable,
     });
   }
 
-  function handleExpand(Operating) {
-    Operating((pre) => !pre);
+  function handleExpand(Operating: { (value: React.SetStateAction<boolean>): void; (value: React.SetStateAction<boolean>): void; (value: React.SetStateAction<boolean>): void; (arg0: (pre: any) => boolean): void; }) {
+    Operating((pre: any) => !pre);
   }
 
-  function handleRemoveForm(formRecord) {
-    batchDeployDs.remove(formRecord);
+  function handleRemoveForm(formRecord: Record | Record[] | undefined) {
+    batchDeployDs.remove(formRecord as any);
   }
 
-  function handleAddForm(appServiceType) {
+  function handleAddForm(appServiceType: string) {
     batchDeployDs.create();
-    batchDeployDs.current.init('appServiceSource', appServiceType);
+    batchDeployDs.current?.init('appServiceSource', appServiceType);
     deployStore.setConfigValue('');
   }
 
-  function handleClickAppService(formRecord) {
+  function handleClickAppService(formRecord: any) {
     batchDeployDs.current = formRecord;
   }
 
@@ -134,6 +136,7 @@ const BatchDeployModal = injectIntl(observer(() => {
           notFoundContent={<FormattedMessage id={`${intlPrefix}.env.empty`} />}
           onOption={renderOptionProperty}
         />
+        {/* @ts-expect-error */}
         <span colSpan={1} />
       </Form>
       )}
@@ -161,15 +164,19 @@ const BatchDeployModal = injectIntl(observer(() => {
                     </Select>
                     {batchDeployDs.data.length > 1 ? (
                       <Button
-                        funcType="flat"
+                        funcType={'flat' as any}
                         icon="delete"
+                        // @ts-expect-error
                         colSpan={1}
                         className="appService-delete-btn"
-                        onClick={() => handleRemoveForm(formRecord)}
+                        onClick={() => handleRemoveForm(formRecord as any)}
                       />
+                      // @ts-expect-error
                     ) : <span colSpan={1} />}
                     {formRecord.get('hasError') ? (
+                      // @ts-expect-error
                       <Icon type="error" colSpan={1} className="appService-error-icon" />
+                      // @ts-expect-error
                     ) : <span colSpan={1} />}
                   </Form>
                 </div>
@@ -178,8 +185,8 @@ const BatchDeployModal = injectIntl(observer(() => {
             return null;
           })}
           <Button
-            funcType="flat"
-            color="primary"
+            funcType={'flat' as any}
+            color={'primary' as any}
             icon="add"
             className="appService-add-btn"
             onClick={() => handleAddForm('normal_service')}
@@ -200,7 +207,7 @@ const BatchDeployModal = injectIntl(observer(() => {
                       searchable
                       colSpan={6}
                       notFoundContent={<FormattedMessage id={`${intlPrefix}.app.empty`} />}
-                      onClick={() => handleClickAppService(formRecord)}
+                      onClick={() => handleClickAppService(formRecord as any)}
                     >
                       {map(deployStore.getShareAppService, ({ id: groupId, name: groupName, appServiceList }) => (
                         <OptGroup label={groupName} key={groupId}>
@@ -212,15 +219,19 @@ const BatchDeployModal = injectIntl(observer(() => {
                     </Select>
                     {batchDeployDs.data.length > 1 ? (
                       <Button
-                        funcType="flat"
+                        funcType={'flat' as any}
                         icon="delete"
+                        // @ts-expect-error
                         colSpan={1}
                         className="appService-delete-btn"
-                        onClick={() => handleRemoveForm(formRecord)}
+                        onClick={() => handleRemoveForm(formRecord as any)}
                       />
+                      // @ts-expect-error
                     ) : <span colSpan={1} />}
                     {formRecord.get('hasError') ? (
+                      // @ts-expect-error
                       <Icon type="error" colSpan={1} className="appService-error-icon" />
+                      // @ts-expect-error
                     ) : <span colSpan={1} />}
                   </Form>
                 </div>
@@ -229,8 +240,8 @@ const BatchDeployModal = injectIntl(observer(() => {
             return null;
           })}
           <Button
-            funcType="flat"
-            color="primary"
+            funcType={'flat' as any}
+            color={'primary' as any}
             icon="add"
             className="appService-add-btn"
             onClick={() => handleAddForm('share_service')}
@@ -250,16 +261,22 @@ const BatchDeployModal = injectIntl(observer(() => {
               name="appServiceVersionId"
               searchable
               searchMatcher="version"
+              colSpan={1}
               disabled={record && !record.get('appServiceId')}
             />
             <TextField
               name="instanceName"
+              colSpan={1}
               addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.instance.tips` })} />}
+            />
+            <TextField
+              name="appName"
+              colSpan={1}
             />
             <Select
               name="valueId"
               searchable
-              colSpan={2}
+              colSpan={3}
               newLine
               clearButton
               disabled={record && (!record.get('appServiceId') || !record.get('environmentId'))}

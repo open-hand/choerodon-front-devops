@@ -43,7 +43,7 @@ const HzeroDeploy = observer(() => {
 
   const renderEnvOption = useCallback(({
     record, text,
-  }: { record: Record, text: string }) => (
+  }: { record: Record, text: string }):any => (
     <EnvOption record={record} text={text} />
   ), []);
 
@@ -66,7 +66,7 @@ const HzeroDeploy = observer(() => {
 
   return (
     <div className={`${prefixCls}`}>
-      <Form dataSet={formDs} columns={5}>
+      <Form dataSet={formDs} columns={6}>
         <SelectBox
           name="appType"
           colSpan={2}
@@ -80,7 +80,6 @@ const HzeroDeploy = observer(() => {
           optionRenderer={renderEnvOption}
           onOption={renderOptionProperty}
           colSpan={2}
-          newLine
         />
         <Select
           name="mktAppVersion"

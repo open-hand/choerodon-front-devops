@@ -150,7 +150,7 @@ const mapping = {
   instance: {
     name: 'instanceName',
     type: 'string',
-    label: '实例名称',
+    label: '应用名称',
     // defaultValue: `${middleWareData[0].value}-${uuidV1().substring(0, 5)}`,
     maxLength: 64,
   },

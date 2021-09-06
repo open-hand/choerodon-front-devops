@@ -1,4 +1,5 @@
 import { useLocalStore } from 'mobx-react-lite';
+import { marketHzeroApi } from '@/api';
 import { ServiceItemProps } from './FormDataSet';
 
 export default function useStore() {
@@ -18,6 +19,27 @@ export default function useStore() {
     setServiceData(data: ServiceItemProps[]) {
       this.serviceData = data;
     },
+
+    // hzeroSyncStatus: null,
+    // get getHzeroSyncStatus() {
+    //   return this.hzeroSyncStatus;
+    // },
+    // setHzeroSyncStatus(data:any) {
+    //   this.hzeroSyncStatus = data;
+    // },
+
+    // async loadHzeroSyncStatus() {
+    //   try {
+    //     const res = await marketHzeroApi.loadSyncStatus();
+    //     if (res && !res.failed) {
+    //       this.setHzeroSyncStatus(res);
+    //     } else {
+    //       this.setHzeroSyncStatus(null);
+    //     }
+    //   } catch (e) {
+    //     this.setHzeroSyncStatus(null);
+    //   }
+    // },
   }));
 }
 

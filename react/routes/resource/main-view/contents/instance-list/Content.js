@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { Fragment } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Table } from 'choerodon-ui/pro';
@@ -79,10 +80,11 @@ const Content = observer(() => {
         border={false}
         queryBar="bar"
       >
-        <Column name="code" renderer={renderName} sortable />
+        <Column name="appName" renderer={renderName} sortable />
+        <Column name="appCode" sortable />
         <Column name="versionName" renderer={renderVersion} />
         <Column name="appServiceName" renderer={renderAppName} sortable />
-        <Column renderer={renderPods} width="1rem" header={formatMessage({ id: `${intlPrefix}.instance.pod.status` })} />
+        {/* <Column renderer={renderPods} width="1rem" header={formatMessage({ id: `${intlPrefix}.instance.pod.status` })} /> */}
       </Table>
     </div>
   );
