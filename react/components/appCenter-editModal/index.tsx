@@ -78,4 +78,6 @@ function openHostAppConfigModal(data: string | object, refresh: Function) {
   });
 }
 
-export { openAppConfigModal, openContainerConfigModal, openDeployGroupConfigModal };
+export {
+  openHostAppConfigModal, openAppConfigModal, openContainerConfigModal, openDeployGroupConfigModal,
+};
