@@ -1,15 +1,14 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events,max-len, jsx-a11y/no-static-element-interactions */
 
 import React, {
-  Fragment, useEffect, useState, useMemo,
+  useEffect, useState, useMemo,
 } from 'react';
 import {
-  Button, Form, Icon, Select, SelectBox, TextField,
+  Button, Form, Icon, Select, TextField,
 } from 'choerodon-ui/pro';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
-import forEach from 'lodash/forEach';
 import YamlEditor from '../../../../components/yamlEditor';
 import StatusDot from '../../../../components/status-dot';
 import Tips from '../../../../components/new-tips';

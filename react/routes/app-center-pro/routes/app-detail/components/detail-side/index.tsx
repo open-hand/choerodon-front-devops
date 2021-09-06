@@ -5,7 +5,6 @@ import { Tooltip } from 'choerodon-ui/pro';
 import { UserInfo, TimePopover, StatusTag } from '@choerodon/components';
 import EnvOrHostStatusIcon from '../../../../components/EnvOrHostStatusIcon';
 import EnvItem from '@/components/env-item';
-import PodCircle from '@/components/pod-circle';
 import { useAppDetailsStore } from '../../stores';
 import './index.less';
 import {
@@ -42,6 +41,7 @@ const DetailAside = () => {
     chartSource,
 
     creationDate,
+    updatedDate,
     rdupmType,
     objectStatus,
     creator = {},
@@ -227,6 +227,14 @@ const DetailAside = () => {
           </div>
           <div>
             <span>创建者</span>
+            <UserInfo realName={realName} loginName={ldap ? loginName : email} avatar={imageUrl} />
+          </div>
+          <div>
+            <span>最近更新时间</span>
+            <TimePopover content={updatedDate} />
+          </div>
+          <div>
+            <span>最近更新者</span>
             <UserInfo realName={realName} loginName={ldap ? loginName : email} avatar={imageUrl} />
           </div>
         </div>

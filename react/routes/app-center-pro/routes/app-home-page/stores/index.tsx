@@ -12,6 +12,7 @@ import useStore, { StoreProps } from './useStore';
 import SearchDataSet from './SearchDataSet';
 import ListDataSet from './ListDataSet';
 import { ENV_TAB, HOST_TAB } from '@/routes/app-center-pro/stores/CONST';
+import useHasMarket from '@/hooks/useHasMarket';
 
 interface ContextProps {
   subfixCls: string,
@@ -22,6 +23,7 @@ interface ContextProps {
   mainStore: StoreProps,
   ALL_ENV_KEY: string,
   projectId:string,
+  hasMarket: boolean
   typeTabKeys: {
     ENV_TAB: 'env',
     HOST_TAB: 'host',
@@ -51,6 +53,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const defaultTypeTabKey = typeTabKeys.ENV_TAB;
   const ALL_ENV_KEY = '0';
   const mainStore = useStore({ defaultTypeTabKey });
+  const hasMarket = useHasMarket();
 
   const envDs = useMemo(() => new DataSet(EnvOptionsDataSet()), []);
   const hostDs = useMemo(() => new DataSet(HostOptionsDataSet()), []);
@@ -86,6 +89,10 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     loadHostData();
   }, []);
 
+  useEffect(() => {
+    hasMarket && mainStore.loadHzeroSyncStatus();
+  }, []);
+
   const refresh = (key?: typeof ENV_TAB | typeof HOST_TAB) => {
     if (key) {
       listDs.setQueryParameter('typeKey', key);
@@ -107,6 +114,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     intlPrefix,
     projectId,
     refresh,
+    hasMarket,
   };
   return (
     <Store.Provider value={value}>

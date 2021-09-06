@@ -29,7 +29,6 @@ export default function DeployConfig() {
     envStore,
     intl: { formatMessage },
     configDs,
-    configFormDs,
     baseInfoDs,
   } = useEnvironmentStore();
 

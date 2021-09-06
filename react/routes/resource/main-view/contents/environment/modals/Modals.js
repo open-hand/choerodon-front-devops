@@ -12,7 +12,7 @@ import { useModalStore } from './stores';
 import Tips from '../../../../../../components/new-tips';
 import DeployConfigForm from '../../../../../../components/deploy-config-form';
 import Deploy from '../../../../../deployment/modals/deploy';
-import BatchDeploy from '../../../../../deployment/modals/batch-deploy';
+import { openBatchDeploy } from '@/components/batch-deploy';
 
 import '../../../../../../components/dynamic-select/style/index.less';
 import { SMALL } from '../../../../../../utils/getModalWidth';
@@ -226,29 +226,6 @@ const EnvModals = observer(() => {
     });
   }
 
-  function openBatchDeploy() {
-    Modal.open({
-      key: batchDeployKey,
-      style: configModalStyle,
-      drawer: true,
-      title: formatMessage({ id: `${intlPrefixDeploy}.batch` }),
-      children: <BatchDeploy
-        deployStore={deployStore}
-        refresh={deployAfter}
-        intlPrefix={intlPrefixDeploy}
-        prefixCls="c7ncd-deploy"
-        envId={id}
-      />,
-      afterClose: () => {
-        deployStore.setCertificates([]);
-        deployStore.setAppService([]);
-        deployStore.setShareAppService([]);
-        deployStore.setConfigValue('');
-      },
-      okText: formatMessage({ id: 'deployment' }),
-    });
-  }
-
   async function handleCloseAutoDeployModal() {
     Modal.open({
       title: autoDeployStatus ? '停用自动部署' : '启用自动部署',
@@ -290,7 +267,10 @@ const EnvModals = observer(() => {
           permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.batch'],
           disabled: configDisabled,
           name: formatMessage({ id: `${intlPrefixDeploy}.batch` }),
-          handler: openBatchDeploy,
+          handler: () => openBatchDeploy({
+            envId: id,
+            refresh: deployAfter,
+          }),
         },
       ],
     }, {

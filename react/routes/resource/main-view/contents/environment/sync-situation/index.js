@@ -17,6 +17,7 @@ export default function Situation() {
     intlPrefix,
     intl: { formatMessage },
   } = useResourceStore();
+
   const { gitopsLogDs } = useEnvironmentStore();
 
   function renderMsg({ value }) {

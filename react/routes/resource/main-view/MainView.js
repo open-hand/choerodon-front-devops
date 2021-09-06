@@ -1,6 +1,5 @@
 import React, {
   useRef, lazy, Suspense, useMemo,
-  useEffect,
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
@@ -15,8 +14,7 @@ import { useMainStore } from './stores';
 import './index.less';
 
 // 实例视图
-const EnvContent = lazy(() => import('./contents/environment'));
-const AppContent = lazy(() => import('./contents/application'));
+// const AppContent = lazy(() => import('./contents/application'));
 const IstContent = lazy(() => import('./contents/instance'));
 
 // 资源视图
@@ -43,12 +41,9 @@ const MainView = observer(() => {
   const {
     prefixCls,
     resourceStore,
-    viewTypeMappings: {
-      IST_VIEW_TYPE,
-    },
     itemTypes: {
       ENV_ITEM,
-      APP_ITEM,
+      // APP_ITEM,
       IST_ITEM,
       SERVICES_ITEM,
       INGRESS_ITEM,
@@ -63,7 +58,6 @@ const MainView = observer(() => {
       CIPHER_GROUP,
       CUSTOM_GROUP,
       IST_GROUP,
-      PVC_ITEM,
       PVC_GROUP,
       WORKLOAD_GROUP,
     },
@@ -73,12 +67,8 @@ const MainView = observer(() => {
   const { mainStore } = useMainStore();
   const rootRef = useRef(null);
 
-  const { getSelectedMenu: { parentId }, getSelectedMenu } = resourceStore;
+  const { getSelectedMenu: { parentId } } = resourceStore;
   const { getDeleteArr } = mainStore;
-
-  useEffect(() => {
-    console.log(getSelectedMenu);
-  }, [getSelectedMenu]);
 
   const deleteModals = useMemo(() => (
     map(getDeleteArr, ({
@@ -99,13 +89,13 @@ const MainView = observer(() => {
 
   const content = useMemo(() => {
     const {
-      getViewType,
       getSelectedMenu: { itemType },
     } = resourceStore;
     if (!itemType) return <Loading display />;
     const cmMaps = {
-      [ENV_ITEM]: getViewType === IST_VIEW_TYPE ? <EnvContent /> : <ResourceEnvContent />,
-      [APP_ITEM]: <AppContent />,
+      // [ENV_ITEM]: getViewType === IST_VIEW_TYPE ? <EnvContent /> : <ResourceEnvContent />,
+      [ENV_ITEM]: <ResourceEnvContent />,
+      // [APP_ITEM]: <AppContent />,
       [IST_ITEM]: <IstContent />,
       [SERVICES_GROUP]: <NetworkContent />,
       [INGRESS_GROUP]: <IngressContent />,
@@ -131,7 +121,7 @@ const MainView = observer(() => {
           describe="请稍后重试"
         />
       );
-  }, [resourceStore.getViewType, resourceStore.getSelectedMenu.itemType]);
+  }, [resourceStore.getSelectedMenu.itemType]);
 
   return (!treeDs.length && treeDs.status === 'ready' && !resourceStore.getSearchValue) ? (
     <div className={`${prefixCls}-wrap`}>

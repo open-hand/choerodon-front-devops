@@ -10,9 +10,7 @@ import { openDomainFormModal } from '@/components/domain-form';
 import { openRedeploy } from '@/components/reDeploy';
 import { openMarketUpgradeModal } from '@/components/app-upgrade';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
-import { openHostAppConfigModal } from '../../../../../../components/OpenAppCreateModal/components/host-app-config';
-import { openContainerConfigModal } from '../../../../../../components/OpenAppCreateModal/components/container-config';
-import { openDeployGroupConfigModal } from '../../../../../../components/OpenAppCreateModal/components/deploy-group-config';
+
 import {
   APP_STATUS,
   CHART_CATERGORY,
@@ -24,8 +22,10 @@ import {
   IS_SERVICE,
 } from '@/routes/app-center-pro/stores/CONST';
 import { getAppCategories, getChartSourceGroup } from '@/routes/app-center-pro/utils';
-import { openAppConfigModal } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config';
 import AppCenterProServices from '@/routes/app-center-pro/services';
+import {
+  openAppConfigModal, openContainerConfigModal, openDeployGroupConfigModal, openHostAppConfigModal,
+} from '@/components/appCenter-editModal';
 
 const DetailsTabsHeaderButtons = () => {
   const {
@@ -84,6 +84,7 @@ const DetailsTabsHeaderButtons = () => {
           handler: () => {
             openAppConfigModal(appRecord?.toData() || {}, refresh);
           },
+          permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateChart'],
         };
         break;
       case DEPLOY_CATERGORY:
@@ -93,10 +94,13 @@ const DetailsTabsHeaderButtons = () => {
             {
               name: '修改应用配置',
               handler: () => openDeployGroupConfigModal(appRecord?.toData(), refresh),
+              permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateChart choerodon.code.project.deploy.app-deployment.application-center.updateDeployGroupApp'],
             },
             {
               name: '修改容器配置',
               handler: () => openContainerConfigModal(appRecord?.toData(), refresh),
+              permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateDeployGroupContainer'],
+
             },
           ],
         };
@@ -107,6 +111,7 @@ const DetailsTabsHeaderButtons = () => {
           handler: () => {
             openHostAppConfigModal(appRecord?.toData() || {}, refresh);
           },
+          permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateHost'],
           icon: 'add_comment-o',
         };
         break;

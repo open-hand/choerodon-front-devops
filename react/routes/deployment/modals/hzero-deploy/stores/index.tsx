@@ -5,10 +5,10 @@ import { injectIntl } from 'react-intl';
 import { inject } from 'mobx-react';
 import { DataSet } from 'choerodon-ui/pro';
 import { DataSet as DataSetProps } from '@/interface';
-import { marketHzeroApi } from '@/api';
 import FormDataSet from './FormDataSet';
 import ServiceDataSet from './ServiceDataSet';
 import useStore, { StoreProps } from './useStore';
+import useHasMarket from '@/hooks/useHasMarket';
 
 interface ContextProps {
   prefixCls: string,
@@ -35,10 +35,12 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     syncStatus,
   } = props;
 
-  const intlPrefix = useMemo(() => 'c7ncd.deploy.hzero', []);
+  const intlPrefix = 'c7ncd.deploy.hzero';
+
   const random = useMemo(() => Math.random(), []);
 
   const mainStore = useStore();
+
   const typeDs = useMemo(() => new DataSet({
     data: [{
       text: formatMessage({ id: `${intlPrefix}.type.open` }),
@@ -55,6 +57,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     formatMessage,
     intlPrefix,
   })), []);
+
   const formDs = useMemo(() => new DataSet(FormDataSet({
     formatMessage,
     intlPrefix,

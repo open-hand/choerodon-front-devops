@@ -52,7 +52,14 @@ const TreeItem = observer(({ record, search }) => {
     if (isGroup) {
       return (
         <>
-          {isExpand ? <Icon type="folder_open2" /> : <Icon type="folder_open" />}
+          {
+            <Icon
+              type={isExpand ? 'folder' : 'folder-o'}
+              style={isExpand ? {
+                color: '#FFCD69',
+              } : {}}
+            />
+          }
           {name}
         </>
       );

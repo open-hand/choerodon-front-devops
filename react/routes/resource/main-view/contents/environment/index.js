@@ -3,7 +3,7 @@ import { Permission } from '@choerodon/boot';
 import { StoreProvider } from './stores';
 import EnvContent from './EnvContent';
 
-export default props => (
+const EnvIndex = (props) => (
   <Permission
     service={[
       'choerodon.code.project.deploy.app-deployment.resource.ps.gitops',
@@ -17,3 +17,5 @@ export default props => (
     </StoreProvider>
   </Permission>
 );
+
+export default EnvIndex;

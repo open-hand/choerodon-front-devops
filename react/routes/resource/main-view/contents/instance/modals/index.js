@@ -11,6 +11,9 @@ import UpgradeModalContent from './upgrade';
 import MarketUpgradeModalContent from './market-upgrade';
 import { useResourceStore } from '../../../../stores';
 import { useInstanceStore } from '../stores';
+import {
+  openAppConfigModal,
+} from '@/components/appCenter-editModal';
 
 const detailKey = Modal.key();
 const valuesKey = Modal.key();
@@ -117,23 +120,6 @@ const IstModals = injectIntl(observer(() => {
       afterClose: () => {
         istStore.setUpgradeValue({});
       },
-    });
-  }
-
-  function openDetailModal() {
-    Modal.open({
-      key: detailKey,
-      title: formatMessage({ id: `${intlPrefix}.modal.detail` }),
-      drawer: true,
-      okCancel: false,
-      okText: formatMessage({ id: 'close' }),
-      style: { width: 380 },
-      children: <DetailsModal
-        record={baseDs.current}
-        intlPrefix={intlPrefix}
-        prefixCls={prefixCls}
-        formatMessage={formatMessage}
-      />,
     });
   }
 
@@ -247,14 +233,16 @@ const IstModals = injectIntl(observer(() => {
         title: !btnDisabled && marketDisable ? formatMessage({ id: `${intlPrefix}.instance.disable.message` }) : '',
       },
       disabledMessage: !btnDisabled ? formatMessage({ id: `${intlPrefix}.instance.disable.message` }) : null,
-    }, {
-      name: formatMessage({ id: `${intlPrefix}.modal.modify` }),
-      icon: 'backup_line',
-      handler: openUpgradeModal,
-      permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.example'],
-      display: !isMarket,
-      disabled: btnDisabled,
-    }, {
+    },
+    {
+      permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.updateChart'],
+      name: '修改应用',
+      icon: 'add_comment-o',
+      handler: () => {
+        openAppConfigModal(record?.toData() || {}, refresh);
+      },
+    },
+    {
       name: formatMessage({ id: 'upgrade' }),
       icon: 'backup_line',
       handler: openMarketUpgradeModal,

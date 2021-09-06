@@ -4,10 +4,8 @@ import React, {
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { withRouter } from 'react-router-dom';
-import { TabCode } from '@choerodon/master';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
-import { useQueryString } from '@choerodon/components';
 import queryString from 'query-string';
 import { viewTypeMappings, itemTypeMappings } from './mappings';
 import TreeDataSet from './TreeDataSet';
@@ -24,32 +22,25 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
   observer((props) => {
     const {
       intl: { formatMessage },
-      AppState: { currentMenuType: { id, organizationId, name: projectName } },
+      AppState: { currentMenuType: { id: projectId, organizationId, name: projectName } },
       children,
       location: { state, search },
     } = props;
 
-    const urlActiveKey = useQueryString().activeKey;
-
     const viewTypeMemo = useMemo(() => viewTypeMappings, []);
     const itemTypes = useMemo(() => itemTypeMappings, []);
-    let {
-      activeKey,
-    } = state || queryString.parse(search) || {};
-    if (!activeKey) {
-      activeKey = urlActiveKey;
-    }
-    const newViewType = activeKey || '';
-    const resourceStore = useStore(newViewType);
+
+    const resourceStore = useStore();
+
     const viewType = resourceStore.getViewType;
     const treeDs = useMemo(() => new DataSet(TreeDataSet({
       store: resourceStore,
       type: viewType,
-      projectId: id,
+      projectId,
       formatMessage,
       organizationId,
       projectName,
-    })), [viewType, id]);
+    })), [viewType, projectId]);
 
     useEffect(() => {
       // NOTE: 1、部署或实例视图的部署后跳转至实例视图实例层。2、资源视图的部署后跳转至资源视图实例层。
@@ -58,9 +49,8 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
     }, []);
 
     const handleSelect = useCallback(async () => {
-      const { IST_VIEW_TYPE, RES_VIEW_TYPE } = viewTypeMemo;
       const {
-        envId, appServiceId, instanceId, itemType = 'instances',
+        envId, itemType = 'instances',
       } = state || queryString.parse(search) || {};
       if (envId) {
         let newEnvId = envId;
@@ -71,36 +61,15 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
             newEnvId = res[envId];
           }
         }
-        if (newViewType === IST_VIEW_TYPE) {
-          if (instanceId) {
-            const parentId = `${newEnvId}**${appServiceId}`;
-            resourceStore.setSelectedMenu({
-              id: instanceId,
-              parentId,
-              key: `${parentId}**${instanceId}`,
-              itemType: itemTypes.IST_ITEM,
-            });
-            resourceStore.setExpandedKeys([`${newEnvId}`, `${newEnvId}**${appServiceId}`]);
-          } else {
-            resourceStore.setSelectedMenu({
-              id: newEnvId,
-              parentId: '0',
-              key: String(newEnvId),
-              itemType: itemTypes.ENV_ITEM,
-            });
-            resourceStore.setExpandedKeys([`${newEnvId}`]);
-          }
-        } else {
-          resourceStore.setSelectedMenu({
-            id: 0,
-            name: formatMessage({ id: itemType }),
-            key: `${newEnvId}**${itemType}`,
-            isGroup: true,
-            itemType: `group_${itemType}`,
-            parentId: String(newEnvId),
-          });
-          resourceStore.setExpandedKeys([`${newEnvId}`]);
-        }
+        resourceStore.setSelectedMenu({
+          id: 0,
+          name: formatMessage({ id: itemType }),
+          key: `${newEnvId}**${itemType}`,
+          isGroup: true,
+          itemType: `group_${itemType}`,
+          parentId: String(newEnvId),
+        });
+        resourceStore.setExpandedKeys([`${newEnvId}`]);
       }
     }, [state, search]);
 
@@ -116,6 +85,8 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       itemTypes,
       resourceStore,
       treeDs,
+      projectId,
+      formatMessage,
     };
     return (
       <Store.Provider value={value}>

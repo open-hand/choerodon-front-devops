@@ -1,6 +1,9 @@
+/* eslint-disable import/no-anonymous-default-export */
 import getTablePostData from '../../../../../../utils/getTablePostData';
 
-export default ({ formatMessage, intlPrefix, projectId, envId }) => ({
+export default ({
+  formatMessage, intlPrefix, projectId, envId,
+}) => ({
   autoQuery: true,
   selection: false,
   pageSize: 10,
@@ -21,9 +24,10 @@ export default ({ formatMessage, intlPrefix, projectId, envId }) => ({
   },
   fields: [
     { name: 'id', type: 'string' },
-    { name: 'code', type: 'string', label: formatMessage({ id: `${intlPrefix}.instance.name` }) },
-    { name: 'versionName', type: 'string', label: formatMessage({ id: 'version' }) },
-    { name: 'appServiceName', type: 'string', label: formatMessage({ id: 'appService' }) },
+    { name: 'appCode', type: 'string', label: formatMessage({ id: 'appCode' }) },
+    { name: 'appName', type: 'string', label: formatMessage({ id: 'appName' }) },
+    { name: 'versionName', type: 'string', label: 'Chart版本' },
+    { name: 'appServiceName', type: 'string', label: 'Chart来源' },
     { name: 'status', type: 'string' },
     { name: 'podRunningCount', type: 'number' },
     { name: 'podCount', type: 'number' },
@@ -32,8 +36,8 @@ export default ({ formatMessage, intlPrefix, projectId, envId }) => ({
     { name: 'projectId', type: 'string' },
   ],
   queryFields: [
-    { name: 'code', type: 'string', label: formatMessage({ id: `${intlPrefix}.instance.name` }) },
-    { name: 'appServiceName', type: 'string', label: formatMessage({ id: 'appService' }) },
-    { name: 'versionName', type: 'string', label: formatMessage({ id: 'version' }) },
+    { name: 'appCode', type: 'string', label: formatMessage({ id: 'appCode' }) },
+    { name: 'appName', type: 'string', label: formatMessage({ id: 'appName' }) },
+    { name: 'versionName', type: 'string', label: formatMessage({ id: 'Chart版本' }) },
   ],
 });

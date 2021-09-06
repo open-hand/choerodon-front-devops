@@ -12,7 +12,7 @@ import DetailDataSet from './DetailDataSet';
 import useStore from './useStore';
 import usePipelineStore from './usePipelineStore';
 import OptionsDataSet from './OptionsDataSet';
-import useHasMarket from '../../../hooks/useHasMarket';
+import useHasMarket from '@/hooks/useHasMarket';
 
 const Store = createContext();
 const STATUS = ['success', 'failed', 'operating'];
@@ -32,7 +32,9 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       location: { state },
     } = props;
     const intlPrefix = 'c7ncd.deploy';
+
     const hasMarket = useHasMarket();
+
     const deployTypeDs = useMemo(() => new DataSet({
       data: [
         {
@@ -50,6 +52,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       ],
       selection: 'single',
     }), []);
+
     const deployModeDs = useMemo(() => new DataSet({
       data: [{
         text: '容器部署',
@@ -59,6 +62,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
         value: 'host',
       }],
     }), []);
+
     const deployResultDs = useMemo(() => new DataSet({
       data: map(STATUS, (item) => ({
         text: formatMessage({ id: `${intlPrefix}.status.${item}` }),
@@ -87,15 +91,6 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       }
       hasMarket && deployStore.loadHzeroSyncStatus();
     }, []);
-
-    useEffect(() => {
-      // envOptionsDs.transport.read.url
-      // = `/devops/v1/projects/${projectId}/envs/list_by_active?active=true`;
-      // pipelineOptionsDs.transport.read.url =
-      //   `/devops/v1/projects/${projectId}/pipeline/list_all`;
-      // envOptionsDs.query();
-      // pipelineOptionsDs.query();
-    }, [projectId]);
 
     const value = {
       ...props,

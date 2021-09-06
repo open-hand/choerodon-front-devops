@@ -8,11 +8,11 @@ import {
   Select,
   Tooltip,
 } from 'choerodon-ui/pro';
+import { axios } from '@choerodon/boot';
 import {
   Record, RecordObjectProps,
 } from '@/interface';
 import EnvOption from '@/components/env-option';
-import { axios } from '@choerodon/boot';
 import { useHzeroDeployStore } from './stores';
 import ServiceContent from './components/service-content';
 
@@ -20,8 +20,6 @@ import './index.less';
 
 const HzeroDeploy = observer(() => {
   const {
-    formatMessage,
-    intlPrefix,
     prefixCls,
     modal,
     formDs,

@@ -45,12 +45,11 @@ export default function useStore({ defaultTab }) {
       return this.polarisLoading;
     },
 
-    async checkPermission({ projectId, organizationId, resourceType }) {
+    async checkPermission({ projectId, organizationId }) {
       const res = await checkPermission({
         code: 'choerodon.code.project.deploy.app-deployment.resource.ps.permission',
         organizationId,
         projectId,
-        resourceType,
       });
       this.setPermission(res);
     },
