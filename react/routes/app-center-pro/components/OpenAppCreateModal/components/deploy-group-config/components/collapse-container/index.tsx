@@ -36,7 +36,7 @@ const Index = ({
           onClick={handleClickIcon}
         >
           <Icon
-            type={collapse ? 'expand_less' : 'expand_more'}
+            type={collapse ? 'expand_more' : 'expand_less'}
             style={{
               color: '#5365EA',
             }}

@@ -8,7 +8,7 @@ import { inject } from 'mobx-react';
 import { Icon, Upload, Button as OldButton } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { CustomSelect, ChunkUploader } from '@choerodon/components';
-import { productTypeData, productSourceData, mapping } from '../../stores/conGroupDataSet';
+import { productTypeData, productSourceData, mapping, repoTypeData } from '../../stores/conGroupDataSet';
 import { mapping as portMapping } from '../../stores/portConfigDataSet';
 import { Record, FuncType } from '@/interface';
 import CollapseContainer from '../../../deploy-group-config/components/collapse-container';
@@ -95,8 +95,14 @@ const Index = inject('AppState')(observer(({
                       />
                     </div>
                   </div>
-                  <TextField name={mapping.username.name} />
-                  <TextField name={mapping.password.name} />
+                  {
+                    dataSource.get(mapping.repoType.name) === repoTypeData[0].value && (
+                      <>
+                        <TextField name={mapping.username.name} />
+                        <TextField name={mapping.password.name} />
+                      </>
+                    )
+                  }
                 </Form>
               );
               break;

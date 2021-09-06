@@ -272,45 +272,59 @@ const Index = observer(() => {
     <div className="c7ncd-appCenterPro-hostAppConfig">
       {
         detail ? '' : (
-          <div className="c7ncd-appCenterPro-conDetail__productType">
-            <CustomSelect
-              onClickCallback={
-                (value) => HostAppConfigDataSet.current.set(mapping.jarSource.name, value.value)
-              }
-              selectedKeys={HostAppConfigDataSet.current.get(mapping.jarSource.name)}
-              data={jarSource}
-              identity="value"
-              mode="single"
-              customChildren={(item): any => (
-                <div className="c7ncd-appCenterPro-conDetail__productSource__item">
-                  <img src={item.img} alt="" />
-                  <p>
-                    {item.name}
-                  </p>
-                </div>
-              )}
-            />
-          </div>
+          <>
+            <Form style={{ marginTop: 20 }} columns={3} dataSet={HostAppConfigDataSet}>
+              <Select
+                name={mapping.host.name}
+                optionRenderer={renderHostOption}
+                disabled={Boolean(detail)}
+                onOption={({ record: hostRecord }) => ({
+                  disabled: !hostRecord.get('connect'),
+                })}
+              />
+            </Form>
+            <div className="c7ncd-appCenterPro-conDetail__productType">
+              <CustomSelect
+                onClickCallback={
+                  (value) => HostAppConfigDataSet.current.set(mapping.jarSource.name, value.value)
+                }
+                selectedKeys={HostAppConfigDataSet.current.get(mapping.jarSource.name)}
+                data={jarSource}
+                identity="value"
+                mode="single"
+                customChildren={(item): any => (
+                  <div className="c7ncd-appCenterPro-conDetail__productSource__item">
+                    <img src={item.img} alt="" />
+                    <p>
+                      {item.name}
+                    </p>
+                  </div>
+                )}
+              />
+            </div>
+          </>
         )
       }
       <Form className="c7ncd-appCenterPro-conDetail__form" columns={3} record={HostAppConfigDataSet?.current}>
         {
           renderDetailForm()
         }
-        <Select
-          name={mapping.host.name}
-          optionRenderer={renderHostOption}
-          disabled={Boolean(detail)}
-          onOption={({ record: hostRecord }) => ({
-            disabled: !hostRecord.get('connect'),
-          })}
-        />
         {
           detail && (
-            <Select
-              name={mapping.jarSource.name}
-              disabled
-            />
+            <>
+              <Select
+                name={mapping.host.name}
+                optionRenderer={renderHostOption}
+                disabled={Boolean(detail)}
+                onOption={({ record: hostRecord }) => ({
+                  disabled: !hostRecord.get('connect'),
+                })}
+              />
+              <Select
+                name={mapping.jarSource.name}
+                disabled
+              />
+            </>
           )
         }
         { renderFormByProductSource() }
