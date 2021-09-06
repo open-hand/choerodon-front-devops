@@ -166,7 +166,7 @@ const WorkloadContent = observer(() => {
   const renderName = useCallback(({ value, record }: { value: string, record: Record }) => {
     const status = record.get('commandStatus');
     const error = record.get('error');
-    const hasInstanceId = record.get('instanceId');
+    const sourceType = record.get('sourceType');
     return (
       <div style={{
         display: 'flex',
@@ -185,8 +185,11 @@ const WorkloadContent = observer(() => {
           error={error}
         />
         {
-         hasInstanceId && <StatusTag colorCode="operating" type="border" name="Chart资源" />
-       }
+         sourceType === 'chart' && <StatusTag colorCode="operating" type="border" name="Chart资源" />
+        }
+        {
+         sourceType === 'deploy_group' && <StatusTag colorCode="success" type="border" name="部署组资源" />
+        }
       </div>
 
     );
@@ -333,8 +336,8 @@ const WorkloadContent = observer(() => {
             <Column name="name" renderer={renderName} />
             <Column renderer={renderAction} width={60} />
             <Column name="pod" renderer={renderPod} />
-            <Column name="labels" renderer={renderLabels} />
-            <Column name="ports" renderer={renderPorts} />
+            <Column name="labels" renderer={renderLabels} width={130} />
+            <Column name="ports" renderer={renderPorts} width={100} />
             <Column name="source" renderer={renderResource} width={100} />
             <Column name="age" renderer={renderUpdateDate} width={110} />
           </Table>
