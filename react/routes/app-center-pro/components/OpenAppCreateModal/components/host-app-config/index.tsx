@@ -11,23 +11,3 @@ const HostAppConfig = (props: any) => (
 );
 
 export default HostAppConfig;
-
-function openHostAppConfigModal(data: string | object, refresh: Function) {
-  Modal.open({
-    title: '修改应用',
-    key: Modal.key(),
-    drawer: true,
-    style: {
-      width: CONSTANTS.MODAL_WIDTH.MAX,
-    },
-    children: (
-      <HostAppConfig
-        refresh={refresh}
-        detail={data}
-      />
-    ),
-    okText: '修改',
-  });
-}
-
-export { openHostAppConfigModal };
