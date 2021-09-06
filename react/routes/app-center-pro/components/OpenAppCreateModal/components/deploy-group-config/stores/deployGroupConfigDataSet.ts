@@ -48,6 +48,7 @@ const mapping: {
     name: 'code',
     type: 'string' as FieldType,
     label: '应用编码',
+    disabled: true,
   },
   env: {
     name: 'envId',

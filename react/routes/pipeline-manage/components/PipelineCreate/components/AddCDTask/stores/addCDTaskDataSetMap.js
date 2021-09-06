@@ -47,7 +47,7 @@ const typeData = [{
 }];
 
 const deployWayData = [{
-  value: 'new',
+  value: 'create',
   name: '新建应用',
 }, {
   value: 'update',
@@ -59,7 +59,7 @@ const fieldMap = {
     textField: 'name',
     valueField: 'value',
     defaultValue: deployWayData[0].value,
-    name: 'deployWay',
+    name: 'deployType',
     type: 'string',
     label: '部署方式',
     options: new DataSet({

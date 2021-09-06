@@ -265,7 +265,13 @@ const Index = observer(() => {
             </Form>
             <p style={{ fontWeight: 500 }}>
               Options
-              <span>
+              <span
+                style={{
+                  marginLeft: '4px',
+                  position: 'relative',
+                  bottom: '2px',
+                }}
+              >
                 <Tips helpText="定义域名解析配置文件的其他选项，常见的有 timeout、attempts 和 ndots 等等。" />
               </span>
             </p>
