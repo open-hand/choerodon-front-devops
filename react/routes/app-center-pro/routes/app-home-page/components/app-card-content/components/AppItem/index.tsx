@@ -16,6 +16,7 @@ import AppCenterProServices from '../../../../../../services';
 import EnvOrHostStatusIcon from '@/routes/app-center-pro/components/EnvOrHostStatusIcon';
 import { useAppHomePageStore } from '../../../../stores';
 import AppStatus from '../AppStatus';
+import UPDATE_IMG from '@/routes/app-center-pro/assets/update.svg';
 
 const AppItem = observer(({
   record,
@@ -66,7 +67,13 @@ const AppItem = observer(({
     podRunningCount,
     podUnlinkCount,
     podCount,
+
+    // 市场应用
+    upgradeAvailable,
+    currentVersionAvailable,
   } = record.toData();
+
+  // !upgradeAvailable || !upgradeAvailable
 
   const {
     imageUrl,
@@ -220,6 +227,11 @@ const AppItem = observer(({
       <aside>
         {renderAction()}
       </aside>
+      {
+        upgradeAvailable && currentVersionAvailable && (
+          <img className={`${subfixCls}-list-card-update`} src={UPDATE_IMG} alt="img" />
+        )
+      }
       <header>
         <EnvOrHostStatusIcon
           hostError={devopsHostCommandDTO?.error}
