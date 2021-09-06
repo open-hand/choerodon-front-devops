@@ -28,7 +28,6 @@ import addCDTaskDataSetMap, {
   deployWayData,
 } from "./stores/addCDTaskDataSetMap";
 import { mapping } from './stores/deployChartDataSet';
-
 import { useAddCDTaskStore } from "./stores";
 import YamlEditor from "../../../../../../components/yamlEditor";
 import Tips from "../../../../../../components/new-tips";
