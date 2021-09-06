@@ -12,28 +12,17 @@ const mapping: {
     textField: 'name',
     options: new DataSet({
       data: [{
-        value: 'HTTP',
-        name: 'HTTP',
-      }, {
-        value: 'GRPC',
-        name: 'GRPC',
-      }, {
-        value: 'HTTP2',
-        name: 'HTTP2',
-      }, {
-        value: 'HTTPS',
-        name: 'HTTPS',
-      }, {
         value: 'TCP',
         name: 'TCP',
       }, {
-        value: 'MONGO',
-        name: 'MONGO',
+        value: 'UDP',
+        name: 'UDP',
       }, {
-        value: 'REDIS',
-        name: 'REDIS',
+        value: 'SCTP',
+        name: 'SCTP',
       }],
     }),
+    defaultValue: 'TCP',
     dynamicProps: {
       required: ({ record }) => record.get(mapping.name.name) || record.get(mapping.port.name),
     },
