@@ -61,8 +61,11 @@ const mapping: {
   podNum: {
     name: 'replicas',
     type: 'number' as FieldType,
-    label: 'Pod总数',
+    label: '副本数',
     required: true,
+    defaultValue: 1,
+    min: 1,
+    step: 1,
   },
   MaxSurge: {
     name: 'maxSurge',
