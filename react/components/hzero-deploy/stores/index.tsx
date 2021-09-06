@@ -1,5 +1,5 @@
 import React, {
-  createContext, useCallback, useContext, useEffect, useMemo,
+  createContext, useContext, useEffect, useMemo,
 } from 'react';
 import { injectIntl } from 'react-intl';
 import { inject } from 'mobx-react';
@@ -8,7 +8,6 @@ import { DataSet as DataSetProps } from '@/interface';
 import FormDataSet from './FormDataSet';
 import ServiceDataSet from './ServiceDataSet';
 import useStore, { StoreProps } from './useStore';
-import useHasMarket from '@/hooks/useHasMarket';
 
 interface ContextProps {
   prefixCls: string,
@@ -35,13 +34,11 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     syncStatus,
   } = props;
 
-  const intlPrefix = 'c7ncd.deploy.hzero';
-
+  const intlPrefix = useMemo(() => 'c7ncd.deploy.hzero', []);
   const random = useMemo(() => Math.random(), []);
 
   const mainStore = useStore();
-
-  const typeDs = useMemo(() => new DataSet({
+  const typeDs = useMemo(():any => new DataSet({
     data: [{
       text: formatMessage({ id: `${intlPrefix}.type.open` }),
       value: 'open',

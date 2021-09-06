@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, max-len */
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, Suspense } from 'react';
 import {
   Page, Content, Header, Permission, Breadcrumb, Choerodon, HeaderButtons, Action,
 } from '@choerodon/boot';
@@ -10,9 +10,8 @@ import {
 import { FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router-dom';
 import { get, has } from '@choerodon/inject';
-import classNames from 'classnames';
 import { observer } from 'mobx-react-lite';
-import { StatusTag } from '@choerodon/components';
+import { StatusTag, NewTips as Tips } from '@choerodon/components';
 import { TabCode } from '@choerodon/master';
 import ReactCodeMirror from 'react-codemirror';
 import app from '@/images/app.svg';
@@ -20,19 +19,19 @@ import image from '@/images/image.svg';
 import jar from '@/images/jar.svg';
 import hzero from '@/images/hzero.svg';
 import { SMALL } from '@/utils/getModalWidth';
-import YamlEditor from '@/components/yamlEditor';
 import { mapping } from './stores/ListDataSet';
 import { useDeployStore } from './stores';
 import TimePopover from '../../components/timePopover/TimePopover';
 import UserInfo from '../../components/userInfo';
 import Deploy from './modals/deploy';
 import BaseComDeploy from './modals/base-comDeploy';
-import BatchDeploy from './modals/batch-deploy';
 import HzeroDeploy from './modals/hzero-deploy';
+import { openBatchDeploy } from '@/components/batch-deploy';
+import { openAppCreateModal } from '@/components/open-appCreate';
 import HzeroDeployDetail from './modals/hzero-deploy-detail';
-import Tips from '../../components/new-tips';
 import { LARGE } from '../../utils/getModalWidth';
 import { deployRecordApi } from '../../api';
+import { getHzeroDeployBtnConfig } from '@/components/hzero-deploy';
 
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/base16-dark.css';
@@ -40,7 +39,6 @@ import './index.less';
 
 const { Column } = Table;
 const modalKey4 = Modal.key();
-const batchDeployModalKey = Modal.key();
 const commandModalKey = Modal.key();
 const hzeroDeployModalKey = Modal.key();
 const hzeroDeployDetailModalKey = Modal.key();
@@ -71,8 +69,6 @@ const Deployment = withRouter(observer((props) => {
     prefixCls,
     listDs,
     deployStore,
-    envOptionsDs,
-    pipelineOptionsDs,
     hasMarket,
   } = useDeployStore();
 
@@ -89,8 +85,6 @@ const Deployment = withRouter(observer((props) => {
   }, []);
 
   function refresh() {
-    // envOptionsDs.query();
-    // pipelineOptionsDs.query();
     listDs.query();
   }
 
@@ -149,28 +143,6 @@ const Deployment = withRouter(observer((props) => {
     });
   }
 
-  function openBatchDeploy() {
-    Modal.open({
-      key: batchDeployModalKey,
-      style: modalStyle2,
-      drawer: true,
-      title: formatMessage({ id: `${intlPrefix}.batch` }),
-      children: <BatchDeploy
-        deployStore={deployStore}
-        refresh={deployAfter}
-        intlPrefix={intlPrefix}
-        prefixCls={prefixCls}
-      />,
-      afterClose: () => {
-        deployStore.setCertificates([]);
-        deployStore.setAppService([]);
-        deployStore.setShareAppService([]);
-        deployStore.setConfigValue('');
-      },
-      okText: formatMessage({ id: 'deployment' }),
-    });
-  }
-
   function linkToInstance(record) {
     const { history, location: { search } } = props;
     if (record) {
@@ -209,22 +181,6 @@ const Deployment = withRouter(observer((props) => {
       });
     }
   }
-
-  const openHzeroDeploy = useCallback(() => {
-    Modal.open({
-      key: hzeroDeployModalKey,
-      style: {
-        width: LARGE,
-      },
-      title: formatMessage({ id: `${intlPrefix}.hzero` }),
-      children: <HzeroDeploy
-        syncStatus={deployStore.getHzeroSyncStatus}
-        refresh={refresh}
-      />,
-      drawer: true,
-      okText: formatMessage({ id: 'deployment' }),
-    });
-  }, []);
 
   function renderNumber({ record }) {
     const errorInfo = record.get('errorInfo');
@@ -540,30 +496,21 @@ const Deployment = withRouter(observer((props) => {
   const getHeaderButtons = () => {
     const res = [
       {
-        name: formatMessage({ id: `${intlPrefix}.manual` }),
-        icon: 'cloud_done-o',
+        name: '创建应用',
+        icon: 'playlist_add',
         display: true,
         permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.manual'],
-        handler: openDeploy,
+        handler: () => openAppCreateModal(refresh, true, id),
       },
       {
-        name: formatMessage({ id: `${intlPrefix}.batch` }),
-        icon: 'cloud_done-o',
+        name: '批量创建Chart应用',
+        icon: 'library_add-o',
         display: true,
         permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.batch'],
-        handler: openBatchDeploy,
-      },
-      {
-        name: formatMessage({ id: `${intlPrefix}.hzero` }),
-        icon: 'cloud_done-o',
-        display: hasMarket,
-        disabled: !(deployStore.getHzeroSyncStatus?.open || deployStore.getHzeroSyncStatus?.sass),
-        permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.hzero'],
-        handler: openHzeroDeploy,
-        tooltipsConfig: {
-          title: !(deployStore.getHzeroSyncStatus?.open || deployStore.getHzeroSyncStatus?.sass)
-            ? '未从开放平台同步HZERO应用至C7N平台，无法执行此操作' : '',
-        },
+        handler: () => openBatchDeploy({
+          envId: id,
+          refresh: deployAfter,
+        }),
       },
       {
         icon: 'refresh',
@@ -571,12 +518,25 @@ const Deployment = withRouter(observer((props) => {
         handler: refresh,
       },
     ];
+    if (deployStore.getHzeroSyncStatus) {
+      res.unshift(getHzeroDeployBtnConfig({
+        refresh,
+        syncStatus: deployStore.getHzeroSyncStatus,
+        hasMarket,
+      }));
+    }
     if (has('base-pro:getBaseComponentDeployConfig')) {
       res.splice(2, 0, {
         ...get('base-pro:getBaseComponentDeployConfig')(refresh, false),
       });
     }
-    return res;
+
+    return (
+      <HeaderButtons
+        items={res}
+        showClassName={false}
+      />
+    );
   };
 
   return (
@@ -584,10 +544,7 @@ const Deployment = withRouter(observer((props) => {
       service={['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.default']}
     >
       <Header title={<FormattedMessage id="app.head" />} backPath={getBackPath()}>
-        <HeaderButtons
-          items={getHeaderButtons()}
-          showClassName={false}
-        />
+        {getHeaderButtons()}
       </Header>
       <Breadcrumb />
       <Content className={`${prefixCls}-content`}>
