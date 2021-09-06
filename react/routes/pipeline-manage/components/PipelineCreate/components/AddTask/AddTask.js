@@ -75,6 +75,7 @@ const AddTask = observer(() => {
     DependRepoDataSet,
     modal,
     handleOk,
+    taskType,
     AddTaskUseStore: useStore,
     AppState: {
       currentMenuType: {
@@ -348,6 +349,7 @@ const AddTask = observer(() => {
       }
     };
     init();
+    AddTaskFormDataSet.current.set('type',taskType)
   }, []);
 
   function encode(str) {
@@ -1581,12 +1583,6 @@ const AddTask = observer(() => {
   return (
     <>
       <Form className="addTaskForm" dataSet={AddTaskFormDataSet} columns={4}>
-        <Select name="type" colSpan={1}>
-          <Option value="build">构建</Option>
-          <Option value="sonar">代码检查</Option>
-          <Option value="custom">自定义</Option>
-          <Option value="chart">发布Chart</Option>
-        </Select>
         {
           AddTaskFormDataSet.current.get('type') !== 'custom' ? [
             <TextField name="name" colSpan={3} />,
