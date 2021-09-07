@@ -15,7 +15,7 @@ import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
 import AppCenterProServices from '../../../../../../services';
 import EnvOrHostStatusIcon from '@/routes/app-center-pro/components/EnvOrHostStatusIcon';
 import { useAppHomePageStore } from '../../../../stores';
-import AppStatus from '../AppStatus';
+import AppStatus from '@/routes/app-center-pro/components/AppStatus';
 import UPDATE_IMG from '@/routes/app-center-pro/assets/update.svg';
 
 const AppItem = observer(({
@@ -235,8 +235,6 @@ const AppItem = observer(({
       }
       <header>
         <EnvOrHostStatusIcon
-          hostError={devopsHostCommandDTO?.error}
-          hostStatus={devopsHostCommandDTO?.status}
           podRunningCount={podRunningCount}
           podCount={podCount}
           currentType={currentType}
@@ -250,7 +248,7 @@ const AppItem = observer(({
             {name || '-'}
           </span>
         </Tooltip>
-        <AppStatus error={error || devopsHostCommandDTO.error} subfixCls={subfixCls} status={isEnv ? appStatus : devopsHostCommandDTO?.status} deloyType={currentType} />
+        <AppStatus error={error || devopsHostCommandDTO?.error} status={isEnv ? appStatus : devopsHostCommandDTO?.status} deloyType={currentType} />
       </header>
       <main>
         <div>
