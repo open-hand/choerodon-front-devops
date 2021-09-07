@@ -1,8 +1,17 @@
-import { map, forOwn, isEmpty, forEach } from 'lodash';
+/* eslint-disable no-param-reassign */
+/* eslint-disable consistent-return */
+/* eslint-disable max-len */
+import {
+  map, forOwn, isEmpty, forEach,
+} from 'lodash';
 import uuidv1 from 'uuid/v1';
 
-export default ({ formatMessage, portDs, endPointsDs, targetLabelsDs, appInstanceOptionsDs, networkStore, projectId, envId, networkEdit }) => {
-  const { networkInfoDs, networkId, initTargetLabel, initPorts, initEndPoints } = networkEdit;
+export default ({
+  formatMessage, portDs, endPointsDs, targetLabelsDs, appInstanceOptionsDs, appDeployOptionsDs, networkStore, projectId, envId, networkEdit,
+}) => {
+  const {
+    networkInfoDs, networkId, initTargetLabel, initPorts, initEndPoints,
+  } = networkEdit;
 
   /**
   * 检查名字的唯一性
@@ -16,7 +25,7 @@ export default ({ formatMessage, portDs, endPointsDs, targetLabelsDs, appInstanc
     const pattern = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
     if (value && !pattern.test(value)) {
       return formatMessage({ id: 'network.name.check.failed' });
-    } else if (value && pattern.test(value)) {
+    } if (value && pattern.test(value)) {
       const res = await networkStore.checkNetWorkName(projectId, envId, value);
       if (!res) {
         return formatMessage({ id: 'network.name.check.exist' });
@@ -50,11 +59,31 @@ export default ({ formatMessage, portDs, endPointsDs, targetLabelsDs, appInstanc
         const instance = appInstanceOptionsDs.find((r) => r.get('code') === item);
         const status = instance.get('status');
         if (instance && status && status !== 'running' && !msg) {
-          msg = formatMessage({ id: 'network.instance.check.failed' });
+          msg = formatMessage({ id: 'network.application.check.failed' });
         }
       });
       if (data[1] && !msg) {
         msg = formatMessage({ id: 'network.instance.check.failed.more' });
+      }
+    }
+    if (msg) {
+      return msg;
+    }
+  }
+  function checkDeploy(value, name, record) {
+    if (!networkId) return;
+    let msg;
+    if (value) {
+      const data = value.split(',');
+      forEach(data, (item) => {
+        const instance = appDeployOptionsDs.find((r) => r.get('code') === item);
+        const status = instance.get('status');
+        if (instance && status && status !== 'running' && !msg) {
+          msg = formatMessage({ id: 'network.application.check.failed' });
+        }
+      });
+      if (data[1] && !msg) {
+        msg = formatMessage({ id: 'network.deploy.check.failed.more' });
       }
     }
     if (msg) {
@@ -89,13 +118,18 @@ export default ({ formatMessage, portDs, endPointsDs, targetLabelsDs, appInstanc
           url: `devops/v1/projects/${projectId}/app_service/list_all`,
         },
         dynamicProps: {
-          required: ({ dataSet, record, name }) => record.get('target') === 'instance',
+          required: ({ dataSet, record, name }) => record.get('target') === 'instance' && record.get('isChart') === 'chart',
         },
       },
       {
         name: 'target',
         type: 'string',
         defaultValue: 'instance',
+      },
+      {
+        name: 'isChart',
+        type: 'string',
+        defaultValue: 'chart',
       },
       {
         name: 'type',
@@ -105,15 +139,26 @@ export default ({ formatMessage, portDs, endPointsDs, targetLabelsDs, appInstanc
       {
         name: 'appInstance',
         type: 'string',
-        label: formatMessage({ id: 'network.target.instance' }),
+        label: formatMessage({ id: 'network.target.application' }),
         required: true,
         options: appInstanceOptionsDs,
         textField: 'code',
         valueField: 'code',
         validator: checkInstance,
         dynamicProps: {
-          required: ({ dataSet, record, name }) => record.get('target') === 'instance',
+          required: ({ dataSet, record, name }) => record.get('target') === 'instance' && record.get('isChart') === 'chart',
         },
+      },
+      {
+        name: 'appDeploy', // 部署组应用
+        type: 'string',
+        label: formatMessage({ id: 'network.isChart.deployment' }),
+        required: true,
+        options: appDeployOptionsDs,
+        textField: 'code',
+        valueField: 'objectId',
+        validator: checkDeploy,
+        required: true,
       },
       {
         name: 'externalIps',
@@ -142,13 +187,21 @@ export default ({ formatMessage, portDs, endPointsDs, targetLabelsDs, appInstanc
       },
     },
     events: {
-      update({ dataSet, record, name, value, oldValue }) {
+      update({
+        dataSet, record, name, value, oldValue,
+      }) {
         switch (name) {
           case 'target':
             networkId
-              ? record.init('instance', initTargetLabel({ targetLabelsDs, type: value, record, networkInfoDs, formatMessage }))
-              && record.init('targetIps', initEndPoints({ endPointsDs, targetLabelsDs, record: dataSet.current, networkInfoDs }))
-              : handleTargetChange({ targetLabelsDs, endPointsDs, value, record, dataSet });
+              ? record.init('instance', initTargetLabel({
+                targetLabelsDs, type: value, record, networkInfoDs, formatMessage,
+              }))
+              && record.init('targetIps', initEndPoints({
+                endPointsDs, targetLabelsDs, record: dataSet.current, networkInfoDs,
+              }))
+              : handleTargetChange({
+                targetLabelsDs, endPointsDs, value, record, dataSet,
+              });
             break;
           case 'type':
             networkId
@@ -156,10 +209,12 @@ export default ({ formatMessage, portDs, endPointsDs, targetLabelsDs, appInstanc
               : handleTypeChange({ portDs, value, record });
             break;
           case 'appServiceId':
-            !networkId && handleAppServiceIdChange({ dataSet, record, name, value });
+            !networkId && handleAppServiceIdChange({
+              dataSet, record, name, value,
+            });
             if (value) {
               record.get('appInstance') && record.set('appInstance', null);
-              appInstanceOptionsDs.transport.read.url = `/devops/v1/projects/${projectId}/app_service_instances/list_running_instance?env_id=${envId}&app_service_id=${value}`;
+              appInstanceOptionsDs.transport.read.url = `/devops/v1/projects/${projectId}/deploy_app_center/deployment?env_id=${envId}&app_service_id=${value}`;
               appInstanceOptionsDs.query();
             }
             break;
@@ -171,7 +226,9 @@ export default ({ formatMessage, portDs, endPointsDs, targetLabelsDs, appInstanc
   };
 };
 
-function handleTargetChange({ targetLabelsDs, endPointsDs, value, record }) {
+function handleTargetChange({
+  targetLabelsDs, endPointsDs, value, record,
+}) {
   if (value !== 'instance') {
     record.set('appInstance', null);
     record.set('appServiceId', null);
@@ -195,7 +252,9 @@ function handleTypeChange({ portDs, value, record }) {
   }
 }
 
-function handleAppServiceIdChange({ dataSet, record, name, value }) {
+function handleAppServiceIdChange({
+  dataSet, record, name, value,
+}) {
   if (!value) return;
   const opt = dataSet.getField(name).getLookupData(value);
   if (opt) {
@@ -220,7 +279,9 @@ function createNetworkName(opt) {
 }
 
 export function transFormData(data, formatMessage, envId) {
-  const { portDs: portData, endPointsDs: endPointsData, targetLabelsDs: targetLabelsData, target, appInstance, name, type, externalIps, targetIps, appServiceId } = data;
+  const {
+    portDs: portData, endPointsDs: endPointsData, targetLabelsDs: targetLabelsData, target, appInstance, appDeploy, name, type, externalIps, targetIps, appServiceId, isChart,
+  } = data;
 
   // NOTE: 转换port的数据，过滤掉不用的数据
   const ports = map(portData, (value) => ({
@@ -232,6 +293,7 @@ export function transFormData(data, formatMessage, envId) {
 
   let targetAppServiceId;
   let targetInstanceCode;
+  let targetDeploymentId;
   let selectors = null;
   let endPoints = null;
   // 目标对象是实例还是选择器
@@ -241,10 +303,14 @@ export function transFormData(data, formatMessage, envId) {
      * 所有实例直接与AppService关联所以此处赋值给targetAppServiceId
      * 单个实例直接与AppInstnace关联所以此处赋值给targetInstanceCode
      */
-    if (appInstance === formatMessage({ id: 'all_instance' })) {
-      targetAppServiceId = appServiceId;
+    if (isChart === 'chart') {
+      if (appInstance === formatMessage({ id: 'all_instance' })) {
+        targetAppServiceId = appServiceId;
+      } else {
+        targetInstanceCode = appInstance;
+      }
     } else {
-      targetInstanceCode = appInstance;
+      targetDeploymentId = appDeploy;
     }
   } else if (target === 'param') {
     // NOTE: 处理selectors,将targetLabels的数组转换成key，value的对象
@@ -287,5 +353,6 @@ export function transFormData(data, formatMessage, envId) {
     ports,
     selectors,
     endPoints,
+    targetDeploymentId,
   };
 }

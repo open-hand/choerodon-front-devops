@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-bind */
-import React, { useEffect, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   TextField, Form, Button, Icon, Select, SelectBox, Tooltip,
@@ -154,14 +154,24 @@ function FormContent() {
     if (current.get('target') === 'instance') {
       targetForm = (
         <>
-          <Select
-            name="appServiceId"
-            colSpan={3}
-            className="app-service-select"
-            searchable
-            optionRenderer={appServiceRenderer}
-          />
-          <Select name="appInstance" colSpan={3} className="app-instance-select" optionRenderer={appInstanceOptionRenderer} renderer={appInstanceRenderer} />
+
+          <SelectBox name="isChart">
+            <Option value="chart"><span className="isChart-instance">{formatMessage({ id: 'network.isChart.chart' })}</span></Option>
+            <Option value="deployment"><span className="isChart-instance">{formatMessage({ id: 'network.isChart.deployment' })}</span></Option>
+          </SelectBox>
+          {current.get('isChart') === 'chart' ? (
+            <>
+              <Select
+                name="appServiceId"
+                colSpan={3}
+                className="app-service-select"
+                searchable
+                optionRenderer={appServiceRenderer}
+              />
+              <Select name="appInstance" colSpan={3} className="app-instance-select" optionRenderer={appInstanceOptionRenderer} renderer={appInstanceRenderer} />
+            </>
+          ) : <Select name="appDeploy" colSpan={3} className="app-instance-select" optionRenderer={appInstanceOptionRenderer} renderer={appInstanceRenderer} />}
+
         </>
       );
     } else if (current.get('target') === 'param') {
@@ -251,7 +261,7 @@ function FormContent() {
             colSpan={3}
           >
             <SelectBox name="target">
-              <Option value="instance"><span className="target-instance">{formatMessage({ id: 'network.target.instance' })}</span></Option>
+              <Option value="instance"><span className="target-instance">{formatMessage({ id: 'network.target.application' })}</span></Option>
               <Option value="param"><span className="target-instance">{formatMessage({ id: 'network.target.param' })}</span></Option>
               <Option value="endPoints">Endpoints</Option>
             </SelectBox>

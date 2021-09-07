@@ -47,7 +47,7 @@ const EnvModals = observer(() => {
       children: <CreateNetwork
         envId={parentId}
         store={networkStore}
-        refresh={refresh}
+        refresh
       />,
       okText: formatMessage({ id: 'create' }),
     });

@@ -1,13 +1,20 @@
-import React, { createContext, useContext, useEffect, useMemo } from 'react';
+/* eslint-disable consistent-return */
+/* eslint-disable max-len */
+import React, {
+  createContext, useContext, useEffect, useMemo,
+} from 'react';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
-import { forEach, isEmpty, map, keys } from 'lodash';
+import {
+  forEach, isEmpty, map, keys,
+} from 'lodash';
 import { DataSet } from 'choerodon-ui/pro';
 import { axios } from '@choerodon/boot';
 import CreateFormDataSet, { transFormData } from './CreateFormDataSet';
 import PortDataSet from './PortDataSet';
 import AppInstanceOptionsDataSet from './AppInstanceOptionsDataSet';
+import AppDeployOptionsDataSet from './AppDeployOptionsDataSet';
 import TargetLabelsDataSet from './TargetLabelsDataSet';
 import NetworkInfoDataSet from './NetworkInfoDataSet';
 import EndPointsDataSet from './EndPointsDataSet';
@@ -29,17 +36,28 @@ function StoreProvider(props) {
     appServiceId,
   } = props;
 
-
   const appInstanceOptionsDs = useMemo(() => new DataSet(AppInstanceOptionsDataSet(projectId, envId, formatMessage)), [projectId, envId]);
-
+  const appDeployOptionsDs = useMemo(() => new DataSet(AppDeployOptionsDataSet(projectId, envId, formatMessage)), [projectId, envId]);
   const portDs = useMemo(() => new DataSet(PortDataSet({ formatMessage, projectId, envId })), [projectId, envId]);
   const endPointsDs = useMemo(() => new DataSet(EndPointsDataSet({ formatMessage })), []);
   const targetLabelsDs = useMemo(() => new DataSet(TargetLabelsDataSet({ formatMessage })), []);
 
   const networkInfoDs = useMemo(() => new DataSet(NetworkInfoDataSet(projectId, networkId)), [networkId]);
 
-  const formDs = useMemo(() => new DataSet(CreateFormDataSet({ formatMessage, portDs, endPointsDs, targetLabelsDs, appInstanceOptionsDs, networkStore, projectId, envId, networkEdit: { networkInfoDs, networkId, initTargetLabel, initPorts, initEndPoints } })), [projectId, envId]);
-  
+  const formDs = useMemo(() => new DataSet(CreateFormDataSet({
+    formatMessage,
+    portDs,
+    endPointsDs,
+    targetLabelsDs,
+    appInstanceOptionsDs,
+    appDeployOptionsDs,
+    networkStore,
+    projectId,
+    envId,
+    networkEdit: {
+      networkInfoDs, networkId, initTargetLabel, initPorts, initEndPoints,
+    },
+  })), [projectId, envId]);
 
   useEffect(() => {
     if (networkId && formDs.current) {
@@ -53,7 +71,9 @@ function StoreProvider(props) {
         axios.all([networkInfoDs.query(), appInstanceOptionsDs.query()])
           .then(([res]) => {
             const { type, target, target: { instances, targetAppServiceId } } = res;
-            loadInfo({ data: res, formatMessage, targetLabelsDs, portDs, endPointsDs, formDs, networkInfoDs });
+            loadInfo({
+              data: res, formatMessage, targetLabelsDs, portDs, endPointsDs, formDs, networkInfoDs,
+            });
             // 这里做兼容旧数据的处理 一个网络对应部分实例
             if (!targetAppServiceId && instances && instances.length) {
               forEach(instances, (item, index) => {
@@ -67,8 +87,12 @@ function StoreProvider(props) {
       } else {
         networkInfoDs.query()
           .then((res) => {
-            const { type, target, target: { instances, targetAppServiceId }, appServiceId: currentAppServiceId } = res;
-            loadInfo({ data: res, formatMessage, targetLabelsDs, portDs, endPointsDs, formDs, networkInfoDs });
+            const {
+              type, target, target: { instances, targetAppServiceId }, appServiceId: currentAppServiceId,
+            } = res;
+            loadInfo({
+              data: res, formatMessage, targetLabelsDs, portDs, endPointsDs, formDs, networkInfoDs,
+            });
             // 这里做兼容旧数据的处理 一个网络对应部分实例
             if (currentAppServiceId || targetAppServiceId) {
               appInstanceOptionsDs.transport.read.url = `/devops/v1/projects/${projectId}/app_service_instances/list_running_instance?env_id=${envId}&app_service_id=${currentAppServiceId || targetAppServiceId}`;
@@ -88,7 +112,7 @@ function StoreProvider(props) {
       }
     }
   }, [networkId, formDs.current]);
-  
+
   useEffect(() => {
     if (!networkId) {
       portDs.create();
@@ -96,7 +120,6 @@ function StoreProvider(props) {
       targetLabelsDs.create();
     }
   }, []);
-
 
   const value = {
     ...props,
@@ -116,11 +139,17 @@ function StoreProvider(props) {
   );
 }
 
-function loadInfo({ data, formatMessage, targetLabelsDs, portDs, endPointsDs, formDs, networkInfoDs }) {
-  const { name, id, type, target, config, appServiceId } = data;
-  const { instances, targetAppServiceId, selectors, endPoints } = target;
+function loadInfo({
+  data, formatMessage, targetLabelsDs, portDs, endPointsDs, formDs, networkInfoDs,
+}) {
+  const {
+    name, id, type, target, config, appServiceId,
+  } = data;
+  const {
+    instances, targetAppServiceId, selectors, endPoints,
+  } = target;
 
-  // 判断目标对象类型  
+  // 判断目标对象类型
   let targetType = 'param';
   if (targetAppServiceId || !isEmpty(instances)) {
     targetType = 'instance';
@@ -128,11 +157,14 @@ function loadInfo({ data, formatMessage, targetLabelsDs, portDs, endPointsDs, fo
   if (!isEmpty(endPoints)) {
     targetType = 'endPoints';
   }
-  
-  const appInstance = initTargetLabel({ targetLabelsDs, type: targetType, record: formDs.current, networkInfoDs, formatMessage });
+
+  const appInstance = initTargetLabel({
+    targetLabelsDs, type: targetType, record: formDs.current, networkInfoDs, formatMessage,
+  });
   const externalIps = initPorts({ portDs, type, networkInfoDs });
-  const targetIps = initEndPoints({ endPointsDs, targetLabelsDs, record: formDs.current, networkInfoDs });
-  
+  const targetIps = initEndPoints({
+    endPointsDs, targetLabelsDs, record: formDs.current, networkInfoDs,
+  });
 
   formDs.current.init('name', name);
   formDs.current.init('appServiceId', appServiceId);
@@ -143,14 +175,15 @@ function loadInfo({ data, formatMessage, targetLabelsDs, portDs, endPointsDs, fo
   formDs.current.init('targetIps', targetIps);
 }
 
-
-function initTargetLabel({ targetLabelsDs, type, record, networkInfoDs, formatMessage }) {
+function initTargetLabel({
+  targetLabelsDs, type, record, networkInfoDs, formatMessage,
+}) {
   const { instances, targetAppServiceId, selectors } = networkInfoDs.current.get('target');
   if (type === 'instance') {
     if (targetAppServiceId) {
       // 如果存在targetAppServiceId那么 实例的值为所有实例
       return formatMessage({ id: 'all_instance' });
-    } else if (instances && instances.length) {
+    } if (instances && instances.length) {
       // 如果存在instances 且 有值 那么将appInstance设置为instances数组的第一项（暂且这么处理，后期要对旧数据做兼容处理）
       if (instances.length > 1) {
         return map(instances, (item) => item.code).join(',');
@@ -186,20 +219,21 @@ function initPorts({ portDs, type, networkInfoDs }) {
   if (type === 'ClusterIP') {
     if (typeof externalIps === 'string') {
       return [ips];
-    } else {
-      return ips;
     }
+    return ips;
   }
 }
 
-function initEndPoints({ endPointsDs, targetLabelsDs, record, networkInfoDs }) {
+function initEndPoints({
+  endPointsDs, targetLabelsDs, record, networkInfoDs,
+}) {
   const { endPoints } = networkInfoDs.current.get('target');
   if (!isEmpty(endPoints)) {
     endPointsDs.reset();
     targetLabelsDs.reset();
     record.init('appServiceId', null);
     record.init('appInstance', null);
-    
+
     const ipstr = keys(endPoints)[0];
     if (ipstr) {
       const targetPortObj = endPoints[ipstr];

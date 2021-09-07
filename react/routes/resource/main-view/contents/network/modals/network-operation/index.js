@@ -4,7 +4,7 @@ import FormContent from './network-form';
 
 function NetWork(props) {
   return (
-    <NetWorkStoreProvider {...props}> 
+    <NetWorkStoreProvider {...props}>
       <FormContent />
     </NetWorkStoreProvider>
   );
