@@ -20,6 +20,7 @@ interface ContextProps {
   versionsDs: DataSet,
   modal: any,
   refresh(): void,
+  isHzero: boolean,
   defaultData: {
     marketAppServiceId: string,
     instanceId: string,
@@ -52,6 +53,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
         environmentId,
       },
       isMiddleware = false,
+      isHzero = false,
     } = props;
 
     const prefixCls = 'c7ncd-deployment';
@@ -60,11 +62,13 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
     const versionsDs = useMemo(() => new DataSet(VersionsDataSet({
       formatMessage, intlPrefix, projectId, marketDeployObjectId, marketAppServiceId,
     })), [projectId, marketDeployObjectId]);
+
     const valueDs = useMemo(() => new DataSet(ValueDataSet({
       projectId, marketDeployObjectId, instanceId,
     })), [projectId, instanceId, marketDeployObjectId]);
+
     const formDs = useMemo(() => new DataSet(FormDataSet({
-      formatMessage, intlPrefix, projectId, versionsDs, valueDs, isMiddleware,
+      formatMessage, intlPrefix, projectId, versionsDs, valueDs, isMiddleware, isHzero,
     })), [projectId]);
 
     useEffect(() => {
@@ -108,6 +112,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       versionsDs,
       defaultData,
       valueDs,
+      isHzero,
     };
     return (
       <Store.Provider value={value}>
