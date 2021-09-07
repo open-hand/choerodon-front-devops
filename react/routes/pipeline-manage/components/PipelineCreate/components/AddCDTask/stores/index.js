@@ -5,6 +5,8 @@ import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
 import deployChartDataSet, { deployConfigDataSet } from './deployChartDataSet';
 import addCDTaskDataSet from './addCDTaskDataSet';
+import deployGroupDataSet
+  from '@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/deployGroupDataSet';
 import useStore from './useStore';
 
 const Store = createContext();
@@ -32,12 +34,14 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
   const ADDCDTaskUseStore = useStore();
   const ADDCDTaskDataSet = useMemo(() => new DataSet(addCDTaskDataSet(projectId, PipelineCreateFormDataSet, organizationId, ADDCDTaskUseStore, appServiceCode, random, deployConfigDataSet)), [ADDCDTaskUseStore, random]);
   const DeployChartDataSet = useMemo(() => new DataSet(deployChartDataSet(ADDCDTaskUseStore)), []);
+  const DeployGroupDataSet = useMemo(() => new DataSet(deployGroupDataSet()), []);
 
   const value = {
     ...props,
     ADDCDTaskUseStore,
     ADDCDTaskDataSet,
     DeployChartDataSet,
+    DeployGroupDataSet,
   };
 
   return (

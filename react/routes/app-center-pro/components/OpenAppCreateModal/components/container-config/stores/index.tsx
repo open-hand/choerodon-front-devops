@@ -10,6 +10,7 @@ interface ContextType {
   modal?: any,
   detail?: any,
   refresh?: Function,
+  isPipeline?: Boolean,
 }
 
 const Store = createContext({} as ContextType);

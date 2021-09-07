@@ -8,6 +8,7 @@ const jobTypes = {
   cdAudit: '人工卡点',
   cdApiTest: 'API测试',
   cdExternalApproval: '外部卡点',
+  deployment: '发布部署组',
 };
 
 export default jobTypes;
