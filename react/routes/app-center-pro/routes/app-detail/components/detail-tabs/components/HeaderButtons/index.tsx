@@ -32,6 +32,7 @@ const DetailsTabsHeaderButtons = () => {
     openDeleteHostAppModal,
     goBackHomeBaby,
     deleteEnvApp,
+    formatMessage,
   } = useAppCenterProStore();
 
   const {
@@ -63,11 +64,25 @@ const DetailsTabsHeaderButtons = () => {
     sourceType,
     instanceName,
     objectName,
+
+    upgradeAvailable,
+    currentVersionAvailable,
+
+    // 环境相关
+    envConnected,
   } = appRecord?.toData() || {};
 
-  const isMarket = chartSource === 'market' || chartSource === 'hzero';
+  const isHzero = chartSource === 'hzero';
+
+  const isMarket = chartSource === 'market' || isHzero;
 
   const isMiddleware = chartSource === 'middleware';
+
+  const isMarketAppDisabled = (isMarket || isMiddleware) && !currentVersionAvailable;
+
+  const envNotConnected = !envConnected;
+
+  const btnDisabled = !envConnected || !appStatus || (appStatus !== APP_STATUS.FAILED && appStatus !== APP_STATUS.RUNNING);
 
   const whichGroup = getChartSourceGroup(
     chartSource || sourceType, deployType,
@@ -129,6 +144,7 @@ const DetailsTabsHeaderButtons = () => {
       groupBtnItems: [
         {
           name: '创建网络',
+          disabled: envNotConnected,
           handler: () => {
             openNetWorkFormModal({
               envId: hostOrEnvId, appServiceId, refresh,
@@ -137,6 +153,7 @@ const DetailsTabsHeaderButtons = () => {
         },
         {
           name: '创建域名',
+          disabled: envNotConnected,
           handler: () => {
             openDomainFormModal({
               envId: hostOrEnvId,
@@ -153,6 +170,8 @@ const DetailsTabsHeaderButtons = () => {
   const modifyValues = {
     name: '修改Values',
     icon: 'rate_review1',
+    disabled: isMarketAppDisabled || btnDisabled,
+    disabledMessage: !btnDisabled ? formatMessage({ id: 'c7ncd.deployment.instance.disable.message' }) : null,
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-values-modify'],
     handler: () => openModifyValueModal({
       appServiceVersionId,
@@ -168,6 +187,11 @@ const DetailsTabsHeaderButtons = () => {
   const redeploy = {
     name: '重新部署',
     icon: 'redeploy_line',
+    disabled: btnDisabled || isMarketAppDisabled,
+    tooltipsConfig: {
+      title: !btnDisabled && isMarketAppDisabled ? formatMessage({ id: 'c7ncd.deployment.instance.disable.message' }) : '',
+      placement: 'bottom',
+    },
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-redeploy'],
     handler: () => openRedeploy({
       appServiceId: instanceId,
@@ -195,7 +219,6 @@ const DetailsTabsHeaderButtons = () => {
   // 停用应用
   const stopApp = {
     name: '停用应用',
-    // icon: 'do_not_disturb_alt',
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-toggle-status'],
     handler: () => AppCenterProServices.toggleActive({
       active: 'stop',
@@ -227,7 +250,13 @@ const DetailsTabsHeaderButtons = () => {
   const upGrade = {
     name: '升级',
     icon: 'rate_review1',
+    display: isMarket && !isMiddleware,
+    disabled: btnDisabled || isMarketAppDisabled || !upgradeAvailable,
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-upgrade'],
+    tooltipsConfig: {
+      placement: 'bottom',
+      title: !btnDisabled && (isMarketAppDisabled || !upgradeAvailable) ? formatMessage({ id: `c7ncd.deployment.instance.disable.message${currentVersionAvailable ? '.upgrade' : ''}` }) : '',
+    },
     handler: () => openMarketUpgradeModal({
       instanceId,
       appServiceId,
@@ -236,6 +265,7 @@ const DetailsTabsHeaderButtons = () => {
       appServiceVersionId,
       callback: refresh,
       isMiddleware,
+      isHzero,
     }),
   };
 
