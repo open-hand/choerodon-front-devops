@@ -23,6 +23,7 @@ const marketUpgrade = observer(() => {
     },
     location: { search },
     versionsDs,
+    isHzero,
   } = useUpgradeStore();
 
   const record = useMemo(() => formDs.current, [formDs.current]);
@@ -100,29 +101,38 @@ const marketUpgrade = observer(() => {
     return text;
   }, []);
 
+  const renderForm = () => {
+    if (!isHzero) {
+      return (
+        <Form dataSet={formDs} columns={3}>
+          <TextField name="marketAppName" disabled />
+          <TextField name="marketAppVersion" disabled />
+          <TextField name="marketServiceName" disabled newLine />
+          <Select
+            name="marketDeployObjectId"
+            clearButton={false}
+            className={`${prefixCls}-select`}
+            renderer={renderVersion}
+          />
+          <Button
+            className={`${prefixCls}-btn`}
+            disabled={!marketAppServiceId}
+          >
+            {getButtonContent}
+          </Button>
+        </Form>
+      );
+    }
+    return '';
+  };
+
   if (!record) {
     return <Spin spinning />;
   }
 
   return (
     <>
-      <Form dataSet={formDs} columns={3}>
-        <TextField name="marketAppName" disabled />
-        <TextField name="marketAppVersion" disabled />
-        <TextField name="marketServiceName" disabled newLine />
-        <Select
-          name="marketDeployObjectId"
-          clearButton={false}
-          className={`${prefixCls}-select`}
-          renderer={renderVersion}
-        />
-        <Button
-          className={`${prefixCls}-btn`}
-          disabled={!marketAppServiceId}
-        >
-          {getButtonContent}
-        </Button>
-      </Form>
+      {renderForm()}
       <Spin spinning={valueDs.status === 'loading'}>
         {getValue}
       </Spin>

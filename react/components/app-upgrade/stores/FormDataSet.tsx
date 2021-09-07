@@ -1,9 +1,11 @@
+/* eslint-disable import/no-anonymous-default-export */
 import omit from 'lodash/omit';
-import pick from 'lodash/pick';
 import { DataSet } from 'choerodon-ui/pro';
 import {
   DataSetProps, Record, FieldType, FieldIgnore,
 } from '@/interface';
+import { middlewareConfigApi } from '@/api/Middleware';
+import { appServiceInstanceApiConfig } from '@/api';
 
 interface FormProps {
   intlPrefix: string,
@@ -12,6 +14,7 @@ interface FormProps {
   versionsDs: DataSet,
   valueDs: DataSet,
   isMiddleware: boolean,
+  isHzero:boolean,
 }
 
 interface updateProps {
@@ -21,7 +24,7 @@ interface updateProps {
 }
 
 export default ({
-  formatMessage, intlPrefix, projectId, versionsDs, valueDs, isMiddleware,
+  formatMessage, intlPrefix, projectId, versionsDs, valueDs, isMiddleware, isHzero,
 }: FormProps): DataSetProps => {
   async function handleUpdate({ name, value, record }: updateProps) {
     if (name === 'marketDeployObjectId' && value) {
@@ -38,6 +41,13 @@ export default ({
     }
   }
 
+  const getUpgradeAppUrl = (data:any, instanceId:string) => {
+    if (isMiddleware) {
+      return middlewareConfigApi.upgradeApp(data, instanceId);
+    }
+    return appServiceInstanceApiConfig.updateMarketAppService(instanceId, data);
+  };
+
   return ({
     autoCreate: true,
     autoQuery: false,
@@ -48,13 +58,7 @@ export default ({
         if (!res.values) {
           res.values = valueDs && valueDs.current ? valueDs.current.get('yaml') : '';
         }
-        return ({
-          url: isMiddleware
-            ? `/devops/v1/projects/${projectId}/middleware/redis/${data.instanceId}`
-            : `/devops/v1/projects/${projectId}/app_service_instances/market/instances/${data.instanceId}`,
-          method: 'put',
-          data: res,
-        });
+        return getUpgradeAppUrl(res, data.instanceId);
       },
     },
     fields: [

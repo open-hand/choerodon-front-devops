@@ -23,7 +23,8 @@ type MarketUpgradeModalProps = {
   instanceId:string,
   appServiceName:string
   callback:CallableFunction
-  isMiddleware:boolean,
+  isMiddleware?:boolean,
+  isHzero?:boolean
 }
 
 function openMarketUpgradeModal({
@@ -34,6 +35,7 @@ function openMarketUpgradeModal({
   instanceId,
   callback,
   isMiddleware,
+  isHzero,
 }:MarketUpgradeModalProps) {
   const defaultData = {
     instanceId,
@@ -54,6 +56,7 @@ function openMarketUpgradeModal({
     children: <MarketUpgradeModalContent
       defaultData={defaultData}
       refresh={callback}
+      isHzero={isHzero}
       isMiddleware={isMiddleware}
     />,
   });
