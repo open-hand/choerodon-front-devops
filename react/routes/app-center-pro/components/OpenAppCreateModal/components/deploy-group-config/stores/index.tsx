@@ -18,6 +18,10 @@ interface ContextType {
   modal?: any,
   detail?: any,
   refresh?: Function,
+  isPipeline?: boolean,
+  customStyle: {
+    [key: string]: object,
+  }
 }
 
 const Store = createContext({} as ContextType);
@@ -30,9 +34,12 @@ export const StoreProvider = (props: any) => {
   const {
     children,
     cRef,
+    isPipeline,
   } = props;
 
-  const DeployGroupConfigDataSet = useMemo(() => new DataSet(deployGroupConfigDataSet()), []);
+  const DeployGroupConfigDataSet = useMemo(
+    () => new DataSet(deployGroupConfigDataSet(isPipeline)), [isPipeline],
+  );
   const OptionDataSet = useMemo(() => new DataSet(optionDataSet()), []);
   const AnnotationsDataSet = useMemo(() => new DataSet(optionDataSet(/^([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$/)), []);
   const LabelsDataSet = useMemo(() => new DataSet(optionDataSet(/^([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$/)), []);

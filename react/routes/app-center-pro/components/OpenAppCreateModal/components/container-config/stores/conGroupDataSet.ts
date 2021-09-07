@@ -93,6 +93,11 @@ const repoTypeData = [{
 const mapping: {
   [key: string]: FieldProps
 } = {
+  open: {
+    name: 'open',
+    type: 'boolean' as FieldType,
+    defaultValue: false,
+  },
   edit: {
     name: 'edit',
     type: 'boolean' as FieldType,

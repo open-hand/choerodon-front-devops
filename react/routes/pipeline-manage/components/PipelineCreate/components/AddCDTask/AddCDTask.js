@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import {
   Form,
   Select,
@@ -21,7 +21,12 @@ import JSONbig from "json-bigint";
 import { get } from "lodash";
 import DeployConfig from "@/components/deploy-config-form";
 import StatusDot from "@/components/status-dot";
+import {
+  handleSetSubmitDataByDeployGroupConfig,
+  handleSetSubmitDataByContainerConfig,
+} from "@/routes/app-center-pro/components/OpenAppCreateModal";
 import DeployChart from "./components/deploy-chart";
+import DeployGroup from './components/deploy-group';
 import addCDTaskDataSetMap, {
   typeData,
   fieldMap,
@@ -34,6 +39,8 @@ import Tips from "../../../../../../components/new-tips";
 import "./index.less";
 import deployChartDataSet
   from "@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/deployChartDataSet";
+import deployGroupDataSet
+  from "@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/deployGroupDataSet";
 
 let currentSize = 10;
 
@@ -85,8 +92,12 @@ export default observer(() => {
     witchColumnJobIndex,
     index: taskIndex,
     DeployChartDataSet,
+    DeployGroupDataSet,
   } = useAddCDTaskStore();
 
+  const deployGroupcRef = useRef();
+
+  const [deployGroupDetail, setDeployGroupDetail] = useState(undefined);
   const [branchsList, setBranchsList] = useState([]);
   const [valueIdValues, setValueIdValues] = useState("");
   const [customValues, setCustomValues] = useState(
@@ -241,7 +252,7 @@ export default observer(() => {
     ADDCDTaskDataSet?.current?.get("deploySource"),
   ]);
 
-  function getMetadata(ds, deployChartData) {
+  function getMetadata(ds, deployChartData, extraData) {
     if (ds.type === "cdDeploy") {
       ds.value = Base64.encode(valueIdValues);
       // 如果部署模式是新建 则删掉多余的实例id
@@ -356,6 +367,12 @@ export default observer(() => {
         ...deployChartData,
       }
     }
+    if (ds.type === typeData[1].value) {
+      ds = {
+        ...ds,
+        ...extraData,
+      }
+    }
     ds.appServiceId = PipelineCreateFormDataSet.current.get("appServiceId");
     return JSON.stringify(ds).replace(/"/g, "'");
   }
@@ -364,6 +381,7 @@ export default observer(() => {
     let deployChartData;
     const result = await ADDCDTaskDataSet.current.validate(true);
     if (result) {
+      let submitData = {};
       const ds = JSON.parse(JSON.stringify(ADDCDTaskDataSet.toData()[0]));
       if (ds.type === typeData[0].value) {
         const chartDeployValidate = await DeployChartDataSet.current.validate(true);
@@ -371,6 +389,26 @@ export default observer(() => {
           deployChartData = DeployChartDataSet.current.toData();
         } else {
           return false;
+        }
+      }
+      if (ds.type === typeData[1].value) {
+        const data = await deployGroupcRef.current.handleOk();
+        if (!data) {
+          return false;
+        } else {
+          submitData = {
+            ...submitData,
+           ...DeployGroupDataSet.current.toData(),
+          }
+          const returnData = handleSetSubmitDataByDeployGroupConfig({
+            appConfigData: data.appConfig,
+            submitData,
+          });
+          const result = handleSetSubmitDataByContainerConfig({
+            resourceConfigData: data.containerConfig,
+            submitData: returnData,
+          });
+          submitData = result;
         }
       }
       // if (ds.type === 'cdHost') {
@@ -390,7 +428,7 @@ export default observer(() => {
             : ds.triggerValue,
       };
       if (ds.type !== "cdAudit") {
-        data.metadata = getMetadata(ds, deployChartData);
+        data.metadata = getMetadata(ds, deployChartData, submitData);
       }
       handleOk(data);
       return true;
@@ -463,6 +501,10 @@ export default observer(() => {
         const metadata = JSON.parse(
           jobDetail.metadata.replace(/'/g, '"'));
         DeployChartDataSet.loadData([metadata]);
+      } else if (jobDetail.type === typeData[1].value) {
+        const metadata = JSON.parse(
+          jobDetail.metadata.replace(/'/g, '"'));
+        setDeployGroupDetail(metadata);
       }
 
       const newJobDetail = {
@@ -1228,6 +1270,14 @@ export default observer(() => {
           handleChangeValueIdValues={handleChangeValueIdValues}
         />,
       ],
+      [typeData[1].value]: [
+        <div className="addcdTask-divided" />,
+        <DeployGroup
+          dataSet={DeployGroupDataSet}
+          cRef={deployGroupcRef}
+          detail={deployGroupDetail}
+        />
+      ]
     };
     return obj[ADDCDTaskDataSet?.current?.get("type")];
   };
@@ -1524,7 +1574,7 @@ export default observer(() => {
             {renderRelatedMission()}
           </Select>,
         ]}
-        {ADDCDTaskDataSet?.current?.get("type") === typeData[0].value && [
+        {[typeData[0].value, typeData[1].value].includes(ADDCDTaskDataSet?.current?.get("type")) && [
           <Select
             colSpan={1}
             name="envId"

@@ -3,6 +3,7 @@ import { Icon } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { Button, TextField } from 'choerodon-ui/pro';
 import { Record, DataSet, FuncType } from '@/interface';
+import ContainerDetail from '../container-detail';
 import { mapping } from '../../stores/conGroupDataSet';
 
 import './index.less';
@@ -10,11 +11,12 @@ import './index.less';
 const Index = observer(({
   className,
   dataSource,
+  isPipeline,
 }: {
   className?: string;
   dataSource: DataSet,
+  isPipeline?: Boolean,
 }) => {
-  console.log(dataSource);
   useEffect(() => {
     if (dataSource?.records?.length && dataSource?.records?.length === 1) {
       dataSource.records[0].set((mapping.focus.name as string), true);
@@ -31,12 +33,24 @@ const Index = observer(({
     });
   };
 
-  const renderDataSource = () => dataSource.records.map((record: Record) => (
+  const renderDataSource = () => dataSource.records.map((record: Record) => [
     <div
       role="none"
       className={`c7ncd-appCenterPro-conGroup__item ${record.get('focus') && 'c7ncd-appCenterPro-conGroup__item--focus'}`}
+      style={{
+        justifyContent: isPipeline ? 'flex-start' : 'space-between',
+      }}
       onClick={() => handleClickItem(record)}
     >
+      {
+        isPipeline && (
+          <Icon
+            className="c7ncd-appCenterPro-conGroup__item__openIcon"
+            type="baseline-arrow_right"
+            onClick={() => record.set(mapping.open.name as string, !record.get(mapping.open.name))}
+          />
+        )
+      }
       {
         record.get('edit') ? (
           <TextField
@@ -56,11 +70,11 @@ const Index = observer(({
           </p>
         )
       }
-      <div>
+      <div className={isPipeline ? 'c7ncd-appCenterPro-conGroup__item__pipelineDelete' : ''}>
         {
           dataSource.records.length > 1 && (
             <Icon
-              type="delete_forever-o"
+              type={isPipeline ? 'remove_circle_outline' : 'delete_forever-o'}
               onClick={(e) => {
                 e.stopPropagation();
                 dataSource.delete([record], false);
@@ -70,11 +84,19 @@ const Index = observer(({
           )
         }
       </div>
-    </div>
-  ));
+    </div>,
+    isPipeline && record.get(mapping.open.name) && (
+      <ContainerDetail
+        dataSource={record}
+      />
+    ),
+  ]);
   return (
     <div
       className={`c7ncd-appCenterPro-conGroup ${className}`}
+      style={{
+        width: isPipeline ? '100%' : '300px',
+      }}
     >
       {renderDataSource()}
       <div

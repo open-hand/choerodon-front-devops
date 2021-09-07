@@ -1,4 +1,4 @@
-import React, { useEffect, useImperativeHandle } from 'react';
+import React, { useEffect, useImperativeHandle, useLayoutEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Form, Select, NumberField, TextField, Icon, Button,
@@ -31,7 +31,24 @@ const Index = observer(() => {
     detail,
     modal,
     refresh,
+    isPipeline,
+    customStyle,
   } = useDeployGroupConfigStore();
+
+  useLayoutEffect(() => {
+    if (customStyle) {
+      Object.entries(customStyle).forEach((item) => {
+        const target = document.querySelector(item[0]);
+        if (target) {
+          Object.entries(item[1]).forEach((itemstyle: [string, string]) => {
+            // @ts-ignore
+            // eslint-disable-next-line
+            (target as HTMLElement).style[itemstyle[0]] = itemstyle[1];
+          });
+        }
+      });
+    }
+  }, []);
 
   useEffect(() => {
     if (typeof (detail) === 'object') {
@@ -195,22 +212,30 @@ const Index = observer(() => {
         marginTop: detail ? 'unset' : '30px',
       }}
     >
-      <Form columns={3} dataSet={DeployGroupConfigDataSet}>
+      <Form
+        columns={3}
+        dataSet={DeployGroupConfigDataSet}
+        className="c7ncd-appCenterPro-deployGroup__form"
+      >
         {
-          detail && [
+          detail && !isPipeline && [
             <TextField name={mapping.appName.name} />,
             <TextField name={mapping.appCode.name} />,
           ]
         }
-        <Select
-          newLine
-          colSpan={1}
-          name={mapping.env.name}
-          optionRenderer={renderEnvOption}
-          onOption={({ record }) => ({
-            disabled: !(record.get('connect') && record.get('synchro') && record.get('permission')),
-          })}
-        />
+        {
+          !isPipeline && (
+            <Select
+              newLine
+              colSpan={1}
+              name={mapping.env.name}
+              optionRenderer={renderEnvOption}
+              onOption={({ record }) => ({
+                disabled: !(record.get('connect') && record.get('synchro') && record.get('permission')),
+              })}
+            />
+          )
+        }
         <NumberField
           colSpan={1}
           name={mapping.podNum.name}
