@@ -9,7 +9,7 @@ import DeployConfigForm from '@/components/deploy-config-form';
 import { handlePromptError } from '@/utils';
 import { useResourceStore } from '../../../../../../../stores';
 import { useREStore } from '../../../../stores';
-import { devopsValueApi } from '@/api';
+import { deployValueApi } from '@/api';
 
 const { Column } = Table;
 const deleteModalKey = Modal.key();
@@ -55,7 +55,7 @@ export default function DeployConfig() {
       footer: null,
     });
     try {
-      const res = await devopsValueApi.checkDelete(valueId);
+      const res = await deployValueApi.checkDelete(valueId);
       if (handlePromptError(res)) {
         const modalProps = {
           title: formatMessage({ id: `${intlPrefix}.config.delete.disable` }, { name }),
@@ -92,7 +92,7 @@ export default function DeployConfig() {
 
   async function handleDelete(record:any) {
     try {
-      const res = await devopsValueApi.deleteDeployValue(record.get('id'), null);
+      const res = await deployValueApi.deleteDeployValue(record.get('id'), null);
       if (handlePromptError(res, false)) {
         refresh();
         return true;
