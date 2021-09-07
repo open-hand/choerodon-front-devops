@@ -1,7 +1,7 @@
 import { DataSet } from 'choerodon-ui/pro';
 import { CONSTANTS } from '@choerodon/master';
 import { FieldProps, FieldType, Record } from '@/interface';
-import { deployValueApiConfig } from '@/api/DeployValue';
+import { deployValueConfigApi } from '@/api/DeployValue';
 
 const {
   LCLETTER_NUMREGEX,
@@ -49,7 +49,7 @@ const deployConfigDataSet = new DataSet({
   autoQuery: false,
   transport: {
     read: ({ data: { data } }) => ({
-      ...deployValueApiConfig.getValueIdList(data),
+      ...deployValueConfigApi.getValueIdList(data),
       transformResponse: (res) => {
         let newRes = res;
         try {
