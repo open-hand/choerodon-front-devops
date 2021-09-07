@@ -44,6 +44,9 @@ const map = {
 const typeData = [{
   value: 'chart',
   name: '容器部署-Chart包',
+}, {
+  value: 'deployment',
+  name: '容器部署-部署组',
 }];
 
 const deployWayData = [{

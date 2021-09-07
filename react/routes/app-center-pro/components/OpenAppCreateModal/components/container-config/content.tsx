@@ -85,6 +85,7 @@ const Index = observer(() => {
     detail,
     modal,
     refresh,
+    isPipeline,
   } = useContainerConfig();
 
   const [extraData, setExtraData] = useState({});
@@ -216,12 +217,17 @@ const Index = observer(() => {
       <ContainerGroup
         className="c7ncd-appCenterPro-conConfig__conGroup"
         dataSource={ConGroupDataSet}
+        isPipeline={isPipeline}
       />
-      <ContainerDetail
-        className="c7ncd-appCenterPro-conConfig__conDetail"
-        dataSource={ConGroupDataSet
-          .records.find((record: Record) => record.get(mapping.focus.name))}
-      />
+      {
+        !isPipeline && (
+          <ContainerDetail
+            className="c7ncd-appCenterPro-conConfig__conDetail"
+            dataSource={ConGroupDataSet
+              .records.find((record: Record) => record.get(mapping.focus.name))}
+          />
+        )
+      }
     </div>
   );
 });

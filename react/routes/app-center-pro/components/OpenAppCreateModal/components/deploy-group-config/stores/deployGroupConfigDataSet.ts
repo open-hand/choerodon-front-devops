@@ -57,7 +57,6 @@ const mapping: {
     options: new DataSet(envDataSet),
     textField: 'name',
     valueField: 'id',
-    required: true,
   },
   podNum: {
     name: 'replicas',
@@ -124,7 +123,7 @@ const mapping: {
   },
 };
 
-const deployGroupConfigDataSet = () => ({
+const deployGroupConfigDataSet = (isPipeline: boolean) => ({
   autoCreate: true,
   transport: {
     update: (data: any) => {
@@ -153,7 +152,21 @@ const deployGroupConfigDataSet = () => ({
       return devopsDeployGroupApiConfig.createDeployGroup('update', d);
     },
   },
-  fields: Object.keys(mapping).map((i) => mapping[i]),
+  fields: Object.keys(mapping).map((i) => {
+    const item = mapping[i];
+    switch (i) {
+      case 'env': {
+        item.dynamicProps = {
+          required: () => !isPipeline,
+        };
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+    return item;
+  }),
 });
 
 export default deployGroupConfigDataSet;

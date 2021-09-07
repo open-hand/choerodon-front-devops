@@ -26,6 +26,122 @@ const setKeyValue = (obj: { [key: string]: any }, key: string, value: any) => {
   obj[key] = value;
 };
 
+const handleSetSubmitDataByContainerConfig = ({
+  resourceConfigData,
+  submitData,
+}: any) => {
+  const newData = submitData;
+  setKeyValue(
+    newData,
+    'containerConfig',
+    resourceConfigData,
+  );
+  return newData;
+};
+
+const handleSetSubmitDataByDeployGroupConfig = ({
+  appConfigData,
+  submitData,
+}: any) => {
+  const {
+    annotations,
+    appConfig,
+    hostAliases,
+    labels,
+    nodeLabels,
+    options,
+  } = appConfigData;
+  const data = submitData || {};
+  setKeyValue(
+    data,
+    deployGroupConfigMapping.env.name as string,
+    appConfig[deployGroupConfigMapping.env.name as string],
+  );
+  setKeyValue(
+    data,
+    'appConfig',
+    getAppConfigData({
+      options,
+      appConfig,
+      annotations,
+      labels,
+      nodeLabels,
+      hostAliases,
+    }),
+  );
+  return data;
+};
+
+const handleSetSubmitDataByAppConfig = ({
+  appConfigData,
+  submitData,
+}: any) => {
+  const res = submitData;
+  let request;
+  switch (appConfigData[mapping.chartSource.name as string]) {
+    case chartSourceData[0].value: case chartSourceData[1].value: {
+      request = 'chart_normal';
+      setKeyValue(
+        res,
+        mapping.hzeroVersion.name as string,
+        appConfigData[mapping.hzeroVersion.name as string],
+      );
+      setKeyValue(
+        res,
+        mapping.serviceVersion.name as string,
+        appConfigData[mapping.serviceVersion.name as string],
+      );
+      setKeyValue(
+        res,
+        mapping.env.name as string,
+        appConfigData[mapping.env.name as string],
+      );
+      setKeyValue(
+        res,
+        mapping.value.name as string,
+        appConfigData[mapping.value.name as string],
+      );
+      break;
+    }
+    case chartSourceData[2].value: case chartSourceData[3].value: {
+      request = 'chart_market';
+      setKeyValue(
+        res,
+        mapping.marketVersion.name as string,
+        appConfigData[mapping.marketServiceVersion.name as string]
+          .marketServiceDeployObjectVO.marketServiceId,
+      );
+      setKeyValue(
+        res,
+        mapping.marketServiceVersion.name as string,
+        appConfigData[mapping.marketServiceVersion.name as string].id,
+      );
+      setKeyValue(
+        res,
+        mapping.env.name as string,
+        appConfigData[mapping.env.name as string],
+      );
+      setKeyValue(
+        res,
+        mapping.value.name as string,
+        appConfigData[mapping.value.name as string],
+      );
+      setKeyValue(
+        res,
+        'applicationType' as string,
+        'market',
+      );
+    }
+    default: {
+      break;
+    }
+  }
+  return ({
+    res,
+    request,
+  });
+};
+
 const getAppConfigData = ({
   options,
   appConfig,
@@ -229,76 +345,6 @@ const AppCreateForm = (props: any) => {
     }
   };
 
-  const handleSetSubmitDataByAppConfig = ({
-    appConfigData,
-    submitData,
-  }: any) => {
-    const res = submitData;
-    let request;
-    switch (appConfigData[mapping.chartSource.name as string]) {
-      case chartSourceData[0].value: case chartSourceData[1].value: {
-        request = 'chart_normal';
-        setKeyValue(
-          res,
-          mapping.hzeroVersion.name as string,
-          appConfigData[mapping.hzeroVersion.name as string],
-        );
-        setKeyValue(
-          res,
-          mapping.serviceVersion.name as string,
-          appConfigData[mapping.serviceVersion.name as string],
-        );
-        setKeyValue(
-          res,
-          mapping.env.name as string,
-          appConfigData[mapping.env.name as string],
-        );
-        setKeyValue(
-          res,
-          mapping.value.name as string,
-          appConfigData[mapping.value.name as string],
-        );
-        break;
-      }
-      case chartSourceData[2].value: case chartSourceData[3].value: {
-        request = 'chart_market';
-        setKeyValue(
-          res,
-          mapping.marketVersion.name as string,
-          appConfigData[mapping.marketServiceVersion.name as string]
-            .marketServiceDeployObjectVO.marketServiceId,
-        );
-        setKeyValue(
-          res,
-          mapping.marketServiceVersion.name as string,
-          appConfigData[mapping.marketServiceVersion.name as string].id,
-        );
-        setKeyValue(
-          res,
-          mapping.env.name as string,
-          appConfigData[mapping.env.name as string],
-        );
-        setKeyValue(
-          res,
-          mapping.value.name as string,
-          appConfigData[mapping.value.name as string],
-        );
-        setKeyValue(
-          res,
-          'applicationType' as string,
-          'market',
-        );
-      }
-      default: {
-        break;
-      }
-    }
-    return ({
-      res,
-      request,
-    });
-  };
-
   const handleSetSubmitDataByResourceSetting = ({
     resourceConfigData,
     submitData,
@@ -306,52 +352,6 @@ const AppCreateForm = (props: any) => {
     ...submitData,
     ...resourceConfigData,
   });
-
-  const handleSetSubmitDataByDeployGroupConfig = ({
-    appConfigData,
-    submitData,
-  }: any) => {
-    const {
-      annotations,
-      appConfig,
-      hostAliases,
-      labels,
-      nodeLabels,
-      options,
-    } = appConfigData;
-    const data = submitData;
-    setKeyValue(
-      data,
-      deployGroupConfigMapping.env.name as string,
-      appConfig[deployGroupConfigMapping.env.name as string],
-    );
-    setKeyValue(
-      data,
-      'appConfig',
-      getAppConfigData({
-        options,
-        appConfig,
-        annotations,
-        labels,
-        nodeLabels,
-        hostAliases,
-      }),
-    );
-    return data;
-  };
-
-  const handleSetSubmitDataByContainerConfig = ({
-    resourceConfigData,
-    submitData,
-  }: any) => {
-    const newData = submitData;
-    setKeyValue(
-      newData,
-      'containerConfig',
-      resourceConfigData,
-    );
-    return newData;
-  };
 
   const handleSubmit = async () => {
     let key;
@@ -576,4 +576,10 @@ export default AppCreateForm;
 //   });
 // }
 
-export { setKeyValue, getAppConfigData };
+export {
+  setKeyValue,
+  getAppConfigData,
+  handleSetSubmitDataByAppConfig,
+  handleSetSubmitDataByDeployGroupConfig,
+  handleSetSubmitDataByContainerConfig,
+};

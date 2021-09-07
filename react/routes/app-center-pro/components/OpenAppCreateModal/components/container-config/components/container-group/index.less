@@ -3,6 +3,11 @@
     margin: 0;
   }
   &__item {
+    &__pipelineDelete {
+      position: absolute;
+      right: 5px;
+    }
+    position: relative;
     padding: 13px 10px;
     border-bottom: 1px solid var(--divider);
     display: flex;
@@ -17,6 +22,13 @@
     }
     &__down {
       margin-left: 9px;
+    }
+    &__openIcon {
+      font-size: 20px;
+      margin-right: 3px;
+      position: relative;
+      top: 2px;
+      cursor: pointer;
     }
   }
   &__item--focus {
