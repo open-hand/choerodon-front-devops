@@ -110,9 +110,7 @@ const DetailAside = () => {
         break;
     }
     return (
-      <Tooltip title={objectStatus === 'operating' && `部署版本"${versionName}"`}>
-        <StatusTag name={message} colorCode={objectStatus} />
-      </Tooltip>
+      <StatusTag ellipsisTitle={objectStatus === 'operating' ? `部署版本"${versionName}"` : ''} name={message} colorCode={objectStatus} />
     );
   }
 
