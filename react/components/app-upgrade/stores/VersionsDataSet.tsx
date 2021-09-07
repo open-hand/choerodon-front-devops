@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import React from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { Record, DataSetProps, DataSetSelection } from '@/interface';
