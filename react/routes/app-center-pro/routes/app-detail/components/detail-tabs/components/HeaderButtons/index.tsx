@@ -109,7 +109,7 @@ const DetailsTabsHeaderButtons = () => {
             {
               name: '修改应用配置',
               handler: () => openDeployGroupConfigModal(appRecord?.toData(), refresh),
-              permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateChart choerodon.code.project.deploy.app-deployment.application-center.updateDeployGroupApp'],
+              permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateDeployGroupApp'],
             },
             {
               name: '修改容器配置',
