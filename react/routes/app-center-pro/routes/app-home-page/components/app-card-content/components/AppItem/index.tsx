@@ -61,6 +61,7 @@ const AppItem = observer(({
     status: appStatus, // 应用状态
     objectId: instanceId,
     code: instanceName,
+    error,
 
     creationDate,
 
@@ -249,7 +250,7 @@ const AppItem = observer(({
             {name || '-'}
           </span>
         </Tooltip>
-        <AppStatus subfixCls={subfixCls} status={isEnv ? appStatus : devopsHostCommandDTO?.status} deloyType={currentType} />
+        <AppStatus error={error || devopsHostCommandDTO.error} subfixCls={subfixCls} status={isEnv ? appStatus : devopsHostCommandDTO?.status} deloyType={currentType} />
       </header>
       <main>
         <div>
