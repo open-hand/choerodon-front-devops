@@ -8,6 +8,7 @@ import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
 import { DataSet } from '@/interface';
 import AppDataSet from './AppDataSet';
 import { getAppCategories, getChartSourceGroup } from '@/routes/app-center-pro/utils';
+import { ENV_TAB, HOST_TAB } from '@/routes/app-center-pro/stores/CONST';
 
 interface ContextProps {
   subfixCls: string,
@@ -16,7 +17,7 @@ interface ContextProps {
   deployTypeId:string,
   appId:string,
   appSource:string
-  deployType:string
+  deployType:typeof ENV_TAB | typeof HOST_TAB
   rdupmType:string
   appDs:DataSet
   appCatergory:{

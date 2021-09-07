@@ -19,6 +19,7 @@ import {
   ENV_TAB,
   HOST_TAB,
 } from '@/routes/app-center-pro/stores/CONST';
+import AppStatus from '@/routes/app-center-pro/components/AppStatus';
 
 const DetailAside = () => {
   const {
@@ -67,6 +68,8 @@ const DetailAside = () => {
     groupId,
     version,
     fileInfoVO,
+
+    error,
   } = appDs.current?.toData() || {};
 
   const {
@@ -76,6 +79,10 @@ const DetailAside = () => {
     realName,
     email,
   } = creator;
+
+  const isEnv = deployType === ENV_TAB;
+
+  const isHost = deployType === HOST_TAB;
 
   const getChartSourceName:any = {
     [CHART_HZERO]: 'HZERO服务',
@@ -195,14 +202,12 @@ const DetailAside = () => {
     <div className={`${subfixCls}-aside`}>
       <header>
         <EnvOrHostStatusIcon
-          hostError={devopsHostCommandDTO?.error}
-          hostStatus={devopsHostCommandDTO?.status}
           podRunningCount={podRunningCount}
           podCount={podCount}
-          // @ts-expect-error
           currentType={deployType}
         />
         <span className={`${subfixCls}-aside-name`}>{name || '-'}</span>
+        <AppStatus error={error || devopsHostCommandDTO?.error} status={isEnv ? objectStatus : devopsHostCommandDTO.status} deloyType={deployType} />
       </header>
       <main>
         <h3>详情</h3>
@@ -211,8 +216,8 @@ const DetailAside = () => {
             <span>应用编码</span>
             <span>{code || '-'}</span>
           </div>
-          {deployType === ENV_TAB && renderEnv()}
-          {deployType === HOST_TAB && renderHost()}
+          { isEnv && renderEnv()}
+          { isHost && renderHost()}
           <div>
             <span>部署方式</span>
             <span>{deployWay || '主机部署' || '-'}</span>
@@ -223,7 +228,7 @@ const DetailAside = () => {
           </div>
           { appCatergory?.code === CHART_CATERGORY && renderChartDetails()}
           {
-            deployType === HOST_TAB && renderJar()
+            isHost && renderJar()
           }
           <div>
             <span>创建时间</span>
