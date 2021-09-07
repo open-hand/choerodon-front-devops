@@ -459,6 +459,10 @@ export default observer(() => {
           );
           newCdAuditUserIds = cdAuditUserIds && [...cdAuditUserIds];
         }
+      } else if (jobDetail.type === typeData[0].value) {
+        const metadata = JSON.parse(
+          jobDetail.metadata.replace(/'/g, '"'));
+        DeployChartDataSet.loadData([metadata]);
       }
 
       const newJobDetail = {
