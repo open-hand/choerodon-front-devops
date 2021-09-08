@@ -30,20 +30,12 @@ const Content = observer(() => {
 
   function renderAppName({ value, record }) {
     const appServiceType = record.get('chartSource');
-    let iconType;
-    if (appServiceType === 'share_service') {
-      iconType = 'share';
-    } else if (['middleware_service', 'market_service'].includes(appServiceType)) {
-      iconType = 'application_market';
-    } else {
-      iconType = 'widgets';
-    }
     return (
       <AppName
         width={0.18}
         name={value}
         showIcon={!!record.get('projectId')}
-        self={iconType}
+        self={appServiceType}
         isInstance
       />
     );

@@ -14,7 +14,6 @@ import './AppName.less';
  * @param { 应用名称，显示应用前icon，本组织or应用市场 } props
  */
 export default function AppName(props) {
-  const projectUrl = '../../images/project';
   const {
     name, showIcon, self, width, isInstance, hoverName,
   } = props;
@@ -24,7 +23,7 @@ export default function AppName(props) {
     icon = self;
     if (self === 'share') {
       type = 'share';
-    } else if (self === 'application_market') {
+    } else if (self === 'market') {
       type = 'market';
     } else {
       type = 'project';
@@ -33,7 +32,7 @@ export default function AppName(props) {
     icon = self ? 'widgets' : 'apps';
     type = self ? 'project' : 'market';
   }
-  const imageUrl = { project: projectImg, share: { shareImg }, market: { marketImg } };
+  const imageUrl = { project: projectImg, share: shareImg, market: marketImg };
   return (
     <>
       {showIcon ? (
