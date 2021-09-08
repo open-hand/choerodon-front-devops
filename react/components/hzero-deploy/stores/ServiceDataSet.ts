@@ -42,7 +42,7 @@ export default ({
         required: true,
       },
       {
-        name: 'instanceName',
+        name: 'appCode',
         label: formatMessage({ id: 'appCode' }),
         required: true,
         validator: checkName,
