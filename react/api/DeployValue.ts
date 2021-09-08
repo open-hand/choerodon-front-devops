@@ -48,6 +48,7 @@ class DeployValueApi extends Api<DeployValueApi> {
         random,
         createValueRandom,
       },
+      data: null,
     });
   }
 }

@@ -46,6 +46,7 @@ const mapping = (): {
 });
 
 const deployConfigDataSet = new DataSet({
+  paging: false,
   autoQuery: false,
   transport: {
     read: ({ data: { data } }) => ({
