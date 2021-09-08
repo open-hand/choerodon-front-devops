@@ -105,6 +105,23 @@ const Index = observer(() => {
         return (
           <Select
             name={mapping.marketVersion.name}
+            onOption={({ record }) => {
+              let groupName;
+              if (detail) {
+                const optionsData = AppConfigDataSet
+                  .current?.getField(mapping.marketVersion.name)?.options?.toData();
+                const selected: any = optionsData
+                  && optionsData
+                    .find(
+                      (item: any) => String(item?.versionId)
+                        === String((detail as any)?.mktAppVersionId),
+                    );
+                groupName = selected && selected.name;
+              }
+              return ({
+                disabled: groupName ? record.get('name') !== groupName : false,
+              });
+            }}
             colSpan={1}
           />
         );

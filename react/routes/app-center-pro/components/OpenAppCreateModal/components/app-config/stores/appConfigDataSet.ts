@@ -1,6 +1,7 @@
 import { FieldProps } from 'choerodon-ui/pro/lib/data-set/field';
 import { FieldType } from 'choerodon-ui/pro/lib/data-set/enum';
 import { DataSet } from 'choerodon-ui/pro';
+import { Record } from '@/interface';
 import { appServiceApiConfig } from '@/api/AppService';
 import { deployApiConfig, deployApi } from '@/api/Deploy';
 import { appServiceVersionApiConfig } from '@/api/AppServiceVersions';
@@ -284,9 +285,29 @@ const mapping: {
   },
 };
 
-const appConfigDataSet = () => ({
+const appConfigDataSet = (envId?: string, detail?: any) => ({
   autoCreate: true,
-  fields: Object.keys(mapping).map((i) => mapping[i]),
+  fields: Object.keys(mapping).map((i) => {
+    const item = mapping[i];
+    switch (i) {
+      case 'env': {
+        if (envId) {
+          item.disabled = true;
+        }
+        break;
+      }
+      case 'hzeroVersion': {
+        if (detail) {
+          item.disabled = true;
+        }
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+    return item;
+  }),
   transport: {
     update: ({ data: [data] }: any) => {
       if ([chartSourceData[0].value, chartSourceData[1].value]
@@ -356,6 +377,13 @@ const appConfigDataSet = () => ({
         default: {
           break;
         }
+      }
+    },
+    create: ({ record }: {
+      record: Record,
+    }) => {
+      if (envId) {
+        record.set(mapping.env.name as string, envId);
       }
     },
   },
