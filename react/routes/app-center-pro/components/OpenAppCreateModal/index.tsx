@@ -254,11 +254,11 @@ const AppCreateForm = (props: any) => {
         case deployModeOptionsData[0].value: {
           switch (deployType) {
             case deployProductOptionsData[0].value: {
-              return <AppConfig cRef={appConfigRef} />;
+              return <AppConfig envId={propsEnvId} cRef={appConfigRef} />;
               break;
             }
             case deployProductOptionsData[1].value: {
-              return <DeployGroupConfig cRef={appConfigRef} />;
+              return <DeployGroupConfig envId={propsEnvId} cRef={appConfigRef} />;
             }
             default: {
               return '';

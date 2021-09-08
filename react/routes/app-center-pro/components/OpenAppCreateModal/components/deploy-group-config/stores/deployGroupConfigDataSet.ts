@@ -1,8 +1,6 @@
 import { DataSet } from 'choerodon-ui/pro';
-import { FieldProps, FieldType } from '@/interface';
+import { FieldProps, FieldType, Record } from '@/interface';
 import { envDataSet } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config/stores/appConfigDataSet';
-import { deployApiConfig } from '@/api';
-import { setData } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-app-config/content';
 import { setKeyValue, getAppConfigData } from '@/routes/app-center-pro/components/OpenAppCreateModal';
 import { devopsDeployGroupApiConfig } from '@/api/DevopsDeployGroup';
 
@@ -123,7 +121,10 @@ const mapping: {
   },
 };
 
-const deployGroupConfigDataSet = (isPipeline: boolean) => ({
+const deployGroupConfigDataSet = (
+  isPipeline: boolean,
+  envId?: string,
+) => ({
   autoCreate: true,
   transport: {
     update: (data: any) => {
@@ -159,6 +160,7 @@ const deployGroupConfigDataSet = (isPipeline: boolean) => ({
         item.dynamicProps = {
           required: () => !isPipeline,
         };
+        item.disabled = Boolean(envId);
         break;
       }
       default: {
@@ -167,6 +169,15 @@ const deployGroupConfigDataSet = (isPipeline: boolean) => ({
     }
     return item;
   }),
+  events: {
+    create: ({ record }: {
+      record: Record,
+    }) => {
+      if (envId) {
+        record.set(mapping.env.name as string, envId);
+      }
+    },
+  },
 });
 
 export default deployGroupConfigDataSet;

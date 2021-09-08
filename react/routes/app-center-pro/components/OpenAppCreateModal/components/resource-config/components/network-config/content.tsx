@@ -72,18 +72,19 @@ const Index = observer(() => {
       </Form>
       {
         PortsDataSet.records.map((portRecord: any) => (
-          <Form record={portRecord} key={portRecord.id} columns={5}>
+          <Form record={portRecord} key={portRecord.id} columns={9}>
             {
               NetworkConfigDataSet.current.get('type') !== 'ClusterIP'
-              && <TextField name="nodePort" />
+              && <TextField colSpan={2} name="nodePort" />
             }
             <TextField
+              colSpan={2}
               name="port"
             />
-            <TextField name="targetPort" />
+            <TextField colSpan={2} name="targetPort" />
             {
               NetworkConfigDataSet.current.get('type') === 'NodePort'
-              && <Select name="protocol" />
+              && <Select colSpan={2} name="protocol" />
             }
             {
               PortsDataSet.records.length > 1 ? (
@@ -97,11 +98,11 @@ const Index = observer(() => {
                     top: 10,
                   }}
                   // @ts-ignore
-                  colSpan={3}
+                  colSpan={1}
                 />
               ) : (
                 // @ts-ignore
-                <span colSpan={3} />
+                <span colSpan={1} />
               )
             }
           </Form>
