@@ -59,7 +59,7 @@ export default ({
           ...item,
           values: item?.marketServiceDeployObjectVO?.value,
           marketServiceVersion: item?.marketServiceDeployObjectVO?.marketServiceVersion,
-          instanceName: getInstanceName(item?.marketServiceCode),
+          appCode: getInstanceName(item?.marketServiceCode),
           appName: item?.marketServiceName,
         }));
         serviceDs.loadData(newServiceData || []);
@@ -99,7 +99,7 @@ export default ({
           sequence: record.get('sequence'),
           value: record.get('values'),
           mktServiceId: record.get('id'),
-          appCode: record.get('instanceName'),
+          appCode: record.get('appCode'),
           appName: record.get('appName'),
           mktDeployObjectId: record.get('marketServiceDeployObjectVO')?.id,
         }));
