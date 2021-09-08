@@ -8,6 +8,7 @@ import DeployConfigForm from '../../../../../../../components/deploy-config-form
 import { useResourceStore } from '../../../../../stores';
 import { useREStore } from '../../stores';
 import PermissionPage from './components/permission';
+import { openAppCreateModal } from '@/components/open-appCreate';
 
 const envDetailKey = Modal.key();
 const configKey = Modal.key();
@@ -26,7 +27,13 @@ const REModals = observer(() => {
   const {
     intlPrefix,
     intl: { formatMessage },
-    resourceStore: { getSelectedMenu: { id } },
+    resourceStore: {
+      getSelectedMenu,
+      getSelectedMenu: { id },
+      setSelectedMenu,
+      setExpandedKeys,
+    },
+    itemTypes,
   } = useResourceStore();
 
   const {
@@ -112,12 +119,44 @@ const REModals = observer(() => {
     });
   }
 
+  function handleCreateCallback(type: 'deployGroup' | 'chart') {
+    let menuData = {};
+    switch (type) {
+      case 'deployGroup':
+        menuData = {
+          id: '1',
+          name: formatMessage({ id: itemTypes.WORKLOAD_GROUP }),
+          key: `${id}**workload`,
+          isGroup: true,
+          expand: false,
+          itemType: `${itemTypes.WORKLOAD_GROUP}`,
+          parentId: String(id),
+        };
+        break;
+      case 'chart':
+        menuData = {
+          id: '0',
+          name: formatMessage({ id: itemTypes.IST_GROUP }),
+          key: `${id}**instances`,
+          isGroup: true,
+          expand: false,
+          itemType: `${itemTypes.IST_GROUP}`,
+          parentId: String(id),
+        };
+        break;
+      default:
+        break;
+    }
+    setSelectedMenu(menuData);
+    setExpandedKeys([`${id}`]);
+  }
+
   function getButtons() {
     return [
       {
         name: '创建应用',
         icon: 'playlist_add',
-        handler: () => {},
+        handler: () => openAppCreateModal(handleCreateCallback, true, id),
       },
       {
         permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.deploy-config'],
