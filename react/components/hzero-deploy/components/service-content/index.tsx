@@ -191,7 +191,7 @@ const ServiceContent = observer(() => {
           colSpan={1}
         />
         <TextField
-          name="instanceName"
+          name="appCode"
           colSpan={1}
         />
         <YamlEditor

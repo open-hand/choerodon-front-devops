@@ -26,6 +26,11 @@ const AppHomePage = () => {
   const renderHeaderBtns = () => {
     const items = [
       {
+        name: '创建应用',
+        icon: 'playlist_add',
+        handler: () => openAppCreateModal(refresh),
+      },
+      {
         permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.resource-batch'],
         name: '批量创建Chart应用',
         icon: 'library_add-o',
@@ -34,18 +39,13 @@ const AppHomePage = () => {
         }),
       },
       {
-        name: '创建应用',
-        icon: 'playlist_add',
-        handler: () => openAppCreateModal(refresh),
-      },
-      {
         icon: 'refresh',
         display: true,
         handler: () => refresh(),
       },
     ];
     if (mainStore.getHzeroSyncStatus) {
-      items.unshift(getHzeroDeployBtnConfig({
+      items.splice(2, 0, getHzeroDeployBtnConfig({
         refresh,
         syncStatus: mainStore.getHzeroSyncStatus,
         hasMarket,
