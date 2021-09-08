@@ -214,7 +214,7 @@ export default ({
             });
             if (value) {
               record.get('appInstance') && record.set('appInstance', null);
-              appInstanceOptionsDs.transport.read.url = `/devops/v1/projects/${projectId}/deploy_app_center/deployment?env_id=${envId}&app_service_id=${value}`;
+              appInstanceOptionsDs.transport.read.url = `/devops/v1/projects/${projectId}/deploy_app_center/chart?env_id=${envId}&app_service_id=${value}`;
               appInstanceOptionsDs.query();
             }
             break;

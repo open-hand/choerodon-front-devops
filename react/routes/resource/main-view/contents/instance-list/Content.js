@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+/* eslint-disable react/jsx-no-bind */
 import React, { Fragment } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Table } from 'choerodon-ui/pro';
@@ -28,25 +28,8 @@ const Content = observer(() => {
     intl: { formatMessage },
   } = useIstListStore();
 
-  function renderName({ value, record }) {
-    const status = record.get('status');
-    const error = record.get('error');
-    return (
-      <StatusIcon
-        name={value}
-        width={0.2}
-        status={status || ''}
-        error={error || ''}
-      />
-    );
-  }
-
-  function renderVersion({ record }) {
-    return <UploadIcon dataSource={record.toData()} />;
-  }
-
   function renderAppName({ value, record }) {
-    const appServiceType = record.get('appServiceType');
+    const appServiceType = record.get('chartSource');
     let iconType;
     if (appServiceType === 'share_service') {
       iconType = 'share';
@@ -66,11 +49,6 @@ const Content = observer(() => {
     );
   }
 
-  function renderPods({ record }) {
-    const dataSource = record.toData();
-    return <PodStatus dataSource={dataSource} />;
-  }
-
   return (
     <div className={`${prefixCls}-instance-table`}>
       <Modals />
@@ -80,11 +58,10 @@ const Content = observer(() => {
         border={false}
         queryBar="bar"
       >
-        <Column name="appName" renderer={renderName} sortable />
-        <Column name="appCode" sortable />
-        <Column name="versionName" renderer={renderVersion} />
+        <Column name="name" />
+        <Column name="code" />
+        <Column name="commandVersion" />
         <Column name="appServiceName" renderer={renderAppName} sortable />
-        {/* <Column renderer={renderPods} width="1rem" header={formatMessage({ id: `${intlPrefix}.instance.pod.status` })} /> */}
       </Table>
     </div>
   );

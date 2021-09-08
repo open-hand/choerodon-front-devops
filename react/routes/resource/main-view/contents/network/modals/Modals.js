@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
@@ -47,7 +48,7 @@ const EnvModals = observer(() => {
       children: <CreateNetwork
         envId={parentId}
         store={networkStore}
-        refresh
+        refresh={refresh}
       />,
       okText: formatMessage({ id: 'create' }),
     });

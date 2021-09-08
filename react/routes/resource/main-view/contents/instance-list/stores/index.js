@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useEffect, useMemo } from 'react';
+import React, {
+  createContext, useContext, useEffect, useMemo,
+} from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
@@ -35,7 +37,6 @@ export const StoreProvider = injectIntl(inject('AppState')(
       envId: parentId,
     })), [id, parentId]);
 
-
     const value = {
       ...props,
       istListDs,
@@ -57,5 +58,5 @@ export const StoreProvider = injectIntl(inject('AppState')(
         {children}
       </Store.Provider>
     );
-  })
+  }),
 ));
