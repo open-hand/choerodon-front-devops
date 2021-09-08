@@ -381,6 +381,9 @@ const AppCreateForm = (props: any) => {
           key = ENV_TAB;
           switch (appInfoData[infoMapping.deployProductType.name as string]) {
             case deployProductOptionsData[0].value: {
+              if (isDeploy) {
+                key = 'chart';
+              }
               const { res, request: newRequest } = handleSetSubmitDataByAppConfig({
                 appConfigData,
                 submitData,
@@ -394,6 +397,9 @@ const AppCreateForm = (props: any) => {
               break;
             }
             case deployProductOptionsData[1].value: {
+              if (isDeploy) {
+                key = 'deployGroup';
+              }
               submitData = handleSetSubmitDataByDeployGroupConfig({
                 appConfigData,
                 submitData,
