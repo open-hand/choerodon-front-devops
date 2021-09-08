@@ -7,6 +7,7 @@ import {
   Page, Header, Breadcrumb, Content, HeaderButtons,
 } from '@choerodon/boot';
 import { Modal, Button } from 'choerodon-ui/pro';
+import { toJS } from 'mobx';
 import PipelineTree from './components/PipelineTree';
 import PipelineFlow from './components/PipelineFlow';
 import DragBar from '../../components/drag-bar';
@@ -75,7 +76,7 @@ const PipelineManage = observer(() => {
 
   const { getSelectedMenu } = mainStore;
 
-  async function handleRefresh() {
+  const handleRefresh = async () => {
     mainStore.setLoadedKeys([]);
     mainStore.setTreeDataPage(1);
     await treeDs.query();
@@ -87,9 +88,10 @@ const PipelineManage = observer(() => {
     } else {
       devopsPipelineRecordRelId && loadDetailData(projectId, devopsPipelineRecordRelId);
     }
-  }
+  };
 
   function openEditModal() {
+    const oldEditMainData = toJS(editBlockStore.getMainData);
     Modal.open({
       key: Modal.key(),
       title: '修改流水线',
@@ -101,6 +103,7 @@ const PipelineManage = observer(() => {
         dataSource={editBlockStore.getMainData}
         refreshTree={handleRefresh}
         editBlockStore={editBlockStore}
+        oldEditMainData={oldEditMainData}
         isEdit
       />,
       okText: formatMessage({ id: 'save' }),
