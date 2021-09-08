@@ -3,7 +3,7 @@ import omit from 'lodash/omit';
 import forEach from 'lodash/forEach';
 import map from 'lodash/map';
 import uuidV1 from 'uuid/v1';
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import isEmpty from 'lodash/isEmpty';
 
 function getRandomName(prefix = '') {
@@ -41,7 +41,7 @@ export default (({
     switch (name) {
       case 'environmentId':
         dataSet.forEach((eachRecord:any) => eachRecord !== record && eachRecord.set('environmentId', value));
-        record.get('instanceName') && record.getField('instanceName').checkValidity();
+        record.get('appCode') && record.getField('appCode').checkValidity();
         record.set('valueId', null);
         networkRecord.getField('name').checkValidity();
         domainRecord.getField('name').checkValidity();
@@ -59,7 +59,7 @@ export default (({
             url: `/devops/v1/projects/${projectId}/app_service_versions/page_by_options?app_service_id=${value.split('**')[0]}&deploy_only=true&do_page=true&page=1&size=40`,
             method: 'post',
           });
-          record.set('instanceName', getRandomName(value.split('**')[1]));
+          record.set('appCode', getRandomName(value.split('**')[1]));
           record.set('appName', value.split('**')[1]);
         }
         record.set('valueId', null);
@@ -142,7 +142,7 @@ export default (({
             const { externalIp } = devopsServiceReqVO;
             devopsServiceReqVO.ports = newPorts;
             devopsServiceReqVO.externalIp = externalIp && externalIp.length ? externalIp.join(',') : null;
-            devopsServiceReqVO.appCode = res.instanceName;
+            devopsServiceReqVO.appCode = res.appCode;
             devopsServiceReqVO.appName = res.appName;
             devopsServiceReqVO.envId = res.environmentId;
             res.devopsServiceReqVO = devopsServiceReqVO;
@@ -174,7 +174,7 @@ export default (({
         name: 'environmentId', type: 'string', textField: 'name', valueField: 'id', label: formatMessage({ id: 'environment' }), required: true, options: envOptionsDs,
       },
       {
-        name: 'instanceName', type: 'string', label: formatMessage({ id: `appCode` }), required: true, validator: checkName, maxLength: 53,
+        name: 'appCode', type: 'string', label: formatMessage({ id: `appCode` }), required: true, validator: checkName, maxLength: 53,
       },
       {
         name: 'appName', type: 'string', label: formatMessage({ id: 'appName' }), required: true, maxLength: 53,
