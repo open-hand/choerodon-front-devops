@@ -369,6 +369,7 @@ export default observer(() => {
         ...ds,
         ...deployChartData,
       }
+      delete ds.value;
     }
     if (ds.type === typeData[1].value) {
       ds = {
