@@ -25,7 +25,7 @@ const ResourceConfig = () => {
   const getContent = () => {
     if (!resourceConfigDs.length) {
       return (
-        <TabEmptyPage text="当前应用下暂无资源配置信息" />
+        <TabEmptyPage text="当前应用下暂无网络配置信息" />
       );
     }
     return resourceConfigDs.map((record:any) => <ConfigItem connect={connect} formatMessage={formatMessage} data={record.toData()} subfixCls={subfixCls} key={record.get('id')} />);

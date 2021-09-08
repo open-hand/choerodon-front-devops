@@ -27,7 +27,7 @@ const chartKeys = [
   ...deployGroupKeys,
   {
     key: RESOURCE,
-    name: '资源配置',
+    name: '网络配置',
   },
 ];
 
