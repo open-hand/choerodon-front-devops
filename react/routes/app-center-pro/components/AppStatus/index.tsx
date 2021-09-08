@@ -26,6 +26,15 @@ const AppStatus = ({
     </Tooltip>
   );
 
+  const ErrorIcon = () => (
+    <Tooltip title={error}>
+      <Icon
+        className={statusCls}
+        type="info"
+      />
+    </Tooltip>
+  );
+
   const getTagEnv = () => {
     let tag:any = '';
     switch (status) {

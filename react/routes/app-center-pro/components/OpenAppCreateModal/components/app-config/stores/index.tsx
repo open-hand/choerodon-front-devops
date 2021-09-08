@@ -18,6 +18,7 @@ interface ContextType {
     mktAppVersionId: string,
     mktDeployObjectId: string,
   },
+  envId?: string,
 }
 
 const Store = createContext({} as ContextType);
@@ -29,9 +30,13 @@ export function useAppConfigStore() {
 export const StoreProvider = (props: any) => {
   const {
     children,
+    envId,
+    detail,
   } = props;
 
-  const AppConfigDataSet = useMemo(() => new DataSet(appConfigDataSet()), []);
+  const AppConfigDataSet = useMemo(
+    () => new DataSet(appConfigDataSet(envId, detail)), [envId, detail],
+  );
 
   const value = {
     ...props,
