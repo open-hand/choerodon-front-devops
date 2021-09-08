@@ -194,7 +194,12 @@ const Index = observer(() => {
                 {/*  </Button> */}
                 {/* </Upload> */}
                 { dataSource.get(mapping.uploadUrl.name) && (
-                  <p className="c7ncd-appCenterPro-conDetail__fileName">
+                  <p
+                    newLine className="c7ncd-appCenterPro-conDetail__fileName"
+                    style={{
+                      width: '100%',
+                    }}
+                  >
                       <span className="c7ncd-appCenterPro-conDetail__fileName__fileIcon">
                         <Icon type="attach_file" />
                         <span>
