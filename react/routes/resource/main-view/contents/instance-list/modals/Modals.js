@@ -10,8 +10,12 @@ const CustomModals = observer(() => {
   const {
     resourceStore: {
       getSelectedMenu: { parentId },
+      getSelectedMenu,
+      setSelectedMenu, setExpandedKeys,
     },
     treeDs,
+    formatMessage,
+    itemTypes,
   } = useResourceStore();
 
   const {
@@ -24,6 +28,38 @@ const CustomModals = observer(() => {
     istListDs.query();
   }
 
+  function handleCreateCallback(type) {
+    let menuData = {};
+    switch (type) {
+      case 'deployGroup':
+        menuData = {
+          id: '1',
+          name: formatMessage({ id: itemTypes.WORKLOAD_GROUP }),
+          key: `${parentId}**workload`,
+          isGroup: true,
+          expand: false,
+          itemType: `${itemTypes.WORKLOAD_GROUP}`,
+          parentId: String(parentId),
+        };
+        break;
+      case 'chart':
+        menuData = {
+          id: '0',
+          name: formatMessage({ id: itemTypes.IST_GROUP }),
+          key: `${parentId}**instances`,
+          isGroup: true,
+          expand: false,
+          itemType: `${itemTypes.IST_GROUP}`,
+          parentId: String(parentId),
+        };
+        break;
+      default:
+        break;
+    }
+    setSelectedMenu(menuData);
+    setExpandedKeys([`${parentId}`]);
+  }
+
   const buttons = useMemo(() => {
     const envRecord = treeDs.find((record) => record.get('key') === parentId);
     const connect = envRecord && envRecord.get('connect');
@@ -34,7 +70,7 @@ const CustomModals = observer(() => {
         disabled: configDisabled,
         name: '创建应用',
         icon: 'playlist_add',
-        handler: () => openAppCreateModal(refresh, true, envId),
+        handler: () => openAppCreateModal(handleCreateCallback, true, envId),
       },
       {
         permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.resource-batch'],
