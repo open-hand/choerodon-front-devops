@@ -24,6 +24,7 @@ const EditItem = (props) => {
     innerRef,
     dragProvided,
     snapshotinner,
+    appServiceId,
   } = props;
 
   const { name, type, edit } = jobDetail;
@@ -89,6 +90,7 @@ const EditItem = (props) => {
           jobDetail={jobDetail}
           appServiceId={appServiceName}
           appServiceName={appServiceName}
+          trueAppServiceId={appServiceId}
           pipelineStageMainSource={getStepData}
           columnIndex={columnIndex}
           witchColumnJobIndex={witchColumnJobIndex}

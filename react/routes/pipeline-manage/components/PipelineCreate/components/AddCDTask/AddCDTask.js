@@ -25,6 +25,8 @@ import {
   handleSetSubmitDataByDeployGroupConfig,
   handleSetSubmitDataByContainerConfig,
 } from "@/routes/app-center-pro/components/OpenAppCreateModal";
+import { initValueIdDataSet } from "@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/addCDTaskDataSet";
+import { deployConfigDataSet } from "./stores/deployChartDataSet";
 import DeployChart from "./components/deploy-chart";
 import DeployGroup from './components/deploy-group';
 import addCDTaskDataSetMap, {
@@ -93,6 +95,7 @@ export default observer(() => {
     index: taskIndex,
     DeployChartDataSet,
     DeployGroupDataSet,
+    trueAppServiceId,
   } = useAddCDTaskStore();
 
   const deployGroupcRef = useRef();
@@ -442,10 +445,11 @@ export default observer(() => {
     if (jobDetail) {
       let newCdAuditUserIds = jobDetail?.cdAuditUserIds;
       let extra = {};
-      if (jobDetail.type === "cdDeploy") {
-        const { value } = JSONbig.parse(jobDetail.metadata.replace(/'/g, '"'));
-        value && setValueIdValues(Base64.decode(value));
-      } else if (jobDetail.type === addCDTaskDataSetMap.apiTest) {
+      // if (jobDetail.type === "cdDeploy") {
+      //   const { value } = JSONbig.parse(jobDetail.metadata.replace(/'/g, '"'));
+      //   value && setValueIdValues(Base64.decode(value));
+      // } else
+      if (jobDetail.type === addCDTaskDataSetMap.apiTest) {
         if (jobDetail.metadata) {
           const metadata = JSONbig.parse(jobDetail.metadata.replace(/'/g, '"'));
           extra[addCDTaskDataSetMap.relativeMission] =
@@ -501,6 +505,12 @@ export default observer(() => {
         const metadata = JSON.parse(
           jobDetail.metadata.replace(/'/g, '"'));
         DeployChartDataSet.loadData([metadata]);
+        initValueIdDataSet(
+          deployConfigDataSet,
+          trueAppServiceId,
+          metadata.envId,
+          ADDCDTaskUseStore.getValueIdRandom,
+        )
       } else if (jobDetail.type === typeData[1].value) {
         const metadata = JSON.parse(
           jobDetail.metadata.replace(/'/g, '"'));
@@ -1491,7 +1501,7 @@ export default observer(() => {
         </Select> */}
         <TextField colSpan={2} name="name" />
         <TextField colSpan={1} name="glyyfw" />
-        <div className="addcdTask-wrap" colSpan={2}>
+        <div className="addcdTask-wrap" colSpan={3}>
           <Select
             name="triggerType"
             className="addcdTask-triggerType"
@@ -1610,64 +1620,64 @@ export default observer(() => {
           </div>,
           <SelectBox name={fieldMap.deployWay.name} />,
         ]}
-        {ADDCDTaskDataSet?.current?.get("type") === "cdDeploy" && [
-          <Select
-            colSpan={1}
-            name="envId"
-            optionRenderer={optionRenderer}
-            // renderer={renderer}
-            onOption={({ record }) => ({
-              disabled: !record.get("connected"),
-            })}
-          />,
-          isProjectOwner && (
-            <div
-              className="addcdTask-whetherBlock addcdTask-triggersTasks"
-              style={{
-                position: "relative",
-              }}
-              colSpan={2}
-            >
-              <SelectBox name={addCDTaskDataSetMap.triggersTasks.name}>
-                <Option value={addCDTaskDataSetMap.triggersTasks.values[0]}>
-                  是
-                </Option>
-                <Option value={addCDTaskDataSetMap.triggersTasks.values[1]}>
-                  否
-                </Option>
-              </SelectBox>
-              <NewTips
-                helpText="此处仅项目所有者可以设置；默认为是，即触发用户在没有该部署任务的环境权限时，将会直接使用管理员账户触发部署；若选择为否，触发成员在没有环境权限时，将会直接跳过此部署任务。"
-                style={{
-                  position: "absolute",
-                  top: "7px",
-                  left: "195px",
-                }}
-              />
-            </div>
-          ),
-          <SelectBox
-            className="addcdTask-mode"
-            newLine
-            colSpan={1}
-            name="deployType"
-          >
-            <Option value="create">新建实例</Option>
-            <Option value="update">替换实例</Option>
-          </SelectBox>,
-          <p className="addcdTask-text" colSpan={2}>
-            <Icon
-              style={{ color: "#F44336", position: "relative", bottom: "2px" }}
-              type="error"
-            />
-            替换实例会更新该实例的镜像及配置信息，请确认要替换的实例选择无误。
-          </p>,
-          ADDCDTaskDataSet?.current?.get("deployType") === "create" ? (
-            <TextField newLine colSpan={2} name="instanceName" />
-          ) : (
-            <Select newLine colSpan={2} name="instanceId" />
-          ),
-        ]}
+        {/*{ADDCDTaskDataSet?.current?.get("type") === "cdDeploy" && [*/}
+        {/*  <Select*/}
+        {/*    colSpan={1}*/}
+        {/*    name="envId"*/}
+        {/*    optionRenderer={optionRenderer}*/}
+        {/*    // renderer={renderer}*/}
+        {/*    onOption={({ record }) => ({*/}
+        {/*      disabled: !record.get("connected"),*/}
+        {/*    })}*/}
+        {/*  />,*/}
+        {/*  isProjectOwner && (*/}
+        {/*    <div*/}
+        {/*      className="addcdTask-whetherBlock addcdTask-triggersTasks"*/}
+        {/*      style={{*/}
+        {/*        position: "relative",*/}
+        {/*      }}*/}
+        {/*      colSpan={2}*/}
+        {/*    >*/}
+        {/*      <SelectBox name={addCDTaskDataSetMap.triggersTasks.name}>*/}
+        {/*        <Option value={addCDTaskDataSetMap.triggersTasks.values[0]}>*/}
+        {/*          是*/}
+        {/*        </Option>*/}
+        {/*        <Option value={addCDTaskDataSetMap.triggersTasks.values[1]}>*/}
+        {/*          否*/}
+        {/*        </Option>*/}
+        {/*      </SelectBox>*/}
+        {/*      <NewTips*/}
+        {/*        helpText="此处仅项目所有者可以设置；默认为是，即触发用户在没有该部署任务的环境权限时，将会直接使用管理员账户触发部署；若选择为否，触发成员在没有环境权限时，将会直接跳过此部署任务。"*/}
+        {/*        style={{*/}
+        {/*          position: "absolute",*/}
+        {/*          top: "7px",*/}
+        {/*          left: "195px",*/}
+        {/*        }}*/}
+        {/*      />*/}
+        {/*    </div>*/}
+        {/*  ),*/}
+        {/*  <SelectBox*/}
+        {/*    className="addcdTask-mode"*/}
+        {/*    newLine*/}
+        {/*    colSpan={1}*/}
+        {/*    name="deployType"*/}
+        {/*  >*/}
+        {/*    <Option value="create">新建实例</Option>*/}
+        {/*    <Option value="update">替换实例</Option>*/}
+        {/*  </SelectBox>,*/}
+        {/*  <p className="addcdTask-text" colSpan={2}>*/}
+        {/*    <Icon*/}
+        {/*      style={{ color: "#F44336", position: "relative", bottom: "2px" }}*/}
+        {/*      type="error"*/}
+        {/*    />*/}
+        {/*    替换实例会更新该实例的镜像及配置信息，请确认要替换的实例选择无误。*/}
+        {/*  </p>,*/}
+        {/*  ADDCDTaskDataSet?.current?.get("deployType") === "create" ? (*/}
+        {/*    <TextField newLine colSpan={2} name="instanceName" />*/}
+        {/*  ) : (*/}
+        {/*    <Select newLine colSpan={2} name="instanceId" />*/}
+        {/*  ),*/}
+        {/*]}*/}
         {ADDCDTaskDataSet?.current?.get("type") === "cdAudit" && (
           <div colSpan={3} style={{ display: "flex" }}>
             <div style={{ width: "47.5%", marginRight: 8 }} colSpan={2}>
