@@ -42,10 +42,10 @@ const map = {
 };
 
 const typeData = [{
-  value: 'chart',
+  value: 'cdDeploy',
   name: '容器部署-Chart包',
 }, {
-  value: 'deployment',
+  value: 'cdDeployment',
   name: '容器部署-部署组',
 }];
 

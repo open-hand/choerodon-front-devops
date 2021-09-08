@@ -5,6 +5,16 @@ import forEach from 'lodash/forEach';
 import JSONbig from 'json-bigint';
 import addCDTaskDataSetMap, { fieldMap, typeData } from './addCDTaskDataSetMap';
 
+function initValueIdDataSet(dataSet, appServiceId, envId, createValueRandom) {
+  dataSet.setQueryParameter('data', {
+    appServiceId,
+    envId,
+    random: Math.random(),
+    createValueRandom,
+  });
+  dataSet.query();
+}
+
 function getDefaultInstanceName(appServiceCode) {
   return appServiceCode
     ? `${appServiceCode.substring(0, 24)}-${uuidV1().substring(0, 5)}`
@@ -142,10 +152,10 @@ export default (
       type: 'string',
       label: '实例名称',
       validator: (value, name, record) => checkName(value, projectId, record),
-      dynamicProps: {
-        required: ({ record }) => record.get('type') === 'cdDeploy'
-          && record.get('deployType') === 'create',
-      },
+      // dynamicProps: {
+      //   required: ({ record }) => record.get('type') === 'cdDeploy'
+      //     && record.get('deployType') === 'create',
+      // },
       defaultValue: getDefaultInstanceName(appServiceCode),
     },
     {
@@ -184,7 +194,7 @@ export default (
       textField: 'name',
       valueField: 'id',
       dynamicProps: {
-        required: ({ record }) => record.get('type') === 'cdDeploy',
+        // required: ({ record }) => record.get('type') === 'cdDeploy',
         disabled: ({ record }) => !record.get('envId'),
         lookupAxiosConfig: ({ record }) => ({
           method: 'get',
@@ -702,13 +712,12 @@ export default (
       switch (name) {
         case 'envId': {
           if (record.get('type') === typeData[0].value) {
-            valueIdDataSet.setQueryParameter('data', {
-              appServiceId: PipelineCreateFormDataSet.current.get('appServiceId'),
-              envId: value,
-              random: Math.random(),
-              createValueRandom: useStore.getValueIdRandom,
-            });
-            valueIdDataSet.query();
+            initValueIdDataSet(
+              valueIdDataSet,
+              PipelineCreateFormDataSet.current.get('appServiceId'),
+              value,
+              useStore.getValueIdRandom,
+            );
           }
           break;
         }
@@ -719,3 +728,5 @@ export default (
     },
   },
 });
+
+export { initValueIdDataSet };
