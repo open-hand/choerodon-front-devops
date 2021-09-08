@@ -190,7 +190,7 @@ const REModals = observer(() => {
             tooltipsConfig: {
               title: !existAutoDeploy && '流水线中没有该环境下的自动部署任务',
             },
-            name: autoDeployStatus ? '停用自动部署' : '开启自动部署',
+            name: autoDeployStatus || !existAutoDeploy ? '停用自动部署' : '开启自动部署',
             handler: handleCloseAutoDeployModal,
           },
         ],
