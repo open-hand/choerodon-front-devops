@@ -265,7 +265,7 @@ const BatchDeployModal = injectIntl(observer(() => {
               disabled={record && !record.get('appServiceId')}
             />
             <TextField
-              name="instanceName"
+              name="appCode"
               colSpan={1}
               addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.instance.tips` })} />}
             />
