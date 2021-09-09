@@ -205,7 +205,7 @@ const DetailAside = () => {
           currentType={deployType}
         />
         <span className={`${subfixCls}-aside-name`}>{name || '-'}</span>
-        <AppStatus error={error || devopsHostCommandDTO?.error} status={isEnv ? objectStatus : devopsHostCommandDTO.status} deloyType={deployType} />
+        <AppStatus error={error || devopsHostCommandDTO?.error} status={isEnv ? objectStatus : devopsHostCommandDTO?.status} deloyType={deployType} />
       </header>
       <main>
         <h3>详情</h3>
