@@ -8,6 +8,7 @@ import addCDTaskDataSet from './addCDTaskDataSet';
 import deployGroupDataSet
   from '@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/deployGroupDataSet';
 import useStore from './useStore';
+import { fieldMap } from './addCDTaskDataSetMap';
 
 const Store = createContext();
 
@@ -33,8 +34,8 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
 
   const ADDCDTaskUseStore = useStore();
   const ADDCDTaskDataSet = useMemo(() => new DataSet(addCDTaskDataSet(projectId, PipelineCreateFormDataSet, organizationId, ADDCDTaskUseStore, appServiceCode, random, deployConfigDataSet)), [ADDCDTaskUseStore, random]);
-  const DeployChartDataSet = useMemo(() => new DataSet(deployChartDataSet(ADDCDTaskUseStore)), []);
-  const DeployGroupDataSet = useMemo(() => new DataSet(deployGroupDataSet()), []);
+  const DeployChartDataSet = useMemo(() => new DataSet(deployChartDataSet(ADDCDTaskDataSet)), [ADDCDTaskDataSet?.current?.get(fieldMap.deployWay.name)]);
+  const DeployGroupDataSet = useMemo(() => new DataSet(deployGroupDataSet(ADDCDTaskDataSet)), []);
 
   const value = {
     ...props,

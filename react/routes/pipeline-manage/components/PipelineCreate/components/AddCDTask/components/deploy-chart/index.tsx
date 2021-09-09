@@ -7,6 +7,7 @@ import { observer } from 'mobx-react-lite';
 import { FuncType, ButtonColor } from '@/interface';
 import YamlEditor from '@/components/yamlEditor';
 import { mapping } from '../../stores/deployChartDataSet';
+import { deployWayData } from '../../stores/addCDTaskDataSetMap';
 
 import './index.less';
 
@@ -17,7 +18,9 @@ export default observer(({
   optionRenderValueId,
   rendererValueId,
   handleChangeValueIdValues,
+  deployWay,
 }: {
+  deployWay: string,
   dataSet: DataSet,
   optionRenderValueId(): React.ReactNode,
   rendererValueId(): React.ReactNode,
@@ -66,7 +69,13 @@ export default observer(({
         dataSet={dataSet}
         className={`${cssPrefix}__form`}
       >
-        <TextField name={mapping().appName.name} />
+        {
+          deployWay === deployWayData[0].value ? (
+            <TextField name={mapping().appName.name} />
+          ) : (
+            <Select name={mapping().appName.name} />
+          )
+        }
         <TextField name={mapping().appCode.name} />
       </Form>
       <div className={`${cssPrefix}__divided`} />

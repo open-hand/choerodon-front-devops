@@ -157,7 +157,9 @@ const Index = observer(() => {
     let flag3 = true;
     let name = '';
     ConGroupDataSet.records.forEach((record: any) => {
-      arr.push(record.getField(mapping.portConfig.name).options.validate());
+      if (record.get(mapping.productSource.name) === productSourceData[0].value) {
+        arr.push(record.getField(mapping.portConfig.name).options.validate());
+      }
       arr.push(record.getField(mapping.enVariable.name).options.validate());
       if (record.get(mapping.productType.name) === productTypeData[1].value) {
         if (record.get(mapping.productSource.name) === productSourceData[5].value) {

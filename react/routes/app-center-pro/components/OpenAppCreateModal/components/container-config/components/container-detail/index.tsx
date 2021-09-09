@@ -1,13 +1,13 @@
 /* eslint-disable */
 // @ts-nocheck
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Form, TextField, Button, SelectBox, NumberField, Select,
 } from 'choerodon-ui/pro';
 import { inject } from 'mobx-react';
 import { Icon, Upload, Button as OldButton } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
-import { CustomSelect, ChunkUploader } from '@choerodon/components';
+import { CustomSelect, ChunkUploader, NewTips } from '@choerodon/components';
 import { productTypeData, productSourceData, mapping, repoTypeData } from '../../stores/conGroupDataSet';
 import { mapping as portMapping } from '../../stores/portConfigDataSet';
 import { Record, FuncType } from '@/interface';
@@ -15,28 +15,37 @@ import CollapseContainer from '../../../deploy-group-config/components/collapse-
 
 import './index.less';
 
-console.log(productSourceData);
-
-let imageSource;
-let jarSource;
-
-if (productSourceData) {
-  imageSource = JSON.parse(JSON.stringify(productSourceData)).splice(0, 5);
-  jarSource = [
-    ...JSON.parse(JSON.stringify(productSourceData)).splice(0, 3),
-    productSourceData[5],
-  ]
-}
-
 const Index = inject('AppState')(observer(({
   className,
   dataSource,
   AppState: { currentMenuType: { organizationId } },
+  isPipeline,
 }: {
   className?: string;
   dataSource: Record
   AppState?: any,
+  isPipeline?: Boolean,
 }) => {
+  const [imageSource, setImageSource] = useState(JSON.parse(JSON.stringify(productSourceData)).splice(0, 5));
+  const [jarSource, setJarSource] = useState([
+    ...JSON.parse(JSON.stringify(productSourceData)).splice(0, 3),
+    productSourceData[5],
+  ])
+
+  useEffect(() => {
+    if (isPipeline) {
+      setImageSource([
+        productSourceData[6],
+        ...JSON.parse(JSON.stringify(productSourceData)).splice(0, 5)
+      ]);
+      setJarSource([
+        productSourceData[6],
+        ...JSON.parse(JSON.stringify(productSourceData)).splice(0, 3),
+        productSourceData[5],
+      ])
+    }
+  }, []);
+
   const renderFormByProductSource = () => {
     if (dataSource) {
       switch (dataSource.get(mapping.productType.name)) {
@@ -105,6 +114,18 @@ const Index = inject('AppState')(observer(({
                   }
                 </Form>
               );
+              break;
+            }
+            case productSourceData[6].value: {
+              return (
+                <Form className="c7ncd-appCenterPro-conDetail__form" columns={3} record={dataSource}>
+                  <Select
+                    colSpan={3}
+                    name={mapping.relativeMission.name}
+                    addonAfter={<NewTips helpText="123" />}
+                  />
+                </Form>
+              )
               break;
             }
             default: {
@@ -192,6 +213,18 @@ const Index = inject('AppState')(observer(({
                   ) }
                 </>
               );
+            }
+            case productSourceData[6].value: {
+              return (
+                <Form className="c7ncd-appCenterPro-conDetail__form" columns={3} record={dataSource}>
+                  <Select
+                    colSpan={3}
+                    name={mapping.relativeMission.name}
+                    addonAfter={<NewTips helpText="123" />}
+                  />
+                </Form>
+              )
+              break;
             }
             default: {
               return '';
@@ -361,14 +394,12 @@ const Index = inject('AppState')(observer(({
     if (dataSource) {
       return dataSource.get(mapping.productType.name) === productTypeData[0].value
         ? imageSource
-        : jarSource;
+        : jarSource
     }
     return [{
       value: '',
     }];
   };
-
-  console.log(dataSource?.get(mapping.productSource.name));
 
   return (
     <div

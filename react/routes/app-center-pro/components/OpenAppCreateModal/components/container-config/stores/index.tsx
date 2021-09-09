@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
+import { observer } from 'mobx-react-lite';
 import conGroupDataSet
   from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config/stores/conGroupDataSet';
 
@@ -11,6 +12,7 @@ interface ContextType {
   detail?: any,
   refresh?: Function,
   isPipeline?: Boolean,
+  preJobList?: object[],
 }
 
 const Store = createContext({} as ContextType);
@@ -19,12 +21,16 @@ export function useContainerConfig() {
   return useContext(Store);
 }
 
-export const StoreProvider = (props: any) => {
+export const StoreProvider = observer((props: any) => {
   const {
     children,
+    isPipeline,
+    preJobList,
   } = props;
 
-  const ConGroupDataSet = useMemo(() => new DataSet(conGroupDataSet()), []);
+  const ConGroupDataSet = useMemo(
+    () => new DataSet(conGroupDataSet(isPipeline, preJobList)), [isPipeline, preJobList],
+  );
 
   const value = {
     ...props,
@@ -36,4 +42,4 @@ export const StoreProvider = (props: any) => {
       {children}
     </Store.Provider>
   );
-};
+});

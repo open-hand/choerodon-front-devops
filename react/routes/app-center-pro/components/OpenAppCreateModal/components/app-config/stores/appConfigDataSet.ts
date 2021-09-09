@@ -30,7 +30,7 @@ const chartSourceData: {
   img: market,
 }, {
   value: 'hzero',
-  name: 'Hzero服务',
+  name: 'HZERO服务',
   img: hzero,
 }];
 
