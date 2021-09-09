@@ -1,15 +1,15 @@
 /* eslint-disable import/no-anonymous-default-export */
 export default ({
   title, id, formatMessage, projectId, envId, store,
-}:any):any => {
-  const checkName = async (value:string, name:string, record:any) => {
+}: any): any => {
+  const checkName = async (value: string, name: string, record: any) => {
     const pattern = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
     if (value && !pattern.test(value)) {
       return formatMessage({ id: 'network.name.check.failed' });
     }
     if (value && pattern.test(value)) {
       try {
-        const res = await store.checkName(projectId, envId, value);
+        const res = await store.checkName(envId, value);
         if (res && !res.failed) {
           return true;
         }
@@ -35,7 +35,7 @@ export default ({
       type: 'string',
       label: formatMessage({ id: 'app.name' }),
       required: true,
-      validator: checkName,
+      validator: id ? () => true : checkName,
       maxLength: 100,
     }, {
       name: 'description',
