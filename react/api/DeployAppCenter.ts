@@ -5,10 +5,11 @@ class DeployAppCenterApi extends Api<DeployAppCenterApi> {
     return `/devops/v1/projects/${this.projectId}/deploy_app_center`;
   }
 
-  getDeployCenterAppList() {
+  getDeployCenterAppList(params?: object) {
     return this.request({
       url: `${this.prefix}/page_by_env`,
       method: 'get',
+      params,
     });
   }
 
@@ -56,22 +57,37 @@ class DeployAppCenterApi extends Api<DeployAppCenterApi> {
     });
   }
 
-  checkAppName(name: string) {
+  checkAppName(name: string, rdupmType?: string, objectId?: string) {
     return this.request({
       method: 'get',
       url: `${this.prefix}/check_name`,
       params: {
         name,
+        rdupmType,
+        objectId,
       },
     });
   }
 
-  checkAppCode(code: string) {
+  checkAppCode(code: string, rdupmType?: string, objectId?: string) {
     return this.request({
       method: 'get',
       url: `${this.prefix}/check_code`,
       params: {
         code,
+        rdupmType,
+        objectId,
+      },
+    });
+  }
+
+  getAppFromChart(envId: string, appServiceId: string) {
+    return this.request({
+      method: 'get',
+      url: `${this.prefix}/chart`,
+      params: {
+        env_id: envId,
+        app_service_id: appServiceId,
       },
     });
   }

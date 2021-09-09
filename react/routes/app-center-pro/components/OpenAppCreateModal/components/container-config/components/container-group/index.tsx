@@ -88,6 +88,7 @@ const Index = observer(({
     isPipeline && record.get(mapping.open.name) && (
       <ContainerDetail
         dataSource={record}
+        isPipeline
       />
     ),
   ]);

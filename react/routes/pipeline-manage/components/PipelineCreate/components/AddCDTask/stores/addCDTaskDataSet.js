@@ -3,7 +3,9 @@ import uuidV1 from 'uuid/v1';
 import { axios } from '@choerodon/boot';
 import forEach from 'lodash/forEach';
 import JSONbig from 'json-bigint';
-import addCDTaskDataSetMap, { fieldMap, typeData } from './addCDTaskDataSetMap';
+import addCDTaskDataSetMap, { fieldMap, typeData, deployWayData } from './addCDTaskDataSetMap';
+import { appNameDataSet } from './deployGroupDataSet';
+import { appNameChartDataSet } from './deployChartDataSet';
 
 function initValueIdDataSet(dataSet, appServiceId, envId, createValueRandom) {
   dataSet.setQueryParameter('data', {
@@ -117,7 +119,7 @@ export default (
       textField: 'name',
       valueField: 'id',
       dynamicProps: {
-        required: ({ record }) => [typeData[0].value, 'cdDeploy'].includes(record.get('type')),
+        required: ({ record }) => [typeData[0].value, typeData[1].value, 'cdDeploy'].includes(record.get('type')),
       },
       lookupAxiosConfig: () => ({
         method: 'get',
@@ -165,7 +167,7 @@ export default (
       textField: 'code',
       valueField: 'id',
       dynamicProps: {
-        required: ({ record }) => record.get('deployType') === 'update',
+        // required: ({ record }) => record.get('deployType') === 'update',
         disabled: ({ record }) => !record.get('envId'),
         lookupAxiosConfig: ({ record }) => ({
           method: 'get',
@@ -717,6 +719,11 @@ export default (
               PipelineCreateFormDataSet.current.get('appServiceId'),
               value,
               useStore.getValueIdRandom,
+            );
+            initValueIdDataSet(
+              appNameChartDataSet,
+              PipelineCreateFormDataSet.current.get('appServiceId'),
+              value,
             );
           }
           break;

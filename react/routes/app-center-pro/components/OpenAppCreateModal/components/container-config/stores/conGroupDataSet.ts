@@ -80,6 +80,10 @@ const productSourceData = [{
   value: 'upload',
   name: '本地上传',
   img: upload,
+}, {
+  value: 'pipeline',
+  name: '流水线上游制品',
+  img: projectproduct,
 }];
 
 const repoTypeData = [{
@@ -600,11 +604,61 @@ const mapping: {
     name: 'jarFileUrl',
     type: 'string' as FieldType,
   },
+  relativeMission: {
+    textField: 'name',
+    valueField: 'name',
+    name: 'pipelineJobName',
+    type: 'string' as FieldType,
+    label: '流水线上游制品',
+  },
 };
 
-const conGroupDataSet = (): DataSetProps => ({
+const conGroupDataSet = (
+  isPipeline?: Boolean,
+  preJobList?: {
+    metadata: string,
+    name: string,
+  }[],
+): DataSetProps => ({
   autoCreate: true,
-  fields: Object.keys(mapping).map((i) => mapping[i]),
+  fields: Object.keys(mapping).map((i) => {
+    const item = mapping[i];
+    switch (i) {
+      case 'productSource': {
+        if (isPipeline) {
+          item.defaultValue = productSourceData[6].value;
+        } else {
+          item.defaultValue = productSourceData[0].value;
+        }
+        break;
+      }
+      case 'relativeMission': {
+        if (preJobList && preJobList.length > 0) {
+          const data = preJobList.filter((itemList) => {
+            if (itemList.metadata) {
+              const metadata = JSON.parse(itemList.metadata.replace(/'/g, '"'));
+              return metadata?.config?.some((c: any) => c.type === 'docker');
+            }
+            return false;
+          });
+          item.options = new DataSet({
+            data,
+          });
+          if (data && data.length === 1) {
+            item.defaultValue = data[0].name;
+          }
+          if (isPipeline) {
+            item.required = true;
+          }
+        }
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+    return item;
+  }),
   transport: {
     update: (data) => devopsDeployGroupApiConfig
       .updateContainer((data?.dataSet?.queryParameter as any)?.data),
@@ -613,7 +667,11 @@ const conGroupDataSet = (): DataSetProps => ({
     update: ({ record, name, value }: any) => {
       switch (name) {
         case mapping.productType.name: {
-          record.set(mapping.productSource.name, productSourceData[0].value);
+          if (isPipeline) {
+            record.set(mapping.productSource.name, productSourceData[6].value);
+          } else {
+            record.set(mapping.productSource.name, productSourceData[0].value);
+          }
           break;
         }
         case mapping.productSource.name: {

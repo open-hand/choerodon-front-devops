@@ -1,9 +1,12 @@
 import React, { useRef, useImperativeHandle, useEffect } from 'react';
-import { DataSet, Form, TextField } from 'choerodon-ui/pro';
+import {
+  DataSet, Form, TextField, Select,
+} from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import { mapping } from '../../stores/deployGroupDataSet';
 import DeployGroupConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/deploy-group-config';
 import ContainerConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config';
+import { deployWayData } from '../../stores/addCDTaskDataSetMap';
 
 import './index.less';
 
@@ -13,7 +16,10 @@ const Index = observer(({
   dataSet,
   cRef,
   detail,
+  deployWay,
+  preJobList,
 }: {
+  deployWay?: string,
   dataSet: DataSet,
   cRef?: any,
   detail?: {
@@ -21,7 +27,8 @@ const Index = observer(({
     name: string,
     code: string,
     containerConfig: any,
-  }
+  },
+  preJobList?: object[],
 }) => {
   const deployGroupRef = useRef();
   const containerConfigRef = useRef();
@@ -58,7 +65,13 @@ const Index = observer(({
         应用信息
       </p>
       <Form dataSet={dataSet} columns={2}>
-        <TextField name={mapping().appName.name} />
+        {
+          deployWay === deployWayData[0].value ? (
+            <TextField name={mapping().appName.name} />
+          ) : (
+            <Select name={mapping().appName.name} />
+          )
+        }
         <TextField name={mapping().appCode.name} />
       </Form>
       <div className={`${cssPrefix}__divided`} />
@@ -85,9 +98,14 @@ const Index = observer(({
         detail={detail}
         cRef={containerConfigRef}
         isPipeline
+        preJobList={preJobList}
       />
     </div>
   );
 });
+
+Index.defaultProps = {
+  deployWay: deployWayData[0].value,
+};
 
 export default Index;

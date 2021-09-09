@@ -39,9 +39,9 @@ import { useAddCDTaskStore } from "./stores";
 import YamlEditor from "../../../../../../components/yamlEditor";
 import Tips from "../../../../../../components/new-tips";
 import "./index.less";
-import deployChartDataSet
+import deployChartDataSet, { mapping as deployChartMapping }
   from "@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/deployChartDataSet";
-import deployGroupDataSet
+import deployGroupDataSet, { mapping as deployGroupMapping }
   from "@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/deployGroupDataSet";
 
 let currentSize = 10;
@@ -127,6 +127,7 @@ export default observer(() => {
   const [pipelineCallbackAddress, setPipelineCallbackAddress] = useState(
     undefined
   );
+  const [preJobList, setPreJobList] = useState([]);
 
   useEffect(() => {
     ADDCDTaskUseStore.setValueIdRandom(Math.random());
@@ -159,12 +160,34 @@ export default observer(() => {
       [addCDTaskDataSetMap.alarm]: false,
       [addCDTaskDataSetMap.whetherBlock]: true,
       [fieldMap.deployWay.name]: deployWayData[0].value,
+      [addCDTaskDataSetMap.triggersTasks.name]: addCDTaskDataSetMap.triggersTasks.values[0],
     };
     if (taskType === "cdHost" && relatedJobOpts && relatedJobOpts.length === 1) {
       newData.pipelineTask = relatedJobOpts[0].name;
     }
     ADDCDTaskDataSet.loadData([newData]);
+    getRelativeBaseOnCondition();
   }, []);
+
+  const getRelativeBaseOnCondition = () => {
+    const filterColumns = pipelineStageMainSource.slice(0, columnIndex);
+    let itemPreJobLists = [];
+    filterColumns.forEach((item, itemIndex) => {
+      if (itemIndex + 1 < columnIndex) {
+        itemPreJobLists = [
+          ...itemPreJobLists,
+          ...item.jobList,
+        ]
+      } else {
+        item.jobList.forEach((jobItem, jobItemIndex) => {
+          if (jobItemIndex + 1 < witchColumnJobIndex) {
+            itemPreJobLists.push(jobItem);
+          }
+        })
+      }
+    })
+    setPreJobList(itemPreJobLists);
+  }
 
   useEffect(() => {
     const currentHostDeployType = ADDCDTaskDataSet?.current?.get(
@@ -377,7 +400,7 @@ export default observer(() => {
         ...extraData,
       }
     }
-    ds.appServiceId = PipelineCreateFormDataSet.current.get("appServiceId");
+    ds.appServiceId = PipelineCreateFormDataSet?.current?.get("appServiceId") || trueAppServiceId;
     return JSON.stringify(ds).replace(/"/g, "'");
   }
 
@@ -432,7 +455,10 @@ export default observer(() => {
             : ds.triggerValue,
       };
       if (ds.type !== "cdAudit") {
-        data.metadata = getMetadata(ds, deployChartData, submitData);
+        data.metadata = getMetadata(ds, deployChartData, {
+          ...submitData,
+          envId: data.envId,
+        });
       }
       handleOk(data);
       return true;
@@ -711,6 +737,14 @@ export default observer(() => {
           refresh={({ valueId, value }) => {
             ADDCDTaskUseStore.setValueIdRandom(Math.random());
             ADDCDTaskDataSet.current.set("valueId", valueId);
+            if (ADDCDTaskDataSet.current.get('type') === typeData[0].value) {
+              initValueIdDataSet(
+                deployConfigDataSet,
+                PipelineCreateFormDataSet.current.get('appServiceId') || trueAppServiceId,
+                ADDCDTaskDataSet.current.get("envId"),
+                ADDCDTaskUseStore.getValueIdRandom,
+              )
+            }
             // const origin = ADDCDTaskUseStore.getValueIdList;
             setValueIdValues(value);
           }}
@@ -1275,6 +1309,7 @@ export default observer(() => {
       [typeData[0].value]: [
         <div className="addcdTask-divided" />,
         <DeployChart
+          deployWay={ADDCDTaskDataSet.current.get(fieldMap.deployWay.name)}
           dataSet={DeployChartDataSet}
           optionRenderValueId={optionRenderValueId}
           rendererValueId={rendererValueId}
@@ -1284,9 +1319,11 @@ export default observer(() => {
       [typeData[1].value]: [
         <div className="addcdTask-divided" />,
         <DeployGroup
+          deployWay={ADDCDTaskDataSet.current.get(fieldMap.deployWay.name)}
           dataSet={DeployGroupDataSet}
           cRef={deployGroupcRef}
           detail={deployGroupDetail}
+          preJobList={preJobList}
         />
       ]
     };
@@ -1619,7 +1656,13 @@ export default observer(() => {
               }}
             />
           </div>,
-          <SelectBox name={fieldMap.deployWay.name} />,
+          <SelectBox 
+            name={fieldMap.deployWay.name}
+            onChange={(value) => {
+              DeployGroupDataSet.current.set(deployGroupMapping().appName.name, undefined);
+              DeployGroupDataSet.current.set(deployGroupMapping().appCode.name, undefined);
+            }}
+          />,
         ]}
         {/*{ADDCDTaskDataSet?.current?.get("type") === "cdDeploy" && [*/}
         {/*  <Select*/}
