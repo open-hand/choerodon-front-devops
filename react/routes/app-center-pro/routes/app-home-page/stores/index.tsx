@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
-import { DataSet } from 'choerodon-ui/pro';
+import { DataSet, message } from 'choerodon-ui/pro';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
 import EnvOptionsDataSet from '@/routes/app-center-pro/stores/EnvOptionsDataSet';
 import HostOptionsDataSet from '@/routes/app-center-pro/stores/HostOptionsDataSet';
@@ -94,10 +94,13 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   }, []);
 
   const refresh = (key?: typeof ENV_TAB | typeof HOST_TAB) => {
-    if (key) {
+    if (key && [ENV_TAB, HOST_TAB].includes(key)) {
       listDs.setQueryParameter('typeKey', key);
       searchDs.current?.set('typeKey', key);
       mainStore.setCurrentTypeTabKey(key);
+    } else if (key && ![ENV_TAB, HOST_TAB].includes(key)) {
+      message.error('refresh 的第一个参数必须是env或者host');
+      throw new Error('refresh 的第一个参数必须是env或者host');
     }
     listDs.query();
   };

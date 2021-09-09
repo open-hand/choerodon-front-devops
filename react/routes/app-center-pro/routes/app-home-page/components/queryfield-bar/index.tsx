@@ -84,7 +84,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
               searchable
               optionRenderer={renderEnvOption}
               onOption={renderOptionProperty}
-              onChange={refresh}
+              onChange={() => refresh('env')}
             />
           ) : (
             <Select
@@ -93,7 +93,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
               colSpan={3}
               searchable
               optionRenderer={renderHostOption}
-              onChange={refresh}
+              onChange={() => refresh('host')}
             />
           )}
         </Form>
@@ -110,7 +110,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
             colSpan={4}
             placeholder="请输入搜索条件"
             prefix={<Icon type="search" />}
-            onClear={refresh}
+            onClear={() => refresh()}
           />
         </Form>
         <Button
