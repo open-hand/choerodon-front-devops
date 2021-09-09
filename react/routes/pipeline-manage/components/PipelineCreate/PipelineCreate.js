@@ -31,6 +31,7 @@ const PipelineCreate = observer(() => {
     mainStore,
     // 老mainData 为了在复制之后 重新设置成以前的mainData
     oldMainData,
+    oldEditMainData,
     appService,
     isEdit,
   } = usePipelineCreateStore();
@@ -124,6 +125,12 @@ const PipelineCreate = observer(() => {
   modal.handleCancel(() => {
     if (oldMainData) {
       handleCancel();
+    }
+    if (oldEditMainData) {
+      editBlockStore.setMainData(oldEditMainData);
+      editBlockStore.setViewData(oldEditMainData.devopsCiStageVOS.concat(
+        oldEditMainData.devopsCdStageVOS,
+      ));
     }
   });
 
