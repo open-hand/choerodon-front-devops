@@ -153,9 +153,11 @@ export default ({
         name: 'appDeploy', // 部署组应用
         type: 'string',
         label: formatMessage({ id: 'network.isChart.deployment' }),
-        required: true,
+        dynamicProps: {
+          required: ({ dataSet, record, name }) => record.get('target') === 'instance' && record.get('isChart') !== 'chart',
+        },
         options: appDeployOptionsDs,
-        textField: 'code',
+        textField: 'name',
         valueField: 'objectId',
         validator: checkDeploy,
         required: true,
