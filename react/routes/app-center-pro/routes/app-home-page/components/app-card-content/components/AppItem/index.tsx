@@ -74,16 +74,6 @@ const AppItem = observer(({
     currentVersionAvailable,
   } = record.toData();
 
-  // !upgradeAvailable || !upgradeAvailable
-
-  const {
-    imageUrl,
-    ldap,
-    loginName,
-    realName,
-    email,
-  } = creator;
-
   const currentType = mainStore.getCurrentTypeTabKey;
 
   const isEnv = currentType === typeTabKeys.ENV_TAB;
