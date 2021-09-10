@@ -4,9 +4,10 @@ import { observer } from 'mobx-react-lite';
 import {
   Button, Form, Icon, Select, TextField,
 } from 'choerodon-ui/pro';
-import { CustomTabs } from '@choerodon/components';
+import { CustomTabs, FilterTextField } from '@choerodon/components';
 import map from 'lodash/map';
 import { LabelLayoutType, RecordObjectProps } from '@/interface';
+
 import EnvOption from '@/components/env-option';
 
 import './index.less';
@@ -113,6 +114,17 @@ const ContentHeader: React.FC<any> = observer((): any => {
             onClear={() => refresh()}
           />
         </Form>
+        {/* <FilterTextField
+          filterMap={
+            [
+              {
+                field: 'name',
+                label: '姓名',
+              },
+            ]
+          }
+          onSearch={(data) => console.log(data)}
+        /> */}
         <Button
           onClick={() => refresh()}
           className={`${newPrefixCls}-btn`}
