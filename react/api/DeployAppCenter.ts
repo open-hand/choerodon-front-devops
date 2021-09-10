@@ -6,11 +6,14 @@ class DeployAppCenterApi extends Api<DeployAppCenterApi> {
   }
 
   getDeployCenterAppList(params?: object) {
-    return this.request({
+    const obj:any = {
       url: `${this.prefix}/page_by_env`,
       method: 'get',
-      params,
-    });
+    };
+    if (params) {
+      obj.params = params;
+    }
+    return this.request(obj);
   }
 
   // loadEvents
