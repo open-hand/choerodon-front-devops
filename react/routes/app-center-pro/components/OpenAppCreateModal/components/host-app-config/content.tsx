@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 import {
   Form, Select, Button, TextField, Output,
 } from 'choerodon-ui/pro';
-import { Upload, Icon, Button as OldButton } from 'choerodon-ui';
+import { Upload, Icon, Button as OldButton, Tabs, Alert, message } from 'choerodon-ui';
 import { CustomSelect, ChunkUploader } from '@choerodon/components';
 import { Base64 } from 'js-base64';
 import { useHostAppConfigStore } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-app-config/stores';
@@ -22,6 +22,8 @@ import '../container-config/components/container-detail/index.less';
 import '../container-config/components/container-detail/index.less';
 import StatusDot from '@/components/status-dot';
 import { LabelAlignType, LabelLayoutType } from '@/interface';
+
+const TabPane = Tabs.TabPane;
 
 const jarSource = [
   ...JSON.parse(JSON.stringify(productSourceData)).splice(0, 3),
@@ -95,13 +97,28 @@ const Index = observer(() => {
     }
   }, []);
 
+  const valueCheckValidate = () => {
+    const value = HostAppConfigDataSet.current.get(mapping.value.name);
+    const startCommand = HostAppConfigDataSet.current.get(mapping.startCommand.name);
+    const postCommand = HostAppConfigDataSet.current.get(mapping.postCommand.name);
+    if (!value && !startCommand && !postCommand) {
+      message.error('前置命令】、【启动命令】、【后置命令】三者之中，必须至少填写一个');
+      return false;
+    }
+    return true;
+  }
+
   const handleOk = async () => {
-    const res = await HostAppConfigDataSet.submit();
-    if (res !== false) {
-      if (refresh) {
-        refresh();
+    const flag = valueCheckValidate();
+    if (flag) {
+      const res = await HostAppConfigDataSet.submit();
+      if (res !== false) {
+        if (refresh) {
+          refresh();
+        }
+        return true;
       }
-      return true;
+      return false;
     }
     return false;
   };
@@ -112,9 +129,12 @@ const Index = observer(() => {
 
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
-      const flag = await HostAppConfigDataSet.validate();
-      if (flag) {
-        return setData(HostAppConfigDataSet.current.toData());
+      if (valueCheckValidate()) {
+        const flag = await HostAppConfigDataSet.validate();
+        if (flag) {
+          return setData(HostAppConfigDataSet.current.toData());
+        }
+        return false;
       }
       return false;
     },
@@ -337,13 +357,43 @@ const Index = observer(() => {
         }
         { renderFormByProductSource() }
       </Form>
-      <YamlEditor
-        readOnly={false}
-        value={HostAppConfigDataSet.current.get(mapping.value.name)}
-        onValueChange={(value: string) => {
-          HostAppConfigDataSet.current.set(mapping.value.name, value);
-        }}
+      <Alert
+        type="warning"
+        showIcon
+        message="【前置命令】、【启动命令】、【后置命令】三者之中，必须至少填写一个"
       />
+      <Tabs defaultActiveKey="1">
+        <TabPane tab="前置操作" key="1">
+          <YamlEditor
+            modeChange={false}
+            readOnly={false}
+            value={HostAppConfigDataSet.current.get(mapping.value.name)}
+            onValueChange={(value: string) => {
+              HostAppConfigDataSet.current.set(mapping.value.name, value);
+            }}
+          />
+        </TabPane>
+        <TabPane tab="启动命令" key="2">
+          <YamlEditor
+            modeChange={false}
+            readOnly={false}
+            value={HostAppConfigDataSet.current.get(mapping.startCommand.name)}
+            onValueChange={(value: string) => {
+              HostAppConfigDataSet.current.set(mapping.startCommand.name, value);
+            }}
+          />
+        </TabPane>
+        <TabPane tab="后置操作" key="3">
+          <YamlEditor
+            modeChange={false}
+            readOnly={false}
+            value={HostAppConfigDataSet.current.get(mapping.postCommand.name)}
+            onValueChange={(value: string) => {
+              HostAppConfigDataSet.current.set(mapping.postCommand.name, value);
+            }}
+          />
+        </TabPane>
+      </Tabs>
     </div>
   );
 });

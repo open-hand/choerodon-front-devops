@@ -268,12 +268,25 @@ const AppCreateForm = (props: any) => {
           break;
         }
         case deployModeOptionsData[1].value: {
-          return (
-            <HostAppConfig
-              cRef={appConfigRef}
-              modal={modal}
-            />
-          );
+          switch (deployType) {
+            case deployProductOptionsData[2].value: {
+              return (
+                <HostAppConfig
+                  cRef={appConfigRef}
+                  modal={modal}
+                />
+              );
+              break;
+            }
+            case deployProductOptionsData[3].value: {
+              return '123';
+              break;
+            }
+            default: {
+              return '';
+              break;
+            }
+          }
           break;
         }
         default: {
@@ -432,7 +445,6 @@ const AppCreateForm = (props: any) => {
         }
       }
     }
-    console.log(submitData);
     let result;
     // @ts-ignore
     switch (request) {
