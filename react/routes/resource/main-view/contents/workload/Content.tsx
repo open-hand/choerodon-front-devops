@@ -176,6 +176,12 @@ const WorkloadContent = observer(() => {
         textOverflow: 'ellipsis',
       }}
       >
+        {
+         sourceType === 'chart' && <StatusTag colorCode="operating" type="border" name="Chart资源" />
+        }
+        {
+         sourceType === 'deploy_group' && <StatusTag colorCode="success" type="border" name="部署组资源" />
+        }
         <StatusIcon
           name={value}
           status={status}
@@ -184,12 +190,6 @@ const WorkloadContent = observer(() => {
           permissionCode={['choerodon.code.project.deploy.app-deployment.resource.ps.workload.detail']}
           error={error}
         />
-        {
-         sourceType === 'chart' && <StatusTag colorCode="operating" type="border" name="Chart资源" />
-        }
-        {
-         sourceType === 'deploy_group' && <StatusTag colorCode="success" type="border" name="部署组资源" />
-        }
       </div>
 
     );
