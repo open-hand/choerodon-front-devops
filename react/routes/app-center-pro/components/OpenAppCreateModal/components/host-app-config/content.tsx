@@ -15,6 +15,7 @@ import {
   productSourceData,
   productTypeData,
 } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config/stores/conGroupDataSet';
+import OperationYaml from '../operation-yaml';
 
 import './index.less';
 import '../container-config/components/container-detail/index.less';
@@ -29,6 +30,14 @@ const jarSource = [
   ...JSON.parse(JSON.stringify(productSourceData)).splice(0, 3),
   productSourceData[5],
 ];
+
+const valueCheckValidate = (value, startCommand, postCommand) => {
+  if (!value && !startCommand && !postCommand) {
+    message.error('前置命令】、【启动命令】、【后置命令】三者之中，必须至少填写一个');
+    return false;
+  }
+  return true;
+}
 
 const setData = (data: any) => {
   const newData = data;
@@ -97,19 +106,14 @@ const Index = observer(() => {
     }
   }, []);
 
-  const valueCheckValidate = () => {
-    const value = HostAppConfigDataSet.current.get(mapping.value.name);
-    const startCommand = HostAppConfigDataSet.current.get(mapping.startCommand.name);
-    const postCommand = HostAppConfigDataSet.current.get(mapping.postCommand.name);
-    if (!value && !startCommand && !postCommand) {
-      message.error('前置命令】、【启动命令】、【后置命令】三者之中，必须至少填写一个');
-      return false;
-    }
-    return true;
-  }
+  
 
   const handleOk = async () => {
-    const flag = valueCheckValidate();
+    const flag = valueCheckValidate(
+      HostAppConfigDataSet.current.get(mapping.value.name),
+        HostAppConfigDataSet.current.get(mapping.startCommand.name),
+        HostAppConfigDataSet.current.get(mapping.postCommand.name)
+    );
     if (flag) {
       const res = await HostAppConfigDataSet.submit();
       if (res !== false) {
@@ -129,7 +133,11 @@ const Index = observer(() => {
 
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
-      if (valueCheckValidate()) {
+      if (valueCheckValidate(
+        HostAppConfigDataSet.current.get(mapping.value.name),
+        HostAppConfigDataSet.current.get(mapping.startCommand.name),
+        HostAppConfigDataSet.current.get(mapping.postCommand.name)
+      )) {
         const flag = await HostAppConfigDataSet.validate();
         if (flag) {
           return setData(HostAppConfigDataSet.current.toData());
@@ -357,47 +365,16 @@ const Index = observer(() => {
         }
         { renderFormByProductSource() }
       </Form>
-      <Alert
-        type="warning"
-        showIcon
-        message="【前置命令】、【启动命令】、【后置命令】三者之中，必须至少填写一个"
+      <OperationYaml
+        dataSet={HostAppConfigDataSet}
+        preName={mapping.value.name}
+        startName={mapping.startCommand.name}
+        postName={mapping.postCommand.name}
       />
-      <Tabs defaultActiveKey="1">
-        <TabPane tab="前置操作" key="1">
-          <YamlEditor
-            modeChange={false}
-            readOnly={false}
-            value={HostAppConfigDataSet.current.get(mapping.value.name)}
-            onValueChange={(value: string) => {
-              HostAppConfigDataSet.current.set(mapping.value.name, value);
-            }}
-          />
-        </TabPane>
-        <TabPane tab="启动命令" key="2">
-          <YamlEditor
-            modeChange={false}
-            readOnly={false}
-            value={HostAppConfigDataSet.current.get(mapping.startCommand.name)}
-            onValueChange={(value: string) => {
-              HostAppConfigDataSet.current.set(mapping.startCommand.name, value);
-            }}
-          />
-        </TabPane>
-        <TabPane tab="后置操作" key="3">
-          <YamlEditor
-            modeChange={false}
-            readOnly={false}
-            value={HostAppConfigDataSet.current.get(mapping.postCommand.name)}
-            onValueChange={(value: string) => {
-              HostAppConfigDataSet.current.set(mapping.postCommand.name, value);
-            }}
-          />
-        </TabPane>
-      </Tabs>
     </div>
   );
 });
 
 export default Index;
 
-export { setData };
+export { setData, valueCheckValidate };

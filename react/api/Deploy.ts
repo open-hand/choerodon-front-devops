@@ -29,6 +29,14 @@ class DeployApi extends Api<DeployApi> {
     });
   }
 
+  deployCustom(data: object) {
+    return this.request({
+      method: 'post',
+      url: `${this.prefix}/custom`,
+      data,
+    });
+  }
+
   /**
    * 快速部署HZERO应用
    * @param data 部署参数

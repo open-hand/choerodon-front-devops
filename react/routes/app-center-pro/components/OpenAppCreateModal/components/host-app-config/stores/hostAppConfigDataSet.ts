@@ -37,6 +37,28 @@ const updateModalProps = (record: any, modal: any) => {
   }
 };
 
+const hostDataSetConfig = () => ({
+  autoQuery: true,
+  transport: {
+    read: () => ({
+      ...hostApiConfig.getHosts(),
+      transformResponse: (res: any) => {
+        let newRes = res;
+        try {
+          newRes = JSON.parse(newRes);
+          newRes.content = newRes.content.map((i: any) => ({
+            ...i,
+            connect: i.hostStatus === 'connected',
+          }));
+          return newRes;
+        } catch (e) {
+          return newRes;
+        }
+      },
+    }),
+  },
+});
+
 const mapping: {
   [key: string]: FieldProps
 } = {
@@ -57,27 +79,7 @@ const mapping: {
     required: true,
     textField: 'name',
     valueField: 'id',
-    options: new DataSet({
-      autoQuery: true,
-      transport: {
-        read: () => ({
-          ...hostApiConfig.getHosts(),
-          transformResponse: (res) => {
-            let newRes = res;
-            try {
-              newRes = JSON.parse(newRes);
-              newRes.content = newRes.content.map((i: any) => ({
-                ...i,
-                connect: i.hostStatus === 'connected',
-              }));
-              return newRes;
-            } catch (e) {
-              return newRes;
-            }
-          },
-        }),
-      },
-    }),
+    options: new DataSet(hostDataSetConfig()),
   },
   jarSource: {
     name: 'sourceType',
@@ -412,4 +414,4 @@ const hostAppConfigDataSet = (modal: any): DataSetProps => ({
 
 export default hostAppConfigDataSet;
 
-export { mapping };
+export { mapping, hostDataSetConfig };
