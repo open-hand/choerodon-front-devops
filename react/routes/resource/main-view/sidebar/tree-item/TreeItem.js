@@ -7,6 +7,7 @@ import EnvItem from '../../../../../components/env-item';
 import { useResourceStore } from '../../../stores';
 import { useMainStore } from '../../stores';
 import InstanceItem from './InstanceItem';
+import folderNoCheck from '../../../../../images/folder_no_check.svg';
 import AppItem from './AppItem';
 import NetworkItem from './NetworkItem';
 import CustomItem from './CustomItem';
@@ -52,14 +53,7 @@ const TreeItem = observer(({ record, search }) => {
     if (isGroup) {
       return (
         <>
-          {
-            <Icon
-              type={isExpand ? 'folder' : 'folder-o'}
-              style={isExpand ? {
-                color: '#FFCD69',
-              } : {}}
-            />
-          }
+          <img src={folderNoCheck} alt="img" />
           {name}
         </>
       );
@@ -74,12 +68,7 @@ const TreeItem = observer(({ record, search }) => {
     let treeItem;
     switch (type) {
       case ENV_ITEM: {
-        treeItem = (
-          <EnvItem
-            name={name}
-            connect={record.get('connect')}
-          />
-        );
+        treeItem = <EnvItem name={name} connect={record.get('connect')} />;
         break;
       }
       case SERVICES_ITEM:
@@ -91,12 +80,7 @@ const TreeItem = observer(({ record, search }) => {
         treeItem = getNormalItem(type, param);
         break;
       case IST_ITEM: {
-        treeItem = (
-          <InstanceItem
-            {...param}
-            podColor={podColor}
-          />
-        );
+        treeItem = <InstanceItem {...param} podColor={podColor} />;
         break;
       }
       case APP_ITEM:
