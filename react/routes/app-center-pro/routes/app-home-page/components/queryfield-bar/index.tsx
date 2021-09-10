@@ -56,6 +56,51 @@ const ContentHeader: React.FC<any> = observer((): any => {
     disabled: !envRecord.get('permission'),
   }), []);
 
+  const renderFilterDatas = () => (
+    [
+      {
+        field: 'name',
+        label: '应用名称',
+      },
+      {
+        field: 'rdupm_type',
+        label: '应用类型',
+        options: [
+          {
+            name: 'chart包',
+            value: 'chart',
+          },
+          {
+            name: '部署组',
+            value: '',
+          },
+        ],
+      },
+      {
+        field: 'operation_type',
+        label: '操作类型',
+      },
+    ]
+  );
+
+  const setQueryFields = (data:any) => {
+    searchDs.reset();
+    const record = searchDs.current;
+    if (data && data.length) {
+      data.forEach((item:any) => {
+        const {
+          field,
+          value,
+          options = {},
+        } = item || {};
+        if (value) {
+          record?.set(field || 'params', value?.value || value);
+        }
+      });
+    }
+    listDs.query();
+  };
+
   return (
     <div className={newPrefixCls}>
       <CustomTabs
@@ -115,15 +160,8 @@ const ContentHeader: React.FC<any> = observer((): any => {
           />
         </Form>
         {/* <FilterTextField
-          filterMap={
-            [
-              {
-                field: 'name',
-                label: '姓名',
-              },
-            ]
-          }
-          onSearch={(data) => console.log(data)}
+          filterMap={renderFilterDatas()}
+          onSearch={setQueryFields}
         /> */}
         <Button
           onClick={() => refresh()}
