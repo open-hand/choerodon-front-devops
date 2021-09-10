@@ -2,6 +2,7 @@ import { DataSet } from 'choerodon-ui/pro';
 import { CONSTANTS } from '@choerodon/master';
 import { FieldProps } from 'choerodon-ui/pro/lib/data-set/field';
 import { FieldType } from 'choerodon-ui/pro/lib/data-set/enum';
+import { Record } from '@/interface';
 import container from '../images/container.png';
 import host from '../images/host.png';
 
@@ -29,6 +30,14 @@ const deployProductOptionsData = [{
   value: 'deployGroup',
   name: '部署组',
   description: '通过创建与配置Deployment部署应用至k8s集群',
+}, {
+  value: 'jar',
+  name: 'jar包',
+  description: '123',
+}, {
+  value: 'other',
+  name: '其他制品',
+  description: '123',
 }];
 
 const mapping: {
@@ -83,6 +92,27 @@ const mapping: {
 const appInfoDataSet = () => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((i) => mapping[i]),
+  events: {
+    update: ({ record, name, value }: {
+      record: Record,
+      name: string,
+      value: string,
+    }) => {
+      switch (name) {
+        case mapping.deployMode.name: {
+          if (value === deployModeOptionsData[0].value) {
+            record.set(mapping.deployProductType.name as string, deployProductOptionsData[0].value);
+          } else {
+            record.set(mapping.deployProductType.name as string, deployProductOptionsData[2].value);
+          }
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    },
+  },
 });
 
 export { mapping, deployModeOptionsData, deployProductOptionsData };

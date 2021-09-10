@@ -75,45 +75,44 @@ const Index = observer(() => {
           )}
         />
       </div>
-      {
-        AppInfoDataSet.current.get(mapping.deployMode.name) === deployModeOptionsData[0].value && (
-          <>
-            <p
-              className="c7ncd-appCenterPro-appInfo__form__title"
+      <p
+        className="c7ncd-appCenterPro-appInfo__form__title"
               // @ts-ignore
-              newLine
-            >
-              部署制品类型
-            </p>
-            <div
-              className="c7ncd-appCenterPro-appInfo__form__selectContainer"
+        newLine
+      >
+        部署制品类型
+      </p>
+      <div
+        className="c7ncd-appCenterPro-appInfo__form__selectContainer"
               // @ts-ignore
-              colSpan={2}
-              newLine
-            >
-              <CustomSelect
-                selectedKeys={AppInfoDataSet.current.get(mapping.deployProductType.name)}
-                onClickCallback={(value) => handleChangeField(
-                  AppInfoDataSet,
+        colSpan={2}
+        newLine
+      >
+        <CustomSelect
+          selectedKeys={AppInfoDataSet.current.get(mapping.deployProductType.name)}
+          onClickCallback={(value) => handleChangeField(
+            AppInfoDataSet,
                   mapping.deployProductType.name as string,
                   value.value,
-                )}
-                data={deployProductOptionsData}
-                identity="value"
-                mode="single"
-                customChildren={(item): any => (
-                  <div className="c7ncd-appCenterPro-appInfo__form__customItem">
-                    <div className="c7ncd-appCenterPro-appInfo__form__customItem--right">
-                      <p className="c7ncd-appCenterPro-appInfo__form__customItem--right__name">{ item.name }</p>
-                      <p className="c7ncd-appCenterPro-appInfo__form__customItem--right__des">{ item.description }</p>
-                    </div>
-                  </div>
-                )}
-              />
+          )}
+          data={
+            AppInfoDataSet.current.get(mapping.deployMode.name) === deployModeOptionsData[0].value
+              ? deployProductOptionsData.slice(0, 2)
+              : deployProductOptionsData.slice(2, 4)
+          }
+          identity="value"
+          mode="single"
+          customChildren={(item): any => (
+            <div className="c7ncd-appCenterPro-appInfo__form__customItem">
+              <div className="c7ncd-appCenterPro-appInfo__form__customItem--right">
+                <p className="c7ncd-appCenterPro-appInfo__form__customItem--right__name">{ item.name }</p>
+                <p className="c7ncd-appCenterPro-appInfo__form__customItem--right__des">{ item.description }</p>
+              </div>
             </div>
-          </>
-        )
-      }
+          )}
+        />
+      </div>
+
     </Form>
   );
 });
