@@ -34,7 +34,12 @@ export default ({
   fields: [{
     name: 'name',
     label: formatMessage({ id: 'name' }),
-  }, {
+  },
+  {
+    name: 'sourceType',
+    label: '类型',
+  },
+  {
     name: 'pod',
     label: 'Pod',
   }, {

@@ -3,6 +3,7 @@ import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { Tooltip, Spin, Icon } from 'choerodon-ui/pro';
 import classnames from 'classnames';
+import { StatusTag } from '@choerodon/components';
 import MouseOverWrapper from '../MouseOverWrapper';
 import './StatusIcon.less';
 import ClickText from '../click-text';
@@ -20,6 +21,7 @@ function StatusIcon(props) {
     record,
     permissionCode,
     className,
+    sourceType,
   } = props;
   let statusDom = null;
   const statusClass = classnames(className, {
@@ -41,9 +43,6 @@ function StatusIcon(props) {
         <Tooltip title={formatMessage({ id: 'ist_operating' })}>
           <Spin
             className="c7ncd-status-progress-span"
-            // type="loading"
-            // size="small"
-            // width={15}
             spinning
           />
         </Tooltip>
@@ -66,21 +65,20 @@ function StatusIcon(props) {
 
   return (
     <>
-      <MouseOverWrapper
-        text={name}
-        width={width || 0.15}
-        className="c7n-status-text"
-      >
-        {clickAble ? (
-          <ClickText
-            value={name}
-            clickAble={clickAble}
-            onClick={onClick}
-            record={record}
-            permissionCode={permissionCode}
-          />
-        ) : <span className={statusClass}>{name}</span>}
-      </MouseOverWrapper>
+      {clickAble ? (
+        <ClickText
+          value={name}
+          clickAble={clickAble}
+          onClick={onClick}
+          record={record}
+          permissionCode={permissionCode}
+          showToolTip
+        />
+      ) : (
+        <Tooltip>
+          <span className={statusClass}>{name}</span>
+        </Tooltip>
+      )}
       {statusDom}
     </>
   );
