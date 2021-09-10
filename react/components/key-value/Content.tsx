@@ -211,6 +211,7 @@ const FormView = observer(() => {
    */
   const handleSubmit = async () => {
     const isValidate = await FormDataSet.validate();
+
     if (isValidate) {
       const postData = await formValidate();
       if (!postData) {
@@ -368,7 +369,7 @@ const FormView = observer(() => {
     <div className="c7n-region">
       <div>
         {/* @ts-ignore */}
-        <Form dataSet={FormDataSet} className="c7n-sidebar-form" layout="vertical">
+        <Form dataSet={FormDataSet} className="c7n-sidebar-form" labelLayout="vertical">
           <TextField
             name="name"
             disabled={!!id}
