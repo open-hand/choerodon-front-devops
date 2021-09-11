@@ -619,79 +619,48 @@ const conGroupDataSet = (
     metadata: string,
     name: string,
   }[],
-): DataSetProps => ({
-  autoCreate: true,
-  fields: Object.keys(mapping).map((i) => {
-    const item = mapping[i];
-    switch (i) {
-      case 'productSource': {
-        if (isPipeline) {
-          item.defaultValue = productSourceData[6].value;
-        } else {
-          item.defaultValue = productSourceData[0].value;
-        }
-        break;
+): DataSetProps => {
+  let dockerData: any[] = [];
+  let jarData: any[] = [];
+  if (preJobList && preJobList.length > 0) {
+    dockerData = preJobList.filter((itemList) => {
+      if (itemList.metadata) {
+        const metadata = JSON.parse(itemList.metadata.replace(/'/g, '"'));
+        return metadata?.config?.some((c: any) => c.type === 'docker');
       }
-      case 'relativeMission': {
-        if (preJobList && preJobList.length > 0) {
-          const data = preJobList.filter((itemList) => {
-            if (itemList.metadata) {
-              const metadata = JSON.parse(itemList.metadata.replace(/'/g, '"'));
-              return metadata?.config?.some((c: any) => c.type === 'docker');
-            }
-            return false;
-          });
-          item.options = new DataSet({
-            data,
-          });
-          if (data && data.length === 1) {
-            item.defaultValue = data[0].name;
-          }
+      return false;
+    });
+    jarData = preJobList.filter((itemList) => {
+      if (itemList.metadata) {
+        const metadata = JSON.parse(itemList.metadata.replace(/'/g, '"'));
+        return metadata?.config?.some((c: any) => ['maven_deploy', 'upload_jar'].includes(c.type));
+      }
+      return false;
+    });
+  }
+  return ({
+    autoCreate: true,
+    fields: Object.keys(mapping).map((i) => {
+      const item = mapping[i];
+      switch (i) {
+        case 'productSource': {
           if (isPipeline) {
-            item.required = true;
-          }
-        }
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-    return item;
-  }),
-  transport: {
-    update: (data) => devopsDeployGroupApiConfig
-      .updateContainer((data?.dataSet?.queryParameter as any)?.data),
-  },
-  events: {
-    update: ({ record, name, value }: any) => {
-      switch (name) {
-        case mapping.productType.name: {
-          if (isPipeline) {
-            record.set(mapping.productSource.name, productSourceData[6].value);
+            item.defaultValue = productSourceData[6].value;
           } else {
-            record.set(mapping.productSource.name, productSourceData[0].value);
+            item.defaultValue = productSourceData[0].value;
           }
           break;
         }
-        case mapping.productSource.name: {
-          record.set(mapping.marketAppVersion.name, '');
-          record.set(mapping.marketServiceVersion.name, '');
-          switch (value) {
-            case productSourceData[1].value: {
-              const optionsDs = record?.getField(mapping.marketAppVersion.name).options;
-              optionsDs.setQueryParameter('type', 'common');
-              optionsDs.query();
-              break;
+        case 'relativeMission': {
+          if (preJobList && preJobList.length > 0) {
+            item.options = new DataSet({
+              data: dockerData,
+            });
+            if (dockerData && dockerData.length === 1) {
+              item.defaultValue = dockerData[0].name;
             }
-            case productSourceData[2].value: {
-              const optionsDs = record?.getField(mapping.marketAppVersion.name).options;
-              optionsDs.setQueryParameter('type', 'hzero');
-              optionsDs.query();
-              break;
-            }
-            default: {
-              break;
+            if (isPipeline) {
+              item.required = true;
             }
           }
           break;
@@ -700,9 +669,59 @@ const conGroupDataSet = (
           break;
         }
       }
+      return item;
+    }),
+    transport: {
+      update: (data) => devopsDeployGroupApiConfig
+        .updateContainer((data?.dataSet?.queryParameter as any)?.data),
     },
-  },
-});
+    events: {
+      update: ({ record, name, value }: any) => {
+        switch (name) {
+          case mapping.productType.name: {
+            if (isPipeline) {
+              record.set(mapping.productSource.name, productSourceData[6].value);
+              if (value === productTypeData[0].value) {
+                record.getField(mapping.relativeMission.name).options.loadData(dockerData);
+              } else {
+                record.getField(mapping.relativeMission.name).options.loadData(jarData);
+              }
+              record.set(mapping.relativeMission.name, undefined);
+            } else {
+              record.set(mapping.productSource.name, productSourceData[0].value);
+            }
+            break;
+          }
+          case mapping.productSource.name: {
+            record.set(mapping.marketAppVersion.name, '');
+            record.set(mapping.marketServiceVersion.name, '');
+            switch (value) {
+              case productSourceData[1].value: {
+                const optionsDs = record?.getField(mapping.marketAppVersion.name).options;
+                optionsDs.setQueryParameter('type', 'common');
+                optionsDs.query();
+                break;
+              }
+              case productSourceData[2].value: {
+                const optionsDs = record?.getField(mapping.marketAppVersion.name).options;
+                optionsDs.setQueryParameter('type', 'hzero');
+                optionsDs.query();
+                break;
+              }
+              default: {
+                break;
+              }
+            }
+            break;
+          }
+          default: {
+            break;
+          }
+        }
+      },
+    },
+  });
+};
 
 export default conGroupDataSet;
 

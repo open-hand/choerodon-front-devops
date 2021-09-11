@@ -131,7 +131,7 @@ export default observer(() => {
         <Icon
           onClick={() => {
             HostOtherProductDataSet.current.set(mapping.fileName.name, '');
-            HostOtherProductDataSet.current.set(mapping.uploadFile.name, '');
+            HostOtherProductDataSet.current.set(mapping.uploadUrl.name, '');
           }}
           type="delete"
           style={{

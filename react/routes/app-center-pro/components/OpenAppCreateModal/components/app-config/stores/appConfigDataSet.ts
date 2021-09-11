@@ -365,14 +365,27 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
           break;
         }
         case mapping.serviceVersion.name: {
-          const res = await appServiceInstanceApi.getDeployValue(value);
-          record.set(mapping.value.name, res?.yaml);
+          if (value) {
+            const res = await appServiceInstanceApi.getDeployValue(value);
+            record.set(mapping.value.name, res?.yaml);
+          }
           break;
         }
         case mapping.marketServiceVersion.name: {
-          const res = await deployApi.getValue(value.id);
-          record.set(mapping.value.name, res?.value);
+          if (value) {
+            const res = await deployApi.getValue(value.id);
+            record.set(mapping.value.name, res?.value);
+          }
           break;
+        }
+        case mapping.hzeroVersion.name: {
+          record.set(mapping.serviceVersion.name, undefined);
+          record.set(mapping.value.name, '');
+          break;
+        }
+        case mapping.marketVersion.name: {
+          record.set(mapping.marketServiceVersion.name, undefined);
+          record.set(mapping.value.name, '');
         }
         default: {
           break;

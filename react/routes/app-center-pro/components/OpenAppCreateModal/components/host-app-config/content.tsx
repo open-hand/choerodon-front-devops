@@ -62,7 +62,9 @@ const setData = (data: any) => {
       mapping.marketServiceVersion.name as string]
       ?.marketServiceDeployObjectVO?.marketAppVersionId,
   };
-  newData[mapping.value.name as string] = Base64.encode(newData[mapping.value.name as string]);
+  newData[mapping.value.name as string] = newData[mapping.value.name as string] ? Base64.encode(newData[mapping.value.name as string]) : '';
+  newData[mapping.startCommand.name as string] = newData[mapping.startCommand.name as string] ? Base64.encode(newData[mapping.startCommand.name as string]) : '';
+  newData[mapping.postCommand.name as string] = newData[mapping.postCommand.name as string] ? Base64.encode(newData[mapping.postCommand.name as string]) : '';
   // newData.deployObjectId = newData[
   //   mapping.marketServiceVersion.name as string]?.marketServiceDeployObjectVO?.id;
   return newData;
@@ -96,7 +98,9 @@ const Index = observer(() => {
         ...detail,
         ...detail?.prodJarInfoVO || {},
         ...detail?.fileInfoVO || {},
-        value: detail.value ? Base64.decode(detail.value) : '',
+        [mapping.value.name]: detail[mapping.value.name] ? Base64.decode(detail[mapping.value.name]) : '',
+        [mapping.startCommand.name]: detail[mapping.startCommand.name] ? Base64.decode(detail[mapping.startCommand.name]) : '',
+        [mapping.postCommand.name]: detail[mapping.postCommand.name] ? Base64.decode(detail[mapping.postCommand.name]) : '',
         [mapping.marketAppVersion.name as string]: detail
           ?.marketDeployObjectInfoVO?.mktAppVersionId,
         [mapping.marketServiceVersion.name as string]: detail
@@ -105,8 +109,6 @@ const Index = observer(() => {
       queryMarketAppVersionOptions(detail, HostAppConfigDataSet);
     }
   }, []);
-
-  
 
   const handleOk = async () => {
     const flag = valueCheckValidate(
@@ -213,7 +215,7 @@ const Index = observer(() => {
                 >
                   <OldButton
                     type="dashed"
-                    icon="file_upload"
+                    icon="file_upload_black-o"
                   >上传文件</OldButton>
                 </ChunkUploader>
                 {/* <Upload> */}
@@ -237,7 +239,7 @@ const Index = observer(() => {
                     <Icon
                       onClick={() => {
                         dataSource.set(mapping.fileName.name, '');
-                        dataSource.set(mapping.uploadFile.name, '');
+                        dataSource.set(mapping.uploadUrl.name, '');
                       }}
                       type="delete"
                       style={{
@@ -366,6 +368,9 @@ const Index = observer(() => {
         { renderFormByProductSource() }
       </Form>
       <OperationYaml
+        style={{
+          marginBottom: 20,
+        }}
         dataSet={HostAppConfigDataSet}
         preName={mapping.value.name}
         startName={mapping.startCommand.name}

@@ -7,14 +7,17 @@ import addCDTaskDataSetMap, { fieldMap, typeData, deployWayData } from './addCDT
 import { appNameDataSet } from './deployGroupDataSet';
 import { appNameChartDataSet } from './deployChartDataSet';
 
-function initValueIdDataSet(dataSet, appServiceId, envId, createValueRandom) {
+async function initValueIdDataSet(dataSet, appServiceId, envId, createValueRandom, afterFun) {
   dataSet.setQueryParameter('data', {
     appServiceId,
     envId,
     random: Math.random(),
     createValueRandom,
   });
-  dataSet.query();
+  const res = await dataSet.query();
+  if (afterFun) {
+    afterFun(res);
+  }
 }
 
 function getDefaultInstanceName(appServiceCode) {
@@ -53,6 +56,7 @@ export default (
   appServiceCode,
   random,
   valueIdDataSet,
+  trueAppServiceId,
 ) => ({
   autoCreate: true,
   fields: [
@@ -173,9 +177,7 @@ export default (
           method: 'get',
           url:
             record.get('envId')
-            && `/devops/v1/projects/${projectId}/app_service_instances/list_running_and_failed?app_service_id=${PipelineCreateFormDataSet.current.get(
-              'appServiceId',
-            )}&env_id=${record.get('envId')}&random=${random}`,
+            && `/devops/v1/projects/${projectId}/app_service_instances/list_running_and_failed?app_service_id=${PipelineCreateFormDataSet?.current?.get('appServiceId') || trueAppServiceId}&env_id=${record.get('envId')}&random=${random}`,
           transformResponse: (res) => {
             let newRes = res;
             try {
@@ -202,9 +204,7 @@ export default (
           method: 'get',
           url:
             record.get('envId')
-            && `/devops/v1/projects/${projectId}/deploy_value/list_by_env_and_app?app_service_id=${PipelineCreateFormDataSet.current.get(
-              'appServiceId',
-            )}&env_id=${record.get('envId')}&random=${random}&createValueRandom=${useStore.getValueIdRandom}`,
+            && `/devops/v1/projects/${projectId}/deploy_value/list_by_env_and_app?app_service_id=${PipelineCreateFormDataSet?.current?.get('appServiceId') || trueAppServiceId}&env_id=${record.get('envId')}&random=${random}&createValueRandom=${useStore.getValueIdRandom}`,
           transformResponse: (res) => {
             let newRes = res;
             try {
@@ -239,6 +239,9 @@ export default (
       label: '主机',
       textField: 'name',
       valueField: 'id',
+      dynamicProps: {
+        required: ({ record }) => record.get('type') === 'cdHost',
+      },
       lookupAxiosConfig: () => ({
         method: 'post',
         url: `/devops/v1/projects/${projectId}/hosts/page_by_options?random=${random}`,
@@ -311,11 +314,12 @@ export default (
       name: 'hostDeployType',
       type: 'string',
       label: '部署模式',
-      defaultValue: 'image',
+      defaultValue: 'jar',
     },
     {
       name: 'deploySource',
       type: 'string',
+      disabled: true,
       label: '部署来源',
       defaultValue: 'matchDeploy',
       dynamicProps: {
@@ -334,10 +338,6 @@ export default (
       name: 'appInstanceName',
       type: 'string',
       label: '应用实例名称',
-      dynamicProps: {
-        required: ({ record }) => record.get('type') === 'cdHost'
-          && (record.get('hostDeployType') === 'jar'),
-      },
       maxLength: 64,
     },
     {
@@ -624,7 +624,7 @@ export default (
         }
         return {
           method: 'post',
-          url: `/devops/v1/projects/${projectId}/users/app_services/${PipelineCreateFormDataSet.current.get('appServiceId')}?page=0&size=20`,
+          url: `/devops/v1/projects/${projectId}/users/app_services/${PipelineCreateFormDataSet?.current?.get('appServiceId') || trueAppServiceId}?page=0&size=20`,
           data: {
             userName: params.realName || '',
             ids: cdAuditIds || [],
@@ -707,6 +707,18 @@ export default (
     },
     {
       ...fieldMap.deployWay,
+    },
+    {
+      ...fieldMap.productType,
+    },
+    {
+      ...fieldMap.preCommand,
+    },
+    {
+      ...fieldMap.runCommand,
+    },
+    {
+      ...fieldMap.postCommand,
     },
   ],
   events: {
