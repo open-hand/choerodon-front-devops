@@ -116,7 +116,7 @@ const portsDataSet = () => ({
       type: 'string',
       label: '目标端口',
       required: true,
-      validator: checkPort,
+      // validator: checkPort,
       dynamicProps: {
         required: isRequired,
       },

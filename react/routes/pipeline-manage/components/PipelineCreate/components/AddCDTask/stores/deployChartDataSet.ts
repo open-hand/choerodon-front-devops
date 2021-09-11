@@ -27,7 +27,7 @@ const mapping = (): {
   appName: {
     textField: 'name',
     valueField: 'name',
-    name: 'name',
+    name: 'appName',
     type: 'string' as FieldType,
     label: '应用名称',
     required: true,
@@ -35,7 +35,7 @@ const mapping = (): {
     options: appNameChartDataSet,
   },
   appCode: {
-    name: 'code',
+    name: 'appCode',
     type: 'string' as FieldType,
     label: '应用编码',
     required: true,

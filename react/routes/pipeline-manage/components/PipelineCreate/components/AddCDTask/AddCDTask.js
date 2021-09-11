@@ -43,6 +43,9 @@ import deployChartDataSet, { mapping as deployChartMapping }
   from "@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/deployChartDataSet";
 import deployGroupDataSet, { mapping as deployGroupMapping }
   from "@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/deployGroupDataSet";
+import { productTypeData } from './stores/addCDTaskDataSetMap';
+import OperationYaml from '../../../../../app-center-pro/components/OpenAppCreateModal/components/operation-yaml';
+import { valueCheckValidate } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-app-config/content';
 
 let currentSize = 10;
 
@@ -96,6 +99,7 @@ export default observer(() => {
     DeployChartDataSet,
     DeployGroupDataSet,
     trueAppServiceId,
+    HostJarDataSet,
   } = useAddCDTaskStore();
 
   const deployGroupcRef = useRef();
@@ -152,7 +156,7 @@ export default observer(() => {
       triggerType: "refs",
       deployType: "create",
       authType: "accountPassword",
-      hostDeployType: "image",
+      hostDeployType: "jar",
       deploySource: "pipelineDeploy",
       [addCDTaskDataSetMap.hostSource]: addCDTaskDataSetMap.alreadyhost,
       workingPath: "./",
@@ -160,7 +164,11 @@ export default observer(() => {
       [addCDTaskDataSetMap.alarm]: false,
       [addCDTaskDataSetMap.whetherBlock]: true,
       [fieldMap.deployWay.name]: deployWayData[0].value,
+      [fieldMap.productType.name]: productTypeData[0].value,
       [addCDTaskDataSetMap.triggersTasks.name]: addCDTaskDataSetMap.triggersTasks.values[0],
+      [fieldMap.preCommand.name]: fieldMap.preCommand.defaultValue,
+      [fieldMap.runCommand.name]: fieldMap.runCommand.defaultValue,
+      [fieldMap.postCommand.name]: fieldMap.postCommand.defaultValue,
     };
     if (taskType === "cdHost" && relatedJobOpts && relatedJobOpts.length === 1) {
       newData.pipelineTask = relatedJobOpts[0].name;
@@ -279,6 +287,9 @@ export default observer(() => {
   ]);
 
   function getMetadata(ds, deployChartData, extraData) {
+    ds[fieldMap.preCommand.name] = Base64.encode(ds[fieldMap.preCommand.name]);
+          ds[fieldMap.runCommand.name] = Base64.encode(ds[fieldMap.runCommand.name]);
+          ds[fieldMap.postCommand.name] = Base64.encode(ds[fieldMap.postCommand.name]);
     if (ds.type === "cdDeploy") {
       ds.value = Base64.encode(valueIdValues);
       // 如果部署模式是新建 则删掉多余的实例id
@@ -378,11 +389,18 @@ export default observer(() => {
           ds.jarDeploy = {
             ...currentObj,
             pipelineTask: ds.pipelineTask,
-            value: Base64.encode(jarValues),
+            // value: Base64.encode(jarValues),
           };
+          // ds[fieldMap.preCommand.name] = Base64.encode(ds[fieldMap.preCommand.name]);
+          // ds[fieldMap.runCommand.name] = Base64.encode(ds[fieldMap.runCommand.name]);
+          // ds[fieldMap.postCommand.name] = Base64.encode(ds[fieldMap.postCommand.name]);
         }
         ds.jarDeploy.name = ds.appInstanceName;
         ds.jarDeploy.workingPath = ds.workingPath;
+      } else if (ds.hostDeployType === productTypeData[1].value) {
+        // ds[fieldMap.preCommand.name] = Base64.encode(ds[fieldMap.preCommand.name]);
+        // ds[fieldMap.runCommand.name] = Base64.encode(ds[fieldMap.runCommand.name]);
+        // ds[fieldMap.postCommand.name] = Base64.encode(ds[fieldMap.postCommand.name]);
       }
     }
     if (ds.type === typeData[0].value) {
@@ -394,7 +412,7 @@ export default observer(() => {
       }
       delete ds.value;
     }
-    if (ds.type === typeData[1].value) {
+    if (['cdHost', typeData[1].value].includes(ds.type)) {
       ds = {
         ...ds,
         ...extraData,
@@ -410,6 +428,19 @@ export default observer(() => {
     if (result) {
       let submitData = {};
       const ds = JSON.parse(JSON.stringify(ADDCDTaskDataSet.toData()[0]));
+      if (ds.type === 'cdHost') {
+        const hostjarValidate = await HostJarDataSet.current.validate(true);
+        const flag = valueCheckValidate(
+          ADDCDTaskDataSet.current.get(fieldMap.preCommand.name),
+          ADDCDTaskDataSet.current.get(fieldMap.runCommand.name),
+          ADDCDTaskDataSet.current.get(fieldMap.postCommand.name),
+        )
+        if (flag && hostjarValidate) {
+          submitData = HostJarDataSet.current.toData();
+        } else {
+          return false;
+        }
+      }
       if (ds.type === typeData[0].value) {
         const chartDeployValidate = await DeployChartDataSet.current.validate(true);
         if (chartDeployValidate) {
@@ -493,6 +524,9 @@ export default observer(() => {
   useEffect(() => {
     if (jobDetail) {
       let newCdAuditUserIds = jobDetail?.cdAuditUserIds;
+      let preCommand;
+      let runCommand;
+      let postCommand;
       let extra = {};
       // if (jobDetail.type === "cdDeploy") {
       //   const { value } = JSONbig.parse(jobDetail.metadata.replace(/'/g, '"'));
@@ -521,6 +555,10 @@ export default observer(() => {
         }
       } else if (jobDetail.type === "cdHost") {
         const metadata = JSONbig.parse(jobDetail.metadata.replace(/'/g, '"'));
+        preCommand = Base64.decode(metadata[fieldMap.preCommand.name]);
+        runCommand = Base64.decode(metadata[fieldMap.runCommand.name]);
+        postCommand = Base64.decode(metadata[fieldMap.postCommand.name]);
+        HostJarDataSet.loadData([metadata]);
         extra = {
           ...metadata?.hostConnectionVO,
           ...metadata?.jarDeploy,
@@ -539,10 +577,11 @@ export default observer(() => {
           setCustomValues(Base64.decode(metadata.customize?.values));
         } else if (hostDeployType === "image") {
           setImageDeployValues(Base64.decode(metadata.imageDeploy.value));
-        } else if (hostDeployType === "jar") {
-          extra.appInstanceName = metadata.jarDeploy.name;
-          setJarValues(Base64.decode(metadata.jarDeploy.value));
         }
+        //  else if (hostDeployType === "jar") {
+        //   extra.appInstanceName = metadata.jarDeploy.name;
+        //   setJarValues(Base64.decode(metadata.jarDeploy.value));
+        // }
       } else if (jobDetail.type === "cdAudit") {
         if (jobDetail.metadata) {
           const { cdAuditUserIds } = JSON.parse(
@@ -551,14 +590,20 @@ export default observer(() => {
           newCdAuditUserIds = cdAuditUserIds && [...cdAuditUserIds];
         }
       } else if (jobDetail.type === typeData[0].value) {
-        const metadata = JSON.parse(
-          jobDetail.metadata.replace(/'/g, '"'));
+        const metadata = JSONbig.parse(
+        jobDetail.metadata.replace(/'/g, '"'));
         DeployChartDataSet.loadData([metadata]);
+        function afterQuery(res) {
+          const id = String(metadata.valueId);
+          const config = res.find(item => item.id === id);
+          DeployChartDataSet.current.set(deployChartMapping().value.name, config.value);
+        }
         initValueIdDataSet(
           deployConfigDataSet,
           trueAppServiceId,
           metadata.envId,
           ADDCDTaskUseStore.getValueIdRandom,
+          afterQuery,
         )
       } else if (jobDetail.type === typeData[1].value) {
         const metadata = JSON.parse(
@@ -577,6 +622,9 @@ export default observer(() => {
           jobDetail.triggerType === "regex"
             ? jobDetail.triggerValue
             : jobDetail.triggerValue?.split(","),
+            preCommand,
+            runCommand,
+            postCommand,
       };
       delete newJobDetail.metadata;
       if (newJobDetail.envId) {
@@ -992,7 +1040,7 @@ export default observer(() => {
           currentDepoySource === "matchDeploy" && (
             <TextField colSpan={3} name="matchContent" />
           ),
-          <TextField colSpan={3} name="containerName" />,
+          // <TextField colSpan={3} name="containerName" />,
           <YamlEditor
             colSpan={6}
             className="addcdTask-yamleditor"
@@ -1003,7 +1051,8 @@ export default observer(() => {
           />,
         ],
         jar: [
-          <Select
+          ADDCDTaskDataSet.current.get(fieldMap.productType.name) === productTypeData[0].value ? [
+<Select
             newLine
             colSpan={3}
             name="deploySource"
@@ -1030,6 +1079,7 @@ export default observer(() => {
               ))}
             </Select>
           ),
+          ] : '',
           currentDepoySource === "matchDeploy" && (
             <Select colSpan={3} name="serverName" />
           ),
@@ -1069,18 +1119,26 @@ export default observer(() => {
           //   colSpan={3}
           //   name="workingPath"
           // />,
-          <TextField colSpan={3} name="appInstanceName" />,
-          <YamlEditor
+          // <TextField colSpan={3} name="appInstanceName" />,
+          <OperationYaml
             colSpan={6}
             newLine
-            className="addcdTask-yamleditor"
-            readOnly={false}
-            value={jarValues}
-            onValueChange={(data) => setJarValues(data)}
-          />,
+            dataSet={ADDCDTaskDataSet}
+            preName={fieldMap.preCommand.name}
+            startName={fieldMap.runCommand.name}
+            postName={fieldMap.postCommand.name}
+          />
+          // <YamlEditor
+          //   colSpan={6}
+          //   newLine
+          //   className="addcdTask-yamleditor"
+          //   readOnly={false}
+          //   value={jarValues}
+          //   onValueChange={(data) => setJarValues(data)}
+          // />,
         ],
       };
-      return result[ADDCDTaskDataSet?.current?.get("hostDeployType")];
+      return result['jar'];
     }
     const obj = {
       cdDeploy: [
@@ -1138,52 +1196,67 @@ export default observer(() => {
         </Form>,
       ],
       cdHost: [
-        <div className="addcdTask-divided" />,
-        <p className="addcdTask-title">主机设置</p>,
-        <Form
-          className="addcdTask-cdHost"
-          columns={2}
-          dataSet={ADDCDTaskDataSet}
-        >
-          <SelectBox
-            style={{ top: "16px" }}
-            colSpan={1}
-            name={addCDTaskDataSetMap.hostSource}
-            onChange={() => {
-              ADDCDTaskDataSet.current.set(addCDTaskDataSetMap.host, undefined);
-              ADDCDTaskDataSet.current.set("hostIp", undefined);
-              ADDCDTaskDataSet.current.set("hostPort", undefined);
-            }}
-          >
-            <Option value={addCDTaskDataSetMap.alreadyhost}>已有主机</Option>
-            {/* <Option value={addCDTaskDataSetMap.customhost}>自定义主机</Option> */}
-          </SelectBox>
-          {renderHostSetting()}
-          {/* <div newLine colSpan={2} style={{ display: 'flex', alignItems: 'center' }}>
-            <Button
-              disabled={
-                ADDCDTaskDataSet.current.get(
-                  addCDTaskDataSetMap.hostSource,
-                ) === addCDTaskDataSetMap.customhost
-                  ? (!ADDCDTaskDataSet.current.get('hostIp')
-                || !ADDCDTaskDataSet.current.get('hostPort')
-                || !ADDCDTaskDataSet.current.get('username'))
-                : !ADDCDTaskDataSet.current.get(addCDTaskDataSetMap.host)
-              }
-              onClick={handleTestConnect}
-              style={{ marginRight: 20 }}
-              color="primary"
-              funcType="raised"
-            >
-              测试连接
-            </Button>
-            {getTestDom()}
-          </div> */}
+        <Form columns={2} className="addcdTask-cdHost" dataSet={ADDCDTaskDataSet}>
+          <SelectBox name={fieldMap.deployWay.name}/>
+          <SelectBox name={fieldMap.productType.name} />
         </Form>,
         <div className="addcdTask-divided" />,
+        <p className="addcdTask-title">应用信息</p>,
+        <Form columns={2} dataSet={HostJarDataSet}>
+          {
+            ADDCDTaskDataSet.current.get(fieldMap.deployWay.name) === deployWayData[0].value ?
+              <TextField name="appName" /> :
+              <Select name="appName" />
+          }
+          <TextField name="appCode" />
+        </Form>,
+        <div className="addcdTask-divided" />,
+        // <div className="addcdTask-divided" />,
+        // <p className="addcdTask-title">主机设置</p>,
+        // <Form
+        //   className="addcdTask-cdHost"
+        //   columns={2}
+        //   dataSet={ADDCDTaskDataSet}
+        // >
+        //   <SelectBox
+        //     style={{ top: "16px" }}
+        //     colSpan={1}
+        //     name={addCDTaskDataSetMap.hostSource}
+        //     onChange={() => {
+        //       ADDCDTaskDataSet.current.set(addCDTaskDataSetMap.host, undefined);
+        //       ADDCDTaskDataSet.current.set("hostIp", undefined);
+        //       ADDCDTaskDataSet.current.set("hostPort", undefined);
+        //     }}
+        //   >
+        //     <Option value={addCDTaskDataSetMap.alreadyhost}>已有主机</Option>
+        //     {/* <Option value={addCDTaskDataSetMap.customhost}>自定义主机</Option> */}
+        //   </SelectBox>
+        //   {renderHostSetting()}
+        //   {/* <div newLine colSpan={2} style={{ display: 'flex', alignItems: 'center' }}>
+        //     <Button
+        //       disabled={
+        //         ADDCDTaskDataSet.current.get(
+        //           addCDTaskDataSetMap.hostSource,
+        //         ) === addCDTaskDataSetMap.customhost
+        //           ? (!ADDCDTaskDataSet.current.get('hostIp')
+        //         || !ADDCDTaskDataSet.current.get('hostPort')
+        //         || !ADDCDTaskDataSet.current.get('username'))
+        //         : !ADDCDTaskDataSet.current.get(addCDTaskDataSetMap.host)
+        //       }
+        //       onClick={handleTestConnect}
+        //       style={{ marginRight: 20 }}
+        //       color="primary"
+        //       funcType="raised"
+        //     >
+        //       测试连接
+        //     </Button>
+        //     {getTestDom()}
+        //   </div> */}
+        // </Form>,
+        // <div className="addcdTask-divided" />,
         <p className="addcdTask-title">主机部署</p>,
         <Form style={{ marginTop: 20 }} columns={6} dataSet={ADDCDTaskDataSet}>
-          <SelectBox
+          {/* <SelectBox
             className="addcdTask-mainMode"
             colSpan={5}
             name="hostDeployType"
@@ -1199,8 +1272,14 @@ export default observer(() => {
             <Option value="image">镜像部署</Option>
             <Option value="jar">jar包部署</Option>
             <Option value="customize">自定义命令</Option>
-          </SelectBox>
-          ,{getModeDom()}
+          </SelectBox> */}
+          <Select
+            colSpan={3}
+            name={addCDTaskDataSetMap.host}
+            optionRenderer={renderEnvOption}
+            onOption={renderOptionProperty}
+          />
+          {getModeDom()}
         </Form>,
       ],
       [addCDTaskDataSetMap.apiTest]: [
