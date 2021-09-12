@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React, { Component, Fragment } from 'react';
 import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
@@ -61,6 +62,9 @@ export default class YamlEditor extends Component {
       viewportMargin: Infinity,
       lint: !props.readOnly && props.showError,
       gutters: !props.readOnly ? ['CodeMirror-lint-markers'] : [],
+      customRightClasses: props.customRightClasses?props.customRightClasses:null,
+      customEditorContentClass: props.customEditorContentClass?props.customEditorContentClass: '',
+      LEGEND_TYPE: props.LEGEND_TYPE ? props.LEGEND_TYPE: ''
     };
   }
 

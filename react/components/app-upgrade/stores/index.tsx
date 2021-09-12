@@ -7,6 +7,7 @@ import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
 import { withRouter } from 'react-router';
 import FormDataSet from './FormDataSet';
+import HzeroFormDataSet from './HzeroFormDataSet';
 import VersionsDataSet from './VersionsDataSet';
 import ValueDataSet from './ValueDataSet';
 
@@ -16,6 +17,7 @@ interface ContextProps {
   formatMessage(arg0: object, arg1?: object): string,
   projectId: number,
   formDs: DataSet,
+  formDsHzero: DataSet,
   valueDs: DataSet,
   versionsDs: DataSet,
   modal: any,
@@ -71,15 +73,28 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       formatMessage, intlPrefix, projectId, versionsDs, valueDs, isMiddleware, isHzero,
     })), [projectId]);
 
+    const formDsHzero = useMemo(() => new DataSet(HzeroFormDataSet({
+      formatMessage, intlPrefix, projectId, versionsDs, valueDs, isMiddleware, isHzero,
+    })), [projectId]);
+
     useEffect(() => {
       const record = formDs.current;
+      const recordHzero = formDsHzero.current;
       if (record) {
         record.init({
           ...defaultData,
           type: 'update',
         });
       }
+      if (recordHzero) {
+        recordHzero.init({
+          ...defaultData,
+          type: 'update',
+          marketDeployObjectId: '',
+        });
+      }
       loadVersion();
+      loadVersionHzero();
     }, []);
 
     const loadVersion = useCallback(async () => {
@@ -91,6 +106,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       versionsDs.forEach((eachRecord) => {
         const versionType = eachRecord.get('versionType');
         if (versionType === 'currentVersion') {
+          console.log(eachRecord.get('marketAppVersion'));
           record.init({
             marketAppName: eachRecord.get('marketAppName'),
             marketAppVersion: eachRecord.get('marketAppVersion'),
@@ -103,6 +119,32 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       });
     }, [formDs.current]);
 
+    const loadVersionHzero = useCallback(async () => {
+      const recordHzero = formDsHzero.current;
+      if (!recordHzero) {
+        return;
+      }
+      await versionsDs.query();
+      versionsDs.forEach((eachRecord) => {
+        const versionType = eachRecord.get('versionType');
+        if (versionType === 'currentVersion') {
+          recordHzero.init({
+            // marketAppName: eachRecord.get('marketAppName'),
+            marketAppVersion: eachRecord.get('marketAppVersion'),
+          });
+          versionsDs.delete(eachRecord, false);
+        } else {
+          const versionTypeText = versionType
+            ? `（${formatMessage({ id: `${intlPrefix}.market.version.${versionType}` })}）`
+            : '';
+          eachRecord.init('marketServiceVersion', `${eachRecord.get('marketServiceVersion')}${versionTypeText}`);
+          if (versionType === 'lastVersion') {
+            recordHzero.init('marketDeployObjectId', `${eachRecord.get('marketServiceVersion')}`);
+          }
+        }
+      });
+    }, [formDsHzero.current]);
+
     const value = {
       ...props,
       formatMessage,
@@ -110,6 +152,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       projectId,
       formDs,
       versionsDs,
+      formDsHzero,
       defaultData,
       valueDs,
       isHzero,
