@@ -7,9 +7,7 @@ import JsYaml from 'js-yaml';
 const SexyYamlType = new JsYaml.Type('!sexy', {
   kind: 'sequence',
   construct(data) {
-    return data.map((string) => {
-      return `sexy ${string}`;
-    });
+    return data.map((string) => `sexy ${string}`);
   },
 });
 const SEXY_SCHEMA = JsYaml.Schema.create([SexyYamlType]);
@@ -34,7 +32,6 @@ export function checkFormat(value) {
 
   return result;
 }
-
 
 /**
  * 非注释改动检测

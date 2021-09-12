@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
@@ -131,7 +132,7 @@ class CodeMirror extends React.Component {
   };
 
   get getLegends() {
-    const LEGEND_TYPE = ['new', 'delete', 'modify', 'error'];
+    let LEGEND_TYPE = this.props.options.LEGEND_TYPE || ['new', 'delete', 'modify', 'error']
     return _.map(LEGEND_TYPE, (item) => (
       <span
         key={item}
@@ -151,16 +152,17 @@ class CodeMirror extends React.Component {
 
     if (canChangeMode) {
       const { viewMode } = this.state;
-      editor = <div className="c7ncd-editor-tools">
-        <Button funcType="flat" onClick={this.handleChangeView}>
-          <FormattedMessage id="editor.mode.changer" />
-        </Button>
-        {viewMode === 'diff' ? (
-          <div className="c7ncd-editor-legend">{this.getLegends}</div>
-        ) : null}
-      </div>;
+      editor = (
+        <div className="c7ncd-editor-tools">
+          <Button funcType="flat" onClick={this.handleChangeView}>
+            <FormattedMessage id="editor.mode.changer" />
+          </Button>
+          {viewMode === 'diff' ? (
+            <div className="c7ncd-editor-legend">{this.getLegends}</div>
+          ) : null}
+        </div>
+      );
     }
-
     return (
       <div className="c7ncd-codemirror">
         {editor}

@@ -3,14 +3,21 @@ import { FormattedMessage } from 'react-intl';
 import { Modal } from 'choerodon-ui/pro';
 import { StoreProvider } from './stores';
 import Content from './Content';
+import HzeroContent from './HzeroContent';
 
 import './index.less';
 
 const marketUpgradeKey = Modal.key();
+const HzeroUpgradeKey = Modal.key();
 
 const MarketUpgradeModalContent = (props: any) => (
   <StoreProvider {...props}>
     <Content />
+  </StoreProvider>
+);
+const HzeroUpgradeModalContent = (props: any) => (
+  <StoreProvider {...props}>
+    <HzeroContent />
   </StoreProvider>
 );
 
@@ -27,6 +34,7 @@ type MarketUpgradeModalProps = {
   isHzero?:boolean
 }
 
+// market
 function openMarketUpgradeModal({
   appServiceId,
   appServiceVersionId,
@@ -61,6 +69,43 @@ function openMarketUpgradeModal({
     />,
   });
 }
+
+// Hzero
+function openHzeroUpgradeModal({
+  appServiceId,
+  appServiceVersionId,
+  appServiceName,
+  envId,
+  instanceId,
+  callback,
+  isMiddleware,
+  isHzero,
+}:MarketUpgradeModalProps) {
+  const defaultData = {
+    instanceId,
+    marketAppServiceId: appServiceId,
+    marketDeployObjectId: appServiceVersionId,
+    marketServiceName: appServiceName,
+    environmentId: envId,
+  };
+
+  Modal.open({
+    key: HzeroUpgradeKey,
+    title: '升级Hzero',
+    drawer: true,
+    okText: <FormattedMessage id="upgrade" />,
+    style: {
+      width: 'calc(100vw - 3.52rem)',
+    },
+    children: <HzeroUpgradeModalContent
+      defaultData={defaultData}
+      refresh={callback}
+      isHzero={isHzero}
+      isMiddleware={isMiddleware}
+    />,
+  });
+}
 export {
   openMarketUpgradeModal,
+  openHzeroUpgradeModal,
 };

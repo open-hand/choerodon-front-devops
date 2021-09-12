@@ -8,7 +8,7 @@ import { useAppDetailsStore } from '../../../../stores';
 import { openNetWorkFormModal } from '@/components/create-network';
 import { openDomainFormModal } from '@/components/domain-form';
 import { openRedeploy } from '@/components/reDeploy';
-import { openMarketUpgradeModal } from '@/components/app-upgrade';
+import { openMarketUpgradeModal, openHzeroUpgradeModal } from '@/components/app-upgrade';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
 
 import {
@@ -268,6 +268,29 @@ const DetailsTabsHeaderButtons = () => {
       isHzero,
     }),
   };
+
+  // // 升级
+  // const upGradeHzero = { // 升级2
+  //   name: '升级',
+  //   icon: 'rate_review1',
+  //   display: isHzero && !isMiddleware,
+  //   disabled: btnDisabled || isMarketAppDisabled || !upgradeAvailable,
+  //   permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-upgrade'],
+  //   tooltipsConfig: {
+  //     placement: 'bottom',
+  //     title: !btnDisabled && (isMarketAppDisabled || !upgradeAvailable) ? formatMessage({ id: `c7ncd.deployment.instance.disable.message${currentVersionAvailable ? '.upgrade' : ''}` }) : '',
+  //   },
+  //   handler: () => openHzeroUpgradeModal({
+  //     instanceId,
+  //     appServiceId,
+  //     appServiceName,
+  //     envId: hostOrEnvId,
+  //     appServiceVersionId,
+  //     callback: refresh,
+  //     isMiddleware,
+  //     isHzero,
+  //   }),
+  // };
 
   // 更多操作
   const moreOpts = (() => {
