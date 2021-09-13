@@ -500,7 +500,7 @@ const Deployment = withRouter(observer((props) => {
         icon: 'playlist_add',
         display: true,
         permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.manual'],
-        handler: () => openAppCreateModal(refresh, true, id),
+        handler: () => openAppCreateModal(refresh),
       },
       {
         name: '批量创建Chart应用',
@@ -508,7 +508,6 @@ const Deployment = withRouter(observer((props) => {
         display: true,
         permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.batch'],
         handler: () => openBatchDeploy({
-          envId: id,
           refresh: deployAfter,
         }),
       },
