@@ -26,6 +26,7 @@ const TreeMenu = observer(() => {
     AppState: { currentMenuType: { projectId, organizationId, name: projectName } },
     intl: { formatMessage },
   } = useResourceStore();
+
   const { mainStore } = useMainStore();
 
   const bounds = useMemo(() => mainStore.getNavBounds, [mainStore.getNavBounds]);
