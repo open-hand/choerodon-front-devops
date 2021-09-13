@@ -33,11 +33,11 @@ const deployProductOptionsData = [{
 }, {
   value: 'jar',
   name: 'jar包',
-  description: '123',
+  description: '支持将制品库、应用市场或本地的jar包部署至主机',
 }, {
   value: 'other',
   name: '其他制品',
-  description: '123',
+  description: '支持本地上传或远程拉取各种类型的制品部署至主机',
 }];
 
 const mapping: {

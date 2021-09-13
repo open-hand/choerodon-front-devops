@@ -99,11 +99,11 @@ export default observer(() => {
         // eslint-disable-next-line
         combineUrl={`${window._env_.API_HOST}/hfle/v1/${organizationId}/upload/fragment-combine`}
                   // disabled={!ImportFileDataSet?.current?.get(mapping().folderId.name)}
-        suffix=".jar"
+        // suffix=".jar"
         paramsData={{
           bucketName: 'devops-service',
         }}
-        accept=".jar"
+        // accept=".jar"
         prefixPatch="/hfle"
         showUploadList
         onSuccess={(res: any, file: any) => {

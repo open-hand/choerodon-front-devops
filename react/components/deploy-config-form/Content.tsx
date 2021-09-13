@@ -5,6 +5,7 @@ import { observer } from 'mobx-react-lite';
 import {
   Form, TextField, TextArea, Select, Spin,
 } from 'choerodon-ui/pro';
+import { message } from 'choerodon-ui';
 import { ResizeType } from '@/interface';
 import YamlEditor from '@/components/yamlEditor';
 import { useDeployConfigFormStore } from './stores';
@@ -27,6 +28,9 @@ const DeployConfigForm = () => {
     if (isError) return false;
 
     try {
+      if (!formDs.current?.get('value')) {
+        message.error('配置信息为必填');
+      }
       const res = await formDs.submit();
       if (res && res.list) {
         const { id, value } = res.list[0];
