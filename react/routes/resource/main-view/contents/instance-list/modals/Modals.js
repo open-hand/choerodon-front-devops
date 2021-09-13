@@ -34,7 +34,7 @@ const CustomModals = observer(() => {
       case 'deployGroup':
         menuData = {
           id: '1',
-          name: formatMessage({ id: itemTypes.WORKLOAD_GROUP }),
+          name: formatMessage({ id: 'workload_group' }),
           key: `${parentId}**workload`,
           isGroup: true,
           expand: false,
@@ -45,7 +45,7 @@ const CustomModals = observer(() => {
       case 'chart':
         menuData = {
           id: '0',
-          name: formatMessage({ id: itemTypes.IST_GROUP }),
+          name: formatMessage({ id: 'instances_group' }),
           key: `${parentId}**instances`,
           isGroup: true,
           expand: false,
