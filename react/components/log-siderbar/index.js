@@ -191,6 +191,9 @@ export default class LogSidebar extends Component {
           logs.push('\n连接出错，请重新打开\n');
           editor.setValue(_.join(logs, ''));
           editor.execCommand('goDocEnd');
+          setTimeout(() => {
+            this.loadLog(false);
+          }, 1000);
         };
 
         ws.onclose = () => {
