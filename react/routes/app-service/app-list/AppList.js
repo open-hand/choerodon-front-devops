@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { withRouter } from 'react-router-dom';
@@ -71,7 +72,7 @@ const AppService = withRouter(observer(() => {
       },
       title: formatMessage({ id: `${intlPrefix}.create` }),
       children: <CreateForm
-        refresh={refresh}
+        refresh
         intlPrefix={intlPrefix}
         prefixCls={prefixCls}
       />,
@@ -89,7 +90,7 @@ const AppService = withRouter(observer(() => {
         appServiceStore={appServiceStore}
         intlPrefix={intlPrefix}
         prefixCls={prefixCls}
-        refresh={refresh}
+        refresh
       />,
       okText: formatMessage({ id: 'import' }),
     });
