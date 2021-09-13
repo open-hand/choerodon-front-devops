@@ -120,6 +120,9 @@ function StoreProvider(props) {
       targetLabelsDs.create();
     }
   }, []);
+  useEffect(() => {
+    formDs.current.set('name', null);
+  }, [formDs.current.get('isChart')]);
 
   const value = {
     ...props,
