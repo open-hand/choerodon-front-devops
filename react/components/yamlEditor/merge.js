@@ -717,7 +717,6 @@
   // Merge view, containing 0, 1, or 2 diff views.
 
   var MergeView = (CodeMirror.MergeView = function (node, options) {
-    console.log(options);
     if (!(this instanceof MergeView)) return new MergeView(node, options);
 
     this.options = options;
@@ -727,7 +726,6 @@
     const hasLeft = origLeft != null;
     const hasRight = origRight != null;
     const panes = 1 + (hasLeft ? 1 : 0) + (hasRight ? 1 : 0);
-    console.log(hasLeft, hasRight);
     const wrap = [];
     let left = (this.left = null);
     let right = (this.right = null);

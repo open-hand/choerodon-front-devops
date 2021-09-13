@@ -64,15 +64,9 @@ export default class YamlEditor extends Component {
       gutters: !props.readOnly ? ['CodeMirror-lint-markers'] : [],
       customRightClasses: props.customRightClasses?props.customRightClasses:null,
       customEditorContentClass: props.customEditorContentClass?props.customEditorContentClass: '',
-      LEGEND_TYPE: props.LEGEND_TYPE ? props.LEGEND_TYPE: ''
+      LEGEND_TYPE: props.LEGEND_TYPE ? props.LEGEND_TYPE: '',
+      viewMode: props.viewMode
     };
-  }
-
-  componentDidMount() {
-    const { value, onValueChange } = this.props;
-    this.checkYamlFormat(value);
-    // 初始化组件时设置值
-    onValueChange(value);
   }
 
   onChange = (value) => {
@@ -87,6 +81,13 @@ export default class YamlEditor extends Component {
     }
     onValueChange(value, changed);
   };
+
+  componentDidMount() {
+    const { value, onValueChange } = this.props;
+    this.checkYamlFormat(value);
+    // 初始化组件时设置值
+    onValueChange(value);
+  }
 
   /**
    * 校验Yaml格式
@@ -117,7 +118,6 @@ export default class YamlEditor extends Component {
     this.setState({ errorTip, moreDocumentErrorTip });
     return errorTip;
   }
-
   render() {
     // originValue 用做merge对比的源数据
     const {
