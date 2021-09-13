@@ -22,7 +22,6 @@ const mapping: {
         name: 'SCTP',
       }],
     }),
-    defaultValue: 'TCP',
     dynamicProps: {
       required: ({ record }) => record.get(mapping.name.name) || record.get(mapping.port.name),
     },
