@@ -120,44 +120,44 @@ const REModals = observer(() => {
     });
   }
 
-  function handleCreateCallback(type: 'deployGroup' | 'chart') {
+  function handleCreateCallback(type: 'deployGroup' | 'chart', { envId }:any) {
     let menuData = {};
     switch (type) {
       case 'deployGroup':
         menuData = {
-          id: '1',
+          id: 1,
           name: formatMessage({ id: 'workload_group' }),
-          key: `${id}**workload`,
+          key: `${envId}**workload`,
           isGroup: true,
           expand: false,
           itemType: `${itemTypes.WORKLOAD_GROUP}`,
-          parentId: String(id),
+          parentId: String(envId),
         };
         break;
       case 'chart':
         menuData = {
-          id: '0',
-          name: formatMessage({ id: 'instances_group' }),
-          key: `${id}**instances`,
+          id: 0,
+          name: formatMessage({ id: 'instances' }),
+          key: `${envId}**instances`,
           isGroup: true,
-          expand: false,
-          itemType: `${itemTypes.IST_GROUP}`,
-          parentId: String(id),
+          // expand: false,
+          itemType: 'group_instances',
+          parentId: String(envId),
         };
         break;
       default:
         break;
     }
     setSelectedMenu(menuData);
-    setExpandedKeys([`${id}`]);
+    setExpandedKeys([`${envId}`]);
   }
 
   function getButtons() {
     return [
-      // {
-      //   name: 'test',
-      //   handler: () => handleCreateCallback('deployGroup'),
-      // },
+      {
+        name: 'test',
+        handler: () => handleCreateCallback('chart', { envId: id }),
+      },
       {
         name: '创建应用',
         icon: 'playlist_add',

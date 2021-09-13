@@ -95,7 +95,7 @@ export default class DetailCard extends PureComponent {
               <Link
                 to={{
                   pathname: '/devops/resource',
-                  search: `${search}&activeKey=${TabCode.get('/devops/resource').tabCodes[0]}`,
+                  search: `${search}`,
                   state: {
                     ...recordRouteState,
                     instanceId,

@@ -45,13 +45,17 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
     useEffect(() => {
       // NOTE: 1、部署或实例视图的部署后跳转至实例视图实例层。2、资源视图的部署后跳转至资源视图实例层。
       // 3、消息通知通过url传参跳转至资源视图各资源列表层。
-      handleSelect();
-    }, []);
-
-    const handleSelect = useCallback(async () => {
       const {
-        envId, itemType = 'instances',
+        envId, itemType = 'instances', instanceId, appServiceId, menuId = 0,
       } = state || queryString.parse(search) || {};
+      handleSelect({
+        envId, itemType, instanceId, appServiceId, menuId,
+      });
+    }, [handleSelect, search, state]);
+
+    const handleSelect = useCallback(async ({
+      envId, itemType = 'instances', instanceId, appServiceId, menuId = 0,
+    }) => {
       if (envId) {
         let newEnvId = envId;
         if (!state) {
@@ -62,7 +66,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
           }
         }
         resourceStore.setSelectedMenu({
-          id: 0,
+          id: menuId,
           name: formatMessage({ id: itemType }),
           key: `${newEnvId}**${itemType}`,
           isGroup: true,
@@ -87,6 +91,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       treeDs,
       projectId,
       formatMessage,
+      handleSelect,
     };
     return (
       <Store.Provider value={value}>
