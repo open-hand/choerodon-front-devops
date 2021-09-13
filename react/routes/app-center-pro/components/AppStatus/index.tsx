@@ -56,7 +56,9 @@ const AppStatus = ({
         break;
       case APP_STATUS.OPERATING:
         tag = (
-          <StatusTag colorCode="operating" name="处理中" />
+          <div className={`${prefixcls}-status`}>
+            <StatusTag colorCode="operating" name="处理中" />
+          </div>
         );
         break;
       default:

@@ -46,6 +46,36 @@ const APP_STATUS = {
   RUNNING: 'running',
 };
 
+// 操作类型
+/**
+     * 创建应用
+     */
+const CREATE_APP = 'create_app';
+/**
+  * hzero快速部署
+  */
+const HZERO = 'hzero';
+/**
+  * 基础组件
+  */
+const BASE_COMPONENT = 'base_component';
+/**
+  * 批量部署
+  */
+const BATCH_DEPLOY = 'batch_deploy';
+/**
+  * 流水先部署
+  */
+const PIPELINE_DEPLOY = 'pipeline_deploy';
+
+const APP_OPERATION = {
+  CREATE_APP,
+  HZERO,
+  BASE_COMPONENT,
+  BATCH_DEPLOY,
+  PIPELINE_DEPLOY,
+};
+
 export {
   ENV_TAB,
   HOST_TAB,
@@ -68,4 +98,11 @@ export {
   isHostGroup,
   isMarketGroup,
   APP_STATUS,
+
+  CREATE_APP,
+  HZERO,
+  BASE_COMPONENT,
+  BATCH_DEPLOY,
+  PIPELINE_DEPLOY,
+  APP_OPERATION,
 };

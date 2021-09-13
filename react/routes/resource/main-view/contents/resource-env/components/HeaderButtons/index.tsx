@@ -34,6 +34,7 @@ const REModals = observer(() => {
       setExpandedKeys,
     },
     itemTypes,
+    treeDs,
   } = useResourceStore();
 
   const {
@@ -125,7 +126,7 @@ const REModals = observer(() => {
       case 'deployGroup':
         menuData = {
           id: '1',
-          name: formatMessage({ id: itemTypes.WORKLOAD_GROUP }),
+          name: formatMessage({ id: 'workload_group' }),
           key: `${id}**workload`,
           isGroup: true,
           expand: false,
@@ -136,7 +137,7 @@ const REModals = observer(() => {
       case 'chart':
         menuData = {
           id: '0',
-          name: formatMessage({ id: itemTypes.IST_GROUP }),
+          name: formatMessage({ id: 'instances_group' }),
           key: `${id}**instances`,
           isGroup: true,
           expand: false,
@@ -153,6 +154,10 @@ const REModals = observer(() => {
 
   function getButtons() {
     return [
+      // {
+      //   name: 'test',
+      //   handler: () => handleCreateCallback('deployGroup'),
+      // },
       {
         name: '创建应用',
         icon: 'playlist_add',

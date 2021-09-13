@@ -125,6 +125,7 @@ export default ({
         handleSelect({
           record, store, projectId, organizationId, projectName,
         });
+        console.log(record.toData());
       },
       unSelect: ({ record }) => {
         // 禁用取消选中
