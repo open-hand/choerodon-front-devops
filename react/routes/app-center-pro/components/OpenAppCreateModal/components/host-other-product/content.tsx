@@ -107,7 +107,7 @@ export default observer(() => {
       >
         <OldButton
           type="dashed"
-          icon="file_upload"
+          icon="file_upload_black-o"
         >
           上传文件
 
