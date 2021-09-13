@@ -1,3 +1,4 @@
+/* eslint-disable arrow-parens */
 import React from 'react';
 import { StoreProvider } from './stores';
 import AppList from './AppList';
