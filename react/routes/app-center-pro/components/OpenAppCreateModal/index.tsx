@@ -526,8 +526,8 @@ const AppCreateForm = (props: any) => {
         setCurrent(current + 1);
       } else {
         try {
-          const { key } = await handleSubmit();
-          refresh(key);
+          const { key, result } = await handleSubmit();
+          refresh(key, result);
           return true;
         } catch (e) {
           return false;
