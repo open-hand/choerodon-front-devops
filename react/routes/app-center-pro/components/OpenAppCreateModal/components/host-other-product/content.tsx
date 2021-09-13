@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { Form, Select } from 'choerodon-ui/pro';
 import { Button as OldButton, Icon } from 'choerodon-ui';
 import { ChunkUploader } from '@choerodon/components';
+import { Base64 } from 'js-base64';
 import StatusDot from '@/components/status-dot';
 import OperationYaml from '../operation-yaml';
 import { useHostOtherProductStore } from './stores';
@@ -42,6 +43,9 @@ export default observer(() => {
               [mapping.fileName.name as string]: data[mapping.fileName.name as string],
               [mapping.uploadUrl.name as string]: data[mapping.uploadUrl.name as string],
             },
+            [mapping.value.name as string]: data[mapping.value.name as string] ? Base64.encode(data[mapping.value.name as string]) : '',
+            [mapping.startCommand.name as string]: data[mapping.startCommand.name as string] ? Base64.encode(data[mapping.startCommand.name as string]) : '',
+            [mapping.postCommand.name as string]: data[mapping.postCommand.name as string] ? Base64.encode(data[mapping.postCommand.name as string]) : '',
           };
         }
         return false;

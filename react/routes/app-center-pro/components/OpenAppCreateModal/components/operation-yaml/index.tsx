@@ -34,7 +34,7 @@ const Index = observer(({
           readOnly={false}
           value={dataSet?.current?.get(preName)}
           onValueChange={(value: string) => {
-            dataSet?.current?.set(preName, value);
+              dataSet?.current?.set(preName, value);
           }}
         />
       </TabPane>
@@ -44,7 +44,7 @@ const Index = observer(({
           readOnly={false}
           value={dataSet?.current?.get(startName)}
           onValueChange={(value: string) => {
-            dataSet?.current?.set(startName, value);
+              dataSet?.current?.set(startName, value);
           }}
         />
       </TabPane>
@@ -54,7 +54,7 @@ const Index = observer(({
           readOnly={false}
           value={dataSet?.current?.get(postName)}
           onValueChange={(value: string) => {
-            dataSet?.current?.set(postName, value);
+              dataSet?.current?.set(postName, value);
           }}
         />
       </TabPane>
