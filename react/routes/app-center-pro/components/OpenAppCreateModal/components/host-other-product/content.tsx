@@ -37,7 +37,7 @@ export default observer(() => {
         const flag = await HostOtherProductDataSet.validate();
         if (flag) {
           const data = HostOtherProductDataSet.current.toData();
-          return {
+          const res = {
             ...data,
             fileInfoVO: {
               [mapping.fileName.name as string]: data[mapping.fileName.name as string],
@@ -47,6 +47,10 @@ export default observer(() => {
             [mapping.startCommand.name as string]: data[mapping.startCommand.name as string] ? Base64.encode(data[mapping.startCommand.name as string]) : '',
             [mapping.postCommand.name as string]: data[mapping.postCommand.name as string] ? Base64.encode(data[mapping.postCommand.name as string]) : '',
           };
+          if (data[mapping.uploadUrl.name as string]) {
+            res.sourceType = 'upload';
+          }
+          return res;
         }
         return false;
       }

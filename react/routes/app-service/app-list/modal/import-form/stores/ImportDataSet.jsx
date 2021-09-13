@@ -236,7 +236,7 @@ export default ({
         name: 'githubTemplate',
         type: 'string',
         textField: 'name',
-        valueField: 'id',
+        valueField: 'path',
         dynamicProps: {
           lookupUrl: ({ record }) => (record.get('platformType') === 'github' ? `/devops/v1/projects/${projectId}/app_service/list_service_templates` : ''),
           required: ({ record }) => record.get('platformType') === 'github' && record.get('isTemplate'),
