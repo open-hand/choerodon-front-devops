@@ -3,12 +3,12 @@ const jobTypes = {
   sonar: '代码检查',
   custom: '自定义',
   chart: '发布Chart',
-  cdDeploy: '部署-chart包',
+  cdDeploy: '容器部署-chart包',
   cdHost: '主机部署',
   cdAudit: '人工卡点',
   cdApiTest: 'API测试',
   cdExternalApproval: '外部卡点',
-  cdDeployment: '部署-部署组',
+  cdDeployment: '容器部署-部署组',
 };
 
 export default jobTypes;

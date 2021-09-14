@@ -13,10 +13,10 @@ import copy from 'copy-to-clipboard';
 import StreamSaver from 'streamsaver';
 import { Base64 } from 'js-base64';
 import { get } from 'lodash';
+import { TabCode } from '@choerodon/master';
 import renderDuration from '@/utils/getDuration';
 import { handlePromptError } from '@/utils';
 import { MIDDLE } from '@/utils/getModalWidth';
-import { TabCode } from '@choerodon/master';
 import StatusTag from '../StatusTag';
 import DepolyLog from '../deployLog';
 import StatusDot from '../statusDot';
@@ -143,24 +143,21 @@ const DetailItem = (props) => {
       envName,
       appServiceName: cdJobAppServiceName,
       appServiceVersion: cdJobAppServiceVersion,
-      instanceName,
       envId,
-      instanceId,
+
+      appId,
+      chartSource,
+      rdupmType,
     } = cdAuto || {};
 
     function linkTo() {
-      if (instanceId && instanceName) {
+      if (appId) {
         history.push({
-          pathname: '/devops/resource',
+          pathname: `/devops/application-center/detail/${appId}/${chartSource}/env/${envId}/${rdupmType}`,
           search: `${search}`,
-          state: {
-            instanceId,
-            appServiceId,
-            envId,
-          },
         });
       } else {
-        history.push(`/devops/resource${search}`);
+        message.error('appId is not exist');
       }
     }
 
@@ -182,12 +179,12 @@ const DetailItem = (props) => {
         </div>
         <div>
           <span>生成应用:</span>
-          <Tooltip title={instanceName}>
+          <Tooltip title={cdAuto?.appName}>
             <span
               style={{ color: '#3F51B5', cursor: 'pointer' }}
               onClick={linkTo}
             >
-              {(jobStatus !== 'created' && instanceName) || '-'}
+              {(jobStatus !== 'created' && cdAuto?.appName) || '-'}
             </span>
           </Tooltip>
         </div>
@@ -385,6 +382,7 @@ const DetailItem = (props) => {
   const renderItemDetail = () => {
     const funcMap = new Map([
       ['cdDeploy', renderCdAuto],
+      // ['cdDeployment', renderCdAuto],
       ['cdAudit', renderCdAudit],
       ['chart', renderChart],
       ['cdHost', renderCdHost],
