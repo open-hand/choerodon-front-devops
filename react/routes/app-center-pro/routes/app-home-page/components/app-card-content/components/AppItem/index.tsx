@@ -9,7 +9,7 @@ import { Record } from '@/interface';
 import EnvItem from '@/components/env-item';
 import { getAppCategories, getChartSourceGroup } from '@/routes/app-center-pro/utils';
 import {
-  APP_STATUS, CHART_HOST, IS_HOST, IS_MARKET, IS_SERVICE,
+  APP_STATUS, CHART_CATERGORY, CHART_HOST, IS_HOST, IS_MARKET, IS_SERVICE,
 } from '@/routes/app-center-pro/stores/CONST';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
 import AppCenterProServices from '../../../../../../services';
@@ -17,6 +17,8 @@ import EnvOrHostStatusIcon from '@/routes/app-center-pro/components/EnvOrHostSta
 import { useAppHomePageStore } from '../../../../stores';
 import AppStatus from '@/routes/app-center-pro/components/AppStatus';
 import UPDATE_IMG from '@/routes/app-center-pro/assets/update.svg';
+import { openMarketUpgradeModal } from '@/components/app-upgrade';
+import { openHzeroUpgradeModal } from '@/components/app-upgrade-hzero';
 
 const AppItem = observer(({
   record,
@@ -53,6 +55,10 @@ const AppItem = observer(({
 
     creator = {},
 
+    appServiceId,
+    appServiceName,
+    appServiceVersionId,
+
     code,
     rdupmType, // 部署对象
     operationType, // 操作类型
@@ -87,6 +93,12 @@ const AppItem = observer(({
   const catergory = getAppCategories(rdupmType, currentType);
 
   const appCatergoryCode = catergory.code;
+
+  // 应用市场
+  const isHzero = chartSource === 'hzero';
+
+  const isMarket = chartSource === 'market' || isHzero;
+  const isMiddleware = chartSource === 'middleware';
 
   const { search, pathname } = useLocation();
 
@@ -153,12 +165,35 @@ const AppItem = observer(({
     return data;
   };
 
+  const getRunningHeaderItemsOfServices = () => {
+    const data = [stopObj, deleteObj];
+    const situation = catergory.code === CHART_CATERGORY && envConnected && chartSource === 'market' && upgradeAvailable && currentVersionAvailable;
+    const openModalHandle = isHzero ? openHzeroUpgradeModal : openMarketUpgradeModal;
+    if (situation) {
+      data.push({
+        service: ['choerodon.code.project.deploy.app-deployment.application-center.app-upgrade'],
+        action: () => openModalHandle({
+          instanceId,
+          appServiceId,
+          appServiceName,
+          envId,
+          appServiceVersionId,
+          callback: refresh,
+          isMiddleware,
+          isHzero,
+        }),
+        text: '升级',
+      });
+    }
+    return data;
+  };
+
   const getIsMarketActionData = () => {
     let data:any = [];
     switch (appStatus) {
       case APP_STATUS.RUNNING:
       case APP_STATUS.ACTIVE:
-        data = [stopObj, deleteObj];
+        data = getRunningHeaderItemsOfServices();
         break;
       case APP_STATUS.STOP:
         data = [activeObj, deleteObj];

@@ -175,11 +175,10 @@ const WorkloadContent = observer(() => {
   };
 
   const renderAppType = ({ value: sourceType }:{value:'chart'| 'deploy_group'}) => {
-    if (!sourceType) return null;
     const {
       colorCode,
       name: typeName,
-    } = appTypeObj[sourceType] || {};
+    } = appTypeObj[sourceType || 'chart'] || {};
     return (
       <StatusTag
         style={{

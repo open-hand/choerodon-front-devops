@@ -8,7 +8,8 @@ import { useAppDetailsStore } from '../../../../stores';
 import { openNetWorkFormModal } from '@/components/create-network';
 import { openDomainFormModal } from '@/components/domain-form';
 import { openRedeploy } from '@/components/reDeploy';
-import { openMarketUpgradeModal, openHzeroUpgradeModal } from '@/components/app-upgrade';
+import { openMarketUpgradeModal } from '@/components/app-upgrade';
+import { openHzeroUpgradeModal } from '@/components/app-upgrade-hzero';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
 
 import {
@@ -78,11 +79,12 @@ const DetailsTabsHeaderButtons = () => {
 
   const isMiddleware = chartSource === 'middleware';
 
+  // 是market的chartSource或者middleWare的情况下去走currentVersionAvailable逻辑
   const isMarketAppDisabled = (isMarket || isMiddleware) && !currentVersionAvailable;
 
   const envNotConnected = !envConnected;
 
-  const btnDisabled = !envConnected || !appStatus || (appStatus !== APP_STATUS.FAILED && appStatus !== APP_STATUS.RUNNING);
+  const btnDisabled = !envConnected || !appStatus || (appStatus !== APP_STATUS.FAILED && appStatus !== APP_STATUS.OPERATING);
 
   const whichGroup = getChartSourceGroup(
     chartSource || sourceType, deployType,
@@ -257,40 +259,20 @@ const DetailsTabsHeaderButtons = () => {
       placement: 'bottom',
       title: !btnDisabled && (isMarketAppDisabled || !upgradeAvailable) ? formatMessage({ id: `c7ncd.deployment.instance.disable.message${currentVersionAvailable ? '.upgrade' : ''}` }) : '',
     },
-    handler: () => openMarketUpgradeModal({
-      instanceId,
-      appServiceId,
-      appServiceName,
-      envId: hostOrEnvId,
-      appServiceVersionId,
-      callback: refresh,
-      isMiddleware,
-      isHzero,
-    }),
+    handler: () => {
+      const openModalHandle = isHzero ? openHzeroUpgradeModal : openMarketUpgradeModal;
+      openModalHandle({
+        instanceId,
+        appServiceId,
+        appServiceName,
+        envId: hostOrEnvId,
+        appServiceVersionId,
+        callback: refresh,
+        isMiddleware,
+        isHzero,
+      });
+    },
   };
-
-  // // 升级
-  // const upGradeHzero = { // 升级2
-  //   name: '升级',
-  //   icon: 'rate_review1',
-  //   display: isHzero && !isMiddleware,
-  //   disabled: btnDisabled || isMarketAppDisabled || !upgradeAvailable,
-  //   permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-upgrade'],
-  //   tooltipsConfig: {
-  //     placement: 'bottom',
-  //     title: !btnDisabled && (isMarketAppDisabled || !upgradeAvailable) ? formatMessage({ id: `c7ncd.deployment.instance.disable.message${currentVersionAvailable ? '.upgrade' : ''}` }) : '',
-  //   },
-  //   handler: () => openHzeroUpgradeModal({
-  //     instanceId,
-  //     appServiceId,
-  //     appServiceName,
-  //     envId: hostOrEnvId,
-  //     appServiceVersionId,
-  //     callback: refresh,
-  //     isMiddleware,
-  //     isHzero,
-  //   }),
-  // };
 
   // 更多操作
   const moreOpts = (() => {
