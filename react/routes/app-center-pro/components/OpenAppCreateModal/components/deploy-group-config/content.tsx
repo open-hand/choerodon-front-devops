@@ -63,7 +63,7 @@ const Index = observer(() => {
         [mapping.env.name as string]: detail.environmentId,
       }]);
     }
-  }, []);
+  }, [detail]);
 
   const handleOk = async () => {
     const dsList = [

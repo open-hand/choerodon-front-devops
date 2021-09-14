@@ -372,6 +372,10 @@ const AppCreateForm = (props: any) => {
   }: any) => ({
     ...submitData,
     ...resourceConfigData,
+    devopsServiceReqVO: {
+      ...resourceConfigData.devopsServiceReqVO,
+      targetInstanceCode: submitData.appCode,
+    },
   });
 
   const handleSubmit = async () => {

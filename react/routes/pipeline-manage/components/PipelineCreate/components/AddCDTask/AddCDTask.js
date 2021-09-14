@@ -26,7 +26,7 @@ import {
   handleSetSubmitDataByContainerConfig,
 } from "@/routes/app-center-pro/components/OpenAppCreateModal";
 import { initValueIdDataSet } from "@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/addCDTaskDataSet";
-import { deployConfigDataSet } from "./stores/deployChartDataSet";
+import { deployConfigDataSet, appNameChartDataSet } from "./stores/deployChartDataSet";
 import DeployChart from "./components/deploy-chart";
 import DeployGroup from './components/deploy-group';
 import addCDTaskDataSetMap, {
@@ -115,11 +115,11 @@ export default observer(() => {
   );
   const [jarValues, setJarValues] = useState(
     "# java -jar指令\n" +
-      "# 不可删除${jar}\n" +
-      "# java -jar 后台运行参数会自动添加 不需要在重复添加\n" +
-      "# 其余参数可参考可根据需要添加\n" +
-      "java -jar ${jar}\n" +
-      "# 相关文件存放目录：jar包下载目录为$HOME/choerodon/实例id/temp-jar/, 日志存放目录为$HOME/choerodon/实例id/temp-jar/',\n"
+    "# 不可删除${jar}\n" +
+    "# java -jar 后台运行参数会自动添加 不需要在重复添加\n" +
+    "# 其余参数可参考可根据需要添加\n" +
+    "java -jar ${jar}\n" +
+    "# 相关文件存放目录：jar包下载目录为$HOME/choerodon/实例id/temp-jar/, 日志存放目录为$HOME/choerodon/实例id/temp-jar/',\n"
   );
   // + '# 默认工作目录，当前工作目录(./)，jar包下载存放目录为：./temp-jar/xxx.jar 日志存放目录为：./temp-log/xxx.log\n'
   // + '# 填写工作目录，jar包下载存放目录为：工作目录/temp-jar/xxx.jar 日志存放目录为：工作目录/temp-jar/xxx.log\n'
@@ -288,8 +288,8 @@ export default observer(() => {
 
   function getMetadata(ds, deployChartData, extraData) {
     ds[fieldMap.preCommand.name] = Base64.encode(ds[fieldMap.preCommand.name]);
-          ds[fieldMap.runCommand.name] = Base64.encode(ds[fieldMap.runCommand.name]);
-          ds[fieldMap.postCommand.name] = Base64.encode(ds[fieldMap.postCommand.name]);
+    ds[fieldMap.runCommand.name] = Base64.encode(ds[fieldMap.runCommand.name]);
+    ds[fieldMap.postCommand.name] = Base64.encode(ds[fieldMap.postCommand.name]);
     if (ds.type === "cdDeploy") {
       ds.value = Base64.encode(valueIdValues);
       // 如果部署模式是新建 则删掉多余的实例id
@@ -469,7 +469,7 @@ export default observer(() => {
         } else {
           submitData = {
             ...submitData,
-           ...DeployGroupDataSet.current.toData(),
+            ...DeployGroupDataSet.current.toData(),
           }
           const returnData = handleSetSubmitDataByDeployGroupConfig({
             appConfigData: data.appConfig,
@@ -558,7 +558,11 @@ export default observer(() => {
         preCommand = Base64.decode(metadata[fieldMap.preCommand.name]);
         runCommand = Base64.decode(metadata[fieldMap.runCommand.name]);
         postCommand = Base64.decode(metadata[fieldMap.postCommand.name]);
-        HostJarDataSet.loadData([metadata]);
+        HostJarDataSet.loadData([{
+          appName: metadata.appName,
+          appCode: metadata.appCode,
+          appId: metadata.appId,
+        }]);
         extra = {
           ...metadata?.hostConnectionVO,
           ...metadata?.jarDeploy,
@@ -591,7 +595,7 @@ export default observer(() => {
         }
       } else if (jobDetail.type === typeData[0].value) {
         const metadata = JSONbig.parse(
-        jobDetail.metadata.replace(/'/g, '"'));
+          jobDetail.metadata.replace(/'/g, '"'));
         DeployChartDataSet.loadData([metadata]);
         function afterQuery(res) {
           const id = String(metadata.valueId);
@@ -605,6 +609,11 @@ export default observer(() => {
           ADDCDTaskUseStore.getValueIdRandom,
           afterQuery,
         )
+        initValueIdDataSet(
+          appNameChartDataSet,
+          trueAppServiceId,
+          metadata.envId,
+        );
       } else if (jobDetail.type === typeData[1].value) {
         const metadata = JSON.parse(
           jobDetail.metadata.replace(/'/g, '"'));
@@ -615,16 +624,19 @@ export default observer(() => {
         ...jobDetail,
         ...extra,
         ...(jobDetail.metadata
-          ? JSONbig.parse(jobDetail.metadata.replace(/'/g, '"'))
+          ? {
+            ...JSONbig.parse(jobDetail.metadata.replace(/'/g, '"')),
+            checkEnvPermissionFlag: !JSONbig.parse(jobDetail.metadata.replace(/'/g, '"'))?.skipCheckPermission,
+          }
           : {}),
         cdAuditUserIds: newCdAuditUserIds && [...newCdAuditUserIds],
         triggerValue:
           jobDetail.triggerType === "regex"
             ? jobDetail.triggerValue
             : jobDetail.triggerValue?.split(","),
-            preCommand,
-            runCommand,
-            postCommand,
+        preCommand,
+        runCommand,
+        postCommand,
       };
       delete newJobDetail.metadata;
       if (newJobDetail.envId) {
@@ -638,9 +650,9 @@ export default observer(() => {
     ADDCDTaskDataSet.current.set(
       "glyyfw",
       appServiceId ||
-        PipelineCreateFormDataSet.getField("appServiceId").getText(
-          PipelineCreateFormDataSet.current.get("appServiceId")
-        )
+      PipelineCreateFormDataSet.getField("appServiceId").getText(
+        PipelineCreateFormDataSet.current.get("appServiceId")
+      )
     );
     handleClickMore();
   }, [ADDCDTaskDataSet, PipelineCreateFormDataSet, appServiceId, jobDetail]);
@@ -967,7 +979,7 @@ export default observer(() => {
         await axios.post(`/devops/v1/projects/${projectId}/deploy_value`, {
           ...(valueIdList ? valueIdList : ADDCDTaskUseStore.getValueIdList).find(
             (i) =>
-              String(i.id) === String(valueId ? valueId :  ADDCDTaskDataSet.current.get("valueId"))
+              String(i.id) === String(valueId ? valueId : ADDCDTaskDataSet.current.get("valueId"))
           ),
           value: tempValues,
         });
@@ -977,7 +989,7 @@ export default observer(() => {
           DeployChartDataSet.current.set(mapping().value.name, tempValues);
         }
       },
-      onCancel: () => {},
+      onCancel: () => { },
     });
   };
 
@@ -1052,33 +1064,33 @@ export default observer(() => {
         ],
         jar: [
           ADDCDTaskDataSet.current.get(fieldMap.productType.name) === productTypeData[0].value ? [
-<Select
-            newLine
-            colSpan={3}
-            name="deploySource"
-            clearButton={false}
-            addonAfter={
-              <Tips helpText="流水线制品部署表示直接使用所选关联构建任务中生成的jar包进行部署；匹配制品部署则表示可自主选择项目下制品库中的jar包，并需配置jar包版本的正则匹配规则，后续部署的jar包版本便会遵循此规则。" />
-            }
-          >
-            <Option value="pipelineDeploy">流水线制品部署</Option>
-            <Option value="matchDeploy">匹配制品部署</Option>
-          </Select>,
-          currentDepoySource === "pipelineDeploy" && (
             <Select
+              newLine
               colSpan={3}
-              name="pipelineTask"
-              searchable
+              name="deploySource"
+              clearButton={false}
               addonAfter={
-                <Tips helpText="此处的关联构建任务，仅会查询出该条流水线中存在'上传jar包至制品库'或“Maven发布”步骤的“构建类型”任务。若所选任务中存在多个满足条件的步骤，则只会部署所选任务中第一个满足条件的步骤产生的jar包；" />
+                <Tips helpText="流水线制品部署表示直接使用所选关联构建任务中生成的jar包进行部署；匹配制品部署则表示可自主选择项目下制品库中的jar包，并需配置jar包版本的正则匹配规则，后续部署的jar包版本便会遵循此规则。" />
               }
-              searchMatcher={searchMatcher}
             >
-              {relatedJobOpts.map((item) => (
-                <Option value={item.name}>{item.name}</Option>
-              ))}
-            </Select>
-          ),
+              <Option value="pipelineDeploy">流水线制品部署</Option>
+              <Option value="matchDeploy">匹配制品部署</Option>
+            </Select>,
+            currentDepoySource === "pipelineDeploy" && (
+              <Select
+                colSpan={3}
+                name="pipelineTask"
+                searchable
+                addonAfter={
+                  <Tips helpText="此处的关联构建任务，仅会查询出该条流水线中存在'上传jar包至制品库'或“Maven发布”步骤的“构建类型”任务。若所选任务中存在多个满足条件的步骤，则只会部署所选任务中第一个满足条件的步骤产生的jar包；" />
+                }
+                searchMatcher={searchMatcher}
+              >
+                {relatedJobOpts.map((item) => (
+                  <Option value={item.name}>{item.name}</Option>
+                ))}
+              </Select>
+            ),
           ] : '',
           currentDepoySource === "matchDeploy" && (
             <Select colSpan={3} name="serverName" />
@@ -1197,7 +1209,12 @@ export default observer(() => {
       ],
       cdHost: [
         <Form columns={2} className="addcdTask-cdHost" dataSet={ADDCDTaskDataSet}>
-          <SelectBox name={fieldMap.deployWay.name}/>
+          <SelectBox
+            name={fieldMap.deployWay.name}
+            onChange={() => {
+              HostJarDataSet.deleteAll(false);
+            }}
+          />
           <SelectBox name={fieldMap.productType.name} />
         </Form>,
         <div className="addcdTask-divided" />,
@@ -1420,6 +1437,7 @@ export default observer(() => {
       [typeData[1].value]: [
         <div className="addcdTask-divided" />,
         <DeployGroup
+          changeDetail={setDeployGroupDetail}
           deployWay={ADDCDTaskDataSet.current.get(fieldMap.deployWay.name)}
           dataSet={DeployGroupDataSet}
           cRef={deployGroupcRef}
@@ -1690,39 +1708,39 @@ export default observer(() => {
         </div>
         {ADDCDTaskDataSet.current.get("type") ===
           addCDTaskDataSetMap.apiTest && [
-          <Select
-            newLine
-            colSpan={1}
-            searchable
-            searchMatcher="task_name"
-            name={addCDTaskDataSetMap.apiTestMission}
-            addonAfter={
-              <Tips helpText="此处仅能从项目下已有的API测试任务中进行选择" />
-            }
-          />,
-          <Select
-            colSpan={2}
-            name={addCDTaskDataSetMap.relativeMission}
-            addonAfter={
-              <Tips
-                helpText={
-                  <>
-                    <p>
-                      1.
-                      此处为非必选，若不选关联部署任务，则代表，API测试任务在执行前不会做任何判断
-                    </p>
-                    <p>
-                      2. 此处仅支持选择该任务之前的任一部署任务；
-                      选择后，在执行此API测试任务前便会校验：关联的部署任务中对应的新版本是否已部署成功。只有该版本对应的pod状态为可用时，测试任务才会执行
-                    </p>
-                  </>
-                }
-              />
-            }
-          >
-            {renderRelatedMission()}
-          </Select>,
-        ]}
+            <Select
+              newLine
+              colSpan={1}
+              searchable
+              searchMatcher="task_name"
+              name={addCDTaskDataSetMap.apiTestMission}
+              addonAfter={
+                <Tips helpText="此处仅能从项目下已有的API测试任务中进行选择" />
+              }
+            />,
+            <Select
+              colSpan={2}
+              name={addCDTaskDataSetMap.relativeMission}
+              addonAfter={
+                <Tips
+                  helpText={
+                    <>
+                      <p>
+                        1.
+                        此处为非必选，若不选关联部署任务，则代表，API测试任务在执行前不会做任何判断
+                      </p>
+                      <p>
+                        2. 此处仅支持选择该任务之前的任一部署任务；
+                        选择后，在执行此API测试任务前便会校验：关联的部署任务中对应的新版本是否已部署成功。只有该版本对应的pod状态为可用时，测试任务才会执行
+                      </p>
+                    </>
+                  }
+                />
+              }
+            >
+              {renderRelatedMission()}
+            </Select>,
+          ]}
         {[typeData[0].value, typeData[1].value].includes(ADDCDTaskDataSet?.current?.get("type")) && [
           <Select
             colSpan={1}
@@ -1757,7 +1775,7 @@ export default observer(() => {
               }}
             />
           </div>,
-          <SelectBox 
+          <SelectBox
             name={fieldMap.deployWay.name}
             onChange={(value) => {
               DeployGroupDataSet.current.set(deployGroupMapping().appName.name, undefined);
@@ -1893,60 +1911,60 @@ export default observer(() => {
         )}
         {ADDCDTaskDataSet.current.get("type") ===
           addCDTaskDataSetMap.externalStuck && [
-          <div colSpan={3} className="addcdTask-missionDes">
-            <span style={{ fontWeight: 500 }}>任务说明：</span>
-            <span style={{ display: "inline-block" }}>
-              -
-              外部卡点任务用于对接Choerodon平台外的工作流或系统。此任务触发时，
-              会默认将projectId、pipelineRecordId、stageRecordId
-              、jobRecordId、callback_token、
-              currentCdJob以及pipelineRecordDetails发送至外部地址。
-            </span>
-            <span style={{ display: "inline-block" }}>
-              - 外部系统执行结束后，会往{" "}
-              <span className="addcdTask-missionDes-focus">流水线回调地址</span>{" "}
-              发送一个状态来作为外部卡点的任务状态。成功后会接着执行后续任务，失败则停留在此任务。
-            </span>
-            <br />
-            <span style={{ display: "block", marginTop: 10, fontWeight: 500 }}>
-              流水线回调地址参数说明：
-            </span>
-            <span style={{ display: "block" }}>
-              - pipelineRecordId： 流水线记录id
-            </span>
-            <span style={{ display: "block" }}>
-              - stageRecordId: 流水线阶段记录id
-            </span>
-            <span style={{ display: "block" }}>
-              - jobRecordId: 流水线任务记录id
-            </span>
-            <span style={{ display: "block" }}>
-              - callback_token: 回调时的认证token
-            </span>
-            <span style={{ display: "block" }}>
-              - approval_status： 任务执行状态（true/false
-              ,代表外部卡点任务执行成功或失败）
-            </span>
-          </div>,
-          <TextField
-            label="流水线回调地址"
-            colSpan={3}
-            addonAfter={
-              <CopyToClipboard
-                text={pipelineCallbackAddress}
-                onCopy={handleCopy}
-              >
-                <Icon style={{ cursor: "pointer" }} type="content_copy" />
-              </CopyToClipboard>
-            }
-            disabled
-            required
-            value={pipelineCallbackAddress}
-          />,
-          <TextArea name={addCDTaskDataSetMap.externalAddress} colSpan={3} />,
-          <TextArea name={addCDTaskDataSetMap.externalToken} colSpan={3} />,
-          <TextArea name={addCDTaskDataSetMap.missionDes} colSpan={3} />,
-        ]}
+            <div colSpan={3} className="addcdTask-missionDes">
+              <span style={{ fontWeight: 500 }}>任务说明：</span>
+              <span style={{ display: "inline-block" }}>
+                -
+                外部卡点任务用于对接Choerodon平台外的工作流或系统。此任务触发时，
+                会默认将projectId、pipelineRecordId、stageRecordId
+                、jobRecordId、callback_token、
+                currentCdJob以及pipelineRecordDetails发送至外部地址。
+              </span>
+              <span style={{ display: "inline-block" }}>
+                - 外部系统执行结束后，会往{" "}
+                <span className="addcdTask-missionDes-focus">流水线回调地址</span>{" "}
+                发送一个状态来作为外部卡点的任务状态。成功后会接着执行后续任务，失败则停留在此任务。
+              </span>
+              <br />
+              <span style={{ display: "block", marginTop: 10, fontWeight: 500 }}>
+                流水线回调地址参数说明：
+              </span>
+              <span style={{ display: "block" }}>
+                - pipelineRecordId： 流水线记录id
+              </span>
+              <span style={{ display: "block" }}>
+                - stageRecordId: 流水线阶段记录id
+              </span>
+              <span style={{ display: "block" }}>
+                - jobRecordId: 流水线任务记录id
+              </span>
+              <span style={{ display: "block" }}>
+                - callback_token: 回调时的认证token
+              </span>
+              <span style={{ display: "block" }}>
+                - approval_status： 任务执行状态（true/false
+                ,代表外部卡点任务执行成功或失败）
+              </span>
+            </div>,
+            <TextField
+              label="流水线回调地址"
+              colSpan={3}
+              addonAfter={
+                <CopyToClipboard
+                  text={pipelineCallbackAddress}
+                  onCopy={handleCopy}
+                >
+                  <Icon style={{ cursor: "pointer" }} type="content_copy" />
+                </CopyToClipboard>
+              }
+              disabled
+              required
+              value={pipelineCallbackAddress}
+            />,
+            <TextArea name={addCDTaskDataSetMap.externalAddress} colSpan={3} />,
+            <TextArea name={addCDTaskDataSetMap.externalToken} colSpan={3} />,
+            <TextArea name={addCDTaskDataSetMap.missionDes} colSpan={3} />,
+          ]}
       </Form>
       {getOtherConfig()}
     </div>
