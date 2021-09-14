@@ -218,7 +218,7 @@ const DetailAside = () => {
           { isHost && renderHost()}
           <div>
             <span>部署方式</span>
-            <span>{deployWay || '主机部署' || '-'}</span>
+            <span>{deployWay || '主机部署'}</span>
           </div>
           <div>
             <span>部署对象</span>

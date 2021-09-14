@@ -125,7 +125,7 @@ const HzeroDeployDetail = observer(() => {
     return (
       <div style={{ display: 'flex' }}>
         <div role="none" className={currentAppStatusList.includes(currentAppStatus) ? 'normal' : 'click'} onClick={() => toInstanceDetail(record)}>
-          {record.get('instanceCode') || '-'}
+          {record.get('appCode') || '-'}
         </div>
         <div>{currentAppStatus === 'deleted' ? getStatusTag(currentAppStatus) : ''}</div>
       </div>
@@ -176,13 +176,14 @@ const HzeroDeployDetail = observer(() => {
           <div className={`${prefixCls}-content-form`}>
             <Form
               record={serviceDs.current}
-              columns={2}
+              columns={3}
               labelLayout={'horizontal' as LabelLayoutType}
               labelAlign={'left' as LabelAlignType}
               labelWidth="auto"
             >
               <Output name="mktServiceVersion" renderer={({ value }) => (value || '-')} />
-              <Output label="实例名称" value={renderInstanceCode(serviceDs.current)} />
+              <Output label="应用编码" value={renderInstanceCode(serviceDs.current)} />
+              <Output name="appName" renderer={({ value }) => (value || '-')} />
               <Output name="startTime" renderer={({ value }) => (value || '-')} />
               <Output label="部署耗时" value={(serviceDs.current?.get('startTime') && serviceDs.current?.get('endTime')) ? getConsumeDuration(serviceDs.current?.get('startTime'), serviceDs.current?.get('endTime')) : '-'} />
             </Form>
