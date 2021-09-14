@@ -358,10 +358,14 @@ const Index = observer(() => {
                   disabled: !hostRecord.get('connect'),
                 })}
               />
-              <Select
-                name={mapping.jarSource.name}
-                disabled
-              />
+              {
+                detail?.rdupmType === 'other' ? '' : (
+                  <Select
+                    name={mapping.jarSource.name}
+                    disabled
+                  />
+                )
+              }
             </>
           )
         }
