@@ -358,7 +358,7 @@ const mapping: {
 #./server.startup -tomcat`,
   },
   uploadUrl: {
-    name: 'jarFileUrl',
+    name: 'uploadUrl',
     type: 'string' as FieldType,
   },
   fileName: {
