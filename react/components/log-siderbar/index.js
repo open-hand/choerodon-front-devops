@@ -191,9 +191,6 @@ export default class LogSidebar extends Component {
           logs.push('\n连接出错，请重新打开\n');
           editor.setValue(_.join(logs, ''));
           editor.execCommand('goDocEnd');
-          setTimeout(() => {
-            this.loadLog(false);
-          }, 1000);
         };
 
         ws.onclose = () => {
@@ -206,6 +203,9 @@ export default class LogSidebar extends Component {
             editor.setValue(_.join(logs, ''));
           }
           editor.execCommand('goDocEnd');
+          setTimeout(() => {
+            this.loadLog(false);
+          }, 1000);
         };
 
         ws.onmessage = (e) => {
@@ -323,7 +323,7 @@ export default class LogSidebar extends Component {
           <div className={fullScreen ? 'c7n-container-sidebar-content_full' : 'c7n-container-sidebar-content'}>
             <div className="c7n-term-title">
               <FormattedMessage id="container" />
-            &nbsp;
+              &nbsp;
               <Select className="c7n-log-siderbar-select" value={containerName} onChange={this.handleChange}>
                 {containerOptions}
               </Select>
