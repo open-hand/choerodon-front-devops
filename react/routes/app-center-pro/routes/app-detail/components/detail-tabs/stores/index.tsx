@@ -24,7 +24,7 @@ import PodsDetailsDataSet from './PodsDetailsDataSet';
 import ResourceConfigDs from './ResourceConfigDataSet';
 import { getAppCategories } from '@/routes/app-center-pro/utils';
 import {
-  CHART_CATERGORY, DEPLOY_CATERGORY, HOST_CATERGORY,
+  CHART_CATERGORY, DEPLOY_CATERGORY, HOST_CATERGORY, OTHER_CATERGORY,
 } from '@/routes/app-center-pro/stores/CONST';
 
 interface ContextProps {
@@ -81,6 +81,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
         current = deployGroupKeys;
         break;
       case HOST_CATERGORY:
+      case OTHER_CATERGORY:
         current = hostKeys;
         break;
       default:
