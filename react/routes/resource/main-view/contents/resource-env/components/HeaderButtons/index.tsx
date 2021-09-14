@@ -154,10 +154,10 @@ const REModals = observer(() => {
 
   function getButtons() {
     return [
-      {
-        name: 'test',
-        handler: () => handleCreateCallback('chart', { envId: id }),
-      },
+      // {
+      //   name: 'test',
+      //   handler: () => handleCreateCallback('chart', { envId: id }),
+      // },
       {
         name: '创建应用',
         icon: 'playlist_add',
