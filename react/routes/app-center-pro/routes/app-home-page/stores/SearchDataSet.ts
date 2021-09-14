@@ -19,9 +19,6 @@ export default ({ envDs, hostDs, ALL_ENV_KEY }: SearchProps): any => ({
       ignore: 'always',
     },
     {
-      name: 'params',
-    },
-    {
       name: 'env_id',
       textField: 'name',
       valueField: 'id',
@@ -32,6 +29,8 @@ export default ({ envDs, hostDs, ALL_ENV_KEY }: SearchProps): any => ({
         }) => {
           const isEnv = record.get('typeKey') === ENV_TAB;
           const current = record.get('env_id');
+          debugger
+          console.log(isEnv, current);
           return isEnv && Number(current) ? 'never' : 'always';
         },
       },
@@ -48,10 +47,27 @@ export default ({ envDs, hostDs, ALL_ENV_KEY }: SearchProps): any => ({
         }) => {
           const isHost = record.get('typeKey') === HOST_TAB;
           const current = record.get('host_id');
+          debugger
+          console.log(isHost, current);
           return isHost && Number(current) ? 'never' : 'always';
         },
       },
       options: hostDs,
     },
+    {
+      name: 'params',
+    },
+    // {
+    //   name: 'name',
+    //   label: '应用名称',
+    // },
+    // {
+    //   name: 'rdupm_type',
+    //   label: '应用类型',
+    // },
+    // {
+    //   name: 'operation_type',
+    //   label: '操作类型',
+    // },
   ],
 });

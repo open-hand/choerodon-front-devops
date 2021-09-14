@@ -98,9 +98,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
       listDs.setQueryParameter('typeKey', key);
       searchDs.current?.set('typeKey', key);
       mainStore.setCurrentTypeTabKey(key);
-    } else if (key && ![ENV_TAB, HOST_TAB].includes(key)) {
-      message.error('refresh 的第一个参数必须是env或者host');
-      throw new Error('refresh 的第一个参数必须是env或者host');
     }
     listDs.query();
   };

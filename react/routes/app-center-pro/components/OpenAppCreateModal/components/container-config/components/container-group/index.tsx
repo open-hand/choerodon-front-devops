@@ -57,8 +57,10 @@ const Index = observer(({
             autoFocus
             value={record.get('name')}
             onChange={(value) => record.set('name', value)}
-            onBlur={() => {
-              record.set('edit', false);
+            onBlur={(e) => {
+              if (e.target.value) {
+                record.set('edit', false);
+              }
             }}
           />
         ) : (

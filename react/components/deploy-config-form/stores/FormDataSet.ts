@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import {
   Record, DataSetProps, FieldIgnore, DataSet, RecordObjectProps,
 } from '@/interface';

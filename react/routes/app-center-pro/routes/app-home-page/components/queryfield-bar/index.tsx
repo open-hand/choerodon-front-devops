@@ -12,7 +12,7 @@ import EnvOption from '@/components/env-option';
 
 import './index.less';
 import { useAppHomePageStore } from '../../stores';
-import { ENV_TAB, HOST_TAB } from '@/routes/app-center-pro/stores/CONST';
+import { APP_OPERATION, ENV_TAB, HOST_TAB } from '@/routes/app-center-pro/stores/CONST';
 
 const ContentHeader: React.FC<any> = observer((): any => {
   const {
@@ -56,6 +56,61 @@ const ContentHeader: React.FC<any> = observer((): any => {
     disabled: !envRecord.get('permission'),
   }), []);
 
+  const renderFilterDatas = useCallback(() => {
+    const res: {
+      field: string,
+      label: string,
+      options?: any[]
+    }[] = [
+      {
+        field: 'name',
+        label: '应用名称',
+      },
+      {
+        field: 'operation_type',
+        label: '操作类型',
+        options: map(APP_OPERATION, (value:keyof typeof APP_OPERATION) => ({
+          name: formatMessage({ id: `c7ncd.app.operation.type.${value}` }),
+          value,
+        })),
+      },
+    ];
+    if (mainStore.getCurrentTypeTabKey === ENV_TAB) {
+      res.push({
+        field: 'rdupm_type',
+        label: '应用类型',
+        options: [
+          {
+            name: 'chart包',
+            value: 'chart',
+          },
+          {
+            name: '部署组',
+            value: 'deployment',
+          },
+        ],
+      });
+    }
+    return res;
+  }, [mainStore.getCurrentTypeTabKey]);
+
+  const setQueryFields = (data:any) => {
+    searchDs.reset();
+    const record = searchDs.current;
+    if (data && data.length) {
+      data.forEach((item:any) => {
+        const {
+          field,
+          value,
+        } = item || {};
+        if (value) {
+          record?.set(field || 'params', value?.value || value);
+        }
+      });
+    }
+    listDs.query();
+  };
+
   return (
     <div className={newPrefixCls}>
       <CustomTabs
@@ -98,7 +153,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
             />
           )}
         </Form>
-        <Form
+        {/* <Form
           dataSet={searchDs}
           columns={4}
           className={`${newPrefixCls}-form`}
@@ -113,18 +168,12 @@ const ContentHeader: React.FC<any> = observer((): any => {
             prefix={<Icon type="search" />}
             onClear={() => refresh()}
           />
-        </Form>
-        {/* <FilterTextField
-          filterMap={
-            [
-              {
-                field: 'name',
-                label: '姓名',
-              },
-            ]
-          }
-          onSearch={(data) => console.log(data)}
-        /> */}
+        </Form> */}
+        <FilterTextField
+          filterMap={renderFilterDatas()}
+          onSearch={setQueryFields}
+          className={`${newPrefixCls}-filterText`}
+        />
         <Button
           onClick={() => refresh()}
           className={`${newPrefixCls}-btn`}

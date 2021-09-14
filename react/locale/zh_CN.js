@@ -1,4 +1,13 @@
 // zh_CN.js
+
+const app = {
+  'c7ncd.app.operation.type.create_app': '创建应用',
+  'c7ncd.app.operation.type.hzero': 'hzero快速部署',
+  'c7ncd.app.operation.type.base_component': '基础组件',
+  'c7ncd.app.operation.type.batch_deploy': '批量部署',
+  'c7ncd.app.operation.type.pipeline_deploy': '流水先部署',
+};
+
 const commonField = {
   // 表格通用列名
   status: '状态',
@@ -3187,6 +3196,7 @@ const zhCN = {
   ...reports,
   ...appTemplate,
   ...appCenter,
+  ...app,
 };
 
 export default zhCN;

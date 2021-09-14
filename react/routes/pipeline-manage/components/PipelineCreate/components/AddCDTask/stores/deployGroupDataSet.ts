@@ -17,7 +17,7 @@ const mapping = (): {
   [key: string]: FieldProps
 } => ({
   appName: {
-    name: 'name',
+    name: 'appName',
     type: 'string' as FieldType,
     label: '应用名称',
     required: true,
@@ -26,7 +26,7 @@ const mapping = (): {
     options: appNameDataSet,
   },
   appCode: {
-    name: 'code',
+    name: 'appCode',
     type: 'string' as FieldType,
     label: '应用编码',
     required: true,

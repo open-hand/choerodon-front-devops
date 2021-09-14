@@ -5,6 +5,7 @@ import { observer } from 'mobx-react-lite';
 import toUpper from 'lodash/toUpper';
 import { Action } from '@choerodon/boot';
 import { Icon, Tooltip } from 'choerodon-ui/pro';
+import folderNoCheck from '../../../../../images/folder_no_check.svg';
 import ClusterItem from './ClusterItem';
 import { useClusterStore } from '../../../stores';
 import { useClusterMainStore } from '../../stores';
@@ -79,7 +80,7 @@ const TreeItem = observer(({ record, search }) => {
     if (isGroup) {
       return (
         <>
-          {isExpand ? <Icon type="folder_open2" /> : <Icon type="folder_open" />}
+          <img src={folderNoCheck} alt="img" />
           {name}
         </>
       );

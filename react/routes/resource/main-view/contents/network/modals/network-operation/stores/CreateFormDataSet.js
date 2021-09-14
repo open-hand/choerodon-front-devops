@@ -220,6 +220,11 @@ export default ({
               appInstanceOptionsDs.query();
             }
             break;
+          case 'appDeploy':
+            !networkId && handleAppDeployChange({
+              dataSet, record, name, value, appDeployOptionsDs,
+            });
+            break;
           default:
             break;
         }
@@ -260,18 +265,30 @@ function handleAppServiceIdChange({
   if (!value) return;
   const opt = dataSet.getField(name).getLookupData(value);
   if (opt) {
-    const networkName = createNetworkName(opt);
+    const networkName = createNetworkName(opt, dataSet);
     record.set('name', networkName);
   }
 }
 
+function handleAppDeployChange({
+  dataSet, record, name, value, appDeployOptionsDs,
+}) {
+  if (!value) return;
+  const networkName = createNetworkName(appDeployOptionsDs.current, dataSet);
+  record.set('name', networkName);
+}
 /**
  * 生成网络名
  * @param opt
  * @returns {string}
  */
-function createNetworkName(opt) {
-  let initName = opt.code;
+function createNetworkName(opt, dataSet) {
+  let initName;
+  if (dataSet.current.get('isChart') === 'chart') {
+    initName = opt.code;
+  } else {
+    initName = opt.get('code');
+  }
   if (initName.length > 23) {
     // 初始网络名长度限制
     initName = initName.slice(0, 23);

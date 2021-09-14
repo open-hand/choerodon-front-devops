@@ -34,7 +34,7 @@ const Index = observer(() => {
       }
       default: {
         const res = await appServiceInstanceApi
-          .getMarketValues(detailData.instanceId, detailData.appServiceVersionId);
+          .getMarketValues(detailData.instanceId || detailData.id, detailData.appServiceVersionId);
         return res;
         break;
       }

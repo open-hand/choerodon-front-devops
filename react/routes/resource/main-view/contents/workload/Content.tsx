@@ -163,6 +163,35 @@ const WorkloadContent = observer(() => {
     tableDs.delete(record, modalProps);
   }, [workloadStore.getTabKey]);
 
+  const appTypeObj = {
+    chart: {
+      colorCode: 'operating',
+      name: 'Chart资源',
+    },
+    deploy_group: {
+      colorCode: 'success',
+      name: '部署组资源',
+    },
+  };
+
+  const renderAppType = ({ value: sourceType }:{value:'chart'| 'deploy_group'}) => {
+    if (!sourceType) return null;
+    const {
+      colorCode,
+      name: typeName,
+    } = appTypeObj[sourceType] || {};
+    return (
+      <StatusTag
+        style={{
+          marginLeft: '4px',
+        }}
+        colorCode={colorCode as any}
+        type="border"
+        name={typeName}
+      />
+    );
+  };
+
   const renderName = useCallback(({ value, record }: { value: string, record: Record }) => {
     const status = record.get('commandStatus');
     const error = record.get('error');
@@ -178,18 +207,13 @@ const WorkloadContent = observer(() => {
       >
         <StatusIcon
           name={value}
+          sourceType={sourceType}
           status={status}
           clickAble={status !== 'operating'}
           onClick={() => openDetailModal(record)}
           permissionCode={['choerodon.code.project.deploy.app-deployment.resource.ps.workload.detail']}
           error={error}
         />
-        {
-         sourceType === 'chart' && <StatusTag colorCode="operating" type="border" name="Chart资源" />
-        }
-        {
-         sourceType === 'deploy_group' && <StatusTag colorCode="success" type="border" name="部署组资源" />
-        }
       </div>
 
     );
@@ -320,6 +344,7 @@ const WorkloadContent = observer(() => {
           >
             <Column name="name" renderer={renderName} />
             <Column renderer={renderAction} width={60} />
+            <Column name="sourceType" renderer={renderAppType} />
             <Column name="labels" renderer={renderLabels} />
             <Column name="schedule" />
             <Column name="suspend" renderer={({ value }: { value: boolean }) => (value ? '是' : '否')} width={80} />
@@ -335,6 +360,7 @@ const WorkloadContent = observer(() => {
           >
             <Column name="name" renderer={renderName} />
             <Column renderer={renderAction} width={60} />
+            <Column name="sourceType" renderer={renderAppType} />
             <Column name="pod" renderer={renderPod} />
             <Column name="labels" renderer={renderLabels} width={130} />
             <Column name="ports" renderer={renderPorts} width={100} />

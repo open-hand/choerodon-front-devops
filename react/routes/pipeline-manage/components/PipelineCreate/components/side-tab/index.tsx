@@ -7,15 +7,6 @@ const cssPrefix = 'c7ncd-pipelineCreate-sideTab';
 const sideData = [{
   name: '基础配置',
   key: '1',
-}, {
-  name: '基础配置',
-  key: '2',
-}, {
-  name: '基础配置',
-  key: '3',
-}, {
-  name: '基础配置',
-  key: '4',
 }];
 
 const Index = ({

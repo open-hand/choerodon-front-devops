@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-no-bind */
+/* eslint-disable jsx-quotes */
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Action } from '@choerodon/boot';
@@ -110,7 +112,7 @@ const ConfigMap = observer((props) => {
         envId={parentId}
         store='configMap'
         intlPrefix={intlPrefix}
-        refresh={refresh}
+        refresh
       />,
       okText: formatMessage({ id: 'save' }),
     });

@@ -16,6 +16,7 @@ import { appServiceInstanceApi, deployApi } from '@/api';
 import { mapping as deployGroupConfigMapping } from './components/deploy-group-config/stores/deployGroupConfigDataSet';
 import { devopsDeployGroupApi } from '@/api/DevopsDeployGroup';
 import { ENV_TAB, HOST_TAB } from '@/routes/app-center-pro/stores/CONST';
+import HostOtherProduct from './components/host-other-product';
 
 import './index.less';
 
@@ -279,7 +280,14 @@ const AppCreateForm = (props: any) => {
               break;
             }
             case deployProductOptionsData[3].value: {
-              return '123';
+              return (
+                <HostOtherProduct
+                  style={{
+                    marginTop: 30,
+                  }}
+                  cRef={appConfigRef}
+                />
+              );
               break;
             }
             default: {
@@ -431,13 +439,31 @@ const AppCreateForm = (props: any) => {
           break;
         }
         case deployModeOptionsData[1].value: {
-          key = HOST_TAB;
-          submitData = {
-            ...submitData,
-            // @ts-ignore
-            ...appConfigData,
-          };
-          request = 'deploy_host';
+          switch (appInfoData[infoMapping.deployProductType.name as string]) {
+            case (deployProductOptionsData[2].value): {
+              key = HOST_TAB;
+              submitData = {
+                ...submitData,
+                // @ts-ignore
+                ...appConfigData,
+              };
+              request = 'deploy_host';
+              break;
+            }
+            case (deployProductOptionsData[3].value): {
+              key = HOST_TAB;
+              submitData = {
+                ...submitData,
+                // @ts-ignore
+                ...appConfigData,
+              };
+              request = 'deploy_other';
+              break;
+            }
+            default: {
+              break;
+            }
+          }
           break;
         }
         default: {
@@ -462,6 +488,10 @@ const AppCreateForm = (props: any) => {
       }
       case 'deploy_host': {
         result = await deployApi.deployJava(submitData);
+        break;
+      }
+      case 'deploy_other': {
+        result = await deployApi.deployCustom(submitData);
         break;
       }
       default: {
@@ -496,8 +526,8 @@ const AppCreateForm = (props: any) => {
         setCurrent(current + 1);
       } else {
         try {
-          const { key } = await handleSubmit();
-          refresh(key);
+          const { key, result } = await handleSubmit();
+          refresh(key, result);
           return true;
         } catch (e) {
           return false;

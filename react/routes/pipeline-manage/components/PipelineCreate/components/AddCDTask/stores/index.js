@@ -7,6 +7,7 @@ import deployChartDataSet, { deployConfigDataSet } from './deployChartDataSet';
 import addCDTaskDataSet from './addCDTaskDataSet';
 import deployGroupDataSet
   from '@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/deployGroupDataSet';
+import hostJarDataSet from './hostJarDataSet';
 import useStore from './useStore';
 import { fieldMap } from './addCDTaskDataSetMap';
 
@@ -30,12 +31,14 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
       },
     },
     appServiceCode,
+    trueAppServiceId,
   } = props;
 
   const ADDCDTaskUseStore = useStore();
-  const ADDCDTaskDataSet = useMemo(() => new DataSet(addCDTaskDataSet(projectId, PipelineCreateFormDataSet, organizationId, ADDCDTaskUseStore, appServiceCode, random, deployConfigDataSet)), [ADDCDTaskUseStore, random]);
+  const ADDCDTaskDataSet = useMemo(() => new DataSet(addCDTaskDataSet(projectId, PipelineCreateFormDataSet, organizationId, ADDCDTaskUseStore, appServiceCode, random, deployConfigDataSet, trueAppServiceId)), [ADDCDTaskUseStore, random]);
   const DeployChartDataSet = useMemo(() => new DataSet(deployChartDataSet(ADDCDTaskDataSet)), [ADDCDTaskDataSet?.current?.get(fieldMap.deployWay.name)]);
   const DeployGroupDataSet = useMemo(() => new DataSet(deployGroupDataSet(ADDCDTaskDataSet)), []);
+  const HostJarDataSet = useMemo(() => new DataSet(hostJarDataSet()), []);
 
   const value = {
     ...props,
@@ -43,6 +46,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
     ADDCDTaskDataSet,
     DeployChartDataSet,
     DeployGroupDataSet,
+    HostJarDataSet,
   };
 
   return (

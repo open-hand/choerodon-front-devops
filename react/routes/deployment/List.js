@@ -151,7 +151,7 @@ const Deployment = withRouter(observer((props) => {
       const envId = record.get('envId');
       history.push({
         pathname: '/devops/resource',
-        search: `${search}&activeKey=${TabCode.get('/devops/resource').tabCodes[0]}`,
+        search: `${search}`,
         state: {
           instanceId,
           appServiceId,
@@ -166,17 +166,15 @@ const Deployment = withRouter(observer((props) => {
   function deployAfter(instance, type = 'instance') {
     const { history, location: { search } } = props;
     if (instance.config) {
-      // history.push(`/devops/deployment-operation${search}`);
       refresh();
     } else {
       history.push({
         pathname: '/devops/resource',
-        search: `${search}&activeKey=${TabCode.get('/devops/resource').tabCodes[0]}`,
+        search: `${search}`,
         state: {
           instanceId: instance.id,
           appServiceId: instance.appServiceId,
           envId: instance.envId,
-          viewType: type,
         },
       });
     }
@@ -500,7 +498,7 @@ const Deployment = withRouter(observer((props) => {
         icon: 'playlist_add',
         display: true,
         permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.manual'],
-        handler: () => openAppCreateModal(refresh, true, id),
+        handler: () => openAppCreateModal(refresh),
       },
       {
         name: '批量创建Chart应用',
@@ -508,7 +506,6 @@ const Deployment = withRouter(observer((props) => {
         display: true,
         permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.batch'],
         handler: () => openBatchDeploy({
-          envId: id,
           refresh: deployAfter,
         }),
       },

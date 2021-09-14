@@ -21,7 +21,7 @@ export default withRouter(injectIntl(({
       const envId = record.get('envId');
       history.push({
         pathname: '/devops/resource',
-        search: `${search}&activeKey=${TabCode.get('/devops/resource').tabCodes[0]}`,
+        search: `${search}`,
         state: {
           instanceId,
           appServiceId,

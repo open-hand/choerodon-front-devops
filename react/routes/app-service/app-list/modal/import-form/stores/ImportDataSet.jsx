@@ -4,6 +4,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 import map from 'lodash/map';
 import pick from 'lodash/pick';
+import { DataSet } from 'choerodon-ui/pro';
 import {
   appServiceApiConfig, marketApiConfig, appServiceApi, groupsApiConfig,
 } from '@/api';
@@ -230,13 +231,13 @@ export default ({
       {
         name: 'isGitLabTemplate',
         type: 'bool',
-        defaultValue: false,
+        defaultValue: true,
       },
       {
         name: 'githubTemplate',
         type: 'string',
         textField: 'name',
-        valueField: 'id',
+        valueField: 'path',
         dynamicProps: {
           lookupUrl: ({ record }) => (record.get('platformType') === 'github' ? `/devops/v1/projects/${projectId}/app_service/list_service_templates` : ''),
           required: ({ record }) => record.get('platformType') === 'github' && record.get('isTemplate'),
