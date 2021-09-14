@@ -61,10 +61,7 @@ export default (): DataSetProps => {
   }
 
   function isRequired({ dataSet, record }: any) {
-    const parentRecord = record.cascadeParent;
-    const hasValue = parentRecord.get('name') || parentRecord.get('domain') || parentRecord.get('certId');
-    const dirty = dataSet.some((pathRecord: any) => pathRecord.dirty);
-    return dirty || !!hasValue;
+    return Boolean(record.get('serviceName'));
   }
 
   return ({
