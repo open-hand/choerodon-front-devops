@@ -4,6 +4,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 import map from 'lodash/map';
 import pick from 'lodash/pick';
+import { DataSet } from 'choerodon-ui/pro';
 import {
   appServiceApiConfig, marketApiConfig, appServiceApi, groupsApiConfig,
 } from '@/api';
@@ -230,7 +231,7 @@ export default ({
       {
         name: 'isGitLabTemplate',
         type: 'bool',
-        defaultValue: false,
+        defaultValue: true,
       },
       {
         name: 'githubTemplate',
