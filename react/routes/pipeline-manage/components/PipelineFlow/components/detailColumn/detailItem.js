@@ -181,7 +181,7 @@ const DetailItem = (props) => {
           </Tooltip>
         </div>
         <div>
-          <span>生成实例:</span>
+          <span>生成应用:</span>
           <Tooltip title={instanceName}>
             <span
               style={{ color: '#3F51B5', cursor: 'pointer' }}
