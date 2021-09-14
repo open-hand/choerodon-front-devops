@@ -1,3 +1,6 @@
+/* eslint-disable react/jsx-no-bind */
+/* eslint-disable react/jsx-closing-tag-location */
+/* eslint-disable react/jsx-wrap-multilines */
 import React from 'react';
 import { Action } from '@choerodon/boot';
 import { Table, Tooltip } from 'choerodon-ui/pro';

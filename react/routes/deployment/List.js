@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, max-len */
 
 import React, { useCallback, useEffect, Suspense } from 'react';
@@ -137,7 +138,7 @@ const Deployment = withRouter(observer((props) => {
             middleware,
           } : {})
         }
-        refresh={refresh}
+        refresh
       />,
       okText: '部署',
     });
@@ -442,7 +443,7 @@ const Deployment = withRouter(observer((props) => {
       children: <HzeroDeployDetail
         status={record.get('deployResult')}
         recordId={record.get('id')}
-        refresh={refresh}
+        refresh
         handleHzeroStop={handleHzeroStop}
       />,
       okText: formatMessage({ id: 'close' }),

@@ -1,3 +1,6 @@
+/* eslint-disable react/jsx-no-bind */
+/* eslint-disable consistent-return */
+/* eslint-disable max-len */
 import React, { Fragment, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
@@ -6,12 +9,12 @@ import { handlePromptError } from '../../../../../../../utils';
 import DynamicSelect from '../../../../../../../components/dynamic-select-new';
 import UserInfo from '../../../../../../../components/userInfo';
 
-
 const { Option } = Select;
 
 export default observer((props) => {
-  const { dataSet, nonePermissionDs, refresh, baseDs, store, projectId, formatMessage, prefixCls, intlPrefix, modal } = props;
-  
+  const {
+    dataSet, nonePermissionDs, refresh, baseDs, store, projectId, formatMessage, prefixCls, intlPrefix, modal,
+  } = props;
 
   const record = useMemo(() => baseDs.current, [baseDs.current]);
 
@@ -22,7 +25,7 @@ export default observer((props) => {
       objectVersionNumber: record.get('objectVersionNumber'),
       skipCheckPermission,
     };
-    if (skipCheckPermission) { 
+    if (skipCheckPermission) {
       const res = await store.addUsers({
         projectId,
         userIds: [],
@@ -31,9 +34,8 @@ export default observer((props) => {
       if (handlePromptError(res, false)) {
         refresh();
         return true;
-      } else {
-        return false;
       }
+      return false;
     }
     dataSet.transport.create = ({ data }) => {
       const res = {
@@ -45,7 +47,7 @@ export default observer((props) => {
         method: 'post',
         data: res,
       };
-    }; 
+    };
     try {
       if (await dataSet.submit() !== false) {
         refresh();
@@ -61,19 +63,17 @@ export default observer((props) => {
     record.reset();
     dataSet.reset();
   });
-  
 
   function renderUserOption({ record: optionRecord }) {
     return <UserInfo name={optionRecord.get('realName') || ''} id={record.get('loginName')} />;
   }
-  
 
   function renderer({ optionRecord }) {
     return <UserInfo name={optionRecord.get('realName') || ''} id={record.get('loginName')} />;
   }
 
   return (
-    <Fragment>
+    <>
       <Form record={record}>
         <SelectBox name="skipCheckPermission">
           <Option value>{formatMessage({ id: `${intlPrefix}.member.all` })}</Option>
@@ -82,14 +82,14 @@ export default observer((props) => {
       </Form>
       {record && !record.get('skipCheckPermission') && (
         <DynamicSelect
-          selectDataSet={dataSet} 
+          selectDataSet={dataSet}
           optionsRenderer={renderUserOption}
           optionsDataSet={nonePermissionDs}
-          renderer={renderer}
+          renderer
           selectName="iamUserId"
           addText={formatMessage({ id: `${intlPrefix}.add.member` })}
         />
       )}
-    </Fragment>
+    </>
   );
 });
