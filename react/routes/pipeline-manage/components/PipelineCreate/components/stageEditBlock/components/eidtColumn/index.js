@@ -386,9 +386,7 @@ export default observer((props) => {
           <span>任务列表</span>
           {/* Todo 加上串并行逻辑后优化判断 */}
           <span
-            className={`c7n-piplineManage-stage-type-task c7n-piplineManage-stage-type-task-${
-              parallel || realType === 'CI' ? 'parallel' : 'serial'
-            }`}
+            className={`c7n-piplineManage-stage-type-task c7n-piplineManage-stage-type-task-${parallel || realType === 'CI' ? 'parallel' : 'serial'}`}
           >
             {parallel || realType === 'CI' ? '任务并行' : '任务串行'}
           </span>

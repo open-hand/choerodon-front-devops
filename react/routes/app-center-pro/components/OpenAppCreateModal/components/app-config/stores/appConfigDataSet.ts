@@ -316,6 +316,7 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
           ...data,
           appName: data[mapping.appName.name as string],
           appCode: data[mapping.appCode.name as string],
+          instanceId: data?.id,
         });
       }
       return appServiceInstanceApi.updateMarketAppService(
@@ -324,6 +325,7 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
           ...data,
           appName: data[mapping.appName.name as string],
           appCode: data[mapping.appCode.name as string],
+          instanceId: data?.id,
           marketAppServiceId: data[mapping.hzeroVersion.name as string],
         },
       );
