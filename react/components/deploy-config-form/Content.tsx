@@ -1,13 +1,15 @@
 import React, {
-  useState, useMemo, useCallback,
+  useState, useMemo, useCallback, useRef, useEffect,
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Form, TextField, TextArea, Select, Spin,
 } from 'choerodon-ui/pro';
 import { message } from 'choerodon-ui';
+import { Loading } from '@choerodon/components';
 import { ResizeType } from '@/interface';
 import YamlEditor from '@/components/yamlEditor';
+import useForceUpdate from '@/hooks/useForceUpdate';
 import { useDeployConfigFormStore } from './stores';
 
 import './index.less';
@@ -19,9 +21,13 @@ const DeployConfigForm = () => {
     modal,
     refresh,
     isModify,
+    valueLoading,
   } = useDeployConfigFormStore();
 
   const record = useMemo(() => formDs.current, [formDs.current]);
+
+  const forceUpdate = useForceUpdate();
+
   const [isError, setValueError] = useState(false);
 
   modal.handleOk(async () => {
@@ -47,18 +53,21 @@ const DeployConfigForm = () => {
     record?.set('value', value);
   }, [record]);
 
-  const renderValue = useCallback(() => {
+  const renderValue = () => {
     const app = record?.get('appServiceId');
+    if (app && valueLoading) {
+      return <Loading />;
+    }
     return app ? (
       <YamlEditor
         readOnly={false}
         value={record?.get('value')}
-        originValue={record?.getPristineValue('value')}
+        originValue={record?.get('oldValue') || record?.get('value')}
         onValueChange={handleValueChange}
         handleEnableNext={setValueError}
       />
     ) : null;
-  }, [record]);
+  };
 
   if (!record) {
     return <Spin />;
@@ -77,6 +86,7 @@ const DeployConfigForm = () => {
                 clearButton={false}
                 searchable
                 name="appServiceId"
+                onChange={() => forceUpdate()}
               />
             )}
         </Form>

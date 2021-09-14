@@ -14,21 +14,26 @@ interface FormProps {
   appOptionDs: DataSet,
   appSelectDisabled?: boolean,
   appServiceName?: string,
+  setValueLoading:CallableFunction
 }
 
 export default ({
   formatMessage, projectId, envId, deployConfigId,
-  appOptionDs, appServiceId, appSelectDisabled, appServiceName,
+  appOptionDs, appServiceId, appSelectDisabled, appServiceName, setValueLoading,
 }: FormProps): DataSetProps => {
   const loadValue = async ({ id, record }: { id: string, record: Record }) => {
+    setValueLoading(true);
     const res = await DeployConfigServices.getAppServiceValue(projectId, id);
+    res && record.set('oldValue', res);
     res && record.set('value', res);
+    setValueLoading(false);
   };
   const handleUpdate = async ({ record, name, value }: any) => {
     if (name === 'appServiceId' && value) {
-      const res = await DeployConfigServices.getAppServiceValue(projectId, value);
-      res && record.set('value', res);
-      loadValue({ id: value, record });
+      loadValue({
+        id: value,
+        record,
+      });
     }
   };
 

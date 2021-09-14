@@ -29,6 +29,13 @@ class AppServiceVersionsApi extends Api<AppServiceVersionsApi> {
       method: 'post',
     });
   }
+
+  getYamlValueFromDeployConfig(appServiceId:string) {
+    return this.request({
+      url: `${this.prefix}/value?app_service_id=${appServiceId}`,
+      method: 'get',
+    });
+  }
 }
 
 const appServiceVersionApi = new AppServiceVersionsApi();

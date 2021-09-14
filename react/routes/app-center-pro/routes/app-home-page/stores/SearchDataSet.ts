@@ -53,17 +53,5 @@ export default ({ envDs, hostDs, ALL_ENV_KEY }: SearchProps): any => ({
     {
       name: 'params',
     },
-    // {
-    //   name: 'name',
-    //   label: '应用名称',
-    // },
-    // {
-    //   name: 'rdupm_type',
-    //   label: '应用类型',
-    // },
-    // {
-    //   name: 'operation_type',
-    //   label: '操作类型',
-    // },
   ],
 });
