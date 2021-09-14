@@ -51,7 +51,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   } = useAppCenterProStore();
 
   const defaultTypeTabKey = typeTabKeys.ENV_TAB;
-  const ALL_ENV_KEY = '0';
+  const ALL_ENV_KEY = 'All';
   const mainStore = useStore({ defaultTypeTabKey });
   const hasMarket = useHasMarket();
 
