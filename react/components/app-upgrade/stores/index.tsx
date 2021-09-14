@@ -74,7 +74,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
     })), [projectId]);
 
     const formDsHzero = useMemo(() => new DataSet(HzeroFormDataSet({
-      formatMessage, intlPrefix, projectId, versionsDs, valueDs, isMiddleware, isHzero,
+      formatMessage, intlPrefix, projectId, versionsDs, isMiddleware, isHzero, instanceId,
     })), [projectId]);
 
     useEffect(() => {
@@ -106,7 +106,6 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       versionsDs.forEach((eachRecord) => {
         const versionType = eachRecord.get('versionType');
         if (versionType === 'currentVersion') {
-          console.log(eachRecord.get('marketAppVersion'));
           record.init({
             marketAppName: eachRecord.get('marketAppName'),
             marketAppVersion: eachRecord.get('marketAppVersion'),
@@ -129,8 +128,8 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
         const versionType = eachRecord.get('versionType');
         if (versionType === 'currentVersion') {
           recordHzero.init({
-            // marketAppName: eachRecord.get('marketAppName'),
             marketAppVersion: eachRecord.get('marketAppVersion'),
+            hzeroCurrentVersionId: eachRecord.get('id'),
           });
           versionsDs.delete(eachRecord, false);
         } else {
@@ -139,7 +138,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
             : '';
           eachRecord.init('marketServiceVersion', `${eachRecord.get('marketServiceVersion')}${versionTypeText}`);
           if (versionType === 'lastVersion') {
-            recordHzero.init('marketDeployObjectId', `${eachRecord.get('marketServiceVersion')}`);
+            recordHzero.init('marketDeployObjectId', `${eachRecord.get('id')}`);
           }
         }
       });

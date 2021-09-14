@@ -12,16 +12,17 @@ interface FormProps {
   formatMessage(arg0: object, arg1?: object): string;
   projectId: number;
   versionsDs: DataSet;
-  valueDs: DataSet;
   isMiddleware: boolean;
   isHzero: boolean;
+  instanceId: string
 }
 
 export default ({
   versionsDs,
-  valueDs,
   isMiddleware,
+  instanceId,
 }: FormProps): DataSetProps => {
+  // eslint-disable-next-line no-shadow
   const getUpgradeAppUrl = (data: any, instanceId: string) => {
     if (isMiddleware) {
       return middlewareConfigApi.upgradeApp(data, instanceId);
@@ -36,10 +37,7 @@ export default ({
     transport: {
       create: ({ data: [data] }) => {
         const res = omit(data, ['__id', '__status']);
-        if (!res.values) {
-          res.values = valueDs && valueDs.current ? valueDs.current.get('yaml') : '';
-        }
-        return getUpgradeAppUrl(res, data.instanceId);
+        return getUpgradeAppUrl(res, instanceId);
       },
     },
     fields: [
@@ -47,6 +45,13 @@ export default ({
         name: 'marketAppVersion',
         type: 'string' as FieldType,
         label: '当前版本',
+        ignore: 'always' as FieldIgnore,
+      },
+      {
+        name: 'instanceId',
+        type: 'string' as FieldType,
+        label: 'instanceId',
+        defaultValue: instanceId,
         ignore: 'always' as FieldIgnore,
       },
       {

@@ -4,11 +4,12 @@ import React, {
 import { observer } from 'mobx-react-lite';
 import { Choerodon } from '@choerodon/boot';
 import {
-  Button, Form, Select, TextField,
+  Button, Form, Select, TextField, Axios,
 } from 'choerodon-ui/pro';
 import { Spin } from 'choerodon-ui';
 import { useUpgradeStore } from './stores';
 import YamlEditor from '@/components/yamlEditor';
+import { HzeroGetYamlApi } from '@/api/HzeroYaml';
 
 const HzeroUpgrade = observer(() => {
   const {
@@ -29,11 +30,36 @@ const HzeroUpgrade = observer(() => {
   const record = useMemo(() => formDsHzero.current, [formDsHzero.current]);
 
   const [hasEditorError, setHasEditorError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [values, setValues] = useState(''); // 左边的数据
+  const [originValue, setOriginValue] = useState(''); // 右边的数据
 
   useEffect(() => {
-    modal.update({
-      okProps: { disabled: !record || record.get('marketDeployObjectId') === marketDeployObjectId },
-    });
+    if (record?.get('instanceId')) {
+      const id = record?.get('instanceId');
+      setLoading(true);
+      HzeroGetYamlApi.getCurrentVersionYaml(id).then((res:any) => {
+        setLoading(false);
+        setValues(res.yaml);
+        record.set('values', res.yaml);
+      });
+    }
+  }, [record, record?.get('instanceId')]);
+
+  useEffect(() => {
+    setHasEditorError(false);
+    modal.update({ okProps: { disabled: false } });
+    if (document.getElementsByClassName('c7ncd-yaml-error')[0]) {
+      document.getElementsByClassName('c7ncd-yaml-error')[0].setAttribute('style', 'display:none');
+    }
+    if (record?.get('marketDeployObjectId')) {
+      const id = record?.get('marketDeployObjectId');
+      setLoading(true);
+      HzeroGetYamlApi.getOtherVersionYaml(record.get('instanceId'), id).then((res:any) => {
+        setLoading(false);
+        setOriginValue(res.yaml);
+      });
+    }
   }, [record, record?.get('marketDeployObjectId')]);
 
   modal.handleOk(async () => {
@@ -51,32 +77,6 @@ const HzeroUpgrade = observer(() => {
       return false;
     }
   });
-
-  const getValue = useMemo(() => {
-    const yaml = valueDs.current ? valueDs.current.get('yaml') : '';
-    const values = record ? record.get('values') : '';
-    return (
-      <YamlEditor
-        readOnly={false}
-        value={values || yaml || ''}
-        originValue={yaml}
-        handleEnableNext={handleNextStepEnable}
-        onValueChange={handleChangeValue}
-        customRightClasses={
-            {
-              chunk: 'CodeMirror-merge-r-chunk',
-              start: 'CodeMirror-merge-r-chunk-start',
-              end: 'CodeMirror-merge-r-chunk-end',
-              insert: '',
-              del: '',
-              connect: 'CodeMirror-merge-r-connect',
-            }
-          }
-        LEGEND_TYPE={['modify']}
-        // showError={false}
-      />
-    );
-  }, [record, valueDs.current]);
 
   const handleNextStepEnable = useCallback((flag: boolean) => {
     setHasEditorError(flag);
@@ -103,6 +103,28 @@ const HzeroUpgrade = observer(() => {
     return '';
   };
 
+  const getEditor = useMemo(() => (
+    <YamlEditor
+      readOnly={false}
+      value={values}
+      originValue={originValue}
+      handleEnableNext={handleNextStepEnable}
+      onValueChange={handleChangeValue}
+      customRightClasses={
+        {
+          chunk: 'CodeMirror-merge-r-chunk',
+          start: 'CodeMirror-merge-r-chunk-start',
+          end: 'CodeMirror-merge-r-chunk-end',
+          insert: '',
+          del: '',
+          connect: 'CodeMirror-merge-r-connect',
+        }
+      }
+      viewMode="diff"
+      LEGEND_TYPE={['modify']}
+    />
+  ), [values, originValue, handleNextStepEnable, handleChangeValue]);
+
   if (!record) {
     return <Spin spinning />;
   }
@@ -110,8 +132,8 @@ const HzeroUpgrade = observer(() => {
   return (
     <>
       {renderForm()}
-      <Spin spinning={valueDs.status === 'loading'}>
-        {getValue}
+      <Spin spinning={loading}>
+        {getEditor}
       </Spin>
     </>
   );

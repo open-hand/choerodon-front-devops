@@ -1,14 +1,15 @@
 /*eslint-disable*/
-import React from 'react';
-import PropTypes from 'prop-types';
-import { FormattedMessage } from 'react-intl';
-import { Button } from 'choerodon-ui/pro';
-import _ from 'lodash';
-import './Codemirror.less';
+import React from "react";
+import PropTypes from "prop-types";
+import { FormattedMessage } from "react-intl";
+import { Button } from "choerodon-ui/pro";
+import { Tooltip,Icon } from 'choerodon-ui';
+import _ from "lodash";
+import "./Codemirror.less";
 
 function normalizeLineEndings(str) {
   if (!str) return str;
-  return str.replace(/\r\n|\r/g, '\n');
+  return str.replace(/\r\n|\r/g, "\n");
 }
 
 class CodeMirror extends React.Component {
@@ -27,37 +28,48 @@ class CodeMirror extends React.Component {
   };
 
   static defaultProps = {
-    viewMode: 'normal',
+    viewMode: "normal",
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      viewMode: 'normal',
+      viewMode: "normal",
     };
     // 多个编辑器同时存在时，生成不同的id，以便点击切换编辑模式查找对应的id
     this.codeMirrorId = Date.now();
   }
 
   getCodeMirrorInstance() {
-    return this.props.codeMirrorInstance || require('codemirror');
+    return this.props.codeMirrorInstance || require("codemirror");
   }
 
   componentDidMount() {
-    this.initUI();
+    this.initUI(); // 默认normal模式
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (
-      this.codeMirror
-      && this.props.value !== undefined
-      && this.props.value !== prevProps.value
-      && normalizeLineEndings(this.codeMirror.getValue())
-      !== normalizeLineEndings(this.props.value)
+      this.codeMirror &&
+      this.props.originValue !== undefined &&
+      this.props.originValue !== prevProps.originValue
+    ) {
+      if (this.props.options.viewMode === "diff") {
+        // diff模式
+        this.initUI(this.props.options.viewMode);
+        this.setState({ viewMode: this.props.options.viewMode });
+      }
+    }
+    if (
+      this.codeMirror &&
+      this.props.value !== undefined &&
+      this.props.value !== prevProps.value &&
+      normalizeLineEndings(this.codeMirror.getValue()) !==
+        normalizeLineEndings(this.props.value)
     ) {
       this.codeMirror.setValue(this.props.value);
     }
-    if (typeof this.props.options === 'object') {
+    if (typeof this.props.options === "object") {
       for (const optionName in this.props.options) {
         if (this.props.options.hasOwnProperty(optionName)) {
           this.setOptionIfChanged(optionName, this.props.options[optionName]);
@@ -68,7 +80,7 @@ class CodeMirror extends React.Component {
 
   componentWillUnmount() {
     const { viewMode } = this.state;
-    if (this.codeMirror && viewMode === 'normal') {
+    if (this.codeMirror && viewMode === "normal") {
       this.codeMirror.toTextArea();
     }
   }
@@ -77,16 +89,23 @@ class CodeMirror extends React.Component {
     const { options, value, originValue } = this.props;
     const view = document.getElementById(this.codeMirrorId);
     const codeMirrorInstance = this.getCodeMirrorInstance();
-
-    if (viewMode === 'diff') {
+    if (viewMode === "diff") {
       if (this.codeMirror) {
-        this.codeMirror.toTextArea();
+        if (!this.codeMirror.hasOwnProperty("toTextArea")) {
+          view.innerHTML = "";
+          this.mergeView = null;
+          this.codeMirror = codeMirrorInstance.fromTextArea(
+            this.textareaNode,
+            options
+          );
+        }
+        this.codeMirror.toTextArea(); // 清空原来的normal模式的框
         this.codeMirror = null;
       }
       const mergeViewOptions = {
-        value: value || '',
-        origRight: originValue || '',
-        connect: 'align',
+        value: value || "",
+        origRight: originValue || "",
+        connect: "align",
         // 对比编辑器是否可编辑
         allowEditingOriginals: false,
         showDifferences: true,
@@ -97,22 +116,22 @@ class CodeMirror extends React.Component {
       this.mergeView = codeMirrorInstance.MergeView(view, mergeViewOptions);
       this.codeMirror = this.mergeView.edit;
     } else {
-      view.innerHTML = '';
+      view.innerHTML = "";
       this.mergeView = null;
       this.codeMirror = codeMirrorInstance.fromTextArea(
         this.textareaNode,
-        options,
+        options
       );
     }
 
-    this.codeMirror.on('change', this.codemirrorValueChanged);
-    this.codeMirror.setValue(value || '');
+    this.codeMirror.on("change", this.codemirrorValueChanged);
+    this.codeMirror.setValue(value || "");
   }
 
   handleChangeView = () => {
-    this.initUI(this.state.viewMode === 'normal' ? 'diff' : 'normal');
+    this.initUI(this.state.viewMode === "normal" ? "diff" : "normal");
     this.setState({
-      viewMode: this.state.viewMode === 'normal' ? 'diff' : 'normal',
+      viewMode: this.state.viewMode === "normal" ? "diff" : "normal",
     });
   };
 
@@ -126,13 +145,18 @@ class CodeMirror extends React.Component {
   getCodeMirror = () => this.codeMirror;
 
   codemirrorValueChanged = (doc, change) => {
-    if (this.props.onChange && change.origin !== 'setValue') {
+    if (this.props.onChange && change.origin !== "setValue") {
       this.props.onChange(doc.getValue(), change);
     }
   };
 
   get getLegends() {
-    let LEGEND_TYPE = this.props.options.LEGEND_TYPE || ['new', 'delete', 'modify', 'error']
+    const LEGEND_TYPE = [
+      "new",
+      "delete",
+      "modify",
+      "error",
+    ];
     return _.map(LEGEND_TYPE, (item) => (
       <span
         key={item}
@@ -157,7 +181,7 @@ class CodeMirror extends React.Component {
           <Button funcType="flat" onClick={this.handleChangeView}>
             <FormattedMessage id="editor.mode.changer" />
           </Button>
-          {viewMode === 'diff' ? (
+          {viewMode === "diff" ? (
             <div className="c7ncd-editor-legend">{this.getLegends}</div>
           ) : null}
         </div>
@@ -165,7 +189,27 @@ class CodeMirror extends React.Component {
     }
     return (
       <div className="c7ncd-codemirror">
-        {editor}
+        {options.viewMode !== "diff" && editor}
+        {options.viewMode === "diff" && (
+          <div className="c7ncd-editor-tips">
+            <div className="c7ncd-editor-tips-left">
+              <Tooltip title="应用当前生效的运行配置信息。">
+                <span>
+                  运行配置信息
+                  <Icon style={{position:'relative',top:-1,left:12}} type="help" />
+                </span>
+              </Tooltip>
+
+              <span className="c7ncd-editor-tips-left-modify">差异</span>
+            </div>
+            <div className="c7ncd-editor-tips-right">
+              <Tooltip title="新版本的默认配置信息，即chart包中默认的values。您可参照默认values来配置升级应用后的运行配置信息。">
+                默认配置信息
+                <Icon style={{position:'relative',top:-1,left:12}} type="help" />
+              </Tooltip>
+            </div>
+          </div>
+        )}
         <div>
           <textarea
             className="hidden-textarea"

@@ -91,7 +91,7 @@ function openHzeroUpgradeModal({
 
   Modal.open({
     key: HzeroUpgradeKey,
-    title: '升级Hzero',
+    title: `升级${appServiceName}`,
     drawer: true,
     okText: <FormattedMessage id="upgrade" />,
     style: {
