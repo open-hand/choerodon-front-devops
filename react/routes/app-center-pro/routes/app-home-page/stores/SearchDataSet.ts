@@ -29,7 +29,7 @@ export default ({ envDs, hostDs, ALL_ENV_KEY }: SearchProps): any => ({
         }) => {
           const isEnv = record.get('typeKey') === ENV_TAB;
           const current = record.get('env_id');
-          return isEnv && current ? 'never' : 'always';
+          return isEnv && current !== ALL_ENV_KEY ? 'never' : 'always';
         },
       },
       options: envDs,
@@ -45,7 +45,7 @@ export default ({ envDs, hostDs, ALL_ENV_KEY }: SearchProps): any => ({
         }) => {
           const isHost = record.get('typeKey') === HOST_TAB;
           const current = record.get('host_id');
-          return isHost && current ? 'never' : 'always';
+          return isHost && current !== ALL_ENV_KEY ? 'never' : 'always';
         },
       },
       options: hostDs,
