@@ -124,7 +124,7 @@ const Index = observer(() => {
         });
       }, 1000);
     }
-  }, []);
+  }, [detail]);
 
   const handleOk = async () => {
     const flag = await currentValidate();

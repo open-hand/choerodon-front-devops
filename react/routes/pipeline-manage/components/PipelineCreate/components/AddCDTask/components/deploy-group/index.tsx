@@ -6,6 +6,7 @@ import { observer } from 'mobx-react-lite';
 import { mapping } from '../../stores/deployGroupDataSet';
 import DeployGroupConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/deploy-group-config';
 import ContainerConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config';
+import { deployAppCenterApi } from '@/api';
 import { deployWayData } from '../../stores/addCDTaskDataSetMap';
 
 import './index.less';
@@ -18,6 +19,7 @@ const Index = observer(({
   detail,
   deployWay,
   preJobList,
+  changeDetail,
 }: {
   deployWay?: string,
   dataSet: DataSet,
@@ -28,6 +30,7 @@ const Index = observer(({
     code: string,
     containerConfig: any,
   },
+  changeDetail?(data: any): void,
   preJobList?: object[],
 }) => {
   const deployGroupRef = useRef();
@@ -69,7 +72,20 @@ const Index = observer(({
           deployWay === deployWayData[0].value ? (
             <TextField name={mapping().appName.name} />
           ) : (
-            <Select name={mapping().appName.name} />
+            <Select
+              name={mapping().appName.name}
+              onChange={async (value: string) => {
+                if (value) {
+                  const id = (dataSet.current?.getField(mapping().appName.name)
+                  ?.options?.toData() as any)
+                  ?.find((options: any) => options.name === value)?.id;
+                  const res = await deployAppCenterApi.loadEnvAppDetail(id);
+                  if (changeDetail) {
+                    changeDetail(res);
+                  }
+                }
+              }}
+            />
           )
         }
         <TextField name={mapping().appCode.name} />
