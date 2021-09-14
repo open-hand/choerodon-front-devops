@@ -1,9 +1,10 @@
 import React, {
-  createContext, useContext, useEffect, useMemo,
+  createContext, useContext, useEffect, useMemo, useState,
 } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
+import { observer } from 'mobx-react-lite';
 import { DataSet as DataSetProps } from '@/interface';
 import FormDataSet from './FormDataSet';
 import AppOptionDataSet from './AppOptionDataSet';
@@ -19,6 +20,7 @@ interface ContextProps {
   refresh(data?: { valueId: string, value: string }): void,
   deployConfigId: string,
   isModify: boolean,
+  valueLoading:boolean
 }
 
 const Store = createContext({} as ContextProps);
@@ -28,7 +30,7 @@ export function useDeployConfigFormStore() {
 }
 
 export const StoreProvider = injectIntl(inject('AppState')(
-  (props: any) => {
+  observer((props: any) => {
     const {
       intl: { formatMessage },
       AppState: { currentMenuType: { id: projectId } },
@@ -40,9 +42,12 @@ export const StoreProvider = injectIntl(inject('AppState')(
       appServiceName,
     } = props;
 
+    const [valueLoading, setValueLoading] = useState(true);
+
     const isModify = useMemo(() => deployConfigId || appSelectDisabled, []);
 
     const appOptionDs = useMemo(() => new DataSet(AppOptionDataSet(projectId)), [projectId]);
+
     const formDs = useMemo(() => new DataSet(FormDataSet({
       projectId,
       deployConfigId,
@@ -52,7 +57,16 @@ export const StoreProvider = injectIntl(inject('AppState')(
       appOptionDs,
       appSelectDisabled,
       appServiceName,
-    })), [projectId]);
+      setValueLoading,
+    })),
+    [
+      appOptionDs,
+      appSelectDisabled,
+      appServiceId,
+      appServiceName,
+      deployConfigId,
+      envId,
+    ]);
 
     useEffect(() => {
       if (!isModify) {
@@ -70,11 +84,12 @@ export const StoreProvider = injectIntl(inject('AppState')(
       formDs,
       prefixCls: 'c7ncd-deploy-config-form',
       isModify,
+      valueLoading,
     };
     return (
       <Store.Provider value={value}>
         {children}
       </Store.Provider>
     );
-  },
+  }),
 ));
