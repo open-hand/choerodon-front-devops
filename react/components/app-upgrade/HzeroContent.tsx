@@ -49,6 +49,9 @@ const HzeroUpgrade = observer(() => {
   useEffect(() => {
     setHasEditorError(false);
     modal.update({ okProps: { disabled: false } });
+    if (document.getElementsByClassName('c7ncd-yaml-error')[0]) {
+      document.getElementsByClassName('c7ncd-yaml-error')[0].setAttribute('style', 'display:none');
+    }
     if (record?.get('marketDeployObjectId')) {
       const id = record?.get('marketDeployObjectId');
       setLoading(true);
@@ -100,6 +103,28 @@ const HzeroUpgrade = observer(() => {
     return '';
   };
 
+  const getEditor = useMemo(() => (
+    <YamlEditor
+      readOnly={false}
+      value={values}
+      originValue={originValue}
+      handleEnableNext={handleNextStepEnable}
+      onValueChange={handleChangeValue}
+      customRightClasses={
+        {
+          chunk: 'CodeMirror-merge-r-chunk',
+          start: 'CodeMirror-merge-r-chunk-start',
+          end: 'CodeMirror-merge-r-chunk-end',
+          insert: '',
+          del: '',
+          connect: 'CodeMirror-merge-r-connect',
+        }
+      }
+      viewMode="diff"
+      LEGEND_TYPE={['modify']}
+    />
+  ), [values, originValue, handleNextStepEnable, handleChangeValue]);
+
   if (!record) {
     return <Spin spinning />;
   }
@@ -108,25 +133,7 @@ const HzeroUpgrade = observer(() => {
     <>
       {renderForm()}
       <Spin spinning={loading}>
-        <YamlEditor
-          readOnly={false}
-          value={values}
-          originValue={originValue}
-          handleEnableNext={handleNextStepEnable}
-          onValueChange={handleChangeValue}
-          customRightClasses={
-            {
-              chunk: 'CodeMirror-merge-r-chunk',
-              start: 'CodeMirror-merge-r-chunk-start',
-              end: 'CodeMirror-merge-r-chunk-end',
-              insert: '',
-              del: '',
-              connect: 'CodeMirror-merge-r-connect',
-            }
-          }
-          viewMode="diff"
-          LEGEND_TYPE={['modify']}
-        />
+        {getEditor}
       </Spin>
     </>
   );

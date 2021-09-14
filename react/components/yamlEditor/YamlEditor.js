@@ -63,7 +63,6 @@ export default class YamlEditor extends Component {
       lint: !props.readOnly && props.showError,
       gutters: !props.readOnly ? ['CodeMirror-lint-markers'] : [],
       customRightClasses: props.customRightClasses?props.customRightClasses:null,
-      customEditorContentClass: props.customEditorContentClass?props.customEditorContentClass: '',
       LEGEND_TYPE: props.LEGEND_TYPE ? props.LEGEND_TYPE: '',
       viewMode: props.viewMode
     };

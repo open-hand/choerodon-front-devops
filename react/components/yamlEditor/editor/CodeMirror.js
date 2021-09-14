@@ -102,7 +102,6 @@ class CodeMirror extends React.Component {
         this.codeMirror.toTextArea(); // 清空原来的normal模式的框
         this.codeMirror = null;
       }
-      // this.codeMirror = null;
       const mergeViewOptions = {
         value: value || "",
         origRight: originValue || "",
@@ -152,7 +151,7 @@ class CodeMirror extends React.Component {
   };
 
   get getLegends() {
-    let LEGEND_TYPE = this.props.options.LEGEND_TYPE || [
+    const LEGEND_TYPE = [
       "new",
       "delete",
       "modify",
@@ -194,19 +193,19 @@ class CodeMirror extends React.Component {
         {options.viewMode === "diff" && (
           <div className="c7ncd-editor-tips">
             <div className="c7ncd-editor-tips-left">
-              <Tooltip title="prompt text">
+              <Tooltip title="应用当前生效的运行配置信息。">
                 <span>
                   运行配置信息
-                  <Icon style={{position:'relative',top:-1,left:12}} type="info-o" />
+                  <Icon style={{position:'relative',top:-1,left:12}} type="help" />
                 </span>
               </Tooltip>
 
               <span className="c7ncd-editor-tips-left-modify">差异</span>
             </div>
             <div className="c7ncd-editor-tips-right">
-              <Tooltip title="prompt text">
+              <Tooltip title="新版本的默认配置信息，即chart包中默认的values。您可参照默认values来配置升级应用后的运行配置信息。">
                 默认配置信息
-                <Icon style={{position:'relative',top:-1,left:12}} type="info-o" />
+                <Icon style={{position:'relative',top:-1,left:12}} type="help" />
               </Tooltip>
             </div>
           </div>
