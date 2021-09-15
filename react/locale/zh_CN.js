@@ -51,7 +51,7 @@ const commonField = {
   environment: '环境',
   envName: '环境名称',
   envCode: '环境编码',
-  instance: '实例',
+  instance: 'Chart应用',
   instanceName: '应用名称',
   network: '网络',
   label: '标签',
@@ -196,7 +196,7 @@ const commonField = {
   'search.placeholder': '请输入搜索条件',
   all_instance: '所有实例',
   all_application: '所有应用',
-  appService: '应用服务',
+  appService: '关联应用服务',
   copy_success: '复制成功',
 
   // 项目人员权限管理通用
