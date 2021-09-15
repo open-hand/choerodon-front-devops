@@ -1,6 +1,4 @@
 /* eslint-disable react/jsx-no-bind */
-/* eslint-disable consistent-return */
-/* eslint-disable max-len */
 import React, { Fragment, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
@@ -13,7 +11,7 @@ const { Option } = Select;
 
 export default observer((props) => {
   const {
-    dataSet, nonePermissionDs, refresh, baseDs, store, projectId, formatMessage, prefixCls, intlPrefix, modal,
+    dataSet, nonePermissionDs, refresh, baseDs, store, projectId, formatMessage, intlPrefix, modal,
   } = props;
 
   const record = useMemo(() => baseDs.current, [baseDs.current]);
@@ -57,6 +55,7 @@ export default observer((props) => {
     } catch (e) {
       return false;
     }
+    return true;
   });
 
   modal.handleCancel(() => {
