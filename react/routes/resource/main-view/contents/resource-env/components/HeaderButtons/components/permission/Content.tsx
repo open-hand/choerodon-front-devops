@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-no-bind */
 import React, { useEffect, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { SelectBox, Select, Form } from 'choerodon-ui/pro';
@@ -59,13 +58,9 @@ export default observer(() => {
     permissionsDs.reset();
   });
 
-  function renderUserOption({ record: optionRecord }: any) {
-    return <UserInfo realName={optionRecord.get('realName') || ''} loginName={record.get('loginName')} />;
-  }
+  const renderUserOption = ({ record: optionRecord }: any) => <UserInfo realName={optionRecord.get('realName') || ''} loginName={record.get('loginName')} />;
 
-  function renderer({ optionRecord }: any) {
-    return <UserInfo realName={optionRecord.get('realName') || ''} loginName={record.get('loginName')} />;
-  }
+  const renderer = ({ optionRecord }: any) => <UserInfo realName={optionRecord.get('realName') || ''} loginName={record.get('loginName')} />;
 
   useEffect(() => {
     record.set('permissionTypes', record.get('skipCheckPermission'));

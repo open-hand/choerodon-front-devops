@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-no-bind */
 import React, { Fragment, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
@@ -63,9 +62,7 @@ export default observer((props) => {
     dataSet.reset();
   });
 
-  function renderUserOption({ record: optionRecord }) {
-    return <UserInfo name={optionRecord.get('realName') || ''} id={record.get('loginName')} />;
-  }
+  const renderUserOption = ({ record: optionRecord }) => <UserInfo name={optionRecord.get('realName') || ''} id={record.get('loginName')} />;
 
   function renderer({ optionRecord }) {
     return <UserInfo name={optionRecord.get('realName') || ''} id={record.get('loginName')} />;
