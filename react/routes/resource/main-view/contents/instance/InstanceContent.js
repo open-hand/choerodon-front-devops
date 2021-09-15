@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 import React, {
   Fragment, lazy, Suspense, useEffect, useMemo,
 } from 'react';

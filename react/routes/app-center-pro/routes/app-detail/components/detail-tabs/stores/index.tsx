@@ -6,7 +6,6 @@ import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
-import useDataSet from '@/hooks/useDataSet';
 import { useAppDetailsStore } from '../../../stores';
 import {
   APP_EVENT,
@@ -62,7 +61,6 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     deployTypeId: hostOrEnvId,
     deployType,
     rdupmType,
-    appSource,
     appDs,
   } = useAppDetailsStore();
 

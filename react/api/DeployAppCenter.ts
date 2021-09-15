@@ -9,6 +9,7 @@ class DeployAppCenterApi extends Api<DeployAppCenterApi> {
     const obj:any = {
       url: `${this.prefix}/page_by_env`,
       method: 'get',
+      data: null,
     };
     if (params) {
       obj.params = params;

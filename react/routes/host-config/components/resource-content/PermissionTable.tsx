@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Action } from '@choerodon/master';
-import { useHostConfigStore } from '@/routes/host-config/stores';
 import { Table } from 'choerodon-ui/pro';
-import { RecordObjectProps, Record, TableColumnTooltip } from '@/interface';
 import { TimePopover, UserInfo } from '@choerodon/components';
 import map from 'lodash/map';
+import { useHostConfigStore } from '@/routes/host-config/stores';
+import { RecordObjectProps, Record, TableColumnTooltip } from '@/interface';
 
 const { Column } = Table;
 

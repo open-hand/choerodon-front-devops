@@ -28,7 +28,10 @@ const Index = observer(() => {
     switch (chartSource) {
       case (chartSourceData[0].value): case (chartSourceData[1].value): {
         const res = await appServiceInstanceApi
-          .getValues(detailData.instanceId || detailData.id, detailData.appServiceVersionId);
+          .getValues(
+            detailData.instanceId || detailData.id,
+            detailData.appServiceVersionId || detailData.commandVersionId,
+          );
         return res;
         break;
       }
