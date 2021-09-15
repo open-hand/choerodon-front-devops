@@ -256,10 +256,15 @@ const mapping: {
     type: 'string' as FieldType,
     defaultValue: '',
   },
+  originValue: {
+    name: 'originValues',
+    type: 'string' as FieldType,
+    defaultValue: '',
+  },
   marketServiceVersion: {
     name: 'marketDeployObjectId',
     type: 'object' as FieldType,
-    label: '市场服务及版本',
+    label: '市场服务及版本11',
     textField: 'marketServiceName',
     valueField: 'id',
     dynamicProps: {
@@ -391,6 +396,7 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
           if (value) {
             const res = await deployApi.getValue(value.id);
             record.set(mapping.value.name, res?.value);
+            record.set(mapping.originValue.name, res?.value);
           }
           break;
         }
@@ -402,6 +408,7 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
         case mapping.marketVersion.name: {
           record.set(mapping.marketServiceVersion.name, undefined);
           record.set(mapping.value.name, '');
+          record.set(mapping.originValue.name, '');
         }
         default: {
           break;

@@ -85,7 +85,7 @@ const DetailsTabsHeaderButtons = () => {
 
   const envNotConnected = !envConnected;
 
-  const btnDisabled = !envConnected || !appStatus || (appStatus !== APP_STATUS.FAILED && appStatus !== APP_STATUS.OPERATING);
+  const btnDisabled = !envConnected || !appStatus || (appStatus !== APP_STATUS.FAILED && appStatus !== APP_STATUS.RUNNING);
 
   const whichGroup = getChartSourceGroup(
     chartSource || sourceType, deployType,

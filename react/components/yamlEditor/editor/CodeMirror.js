@@ -49,17 +49,21 @@ class CodeMirror extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+
     if (
       this.codeMirror &&
       this.props.originValue !== undefined &&
       this.props.originValue !== prevProps.originValue
     ) {
-      if (this.props.options.viewMode === "diff") {
-        // diff模式
+      if (this.props.options.viewMode === "diff") { // props传参指定为diff模式
         this.initUI(this.props.options.viewMode);
         this.setState({ viewMode: this.props.options.viewMode });
       }
+      if (this.state.viewMode==='diff') { // 进来的时候已经切换成了diff才加数据
+        this.initUI(this.props.options.viewMode);
+      }
     }
+
     if (
       this.codeMirror &&
       this.props.value !== undefined &&
@@ -67,8 +71,11 @@ class CodeMirror extends React.Component {
       normalizeLineEndings(this.codeMirror.getValue()) !==
         normalizeLineEndings(this.props.value)
     ) {
-      this.codeMirror.setValue(this.props.value);
+      if (this.state.viewMode==='diff') { // 进来的时候已经切换成了diff才加数据
+        this.initUI(this.props.options.viewMode);
+      }
     }
+
     if (typeof this.props.options === "object") {
       for (const optionName in this.props.options) {
         if (this.props.options.hasOwnProperty(optionName)) {

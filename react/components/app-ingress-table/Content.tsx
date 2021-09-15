@@ -174,7 +174,7 @@ const AppIngress = observer(() => {
       <Column name="code" width={90} />
       <Column name="status" renderer={renderStatus} />
       <Column name="pid" width={80} />
-      <Column name="ports" width={80} renderer={({ value }) => <Tooltip title={value}>{value}</Tooltip>} />
+      <Column name="ports" width={100} renderer={({ value }) => <Tooltip title={value}>{value}</Tooltip>} />
       <Column name="creator" renderer={renderUser} />
       <Column name="creationDate" renderer={({ text }) => <TimePopover content={text} />} />
     </Table>
