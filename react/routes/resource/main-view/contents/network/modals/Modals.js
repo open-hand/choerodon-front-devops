@@ -11,7 +11,7 @@ import CreateNetwork from './network-operation';
 
 const modalKey = Modal.key();
 const modalStyle = {
-  width: 740,
+  width: 500,
 };
 
 const EnvModals = observer(() => {
