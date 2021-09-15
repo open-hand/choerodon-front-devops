@@ -1,5 +1,6 @@
 import { FieldProps } from 'choerodon-ui/pro/lib/data-set/field';
 import { DataSet } from 'choerodon-ui/pro';
+import { middlewareConfigApi } from '@/api/Middleware';
 import { Record, FieldType } from '@/interface';
 import { appServiceApiConfig } from '@/api/AppService';
 import { deployApiConfig, deployApi } from '@/api/Deploy';
@@ -31,6 +32,10 @@ const chartSourceData: {
   value: 'hzero',
   name: 'HZERO服务',
   img: hzero,
+}, {
+  value: 'middleware',
+  name: '基础组件',
+  img: '',
 }];
 
 const appServiceOptionsDs = {
@@ -325,6 +330,8 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
           appCode: data[mapping.appCode.name as string],
           instanceId: data?.id,
         });
+      } if (data[mapping.chartSource.name as string] === chartSourceData[4].value) {
+        return middlewareConfigApi.updateMiddleware(data.id, data);
       }
       return appServiceInstanceApi.updateMarketAppService(
         data.instanceId,

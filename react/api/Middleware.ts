@@ -2,7 +2,7 @@ import Api from './Api';
 
 class MiddlewareApi extends Api<MiddlewareApi> {
   get prefix() {
-    return `/devops/v1/project/${this.projectId}/middleware`;
+    return `/devops/v1/projects/${this.projectId}/middleware`;
   }
 
   upgradeApp(res:any, appId:string) {
@@ -10,6 +10,14 @@ class MiddlewareApi extends Api<MiddlewareApi> {
       method: 'put',
       url: `${this.prefix}/redis/${appId}`,
       data: res,
+    });
+  }
+
+  updateMiddleware(instanceId: string, data: any) {
+    return this.request({
+      method: 'put',
+      url: `${this.prefix}/${instanceId}`,
+      data,
     });
   }
 }
