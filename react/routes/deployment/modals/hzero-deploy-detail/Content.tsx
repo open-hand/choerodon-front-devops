@@ -183,7 +183,7 @@ const HzeroDeployDetail = observer(() => {
             >
               <Output name="mktServiceVersion" renderer={({ value }) => (value || '-')} />
               <Output label="应用编码" value={renderInstanceCode(serviceDs.current)} />
-              <Output name="appName" renderer={({ value }) => (value || '-')} />
+              <Output label="应用名称" name="appName" renderer={({ value }) => (value || '-')} />
               <Output name="startTime" renderer={({ value }) => (value || '-')} />
               <Output label="部署耗时" value={(serviceDs.current?.get('startTime') && serviceDs.current?.get('endTime')) ? getConsumeDuration(serviceDs.current?.get('startTime'), serviceDs.current?.get('endTime')) : '-'} />
             </Form>
