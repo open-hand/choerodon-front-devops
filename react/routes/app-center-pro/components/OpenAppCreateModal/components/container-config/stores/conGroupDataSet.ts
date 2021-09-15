@@ -100,7 +100,7 @@ const mapping: {
   open: {
     name: 'open',
     type: 'boolean' as FieldType,
-    defaultValue: false,
+    defaultValue: true,
   },
   edit: {
     name: 'edit',

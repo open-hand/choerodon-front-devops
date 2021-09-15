@@ -113,6 +113,7 @@ const Index = observer(({
           onClick={() => dataSource.create({
             [mapping.name.name as string]: `container-${dataSource.records.length + 1}`,
             [mapping.edit.name as string]: true,
+            [mapping.open.name as string]: false,
           })}
         >
           添加容器

@@ -199,11 +199,11 @@ const Index = observer(() => {
                   }}
                   combineUrl={`${window._env_.API_HOST}/hfle/v1/${organizationId}/upload/fragment-combine`}
                   // disabled={!ImportFileDataSet?.current?.get(mapping().folderId.name)}
-                  suffix=".jar"
+                  suffix={dataSource?.get('rdupmType') === 'other' ? undefined : '.jar'}
                   paramsData={{
                     bucketName: 'devops-service',
                   }}
-                  accept=".jar"
+                  accept={dataSource?.get('rdupmType') === 'other' ? undefined : '.jar'}
                   prefixPatch="/hfle"
                   showUploadList={true}
                   onSuccess={(res, file) => {

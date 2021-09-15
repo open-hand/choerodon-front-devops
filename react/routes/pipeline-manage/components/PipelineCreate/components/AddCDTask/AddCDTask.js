@@ -1070,7 +1070,7 @@ export default observer(() => {
               name="deploySource"
               clearButton={false}
               addonAfter={
-                <Tips helpText="流水线制品部署表示直接使用所选关联构建任务中生成的jar包进行部署；匹配制品部署则表示可自主选择项目下制品库中的jar包，并需配置jar包版本的正则匹配规则，后续部署的jar包版本便会遵循此规则。" />
+                <Tips helpText="流水线制品部署表示直接使用所选关联构建任务中生成的jar包进行部署。" />
               }
             >
               <Option value="pipelineDeploy">流水线制品部署</Option>

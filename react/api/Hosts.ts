@@ -43,7 +43,7 @@ class HostApi extends Api<HostApi> {
       method: 'get',
       params: {
         name,
-        appId,
+        app_id: appId,
       },
     });
   }

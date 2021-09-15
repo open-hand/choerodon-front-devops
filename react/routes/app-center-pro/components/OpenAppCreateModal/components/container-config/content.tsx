@@ -103,6 +103,7 @@ const Index = observer(() => {
         ...item.jarDeployVO,
         ...item.jarDeployVO.prodJarInfoVO,
         ...item.jarDeployVO.fileInfoVO,
+        [mapping.open.name as string]: index === 0,
         [mapping.projectImageRepo.name as string]: {
           repoId: item.dockerDeployVO.imageInfo.repoId,
           repoName: item.dockerDeployVO.imageInfo.repoName,
