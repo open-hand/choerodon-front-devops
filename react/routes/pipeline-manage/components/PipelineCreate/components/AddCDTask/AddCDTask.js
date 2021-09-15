@@ -41,7 +41,7 @@ import Tips from "../../../../../../components/new-tips";
 import "./index.less";
 import deployChartDataSet, { mapping as deployChartMapping }
   from "@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/deployChartDataSet";
-import deployGroupDataSet, { mapping as deployGroupMapping }
+import deployGroupDataSet, { mapping as deployGroupMapping, appNameDataSet }
   from "@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/deployGroupDataSet";
 import { productTypeData } from './stores/addCDTaskDataSetMap';
 import OperationYaml from '../../../../../app-center-pro/components/OpenAppCreateModal/components/operation-yaml';
@@ -1211,8 +1211,9 @@ export default observer(() => {
         <Form columns={2} className="addcdTask-cdHost" dataSet={ADDCDTaskDataSet}>
           <SelectBox
             name={fieldMap.deployWay.name}
-            onChange={() => {
+            onChange={(value) => {
               HostJarDataSet.deleteAll(false);
+              ADDCDTaskDataSet.getField(addCDTaskDataSetMap.host).set('disabled', value === deployWayData[1].value);
             }}
           />
           <SelectBox name={fieldMap.productType.name} />

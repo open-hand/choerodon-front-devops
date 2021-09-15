@@ -3,6 +3,7 @@ import { CONSTANTS } from '@choerodon/master';
 import { FieldProps } from 'choerodon-ui/pro/lib/data-set/field';
 import { FieldType } from 'choerodon-ui/pro/lib/data-set/enum';
 import { Record } from '@/interface';
+import { deployAppCenterApi, hostApi } from '@/api';
 import container from '../images/container.png';
 import host from '../images/host.png';
 
@@ -49,7 +50,21 @@ const mapping: {
     label: '应用名称',
     required: true,
     maxLength: 64,
-    // validator: handleValidateAppName
+    validator: async (value, type, record: Record) => {
+      let res: any = '应用名称已重复';
+      if (record?.get(mapping.deployMode.name) === deployModeOptionsData[0].value) {
+        const flag = await deployAppCenterApi.checkAppName(value);
+        if (flag) {
+          res = true;
+        }
+      } else {
+        const flag = await hostApi.checkAppName(value);
+        if (flag) {
+          res = true;
+        }
+      }
+      return res;
+    },
   },
   appCode: {
     name: 'appCode',
@@ -57,12 +72,24 @@ const mapping: {
     label: '应用编码',
     required: true,
     maxLength: 53,
-    validator: async (value) => {
+    validator: async (value, name, record: Record) => {
       const flag = LCLETTER_NUM.test(value);
-      if (flag) {
-        return true;
+      if (!flag) {
+        return '名称只能由小写字母、数字、"-"组成，且以小写字母开头，不能以"-"结尾';
       }
-      return '名称只能由小写字母、数字、"-"组成，且以小写字母开头，不能以"-"结尾';
+      let res: any = '应用编码重复';
+      if (record?.get(mapping.deployMode.name) === deployModeOptionsData[0].value) {
+        res = await deployAppCenterApi.checkAppCode(value);
+        if (res) {
+          res = true;
+        }
+      } else {
+        res = await hostApi.checkAppCode(value);
+        if (res) {
+          res = true;
+        }
+      }
+      return res;
     },
   },
   deployMode: {

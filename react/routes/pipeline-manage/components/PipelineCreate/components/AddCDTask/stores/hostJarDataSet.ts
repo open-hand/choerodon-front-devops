@@ -1,8 +1,9 @@
 import { DataSet } from 'choerodon-ui/pro';
 import { hostApiConfig } from '@/api';
 import { Record } from '@/interface';
+import addCDTaskDataSetMap, { fieldMap, deployWayData } from './addCDTaskDataSetMap';
 
-const hostJarDataSet = () => ({
+const hostJarDataSet = (ADDCDTaskDataSet: DataSet) => ({
   autoCreate: true,
   fields: [{
     name: 'appName',
@@ -41,7 +42,9 @@ const hostJarDataSet = () => ({
             record.getField('appCode')?.set('disabled', true);
             record.set('appId', item.get('id'));
           }
-
+          if (ADDCDTaskDataSet.current?.get(fieldMap.deployWay.name) === deployWayData[1].value) {
+            ADDCDTaskDataSet.current?.set(addCDTaskDataSetMap.host, record.getField('appName')?.options?.records?.find((i) => i.get('name') === value)?.get('hostId'));
+          }
           break;
         }
         default: {

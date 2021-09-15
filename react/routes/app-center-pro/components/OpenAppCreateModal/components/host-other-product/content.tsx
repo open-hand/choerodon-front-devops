@@ -87,68 +87,71 @@ export default observer(() => {
           })}
         />
       </Form>
-      <ChunkUploader
-        callbackWhenLoadingChange={(loadingIf: boolean) => {
-          console.log(loadingIf);
+      <div style={{ width: '33.3%' }}>
+        <ChunkUploader
+          callbackWhenLoadingChange={(loadingIf: boolean) => {
+            console.log(loadingIf);
           // modal.update({
           //   okProps: {
           //     disabled: loadingIf,
           //   },
           // });
-        }}
+          }}
         // eslint-disable-next-line
         combineUrl={`${window._env_.API_HOST}/hfle/v1/${organizationId}/upload/fragment-combine`}
                   // disabled={!ImportFileDataSet?.current?.get(mapping().folderId.name)}
         // suffix=".jar"
-        paramsData={{
-          bucketName: 'devops-service',
-        }}
+          paramsData={{
+            bucketName: 'devops-service',
+          }}
         // accept=".jar"
-        prefixPatch="/hfle"
-        showUploadList
-        onSuccess={(res: any, file: any) => {
-          HostOtherProductDataSet.current.set(mapping.fileName.name, file.name);
-        }}
-        callback={(str: string) => {
-          HostOtherProductDataSet.current.set(mapping.uploadUrl.name, str);
-        }}
-      >
-        <OldButton
-          type="dashed"
-          icon="file_upload_black-o"
+          prefixPatch="/hfle"
+          showUploadList
+          onSuccess={(res: any, file: any) => {
+            HostOtherProductDataSet.current.set(mapping.fileName.name, file.name);
+          }}
+          callback={(str: string) => {
+            HostOtherProductDataSet.current.set(mapping.uploadUrl.name, str);
+          }}
         >
-          上传文件
+          <OldButton
+            type="dashed"
+            icon="file_upload_black-o"
+          >
+            上传文件
 
-        </OldButton>
-      </ChunkUploader>
-      { HostOtherProductDataSet.current.get(mapping.uploadUrl.name) && (
-      <p
+          </OldButton>
+        </ChunkUploader>
+        { HostOtherProductDataSet.current.get(mapping.uploadUrl.name) && (
+        <p
         // @ts-ignore
-        newLine
-        className="c7ncd-appCenterPro-conDetail__fileName"
-        style={{
-          width: '100%',
-        }}
-      >
-        <span className="c7ncd-appCenterPro-conDetail__fileName__fileIcon">
-          <Icon type="attach_file" />
-          <span>
-            {HostOtherProductDataSet.current.get(mapping.fileName.name)}
-          </span>
-        </span>
-        <Icon
-          onClick={() => {
-            HostOtherProductDataSet.current.set(mapping.fileName.name, '');
-            HostOtherProductDataSet.current.set(mapping.uploadUrl.name, '');
-          }}
-          type="delete"
+          newLine
+          className="c7ncd-appCenterPro-conDetail__fileName"
           style={{
-            cursor: 'pointer',
-            color: '#5365EA',
+            width: '100%',
+            marginTop: 20,
           }}
-        />
-      </p>
-      ) }
+        >
+          <span className="c7ncd-appCenterPro-conDetail__fileName__fileIcon">
+            <Icon type="attach_file" />
+            <span>
+              {HostOtherProductDataSet.current.get(mapping.fileName.name)}
+            </span>
+          </span>
+          <Icon
+            onClick={() => {
+              HostOtherProductDataSet.current.set(mapping.fileName.name, '');
+              HostOtherProductDataSet.current.set(mapping.uploadUrl.name, '');
+            }}
+            type="delete"
+            style={{
+              cursor: 'pointer',
+              color: '#5365EA',
+            }}
+          />
+        </p>
+        ) }
+      </div>
       <OperationYaml
         style={{
           marginTop: 30,

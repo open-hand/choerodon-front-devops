@@ -38,7 +38,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
   const ADDCDTaskDataSet = useMemo(() => new DataSet(addCDTaskDataSet(projectId, PipelineCreateFormDataSet, organizationId, ADDCDTaskUseStore, appServiceCode, random, deployConfigDataSet, trueAppServiceId)), [ADDCDTaskUseStore, random]);
   const DeployChartDataSet = useMemo(() => new DataSet(deployChartDataSet(ADDCDTaskDataSet)), [ADDCDTaskDataSet?.current?.get(fieldMap.deployWay.name)]);
   const DeployGroupDataSet = useMemo(() => new DataSet(deployGroupDataSet(ADDCDTaskDataSet)), []);
-  const HostJarDataSet = useMemo(() => new DataSet(hostJarDataSet()), []);
+  const HostJarDataSet = useMemo(() => new DataSet(hostJarDataSet(ADDCDTaskDataSet)), []);
 
   const value = {
     ...props,
