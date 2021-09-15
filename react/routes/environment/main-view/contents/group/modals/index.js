@@ -1,18 +1,20 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { withRouter } from 'react-router-dom';
 import { Modal } from 'choerodon-ui/pro';
-import { HeaderButtons } from '@choerodon/boot';
+import { HeaderButtons } from '@choerodon/master';
 import EnvCreateForm from '../../../modals/env-create';
 import GroupForm from '../../../modals/GroupForm';
 import { useEnvironmentStore } from '../../../../stores';
 import { useMainStore } from '../../../stores';
 import { useEnvGroupStore } from '../stores';
+import { environmentApiApi } from '@/api/Environment';
 
 const groupKey = Modal.key();
 const envKey = Modal.key();
 
 const GroupModal = observer((props) => {
+  const [createEnvDisable, setCreateEnvDisable] = useState(true);
   const modalStyle = useMemo(() => ({
     width: 380,
   }), []);
@@ -32,12 +34,17 @@ const GroupModal = observer((props) => {
     if (state && state.openCreate) {
       openEnvModal();
     }
+    environmentApiApi.getCreateEnvDisable().then((res) => {
+      if (res) {
+        setCreateEnvDisable(!res);
+      }
+    });
   }, []);
 
-  function refresh() {
+  const refresh = () => {
     groupDs.query();
     treeDs.query();
-  }
+  };
 
   function openGroupModal() {
     Modal.open({
@@ -65,12 +72,20 @@ const GroupModal = observer((props) => {
   }
 
   function getButtons() {
+    let tooltipsConfig = {};
+    if (createEnvDisable) {
+      tooltipsConfig = {
+        title: '集群环境数量已达上限,无法创建更多环境',
+      };
+    }
     return [{
       permissions: ['choerodon.code.project.deploy.environment.ps.group-add-env'],
       name: formatMessage({ id: `${intlPrefix}.create` }),
       icon: 'playlist_add',
       handler: openEnvModal,
       display: true,
+      disabled: createEnvDisable,
+      tooltipsConfig,
     }, {
       permissions: ['choerodon.code.project.deploy.environment.ps.group-create'],
       name: formatMessage({ id: `${intlPrefix}.group.create` }),

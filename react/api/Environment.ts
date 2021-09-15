@@ -9,6 +9,14 @@ class EnvironmentApi extends Api<EnvironmentApi> {
    * 加载环境列表
    * @param params 额外的接口请求参数
    */
+
+  getCreateEnvDisable() {
+    return this.request({
+      method: 'get',
+      url: `${this.prefix}/check_enable_create`,
+    });
+  }
+
   loadEnvList(params = {}) {
     return this.request({
       method: 'get',
