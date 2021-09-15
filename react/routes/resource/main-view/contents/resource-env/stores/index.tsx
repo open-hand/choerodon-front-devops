@@ -83,7 +83,6 @@ export const StoreProvider = injectIntl(inject('AppState')(
       }
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     function loadTabData() {
       switch (currentTabKey) {
         case tabs.SYNC_TAB:

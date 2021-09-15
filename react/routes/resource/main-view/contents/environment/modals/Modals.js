@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 import React, { useCallback, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { HeaderButtons } from '@choerodon/master';
@@ -195,7 +196,7 @@ const EnvModals = observer(() => {
       key: configKey,
       title: formatMessage({ id: `${intlPrefix}.create.config` }),
       children: <DeployConfigForm
-        refresh={refresh}
+        refresh
         envId={id}
       />,
       drawer: true,

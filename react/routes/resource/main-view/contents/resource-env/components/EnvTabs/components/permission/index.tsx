@@ -1,15 +1,16 @@
+/* eslint-disable react/jsx-no-bind */
 import React from 'react';
 import { Action } from '@choerodon/boot';
 import { Table, Tooltip } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import { TimePopover } from '@choerodon/components';
+import { observer } from 'mobx-react-lite';
 import { useREStore } from '../../../../stores';
 import { useResourceStore } from '@/routes/resource/stores';
 import { TableQueryBarType } from '@/interface';
 
 const { Column } = Table;
-
-export default function Permissions() {
+const Permissions = () => {
   const {
     intlPrefix,
     formatMessage,
@@ -30,7 +31,7 @@ export default function Permissions() {
     tableDs.delete(record, modalProps);
   }
 
-  function renderActions({ record }:any) {
+  function renderActions({ record }: any) {
     const actionData = [
       {
         service: [],
@@ -42,11 +43,11 @@ export default function Permissions() {
     return isOwner && <Action data={actionData} />;
   }
 
-  function renderDate({ value }:any) {
+  function renderDate({ value }: any) {
     return value && <TimePopover content={value} />;
   }
 
-  function renderRole({ value }:any) {
+  function renderRole({ value }: any) {
     const roles = map(value || [], 'name');
     return (
       <Tooltip title={roles.join()}>
@@ -78,4 +79,6 @@ export default function Permissions() {
       </Table>
     </div>
   );
-}
+};
+
+export default observer(Permissions);

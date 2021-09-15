@@ -6,21 +6,21 @@ import getTablePostData from '@/utils/getTablePostData';
 /* eslint-disable import/no-anonymous-default-export */
 export default ({
   formatMessage, intlPrefix, id, baseInfoDs,
-}:any):any => ({
+}: any): any => ({
   selection: false,
   pageSize: 10,
   transport: {
-    destroy: ({ data: [data] }:any) => environmentApiConfig.deleteUserByPermission(id, data.iamUserId),
-    read: ({ data }:any) => {
+    destroy: ({ data: [data] }: any) => environmentApiConfig.deleteUserByPermission(id, data.iamUserId),
+    read: ({ data }: any) => {
       const postData = getTablePostData(data);
       return environmentApiConfig.loadPermissionsByOpts(id, postData);
     },
-    create: ({ data }:any) => {
+    create: ({ data }: any) => {
       const res = {
         userIds: map(data, 'iamUserId'),
         envId: id,
         objectVersionNumber: baseInfoDs.current?.get('objectVersionNumber'),
-        skipCheckPermission: baseInfoDs.current?.get('skipCheckPermission'),
+        skipCheckPermission: baseInfoDs.current?.get('permissionTypes'),
       };
       return environmentApiConfig.addUserByPermission(id, res);
     },

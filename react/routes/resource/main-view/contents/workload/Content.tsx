@@ -172,6 +172,10 @@ const WorkloadContent = observer(() => {
       colorCode: 'success',
       name: '部署组资源',
     },
+    workload: {
+      colorCode: 'disconnect',
+      name: '手动添加',
+    },
   };
 
   const renderAppType = ({ value: sourceType }:{value:'chart'| 'deploy_group'}) => {

@@ -1,16 +1,15 @@
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable max-len */
-import React, { Fragment } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
+import { Tooltip, Icon } from 'choerodon-ui';
+
 import { Table } from 'choerodon-ui/pro';
-import StatusIcon from '../../../../../components/StatusIcon';
-import StatusTags from '../../../../../components/status-tag';
 import AppName from '../../../../../components/appName';
-import PodStatus from './components/pod-status';
+
 import { useResourceStore } from '../../../stores';
 import { useIstListStore } from './stores';
 import Modals from './modals';
-import UploadIcon from './components/upload-icon';
 import ResourceListTitle from '../../components/resource-list-title';
 
 import './index.less';
@@ -20,7 +19,6 @@ const { Column } = Table;
 const Content = observer(() => {
   const {
     prefixCls,
-    intlPrefix,
     resourceStore: { getSelectedMenu: { parentId } },
     AppState: { currentMenuType: { id } },
   } = useResourceStore();
@@ -42,6 +40,29 @@ const Content = observer(() => {
     );
   }
 
+  const renderName = ({ value, record }) => (
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+    }}
+    >
+      <span>{value}</span>
+      {
+        record.get('error') && (
+        <Tooltip title={record.get('error')}>
+          <Icon
+            style={{
+              color: '#f76776',
+              marginLeft: '4px',
+            }}
+            type="info"
+          />
+        </Tooltip>
+        )
+      }
+    </div>
+  );
+
   return (
     <div className={`${prefixCls}-instance-table`}>
       <Modals />
@@ -51,7 +72,7 @@ const Content = observer(() => {
         border={false}
         queryBar="bar"
       >
-        <Column name="name" />
+        <Column name="name" renderer={renderName} />
         <Column name="code" />
         <Column name="commandVersion" />
         <Column name="appServiceName" renderer={renderAppName} sortable />
