@@ -43,6 +43,11 @@ export default ({
       name: 'appId',
       required: true,
     },
+    {
+      name: 'appName',
+      required: true,
+      label: '应用名称',
+    },
     { name: 'value' },
   ],
 });
