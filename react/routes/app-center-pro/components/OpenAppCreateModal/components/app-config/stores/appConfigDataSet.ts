@@ -1,12 +1,11 @@
 import { FieldProps } from 'choerodon-ui/pro/lib/data-set/field';
-import { FieldType } from 'choerodon-ui/pro/lib/data-set/enum';
 import { DataSet } from 'choerodon-ui/pro';
-import { Record } from '@/interface';
+import { Record, FieldType } from '@/interface';
 import { appServiceApiConfig } from '@/api/AppService';
 import { deployApiConfig, deployApi } from '@/api/Deploy';
 import { appServiceVersionApiConfig } from '@/api/AppServiceVersions';
 import { environmentApiConfig } from '@/api/Environment';
-import { appServiceInstanceApi } from '@/api';
+import { appServiceInstanceApi, deployAppCenterApi } from '@/api';
 import hzero from '../images/hzero.png';
 import market from '../images/market.png';
 import project from '../images/project.png';
@@ -177,6 +176,14 @@ const mapping: {
     name: 'name',
     type: 'string' as FieldType,
     label: '应用名称',
+    validator: async (value, type, record: Record) => {
+      let res: any = '应用名称已重复';
+      const flag = await deployAppCenterApi.checkAppName(value, 'chart', record.get('instanceId'));
+      if (flag) {
+        res = true;
+      }
+      return res;
+    },
   },
   appCode: {
     name: 'code',
