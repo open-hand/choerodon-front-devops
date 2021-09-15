@@ -1,5 +1,5 @@
 import React, {
-  ReactDOM, ReactElement, useEffect, useImperativeHandle,
+  ReactDOM, ReactElement, useEffect, useImperativeHandle, useMemo,
 } from 'react';
 import {
   Form, Select, TextField, Output,
@@ -179,6 +179,17 @@ const Index = observer(() => {
     </>
   );
 
+  const Editor = useMemo(() => (
+    <YamlEditor
+      readOnly={false}
+      value={AppConfigDataSet.current.get(mapping.value.name)}
+      originValue={AppConfigDataSet.current.get(mapping.originValue.name)}
+      onValueChange={(value: string) => AppConfigDataSet.current.set(mapping.value.name, value)}
+    />
+  ),
+  [AppConfigDataSet.current.get(mapping.value.name),
+    AppConfigDataSet.current.get(mapping.originValue.name)]);
+
   return (
     <div className="c7ncd-appCenterPro-appConfig">
       {
@@ -242,11 +253,7 @@ const Index = observer(() => {
           })}
         />
       </Form>
-      <YamlEditor
-        readOnly={false}
-        value={AppConfigDataSet.current.get(mapping.value.name)}
-        onValueChange={(value: string) => AppConfigDataSet.current.set(mapping.value.name, value)}
-      />
+      {Editor}
     </div>
   );
 });
