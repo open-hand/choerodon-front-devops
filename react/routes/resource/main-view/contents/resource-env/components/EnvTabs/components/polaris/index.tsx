@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 import React, {
   useMemo, useState, useEffect,
 } from 'react';

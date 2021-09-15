@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 import React, { lazy, Suspense, useEffect } from 'react';
 import { runInAction } from 'mobx';
 import { observer } from 'mobx-react-lite';

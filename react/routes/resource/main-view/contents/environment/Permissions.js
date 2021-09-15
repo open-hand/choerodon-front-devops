@@ -26,7 +26,7 @@ export default function Permissions() {
     tableDs.delete(record, modalProps);
   }
 
-  function renderActions({ record }) {
+  const renderActions = ({ record }) => {
     const actionData = [
       {
         service: [],
@@ -36,18 +36,14 @@ export default function Permissions() {
     ];
     const isOwner = !record.get('gitlabProjectOwner');
     return isOwner && <Action data={actionData} />;
-  }
+  };
 
-  function renderDate({ value }) {
-    return value && <TimePopover datetime={value} />;
-  }
+  const renderDate = ({ value }) => value && <TimePopover datetime={value} />;
 
-  function renderRole({ value }) {
+  const renderRole = ({ value }) => {
     const roles = map(value || [], 'name');
-    return <Tooltip title={roles.join()}>
-      {roles.join()}
-    </Tooltip>;
-  }
+    return <Tooltip title={roles.join()}>{roles.join()}</Tooltip>;
+  };
 
   function getActionColumn() {
     const envRecord = baseInfoDs.current;
