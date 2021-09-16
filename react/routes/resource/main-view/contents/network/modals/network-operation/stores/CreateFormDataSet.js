@@ -32,7 +32,6 @@ export default ({
         return formatMessage({ id: 'network.name.check.exist' });
       }
     }
-    return '请输入名称';
   }
 
   /**
@@ -227,6 +226,8 @@ export default ({
               dataSet, record, name, value, appDeployOptionsDs,
             });
             break;
+          case 'isChart':
+            !networkId && handleIsChartChange({ portDs });
           default:
             break;
         }
@@ -262,6 +263,9 @@ function handleTypeChange({ portDs, value, record }) {
   }
 }
 
+function handleIsChartChange({ portDs }) {
+  portDs.current.getField('targetPort').options.loadData([]);
+}
 function handleAppServiceIdChange({
   dataSet, record, name, value,
 }) {

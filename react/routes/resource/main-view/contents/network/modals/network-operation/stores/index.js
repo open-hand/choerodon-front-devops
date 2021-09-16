@@ -124,9 +124,6 @@ function StoreProvider(props) {
     formDs.current.set('name', null);
   }, [formDs.current.get('isChart')]);
 
-  // useEffect(() => {
-  //   console.log('aa');
-  // }, [formDs.current.get('target')]);
   const value = {
     ...props,
     formDs,

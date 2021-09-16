@@ -1,7 +1,7 @@
 /* eslint-disable */
 import detailTabs from '@/routes/app-center-pro/routes/app-detail/components/detail-tabs';
 import { map } from 'lodash';
-
+import {deploymentsApiConfig} from '@/api/Deployments'
 export default ({ formatMessage, projectId, envId }) => {
   /**
    * 验证端口号
@@ -47,7 +47,6 @@ export default ({ formatMessage, projectId, envId }) => {
       return formatMessage({ id: data.failedMsg });
     }
   }
-
   return {
     fields: [
       {
@@ -97,24 +96,7 @@ export default ({ formatMessage, projectId, envId }) => {
             };
           }else{
             if (!dataSet.parent.current || !dataSet.parent.current.get('appDeploy')) return null;
-            return {
-              method: 'get',
-              url: `/devops/v1/projects/${projectId}/deployments/${dataSet.parent.current.get('appDeploy')}/list_port`,
-              transformResponse: (resp) => {
-                try {
-                  const data = JSON.parse(resp);
-                  if (data && data.failed) {
-                    return data;
-                  }
-                  return map(data, (item, index) => ({
-                    ...item,
-                    codePort: `${item.resourceName}: ${item.portValue}`,
-                  }));
-                } catch (e) {
-                  return resp;
-                }
-              },
-            };
+           return deploymentsApiConfig.getTargetPort(dataSet.parent.current.get('appDeploy'));
           }
           },
         },

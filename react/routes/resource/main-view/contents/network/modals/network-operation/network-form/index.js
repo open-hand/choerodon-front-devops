@@ -257,7 +257,7 @@ function FormContent() {
       <TextField name="name" colSpan={3} maxLength={30} disabled={!!networkId} />
     </Form>
   );
-  const colSpanType = { ClusterIP: 28, NodePort: 14, LoadBalancer: 18 };
+  const colSpanType = { ClusterIP: 28, NodePort: 20, LoadBalancer: 18 };
   return (
     <>
       <div className="c7ncd-create-network">
