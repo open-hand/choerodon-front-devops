@@ -1,9 +1,10 @@
-import React, { useCallback, useMemo } from 'react';
+import React, {
+  useMemo, useEffect, useState,
+} from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
 import { HeaderButtons } from '@choerodon/boot';
 import EnvDetail from '../../../../../../components/env-detail';
-import HeaderAction from '../../../../../../components/header-action';
 import Permission from '../../../../../resource/main-view/contents/environment/modals/permission';
 import { useEnvironmentStore } from '../../../../stores';
 import { useMainStore } from '../../../stores';
@@ -14,7 +15,7 @@ import GroupForm from '../../../modals/GroupForm';
 import DeployConfigForm from '../../../../../../components/deploy-config-form';
 import { isNotRunning } from '../../../../util';
 import Tips from '../../../../../../components/new-tips';
-
+import { environmentApiApi } from '@/api/Environment';
 import '../../../../../../components/dynamic-select/style/index.less';
 import { LARGE } from '../../../../../../utils/getModalWidth';
 
@@ -22,27 +23,27 @@ const detailKey = Modal.key();
 const envKey = Modal.key();
 const groupKey = Modal.key();
 const permissionKey = Modal.key();
-const resourceKey = Modal.key();
+// const resourceKey = Modal.key();
 const configKey = Modal.key();
-const ITEM_GROUP = 'group';
-const ITEM_SAFETY = 'safety';
+// const ITEM_GROUP = 'group';
+// const ITEM_SAFETY = 'safety';
 
 const EnvModals = observer(() => {
   const modalStore = useStore();
   const modalStyle = useMemo(() => ({
     width: 380,
   }), []);
-  const actionStyle = useMemo(() => ({
-    marginLeft: '.2rem',
-  }), []);
-  const configModalStyle = useMemo(() => ({
-    width: 'calc(100vw - 3.52rem)',
-    minWidth: '2rem',
-  }), []);
+  // const actionStyle = useMemo(() => ({
+  //   marginLeft: '.2rem',
+  // }), []);
+  // const configModalStyle = useMemo(() => ({
+  //   width: 'calc(100vw - 3.52rem)',
+  //   minWidth: '2rem',
+  // }), []);
   const {
     treeDs,
     intlPrefix: currentIntlPrefix,
-    prefixCls: currentPrefixCls,
+    // prefixCls: currentPrefixCls,
     envStore: { getSelectedMenu },
     AppState: { currentMenuType: { id: projectId } },
   } = useEnvironmentStore();
@@ -61,13 +62,23 @@ const EnvModals = observer(() => {
     gitopsLogDs,
     gitopsSyncDs,
     configDs,
-    configFormDs,
+    // configFormDs,
     checkEnvExist,
     baseDs,
     nonePermissionDs,
   } = useDetailStore();
 
-  function refresh() {
+  const [createEnvDisable, setCreateEnvDisable] = useState(true);
+
+  useEffect(() => {
+    environmentApiApi.getCreateEnvDisable().then((res) => {
+      if (res) {
+        setCreateEnvDisable(!res);
+      }
+    });
+  }, []);
+
+  const refresh = () => {
     checkEnvExist().then((query) => {
       if (query) {
         const { getTabKey } = detailStore;
@@ -89,7 +100,7 @@ const EnvModals = observer(() => {
         baseDs.query();
       }
     });
-  }
+  };
   const disabled = isNotRunning(getSelectedMenu || {});
 
   function openEnvModal() {
@@ -117,12 +128,12 @@ const EnvModals = observer(() => {
     });
   }
 
-  function toPermissionTab() {
-    const { getTabKey } = detailStore;
-    detailStore.setTabKey(ASSIGN_TAB);
-    treeDs.query();
-    getTabKey === ASSIGN_TAB && permissionsDs.query();
-  }
+  // function toPermissionTab() {
+  //   const { getTabKey } = detailStore;
+  //   detailStore.setTabKey(ASSIGN_TAB);
+  //   treeDs.query();
+  //   getTabKey === ASSIGN_TAB && permissionsDs.query();
+  // }
 
   function openEnvDetail() {
     Modal.open({
@@ -178,6 +189,12 @@ const EnvModals = observer(() => {
   };
 
   function getButtons() {
+    let tooltipsConfig = {};
+    if (createEnvDisable) {
+      tooltipsConfig = {
+        title: '集群环境数量已达上限,无法创建更多环境',
+      };
+    }
     return [{
       permissions: ['choerodon.code.project.deploy.environment.ps.detail-create-env'],
       name: formatMessage({ id: `${currentIntlPrefix}.create` }),
@@ -185,6 +202,8 @@ const EnvModals = observer(() => {
       handler: openEnvModal,
       display: true,
       group: 1,
+      disabled: createEnvDisable,
+      tooltipsConfig,
     }, {
       permissions: ['choerodon.code.project.deploy.environment.ps.detail-create-config'],
       disabled,
