@@ -25,12 +25,14 @@ export default ({
     const pattern = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
     if (value && !pattern.test(value)) {
       return formatMessage({ id: 'network.name.check.failed' });
-    } if (value && pattern.test(value)) {
+    }
+    if (value && pattern.test(value)) {
       const res = await networkStore.checkNetWorkName(projectId, envId, value);
       if (!res) {
         return formatMessage({ id: 'network.name.check.exist' });
       }
     }
+    return '请输入名称';
   }
 
   /**
@@ -202,7 +204,7 @@ export default ({
                 endPointsDs, targetLabelsDs, record: dataSet.current, networkInfoDs,
               }))
               : handleTargetChange({
-                targetLabelsDs, endPointsDs, value, record, dataSet,
+                targetLabelsDs, endPointsDs, value, record, dataSet, portDs,
               });
             break;
           case 'type':
@@ -234,11 +236,12 @@ export default ({
 };
 
 function handleTargetChange({
-  targetLabelsDs, endPointsDs, value, record,
+  targetLabelsDs, endPointsDs, value, record, portDs,
 }) {
   if (value !== 'instance') {
     record.set('appInstance', null);
     record.set('appServiceId', null);
+    portDs.current.getField('targetPort').options.loadData([]);
   }
   if (value !== 'param') {
     targetLabelsDs.reset();

@@ -257,7 +257,7 @@ function FormContent() {
       <TextField name="name" colSpan={3} maxLength={30} disabled={!!networkId} />
     </Form>
   );
-  const colSpanType = { ClusterIP: 6, NodePort: 3, LoadBalancer: 4 };
+  const colSpanType = { ClusterIP: 28, NodePort: 14, LoadBalancer: 18 };
   return (
     <>
       <div className="c7ncd-create-network">
@@ -299,7 +299,7 @@ function FormContent() {
         <div className="group-port">
           {
             map(portDs.created, (record, index) => (
-              <Form record={record} key={`port-record-${index}`} columns={12}>
+              <Form record={record} key={`port-record-${index}`} columns={60}>
 
                 {
                 current.get('type') !== 'ClusterIP'
