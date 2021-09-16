@@ -25,7 +25,8 @@ export default ({
     const pattern = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
     if (value && !pattern.test(value)) {
       return formatMessage({ id: 'network.name.check.failed' });
-    } if (value && pattern.test(value)) {
+    }
+    if (value && pattern.test(value)) {
       const res = await networkStore.checkNetWorkName(projectId, envId, value);
       if (!res) {
         return formatMessage({ id: 'network.name.check.exist' });
@@ -202,7 +203,7 @@ export default ({
                 endPointsDs, targetLabelsDs, record: dataSet.current, networkInfoDs,
               }))
               : handleTargetChange({
-                targetLabelsDs, endPointsDs, value, record, dataSet,
+                targetLabelsDs, endPointsDs, value, record, dataSet, portDs,
               });
             break;
           case 'type':
@@ -225,6 +226,8 @@ export default ({
               dataSet, record, name, value, appDeployOptionsDs,
             });
             break;
+          case 'isChart':
+            !networkId && handleIsChartChange({ portDs });
           default:
             break;
         }
@@ -234,11 +237,12 @@ export default ({
 };
 
 function handleTargetChange({
-  targetLabelsDs, endPointsDs, value, record,
+  targetLabelsDs, endPointsDs, value, record, portDs,
 }) {
   if (value !== 'instance') {
     record.set('appInstance', null);
     record.set('appServiceId', null);
+    portDs.current.getField('targetPort').options.loadData([]);
   }
   if (value !== 'param') {
     targetLabelsDs.reset();
@@ -259,6 +263,9 @@ function handleTypeChange({ portDs, value, record }) {
   }
 }
 
+function handleIsChartChange({ portDs }) {
+  portDs.current.getField('targetPort').options.loadData([]);
+}
 function handleAppServiceIdChange({
   dataSet, record, name, value,
 }) {

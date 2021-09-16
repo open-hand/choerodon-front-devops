@@ -1,6 +1,7 @@
 /* eslint-disable */
+import detailTabs from '@/routes/app-center-pro/routes/app-detail/components/detail-tabs';
 import { map } from 'lodash';
-
+import {deploymentsApiConfig} from '@/api/Deployments'
 export default ({ formatMessage, projectId, envId }) => {
   /**
    * 验证端口号
@@ -11,14 +12,14 @@ export default ({ formatMessage, projectId, envId }) => {
   function checkPort(value, type, record) {
     const p = /^([1-9]\d*|0)$/;
     const isRepeat = record.dataSet.findIndex((r) => record.id !== r.id && r.get(type) === value) !== -1;
-
+   
     const data = {
       typeMsg: '',
       min: 0,
       max: 65535,
       failedMsg: 'network.port.check.failed',
     };
-
+    
     switch (type) {
       case 'targetPort':
         data.typeMsg = 'network.tport.check.repeat';
@@ -30,7 +31,10 @@ export default ({ formatMessage, projectId, envId }) => {
         data.failedMsg = 'network.nport.check.failed';
         break;
       default:
-        data.typeMsg = 'network.port.check.repeat';
+        data.typeMsg = 'network.port.check.repeat';//端口号重复
+    }
+    if(isRepeat){
+      return formatMessage({ id:  data.typeMsg  });
     }
     if (value) {
       if (
@@ -43,7 +47,6 @@ export default ({ formatMessage, projectId, envId }) => {
       return formatMessage({ id: data.failedMsg });
     }
   }
-
   return {
     fields: [
       {
@@ -69,6 +72,9 @@ export default ({ formatMessage, projectId, envId }) => {
         textField: 'resourceName',
         dynamicProps: {
           lookupAxiosConfig: ({ dataSet, record, name }) => {
+            if(dataSet.parent.current.get('target')!=='instance'){
+              return null;}
+            if(dataSet.parent.current.get('isChart')==='chart'){
             if (!dataSet.parent.current || !dataSet.parent.current.get('appServiceId')) return null;
             return {
               method: 'get',
@@ -88,6 +94,10 @@ export default ({ formatMessage, projectId, envId }) => {
                 }
               },
             };
+          }else{
+            if (!dataSet.parent.current || !dataSet.parent.current.get('appDeploy')) return null;
+           return deploymentsApiConfig.getTargetPort(dataSet.parent.current.get('appDeploy'));
+          }
           },
         },
       },
