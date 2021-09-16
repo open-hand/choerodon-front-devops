@@ -47,6 +47,20 @@ export default ({ formatMessage, projectId, envId }) => {
       return formatMessage({ id: data.failedMsg });
     }
   }
+  const transformResponse=(resp) => {
+    try {
+      const data = JSON.parse(resp);
+      if (data && data.failed) {
+        return data;
+      }
+      return map(data, (item, index) => ({
+        ...item,
+        codePort: `${item.resourceName}: ${item.portValue}`,
+      }));
+    } catch (e) {
+      return resp;
+    }
+  }
   return {
     fields: [
       {
@@ -96,7 +110,7 @@ export default ({ formatMessage, projectId, envId }) => {
             };
           }else{
             if (!dataSet.parent.current || !dataSet.parent.current.get('appDeploy')) return null;
-           return deploymentsApiConfig.getTargetPort(dataSet.parent.current.get('appDeploy'));
+           return deploymentsApiConfig.getTargetPort(dataSet.parent.current.get('appDeploy'),transformResponse);
           }
           },
         },
