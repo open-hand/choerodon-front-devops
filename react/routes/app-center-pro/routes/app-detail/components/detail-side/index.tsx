@@ -17,7 +17,9 @@ import {
   CHART_SHARE,
   CHART_UPLOAD,
   ENV_TAB,
+  HOST_CATERGORY,
   HOST_TAB,
+  OTHER_CATERGORY,
 } from '@/routes/app-center-pro/stores/CONST';
 import AppStatus from '@/routes/app-center-pro/components/AppStatus';
 
@@ -196,6 +198,37 @@ const DetailAside = () => {
     </>
   );
 
+  const renderHostOther = () => (
+    <>
+      <div>
+        <span>应用来源</span>
+        <span>
+          {getChartSourceName[sourceType]}
+        </span>
+      </div>
+      <div>
+        <span>文件名</span>
+        <span>
+          {
+            <a href={fileInfoVO?.uploadUrl}>
+              {fileInfoVO?.fileName}
+            </a> || '-'
+          }
+        </span>
+      </div>
+    </>
+  );
+
+  const renderHostDetails = () => {
+    if (appCatergory?.code === OTHER_CATERGORY) {
+      return renderHostOther();
+    }
+    if (appCatergory?.code === HOST_CATERGORY) {
+      return renderJar();
+    }
+    return null;
+  };
+
   return (
     <div className={`${subfixCls}-aside`}>
       <header>
@@ -226,7 +259,7 @@ const DetailAside = () => {
           </div>
           { appCatergory?.code === CHART_CATERGORY && renderChartDetails()}
           {
-            isHost && renderJar()
+            isHost && renderHostDetails()
           }
           <div>
             <span>创建时间</span>
