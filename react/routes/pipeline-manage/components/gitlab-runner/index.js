@@ -12,7 +12,6 @@ import './index.less';
 export default function GitlabRunner() {
   useEffect(() => {
     pipeLineApi.getParams().then((res) => {
-      console.log(res);
       setParamsObj(res);
     });
   }, []);
