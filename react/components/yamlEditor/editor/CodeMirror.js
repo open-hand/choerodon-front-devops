@@ -71,6 +71,7 @@ class CodeMirror extends React.Component {
       normalizeLineEndings(this.codeMirror.getValue()) !==
         normalizeLineEndings(this.props.value)
     ) {
+      this.codeMirror.setValue(this.props.value)
       if (this.state.viewMode==='diff') { // 进来的时候已经切换成了diff才加数据
         this.initUI(this.props.options.viewMode);
       }
