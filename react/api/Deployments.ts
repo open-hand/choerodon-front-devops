@@ -36,24 +36,11 @@ class DeploymentsApi extends Api<DeploymentsApi> {
     });
   }
 
-  getTargetPort(deploymentId:string) {
+  getTargetPort(deploymentId:string, transformResponse:any) {
     return this.request({
       url: `${this.prefix}/${deploymentId}/list_port`,
       method: 'get',
-      transformResponse: (resp) => {
-        try {
-          const data = JSON.parse(resp);
-          if (data && data.failed) {
-            return data;
-          }
-          return map(data, (item:any, index:number) => ({
-            ...item,
-            codePort: `${item.resourceName}: ${item.portValue}`,
-          }));
-        } catch (e) {
-          return resp;
-        }
-      },
+      transformResponse,
     });
   }
 }
