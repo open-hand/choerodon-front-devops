@@ -207,7 +207,7 @@ const Index = observer(() => {
                 value.value,
               )}
               selectedKeys={AppConfigDataSet.current.get(mapping.chartSource.name)}
-              data={chartSourceData}
+              data={chartSourceData.slice(0, 4)}
               identity="value"
               mode="single"
               customChildren={(item): any => (

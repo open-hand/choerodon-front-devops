@@ -336,7 +336,10 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
           instanceId: data?.id,
         });
       } if (data[mapping.chartSource.name as string] === chartSourceData[4].value) {
-        return middlewareConfigApi.updateMiddleware(data.id, data);
+        return middlewareConfigApi.updateMiddleware(data.id, {
+          ...data,
+          marketAppServiceId: data.appServiceId,
+        });
       }
       return appServiceInstanceApi.updateMarketAppService(
         data.instanceId,
