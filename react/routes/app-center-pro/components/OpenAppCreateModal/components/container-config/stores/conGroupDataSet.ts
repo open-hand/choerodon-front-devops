@@ -625,15 +625,26 @@ const conGroupDataSet = (
   if (preJobList && preJobList.length > 0) {
     dockerData = preJobList.filter((itemList) => {
       if (itemList.metadata) {
-        const metadata = JSON.parse(itemList.metadata.replace(/'/g, '"'));
-        return metadata?.config?.some((c: any) => c.type === 'docker');
+        try {
+          const metadata = JSON.parse(itemList?.metadata?.replace(/'/g, '"'));
+          if (metadata) {
+            return metadata?.config?.some((c: any) => c.type === 'docker');
+          }
+          return false;
+        } catch (e) {
+          return false;
+        }
       }
       return false;
     });
     jarData = preJobList.filter((itemList) => {
       if (itemList.metadata) {
-        const metadata = JSON.parse(itemList.metadata.replace(/'/g, '"'));
-        return metadata?.config?.some((c: any) => ['maven_deploy', 'upload_jar'].includes(c.type));
+        try {
+          const metadata = JSON.parse(itemList.metadata.replace(/'/g, '"'));
+          return metadata?.config?.some((c: any) => ['maven_deploy', 'upload_jar'].includes(c.type));
+        } catch (e) {
+          return false;
+        }
       }
       return false;
     });
