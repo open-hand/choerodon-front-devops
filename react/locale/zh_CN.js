@@ -826,6 +826,8 @@ const deploy = {
   'c7ncd.deploy.source.deploy.market': '市场',
   'c7ncd.deploy.source.deploy.platformPreset': '平台预置',
   'c7ncd.deploy.source.deploy.hzero': 'Hzero应用',
+  'c7ncd.deploy.source.deploy.upload': '上传',
+  'c7ncd.deploy.source.deploy.deployment': '部署组',
   'c7ncd.deploy.hzero': 'HZERO应用快速部署',
   'c7ncd.deploy.hzero.version': 'HZERO应用版本',
   'c7ncd.deploy.hzero.version.service': '服务版本',

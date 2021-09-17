@@ -580,7 +580,7 @@ const Deployment = withRouter(observer((props) => {
             header="执行结果"
             width={90}
           />
-          <Column name="instanceName" renderer={renderInstance} />
+          <Column name="appName" renderer={renderInstance} />
           <Column name="deploySourceVO" renderer={renderDeploySource} />
           <Column
             name={mapping.deployObject.value}
