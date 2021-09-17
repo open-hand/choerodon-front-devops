@@ -120,9 +120,9 @@ export default function GitlabRunner() {
           text={`helm install c7n/gitlab-runner \\
           --set rbac.create=true \\
           --set env.concurrent=3 \\
-          --set env.gitlabUrl=http://gitlab.example.choerodon.io/ \\
+          --set env.gitlabUrl=${paramsObj['gitlab-url']} \\
           --set env.runnerRegistrationToken=xwxobLNoPQUzyMt_4RGF \\
-          --set env.environment.CHOERODON_URL=http://api.example.choerodon.io \\
+          --set env.environment.CHOERODON_URL=${paramsObj.gateway} \\
           --set env.persistence.runner-maven-pvc="/root/.m2" \\
           --set env.persistence.runner-cache-pvc="/cache" \\
           --set enabled_mount_host_docker_sock=true \\

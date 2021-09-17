@@ -17,11 +17,11 @@ const Dataset = ({ formatMessage, keyOptionsDs }) => {
         if (isRepeat) {
           return formatMessage({ id: 'network.label.check.repeat' });
         }
-      } else {
-        return formatMessage({ id: 'network.label.check.failed' });
+        return true;
       }
+      return formatMessage({ id: 'network.label.check.failed' });
     }
-    return '关键字不存在';
+    return true;
   }
 
   function checkValue(value, name, record) {
@@ -30,8 +30,9 @@ const Dataset = ({ formatMessage, keyOptionsDs }) => {
       if (!p.test(value)) {
         return formatMessage({ id: 'network.label.check.failed' });
       }
+      return true;
     }
-    return '值不存在';
+    return true;
   }
 
   const dynamicProps = {

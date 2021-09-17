@@ -20,6 +20,7 @@ import {
   HOST_CATERGORY,
   HOST_TAB,
   OTHER_CATERGORY,
+  MIDDLWARE_CATERGORY,
 } from '@/routes/app-center-pro/stores/CONST';
 import AppStatus from '@/routes/app-center-pro/components/AppStatus';
 
@@ -70,6 +71,8 @@ const DetailAside = () => {
     groupId,
     version,
     fileInfoVO,
+    middlewareVersion,
+    middlewareMode,
 
     error,
   } = appDs.current?.toData() || {};
@@ -219,12 +222,36 @@ const DetailAside = () => {
     </>
   );
 
+  const renderMiddleware = () => (
+    <>
+      <div>
+        <span>部署模式</span>
+        <span>{middlewareMode}</span>
+      </div>
+      <div>
+        <span>应用来源</span>
+        <span>
+          市场基础组件
+        </span>
+      </div>
+      <div>
+        <span>版本</span>
+        <span>
+          {middlewareVersion}
+        </span>
+      </div>
+    </>
+  );
+
   const renderHostDetails = () => {
     if (appCatergory?.code === OTHER_CATERGORY) {
       return renderHostOther();
     }
     if (appCatergory?.code === HOST_CATERGORY) {
       return renderJar();
+    }
+    if (appCatergory?.code === MIDDLWARE_CATERGORY) {
+      return renderMiddleware();
     }
     return null;
   };

@@ -21,6 +21,7 @@ import {
   IS_HOST,
   IS_MARKET,
   IS_SERVICE,
+  MIDDLWARE_CATERGORY,
   OTHER_CATERGORY,
 } from '@/routes/app-center-pro/stores/CONST';
 import { getAppCategories, getChartSourceGroup } from '@/routes/app-center-pro/utils';
@@ -125,6 +126,7 @@ const DetailsTabsHeaderButtons = () => {
         break;
       case HOST_CATERGORY:
       case OTHER_CATERGORY:
+      case MIDDLWARE_CATERGORY:
         obj = {
           name: '修改应用',
           handler: () => {
