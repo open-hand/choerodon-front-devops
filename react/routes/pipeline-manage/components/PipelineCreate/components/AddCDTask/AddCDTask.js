@@ -407,8 +407,8 @@ export default observer(() => {
       ds.skipCheckPermission = !ds.checkEnvPermissionFlag;
       ds.deployObjectType = ds.type;
       ds = {
-        ...ds,
         ...deployChartData,
+        ...ds,
       }
       delete ds.value;
     }

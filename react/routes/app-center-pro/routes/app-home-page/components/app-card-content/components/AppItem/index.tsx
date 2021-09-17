@@ -284,7 +284,7 @@ const AppItem = observer(({
         </div>
         <div>
           <span>部署对象</span>
-          <span>{catergory.name}</span>
+          <span>{catergory?.name}</span>
         </div>
         {isHost && (
         <div>

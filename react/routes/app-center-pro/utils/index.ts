@@ -5,7 +5,7 @@
 // 3. 否者就是 jar包，主机的
 
 import {
-  CHART_CATERGORY, DEPLOY_CATERGORY, ENV_TAB, HOST_CATERGORY, OTHER_CATERGORY, HOST_TAB, isHostGroup, isMarketGroup, isServiceGroup, IS_HOST, IS_MARKET, IS_SERVICE,
+  CHART_CATERGORY, DEPLOY_CATERGORY, ENV_TAB, HOST_CATERGORY, OTHER_CATERGORY, HOST_TAB, isHostGroup, MIDDLWARE_CATERGORY, isMarketGroup, isServiceGroup, IS_HOST, IS_MARKET, IS_SERVICE,
 } from '../stores/CONST';
 
 // Chart包，部署组，还是jar包
@@ -20,12 +20,15 @@ const getAppCategories = (rdupmType:string, deployType = 'env') => {
       name = '部署组';
       code = DEPLOY_CATERGORY;
     }
-  } else if (rdupmType === 'other') {
-    name = '其它制品';
-    code = OTHER_CATERGORY;
-  } else {
+  } else if (rdupmType === 'jar') {
     name = 'jar包';
     code = HOST_CATERGORY;
+  } else if (rdupmType === 'middleware') {
+    name = '中间件';
+    code = MIDDLWARE_CATERGORY;
+  } else {
+    name = '其它制品';
+    code = OTHER_CATERGORY;
   }
   return {
     name, code,
