@@ -124,6 +124,11 @@ const Index = observer(() => {
           setOptionsDs(record.getField(mapping.enVariable.name).options, record.get('envs'));
         });
       }, 1000);
+    } else {
+      ConGroupDataSet.records.forEach((record: Record) => {
+        record?.getField(mapping.portConfig.name)?.options?.reset();
+        record?.getField(mapping.enVariable.name)?.options?.reset();
+      });
     }
   }, [detail]);
 

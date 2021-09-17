@@ -183,7 +183,7 @@ const mapping: {
     label: '应用名称',
     validator: async (value, type, record: Record) => {
       let res: any = '应用名称已重复';
-      const flag = await deployAppCenterApi.checkAppName(value, 'chart', record.get('instanceId'));
+      const flag = await deployAppCenterApi.checkAppName(value, 'chart', record?.get('instanceId') || record?.get('id'));
       if (flag) {
         res = true;
       }

@@ -75,17 +75,17 @@ const mapping: {
     validator: async (value, name, record: Record) => {
       const flag = LCLETTER_NUM.test(value);
       if (!flag) {
-        return '名称只能由小写字母、数字、"-"组成，且以小写字母开头，不能以"-"结尾';
+        return '编码只能由小写字母、数字、"-"组成，且以小写字母开头，不能以"-"结尾';
       }
       let res: any = '应用编码重复';
       if (record?.get(mapping.deployMode.name) === deployModeOptionsData[0].value) {
-        res = await deployAppCenterApi.checkAppCode(value);
-        if (res) {
+        const res1 = await deployAppCenterApi.checkAppCode(value);
+        if (res1) {
           res = true;
         }
       } else {
-        res = await hostApi.checkAppCode(value);
-        if (res) {
+        const res1 = await hostApi.checkAppCode(value);
+        if (res1) {
           res = true;
         }
       }

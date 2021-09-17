@@ -58,9 +58,8 @@ function GroupItem({
     Modal.open({
       movable: false,
       closable: false,
-      header: true,
       key: confirmKey,
-      title: formatMessage({ id: `${intlPrefix}.group.delete` }, { name }),
+      title: `删除分组${name}`,
       children: <div>{formatMessage({ id: `${intlPrefix}.group.delete.warn` })}</div>,
       onOk: handleDelete,
       okText: formatMessage({ id: 'delete' }),
@@ -107,6 +106,10 @@ function GroupItem({
 
 GroupItem.propTypes = {
   search: PropTypes.string,
+};
+
+GroupItem.defaultProps = {
+  search: '',
 };
 
 export default injectIntl(observer(GroupItem));
