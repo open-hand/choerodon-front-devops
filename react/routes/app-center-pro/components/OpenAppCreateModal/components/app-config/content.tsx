@@ -185,6 +185,7 @@ const Index = observer(() => {
   const Editor = useMemo(() => (
     <YamlEditor
       readOnly={false}
+      modeChange={false}
       value={AppConfigDataSet.current.get(mapping.value.name)}
       originValue={AppConfigDataSet.current.get(mapping.originValue.name)}
       onValueChange={(value: string) => AppConfigDataSet.current.set(mapping.value.name, value)}
