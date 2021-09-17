@@ -264,7 +264,7 @@ const mapping: {
   marketServiceVersion: {
     name: 'marketDeployObjectId',
     type: 'object' as FieldType,
-    label: '市场服务及版本11',
+    label: '市场服务及版本',
     textField: 'marketServiceName',
     valueField: 'id',
     dynamicProps: {
