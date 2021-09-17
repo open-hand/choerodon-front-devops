@@ -305,6 +305,9 @@ function DetailItem({
 
     return (
       <Action
+        style={{
+          marginLeft: 'auto',
+        }}
         placement="bottomRight"
         data={actionData}
         onClick={eventStopProp}

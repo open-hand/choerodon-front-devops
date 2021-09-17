@@ -33,7 +33,7 @@ const CustomModals = observer(() => {
     switch (type) {
       case 'deployGroup':
         menuData = {
-          id: '1',
+          id: 1,
           name: formatMessage({ id: 'workload_group' }),
           key: `${parentId}**workload`,
           isGroup: true,
@@ -44,7 +44,7 @@ const CustomModals = observer(() => {
         break;
       case 'chart':
         menuData = {
-          id: '0',
+          id: 0,
           name: formatMessage({ id: 'instances_group' }),
           key: `${parentId}**instances`,
           isGroup: true,
@@ -56,6 +56,7 @@ const CustomModals = observer(() => {
       default:
         break;
     }
+    refresh();
     setSelectedMenu(menuData);
     setExpandedKeys([`${parentId}`]);
   }
