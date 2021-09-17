@@ -31,10 +31,10 @@ const pvcContent = observer((props) => {
     intl: { formatMessage },
   } = usePVCStore();
 
-  function refresh() {
-    tableDs.query();
-    tableDs.query();
-  }
+  // function refresh() {
+  //   tableDs.query();
+  //   tableDs.query();
+  // }
 
   function getEnvIsNotRunning() {
     const envRecord = treeDs.find((record) => record.get('key') === parentId);
@@ -42,7 +42,7 @@ const pvcContent = observer((props) => {
     return !connect;
   }
 
-  function renderName({ record, value }) {
+  const renderName = ({ record, value }) => {
     const status = record.get('status');
     let color = 'rgba(0, 0, 0, 0.26)';
     switch (status) {
@@ -61,7 +61,7 @@ const pvcContent = observer((props) => {
     }
     if (status) {
       return (
-        <Fragment>
+        <>
           <StatusTags
             name={status}
             color={color}
@@ -72,10 +72,11 @@ const pvcContent = observer((props) => {
               {value}
             </span>
           </Tooltip>
-        </Fragment>
+        </>
       );
     }
-  }
+    return '';
+  };
 
   function handleDelete() {
     const record = tableDs.current;
@@ -87,9 +88,9 @@ const pvcContent = observer((props) => {
     tableDs.delete(record, modalProps);
   }
 
-  function renderAction({ record }) {
+  const renderAction = ({ record }) => {
     const status = record.get('status');
-    const disabled = getEnvIsNotRunning() || status === 'Terminating' || status === 'Operating';
+    const disabled = getEnvIsNotRunning() || status === 'Terminating' || status === 'Operating' || status === 'Deleting';
     if (disabled) {
       return;
     }
@@ -100,8 +101,9 @@ const pvcContent = observer((props) => {
         action: handleDelete,
       },
     ];
+    // eslint-disable-next-line consistent-return
     return (<Action data={action} />);
-  }
+  };
 
   return (
     <div className={`${prefixCls}-PVC`}>
