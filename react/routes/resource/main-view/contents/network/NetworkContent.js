@@ -43,10 +43,10 @@ const NetworkContent = observer(() => {
     intl: { formatMessage },
   } = useNetworkStore();
 
-  function refresh() {
+  const refresh = () => {
     treeDs.query();
     networkDs.query();
-  }
+  };
 
   function getEnvIsNotRunning() {
     const envRecord = treeDs.find((record) => record.get('key') === parentId);
@@ -343,7 +343,7 @@ const NetworkContent = observer(() => {
         envId={parentId}
         appServiceId={networkDs.current.get('appServiceId')}
         store={networkStore}
-        refresh
+        refresh={refresh}
       />,
       okText: formatMessage({ id: 'save' }),
       afterClose: () => networkStore.setSingleData([]),
