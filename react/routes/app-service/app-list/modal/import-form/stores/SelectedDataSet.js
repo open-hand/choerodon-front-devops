@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { axios } from '@choerodon/boot';
 import includes from 'lodash/includes';
-import { appServiceVersionApiConfig } from '@/api';
+import { appServiceApi } from '@/api';
 
 export default ({ intlPrefix, formatMessage, projectId, importStore }) => {
   function handleUpdate({ dataSet, record, name, value, oldValue }) {
@@ -58,6 +58,7 @@ export default ({ intlPrefix, formatMessage, projectId, importStore }) => {
       }
       if (!importStore.getSkipCheck) {
         try {
+          importStore.setSkipCheck(true);
           const res = await appServiceApi.checkName(value);
           if ((res && res.failed) || !res) {
             return formatMessage({ id: 'checkNameExist' });

@@ -90,7 +90,7 @@ const AppService = withRouter(observer(() => {
         appServiceStore={appServiceStore}
         intlPrefix={intlPrefix}
         prefixCls={prefixCls}
-        refresh
+        refresh={refresh}
       />,
       okText: formatMessage({ id: 'import' }),
     });
