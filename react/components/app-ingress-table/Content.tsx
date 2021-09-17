@@ -62,8 +62,20 @@ const AppIngress = observer(() => {
   }, []);
 
   const handleDelete = useCallback(async ({ record: tableRecord }) => {
-    appIngressDataset.setQueryParameter('instanceType', tableRecord.get('instanceType'));
-    refresh();
+    const modalProps = {
+      title: '删除应用实例',
+      children: `确定删除应用实例“${tableRecord.get('name')}”吗？`,
+      okText: formatMessage({ id: 'delete' }),
+    };
+    try {
+      const res = await appIngressDataset.delete(tableRecord, modalProps);
+      if (res && res.failed) {
+        message.error(res?.message);
+      }
+      refresh();
+    } catch (error) {
+      throw new Error(error);
+    }
   }, [appIngressDataset, refresh]);
 
   const renderAction = useCallback(({ record: tableRecord }) => {

@@ -8,6 +8,7 @@ import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
 import HostConfigApi from '../apis';
 import DsBasicObj from './ingressDsBasic';
+import { hostApi } from '@/api';
 
 interface ContextProps {
   prefixCls: string,
@@ -45,7 +46,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       appIngressDataset.queryFields = queryFields;
       if (!appIngressDataset?.transport?.destroy) {
         appIngressDataset.transport.destroy = ({ data: [data] }:any) => ({
-          url: data?.code === 'docker_process' ? HostConfigApi.dockerDelete(projectId, data.hostId, data.id) : HostConfigApi.jarDelete(projectId, data.hostId, data.id),
+          url: hostApi.jarDelete(data.hostId, data.id),
           method: 'delete',
         });
       }
