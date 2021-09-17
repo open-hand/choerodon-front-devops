@@ -250,7 +250,10 @@ export default ({
         textField: 'name',
         valueField: 'id',
         label: 'GitLab Group',
-        required: true,
+        dynamicProps: {
+          lookupUrl: ({ record }) => (record.get('platformType') === 'github' ? `/devops/v1/projects/${projectId}/app_service/list_service_templates` : ''),
+          required: ({ record }) => record.get('platformType') === 'gitlab' && !record.get('isGitLabTemplate'),
+        },
         lookupAxiosConfig: (data) => (groupsApiConfig.getGroups()),
       },
     ],
