@@ -69,61 +69,56 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   }
 
   function openDeleteHostAppModal(hostId: string, instanceId: string, callback?:CallableFunction) {
+    async function deleteHostApp() {
+      try {
+        const res = await hostApi.jarDelete(hostId, instanceId);
+        if (res && res?.failed) {
+          return res;
+        }
+        typeof callback === 'function' && callback();
+        return res;
+      } catch (error) {
+        throw new Error(error);
+      }
+    }
     Modal.open({
       key: Modal.key(),
       title: '删除应用',
       children: '确认删除此应用吗？',
       okText: '删除',
-      onOk: () => deleteHostApp(hostId, instanceId, callback),
+      onOk: deleteHostApp,
     });
   }
 
-  async function deleteHostApp(hostId: string, instanceId: string, callback?:CallableFunction) {
-    try {
-      const res = await hostApi.jarDelete(hostId, instanceId);
-      if (res && res?.failed) {
-        return res;
-      }
-      typeof callback === 'function' && callback();
-      return res;
-    } catch (error) {
-      throw new Error(error);
-    }
-  }
-
-  async function deleteDeployGroupApp({
-    instanceId, callback,
-  }:{
-    instanceId:string,
-    callback:(...args:[])=>any
-  }) {
-    try {
-      const res = await deploymentsApi.deleleDeployGroupApp(instanceId);
-      if (res && res.failed) {
-        return res;
-      }
-      callback();
-      return true;
-    } catch (error) {
-      throw new Error(error);
-    }
-  }
-
+  // 部署组的删除
   function openDeleteGroupModal({
     instanceId, callback,
   }:{
     instanceId:string,
     callback:(...args:[])=>any
   }) {
+    async function deleteDeployGroupApp() {
+      try {
+        const res = await deploymentsApi.deleleDeployGroupApp(instanceId);
+        if (res && res.failed) {
+          return res;
+        }
+        callback();
+        return true;
+      } catch (error) {
+        throw new Error(error);
+      }
+    }
     Modal.open({
       key: Modal.key(),
       title: '删除应用',
       children: '确认删除此应用吗？',
       okText: '删除',
-      onOk: () => deleteDeployGroupApp({ instanceId, callback }),
+      onOk: deleteDeployGroupApp,
     });
   }
 
+  // 删除chart和部署组的
   async function deleteEnvApp({
     appCatergoryCode, envId, instanceId, instanceName, callback,
   }:deletEnvProps) {
