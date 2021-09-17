@@ -67,7 +67,7 @@ class DeployAppCenterApi extends Api<DeployAppCenterApi> {
       params: {
         name,
         rdupmType,
-        objectId,
+        object_id: objectId,
       },
     });
   }
