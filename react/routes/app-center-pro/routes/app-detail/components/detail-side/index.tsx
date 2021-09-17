@@ -115,7 +115,7 @@ const DetailAside = () => {
         break;
     }
     return (
-      <StatusTag ellipsisTitle={objectStatus === 'operating' ? `部署版本"${versionName}"` : ''} name={message} colorCode={objectStatus} />
+      <StatusTag ellipsisTitle={objectStatus === 'operating' && versionName ? `部署版本"${versionName}"` : ''} name={message} colorCode={objectStatus} />
     );
   }
 

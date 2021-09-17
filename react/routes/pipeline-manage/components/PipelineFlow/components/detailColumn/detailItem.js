@@ -202,13 +202,13 @@ const DetailItem = (props) => {
       appName,
 
       hostName,
-    } = cdAuto;
+    } = cdAuto || {};
 
     return (
       <main>
         <div>
           <span>主机名称：</span>
-          <span>{hostName}</span>
+          <span>{hostName || '-'}</span>
         </div>
         <div>
           <span>制品类型：</span>

@@ -2,8 +2,7 @@ import React, {
   createContext, useContext,
 } from 'react';
 import { inject } from 'mobx-react';
-import { injectIntl, FormattedMessage } from 'react-intl';
-import { axios } from '@choerodon/master';
+import { injectIntl } from 'react-intl';
 import { useHistory, useLocation } from 'react-router';
 import { Modal } from 'choerodon-ui/pro';
 import {
