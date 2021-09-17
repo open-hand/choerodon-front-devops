@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { Button, Dropdown, Menu } from 'choerodon-ui';
 import { Modal, Icon } from 'choerodon-ui/pro';
 import { Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd';
+import jobTypes from '../../../../../../stores/jobsTypeMappings';
 import { usePipelineStageEditStore } from '../../stores';
 import AddTask from '../../../AddTask';
 import AddCDTask from '../../../AddCDTask';
@@ -287,7 +288,7 @@ export default observer((props) => {
       title: (
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <span className="c7n-piplineManage-edit-title-text">
-            添加任务
+            {`添加【${jobTypes[taskType]}】任务`}
           </span>
           {type === 'CI' && (
             <div

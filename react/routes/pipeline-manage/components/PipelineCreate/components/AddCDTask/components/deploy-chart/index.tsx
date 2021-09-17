@@ -4,7 +4,7 @@ import {
 } from 'choerodon-ui/pro';
 import { Icon } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
-import { FuncType, ButtonColor } from '@/interface';
+import { FuncType, ButtonColor, LabelLayoutType } from '@/interface';
 import YamlEditor from '@/components/yamlEditor';
 import { mapping } from '../../stores/deployChartDataSet';
 import { deployWayData } from '../../stores/addCDTaskDataSetMap';
@@ -31,7 +31,7 @@ export default observer(({
   }): void,
 }) => {
   const renderValueIdText = () => (
-    <div>
+    <div style={{ marginTop: 20 }}>
       <Icon style={{ color: 'rgb(244, 67, 54)' }} type="error" />
       <span
         style={{
@@ -83,8 +83,18 @@ export default observer(({
         <p className={`${cssPrefix}__title`}>
           应用配置
         </p>
-        <Form columns={2} dataSet={dataSet}>
+        <Form
+          style={{
+            position: 'absolute',
+            left: '50px',
+            top: '-8px',
+          }}
+          columns={2}
+          dataSet={dataSet}
+        >
           <Select
+            className={`${cssPrefix}__anotherField`}
+            prefix="部署配置:"
             name={mapping().deployConfig.name}
             optionRenderer={optionRenderValueId}
             renderer={rendererValueId}

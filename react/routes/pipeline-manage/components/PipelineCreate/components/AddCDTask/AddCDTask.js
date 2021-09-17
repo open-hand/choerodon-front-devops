@@ -1619,7 +1619,7 @@ export default observer(() => {
 
   return (
     <div className="addcdTask">
-      <Form columns={3} dataSet={ADDCDTaskDataSet}>
+      <Form columns={6} dataSet={ADDCDTaskDataSet}>
         {/* <Select
           onChange={(data) => {
             const newData = {
@@ -1657,16 +1657,16 @@ export default observer(() => {
           <Option value={addCDTaskDataSetMap.externalStuck}>外部卡点</Option>
           <Option value={typeData[0].value}>{typeData[0].name}</Option>
         </Select> */}
-        <TextField colSpan={2} name="name" />
-        <TextField colSpan={1} name="glyyfw" />
-        <div className="addcdTask-wrap" colSpan={3}>
+        <TextField colSpan={3} name="name" />
+        <TextField colSpan={3} name="glyyfw" />
+        <div className="addcdTask-wrap" colSpan={6}>
           <Select
             name="triggerType"
             className="addcdTask-triggerType"
             onChange={() =>
               ADDCDTaskDataSet.current.set("triggerValue", undefined)
             }
-            colSpan={1}
+            colSpan={2}
             clearButton={false}
           >
             <Option value="refs">分支类型匹配</Option>
@@ -1699,7 +1699,7 @@ export default observer(() => {
                 </Tooltip>
               )}
               renderer={renderderBranchs}
-              colSpan={2}
+              colSpan={4}
             >
               {branchsList?.map((b) => (
                 <Option value={b.value}>{b.name}</Option>
@@ -1711,7 +1711,7 @@ export default observer(() => {
           addCDTaskDataSetMap.apiTest && [
             <Select
               newLine
-              colSpan={1}
+              colSpan={3}
               searchable
               searchMatcher="task_name"
               name={addCDTaskDataSetMap.apiTestMission}
@@ -1720,7 +1720,7 @@ export default observer(() => {
               }
             />,
             <Select
-              colSpan={2}
+              colSpan={3}
               name={addCDTaskDataSetMap.relativeMission}
               addonAfter={
                 <Tips
@@ -1744,7 +1744,7 @@ export default observer(() => {
           ]}
         {[typeData[0].value, typeData[1].value].includes(ADDCDTaskDataSet?.current?.get("type")) && [
           <Select
-            colSpan={1}
+            colSpan={3}
             name="envId"
             optionRenderer={optionRenderer}
             // renderer={renderer}
@@ -1757,7 +1757,7 @@ export default observer(() => {
             style={{
               position: "relative",
             }}
-            colSpan={2}
+            colSpan={3}
           >
             <SelectBox name={addCDTaskDataSetMap.triggersTasks.name}>
               <Option value={addCDTaskDataSetMap.triggersTasks.values[0]}>
@@ -1777,6 +1777,7 @@ export default observer(() => {
             />
           </div>,
           <SelectBox
+            colSpan={3}
             name={fieldMap.deployWay.name}
             onChange={(value) => {
               DeployGroupDataSet.current.set(deployGroupMapping().appName.name, undefined);
@@ -1914,7 +1915,7 @@ export default observer(() => {
         )}
         {ADDCDTaskDataSet.current.get("type") ===
           addCDTaskDataSetMap.externalStuck && [
-            <div colSpan={3} className="addcdTask-missionDes">
+            <div colSpan={6} className="addcdTask-missionDes">
               <span style={{ fontWeight: 500 }}>任务说明：</span>
               <span style={{ display: "inline-block" }}>
                 -
@@ -1951,7 +1952,7 @@ export default observer(() => {
             </div>,
             <TextField
               label="流水线回调地址"
-              colSpan={3}
+              colSpan={6}
               addonAfter={
                 <CopyToClipboard
                   text={pipelineCallbackAddress}
@@ -1964,9 +1965,9 @@ export default observer(() => {
               required
               value={pipelineCallbackAddress}
             />,
-            <TextArea name={addCDTaskDataSetMap.externalAddress} colSpan={3} />,
-            <TextArea name={addCDTaskDataSetMap.externalToken} colSpan={3} />,
-            <TextArea name={addCDTaskDataSetMap.missionDes} colSpan={3} />,
+            <TextArea name={addCDTaskDataSetMap.externalAddress} colSpan={6} />,
+            <TextArea name={addCDTaskDataSetMap.externalToken} colSpan={6} />,
+            <TextArea name={addCDTaskDataSetMap.missionDes} colSpan={6} />,
           ]}
       </Form>
       {getOtherConfig()}
