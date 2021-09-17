@@ -14,7 +14,9 @@ import { useTreeItemStore } from './stores';
 const modalKey = Modal.key();
 const confirmKey = Modal.key();
 
-function GroupItem({ record, search, intl: { formatMessage }, intlPrefix }) {
+function GroupItem({
+  record, search, intl: { formatMessage }, intlPrefix,
+}) {
   const modalStyle = useMemo(() => ({
     width: 380,
   }), []);
@@ -28,7 +30,7 @@ function GroupItem({ record, search, intl: { formatMessage }, intlPrefix }) {
   function handleClick() {
     const groupId = record.get('id');
     const name = record.get('name');
-    const current = groupFormDs.current;
+    const { current } = groupFormDs;
     current.set('name', name);
     current.set('id', groupId);
     Modal.open({
@@ -83,17 +85,24 @@ function GroupItem({ record, search, intl: { formatMessage }, intlPrefix }) {
       text: formatMessage({ id: `${intlPrefix}.modal.group.delete` }),
       action: confirmDelete,
     }];
-    return <Action
-      placement="bottomRight"
-      data={actionData}
-      onClick={eventStopProp}
-    />;
+    return (
+      <Action
+        placement="bottomRight"
+        data={actionData}
+        style={{
+          marginLeft: 'auto',
+        }}
+        onClick={eventStopProp}
+      />
+    );
   }
 
-  return <Fragment>
-    {getName()}
-    {getSuffix()}
-  </Fragment>;
+  return (
+    <>
+      {getName()}
+      {getSuffix()}
+    </>
+  );
 }
 
 GroupItem.propTypes = {

@@ -100,6 +100,7 @@ const DetailsTabsHeaderButtons = () => {
         obj = {
           name: '修改应用',
           icon: 'add_comment-o',
+          disabled: envNotConnected,
           handler: () => {
             openAppConfigModal(appRecord?.toData() || {}, refresh);
           },
@@ -112,10 +113,12 @@ const DetailsTabsHeaderButtons = () => {
           groupBtnItems: [
             {
               name: '修改应用配置',
+              disabled: envNotConnected,
               handler: () => openDeployGroupConfigModal(appRecord?.toData(), refresh),
               permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateDeployGroupApp'],
             },
             {
+              disabled: envNotConnected,
               name: '修改容器配置',
               handler: () => openContainerConfigModal(appRecord?.toData(), refresh),
               permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateDeployGroupContainer'],
@@ -132,6 +135,7 @@ const DetailsTabsHeaderButtons = () => {
           handler: () => {
             openHostAppConfigModal(appRecord?.toData() || {}, refresh);
           },
+          disabled: envNotConnected,
           permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateHost'],
           icon: 'add_comment-o',
         };
@@ -210,6 +214,7 @@ const DetailsTabsHeaderButtons = () => {
   // 启用应用
   const activeApp = {
     name: '启用应用',
+    disabled: envNotConnected,
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-toggle-status'],
     handler: () => AppCenterProServices.toggleActive({
       active: 'start',
@@ -225,6 +230,7 @@ const DetailsTabsHeaderButtons = () => {
   // 停用应用
   const stopApp = {
     name: '停用应用',
+    disabled: envNotConnected,
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-toggle-status'],
     handler: () => AppCenterProServices.toggleActive({
       active: 'stop',
@@ -240,13 +246,14 @@ const DetailsTabsHeaderButtons = () => {
   // 删除应用
   const deleteApp = {
     name: '删除应用',
+    disabled: envNotConnected,
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-delete'],
     handler: () => {
       deployType === ENV_TAB ? deleteEnvApp({
         appCatergoryCode: getAppCategories(rdupmType, deployType).code,
         envId: hostOrEnvId,
         instanceId,
-        instanceName: instanceName || objectName,
+        instanceName: name,
         callback: goBackHomeBaby,
       }) : openDeleteHostAppModal(hostOrEnvId, appId, goBackHomeBaby);
     },
