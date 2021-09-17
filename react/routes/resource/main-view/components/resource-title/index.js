@@ -39,13 +39,15 @@ function ResourceTitle(props) {
   function getTitle() {
     const current = getCurrent();
     if (current) {
-      const { name, status, errorText } = current;
+      const {
+        name, status, errorText, error,
+      } = current;
       return (
         <div className="c7ncd-resource-title">
           <Icon type={iconType} className="c7ncd-resource-title-icon" />
           <span className="c7ncd-resource-title-name">{name}</span>
           {status === 'failed' && (
-          <Tooltip title={errorText || ''}>
+          <Tooltip title={errorText || error}>
             <Icon type="error" className="c7ncd-resource-title-error-icon" />
           </Tooltip>
           )}
@@ -66,13 +68,15 @@ function ResourceTitle(props) {
   }
 
   function getFallBack() {
-    const { name, status } = resourceStore.getSelectedMenu;
+    const { name, status, error } = resourceStore.getSelectedMenu;
     return (
       <div className="c7ncd-resource-title">
         <Icon type={iconType} className="c7ncd-resource-title-icon" />
         <span>{name}</span>
         {status === 'failed' && (
-        <Icon type="error" className="c7ncd-resource-title-error-icon" />
+        <Tooltip title={error}>
+          <Icon type="error" className="c7ncd-resource-title-error-icon" />
+        </Tooltip>
         )}
       </div>
     );
