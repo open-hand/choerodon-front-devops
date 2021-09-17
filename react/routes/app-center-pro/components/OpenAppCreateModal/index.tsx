@@ -375,7 +375,11 @@ const AppCreateForm = (props: any) => {
       ...resourceConfigData,
     };
     if (resourceConfigData.devopsServiceReqVO) {
+      res.devopsServiceReqVO.envId = submitData.environmentId;
       res.devopsServiceReqVO.targetInstanceCode = submitData.appCode;
+    }
+    if (resourceConfigData.devopsIngressVO) {
+      res.devopsIngressVO.envId = submitData.environmentId;
     }
     return res;
   };

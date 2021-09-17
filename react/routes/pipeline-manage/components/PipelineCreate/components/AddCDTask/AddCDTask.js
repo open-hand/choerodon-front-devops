@@ -1781,6 +1781,8 @@ export default observer(() => {
             onChange={(value) => {
               DeployGroupDataSet.current.set(deployGroupMapping().appName.name, undefined);
               DeployGroupDataSet.current.set(deployGroupMapping().appCode.name, undefined);
+              DeployChartDataSet.current.set(deployChartMapping().appName.name, undefined);
+              DeployChartDataSet.current.set(deployChartMapping().appCode.name, undefined);
             }}
           />,
         ]}
