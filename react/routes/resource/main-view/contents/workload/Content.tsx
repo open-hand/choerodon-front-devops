@@ -212,7 +212,7 @@ const WorkloadContent = observer(() => {
           name={value}
           sourceType={sourceType}
           status={status}
-          clickAble={status !== 'operating'}
+          clickAble={status !== 'operating' && status !== 'failed'}
           onClick={() => openDetailModal(record)}
           permissionCode={['choerodon.code.project.deploy.app-deployment.resource.ps.workload.detail']}
           error={error}
