@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 /* eslint-disable import/no-anonymous-default-export */
 const Dataset = ({ formatMessage, keyOptionsDs }) => {
   /**
@@ -18,10 +17,11 @@ const Dataset = ({ formatMessage, keyOptionsDs }) => {
         if (isRepeat) {
           return formatMessage({ id: 'network.label.check.repeat' });
         }
-      } else {
-        return formatMessage({ id: 'network.label.check.failed' });
+        return true;
       }
+      return formatMessage({ id: 'network.label.check.failed' });
     }
+    return true;
   }
 
   function checkValue(value, name, record) {
@@ -30,7 +30,9 @@ const Dataset = ({ formatMessage, keyOptionsDs }) => {
       if (!p.test(value)) {
         return formatMessage({ id: 'network.label.check.failed' });
       }
+      return true;
     }
+    return true;
   }
 
   const dynamicProps = {
