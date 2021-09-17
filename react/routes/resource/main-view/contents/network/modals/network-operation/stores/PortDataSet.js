@@ -21,9 +21,6 @@ export default ({ formatMessage, projectId, envId }) => {
     };
     
     switch (type) {
-      case 'targetPort':
-        data.typeMsg = 'network.tport.check.repeat';
-        break;
       case 'nodePort':
         data.typeMsg = 'network.nport.check.repeat';
         data.min = 30000;

@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable import/no-anonymous-default-export */
 const Dataset = ({ formatMessage, keyOptionsDs }) => {
   /**
@@ -21,7 +22,6 @@ const Dataset = ({ formatMessage, keyOptionsDs }) => {
         return formatMessage({ id: 'network.label.check.failed' });
       }
     }
-    return '关键字不存在';
   }
 
   function checkValue(value, name, record) {
@@ -31,7 +31,6 @@ const Dataset = ({ formatMessage, keyOptionsDs }) => {
         return formatMessage({ id: 'network.label.check.failed' });
       }
     }
-    return '值不存在';
   }
 
   const dynamicProps = {
