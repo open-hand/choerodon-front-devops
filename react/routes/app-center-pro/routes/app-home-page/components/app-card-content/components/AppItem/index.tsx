@@ -107,7 +107,7 @@ const AppItem = observer(({
       appCatergoryCode,
       envId,
       instanceId,
-      instanceName,
+      instanceName: name,
       callback: refresh,
     }) : openDeleteHostAppModal(hostId, id, refresh);
   };
@@ -251,7 +251,7 @@ const AppItem = observer(({
   return (
     <div className={`${subfixCls}-list-card`}>
       <aside>
-        {renderAction()}
+        {envConnected && renderAction()}
       </aside>
       {
         upgradeAvailable && currentVersionAvailable && (
