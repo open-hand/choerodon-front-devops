@@ -56,7 +56,7 @@ const ValueModalContent = observer((
       const result = await store.upgrade(projectId, data, isMarket, isMiddleware);
       if (handlePromptError(result)) {
         Choerodon.prompt('修改成功.');
-        refresh();
+        refresh && refresh();
       } else {
         Choerodon.prompt('修改失败.');
       }

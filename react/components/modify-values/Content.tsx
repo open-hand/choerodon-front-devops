@@ -64,7 +64,7 @@ const ValueModalContent = observer(() => {
       }
       modal.close();
       message.success('修改成功');
-      refresh();
+      refresh && refresh();
       return true;
     } catch (e) {
       modal.close();

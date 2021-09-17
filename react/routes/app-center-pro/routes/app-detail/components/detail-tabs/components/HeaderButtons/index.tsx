@@ -190,6 +190,7 @@ const DetailsTabsHeaderButtons = () => {
       isMarket,
       isMiddleware,
       envId: hostOrEnvId,
+      afterDeploy: refresh,
     }),
   };
 
