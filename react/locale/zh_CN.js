@@ -3105,7 +3105,7 @@ const zhCN = {
   'captcha.send': '发送验证码',
   'captcha.error': '验证码错误',
   'captcha.resend': '秒后重新发送',
-  'instance.delete.verify.message': '实例删除后将不可恢复，同时与之关联的网络也将失效。',
+  'instance.delete.verify.message': '应用删除后将不可恢复，同时与之关联的网络也将失效。',
   'ingress.delete.verify.message': '确定要删除该域名吗？',
   'service.delete.verify.message': '删除网络后，需要您再去修改相关的域名信息。',
   'certificate.delete.verify.message': '删除证书后，将会导致与此证书相关的域名失效。',
