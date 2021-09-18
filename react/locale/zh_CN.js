@@ -52,6 +52,7 @@ const commonField = {
   envName: '环境名称',
   envCode: '环境编码',
   instance: 'Chart应用',
+  targetDeployment: '部署组应用',
   instanceName: '应用名称',
   network: '网络',
   label: '标签',

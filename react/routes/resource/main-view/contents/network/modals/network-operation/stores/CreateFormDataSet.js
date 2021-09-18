@@ -58,7 +58,7 @@ export default ({
       const data = value.split(',');
       forEach(data, (item) => {
         const instance = appInstanceOptionsDs.find((r) => r.get('code') === item);
-        const status = instance.get('status');
+        const status = instance && instance.get('status');
         if (instance && status && status !== 'running' && !msg) {
           msg = formatMessage({ id: 'network.application.check.failed' });
         }
@@ -330,7 +330,7 @@ export function transFormData(data, formatMessage, envId) {
      * 单个实例直接与AppInstnace关联所以此处赋值给targetInstanceCode
      */
     if (isChart === 'chart') {
-      if (appInstance === formatMessage({ id: 'all_instance' })) {
+      if (appInstance === formatMessage({ id: 'all_application' })) {
         targetAppServiceId = appServiceId;
       } else {
         targetInstanceCode = appInstance;
