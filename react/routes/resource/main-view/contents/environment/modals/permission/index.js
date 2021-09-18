@@ -2,9 +2,9 @@ import React, { Fragment, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
 import { SelectBox, Select, Form } from 'choerodon-ui/pro';
+import { UserInfo } from '@choerodon/components';
 import { handlePromptError } from '../../../../../../../utils';
 import DynamicSelect from '../../../../../../../components/dynamic-select-new';
-import UserInfo from '../../../../../../../components/userInfo';
 
 const { Option } = Select;
 
@@ -62,9 +62,9 @@ export default observer((props) => {
     dataSet.reset();
   });
 
-  const renderUserOption = ({ record: optionRecord }) => <UserInfo name={optionRecord.get('realName') || ''} id={record.get('loginName')} />;
+  const renderUserOption = ({ record: optionRecord }) => <UserInfo realName={optionRecord.get('realName') || ''} loginName={record.get('loginName')} />;
 
-  const renderer = ({ optionRecord }) => <UserInfo name={optionRecord.get('realName') || ''} id={record.get('loginName')} />;
+  const renderer = ({ optionRecord }) => <UserInfo realName={optionRecord.get('realName') || ''} loginName={record.get('loginName')} />;
 
   return (
     <>
