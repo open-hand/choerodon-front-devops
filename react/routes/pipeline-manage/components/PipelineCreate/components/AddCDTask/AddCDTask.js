@@ -409,6 +409,8 @@ export default observer(() => {
       ds = {
         ...deployChartData,
         ...ds,
+        appName: deployChartData.appName,
+        appCode: deployChartData.appName,
       }
       delete ds.value;
     }

@@ -333,7 +333,7 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
           ...data,
           appName: data[mapping.appName.name as string],
           appCode: data[mapping.appCode.name as string],
-          instanceId: data?.id,
+          instanceId: data?.id || data?.instanceId,
         });
       } if (data[mapping.chartSource.name as string] === chartSourceData[4].value) {
         return middlewareConfigApi.updateMiddleware(data.id || data.instanceId, {
@@ -347,7 +347,7 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
           ...data,
           appName: data[mapping.appName.name as string],
           appCode: data[mapping.appCode.name as string],
-          instanceId: data?.id,
+          instanceId: data?.id || data?.instanceId,
           marketAppServiceId: data[mapping.hzeroVersion.name as string],
         },
       );

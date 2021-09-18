@@ -237,6 +237,12 @@ const Index = observer(() => {
           )
         }
         <NumberField
+          className={isPipeline ? 'c7ncd-appCenterPro-deployGroup__form__pipelineField' : ''}
+          {
+            ...isPipeline ? {
+              prefix: '副本数:',
+            } : {}
+          }
           colSpan={1}
           name={mapping.podNum.name}
           precision={0}
