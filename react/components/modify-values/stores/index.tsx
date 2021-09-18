@@ -29,6 +29,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     appServiceVersionId,
     instanceId,
     isMarket,
+    isMiddleware,
   } = props;
 
   const valuesDs = useMemo(() => new DataSet(ValuesDataset({
@@ -36,7 +37,8 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     instanceId,
     appServiceVersionId,
     isMarket,
-  })), [appServiceVersionId, instanceId, isMarket, projectId]);
+    isMiddleware,
+  })), [appServiceVersionId, instanceId, isMarket, projectId, isMiddleware]);
 
   const value = {
     ...props,
