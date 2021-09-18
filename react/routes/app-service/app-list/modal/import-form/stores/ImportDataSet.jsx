@@ -135,12 +135,17 @@ export default ({
     paging: false,
     transport: {
       create: ({ data: [data] }) => {
-        const { platformType } = data;
+        const { platformType, isGitLabTemplate } = data;
         let url = 'external';
         let res;
         let result;
         switch (platformType) {
           case 'gitlab':
+            if (isGitLabTemplate) {
+              res = pick(data, ['code', 'name', 'type', 'repositoryUrl', 'accessToken', 'repositoryUrl']);
+              result = appServiceApiConfig.Import(url, res);
+              break;
+            }
             res = getGitlabRequestData(gitlabSelectedDs.toData());
             result = appServiceApiConfig.batchTransfer(res);
             break;
@@ -156,7 +161,7 @@ export default ({
             break;
           case 'market':
             res = getMarketRequestData(marketSelectedDs.toData());
-            result = marketApiConfig.Import(url, res);
+            result = marketApiConfig.Import(res);
             break;
         }
         return result;
