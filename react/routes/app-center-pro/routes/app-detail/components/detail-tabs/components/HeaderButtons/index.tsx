@@ -75,6 +75,8 @@ const DetailsTabsHeaderButtons = () => {
     envConnected,
   } = appRecord?.toData() || {};
 
+  const isEnv = deployType === ENV_TAB;
+
   const isHzero = chartSource === 'hzero';
 
   const isMarket = chartSource === 'market' || isHzero;
@@ -86,7 +88,9 @@ const DetailsTabsHeaderButtons = () => {
 
   const envNotConnected = !envConnected;
 
-  const btnDisabled = !envConnected || !appStatus || (appStatus !== APP_STATUS.FAILED && appStatus !== APP_STATUS.RUNNING);
+  const btnDisabledEnv = !envConnected || !appStatus || (appStatus !== APP_STATUS.FAILED && appStatus !== APP_STATUS.RUNNING);
+
+  const btnDisabledHost = false;
 
   const whichGroup = getChartSourceGroup(
     chartSource || sourceType, deployType,
@@ -100,7 +104,7 @@ const DetailsTabsHeaderButtons = () => {
         obj = {
           name: '修改应用',
           icon: 'add_comment-o',
-          disabled: envNotConnected,
+          disabled: btnDisabledEnv,
           handler: () => {
             openAppConfigModal(appRecord?.toData() || {}, refresh);
           },
@@ -113,12 +117,12 @@ const DetailsTabsHeaderButtons = () => {
           groupBtnItems: [
             {
               name: '修改应用配置',
-              disabled: envNotConnected,
+              disabled: btnDisabledEnv,
               handler: () => openDeployGroupConfigModal(appRecord?.toData(), refresh),
               permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateDeployGroupApp'],
             },
             {
-              disabled: envNotConnected,
+              disabled: btnDisabledEnv,
               name: '修改容器配置',
               handler: () => openContainerConfigModal(appRecord?.toData(), refresh),
               permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateDeployGroupContainer'],
@@ -135,7 +139,7 @@ const DetailsTabsHeaderButtons = () => {
           handler: () => {
             openHostAppConfigModal(appRecord?.toData() || {}, refresh);
           },
-          disabled: envNotConnected,
+          disabled: btnDisabledHost,
           permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateHost'],
           icon: 'add_comment-o',
         };
@@ -154,7 +158,7 @@ const DetailsTabsHeaderButtons = () => {
       groupBtnItems: [
         {
           name: '创建网络',
-          disabled: envNotConnected,
+          disabled: btnDisabledEnv,
           handler: () => {
             openNetWorkFormModal({
               envId: hostOrEnvId, appServiceId, refresh,
@@ -163,7 +167,7 @@ const DetailsTabsHeaderButtons = () => {
         },
         {
           name: '创建域名',
-          disabled: envNotConnected,
+          disabled: btnDisabledEnv,
           handler: () => {
             openDomainFormModal({
               envId: hostOrEnvId,
@@ -180,8 +184,8 @@ const DetailsTabsHeaderButtons = () => {
   const modifyValues = {
     name: '修改Values',
     icon: 'rate_review1',
-    disabled: isMarketAppDisabled || btnDisabled,
-    disabledMessage: !btnDisabled ? formatMessage({ id: 'c7ncd.deployment.instance.disable.message' }) : null,
+    disabled: isMarketAppDisabled || btnDisabledEnv,
+    disabledMessage: !btnDisabledEnv ? formatMessage({ id: 'c7ncd.deployment.instance.disable.message' }) : null,
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-values-modify'],
     handler: () => openModifyValueModal({
       appServiceVersionId,
@@ -198,9 +202,9 @@ const DetailsTabsHeaderButtons = () => {
   const redeploy = {
     name: '重新部署',
     icon: 'redeploy_line',
-    disabled: btnDisabled || isMarketAppDisabled,
+    disabled: btnDisabledEnv || isMarketAppDisabled,
     tooltipsConfig: {
-      title: !btnDisabled && isMarketAppDisabled ? formatMessage({ id: 'c7ncd.deployment.instance.disable.message' }) : '',
+      title: !btnDisabledEnv && isMarketAppDisabled ? formatMessage({ id: 'c7ncd.deployment.instance.disable.message' }) : '',
       placement: 'bottom',
     },
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-redeploy'],
@@ -215,7 +219,7 @@ const DetailsTabsHeaderButtons = () => {
   // 启用应用
   const activeApp = {
     name: '启用应用',
-    disabled: envNotConnected,
+    disabled: isEnv && btnDisabledEnv,
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-toggle-status'],
     handler: () => AppCenterProServices.toggleActive({
       active: 'start',
@@ -231,7 +235,7 @@ const DetailsTabsHeaderButtons = () => {
   // 停用应用
   const stopApp = {
     name: '停用应用',
-    disabled: envNotConnected,
+    disabled: isEnv && btnDisabledEnv,
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-toggle-status'],
     handler: () => AppCenterProServices.toggleActive({
       active: 'stop',
@@ -247,7 +251,7 @@ const DetailsTabsHeaderButtons = () => {
   // 删除应用
   const deleteApp = {
     name: '删除应用',
-    disabled: envNotConnected,
+    disabled: isEnv && btnDisabledEnv,
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-delete'],
     handler: () => {
       deployType === ENV_TAB ? deleteEnvApp({
@@ -265,11 +269,11 @@ const DetailsTabsHeaderButtons = () => {
     name: '升级',
     icon: 'rate_review1',
     display: isMarket && !isMiddleware,
-    disabled: btnDisabled || isMarketAppDisabled || !upgradeAvailable,
+    disabled: btnDisabledEnv || isMarketAppDisabled || !upgradeAvailable,
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-upgrade'],
     tooltipsConfig: {
       placement: 'bottom',
-      title: !btnDisabled && (isMarketAppDisabled || !upgradeAvailable) ? formatMessage({ id: `c7ncd.deployment.instance.disable.message${currentVersionAvailable ? '.upgrade' : ''}` }) : '',
+      title: !btnDisabledEnv && (isMarketAppDisabled || !upgradeAvailable) ? formatMessage({ id: `c7ncd.deployment.instance.disable.message${currentVersionAvailable ? '.upgrade' : ''}` }) : '',
     },
     handler: () => {
       const openModalHandle = isHzero ? openHzeroUpgradeModal : openMarketUpgradeModal;

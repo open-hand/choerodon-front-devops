@@ -140,7 +140,7 @@ const DetailAside = () => {
       </div>
       <div>
         <span>Chart版本</span>
-        {objectStatus === 'running' ? versionName : getVersionName()}
+        {objectStatus === 'running' ? versionName || '-' : getVersionName()}
       </div>
     </>
   );
