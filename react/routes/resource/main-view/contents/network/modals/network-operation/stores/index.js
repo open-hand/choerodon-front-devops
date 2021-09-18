@@ -121,8 +121,8 @@ function StoreProvider(props) {
     }
   }, []);
   useEffect(() => {
-    formDs.current.set('name', null);
-  }, [formDs.current.get('isChart')]);
+    !networkId && formDs.current.set('name', null);
+  }, [formDs.current.get('isChart'), networkId]);
 
   const value = {
     ...props,
