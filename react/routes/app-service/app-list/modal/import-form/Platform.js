@@ -96,32 +96,26 @@ const Platform = injectIntl(observer(({ checkData, disabled }) => {
     });
   }
 
-  function renderVersion({ record }) {
-    return (
-      <Select
-        record={record}
-        name="versionId"
-        searchable
-        searchMatcher="version"
-        clearButton={false}
-        className={`${prefixCls}-import-platform-table-select`}
-      />
-    );
-  }
+  const renderVersion = ({ record }) => (
+    <Select
+      record={record}
+      name="versionId"
+      searchable
+      searchMatcher="version"
+      clearButton={false}
+      className={`${prefixCls}-import-platform-table-select`}
+    />
+  );
 
-  function renderAction() {
-    return (
-      <Tooltip title={formatMessage({ id: 'delete' })}>
-        <Button shape="circle" icon="delete" funcType="flat" onClick={handleDelete} />
-      </Tooltip>
-    );
-  }
+  const renderAction = () => (
+    <Tooltip title={formatMessage({ id: 'delete' })}>
+      <Button shape="circle" icon="delete" funcType="flat" onClick={handleDelete} />
+    </Tooltip>
+  );
 
-  function renderSelect(record) {
-    return (
-      <Select name="type" record={record} />
-    );
-  }
+  const renderSelect = (record) => (
+    <Select name="type" record={record} />
+  );
   const currentPlatFormType = importRecord?.get('platformType');
   const platFormTypeOpts = {
     share: {
@@ -142,9 +136,9 @@ const Platform = injectIntl(observer(({ checkData, disabled }) => {
     ds.remove(ds.current, false);
     ds.length && checkData();
   }
-  function handleClick() {
+  const handleClick = () => {
     (platFormTypeOpts[currentPlatFormType].openModal)();
-  }
+  };
 
   return (
     <div className={`${prefixCls}-import-platform`}>

@@ -17,7 +17,11 @@ export function useNetworkDetailStore() {
 
 export const StoreProvider = injectIntl(inject('AppState')(
   observer((props) => {
-    const { AppState: { currentMenuType: { id: projectId } }, intl: { formatMessage }, children } = props;
+    const {
+      AppState: { currentMenuType: { id: projectId } },
+      intl: { formatMessage },
+      children,
+    } = props;
     const {
       resourceStore,
       treeDs,
