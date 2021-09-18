@@ -64,9 +64,7 @@ export default observer((props) => {
 
   const renderUserOption = ({ record: optionRecord }) => <UserInfo name={optionRecord.get('realName') || ''} id={record.get('loginName')} />;
 
-  function renderer({ optionRecord }) {
-    return <UserInfo name={optionRecord.get('realName') || ''} id={record.get('loginName')} />;
-  }
+  const renderer = ({ optionRecord }) => <UserInfo name={optionRecord.get('realName') || ''} id={record.get('loginName')} />;
 
   return (
     <>
@@ -81,7 +79,7 @@ export default observer((props) => {
           selectDataSet={dataSet}
           optionsRenderer={renderUserOption}
           optionsDataSet={nonePermissionDs}
-          renderer
+          renderer={renderer}
           selectName="iamUserId"
           addText={formatMessage({ id: `${intlPrefix}.add.member` })}
         />
