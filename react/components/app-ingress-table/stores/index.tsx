@@ -45,10 +45,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       });
       appIngressDataset.queryFields = queryFields;
       if (!appIngressDataset?.transport?.destroy) {
-        appIngressDataset.transport.destroy = ({ data: [data] }:any) => ({
-          url: hostApi.jarDelete(data.hostId, data.id),
-          method: 'delete',
-        });
+        appIngressDataset.transport.destroy = ({ data: [data] }:any) => (hostApi.jarDelete(data.hostId, data.id));
       }
     }, [appIngressDataset, projectId]);
 
