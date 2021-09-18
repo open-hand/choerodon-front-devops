@@ -97,9 +97,6 @@ export default ({
       defaultValue: appSelectDisabled ? appServiceName : null,
     },
     {
-      name: 'valueLoading',
-      defaultValue: true,
-    }, {
       name: 'value',
       required: true,
     }, {
