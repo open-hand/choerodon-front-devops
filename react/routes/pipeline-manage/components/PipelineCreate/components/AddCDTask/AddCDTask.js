@@ -418,6 +418,7 @@ export default observer(() => {
       ds = {
         ...ds,
         ...extraData,
+        [fieldMap.deployWay.name]: ds[fieldMap.deployWay.name],
       }
     }
     ds.appServiceId = PipelineCreateFormDataSet?.current?.get("appServiceId") || trueAppServiceId;
