@@ -5,6 +5,7 @@ import { observer } from 'mobx-react-lite';
 import { Tooltip, Icon } from 'choerodon-ui';
 
 import { Table } from 'choerodon-ui/pro';
+import { StatusTag } from '@choerodon/components';
 import AppName from '../../../../../components/appName';
 
 import { useResourceStore } from '../../../stores';
@@ -29,6 +30,9 @@ const Content = observer(() => {
 
   function renderAppName({ value, record }) {
     const appServiceType = record.get('chartSource');
+    if (!record.get('commandVersion') && record.get('error')) {
+      return null;
+    }
     return (
       <AppName
         width={0.18}
@@ -63,6 +67,13 @@ const Content = observer(() => {
     </div>
   );
 
+  const renderCommandVersion = ({ value, record }) => {
+    if (!value && record.get('error')) {
+      return <StatusTag colorCode="error" name="部署失败" />;
+    }
+    return value;
+  };
+
   return (
     <div className={`${prefixCls}-instance-table`}>
       <Modals />
@@ -74,7 +85,7 @@ const Content = observer(() => {
       >
         <Column name="name" renderer={renderName} />
         <Column name="code" />
-        <Column name="commandVersion" />
+        <Column name="commandVersion" renderer={renderCommandVersion} />
         <Column name="appServiceName" renderer={renderAppName} sortable />
       </Table>
     </div>

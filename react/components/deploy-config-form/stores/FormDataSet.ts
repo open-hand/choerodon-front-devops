@@ -22,11 +22,11 @@ export default ({
   appOptionDs, appServiceId, appSelectDisabled, appServiceName, setValueLoading,
 }: FormProps): DataSetProps => {
   const loadValue = async ({ id, record }: { id: string, record: Record }) => {
-    setValueLoading(true);
+    !deployConfigId && setValueLoading(true);
     const res = await DeployConfigServices.getAppServiceValue(projectId, id);
     res && record.set('oldValue', res);
     res && record.set('value', res);
-    setValueLoading(false);
+    !deployConfigId && setValueLoading(false);
   };
   const handleUpdate = async ({ record, name, value }: any) => {
     if (name === 'appServiceId' && value) {

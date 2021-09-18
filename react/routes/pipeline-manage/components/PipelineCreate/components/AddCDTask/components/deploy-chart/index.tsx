@@ -31,23 +31,41 @@ export default observer(({
   }): void,
 }) => {
   const renderValueIdText = () => (
-    <div style={{ marginTop: 20 }}>
-      <Icon style={{ color: 'rgb(244, 67, 54)' }} type="error" />
-      <span
+    <div
+      style={{
+        marginTop: 20,
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: 12,
+      }}
+    >
+      <div
         style={{
-          fontSize: '12px',
-          fontFamily: 'PingFangSC-Regular, PingFang SC',
-          fontWeight: 400,
-          color: 'var(--text-color3)',
-          lineHeight: '20px',
+          flex: 1,
+          background: '#FEEFF1',
+          borderRadius: '4px',
+          border: '1px solid #FFCCC7',
+          padding: '6px 12px',
         }}
       >
-        修改配置信息后，所选的部署配置中的配置信息也将随之改动。
-      </span>
+        <Icon style={{ color: 'rgb(244, 67, 54)' }} type="error" />
+        <span
+          style={{
+            fontSize: '12px',
+            fontFamily: 'PingFangSC-Regular, PingFang SC',
+            fontWeight: 400,
+            color: 'var(--text-color3)',
+            lineHeight: '20px',
+          }}
+        >
+          修改配置信息后，所选的部署配置中的配置信息也将随之改动。
+        </span>
+      </div>
       <Button
         funcType={'flat' as FuncType}
         color={'blue' as ButtonColor}
         icon="edit-o"
+        style={{ marginLeft: 16 }}
         onClick={() => handleChangeValueIdValues({
           value: dataSet?.current?.get(mapping().value.name),
           valueIdList: dataSet?.current?.getField(mapping().deployConfig.name)?.options?.toData(),

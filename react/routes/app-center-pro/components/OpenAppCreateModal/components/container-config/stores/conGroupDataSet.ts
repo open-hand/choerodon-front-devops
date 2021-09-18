@@ -698,6 +698,11 @@ const conGroupDataSet = (
                 record.getField(mapping.relativeMission.name).options.loadData(jarData);
               }
               record.set(mapping.relativeMission.name, undefined);
+              if (record.get(mapping.productSource.name) === productSourceData[6].value) {
+                record.getField(mapping.relativeMission.name).set('required', true);
+              } else {
+                record.getField(mapping.relativeMission.name).set('required', false);
+              }
             } else {
               record.set(mapping.productSource.name, productSourceData[0].value);
             }
@@ -706,6 +711,11 @@ const conGroupDataSet = (
           case mapping.productSource.name: {
             record.set(mapping.marketAppVersion.name, '');
             record.set(mapping.marketServiceVersion.name, '');
+            if (value === productSourceData[6].value) {
+              record.getField(mapping.relativeMission.name).set('required', true);
+            } else {
+              record.getField(mapping.relativeMission.name).set('required', false);
+            }
             switch (value) {
               case productSourceData[1].value: {
                 const optionsDs = record?.getField(mapping.marketAppVersion.name).options;
