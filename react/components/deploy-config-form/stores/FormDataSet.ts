@@ -14,7 +14,7 @@ interface FormProps {
   appOptionDs: DataSet,
   appSelectDisabled?: boolean,
   appServiceName?: string,
-  setValueLoading:any
+  setValueLoading:CallableFunction,
 }
 
 export default ({
