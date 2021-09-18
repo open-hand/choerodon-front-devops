@@ -1,5 +1,5 @@
 import React, {
-  useMemo, useEffect, useState,
+  useMemo, useEffect,
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
@@ -15,7 +15,6 @@ import GroupForm from '../../../modals/GroupForm';
 import DeployConfigForm from '../../../../../../components/deploy-config-form';
 import { isNotRunning } from '../../../../util';
 import Tips from '../../../../../../components/new-tips';
-import { environmentApiApi } from '@/api/Environment';
 import '../../../../../../components/dynamic-select/style/index.less';
 import { LARGE } from '../../../../../../utils/getModalWidth';
 
@@ -47,7 +46,7 @@ const EnvModals = observer(() => {
     envStore: { getSelectedMenu },
     AppState: { currentMenuType: { id: projectId } },
   } = useEnvironmentStore();
-  const { groupFormDs } = useMainStore();
+  const { groupFormDs, createEnvBtnDisable, getCreateEnvDisable } = useMainStore();
   const {
     formatMessage,
     intlPrefix,
@@ -68,14 +67,8 @@ const EnvModals = observer(() => {
     nonePermissionDs,
   } = useDetailStore();
 
-  const [createEnvDisable, setCreateEnvDisable] = useState(true);
-
   useEffect(() => {
-    environmentApiApi.getCreateEnvDisable().then((res) => {
-      if (res) {
-        setCreateEnvDisable(!res);
-      }
-    });
+    getCreateEnvDisable();
   }, []);
 
   const refresh = () => {
@@ -100,6 +93,7 @@ const EnvModals = observer(() => {
         baseDs.query();
       }
     });
+    getCreateEnvDisable();
   };
   const disabled = isNotRunning(getSelectedMenu || {});
 
@@ -190,7 +184,7 @@ const EnvModals = observer(() => {
 
   function getButtons() {
     let tooltipsConfig = {};
-    if (createEnvDisable) {
+    if (createEnvBtnDisable) {
       tooltipsConfig = {
         title: '集群环境数量已达上限,无法创建更多环境',
       };
@@ -202,7 +196,7 @@ const EnvModals = observer(() => {
       handler: openEnvModal,
       display: true,
       group: 1,
-      disabled: createEnvDisable,
+      disabled: createEnvBtnDisable,
       tooltipsConfig,
     }, {
       permissions: ['choerodon.code.project.deploy.environment.ps.detail-create-config'],

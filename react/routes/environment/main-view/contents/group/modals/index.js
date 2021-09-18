@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { withRouter } from 'react-router-dom';
 import { Modal } from 'choerodon-ui/pro';
@@ -8,13 +8,11 @@ import GroupForm from '../../../modals/GroupForm';
 import { useEnvironmentStore } from '../../../../stores';
 import { useMainStore } from '../../../stores';
 import { useEnvGroupStore } from '../stores';
-import { environmentApiApi } from '@/api/Environment';
 
 const groupKey = Modal.key();
 const envKey = Modal.key();
 
 const GroupModal = observer((props) => {
-  const [createEnvDisable, setCreateEnvDisable] = useState(true);
   const modalStyle = useMemo(() => ({
     width: 380,
   }), []);
@@ -23,7 +21,7 @@ const GroupModal = observer((props) => {
     intl: { formatMessage },
     treeDs,
   } = useEnvironmentStore();
-  const { groupFormDs } = useMainStore();
+  const { groupFormDs, createEnvBtnDisable, getCreateEnvDisable } = useMainStore();
   const { groupDs } = useEnvGroupStore();
 
   useEffect(() => {
@@ -34,16 +32,13 @@ const GroupModal = observer((props) => {
     if (state && state.openCreate) {
       openEnvModal();
     }
-    environmentApiApi.getCreateEnvDisable().then((res) => {
-      if (res) {
-        setCreateEnvDisable(!res);
-      }
-    });
+    getCreateEnvDisable();
   }, []);
 
   const refresh = () => {
     groupDs.query();
     treeDs.query();
+    getCreateEnvDisable();
   };
 
   function openGroupModal() {
@@ -73,7 +68,7 @@ const GroupModal = observer((props) => {
 
   function getButtons() {
     let tooltipsConfig = {};
-    if (createEnvDisable) {
+    if (createEnvBtnDisable) {
       tooltipsConfig = {
         title: '集群环境数量已达上限,无法创建更多环境',
       };
@@ -84,7 +79,7 @@ const GroupModal = observer((props) => {
       icon: 'playlist_add',
       handler: openEnvModal,
       display: true,
-      disabled: createEnvDisable,
+      disabled: createEnvBtnDisable,
       tooltipsConfig,
     }, {
       permissions: ['choerodon.code.project.deploy.environment.ps.group-create'],
