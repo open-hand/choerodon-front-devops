@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useEffect, useMemo } from 'react';
+import React, {
+  createContext, useContext, useEffect, useMemo,
+} from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
@@ -21,7 +23,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       treeDs,
       itemTypes: { SERVICES_ITEM },
     } = useResourceStore();
-    const { getSelectedMenu: { id, parentId, itemType }, getUpTarget, setUpTarget } = resourceStore;
+    const { getSelectedMenu: { id, parentId }, getUpTarget, setUpTarget } = resourceStore;
 
     const baseInfoDs = useMemo(() => new DataSet(BaseInfoDataSet()), []);
 
@@ -70,5 +72,5 @@ export const StoreProvider = injectIntl(inject('AppState')(
         {children}
       </Store.Provider>
     );
-  })
+  }),
 ));

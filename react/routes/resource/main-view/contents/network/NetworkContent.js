@@ -18,13 +18,14 @@ import { useNetworkStore } from './stores';
 import Modals from './modals';
 import EditNetwork from './modals/network-operation';
 import { useMainStore } from '../../stores';
+import { SMALL } from '@/utils/getModalWidth';
 
 import './index.less';
 
 const { Column } = Table;
 const modalKey = Modal.key();
 const modalStyle = {
-  width: 740,
+  width: SMALL,
 };
 
 const NetworkContent = observer(() => {
