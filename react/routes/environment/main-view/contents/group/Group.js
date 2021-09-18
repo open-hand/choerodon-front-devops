@@ -20,8 +20,8 @@ import { useMainStore } from '../../stores';
 import { useEnvGroupStore } from './stores';
 
 const { Column } = Table;
-const envKey = Modal.key;
-const modalKey = Modal.key;
+// const envKey = Modal.key;
+// const modalKey = Modal.key;
 const deleteKey = Modal.key;
 const effectKey = Modal.key;
 const formKey = Modal.key;
@@ -37,7 +37,7 @@ const Group = observer(() => {
     AppState: { currentMenuType: { id: projectId } },
     prefixCls,
   } = useEnvironmentStore();
-  const { mainStore } = useMainStore();
+  const { mainStore, getCreateEnvDisable } = useMainStore();
   const {
     groupDs,
     intl: { formatMessage },
@@ -54,10 +54,11 @@ const Group = observer(() => {
     init();
   }, []);
 
-  function refresh() {
+  const refresh = () => {
     groupDs.query();
     treeDs.query();
-  }
+    getCreateEnvDisable();
+  };
 
   async function openDelete(record) {
     const envId = record.get('id');
@@ -275,7 +276,7 @@ const Group = observer(() => {
     });
   }
 
-  function renderName({ value, record }) {
+  const renderName = ({ value, record }) => {
     const { RUNNING, DISCONNECTED } = statusMappings;
     const status = getStatusInRecord(record);
     return (
@@ -299,9 +300,9 @@ const Group = observer(() => {
         ) : ''}
       </>
     );
-  }
+  };
 
-  function renderActions({ record }) {
+  const renderActions = ({ record }) => {
     const {
       RUNNING, DISCONNECTED, FAILED, OPERATING, STOPPED,
     } = statusMappings;
@@ -371,7 +372,7 @@ const Group = observer(() => {
         onClick={eventStopProp}
       />
     );
-  }
+  };
 
   return (
     <>
