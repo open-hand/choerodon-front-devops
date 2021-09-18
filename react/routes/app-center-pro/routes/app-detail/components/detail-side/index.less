@@ -5,6 +5,9 @@
   border-radius: 4px;
   background: #fff;
   overflow: scroll;
+  &::-webkit-scrollbar {
+    width: 0;
+  }
   > header {
     background-image: url("../../../../assets/appdetail_bg.svg");
     background-size: cover;
@@ -19,6 +22,9 @@
     font-weight: 500;
     color: var(--text-color);
     margin-left: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   > main {
     padding: 24px;

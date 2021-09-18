@@ -264,7 +264,9 @@ const DetailAside = () => {
           podCount={podCount}
           currentType={deployType}
         />
-        <span className={`${subfixCls}-aside-name`}>{name || '-'}</span>
+        <Tooltip title={name}>
+          <span className={`${subfixCls}-aside-name`}>{`${name}` || '-'}</span>
+        </Tooltip>
         <AppStatus error={error || devopsHostCommandDTO?.error} status={isEnv ? objectStatus : devopsHostCommandDTO?.status} deloyType={deployType} />
       </header>
       <main>

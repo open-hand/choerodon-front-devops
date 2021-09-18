@@ -261,6 +261,7 @@ const ResourceConfigItem:React.FC<Props> = ({
   function renderName() {
     return (
       <StatusIcon
+        className={`${subfixCls}-resourceConfig-item-name`}
         name={name}
         status={status || ''}
         error={error || ''}
@@ -309,8 +310,8 @@ const ResourceConfigItem:React.FC<Props> = ({
     <div className={`${subfixCls}-resourceConfig-item`}>
       <main className={`${subfixCls}-resourceConfig-main`}>
         <div style={{
-          minWidth: '120px',
-          maxWidth: '120px',
+          minWidth: '130px',
+          maxWidth: '130px',
         }}
         >
           {renderName()}
