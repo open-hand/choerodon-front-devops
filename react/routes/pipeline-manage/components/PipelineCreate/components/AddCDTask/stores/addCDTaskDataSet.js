@@ -738,6 +738,8 @@ export default (
               value,
             );
           }
+          appNameDataSet.setQueryParameter('data', value);
+          appNameDataSet.query();
           break;
         }
         default: {

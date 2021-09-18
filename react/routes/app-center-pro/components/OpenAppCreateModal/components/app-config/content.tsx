@@ -1,5 +1,5 @@
 import React, {
-  ReactDOM, ReactElement, useEffect, useImperativeHandle,
+  ReactDOM, ReactElement, useEffect, useImperativeHandle, useMemo,
 } from 'react';
 import {
   Form, Select, TextField, Output,
@@ -28,7 +28,10 @@ const Index = observer(() => {
     switch (chartSource) {
       case (chartSourceData[0].value): case (chartSourceData[1].value): {
         const res = await appServiceInstanceApi
-          .getValues(detailData.instanceId || detailData.id, detailData.appServiceVersionId);
+          .getValues(
+            detailData.instanceId || detailData.id,
+            detailData.appServiceVersionId || detailData.commandVersionId,
+          );
         return res;
         break;
       }
@@ -179,6 +182,18 @@ const Index = observer(() => {
     </>
   );
 
+  const Editor = useMemo(() => (
+    <YamlEditor
+      readOnly={false}
+      modeChange={false}
+      value={AppConfigDataSet.current.get(mapping.value.name)}
+      originValue={AppConfigDataSet.current.get(mapping.originValue.name)}
+      onValueChange={(value: string) => AppConfigDataSet.current.set(mapping.value.name, value)}
+    />
+  ),
+  [AppConfigDataSet.current.get(mapping.value.name),
+    AppConfigDataSet.current.get(mapping.originValue.name)]);
+
   return (
     <div className="c7ncd-appCenterPro-appConfig">
       {
@@ -193,7 +208,7 @@ const Index = observer(() => {
                 value.value,
               )}
               selectedKeys={AppConfigDataSet.current.get(mapping.chartSource.name)}
-              data={chartSourceData}
+              data={chartSourceData.slice(0, 4)}
               identity="value"
               mode="single"
               customChildren={(item): any => (
@@ -242,11 +257,7 @@ const Index = observer(() => {
           })}
         />
       </Form>
-      <YamlEditor
-        readOnly={false}
-        value={AppConfigDataSet.current.get(mapping.value.name)}
-        onValueChange={(value: string) => AppConfigDataSet.current.set(mapping.value.name, value)}
-      />
+      {Editor}
     </div>
   );
 });

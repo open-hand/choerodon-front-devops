@@ -5,8 +5,8 @@ import {
   TextField, Form, Button, Icon, Select, SelectBox, Tooltip,
 } from 'choerodon-ui/pro';
 import { map } from 'lodash';
+import { CustomSelect } from '@choerodon/components';
 import useNetWorkStore from '../stores';
-
 import '../index.less';
 
 const { Option } = Select;
@@ -148,17 +148,28 @@ function FormContent() {
       </div>
     );
   }
-
+  const handleClick = (val) => {
+    formDs.current.set('isChart', val.isChart);
+  };
+  const chartType = [{ isChart: 'chart', content: 'chart应用' }, { isChart: 'deployment', content: '部署组应用' }];
   let targetForm = null;
   if (current) {
     if (current.get('target') === 'instance') {
       targetForm = (
         <>
-
-          <SelectBox name="isChart">
-            <Option value="chart"><span className="isChart-instance">{formatMessage({ id: 'network.isChart.chart' })}</span></Option>
-            <Option value="deployment"><span className="isChart-instance">{formatMessage({ id: 'network.isChart.deployment' })}</span></Option>
-          </SelectBox>
+          <div className="app-service-isChartType">
+            <CustomSelect
+              onClickCallback={(value) => handleClick(value)}
+              data={chartType}
+              identity="isChart"
+              mode="single"
+              customChildren={(item) => (
+                <div className="app-service-isChart-content">
+                  {item.content}
+                </div>
+              )}
+            />
+          </div>
           {current.get('isChart') === 'chart' ? (
             <>
               <Select
@@ -212,8 +223,8 @@ function FormContent() {
           <TextField name="targetIps" colSpan={3} />
           {
             map(endPointsDs.created, (record, index) => (
-              <div key={`endPort-record-${index}`} columns={3} className="endpoints-group">
-                <TextField record={record} name="targetPort" maxLength={5} />
+              <div key={`endPort-record-${index}`} className="endpoints-group">
+                <TextField record={record} name="targetPort" colSpan={3} />
                 {
                 endPointsDs.created.length > 1 ? (
                   <Button
@@ -246,7 +257,7 @@ function FormContent() {
       <TextField name="name" colSpan={3} maxLength={30} disabled={!!networkId} />
     </Form>
   );
-
+  const colSpanType = { ClusterIP: 28, NodePort: 20, LoadBalancer: 18 };
   return (
     <>
       <div className="c7ncd-create-network">
@@ -255,10 +266,9 @@ function FormContent() {
         }
         <p className="network-panel-title">{formatMessage({ id: 'network.target' })}</p>
 
-        <Form dataSet={formDs} columns={3}>
+        <Form dataSet={formDs}>
           <div
             className="network-panel-target-select"
-            colSpan={3}
           >
             <SelectBox name="target">
               <Option value="instance"><span className="target-instance">{formatMessage({ id: 'network.target.application' })}</span></Option>
@@ -266,7 +276,7 @@ function FormContent() {
               <Option value="endPoints">Endpoints</Option>
             </SelectBox>
           </div>
-          <div colSpan={3} className="target-form">
+          <div className="target-form">
             {targetForm}
           </div>
         </Form>
@@ -289,18 +299,18 @@ function FormContent() {
         <div className="group-port">
           {
             map(portDs.created, (record, index) => (
-              <Form record={record} key={`port-record-${index}`} columns={5}>
+              <Form record={record} key={`port-record-${index}`} columns={60}>
 
                 {
                 current.get('type') !== 'ClusterIP'
-                  && <TextField name="nodePort" maxLength={5} />
+                  && <TextField name="nodePort" colSpan={colSpanType[current.get('type')]} />
               }
-                <TextField name="port" maxLength={5} />
-                <Select name="targetPort" combo optionRenderer={targetPortOptionRenderer} clearButton={false} optionsFilter={targetPortOptionsFilter} />
+                <TextField name="port" colSpan={colSpanType[current.get('type')]} />
+                <Select name="targetPort" combo optionRenderer={targetPortOptionRenderer} clearButton={false} optionsFilter={targetPortOptionsFilter} colSpan={colSpanType[current.get('type')]} />
                 {
                 current.get('type') === 'NodePort'
                 && (
-                <Select name="protocol" clearButton={false}>
+                <Select name="protocol" clearButton={false} colSpan={colSpanType[current.get('type')]}>
                   {map(['TCP', 'UDP'], (item) => (
                     <Option value={item} key={item}>
                       {item}
@@ -310,7 +320,7 @@ function FormContent() {
                 )
               }
                 {
-                portDs.created.length > 1 ? (
+                portDs.created.length > 1 && (
                   <Button
                     colSpan={3}
                     funcType="flat"
@@ -318,7 +328,7 @@ function FormContent() {
                     className="c7ncd-form-record-delete-btn"
                     onClick={removePortGroup.bind(this, record)}
                   />
-                ) : <span colSpan={3} />
+                )
               }
               </Form>
             ))

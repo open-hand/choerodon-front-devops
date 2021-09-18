@@ -91,7 +91,7 @@ const ImportForm = injectIntl(observer((props) => {
     return validateResult;
   }
 
-  async function checkData() {
+  const checkData = async () => {
     const ds = selectedDataSet[platformType];
     const lists = ds.toData();
     const {
@@ -112,7 +112,7 @@ const ImportForm = injectIntl(observer((props) => {
       Choerodon.handleResponseError(e);
       return false;
     }
-  }
+  };
 
   function getRepeatData(lists) {
     let nameData;

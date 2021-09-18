@@ -103,6 +103,7 @@ const Index = observer(() => {
         ...item.jarDeployVO,
         ...item.jarDeployVO.prodJarInfoVO,
         ...item.jarDeployVO.fileInfoVO,
+        [mapping.open.name as string]: index === 0,
         [mapping.projectImageRepo.name as string]: {
           repoId: item.dockerDeployVO.imageInfo.repoId,
           repoName: item.dockerDeployVO.imageInfo.repoName,
@@ -123,6 +124,11 @@ const Index = observer(() => {
           setOptionsDs(record.getField(mapping.enVariable.name).options, record.get('envs'));
         });
       }, 1000);
+    } else {
+      ConGroupDataSet.records.forEach((record: Record) => {
+        record?.getField(mapping.portConfig.name)?.options?.reset();
+        record?.getField(mapping.enVariable.name)?.options?.reset();
+      });
     }
   }, [detail]);
 

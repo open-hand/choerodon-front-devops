@@ -100,7 +100,7 @@ const mapping: {
   open: {
     name: 'open',
     type: 'boolean' as FieldType,
-    defaultValue: false,
+    defaultValue: true,
   },
   edit: {
     name: 'edit',
@@ -625,15 +625,26 @@ const conGroupDataSet = (
   if (preJobList && preJobList.length > 0) {
     dockerData = preJobList.filter((itemList) => {
       if (itemList.metadata) {
-        const metadata = JSON.parse(itemList.metadata.replace(/'/g, '"'));
-        return metadata?.config?.some((c: any) => c.type === 'docker');
+        try {
+          const metadata = JSON.parse(itemList?.metadata?.replace(/'/g, '"'));
+          if (metadata) {
+            return metadata?.config?.some((c: any) => c.type === 'docker');
+          }
+          return false;
+        } catch (e) {
+          return false;
+        }
       }
       return false;
     });
     jarData = preJobList.filter((itemList) => {
       if (itemList.metadata) {
-        const metadata = JSON.parse(itemList.metadata.replace(/'/g, '"'));
-        return metadata?.config?.some((c: any) => ['maven_deploy', 'upload_jar'].includes(c.type));
+        try {
+          const metadata = JSON.parse(itemList.metadata.replace(/'/g, '"'));
+          return metadata?.config?.some((c: any) => ['maven_deploy', 'upload_jar'].includes(c.type));
+        } catch (e) {
+          return false;
+        }
       }
       return false;
     });
@@ -687,6 +698,11 @@ const conGroupDataSet = (
                 record.getField(mapping.relativeMission.name).options.loadData(jarData);
               }
               record.set(mapping.relativeMission.name, undefined);
+              if (record.get(mapping.productSource.name) === productSourceData[6].value) {
+                record.getField(mapping.relativeMission.name).set('required', true);
+              } else {
+                record.getField(mapping.relativeMission.name).set('required', false);
+              }
             } else {
               record.set(mapping.productSource.name, productSourceData[0].value);
             }
@@ -695,6 +711,11 @@ const conGroupDataSet = (
           case mapping.productSource.name: {
             record.set(mapping.marketAppVersion.name, '');
             record.set(mapping.marketServiceVersion.name, '');
+            if (value === productSourceData[6].value) {
+              record.getField(mapping.relativeMission.name).set('required', true);
+            } else {
+              record.getField(mapping.relativeMission.name).set('required', false);
+            }
             switch (value) {
               case productSourceData[1].value: {
                 const optionsDs = record?.getField(mapping.marketAppVersion.name).options;

@@ -5,13 +5,14 @@ import { Modal } from 'choerodon-ui/pro';
 import { HeaderButtons } from '@choerodon/master';
 import { useResourceStore } from '../../../../stores';
 import { useModalStore } from './stores';
+import { SMALL } from '@/utils/getModalWidth';
 import { useNetworkStore } from '../stores';
 import { useMainStore } from '../../../stores';
 import CreateNetwork from './network-operation';
 
 const modalKey = Modal.key();
 const modalStyle = {
-  width: 740,
+  width: SMALL,
 };
 
 const EnvModals = observer(() => {

@@ -36,6 +36,27 @@ class HostApi extends Api<HostApi> {
       method: 'get',
     });
   }
+
+  checkAppName(name: string, appId?: string) {
+    return this.request({
+      url: `${this.prefix}/apps/check_name`,
+      method: 'get',
+      params: {
+        name,
+        app_id: appId,
+      },
+    });
+  }
+
+  checkAppCode(code: string) {
+    return this.request({
+      url: `${this.prefix}/apps/check_code`,
+      method: 'get',
+      params: {
+        code,
+      },
+    });
+  }
 }
 
 const hostApi = new HostApi();

@@ -22,6 +22,7 @@ const DeployConfigForm = () => {
     refresh,
     isModify,
     valueLoading,
+    deployConfigId,
   } = useDeployConfigFormStore();
 
   const record = useMemo(() => formDs.current, [formDs.current]);
@@ -55,7 +56,7 @@ const DeployConfigForm = () => {
 
   const renderValue = () => {
     const app = record?.get('appServiceId');
-    if (app && valueLoading) {
+    if (app && !deployConfigId && valueLoading) {
       return <Loading />;
     }
     return app ? (

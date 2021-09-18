@@ -22,14 +22,16 @@ const Content = observer(() => {
   childrenStore.setDetailDs(detailDs);
 
   function renderSecret(value, key) {
-    return <div className="secret-detail-section">
-      <div className="secret-detail-section-title">
-        <span>{key}</span>
+    return (
+      <div className="secret-detail-section">
+        <div className="secret-detail-section-title">
+          <span>{key}</span>
+        </div>
+        <div className="secret-detail-section-content">
+          <span>{value}</span>
+        </div>
       </div>
-      <div className="secret-detail-section-content">
-        <span>{value}</span>
-      </div>
-    </div>;
+    );
   }
 
   function getContent() {

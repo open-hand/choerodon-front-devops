@@ -2,23 +2,21 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React from 'react';
 import { Tooltip } from 'choerodon-ui';
-import { Button, Modal, message } from 'choerodon-ui/pro';
+import { Modal, message } from 'choerodon-ui/pro';
 import {
   WritableStream,
 } from 'web-streams-polyfill/ponyfill';
 import {
-  Choerodon, Permission, Action,
+  Choerodon, Action,
 } from '@choerodon/boot';
 import copy from 'copy-to-clipboard';
 import StreamSaver from 'streamsaver';
 import { Base64 } from 'js-base64';
 import { get } from 'lodash';
-import { TabCode } from '@choerodon/master';
 import renderDuration from '@/utils/getDuration';
 import { handlePromptError } from '@/utils';
 import { MIDDLE } from '@/utils/getModalWidth';
 import StatusTag from '../StatusTag';
-import DepolyLog from '../deployLog';
 import StatusDot from '../statusDot';
 import CodeQuality from '../codeQuality';
 import CodeLog from '../codeLog';
@@ -138,28 +136,119 @@ const DetailItem = (props) => {
     }
   }
 
-  const renderCdAuto = () => {
+  function linkToAppDetailsInAppCenter({
+    appId,
+    chartSource,
+    rdupmType,
+    deployType = 'env',
+    deployTypeId,
+  }) {
+    if (appId) {
+      history.push({
+        pathname: `/devops/application-center/detail/${appId}/${chartSource}/${deployType}/${deployTypeId}/${rdupmType}`,
+        search: `${search}`,
+      });
+    } else {
+      message.error('appId is not exist');
+    }
+  }
+
+  const renderCdDeployment = () => {
+    const {
+      envName,
+      appId,
+      chartSource,
+      rdupmType,
+
+      deployType,
+      deployTypeId,
+    } = cdAuto || {};
+
+    return (
+      <main>
+        <div>
+          <span>部署环境:</span>
+          <span>{envName || '-'}</span>
+        </div>
+        <div>
+          <span>生成应用:</span>
+          <Tooltip title={cdAuto?.appName}>
+            <span
+              style={{ color: '#3F51B5', cursor: 'pointer' }}
+              onClick={() => linkToAppDetailsInAppCenter({
+                appId,
+                chartSource,
+                rdupmType,
+                deployType,
+                deployTypeId,
+              })}
+            >
+              {(jobStatus !== 'created' && cdAuto?.appName) || '-'}
+            </span>
+          </Tooltip>
+        </div>
+      </main>
+    );
+  };
+
+  const renderCdHost = () => {
+    const {
+      appId,
+      chartSource,
+      rdupmType,
+
+      deployType,
+      deployTypeId,
+      appName,
+
+      hostName,
+    } = cdAuto || {};
+
+    return (
+      <main>
+        <div>
+          <span>主机名称：</span>
+          <span>{hostName || '-'}</span>
+        </div>
+        <div>
+          <span>制品类型：</span>
+          <span>{rdupmType === 'other_group' ? '其他制品' : 'jar包'}</span>
+        </div>
+        <div>
+          <span>生成应用:</span>
+          <Tooltip title={appName}>
+            <span
+              style={{ color: '#3F51B5', cursor: 'pointer' }}
+              onClick={() => linkToAppDetailsInAppCenter({
+                appId,
+                chartSource,
+                rdupmType,
+                deployType,
+                deployTypeId,
+              })}
+            >
+              {(jobStatus !== 'created' && appName) || '-'}
+            </span>
+          </Tooltip>
+        </div>
+      </main>
+    );
+  };
+
+  const renderCdChart = () => {
     const {
       envName,
       appServiceName: cdJobAppServiceName,
       appServiceVersion: cdJobAppServiceVersion,
-      envId,
 
       appId,
+      appName,
       chartSource,
       rdupmType,
-    } = cdAuto || {};
 
-    function linkTo() {
-      if (appId) {
-        history.push({
-          pathname: `/devops/application-center/detail/${appId}/${chartSource}/env/${envId}/${rdupmType}`,
-          search: `${search}`,
-        });
-      } else {
-        message.error('appId is not exist');
-      }
-    }
+      deployType,
+      deployTypeId,
+    } = cdAuto || {};
 
     return (
       <main>
@@ -179,12 +268,18 @@ const DetailItem = (props) => {
         </div>
         <div>
           <span>生成应用:</span>
-          <Tooltip title={cdAuto?.appName}>
+          <Tooltip title={appName}>
             <span
               style={{ color: '#3F51B5', cursor: 'pointer' }}
-              onClick={linkTo}
+              onClick={() => linkToAppDetailsInAppCenter({
+                appId,
+                chartSource,
+                rdupmType,
+                deployType,
+                deployTypeId,
+              })}
             >
-              {(jobStatus !== 'created' && cdAuto?.appName) || '-'}
+              {(jobStatus !== 'created' && appName) || '-'}
             </span>
           </Tooltip>
         </div>
@@ -234,57 +329,6 @@ const DetailItem = (props) => {
       </div>
     </main>
   );
-
-  const renderCdHost = () => {
-    const {
-      hostDeployType,
-      imageDeploy,
-      jarDeploy,
-    } = cdHostDeployConfigVO;
-    let hostTypeName = '';
-    let hostSource = '';
-    let hostTaskName = '';
-    switch (hostDeployType) {
-      case 'image':
-        hostTypeName = '镜像部署';
-        hostSource = imageDeploy.deploySource === 'pipelineDeploy'
-          ? '流水线制品部署'
-          : '匹配制品部署';
-        hostTaskName = imageDeploy.pipelineTask;
-        break;
-      case 'jar':
-        hostTypeName = 'jar部署';
-        hostSource = jarDeploy.deploySource === 'pipelineDeploy'
-          ? '流水线制品部署'
-          : '匹配制品部署';
-        hostTaskName = jarDeploy.pipelineTask;
-        break;
-      case 'customize':
-        hostTypeName = '自定义命令';
-        hostSource = '-';
-        hostTaskName = '-';
-        break;
-      default:
-        hostTypeName = '-';
-        break;
-    }
-    return (
-      <main>
-        <div>
-          <span>部署模式:</span>
-          <span>{hostTypeName}</span>
-        </div>
-        <div>
-          <span>部署来源:</span>
-          <span>{hostSource}</span>
-        </div>
-        <div>
-          <span>构建任务名称:</span>
-          <span>{hostTaskName}</span>
-        </div>
-      </main>
-    );
-  };
 
   function calcValue(successCount, failCount) {
     const sum = failCount + successCount;
@@ -381,8 +425,8 @@ const DetailItem = (props) => {
 
   const renderItemDetail = () => {
     const funcMap = new Map([
-      ['cdDeploy', renderCdAuto],
-      // ['cdDeployment', renderCdAuto],
+      ['cdDeploy', renderCdChart],
+      ['cdDeployment', renderCdDeployment],
       ['cdAudit', renderCdAudit],
       ['chart', renderChart],
       ['cdHost', renderCdHost],

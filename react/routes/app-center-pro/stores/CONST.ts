@@ -14,7 +14,8 @@ const CHART_CATERGORY = 'chart_group'; // Chart包标识
 const DEPLOY_CATERGORY = 'deploy_group'; // 部署组标识
 
 const HOST_CATERGORY = 'host_group'; // jar包标识
-const OTHER_CATERGORY = 'other_group'; // jar包标识
+const OTHER_CATERGORY = 'other_group'; // 其他制品标识
+const MIDDLWARE_CATERGORY = 'middleware_group';
 
 // chartSource
 const CHART_MARKET = 'market'; // 市场
@@ -83,6 +84,7 @@ export {
   DEPLOY_TYPE,
   CHART_CATERGORY,
   DEPLOY_CATERGORY,
+  MIDDLWARE_CATERGORY,
   HOST_CATERGORY,
   OTHER_CATERGORY,
   CHART_MARKET,

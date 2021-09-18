@@ -41,7 +41,7 @@ import Tips from "../../../../../../components/new-tips";
 import "./index.less";
 import deployChartDataSet, { mapping as deployChartMapping }
   from "@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/deployChartDataSet";
-import deployGroupDataSet, { mapping as deployGroupMapping }
+import deployGroupDataSet, { mapping as deployGroupMapping, appNameDataSet }
   from "@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/deployGroupDataSet";
 import { productTypeData } from './stores/addCDTaskDataSetMap';
 import OperationYaml from '../../../../../app-center-pro/components/OpenAppCreateModal/components/operation-yaml';
@@ -407,8 +407,10 @@ export default observer(() => {
       ds.skipCheckPermission = !ds.checkEnvPermissionFlag;
       ds.deployObjectType = ds.type;
       ds = {
-        ...ds,
         ...deployChartData,
+        ...ds,
+        appName: deployChartData.appName,
+        appCode: deployChartData.appName,
       }
       delete ds.value;
     }
@@ -416,6 +418,7 @@ export default observer(() => {
       ds = {
         ...ds,
         ...extraData,
+        [fieldMap.deployWay.name]: ds[fieldMap.deployWay.name],
       }
     }
     ds.appServiceId = PipelineCreateFormDataSet?.current?.get("appServiceId") || trueAppServiceId;
@@ -1070,7 +1073,7 @@ export default observer(() => {
               name="deploySource"
               clearButton={false}
               addonAfter={
-                <Tips helpText="流水线制品部署表示直接使用所选关联构建任务中生成的jar包进行部署；匹配制品部署则表示可自主选择项目下制品库中的jar包，并需配置jar包版本的正则匹配规则，后续部署的jar包版本便会遵循此规则。" />
+                <Tips helpText="流水线制品部署表示直接使用所选关联构建任务中生成的jar包进行部署。" />
               }
             >
               <Option value="pipelineDeploy">流水线制品部署</Option>
@@ -1211,8 +1214,9 @@ export default observer(() => {
         <Form columns={2} className="addcdTask-cdHost" dataSet={ADDCDTaskDataSet}>
           <SelectBox
             name={fieldMap.deployWay.name}
-            onChange={() => {
+            onChange={(value) => {
               HostJarDataSet.deleteAll(false);
+              ADDCDTaskDataSet.getField(addCDTaskDataSetMap.host).set('disabled', value === deployWayData[1].value);
             }}
           />
           <SelectBox name={fieldMap.productType.name} />
@@ -1606,7 +1610,7 @@ export default observer(() => {
           lists = [...lists, ...i.jobList];
         } else {
           //  如果遍历列是当切列
-          lists = [...lists, ...i.jobList.splice(0, taskIndex)];
+          lists = [...lists, ...i.jobList.splice(0, taskIndex || witchColumnJobIndex)];
         }
       }
     });
@@ -1618,7 +1622,7 @@ export default observer(() => {
 
   return (
     <div className="addcdTask">
-      <Form columns={3} dataSet={ADDCDTaskDataSet}>
+      <Form columns={6} dataSet={ADDCDTaskDataSet}>
         {/* <Select
           onChange={(data) => {
             const newData = {
@@ -1656,16 +1660,16 @@ export default observer(() => {
           <Option value={addCDTaskDataSetMap.externalStuck}>外部卡点</Option>
           <Option value={typeData[0].value}>{typeData[0].name}</Option>
         </Select> */}
-        <TextField colSpan={2} name="name" />
-        <TextField colSpan={1} name="glyyfw" />
-        <div className="addcdTask-wrap" colSpan={3}>
+        <TextField colSpan={3} name="name" />
+        <TextField colSpan={3} name="glyyfw" />
+        <div className="addcdTask-wrap" colSpan={6}>
           <Select
             name="triggerType"
             className="addcdTask-triggerType"
             onChange={() =>
               ADDCDTaskDataSet.current.set("triggerValue", undefined)
             }
-            colSpan={1}
+            colSpan={2}
             clearButton={false}
           >
             <Option value="refs">分支类型匹配</Option>
@@ -1698,7 +1702,7 @@ export default observer(() => {
                 </Tooltip>
               )}
               renderer={renderderBranchs}
-              colSpan={2}
+              colSpan={4}
             >
               {branchsList?.map((b) => (
                 <Option value={b.value}>{b.name}</Option>
@@ -1710,7 +1714,7 @@ export default observer(() => {
           addCDTaskDataSetMap.apiTest && [
             <Select
               newLine
-              colSpan={1}
+              colSpan={3}
               searchable
               searchMatcher="task_name"
               name={addCDTaskDataSetMap.apiTestMission}
@@ -1719,7 +1723,7 @@ export default observer(() => {
               }
             />,
             <Select
-              colSpan={2}
+              colSpan={3}
               name={addCDTaskDataSetMap.relativeMission}
               addonAfter={
                 <Tips
@@ -1743,7 +1747,7 @@ export default observer(() => {
           ]}
         {[typeData[0].value, typeData[1].value].includes(ADDCDTaskDataSet?.current?.get("type")) && [
           <Select
-            colSpan={1}
+            colSpan={3}
             name="envId"
             optionRenderer={optionRenderer}
             // renderer={renderer}
@@ -1756,7 +1760,7 @@ export default observer(() => {
             style={{
               position: "relative",
             }}
-            colSpan={2}
+            colSpan={3}
           >
             <SelectBox name={addCDTaskDataSetMap.triggersTasks.name}>
               <Option value={addCDTaskDataSetMap.triggersTasks.values[0]}>
@@ -1776,10 +1780,13 @@ export default observer(() => {
             />
           </div>,
           <SelectBox
+            colSpan={3}
             name={fieldMap.deployWay.name}
             onChange={(value) => {
               DeployGroupDataSet.current.set(deployGroupMapping().appName.name, undefined);
               DeployGroupDataSet.current.set(deployGroupMapping().appCode.name, undefined);
+              DeployChartDataSet.current.set(deployChartMapping().appName.name, undefined);
+              DeployChartDataSet.current.set(deployChartMapping().appCode.name, undefined);
             }}
           />,
         ]}
@@ -1911,7 +1918,7 @@ export default observer(() => {
         )}
         {ADDCDTaskDataSet.current.get("type") ===
           addCDTaskDataSetMap.externalStuck && [
-            <div colSpan={3} className="addcdTask-missionDes">
+            <div colSpan={6} className="addcdTask-missionDes">
               <span style={{ fontWeight: 500 }}>任务说明：</span>
               <span style={{ display: "inline-block" }}>
                 -
@@ -1948,7 +1955,7 @@ export default observer(() => {
             </div>,
             <TextField
               label="流水线回调地址"
-              colSpan={3}
+              colSpan={6}
               addonAfter={
                 <CopyToClipboard
                   text={pipelineCallbackAddress}
@@ -1961,9 +1968,9 @@ export default observer(() => {
               required
               value={pipelineCallbackAddress}
             />,
-            <TextArea name={addCDTaskDataSetMap.externalAddress} colSpan={3} />,
-            <TextArea name={addCDTaskDataSetMap.externalToken} colSpan={3} />,
-            <TextArea name={addCDTaskDataSetMap.missionDes} colSpan={3} />,
+            <TextArea name={addCDTaskDataSetMap.externalAddress} colSpan={6} />,
+            <TextArea name={addCDTaskDataSetMap.externalToken} colSpan={6} />,
+            <TextArea name={addCDTaskDataSetMap.missionDes} colSpan={6} />,
           ]}
       </Form>
       {getOtherConfig()}

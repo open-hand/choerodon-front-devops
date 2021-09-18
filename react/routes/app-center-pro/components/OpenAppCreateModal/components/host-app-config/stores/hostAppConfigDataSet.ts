@@ -1,14 +1,16 @@
 import { DataSet } from 'choerodon-ui/pro';
 import omit from 'lodash/omit';
 import { Base64 } from 'js-base64';
-import { DataSetProps, FieldProps, FieldType } from '@/interface';
+import {
+  DataSetProps, FieldProps, FieldType, Record,
+} from '@/interface';
 import {
   productSourceData,
   productTypeData,
 } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config/stores/conGroupDataSet';
 import { nexusApiConfig } from '@/api/Nexus';
 import { rdupmApiApiConfig } from '@/api/Rdupm';
-import { deployApi, deployApiConfig } from '@/api';
+import { deployApi, deployApiConfig, hostApi } from '@/api';
 import { hostApiConfig } from '@/api/Host';
 import { setData } from '../content';
 
@@ -66,6 +68,14 @@ const mapping: {
     name: 'name',
     type: 'string' as FieldType,
     label: '应用名称',
+    validator: async (value, type, record: Record) => {
+      let res: any = '应用名称已重复';
+      const flag = await hostApi.checkAppName(value, record.get('id'));
+      if (flag) {
+        res = true;
+      }
+      return res;
+    },
   },
   appCode: {
     name: 'code',
@@ -371,11 +381,21 @@ const hostAppConfigDataSet = (modal: any): DataSetProps => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((i) => mapping[i]),
   transport: {
-    update: ({ data: [data] }) => deployApiConfig.deployJava({
-      ...setData(data),
-      appName: data[mapping.appName.name as string],
-      appCode: data[mapping.appCode.name as string],
-    }),
+    update: ({ data: [data] }) => {
+      let func;
+      if (data.rdupmType === 'other') {
+        return deployApiConfig.deployCustom({
+          ...setData(data),
+          appName: data[mapping.appName.name as string],
+          appCode: data[mapping.appCode.name as string],
+        });
+      }
+      return deployApiConfig.deployJava({
+        ...setData(data),
+        appName: data[mapping.appName.name as string],
+        appCode: data[mapping.appCode.name as string],
+      });
+    },
   },
   events: {
     update: async ({ record, name, value }: any) => {

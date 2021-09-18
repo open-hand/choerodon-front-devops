@@ -50,7 +50,7 @@ const mapping = (): {
   deployConfig: {
     name: 'valueId',
     type: 'string' as FieldType,
-    label: '部署配置',
+    // label: '部署配置',
     required: true,
     options: deployConfigDataSet,
     textField: 'name',

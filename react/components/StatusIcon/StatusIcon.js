@@ -75,7 +75,7 @@ function StatusIcon(props) {
           showToolTip
         />
       ) : (
-        <Tooltip>
+        <Tooltip title={name}>
           <span className={statusClass}>{name}</span>
         </Tooltip>
       )}

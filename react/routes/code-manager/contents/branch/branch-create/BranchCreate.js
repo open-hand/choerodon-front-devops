@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {
   useState, useEffect, useMemo, useCallback,
 } from 'react';
@@ -64,7 +65,7 @@ function BranchCreate(props) {
       selectCom.options.changeStatus('loading');
     }
     axios.all([contentStore.loadBranchData(projectId, appServiceId, branchPageSize, text),
-      contentStore.loadTagData(projectId, appServiceId, tagPageSize, text)])
+    contentStore.loadTagData(projectId, appServiceId, tagPageSize, text)])
       .then(axios.spread((branchs, tags) => {
         if (selectCom && selectCom.options) {
           selectCom.options.changeStatus('ready');
@@ -76,8 +77,8 @@ function BranchCreate(props) {
           if (!text
             && value
             && !(_.findIndex(branchs.list, (item) => item.branchName === value.slice(0, -7)) !== -1
-            // eslint-disable-next-line max-len
-            || _.findIndex(tags.list, (item) => item.release.tagName === value.slice(0, -7)) !== -1)) {
+              // eslint-disable-next-line max-len
+              || _.findIndex(tags.list, (item) => item.release.tagName === value.slice(0, -7)) !== -1)) {
             if (value.slice(-7) === '_type_b') {
               branchs.list.push({
                 branchName: value.slice(0, -7),
@@ -438,29 +439,29 @@ function BranchCreate(props) {
         >
           {
             !isOPERATIONS
-              && ([
-                <Select
-                  name="project"
-                  colSpan={5}
-                  searchable
-                  searchMatcher={() => true}
-                  onInput={handleProjectSearch}
-                  optionRenderer={renderProjectOption}
-                  renderer={renderProject}
-                  onBlur={handleProjectBlur}
-                  clearButton={false}
-                  pagingOptionContent={<span className="c7ncd-select-load-more-text">加载更多</span>}
-                />,
-                <Select
-                  name="issue"
-                  colSpan={5}
-                  onChange={changeIssue}
-                  optionRenderer={issueNameOptionRender}
-                  renderer={issueNameRender}
-                  searchable
-                  searchMatcher="content"
-                />,
-              ])
+            && ([
+              <Select
+                name="project"
+                colSpan={5}
+                searchable
+                searchMatcher={() => true}
+                onInput={handleProjectSearch}
+                optionRenderer={renderProjectOption}
+                renderer={renderProject}
+                onBlur={handleProjectBlur}
+                clearButton={false}
+                pagingOptionContent={<span className="c7ncd-select-load-more-text">加载更多</span>}
+              />,
+              <Select
+                name="issue"
+                colSpan={5}
+                onChange={changeIssue}
+                optionRenderer={issueNameOptionRender}
+                renderer={issueNameRender}
+                searchable
+                searchMatcher="content"
+              />,
+            ])
           }
           <Select
             colSpan={5}
@@ -470,7 +471,7 @@ function BranchCreate(props) {
             onBlur={handleBlur}
             searchable
             optionRenderer={rednerBranchOptionOrigin}
-            renderer={renderBranchOrigin}
+            renderer={({ text }) => text}
           >
             <OptGroup
               label={formatMessage({ id: 'branch.branch' })}
@@ -496,7 +497,7 @@ function BranchCreate(props) {
                   </Option>
                 ) : null))}
               {loadMoreTag ? (
-                <Option value="tag" />) : null }
+                <Option value="tag" />) : null}
             </OptGroup>
           </Select>
           <Select colSpan={2} name="branchType" renderer={renderBranchType} optionRenderer={renderOptionsBranchType}>

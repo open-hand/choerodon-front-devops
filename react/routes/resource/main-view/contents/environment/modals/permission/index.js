@@ -2,16 +2,16 @@ import React, { Fragment, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
 import { SelectBox, Select, Form } from 'choerodon-ui/pro';
+import { UserInfo } from '@choerodon/components';
 import { handlePromptError } from '../../../../../../../utils';
 import DynamicSelect from '../../../../../../../components/dynamic-select-new';
-import UserInfo from '../../../../../../../components/userInfo';
-
 
 const { Option } = Select;
 
 export default observer((props) => {
-  const { dataSet, nonePermissionDs, refresh, baseDs, store, projectId, formatMessage, prefixCls, intlPrefix, modal } = props;
-  
+  const {
+    dataSet, nonePermissionDs, refresh, baseDs, store, projectId, formatMessage, intlPrefix, modal,
+  } = props;
 
   const record = useMemo(() => baseDs.current, [baseDs.current]);
 
@@ -22,7 +22,7 @@ export default observer((props) => {
       objectVersionNumber: record.get('objectVersionNumber'),
       skipCheckPermission,
     };
-    if (skipCheckPermission) { 
+    if (skipCheckPermission) {
       const res = await store.addUsers({
         projectId,
         userIds: [],
@@ -31,9 +31,8 @@ export default observer((props) => {
       if (handlePromptError(res, false)) {
         refresh();
         return true;
-      } else {
-        return false;
       }
+      return false;
     }
     dataSet.transport.create = ({ data }) => {
       const res = {
@@ -45,7 +44,7 @@ export default observer((props) => {
         method: 'post',
         data: res,
       };
-    }; 
+    };
     try {
       if (await dataSet.submit() !== false) {
         refresh();
@@ -55,25 +54,20 @@ export default observer((props) => {
     } catch (e) {
       return false;
     }
+    return true;
   });
 
   modal.handleCancel(() => {
     record.reset();
     dataSet.reset();
   });
-  
 
-  function renderUserOption({ record: optionRecord }) {
-    return <UserInfo name={optionRecord.get('realName') || ''} id={record.get('loginName')} />;
-  }
-  
+  const renderUserOption = ({ record: optionRecord }) => <UserInfo realName={optionRecord.get('realName') || ''} loginName={record.get('loginName')} />;
 
-  function renderer({ optionRecord }) {
-    return <UserInfo name={optionRecord.get('realName') || ''} id={record.get('loginName')} />;
-  }
+  const renderer = ({ optionRecord }) => <UserInfo realName={optionRecord.get('realName') || ''} loginName={record.get('loginName')} />;
 
   return (
-    <Fragment>
+    <>
       <Form record={record}>
         <SelectBox name="skipCheckPermission">
           <Option value>{formatMessage({ id: `${intlPrefix}.member.all` })}</Option>
@@ -82,7 +76,7 @@ export default observer((props) => {
       </Form>
       {record && !record.get('skipCheckPermission') && (
         <DynamicSelect
-          selectDataSet={dataSet} 
+          selectDataSet={dataSet}
           optionsRenderer={renderUserOption}
           optionsDataSet={nonePermissionDs}
           renderer={renderer}
@@ -90,6 +84,6 @@ export default observer((props) => {
           addText={formatMessage({ id: `${intlPrefix}.add.member` })}
         />
       )}
-    </Fragment>
+    </>
   );
 });

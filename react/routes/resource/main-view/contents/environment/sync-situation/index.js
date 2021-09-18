@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 import React from 'react';
 import { Table } from 'choerodon-ui/pro';
 import { Tooltip } from 'choerodon-ui';

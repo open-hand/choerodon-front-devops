@@ -4,7 +4,7 @@ import {
 } from 'choerodon-ui/pro';
 import { Icon } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
-import { FuncType, ButtonColor } from '@/interface';
+import { FuncType, ButtonColor, LabelLayoutType } from '@/interface';
 import YamlEditor from '@/components/yamlEditor';
 import { mapping } from '../../stores/deployChartDataSet';
 import { deployWayData } from '../../stores/addCDTaskDataSetMap';
@@ -31,23 +31,41 @@ export default observer(({
   }): void,
 }) => {
   const renderValueIdText = () => (
-    <div>
-      <Icon style={{ color: 'rgb(244, 67, 54)' }} type="error" />
-      <span
+    <div
+      style={{
+        marginTop: 20,
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: 12,
+      }}
+    >
+      <div
         style={{
-          fontSize: '12px',
-          fontFamily: 'PingFangSC-Regular, PingFang SC',
-          fontWeight: 400,
-          color: 'var(--text-color3)',
-          lineHeight: '20px',
+          flex: 1,
+          background: '#FEEFF1',
+          borderRadius: '4px',
+          border: '1px solid #FFCCC7',
+          padding: '6px 12px',
         }}
       >
-        修改配置信息后，所选的部署配置中的配置信息也将随之改动。
-      </span>
+        <Icon style={{ color: 'rgb(244, 67, 54)' }} type="error" />
+        <span
+          style={{
+            fontSize: '12px',
+            fontFamily: 'PingFangSC-Regular, PingFang SC',
+            fontWeight: 400,
+            color: 'var(--text-color3)',
+            lineHeight: '20px',
+          }}
+        >
+          修改配置信息后，所选的部署配置中的配置信息也将随之改动。
+        </span>
+      </div>
       <Button
         funcType={'flat' as FuncType}
         color={'blue' as ButtonColor}
         icon="edit-o"
+        style={{ marginLeft: 16 }}
         onClick={() => handleChangeValueIdValues({
           value: dataSet?.current?.get(mapping().value.name),
           valueIdList: dataSet?.current?.getField(mapping().deployConfig.name)?.options?.toData(),
@@ -83,8 +101,18 @@ export default observer(({
         <p className={`${cssPrefix}__title`}>
           应用配置
         </p>
-        <Form columns={2} dataSet={dataSet}>
+        <Form
+          style={{
+            position: 'absolute',
+            left: '50px',
+            top: '-8px',
+          }}
+          columns={2}
+          dataSet={dataSet}
+        >
           <Select
+            className={`${cssPrefix}__anotherField`}
+            prefix="部署配置:"
             name={mapping().deployConfig.name}
             optionRenderer={optionRenderValueId}
             renderer={rendererValueId}

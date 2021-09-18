@@ -54,7 +54,10 @@ export default ({ formatMessage, portDs, targetLabelsDs, appInstanceOptionsDs, n
       const data = value.split(',');
       forEach(data, (item: any) => {
         const instance = appInstanceOptionsDs.find((r: { get: (arg0: string) => any; }) => r.get('code') === item);
-        const status = instance.get('status');
+        let status;
+        if(instance){
+          status = instance.get('status');
+        }
         if (instance && status && status !== 'running' && !msg) {
           msg = formatMessage({ id: 'network.instance.check.failed' });
         }

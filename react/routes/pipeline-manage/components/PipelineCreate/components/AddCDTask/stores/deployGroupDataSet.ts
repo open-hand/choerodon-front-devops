@@ -4,11 +4,12 @@ import { deployAppCenterApiConfig, deployAppCenterApi } from '@/api/DeployAppCen
 import { fieldMap, deployWayData } from './addCDTaskDataSetMap';
 
 const appNameDataSet = new DataSet({
-  autoQuery: true,
+  autoQuery: false,
   paging: true,
   transport: {
-    read: () => deployAppCenterApiConfig.getDeployCenterAppList({
+    read: ({ data: { data } }) => deployAppCenterApiConfig.getDeployCenterAppList({
       rdupm_type: 'deployment',
+      env_id: data,
     }),
   },
 });

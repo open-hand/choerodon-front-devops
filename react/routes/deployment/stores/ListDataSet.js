@@ -50,7 +50,7 @@ export default ((
     { name: 'deployCreatedBy', type: 'string' },
     { name: 'pipelineName', type: 'string', label: formatMessage({ id: `${intlPrefix}.pipeline.name` }) },
     { name: 'executeUser', label: '执行' },
-    { name: 'instanceName', type: 'string', label: formatMessage({ id: `${intlPrefix}.instance` }) },
+    { name: 'appName', type: 'string', label: formatMessage({ id: `${intlPrefix}.instance` }) },
     { name: 'appServiceName', type: 'string', label: formatMessage({ id: 'appService' }) },
     { name: 'userImage', type: 'string' },
     { name: 'realName', type: 'string' },

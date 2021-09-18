@@ -1,3 +1,4 @@
+import { map } from 'lodash';
 import Api from './Api';
 
 class DeploymentsApi extends Api<DeploymentsApi> {
@@ -32,6 +33,14 @@ class DeploymentsApi extends Api<DeploymentsApi> {
     return this.request({
       url: `${this.prefix}/${instanceId}/${active}`,
       method: 'put',
+    });
+  }
+
+  getTargetPort(deploymentId:string, transformResponse:any) {
+    return this.request({
+      url: `${this.prefix}/${deploymentId}/list_port`,
+      method: 'get',
+      transformResponse,
     });
   }
 }

@@ -1,7 +1,11 @@
 import React from 'react';
-import { Modal } from 'choerodon-ui/pro';
+import { Modal, message } from 'choerodon-ui/pro';
 import { NetWorkStoreProvider } from './stores';
 import Content from './Content';
+
+// 创建网络和修改网络的modal
+
+const errorText = 'appServiceId is required, please check the data from the backend.';
 
 const NetWorkForm = (props:any) => (
   <NetWorkStoreProvider {...props}>
@@ -20,6 +24,10 @@ type NetWorkFormProps = {
 
 export const openNetWorkFormModal = (props:NetWorkFormProps) => {
   const isModify = props.networkId;
+  if (!props?.appServiceId) {
+    message.error(errorText);
+    throw new Error(errorText);
+  }
   Modal.open({
     key: modalKey,
     drawer: true,

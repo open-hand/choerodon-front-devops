@@ -1,109 +1,141 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Icon } from 'choerodon-ui/pro';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Choerodon } from '@choerodon/boot';
 import {
-  A_KEY_INSTALLATION,
-  ADD_CHART,
-  CRETE_PV,
-  DEPLOY_RUNNER,
+  text1, text2, text3,
 } from './Constant';
+import { pipeLineApi } from '@/api/pipeLine';
 
 import './index.less';
 
 export default function GitlabRunner() {
+  useEffect(() => {
+    pipeLineApi.getParams().then((res) => {
+      setParamsObj(res);
+    });
+  }, []);
+  const [paramsObj, setParamsObj] = useState({});
+
   const prefixCls = 'c7ncd-pipelineManage-runner';
   const options = {
     format: 'text/plain',
   };
 
-  const handleCopy = () => { Choerodon.prompt('复制成功'); };
+  const handleCopy = () => {
+    Choerodon.prompt('复制成功');
+  };
 
   return (
     <div className={`${prefixCls}`}>
-      <p>Gitlab Runner，用于代码提交后自动进行代码测试、构建服务的镜像及生成helm chart并将结果发回给Choerodon。
-        它与GitLab CI一起使用，Gitlab CI是Gitlab中包含的开源持续集成服务，用于协调作业。
-      </p>
-      <blockquote className="warning">
-        注意：若在安装Choerodon系统时，已经成功部署和配置过GitLab Runner。便不用重复进行以下操作。
-      </blockquote>
-      <h3>预备知识</h3>
       <p>
-        <span className="block-span">如果你还不知道Gitlab Runner是做什么的，请参考下面链接进行学习：</span>
-        <a
-          href="https://docs.gitlab.com/runner/"
-          target="_blank"
-          rel="nofollow me noopener noreferrer"
-        >
-          https://docs.gitlab.com/runner/
-        </a>
+        Gitlab CI 是 Gitlab 集成的开源持续集成服务，Gitlab Runner 是 GitLab CI
+        的实现工具。 我们使用 Gitlab CI
+        进行自动化构建制品、代码测试以及将结果发回给 Choerodon猪齿鱼等任务。
+        Gitlab Runner 安装方式有很多种，本文以 kubernetes
+        安装方式进行讲解，若使用其他方式，请参考 Gitlab 官网
       </p>
-      <h3>方式一：一键安装Runner</h3>
-      <p>如你使用一键部署安装的猪齿鱼，在同一集群中可以使用下面命令一键部署Gitlab-Runner</p>
-      <blockquote className="code">
-        {A_KEY_INSTALLATION}
-        <CopyToClipboard
-          text={A_KEY_INSTALLATION}
-          onCopy={handleCopy}
-          options={options}
-        >
-          <Icon type="library_books" className="copy-button" />
-        </CopyToClipboard>
-      </blockquote>
-      <h3>方式二：手动安装Runner</h3>
-      <h4>Step1：获取Runner注册Token</h4>
-      <blockquote>
-        {'Note：此教程注册的Runner属性为共享，若需注册私有Runner或者无法进入Gitlab管理界面，注册Token请在Git项目仓库 Settings > CI/CD > Runners settings 菜单中获取。'}
-      </blockquote>
+      <h3>前置要求</h3>
+      <p>1.Container Runtime 采用 docker 的 kubernetes 集群</p>
+      <p>2.已安装 helm 命令行并能访问 kubernetes 集群</p>
+      <p>3.已安装 NFS Provisioner 或有其他动态存储</p>
+      <h3>安装流程</h3>
+      <p>第一步：获取 Gitlab Runner 注册 Token</p>
+      <p>
+        点击
+        <a href={paramsObj['gitlab-group-url']}>这里</a>
+        进入项目对应的 Gitlab Group 设置页面，选择 Settings
+        {' '}
+        {'>'}
+        {' '}
+        CI/CD
+        并展开菜单
+      </p>
       <div className="image-1" />
-      <h4>Step2：添加choerodon chart仓库</h4>
+      <p>此时我们获取到了 Gitlab 的访问地址以及 Gitlab Runner 的注册 Token。</p>
+      <p>第二步：添加 choerodon chart 仓库</p>
       <pre className="code">
-        {ADD_CHART}
-        <CopyToClipboard
-          text={ADD_CHART}
-          onCopy={handleCopy}
-          options={options}
-        >
+        {text1}
+        <CopyToClipboard text={text1} onCopy={handleCopy} options={options}>
           <Icon type="library_books" className="copy-button" />
         </CopyToClipboard>
       </pre>
-      <h4>Step3：部署Runner</h4>
-      <blockquote>
-        Note：启用持久化存储请执行提前创建所对应的物理目录，PV和PVC可使用以下语句进行创建；可在部署命令中添加--debug --dry-run参数，进行渲染预览不进行部署。
-      </blockquote>
-      <p>- 创建缓存所需PV和PVC</p>
-      <pre className="code">
-        {CRETE_PV}
-        <CopyToClipboard
-          text={CRETE_PV}
-          onCopy={handleCopy}
-          options={options}
-        >
-          <Icon type="library_books" className="copy-button" />
-        </CopyToClipboard>
-      </pre>
-      <p>- 部署Runner</p>
-      <blockquote>
-        Note：请确认你所搭建的K8S集群是否已开启RBAC授权（按照本站Kubernetes部署教程部署的集群默认是开启
-        RBAC授权的），若未开启，请删除下面执行命令中的--set rbac.create=true设置后执行。
-      </blockquote>
-      <pre className="code">
-        {DEPLOY_RUNNER}
-        <CopyToClipboard
-          text={DEPLOY_RUNNER}
-          onCopy={handleCopy}
-          options={options}
-        >
-          <Icon type="library_books" className="copy-button" />
-        </CopyToClipboard>
-      </pre>
-      <p>- 参数</p>
+      <p>第三步：创建存储卷</p>
       <p>
-        1. <span className="code_block">env.environment.*</span>为CI时Pod的环境变量键值对，
-        <span className="code_block">*</span>就是环境变量名，等号后面的为该变量的值，这里例子中添加这几个环境变量建议配置，使用Choerodon管理的项目进行CI时会用到它们，若还需其他环境变量请自定义。</p>
-      <p>2. <span className="code_block">env.persistence.*</span>为CI时Pod的挂载PVC与Pod内目录的键值对，
-        <span className="code_block">*</span>就是PVC的名称，等号后面的值为要挂载到Pod的哪个目录，这里注意一点用引号引起来。
-        本例中我们新建了两个PVC即<span className="code_block">runner-maven-pvc</span>、<span className="code_block">runner-cache-pvc</span>分别挂载到<span className="code_block">/root/.m2</span>和<span className="code_block">/cache</span>目录中。</p>
+        创建存储卷是为了存放在进行 Gitlab CI 时所产生的制品或缓存的依赖包，
+        从而可以使用上一阶段所产生的制品或加速构建。
+      </p>
+      <p>创建 maven 依赖存储卷</p>
+      <pre className="code">
+        {text2}
+        <CopyToClipboard text={text2} onCopy={handleCopy} options={options}>
+          <Icon type="library_books" className="copy-button" />
+        </CopyToClipboard>
+      </pre>
+
+      <p>创建其他缓存存储卷</p>
+      <pre className="code">
+        {text3}
+        <CopyToClipboard text={text3} onCopy={handleCopy} options={options}>
+          <Icon type="library_books" className="copy-button" />
+        </CopyToClipboard>
+      </pre>
+
+      <div className="gitlab-runner-table">
+        <table border="1">
+          <tr>
+            <td>参数</td>
+            <td>含义</td>
+          </tr>
+          <tr>
+            <td>accessModes</td>
+            <td>存储卷访问模式（请勿更改）</td>
+          </tr>
+          <tr>
+            <td>requests.storage</td>
+            <td>申请存储卷空间大小</td>
+          </tr>
+          <tr>
+            <td>storageClassName</td>
+            <td>动态存储类名称</td>
+          </tr>
+        </table>
+      </div>
+
+      <p>第四步：安装 Gitlab Runner</p>
+      <pre className="code">
+        {`helm install c7n/gitlab-runner \\
+--set rbac.create=true \\
+--set env.concurrent=3 \\
+--set env.gitlabUrl=${paramsObj['gitlab-url']} \\
+--set env.runnerRegistrationToken=xwxobLNoPQUzyMt_4RGF \\
+--set env.environment.CHOERODON_URL=${paramsObj.gateway} \\
+--set env.persistence.runner-maven-pvc="/root/.m2" \\
+--set env.persistence.runner-cache-pvc="/cache" \\
+--set enabled_mount_host_docker_sock=true \\
+--name runner \\
+--version 0.2.4 \\
+--namespace c7n-system`}
+        <CopyToClipboard
+          text={`helm install c7n/gitlab-runner \\
+          --set rbac.create=true \\
+          --set env.concurrent=3 \\
+          --set env.gitlabUrl=${paramsObj['gitlab-url']} \\
+          --set env.runnerRegistrationToken=xwxobLNoPQUzyMt_4RGF \\
+          --set env.environment.CHOERODON_URL=${paramsObj.gateway} \\
+          --set env.persistence.runner-maven-pvc="/root/.m2" \\
+          --set env.persistence.runner-cache-pvc="/cache" \\
+          --set enabled_mount_host_docker_sock=true \\
+          --name runner \\
+          --version 0.2.4 \\
+          --namespace c7n-system`}
+          onCopy={handleCopy}
+          options={options}
+        >
+          <Icon type="library_books" className="copy-button" />
+        </CopyToClipboard>
+      </pre>
+
       <div className="gitlab-runner-table">
         <table border="1">
           <tr>
@@ -120,41 +152,68 @@ export default function GitlabRunner() {
           </tr>
           <tr>
             <td>env.gitlabUrl</td>
-            <td>Gitlab地址</td>
+            <td>Gitlab地址（第一步中已获取）</td>
           </tr>
           <tr>
             <td>env.runnerRegistrationToken</td>
-            <td>Runner注册Token</td>
+            <td>Runner注册token （第一步中已获取）</td>
+          </tr>
+          <tr>
+            <td>env.environment.*</td>
+            <td>
+              CI时Pod的环境变量键值对，*就是环境变量名，等号后面的为该变量的值，这里
+              例子中添加这几个环境变量建议配置，使用Choerodon管理的项目进行CI时会用到它们，若还需其他环境变量请自定义。
+            </td>
           </tr>
           <tr>
             <td>env.environment.CHOERODON_URL</td>
-            <td>Choerodon API地址</td>
+            <td>Choerodon API地址（无需更改）</td>
+          </tr>
+          <tr>
+            <td>env.persistence.*</td>
+            <td>
+              CI时Pod的挂载PVC与Pod内目录的键值对，*就是PVC的名称，
+              等号后面的值为要挂载到Pod的哪个目录，这里注意一点用引号引起来。
+              本例中我们新建了两个PVC即
+              <code>runner-maven-pvc</code>
+              、
+              <code>runner-cache-pvc</code>
+              分别挂载到
+              <code>/root/.m2</code>
+              和
+              <code>/cache</code>
+              目录中。
+            </td>
           </tr>
           <tr>
             <td>env.persistence.runner-maven-pvc</td>
-            <td>持久化数据，此处的<code>runner-maven-pvc</code>为PVC名称,值要挂载到Pod的<code>/root/.m2</code>目录</td>
+            <td>
+              持久化数据，此处的
+              <code>runner-maven-pvc</code>
+              为PVC名称,值要挂载到Pod的
+              <code>/root/.m2</code>
+              目录
+            </td>
           </tr>
           <tr>
             <td>env.persistence.runner-cache-pvc</td>
-            <td>持久化数据，此处的<span>runner-cache-pvc</span>为PVC名称,值要挂载到Pod的<code>/cache</code>目录</td>
+            <td>
+              持久化数据，此处
+              <code>runner-cache-pvc</code>
+              为PVC名称，值为要挂载到Pod的
+              <code>/cache目录</code>
+            </td>
           </tr>
           <tr>
             <td>enabled_mount_host_docker_sock</td>
-            <td>是否将<code>dockers.sock</code>节点文件挂在到Pod中，以便build docker镜像</td>
+            <td>
+              是否将
+              <code>dockers.sock</code>
+              节点文件挂在到Pod中，以便build docker镜像
+            </td>
           </tr>
         </table>
       </div>
-      <p>
-        <span>- 更多Runner设置请参考 </span>
-        <a
-          href="https://docs.gitlab.com/runner/"
-          target="_blank"
-          rel="nofollow me noopener noreferrer"
-        >
-          https://docs.gitlab.com/runner/
-        </a>
-      </p>
-
     </div>
   );
 }

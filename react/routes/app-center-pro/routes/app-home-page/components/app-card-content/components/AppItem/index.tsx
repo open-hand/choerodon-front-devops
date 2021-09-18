@@ -107,7 +107,7 @@ const AppItem = observer(({
       appCatergoryCode,
       envId,
       instanceId,
-      instanceName,
+      instanceName: name,
       callback: refresh,
     }) : openDeleteHostAppModal(hostId, id, refresh);
   };
@@ -251,7 +251,7 @@ const AppItem = observer(({
   return (
     <div className={`${subfixCls}-list-card`}>
       <aside>
-        {renderAction()}
+        {envConnected && renderAction()}
       </aside>
       {
         upgradeAvailable && currentVersionAvailable && (
@@ -284,7 +284,7 @@ const AppItem = observer(({
         </div>
         <div>
           <span>部署对象</span>
-          <span>{catergory.name}</span>
+          <span>{catergory?.name}</span>
         </div>
         {isHost && (
         <div>

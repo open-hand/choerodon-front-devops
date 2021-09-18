@@ -200,7 +200,8 @@ const PipelineManage = observer(() => {
     Modal.open({
       key: runnerKey,
       style: settingsModalStyle,
-      title: formatMessage({ id: `${intlPrefix}.gitlab.runner` }),
+      // title: formatMessage({ id: `${intlPrefix}.gitlab.runner` }),
+      title: '注册 Gitlab Group Runner 指引',
       children: <GitlabRunner />,
       drawer: true,
       okCancel: false,

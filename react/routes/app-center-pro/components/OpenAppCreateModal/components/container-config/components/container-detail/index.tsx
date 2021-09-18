@@ -434,7 +434,7 @@ const Index = inject('AppState')(observer(({
           dataSource?.get(mapping.productType.name) === productTypeData[0].value ? '镜像来源' : 'jar包来源'
         }
       </p>
-      <div className="c7ncd-appCenterPro-conDetail__productType">
+      <div style={{ flexWrap: 'wrap' }} className="c7ncd-appCenterPro-conDetail__productType">
         {
           dataSource && (
             <CustomSelect
@@ -445,8 +445,13 @@ const Index = inject('AppState')(observer(({
               data={getProductSourceData()}
               identity="value"
               mode="single"
-              customChildren={(item): any => (
-                <div className="c7ncd-appCenterPro-conDetail__productSource__item">
+              customChildren={(item, index): any => (
+                <div
+                  className="c7ncd-appCenterPro-conDetail__productSource__item"
+                  style={{
+                    marginTop: isPipeline && index > 4 ? 20 : 'unset',
+                  }}
+                >
                   <img src={item.img} alt="" />
                   <p>
                     {item.name}

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 import React, { useMemo, Fragment } from 'react';
 import { Action, Choerodon } from '@choerodon/boot';
 import {
@@ -116,7 +117,7 @@ export default function DeployConfig() {
       style: configModalStyle,
       title: formatMessage({ id: `${intlPrefix}.modify.config` }),
       children: <DeployConfigForm
-        refresh={refresh}
+        refresh
         envId={envId}
         deployConfigId={valueId}
       />,

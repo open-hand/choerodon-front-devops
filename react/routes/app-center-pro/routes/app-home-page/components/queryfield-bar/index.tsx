@@ -95,8 +95,10 @@ const ContentHeader: React.FC<any> = observer((): any => {
   }, [mainStore.getCurrentTypeTabKey]);
 
   const setQueryFields = (data:any) => {
+    const currentEnv = searchDs.current?.get('env_id');
     searchDs.reset();
     const record = searchDs.current;
+    record?.set('env_id', currentEnv);
     if (data && data.length) {
       data.forEach((item:any) => {
         const {

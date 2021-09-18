@@ -18,13 +18,14 @@ import { useNetworkStore } from './stores';
 import Modals from './modals';
 import EditNetwork from './modals/network-operation';
 import { useMainStore } from '../../stores';
+import { SMALL } from '@/utils/getModalWidth';
 
 import './index.less';
 
 const { Column } = Table;
 const modalKey = Modal.key();
 const modalStyle = {
-  width: 740,
+  width: SMALL,
 };
 
 const NetworkContent = observer(() => {
@@ -43,10 +44,10 @@ const NetworkContent = observer(() => {
     intl: { formatMessage },
   } = useNetworkStore();
 
-  function refresh() {
+  const refresh = () => {
     treeDs.query();
     networkDs.query();
-  }
+  };
 
   function getEnvIsNotRunning() {
     const envRecord = treeDs.find((record) => record.get('key') === parentId);
@@ -54,7 +55,7 @@ const NetworkContent = observer(() => {
     return !connect;
   }
 
-  function renderName({ record }) {
+  const renderName = ({ record }) => {
     const name = record.get('name');
     const status = record.get('status');
     const error = record.get('error');
@@ -71,21 +72,23 @@ const NetworkContent = observer(() => {
           error={error || ''}
         />
         {instanceId && (
-        <StatusTag
-          style={{
-            marginLeft: '5px',
-          }}
-          type="border"
-          colorCode="operating"
-          name="Chart资源"
-        />
+          <StatusTag
+            style={{
+              marginLeft: '5px',
+            }}
+            type="border"
+            colorCode="operating"
+            name="Chart资源"
+          />
         )}
       </div>
     );
-  }
+  };
 
-  function renderTargetType({ record }) {
-    const { instances, selectors, targetAppServiceId } = record.get('target') || {};
+  const renderTargetType = ({ record }) => {
+    const {
+      instances, selectors, targetAppServiceId, targetDeploymentName,
+    } = record.get('target') || {};
 
     let type = 'EndPoints';
     if (targetAppServiceId) {
@@ -94,14 +97,21 @@ const NetworkContent = observer(() => {
       type = formatMessage({ id: 'instance' });
     } else if (selectors) {
       type = formatMessage({ id: 'label' });
+    } else if (targetDeploymentName) {
+      type = formatMessage({ id: 'targetDeployment' });
     }
 
     return <span>{type}</span>;
-  }
+  };
 
-  function renderTarget({ record }) {
+  const renderTarget = ({ record }) => {
     const {
-      instances, selectors, endPoints, targetAppServiceName, targetAppServiceId,
+      instances,
+      selectors,
+      endPoints,
+      targetAppServiceName,
+      targetAppServiceId,
+      targetDeploymentName,
     } = record.get('target') || {};
     const node = [];
     const port = [];
@@ -157,6 +167,22 @@ const NetworkContent = observer(() => {
         );
       });
     }
+    if (targetDeploymentName) {
+      const targetClass = classnames({
+        'net-target-item': true,
+        'net-target-item-failed': record.get('status') !== 'operating' && record.get('status') !== 'running',
+      });
+      node.push(
+        <div className={targetClass}>
+          <Tooltip
+            title={formatMessage({ id: record.get('status') || `${intlPrefix}.application.net.deleted` })}
+            placement="top"
+          >
+            {targetDeploymentName}
+          </Tooltip>
+        </div>,
+      );
+    }
     return (
       <>
         {
@@ -179,13 +205,14 @@ const NetworkContent = observer(() => {
                 </div>
               );
             }
+            return '';
           })
         }
       </>
     );
-  }
+  };
 
-  function renderConfigType({ record }) {
+  const renderConfigType = ({ record }) => {
     const { externalIps, ports } = record.get('config') || {};
     const loadBalanceIp = record.get('loadBalanceIp');
     const type = record.get('type');
@@ -280,9 +307,9 @@ const NetworkContent = observer(() => {
         </Tooltip>
       </div>
     );
-  }
+  };
 
-  function renderAction({ record }) {
+  const renderAction = ({ record }) => {
     const status = record.get('status');
     const disabled = getEnvIsNotRunning() || status === 'operating';
     if (disabled || record.get('instanceId')) {
@@ -304,7 +331,7 @@ const NetworkContent = observer(() => {
     ];
 
     return (<Action data={buttons} />);
-  }
+  };
 
   function openModal() {
     Modal.open({

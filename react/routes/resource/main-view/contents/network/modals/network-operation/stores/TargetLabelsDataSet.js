@@ -1,4 +1,5 @@
-export default ({ formatMessage, keyOptionsDs }) => {
+/* eslint-disable import/no-anonymous-default-export */
+const Dataset = ({ formatMessage, keyOptionsDs }) => {
   /**
    * 关键字检查
    * @param rule
@@ -9,16 +10,18 @@ export default ({ formatMessage, keyOptionsDs }) => {
     // 必须由字母数字字符，' - '，'_'或'.'组成，并且必须以字母数字开头和结尾
     // 并且包括可选的DNS子域前缀(包括一级、二级域名)和'/'（例如'example.com/MyName'）
     const p = /^((?=^.{3,255}$)[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\/)*([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$/;
+    // eslint-disable-next-line max-len
     const isRepeat = record.dataSet.findIndex((r) => record.id !== r.id && r.get(name) === value) !== -1;
     if (value) {
       if (p.test(value)) {
         if (isRepeat) {
           return formatMessage({ id: 'network.label.check.repeat' });
         }
-      } else {
-        return formatMessage({ id: 'network.label.check.failed' });
+        return true;
       }
+      return formatMessage({ id: 'network.label.check.failed' });
     }
+    return true;
   }
 
   function checkValue(value, name, record) {
@@ -27,7 +30,9 @@ export default ({ formatMessage, keyOptionsDs }) => {
       if (!p.test(value)) {
         return formatMessage({ id: 'network.label.check.failed' });
       }
+      return true;
     }
+    return true;
   }
 
   const dynamicProps = {
@@ -37,12 +42,11 @@ export default ({ formatMessage, keyOptionsDs }) => {
     },
   };
 
-
   return {
     fields: [
       {
         name: 'keyword',
-        type: 'string', 
+        type: 'string',
         label: formatMessage({ id: 'network.config.keyword' }),
         options: keyOptionsDs,
         validator: checkKeywords,
@@ -52,7 +56,7 @@ export default ({ formatMessage, keyOptionsDs }) => {
       },
       {
         name: 'value',
-        type: 'string', 
+        type: 'string',
         label: formatMessage({ id: 'network.config.value' }),
         options: keyOptionsDs,
         validator: checkValue,
@@ -67,18 +71,21 @@ export default ({ formatMessage, keyOptionsDs }) => {
   };
 };
 
-function updateEventHandler({ dataSet, record, name, value, oldValue }) {
+export default Dataset;
+
+function updateEventHandler({
+  dataSet, record, name, value, oldValue,
+}) {
   if (value && value.includes(':')) {
     const splitkv = value.split(':');
     record.set('keyword', splitkv[0]);
     record.set('value', splitkv[1]);
   }
-  // 当keyword的值发生变化的时候 对其余记录做校验 
+  // 当keyword的值发生变化的时候 对其余记录做校验
   if (name === 'keyword') {
     checkOtherRecords(record, name);
   }
 }
-
 
 function checkOtherRecords(record, type) {
   record.dataSet.forEach((r) => {

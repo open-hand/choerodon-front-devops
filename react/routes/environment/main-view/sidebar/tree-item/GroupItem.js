@@ -14,7 +14,9 @@ import { useTreeItemStore } from './stores';
 const modalKey = Modal.key();
 const confirmKey = Modal.key();
 
-function GroupItem({ record, search, intl: { formatMessage }, intlPrefix }) {
+function GroupItem({
+  record, search, intl: { formatMessage }, intlPrefix,
+}) {
   const modalStyle = useMemo(() => ({
     width: 380,
   }), []);
@@ -28,7 +30,7 @@ function GroupItem({ record, search, intl: { formatMessage }, intlPrefix }) {
   function handleClick() {
     const groupId = record.get('id');
     const name = record.get('name');
-    const current = groupFormDs.current;
+    const { current } = groupFormDs;
     current.set('name', name);
     current.set('id', groupId);
     Modal.open({
@@ -56,9 +58,8 @@ function GroupItem({ record, search, intl: { formatMessage }, intlPrefix }) {
     Modal.open({
       movable: false,
       closable: false,
-      header: true,
       key: confirmKey,
-      title: formatMessage({ id: `${intlPrefix}.group.delete` }, { name }),
+      title: `删除分组${name}`,
       children: <div>{formatMessage({ id: `${intlPrefix}.group.delete.warn` })}</div>,
       onOk: handleDelete,
       okText: formatMessage({ id: 'delete' }),
@@ -83,21 +84,32 @@ function GroupItem({ record, search, intl: { formatMessage }, intlPrefix }) {
       text: formatMessage({ id: `${intlPrefix}.modal.group.delete` }),
       action: confirmDelete,
     }];
-    return <Action
-      placement="bottomRight"
-      data={actionData}
-      onClick={eventStopProp}
-    />;
+    return (
+      <Action
+        placement="bottomRight"
+        data={actionData}
+        style={{
+          marginLeft: 'auto',
+        }}
+        onClick={eventStopProp}
+      />
+    );
   }
 
-  return <Fragment>
-    {getName()}
-    {getSuffix()}
-  </Fragment>;
+  return (
+    <>
+      {getName()}
+      {getSuffix()}
+    </>
+  );
 }
 
 GroupItem.propTypes = {
   search: PropTypes.string,
+};
+
+GroupItem.defaultProps = {
+  search: '',
 };
 
 export default injectIntl(observer(GroupItem));

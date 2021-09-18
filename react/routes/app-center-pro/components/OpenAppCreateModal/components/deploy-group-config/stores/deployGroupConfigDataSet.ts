@@ -3,6 +3,7 @@ import { FieldProps, FieldType, Record } from '@/interface';
 import { envDataSet } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config/stores/appConfigDataSet';
 import { setKeyValue, getAppConfigData } from '@/routes/app-center-pro/components/OpenAppCreateModal';
 import { devopsDeployGroupApiConfig } from '@/api/DevopsDeployGroup';
+import { deployAppCenterApi } from '@/api';
 
 const checkPercentNum = async (value: string) => {
   const patt1 = new RegExp(/^\d+%$/);
@@ -41,6 +42,14 @@ const mapping: {
     name: 'name',
     type: 'string' as FieldType,
     label: '应用名称',
+    validator: async (value, type, record: Record) => {
+      let res: any = '应用名称已重复';
+      const flag = await deployAppCenterApi.checkAppName(value, 'deployment', record.get('instanceId'));
+      if (flag) {
+        res = true;
+      }
+      return res;
+    },
   },
   appCode: {
     name: 'code',

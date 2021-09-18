@@ -369,14 +369,20 @@ const AppCreateForm = (props: any) => {
   const handleSetSubmitDataByResourceSetting = ({
     resourceConfigData,
     submitData,
-  }: any) => ({
-    ...submitData,
-    ...resourceConfigData,
-    devopsServiceReqVO: {
-      ...resourceConfigData.devopsServiceReqVO,
-      targetInstanceCode: submitData.appCode,
-    },
-  });
+  }: any) => {
+    const res = {
+      ...submitData,
+      ...resourceConfigData,
+    };
+    if (resourceConfigData.devopsServiceReqVO) {
+      res.devopsServiceReqVO.envId = submitData.environmentId;
+      res.devopsServiceReqVO.targetInstanceCode = submitData.appCode;
+    }
+    if (resourceConfigData.devopsIngressVO) {
+      res.devopsIngressVO.envId = submitData.environmentId;
+    }
+    return res;
+  };
 
   const handleSubmit = async () => {
     let key;

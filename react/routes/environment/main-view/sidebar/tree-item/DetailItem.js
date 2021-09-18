@@ -1,5 +1,5 @@
 /* eslint-disable react/require-default-props */
-import React, { Fragment, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
@@ -32,15 +32,16 @@ function DetailItem({
       GROUP_ITEM,
     },
   } = useEnvironmentStore();
-  const { mainStore } = useMainStore();
+  const { mainStore, getCreateEnvDisable } = useMainStore();
   const { getSelectedMenu: { itemType, key } } = envStore;
 
-  function refresh() {
+  const refresh = () => {
     treeDs.query();
     if (itemType === GROUP_ITEM && key === record.get('parentId')) {
       envStore.setUpTarget(key);
     }
-  }
+    getCreateEnvDisable();
+  };
 
   async function handleDelete() {
     const envId = record.get('id');
@@ -305,6 +306,9 @@ function DetailItem({
 
     return (
       <Action
+        style={{
+          marginLeft: 'auto',
+        }}
         placement="bottomRight"
         data={actionData}
         onClick={eventStopProp}
