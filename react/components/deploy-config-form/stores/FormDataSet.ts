@@ -14,7 +14,7 @@ interface FormProps {
   appOptionDs: DataSet,
   appSelectDisabled?: boolean,
   appServiceName?: string,
-  setValueLoading:CallableFunction
+  setValueLoading:any
 }
 
 export default ({
@@ -95,7 +95,8 @@ export default ({
       readOnly: true,
       ignore: 'always' as FieldIgnore,
       defaultValue: appSelectDisabled ? appServiceName : null,
-    }, {
+    },
+    {
       name: 'value',
       required: true,
     }, {
