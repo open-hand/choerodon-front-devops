@@ -33,13 +33,11 @@ const Index = observer(() => {
             detailData.appServiceVersionId || detailData.commandVersionId,
           );
         return res;
-        break;
       }
       default: {
         const res = await appServiceInstanceApi
           .getMarketValues(detailData.instanceId || detailData.id, detailData.appServiceVersionId);
         return res;
-        break;
       }
     }
   };

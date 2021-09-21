@@ -239,7 +239,7 @@ const IstModals = injectIntl(observer(() => {
       name: '修改应用',
       icon: 'add_comment-o',
       handler: () => {
-        openAppConfigModal(record?.toData() || {}, refresh);
+        openAppConfigModal({ ...record?.toData(), instanceId: record.get('id') } || {}, refresh);
       },
     },
     {

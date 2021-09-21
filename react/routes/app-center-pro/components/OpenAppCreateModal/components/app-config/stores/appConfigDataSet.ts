@@ -392,8 +392,8 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
         case mapping.serviceVersion.name: {
           if (value) {
             let getYamlValues:{yaml:string};
-            if (detail && 'id' in detail) {
-              getYamlValues = await appServiceInstanceApi.getValues(detail?.id, value);
+            if (detail && 'instanceId' in detail) {
+              getYamlValues = await appServiceInstanceApi.getValues(detail?.instanceId, value);
             } else {
               getYamlValues = await appServiceInstanceApi.getDeployValue(value);
             }
