@@ -88,7 +88,7 @@ const DetailsTabsHeaderButtons = () => {
 
   const envNotConnected = !envConnected;
 
-  const btnDisabledEnv = envNotConnected || !appStatus || ([APP_STATUS.FAILED, APP_STATUS.RUNNING, APP_STATUS.STOP].includes(appStatus));
+  const btnDisabledEnv = envNotConnected || !appStatus || !([APP_STATUS.FAILED, APP_STATUS.RUNNING, APP_STATUS.STOP].includes(appStatus));
 
   const btnDisabledHost = false;
 
