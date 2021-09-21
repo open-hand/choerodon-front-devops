@@ -390,7 +390,7 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
         }
         case mapping.serviceVersion.name: {
           if (value) {
-            const res = await appServiceInstanceApi.getDeployValue(value);
+            const res = await appServiceInstanceApi.getValues(detail.id, value);
             record.set(mapping.value.name, res?.yaml);
           }
           break;
