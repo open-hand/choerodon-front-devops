@@ -52,7 +52,7 @@ const FormView = observer(() => {
       const res = await FormDataSet.query();
       // @ts-ignore
       // eslint-disable-next-line max-len
-      const dataSourceCurrent = _.map(res.value, (value:any, key:any) => new ConfigNode(key, value));
+      const dataSourceCurrent = _.map(res.value, (value: any, key: any) => new ConfigNode(key, value));
       KeyValueDataSet.loadData(dataSourceCurrent);
     }
   }
@@ -69,7 +69,7 @@ const FormView = observer(() => {
    * 删除key-value
    * @param key
    */
-  const handleDelete = (record:any) => {
+  const handleDelete = (record: any) => {
     KeyValueDataSet.remove(record);
     asyncCheckErrorData(KeyValueDataSet.toData());
   };
@@ -116,9 +116,9 @@ const FormView = observer(() => {
     const dataSource = KeyValueDataSet.toData();
     // eslint-disable-next-line no-underscore-dangle
     const _data = dataCurrent || dataSource;
-    const hasKey:any = _data.filter(({ key }:any) => !_.isEmpty(key));
-    const onlyHasValue = _data.filter(({ key, value }:any) => _.isEmpty(key) && !_.isEmpty(value));
-    const onlyHasKey:any = title === 'cipher' && hasKey.filter(({ value }:any) => _.isEmpty(value));
+    const hasKey: any = _data.filter(({ key }: any) => !_.isEmpty(key));
+    const onlyHasValue = _data.filter(({ key, value }: any) => _.isEmpty(key) && !_.isEmpty(value));
+    const onlyHasKey: any = title === 'cipher' && hasKey.filter(({ value }: any) => _.isEmpty(value));
     const hasErrorItem = onlyHasKey.length || onlyHasValue.length;
     const hasRepeatKey = hasKey.length !== _.uniqBy(hasKey, 'key').length;
     const hasEmptyKey = title === 'cipher' && (_.isEmpty(hasKey) || hasKey.length !== _data.length);
@@ -161,7 +161,7 @@ const FormView = observer(() => {
    * 设置键值对模式下的错误提示
    * @param msg
    */
-  function setConfigError(msg:string) {
+  function setConfigError(msg: string) {
     setWarningMes(msg);
     setHasItemError(true);
     modal.update({ okProps: { disabled: true } });
@@ -173,11 +173,11 @@ const FormView = observer(() => {
     let hasConfigRuleError = false;
 
     return new Promise((resolve) => {
-      const { name, description }:any = FormDataSet.toData()[0];
+      const { name, description }: any = FormDataSet.toData()[0];
       const dataSource = KeyValueDataSet.toData();
       if (!isYamlEdit) {
         hasKVError = checkErrorData(null, true);
-        const allData = [...dataSource.filter((item:any) => !_.isEmpty(item?.key))];
+        const allData = [...dataSource.filter((item: any) => !_.isEmpty(item?.key))];
         configData = allData;
       } else {
         hasConfigRuleError = checkConfigRuleError();
@@ -233,7 +233,7 @@ const FormView = observer(() => {
     }
   };
 
-  const getDataSourceMapFormItem = () => KeyValueDataSet.data.map((record:any) => (
+  const getDataSourceMapFormItem = () => KeyValueDataSet.data.map((record: any) => (
     <Form record={record} key={record.id} columns={18} className="c7n-config-container">
       <TextField
         name="key"
@@ -300,7 +300,7 @@ const FormView = observer(() => {
    * yaml 值改变
    * @param value
    */
-  const changeYamlValue = (value:string) => {
+  const changeYamlValue = (value: string) => {
     asyncCheckConfigRuleError(value);
 
     setDataYaml(value);
@@ -310,7 +310,7 @@ const FormView = observer(() => {
    * 校验yaml格式
    * @param flag
    */
-  const checkYamlError = (flag:boolean) => {
+  const checkYamlError = (flag: boolean) => {
     setHasYamlError(flag);
   };
 
@@ -321,7 +321,7 @@ const FormView = observer(() => {
     if (hasYamlError || hasValueError || hasItemError) return;
 
     if (!isYamlEdit) {
-      const dataSource:any = KeyValueDataSet.toData();
+      const dataSource: any = KeyValueDataSet.toData();
       const result = checkErrorData(dataSource);
 
       if (result) return;
@@ -357,7 +357,7 @@ const FormView = observer(() => {
 
   const checkButtonDisabled = (isSubmitCurrent = false) => {
     !isSubmitCurrent
-    && modal.update({ okProps: { disabled: hasYamlError || hasValueError || hasItemError } });
+      && modal.update({ okProps: { disabled: hasYamlError || hasValueError || hasItemError } });
     setIsSubmit(false);
   };
 
@@ -381,14 +381,7 @@ const FormView = observer(() => {
         </Form>
         <div className="c7n-sidebar-from-title">
           <FormattedMessage id={`${intlPrefix}.${title}.head`} />
-          {!isYamlEdit && (
-          <Tooltip
-            overlayStyle={{ maxWidth: 350 }}
-            title={formatMessage({ id: `${intlPrefix}.${title}.help.tooltip` })}
-          >
-            <Icon type="help" />
-          </Tooltip>
-          )}
+          {!isYamlEdit}
           {modeSwitch ? (
             <Button
               className="c7n-config-mode-btn"
