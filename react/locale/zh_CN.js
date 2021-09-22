@@ -461,7 +461,7 @@ const deployment = {
   'c7ncd.deployment.custom.delete.des': '确定要删除该自定义资源吗？',
   'c7ncd.deployment.config.delete.disable': '删除部署配置“{name}”',
   'c7ncd.deployment.config.delete.des': '确定要删除该部署配置吗？',
-  'c7ncd.deployment.config.delete.describe': '仅能删除没有关联任务和关联实例的部署配置。',
+  'c7ncd.deployment.config.delete.describe': '仅能删除没有关联流水线任务和关联Chart应用的部署配置。',
   'c7ncd.deployment.sync.empty': '目前部署同步正常，暂无错误信息',
   'c7ncd.deployment.permission.tab.tips':
     '当选择将权限分配至项目下所有成员时，此时便不能在列表中删除任何成员的权限；仅在选择将权限分配给项目下特定成员时，才能在下方列表中管理成员的权限。项目所有者的权限不能被删除',
