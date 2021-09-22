@@ -18,7 +18,7 @@ type openDeleteProps = {
   projectId:string
 }
 
-export default function useStore() {
+function useAppDeletionWithVertificationStore() {
   return useLocalStore(() => ({
     deleteArr: [],
     setDeleteArr(data:any) {
@@ -92,4 +92,8 @@ export default function useStore() {
   }));
 }
 
-export type StoreProps = ReturnType<typeof useStore>;
+export {
+  useAppDeletionWithVertificationStore,
+};
+
+export type AppDeletionWithVertificationStoreProps = ReturnType<typeof useAppDeletionWithVertificationStore>;

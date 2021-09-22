@@ -16,6 +16,7 @@ import useChildrenContextStore from './useChildrenContextStore';
 import useCertStore from './useCertStore';
 import BaseInfoDataSet from './BaseInfoDataSet';
 import { useResourceStore } from '../../stores';
+import { useAppDeletionWithVertificationStore } from '@/components/app-deletion-with-vertification-code';
 
 const Store = createContext();
 
@@ -42,6 +43,9 @@ export const StoreProvider = injectIntl(inject('AppState')(observer(
     const secretStore = useSecretStore();
     const certStore = useCertStore();
     const childrenStore = useChildrenContextStore();
+
+    // 删除的store
+    const deletionStore = useAppDeletionWithVertificationStore();
 
     useEffect(() => {
       // 此处的key是TreeDataSet里的formatInstance中的key值
@@ -71,6 +75,8 @@ export const StoreProvider = injectIntl(inject('AppState')(observer(
       childrenStore,
       certStore,
       baseInfoDs,
+      deletionStore,
+
       key,
       projectId,
       name,

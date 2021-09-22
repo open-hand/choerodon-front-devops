@@ -1,11 +1,12 @@
 /* eslint-disable max-len */
-import { axios } from '@choerodon/master';
-import { isEmpty, findIndex } from 'lodash';
+import { isEmpty } from 'lodash';
 import { Modal } from 'choerodon-ui/pro';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { StoreProps } from '@/routes/app-center-pro/stores/deletionStore';
+import { AppDeletionWithVertificationStoreProps } from '@/components/app-deletion-with-vertification-code/deletionStore';
 import { appServiceInstanceApi } from '@/api';
+
+export { default as AppDeletionsModal } from './components/delete-modal';
 
 type openDeleteProps = {
   envId:string
@@ -13,7 +14,7 @@ type openDeleteProps = {
   instanceName:string
   callback:(...args:any[])=>any
   projectId:string
-  deletionStore:StoreProps
+  deletionStore:AppDeletionWithVertificationStoreProps
 }
 
 type activeType = 'stop' | 'start' | 'delete';
@@ -51,6 +52,8 @@ function openPipelineReferenceModal({
   });
 }
 
+// deletionStore 可以从app-deletion-with-vertification-code组件下的deletionStore
+// 这个模板里头拿，直接new deletionStore它就行
 async function openDelete({
   envId, instanceName, instanceId, callback, projectId, deletionStore,
 }:openDeleteProps) {
@@ -60,11 +63,16 @@ async function openDelete({
   if (!isEmpty(hasPipelineReference)) {
     openPipelineReferenceModal({ active: 'delete', hasPipelineReference, instanceName });
   } else {
+    if (!deletionStore?.openDeleteModal) {
+      throw new Error('the openDeleteModal trigger needs openDeleteModal function in deletionStore');
+    }
     deletionStore.openDeleteModal({
       envId, instanceId, type: 'instance', callback, instanceName,
     });
   }
 }
+
+export * from './deletionStore';
 
 export {
   openDelete,

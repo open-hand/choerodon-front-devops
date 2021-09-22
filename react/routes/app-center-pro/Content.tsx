@@ -6,10 +6,9 @@ import { nomatch } from '@choerodon/boot';
 import map from 'lodash/map';
 
 import { observer } from 'mobx-react-lite';
-import DeleteModal from './components/delete-modal';
 import { useAppCenterProStore } from './stores';
+import { AppDeletionsModal } from '@/components/app-deletion-with-vertification-code';
 
-// const AppList = React.lazy(() => import('./app-list'));
 const AppHomePage = React.lazy(() => import('./routes/app-home-page'));
 const AppDetail = React.lazy(() => import('./routes/app-detail'));
 
@@ -35,7 +34,7 @@ const AppCenterPro = observer(() => {
     map(getDeleteArr, ({
       name, display, deleteId, type, refresh, envId,
     }) => (
-      <DeleteModal
+      <AppDeletionsModal
         key={deleteId}
         envId={envId}
         store={deletionStore}

@@ -10,9 +10,12 @@ import {
   DEPLOY_TYPE, ENV_TAB,
 } from './CONST';
 
-import useDeletionStore, { StoreProps } from './deletionStore';
 import { hostApi } from '@/api';
-import { openDelete } from '../components/app-deletion';
+import {
+  openDelete,
+  useAppDeletionWithVertificationStore,
+  AppDeletionWithVertificationStoreProps,
+} from '@/components/app-deletion-with-vertification-code';
 import { deploymentsApi } from '@/api/Deployments';
 
 type deletEnvProps ={
@@ -35,7 +38,7 @@ interface ContextProps {
     ENV_TAB: 'env',
     HOST_TAB: 'host',
   }
-  deletionStore: StoreProps
+  deletionStore: AppDeletionWithVertificationStoreProps
   match:any
   openDeleteHostAppModal: (hostId:string, instanceId:string, callback?:CallableFunction) => any
   deleteEnvApp: (props:deletEnvProps)=>any
@@ -61,7 +64,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const location = useLocation();
 
   // 专门针对环境的应用删除的弹窗
-  const deletionStore = useDeletionStore();
+  const deletionStore = useAppDeletionWithVertificationStore();
 
   function goBackHomeBaby() {
     history.push({ pathname: '/devops/application-center', search: location.search });

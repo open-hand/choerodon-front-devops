@@ -7,7 +7,7 @@ import Sidebar from './sidebar';
 import DragBar from '../../../components/drag-bar';
 import Loading from '../../../components/loading';
 import EmptyPage from '../../../components/empty-page';
-import DeleteModal from './components/delete-modal';
+import { AppDeletionsModal } from '@/components/app-deletion-with-vertification-code';
 import { useResourceStore } from '../stores';
 import { useMainStore } from './stores';
 
@@ -64,20 +64,20 @@ const MainView = observer(() => {
     treeDs,
     intl: { formatMessage },
   } = useResourceStore();
-  const { mainStore } = useMainStore();
+  const { deletionStore, mainStore } = useMainStore();
   const rootRef = useRef(null);
 
   const { getSelectedMenu: { parentId } } = resourceStore;
-  const { getDeleteArr } = mainStore;
+  const { getDeleteArr } = deletionStore;
 
   const deleteModals = useMemo(() => (
     map(getDeleteArr, ({
       name, display, deleteId, type, refresh, envId,
     }) => (
-      <DeleteModal
+      <AppDeletionsModal
         key={deleteId}
         envId={envId || parentId.split('**')[0]}
-        store={mainStore}
+        store={deletionStore}
         title={`${formatMessage({ id: `${type}.delete` })}“${name}”`}
         visible={display}
         objectId={deleteId}
