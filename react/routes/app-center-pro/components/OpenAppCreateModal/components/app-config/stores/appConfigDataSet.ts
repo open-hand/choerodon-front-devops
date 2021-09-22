@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { FieldProps } from 'choerodon-ui/pro/lib/data-set/field';
 import { DataSet } from 'choerodon-ui/pro';
 import { middlewareConfigApi } from '@/api/Middleware';
@@ -390,8 +391,13 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
         }
         case mapping.serviceVersion.name: {
           if (value) {
-            const res = await appServiceInstanceApi.getDeployValue(value);
-            record.set(mapping.value.name, res?.yaml);
+            let getYamlValues:{yaml:string};
+            if (detail && 'instanceId' in detail) {
+              getYamlValues = await appServiceInstanceApi.getValues(detail?.instanceId, value);
+            } else {
+              getYamlValues = await appServiceInstanceApi.getDeployValue(value);
+            }
+            record.set(mapping.value.name, getYamlValues?.yaml);
           }
           break;
         }
