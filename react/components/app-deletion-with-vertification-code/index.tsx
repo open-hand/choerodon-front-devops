@@ -3,21 +3,10 @@ import { isEmpty } from 'lodash';
 import { Modal } from 'choerodon-ui/pro';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { AppDeletionWithVertificationStoreProps } from '@/components/app-deletion-with-vertification-code/deletionStore';
 import { appServiceInstanceApi } from '@/api';
+import { openDeleteProps, activeType } from './interface';
 
 export { default as AppDeletionsModal } from './components/delete-modal';
-
-type openDeleteProps = {
-  envId:string
-  instanceId:string
-  instanceName:string
-  callback:(...args:any[])=>any
-  projectId:string
-  deletionStore:AppDeletionWithVertificationStoreProps
-}
-
-type activeType = 'stop' | 'start' | 'delete';
 
 const stopKey2 = Modal.key();
 
@@ -55,7 +44,7 @@ function openPipelineReferenceModal({
 // deletionStore 可以从app-deletion-with-vertification-code组件下的deletionStore
 // 这个模板里头拿，直接new deletionStore它就行
 async function openDelete({
-  envId, instanceName, instanceId, callback, projectId, deletionStore,
+  envId, instanceName, instanceId, callback, deletionStore, type,
 }:openDeleteProps) {
   const hasPipelineReference = await checkPipelineReference({
     instanceId,
@@ -67,7 +56,7 @@ async function openDelete({
       throw new Error('the openDeleteModal trigger needs openDeleteModal function in deletionStore');
     }
     deletionStore.openDeleteModal({
-      envId, instanceId, type: 'instance', callback, instanceName,
+      envId, instanceId, type: type || 'instance', callback, instanceName,
     });
   }
 }

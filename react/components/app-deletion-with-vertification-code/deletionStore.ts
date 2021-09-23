@@ -9,6 +9,7 @@ import {
 } from '@/api';
 import { ingressApiConfig } from '@/api/Ingress';
 import { certificationsApiConfig } from '@/api/Certifications';
+import { deploymentsApiConfig } from '@/api/Deployments';
 
 type openDeleteProps = {
   envId:string
@@ -86,6 +87,7 @@ function useAppDeletionWithVertificationStore() {
         certificate: certificationsApiConfig.deleteInstance(id),
         configMap: configMapApiConfig.deleteInstance(id),
         secret: secretApiConfig.deleteInstance(envId, id),
+        deployGroup: deploymentsApiConfig.deleleDeployGroupApp(id),
       };
       return axios(url[type]);
     },
