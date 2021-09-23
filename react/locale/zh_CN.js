@@ -481,7 +481,7 @@ const deployment = {
   'c7ncd.deployment.pvc.delete.des': '确定要删除该PVC吗？',
   'c7ncd.deployment.active': '生效',
   'c7ncd.deployment.choose.version': '选择版本',
-  'c7ncd.deployment.polaris.empty.des': '当前环境下暂无应用，无法执行健康检查。',
+  'c7ncd.deployment.polaris.empty.des': '当前环境下暂无容器应用，无法执行健康检查。',
   'c7ncd.deployment.polaris.check.empty': '该实例为空',
   'c7ncd.deployment.pod.disabled.tops': '若想降至0，请直接点击“停用实例”',
   'c7ncd.deployment.marketApp': '市场应用',
