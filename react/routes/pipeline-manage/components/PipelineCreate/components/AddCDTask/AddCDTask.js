@@ -198,6 +198,11 @@ export default observer(() => {
   }
 
   useEffect(() => {
+    const value = ADDCDTaskDataSet.current.get(fieldMap.deployWay.name);
+    ADDCDTaskDataSet.getField(addCDTaskDataSetMap.host).set('disabled', (value === deployWayData[1].value) && ADDCDTaskDataSet.current.get('type') === 'cdHost');
+  }, [ADDCDTaskDataSet.current.get(fieldMap.deployWay.name)])
+
+  useEffect(() => {
     const currentHostDeployType = ADDCDTaskDataSet?.current?.get(
       "hostDeployType"
     );
