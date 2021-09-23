@@ -28,7 +28,7 @@ const CustomModals = observer(() => {
     istListDs.query();
   }
 
-  function handleCreateCallback(type) {
+  async function handleCreateCallback(type) {
     let menuData = {};
     switch (type) {
       case 'deployGroup':
@@ -56,7 +56,7 @@ const CustomModals = observer(() => {
       default:
         break;
     }
-    refresh();
+    await refresh();
     setSelectedMenu(menuData);
     setExpandedKeys([`${parentId}`]);
   }
