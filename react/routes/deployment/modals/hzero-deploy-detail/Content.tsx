@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from 'choerodon-ui/pro';
 import classnames from 'classnames';
-import { StatusTag } from '@choerodon/components';
+import { StatusTag, Loading } from '@choerodon/components';
 import { useHistory, useLocation } from 'react-router';
 import {
   Record, LabelLayoutType, LabelAlignType,
@@ -17,7 +17,6 @@ import {
 import YamlEditor from '@/components/yamlEditor';
 import { deployRecordApi } from '@/api';
 import STATUS_TYPE from '@/constants/STATUS_TYPE';
-import Loading from '@/components/loading';
 import { useHzeroDeployDetailStore } from './stores';
 import { getConsumeDuration } from '@/utils/getDuration';
 
@@ -132,7 +131,7 @@ const HzeroDeployDetail = observer(() => {
     );
   };
   if (formDs.status === 'loading') {
-    return <Loading display />;
+    return <Loading display type="c7n" />;
   }
 
   return (

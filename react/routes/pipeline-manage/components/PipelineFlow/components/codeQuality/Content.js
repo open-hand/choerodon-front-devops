@@ -6,8 +6,8 @@ import _ from 'lodash';
 import { Icon } from 'choerodon-ui/pro';
 import { Page } from '@choerodon/boot';
 
+import { Loading } from '@choerodon/components';
 import EmptyPage from '../../../../../../components/empty-page';
-import Loading from '../../../../../../components/loading';
 import Percentage from '../../../../../../components/percentage/Percentage';
 import Rating from '../../../../../../components/rating/Rating';
 
@@ -82,16 +82,16 @@ export default withRouter(observer((props) => {
                       {key === 'coverage' && <Percentage data={Number(innerValue)} />}
                       {key === 'duplicated_lines_density' && <Rating rating={rate} size="18px" type="pie" />}
                       {hasReport && (
-                      <Link
-                        onClick={() => modal.close()}
-                        to={() => ({
-                          pathname: '/rdqam/report/code-quality-workplace',
-                          search: `${search}&from=ci`,
-                          state: { appId: appServiceId, type: OBJECT_TYPE[objKey] },
-                        })}
-                      >
-                        <Icon type="timeline" className="reports-icon" />
-                      </Link>
+                        <Link
+                          onClick={() => modal.close()}
+                          to={() => ({
+                            pathname: '/rdqam/report/code-quality-workplace',
+                            search: `${search}&from=ci`,
+                            state: { appId: appServiceId, type: OBJECT_TYPE[objKey] },
+                          })}
+                        >
+                          <Icon type="timeline" className="reports-icon" />
+                        </Link>
                       )}
                     </div>
                   ))
@@ -113,7 +113,7 @@ export default withRouter(observer((props) => {
     <div
       className="c7n-region c7n-codeQuality-wrapper"
     >
-      {codeQuality.loading ? <Loading display /> : getDetail()}
+      {codeQuality.loading ? <Loading display type="c7n" /> : getDetail()}
     </div>
   );
 }));

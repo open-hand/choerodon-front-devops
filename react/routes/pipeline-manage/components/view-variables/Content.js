@@ -1,10 +1,13 @@
+/* eslint-disable react/jsx-no-bind */
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Form, Icon, TextField, Tooltip } from 'choerodon-ui/pro';
+import {
+  Form, Icon, TextField, Tooltip,
+} from 'choerodon-ui/pro';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Choerodon } from '@choerodon/boot';
+import { Loading } from '@choerodon/components';
 import { useRecordDetailStore } from './stores';
-import Loading from '../../../../components/loading';
 
 import './index.less';
 
@@ -29,7 +32,7 @@ export default observer(() => {
             colSpan={9}
             name="key"
             disabled
-            addonAfter={
+            addonAfter={(
               <Tooltip title={formatMessage({ id: 'copy' })} placement="top">
                 <CopyToClipboard
                   text={eachRecord.get('key')}
@@ -38,7 +41,7 @@ export default observer(() => {
                   <Icon type="content_copy" style={{ cursor: 'pointer' }} />
                 </CopyToClipboard>
               </Tooltip>
-            }
+            )}
           />
           <span className={`${prefixCls}-equal`}>=</span>
           <TextField
@@ -53,21 +56,23 @@ export default observer(() => {
   }
 
   if (!projectFormDs || projectFormDs.status === 'loading') {
-    return <Loading display />;
+    return <Loading display type="c7n" />;
   }
 
-  return (<div className={`${prefixCls}`}>
-    <div className={`${prefixCls}-title`}>
-      {formatMessage({ id: `${intlPrefix}.settings.project` })}
+  return (
+    <div className={`${prefixCls}`}>
+      <div className={`${prefixCls}-title`}>
+        {formatMessage({ id: `${intlPrefix}.settings.project` })}
+      </div>
+      {projectFormDs.length ? getFormContent(projectFormDs) : (
+        <span className={`${prefixCls}-title-empty`}>{formatMessage({ id: `${intlPrefix}.settings.project.empty` })}</span>
+      )}
+      <div className={`${prefixCls}-title-app`}>
+        {formatMessage({ id: `${intlPrefix}.settings.app` })}
+      </div>
+      {appFormDs.length ? getFormContent(appFormDs) : (
+        <span className={`${prefixCls}-title-empty`}>{formatMessage({ id: `${intlPrefix}.settings.app.empty` })}</span>
+      )}
     </div>
-    {projectFormDs.length ? getFormContent(projectFormDs) : (
-      <span className={`${prefixCls}-title-empty`}>{formatMessage({ id: `${intlPrefix}.settings.project.empty` })}</span>
-    )}
-    <div className={`${prefixCls}-title-app`}>
-      {formatMessage({ id: `${intlPrefix}.settings.app` })}
-    </div>
-    {appFormDs.length ? getFormContent(appFormDs) : (
-      <span className={`${prefixCls}-title-empty`}>{formatMessage({ id: `${intlPrefix}.settings.app.empty` })}</span>
-    )}
-  </div>);
+  );
 });

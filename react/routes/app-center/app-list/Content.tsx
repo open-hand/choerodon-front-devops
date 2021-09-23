@@ -6,6 +6,7 @@ import {
 import { Modal } from 'choerodon-ui/pro';
 import { TabCode } from '@choerodon/master';
 import { useHistory, useLocation } from 'react-router';
+import { Loading } from '@choerodon/components';
 import { LARGE, SMALL } from '@/utils/getModalWidth';
 import ContentHeader from '@/routes/app-center/app-list/content-header';
 import Deploy from '@/routes/deployment/modals/deploy';
@@ -15,7 +16,6 @@ import LinkService from '@/routes/app-center/app-list/components/link-service';
 import ContentList from '@/routes/app-center/app-list/content-list';
 import { useAppCenterListStore } from '@/routes/app-center/app-list/stores';
 import EmptyPage from '@/components/empty-page';
-import Loading from '@/components/loading';
 
 import './index.less';
 
@@ -141,7 +141,7 @@ const AppCenterContent = () => {
 
   const getContent = useMemo(() => {
     if (listDs.status === 'loading' || !listDs) {
-      return <Loading display />;
+      return <Loading display type="c7n" />;
     }
     if (listDs && !listDs.length) {
       // @ts-ignore

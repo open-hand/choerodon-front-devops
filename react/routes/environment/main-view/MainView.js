@@ -1,7 +1,9 @@
-import React, { useRef, lazy, Suspense, useMemo } from 'react';
+import React, {
+  useRef, lazy, Suspense, useMemo,
+} from 'react';
 import { observer } from 'mobx-react-lite';
+import { Loading } from '@choerodon/components';
 import DragBar from '../../../components/drag-bar';
-import Loading from '../../../components/loading';
 import Sidebar from './sidebar';
 import { useEnvironmentStore } from '../stores';
 import { useMainStore } from './stores';
@@ -31,22 +33,25 @@ const MainView = observer(() => {
       [DETAIL_ITEM]: <Detail />,
     };
     return cmMaps[itemType]
-      ? <Suspense fallback={<Loading display />}>{cmMaps[itemType]}</Suspense>
-      : <Loading display />;
+      ? <Suspense fallback={<Loading display type="c7n" />}>{cmMaps[itemType]}</Suspense>
+      : <Loading display type="c7n" />;
   }, [itemType]);
 
   function getMainView() {
     if (!treeDs.length && treeDs.status === 'ready') {
-      return <div
-        className={`${prefixCls}-wrap`}
-      >
-        <Suspense fallback={<span />}>
-          <EmptyPage />
-        </Suspense>
-        <div>请先创建分组！</div>
-      </div>;
-    } else {
-      return <div
+      return (
+        <div
+          className={`${prefixCls}-wrap`}
+        >
+          <Suspense fallback={<span />}>
+            <EmptyPage />
+          </Suspense>
+          <div>请先创建分组！</div>
+        </div>
+      );
+    }
+    return (
+      <div
         ref={rootRef}
         className={`${prefixCls}-wrap`}
       >
@@ -58,8 +63,8 @@ const MainView = observer(() => {
         <div className={`${prefixCls}-main ${prefixCls}-animate`}>
           {content}
         </div>
-      </div>;
-    }
+      </div>
+    );
   }
 
   return getMainView();

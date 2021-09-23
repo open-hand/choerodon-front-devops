@@ -3,9 +3,9 @@ import React, {
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
+import { Loading } from '@choerodon/components';
 import Sidebar from './sidebar';
 import DragBar from '../../../components/drag-bar';
-import Loading from '../../../components/loading';
 import EmptyPage from '../../../components/empty-page';
 import { AppDeletionsModal } from '@/components/app-deletion-with-vertification-code';
 import { useResourceStore } from '../stores';
@@ -91,7 +91,7 @@ const MainView = observer(() => {
     const {
       getSelectedMenu: { itemType },
     } = resourceStore;
-    if (!itemType) return <Loading display />;
+    if (!itemType) return <Loading display type="c7n" />;
     const cmMaps = {
       // [ENV_ITEM]: getViewType === IST_VIEW_TYPE ? <EnvContent /> : <ResourceEnvContent />,
       [ENV_ITEM]: <ResourceEnvContent />,
@@ -114,7 +114,7 @@ const MainView = observer(() => {
       [WORKLOAD_GROUP]: <WorkloadContent />,
     };
     return cmMaps[itemType]
-      ? <Suspense fallback={<Loading display />}>{cmMaps[itemType]}</Suspense>
+      ? <Suspense fallback={<Loading display type="c7n" />}>{cmMaps[itemType]}</Suspense>
       : (
         <EmptyPage
           title="没有该类型资源"
