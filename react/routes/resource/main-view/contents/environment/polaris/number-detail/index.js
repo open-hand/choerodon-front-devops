@@ -33,7 +33,7 @@ const categoryGroup = [
   },
   {
     category_type: 'instanceCount',
-    name: '实例数量',
+    name: 'Chart应用数量',
     icon: 'instance_outline',
   },
   {
