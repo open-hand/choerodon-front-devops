@@ -4,19 +4,16 @@ import React, {
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { useHistory, useLocation } from 'react-router';
-import { Modal } from 'choerodon-ui/pro';
 import {
   CHART_CATERGORY,
-  DEPLOY_TYPE, ENV_TAB,
+  DEPLOY_TYPE,
 } from './CONST';
 
-import { hostApi } from '@/api';
 import {
   openDelete,
   useAppDeletionWithVertificationStore,
   AppDeletionWithVertificationStoreProps,
 } from '@/components/app-deletion-with-vertification-code';
-import { deploymentsApi } from '@/api/Deployments';
 import { appTypes } from '@/components/app-deletion-with-vertification-code/interface';
 
 type deletEnvProps ={
@@ -42,7 +39,6 @@ interface ContextProps {
   }
   deletionStore: AppDeletionWithVertificationStoreProps
   match:any
-  openDeleteHostAppModal: (hostId:string, instanceId:string, callback?:CallableFunction) => any
   deleteEnvApp: (props:deletEnvProps)=>any
   goBackHomeBaby: (...args:any[])=>any
 }
@@ -72,28 +68,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     history.push({ pathname: '/devops/application-center', search: location.search });
   }
 
-  function openDeleteHostAppModal(hostId: string, instanceId: string, callback?:CallableFunction) {
-    async function deleteHostApp() {
-      try {
-        const res = await hostApi.jarDelete(hostId, instanceId);
-        if (res && res?.failed) {
-          return res;
-        }
-        typeof callback === 'function' && callback();
-        return res;
-      } catch (error) {
-        throw new Error(error);
-      }
-    }
-    Modal.open({
-      key: Modal.key(),
-      title: '删除应用',
-      children: '确认删除此应用吗？',
-      okText: '删除',
-      onOk: deleteHostApp,
-    });
-  }
-
   // 删除chart和部署组的
   async function deleteEnvApp({
     appCatergoryCode, envId, instanceId, instanceName, callback,
@@ -116,7 +90,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     formatMessage,
     mainTabKeys,
     deletionStore,
-    openDeleteHostAppModal,
     deleteEnvApp,
     goBackHomeBaby,
   };

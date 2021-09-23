@@ -94,6 +94,13 @@ class DeployAppCenterApi extends Api<DeployAppCenterApi> {
       },
     });
   }
+
+  checkPipelinelinked(appId:string) {
+    return this.request({
+      method: 'get',
+      url: `${this.prefix}/${appId}/pipeline_reference`,
+    });
+  }
 }
 
 const deployAppCenterApi = new DeployAppCenterApi();

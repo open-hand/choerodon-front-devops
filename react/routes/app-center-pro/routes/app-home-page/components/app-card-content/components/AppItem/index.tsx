@@ -19,6 +19,7 @@ import AppStatus from '@/routes/app-center-pro/components/AppStatus';
 import UPDATE_IMG from '@/routes/app-center-pro/assets/update.svg';
 import { openMarketUpgradeModal } from '@/components/app-upgrade';
 import { openHzeroUpgradeModal } from '@/components/app-upgrade-hzero';
+import openDeleteHostAppModal from '@/components/app-deletion-host';
 
 const AppItem = observer(({
   record,
@@ -30,7 +31,6 @@ const AppItem = observer(({
   refresh:(...agrs:any[])=>any
 }) => {
   const {
-    openDeleteHostAppModal,
     deleteEnvApp,
   } = useAppCenterProStore();
 
@@ -106,10 +106,10 @@ const AppItem = observer(({
     isEnv ? deleteEnvApp({
       appCatergoryCode,
       envId,
-      instanceId,
+      instanceId: id,
       instanceName: name,
       callback: refresh,
-    }) : openDeleteHostAppModal(hostId, id, refresh);
+    }) : openDeleteHostAppModal(hostId, id, name, refresh);
   };
 
   const stopObj = {

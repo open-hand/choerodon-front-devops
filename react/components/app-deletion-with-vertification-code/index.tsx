@@ -3,17 +3,27 @@ import { isEmpty } from 'lodash';
 import { Modal } from 'choerodon-ui/pro';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { appServiceInstanceApi } from '@/api';
+import { appServiceInstanceApi, deployAppCenterApi, hostApi } from '@/api';
 import { openDeleteProps, activeType } from './interface';
 
 export { default as AppDeletionsModal } from './components/delete-modal';
 
 const stopKey2 = Modal.key();
 
-async function checkPipelineReference({ instanceId }:Pick<openDeleteProps, 'instanceId'>) {
+async function checkPipelineReference({ instanceId, type = 'instance' }:Pick<openDeleteProps, 'instanceId' | 'type'>) {
+  const isAppCenterEnvApp = ['instance', 'deployGroup'].includes(type);
+  const isHostApp = type === 'host';
+  let hanlder;
+  if (isAppCenterEnvApp) {
+    hanlder = deployAppCenterApi.checkPipelinelinked(instanceId);
+  } else if (isHostApp) {
+    hanlder = hostApi.checkAppPipelineLinked(instanceId);
+  } else {
+    hanlder = appServiceInstanceApi.checkPipelineReference(instanceId);
+  }
   try {
-    const res = await appServiceInstanceApi.checkPipelineReference(instanceId);
-    if (res && res.pipelineName) {
+    const res = await hanlder;
+    if (res && res?.pipelineName) {
       return res;
     }
     // 实例没有关联的应用流水线时返回false
@@ -23,7 +33,7 @@ async function checkPipelineReference({ instanceId }:Pick<openDeleteProps, 'inst
   }
 }
 
-function openPipelineReferenceModal({
+export function openPipelineReferenceModal({
   active, hasPipelineReference, instanceName,
 }:{
   active: activeType,
@@ -44,13 +54,18 @@ function openPipelineReferenceModal({
 // deletionStore 可以从app-deletion-with-vertification-code组件下的deletionStore
 // 这个模板里头拿，直接new deletionStore它就行
 async function openDelete({
-  envId, instanceName, instanceId, callback, deletionStore, type,
+  envId, instanceName, instanceId, callback, deletionStore, type = 'instance',
 }:openDeleteProps) {
   const hasPipelineReference = await checkPipelineReference({
     instanceId,
+    type,
   });
   if (!isEmpty(hasPipelineReference)) {
-    openPipelineReferenceModal({ active: 'delete', hasPipelineReference, instanceName });
+    openPipelineReferenceModal({
+      active: 'delete',
+      hasPipelineReference,
+      instanceName,
+    });
   } else {
     if (!deletionStore?.openDeleteModal) {
       throw new Error('the openDeleteModal trigger needs openDeleteModal function in deletionStore');

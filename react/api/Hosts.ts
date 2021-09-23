@@ -57,6 +57,13 @@ class HostApi extends Api<HostApi> {
       },
     });
   }
+
+  checkAppPipelineLinked(appId:string) {
+    return this.request({
+      url: `${this.prefix}/apps/${appId}/pipeline_reference`,
+      method: 'get',
+    });
+  }
 }
 
 const hostApi = new HostApi();

@@ -29,10 +29,10 @@ import AppCenterProServices from '@/routes/app-center-pro/services';
 import {
   openAppConfigModal, openContainerConfigModal, openDeployGroupConfigModal, openHostAppConfigModal,
 } from '@/components/appCenter-editModal';
+import openDeleteHostAppModal from '@/components/app-deletion-host';
 
 const DetailsTabsHeaderButtons = () => {
   const {
-    openDeleteHostAppModal,
     goBackHomeBaby,
     deleteEnvApp,
     formatMessage,
@@ -260,7 +260,7 @@ const DetailsTabsHeaderButtons = () => {
         instanceId,
         instanceName: name,
         callback: goBackHomeBaby,
-      }) : openDeleteHostAppModal(hostOrEnvId, appId, goBackHomeBaby);
+      }) : openDeleteHostAppModal(hostOrEnvId, appId, name, goBackHomeBaby);
     },
   };
 
