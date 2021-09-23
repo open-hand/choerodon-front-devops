@@ -251,7 +251,7 @@ const AppItem = observer(({
   return (
     <div className={`${subfixCls}-list-card`}>
       <aside>
-        {envConnected && renderAction()}
+        {((isEnv && envConnected) || isHost) && renderAction()}
       </aside>
       {
         upgradeAvailable && currentVersionAvailable && (

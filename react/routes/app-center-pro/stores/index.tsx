@@ -94,34 +94,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     });
   }
 
-  // 部署组的删除
-  function openDeleteGroupModal({
-    instanceId, callback,
-  }:{
-    instanceId:string,
-    callback:(...args:[])=>any
-  }) {
-    async function deleteDeployGroupApp() {
-      try {
-        const res = await deploymentsApi.deleleDeployGroupApp(instanceId);
-        if (res && res.failed) {
-          return res;
-        }
-        callback();
-        return true;
-      } catch (error) {
-        throw new Error(error);
-      }
-    }
-    Modal.open({
-      key: Modal.key(),
-      title: '删除应用',
-      children: '确认删除此应用吗？',
-      okText: '删除',
-      onOk: deleteDeployGroupApp,
-    });
-  }
-
   // 删除chart和部署组的
   async function deleteEnvApp({
     appCatergoryCode, envId, instanceId, instanceName, callback,
