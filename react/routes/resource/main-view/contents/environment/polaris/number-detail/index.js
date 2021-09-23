@@ -1,4 +1,6 @@
-import React, { Fragment, Suspense, useMemo, useState, useEffect } from 'react';
+import React, {
+  Fragment, Suspense, useMemo, useState, useEffect,
+} from 'react';
 import { observer } from 'mobx-react-lite';
 import { Spin, Button, Icon } from 'choerodon-ui';
 import { useEnvironmentStore } from '../../stores';
@@ -62,23 +64,28 @@ const numberDetail = observer(({ isLoading }) => {
   }
 
   function renderNumPanel() {
-    return checkGroup.map((item) => <div className={`${prefixCls}-number-check`} key={item.checkType}>
-      <Icon type={item.icon} />
-      <span>
-        {!isLoading ? (polarisNumDS.current && (polarisNumDS.current.get(item.checkType) || 0)) : '-'}&nbsp;
-        {item.text}
-      </span>
-    </div>);
+    return checkGroup.map((item) => (
+      <div className={`${prefixCls}-number-check`} key={item.checkType}>
+        <Icon type={item.icon} />
+        <span>
+          {!isLoading ? (polarisNumDS.current && (polarisNumDS.current.get(item.checkType) || 0)) : '-'}
+          &nbsp;
+          {item.text}
+        </span>
+      </div>
+    ));
   }
 
   function renderDetailPanel(category) {
-    return categoryGroup.map((item, key) => <div className={`${prefixCls}-number-category`} key={item.checkType}>
-      <Icon type={item.icon} />
-      <div className={`${prefixCls}-number-category-detail`}>
-        <span>{item.name}</span>
-        <span>{polarisNumDS.current ? (polarisNumDS.current.get(item.category_type) || '-') : '-'}</span>
+    return categoryGroup.map((item, key) => (
+      <div className={`${prefixCls}-number-category`} key={item.checkType}>
+        <Icon type={item.icon} />
+        <div className={`${prefixCls}-number-category-detail`}>
+          <span>{item.name}</span>
+          <span>{polarisNumDS.current ? (polarisNumDS.current.get(item.category_type) || '-') : '-'}</span>
+        </div>
       </div>
-    </div>);
+    ));
   }
 
   function renderRadar() {
