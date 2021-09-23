@@ -387,6 +387,7 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
           dataSet.current.set(mapping.marketVersion.name, undefined);
           dataSet.current.set(mapping.serviceVersion.name, undefined);
           dataSet.current.set(mapping.marketServiceVersion.name, undefined);
+          dataSet.current.set(mapping.originValue.name, undefined);
           break;
         }
         case mapping.serviceVersion.name: {
@@ -398,6 +399,7 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
               getYamlValues = await appServiceInstanceApi.getDeployValue(value);
             }
             record.set(mapping.value.name, getYamlValues?.yaml);
+            record.set(mapping.originValue.name, getYamlValues?.yaml);
           }
           break;
         }

@@ -246,12 +246,6 @@ const Deployment = withRouter(observer((props) => {
   }
 
   function renderInstance({ value, record }) {
-    if (record.get('deployMode') === 'host') {
-      return '';
-    }
-    if (record.get('deployMode') === 'env' && !value) {
-      return '';
-    }
     return (
       <Tooltip title={value || ''}>
         <span

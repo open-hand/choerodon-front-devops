@@ -27,7 +27,7 @@ export default ({ formatMessage, projectId, envId }) => {
         data.max = 32767;
         data.failedMsg = 'network.nport.check.failed';
         break;
-      default:
+      case 'port':
         data.typeMsg = 'network.port.check.repeat';//端口号重复
     }
     if(isRepeat){
