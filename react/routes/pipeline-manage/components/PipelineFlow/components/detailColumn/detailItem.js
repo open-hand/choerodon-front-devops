@@ -164,6 +164,8 @@ const DetailItem = (props) => {
       deployTypeId,
     } = cdAuto || {};
 
+    const verisonName = (jobStatus !== 'created' && cdAuto?.appName) || '-';
+
     return (
       <main>
         <div>
@@ -173,18 +175,20 @@ const DetailItem = (props) => {
         <div>
           <span>生成应用:</span>
           <Tooltip title={cdAuto?.appName}>
-            <span
-              style={{ color: '#3F51B5', cursor: 'pointer' }}
-              onClick={() => linkToAppDetailsInAppCenter({
-                appId,
-                chartSource,
-                rdupmType,
-                deployType,
-                deployTypeId,
-              })}
-            >
-              {(jobStatus !== 'created' && cdAuto?.appName) || '-'}
-            </span>
+            {appId ? (
+              <span
+                style={{ color: '#3F51B5', cursor: 'pointer' }}
+                onClick={() => linkToAppDetailsInAppCenter({
+                  appId,
+                  chartSource,
+                  rdupmType,
+                  deployType,
+                  deployTypeId,
+                })}
+              >
+                {verisonName}
+              </span>
+            ) : <span>{verisonName}</span>}
           </Tooltip>
         </div>
       </main>

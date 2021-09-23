@@ -17,10 +17,12 @@ import {
   AppDeletionWithVertificationStoreProps,
 } from '@/components/app-deletion-with-vertification-code';
 import { deploymentsApi } from '@/api/Deployments';
+import { appTypes } from '@/components/app-deletion-with-vertification-code/interface';
 
 type deletEnvProps ={
   appCatergoryCode:string,
   envId:string,
+  type?: appTypes
   instanceId:string,
   instanceName:string,
   callback:(...args:[])=>any,
@@ -124,15 +126,15 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   async function deleteEnvApp({
     appCatergoryCode, envId, instanceId, instanceName, callback,
   }:deletEnvProps) {
-    if (appCatergoryCode === CHART_CATERGORY) {
-      openDelete({
-        envId, instanceId, instanceName, callback, projectId, deletionStore,
-      });
-    } else {
-      openDeleteGroupModal({
-        instanceId, callback,
-      });
-    }
+    const appType = appCatergoryCode === CHART_CATERGORY ? 'instance' : 'deployGroup';
+    openDelete({
+      envId,
+      instanceId,
+      instanceName,
+      callback,
+      deletionStore,
+      type: appType,
+    });
   }
 
   const value = {
