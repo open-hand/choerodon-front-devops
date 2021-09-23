@@ -21,7 +21,7 @@ import IssueDetail from './issue-detail';
 import MouserOverWrapper from '../../../../components/MouseOverWrapper';
 import UserInfo from '../../../../components/userInfo';
 import TimePopover from '../../../../components/timePopover';
-import Loading from '../../../../components/loading';
+import { Loading } from '@choerodon/components';
 import StatusIcon from '../../../../components/StatusIcon/StatusIcon';
 import handleMapStore from '../../main-view/store/handleMapStore';
 import { useTableStore } from './stores';
@@ -477,7 +477,7 @@ function Branch(props) {
             </div>
             <div className={styles?.['c7n-branch-theme4-table-column-side-line']}>
               <Icon type="point" />
-              <a href={record.get('commitUrl')}>{ record.get('sha')?.substring(0, 8) }</a>
+              <a href={record.get('commitUrl')}>{record.get('sha')?.substring(0, 8)}</a>
               {record.get('commitUserRealName') && (
                 <UserInfo
                   name={record.get('commitUserRealName')}
@@ -486,7 +486,7 @@ function Branch(props) {
                   showName={false}
                 />
               )}
-              <span className={styles?.['c7n-branch-theme4-table-column-side-line-commitContent']}>{ record.get('commitContent') }&nbsp;·&nbsp;</span>
+              <span className={styles?.['c7n-branch-theme4-table-column-side-line-commitContent']}>{record.get('commitContent')}&nbsp;·&nbsp;</span>
               <UserInfo
                 name={record.get('createUserRealName')}
                 id={record.get('createUserName')}
@@ -494,7 +494,7 @@ function Branch(props) {
                 showName={false}
               />
               <span>创建于</span>
-              <TimePopover content={record.get('creationDate')}/>
+              <TimePopover content={record.get('creationDate')} />
             </div>
           </div>
         </div>
@@ -542,8 +542,8 @@ function Branch(props) {
       className={classNames('c7n-region c7n-branch', styles?.['c7n-branch-theme4-page'])}
       service={['choerodon.code.project.develop.code-management.ps.branch.create']}
     >
-      {!appServiceId || appServiceDs.status !== 'ready' ? <Loading display /> : tableBranch()}
-    </Page>
+      {!appServiceId || appServiceDs.status !== 'ready' ? <Loading display type="c7n" /> : tableBranch()}
+          </Page>
   );
 }
 export default injectIntl(observer(Branch));

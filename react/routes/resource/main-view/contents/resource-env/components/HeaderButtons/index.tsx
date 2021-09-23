@@ -3,8 +3,8 @@ import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
 import { HeaderButtons } from '@choerodon/master';
 import { NewTips } from '@choerodon/components';
-import EnvDetail from '../../../../../../../components/env-detail';
-import DeployConfigForm from '../../../../../../../components/deploy-config-form';
+import EnvDetail from '@/components/env-detail';
+import DeployConfigForm from '@/components/deploy-config-form';
 import { useResourceStore } from '../../../../../stores';
 import { useREStore } from '../../stores';
 import PermissionPage from './components/permission';
@@ -120,7 +120,7 @@ const REModals = observer(() => {
     });
   }
 
-  function handleCreateCallback(type: 'deployGroup' | 'chart', { envId }:any) {
+  async function handleCreateCallback(type: 'deployGroup' | 'chart', { envId }:any) {
     let menuData = {};
     switch (type) {
       case 'deployGroup':
@@ -148,16 +148,13 @@ const REModals = observer(() => {
       default:
         break;
     }
+    await refresh();
     setSelectedMenu(menuData);
     setExpandedKeys([`${envId}`]);
   }
 
   function getButtons() {
     return [
-      // {
-      //   name: 'test',
-      //   handler: () => handleCreateCallback('chart', { envId: id }),
-      // },
       {
         name: '创建应用',
         icon: 'playlist_add',

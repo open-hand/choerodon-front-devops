@@ -58,6 +58,7 @@ export default ({
     autoCreate: false,
     autoQueryAfterSubmit: false,
     paging: false,
+    dataToJSON: undefined,
     transport: {
       read: {
         url: DeployConfigApis.createDeployConfig(projectId),

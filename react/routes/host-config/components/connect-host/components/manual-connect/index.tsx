@@ -5,8 +5,6 @@ import { observer } from 'mobx-react-lite';
 import {
   message,
   Button,
-  Form,
-  Radio,
 } from 'choerodon-ui/pro';
 import { Alert } from 'choerodon-ui';
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -29,14 +27,9 @@ const ManualConnect = observer(() => {
     stepKeys: { ALL },
   } = useHostConnectStore();
 
-  const [docker, setDocker] = useState(true);
   const [command, setCommand] = useState(data || '');
 
   const newPrefixCls = useMemo(() => `${prefixCls}-manual`, []);
-  const permissionShell = useMemo(() => `
-  sudo gpasswd -a "\${USER}" docker\n
-  newgrp - docker
-  `, []);
 
   const goPrevious = useCallback(() => {
     mainStore.setCurrentStep(ALL);
@@ -84,40 +77,6 @@ const ManualConnect = observer(() => {
 
   return (
     <div className={`${newPrefixCls}`}>
-      <span className={`${newPrefixCls}-label`}>
-        主机是否支持Docker镜像部署
-      </span>
-      <Form columns={2}>
-        <Radio name="docker" checked={docker} value onChange={setDocker}>是</Radio>
-        <Radio name="docker" checked={!docker} value={false} onChange={setDocker}>否</Radio>
-      </Form>
-      {docker && (
-        <>
-          <Alert
-            className={`${newPrefixCls}-tips ${newPrefixCls}-tips-info`}
-            message={formatMessage({ id: `${intlPrefix}.connect.attention` })}
-            type="error"
-            showIcon
-            iconType="info"
-          />
-          <div className={`${newPrefixCls}-title`}>
-            <span>{formatMessage({ id: 'envPl.token' })}</span>
-          </div>
-          <div className={`${newPrefixCls}-content ${newPrefixCls}-content-mgb`}>
-            <span>{'sudo gpasswd -a "${USER}" docker'}</span>
-            <br />
-            <span>newgrp - docker</span>
-            <CopyToClipboard text={permissionShell} format>
-              <Button
-                icon="content_copy"
-                className={`${newPrefixCls}-copy`}
-                onClick={handleCopy}
-                funcType={'flat' as FuncType}
-              />
-            </CopyToClipboard>
-          </div>
-        </>
-      )}
       <Alert
         className={`${newPrefixCls}-tips`}
         message={formatMessage({ id: `${intlPrefix}.connect.tips` })}

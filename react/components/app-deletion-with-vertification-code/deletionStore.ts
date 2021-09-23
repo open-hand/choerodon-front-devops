@@ -9,6 +9,7 @@ import {
 } from '@/api';
 import { ingressApiConfig } from '@/api/Ingress';
 import { certificationsApiConfig } from '@/api/Certifications';
+import { deploymentsApiConfig } from '@/api/Deployments';
 
 type openDeleteProps = {
   envId:string
@@ -18,7 +19,7 @@ type openDeleteProps = {
   projectId:string
 }
 
-export default function useStore() {
+function useAppDeletionWithVertificationStore() {
   return useLocalStore(() => ({
     deleteArr: [],
     setDeleteArr(data:any) {
@@ -86,10 +87,15 @@ export default function useStore() {
         certificate: certificationsApiConfig.deleteInstance(id),
         configMap: configMapApiConfig.deleteInstance(id),
         secret: secretApiConfig.deleteInstance(envId, id),
+        deployGroup: deploymentsApiConfig.deleleDeployGroupApp(id),
       };
       return axios(url[type]);
     },
   }));
 }
 
-export type StoreProps = ReturnType<typeof useStore>;
+export {
+  useAppDeletionWithVertificationStore,
+};
+
+export type AppDeletionWithVertificationStoreProps = ReturnType<typeof useAppDeletionWithVertificationStore>;

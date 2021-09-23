@@ -461,7 +461,7 @@ const deployment = {
   'c7ncd.deployment.custom.delete.des': '确定要删除该自定义资源吗？',
   'c7ncd.deployment.config.delete.disable': '删除部署配置“{name}”',
   'c7ncd.deployment.config.delete.des': '确定要删除该部署配置吗？',
-  'c7ncd.deployment.config.delete.describe': '仅能删除没有关联任务和关联实例的部署配置。',
+  'c7ncd.deployment.config.delete.describe': '仅能删除没有关联流水线任务和关联Chart应用的部署配置。',
   'c7ncd.deployment.sync.empty': '目前部署同步正常，暂无错误信息',
   'c7ncd.deployment.permission.tab.tips':
     '当选择将权限分配至项目下所有成员时，此时便不能在列表中删除任何成员的权限；仅在选择将权限分配给项目下特定成员时，才能在下方列表中管理成员的权限。项目所有者的权限不能被删除',
@@ -3097,7 +3097,8 @@ const zhCN = {
   'resource.one.file': '仅能上传一个文件',
 
   // 删除弹框确认信息
-  'instance.delete': '删除应用',
+  'instance.delete': '删除Chart应用',
+  'deployGroup.delete': '删除部署组应用',
   'secret.delete': '删除密文',
   'configMap.delete': '删除配置映射',
   'ingress.delete': '删除域名',
@@ -3119,6 +3120,7 @@ const zhCN = {
   'certificate.delete.message': '删除证书后，将会导致与此证书相关的域名失效。确定要删除该证书吗？',
   'configMap.delete.message': '确认删除配置映射吗？',
   'secret.delete.message': '确认删除密文吗？',
+  'deployGroup.delete.message': '确认删除此部署组应用吗？',
 
   // 0.19
   'data.changed': '基本数据发生变化，已更新。',

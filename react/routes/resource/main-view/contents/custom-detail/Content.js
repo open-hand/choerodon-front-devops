@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import uuidv1 from 'uuid/v1';
 import Cookies from 'universal-cookie';
-import Loading from '../../../../../components/loading';
+import { Loading } from '@choerodon/components';
 import ResourceTitle from '../../components/resource-title';
 import { removeEndsChar } from '../../../../../utils';
 import { useResourceStore } from '../../../stores';
@@ -98,7 +98,7 @@ const Content = observer(() => {
         errorKey="commandErrors"
       />
       <pre className="custom-detail-section-content">
-        {loading ? <Loading display /> : value}
+        {loading ? <Loading display type="c7n" /> : value}
       </pre>
       <Modals />
     </div>

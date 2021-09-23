@@ -120,7 +120,7 @@ const ServiceContent = observer(() => {
   }, [serviceDs.current]);
 
   if (serviceDs.status === 'loading') {
-    return <Loading display />;
+    return <Loading display type="c7n" />;
   }
 
   if (!serviceDs.length) {

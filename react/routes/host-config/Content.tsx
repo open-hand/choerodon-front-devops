@@ -6,12 +6,12 @@ import {
 import {
   Modal,
 } from 'choerodon-ui/pro';
+import { Loading } from '@choerodon/components';
 import ContentHeader from '@/routes/host-config/components/content-header';
 import ContentList from '@/routes/host-config/components/content-list';
 import CreateHost from '@/routes/host-config/components/create-deploy-host';
 import ResourceContent from '@/routes/host-config/components/resource-content';
 import EmptyPage from '@/components/empty-page';
-import Loading from '@/components/loading';
 import { SMALL } from '@/utils/getModalWidth';
 import HostPermission from '@/routes/host-config/components/permission-management';
 import { useHostConfigStore } from './stores';
@@ -56,7 +56,7 @@ const HostConfig: React.FC<any> = observer((): any => {
 
   const getContent = useMemo(() => {
     if (listDs.status === 'loading' || !listDs) {
-      return <Loading display />;
+      return <Loading display type="c7n" />;
     }
     if (listDs && !listDs.length) {
       // @ts-ignore

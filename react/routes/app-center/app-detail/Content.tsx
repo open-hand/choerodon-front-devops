@@ -104,7 +104,7 @@ const AppCenterDetailContent = () => {
   const renderEnvOption = useCallback(({ value, text, record: envRecord }) => (text ? (
     <EnvOption
       connect={value?.connect || envRecord.get('connect')
-      || value?.hostStatus === 'connected' || envRecord.get('hostStatus') === 'connected'}
+        || value?.hostStatus === 'connected' || envRecord.get('hostStatus') === 'connected'}
       text={text}
     />
   ) : null), []);
@@ -114,7 +114,7 @@ const AppCenterDetailContent = () => {
   }), []);
 
   if (!record) {
-    return <Loading display />;
+    return <Loading display type="c7n" />;
   }
 
   return (

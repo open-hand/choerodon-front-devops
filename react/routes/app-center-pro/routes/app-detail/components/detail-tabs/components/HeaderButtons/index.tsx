@@ -330,7 +330,7 @@ const DetailsTabsHeaderButtons = () => {
     if (appCatergory.code === DEPLOY_CATERGORY) {
       data = [modifyAppObj, ...moreOpts];
     } else {
-      data = [modifyValues, modifyAppObj, createSource, upGrade, redeploy, ...moreOpts];
+      data = [modifyAppObj, createSource, upGrade, redeploy, ...moreOpts];
     }
     return data;
   };
