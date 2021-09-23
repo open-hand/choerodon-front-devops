@@ -17,10 +17,12 @@ import {
   AppDeletionWithVertificationStoreProps,
 } from '@/components/app-deletion-with-vertification-code';
 import { deploymentsApi } from '@/api/Deployments';
+import { appTypes } from '@/components/app-deletion-with-vertification-code/interface';
 
 type deletEnvProps ={
   appCatergoryCode:string,
   envId:string,
+  type?: appTypes
   instanceId:string,
   instanceName:string,
   callback:(...args:[])=>any,
@@ -92,47 +94,19 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     });
   }
 
-  // 部署组的删除
-  function openDeleteGroupModal({
-    instanceId, callback,
-  }:{
-    instanceId:string,
-    callback:(...args:[])=>any
-  }) {
-    async function deleteDeployGroupApp() {
-      try {
-        const res = await deploymentsApi.deleleDeployGroupApp(instanceId);
-        if (res && res.failed) {
-          return res;
-        }
-        callback();
-        return true;
-      } catch (error) {
-        throw new Error(error);
-      }
-    }
-    Modal.open({
-      key: Modal.key(),
-      title: '删除应用',
-      children: '确认删除此应用吗？',
-      okText: '删除',
-      onOk: deleteDeployGroupApp,
-    });
-  }
-
   // 删除chart和部署组的
   async function deleteEnvApp({
     appCatergoryCode, envId, instanceId, instanceName, callback,
   }:deletEnvProps) {
-    if (appCatergoryCode === CHART_CATERGORY) {
-      openDelete({
-        envId, instanceId, instanceName, callback, projectId, deletionStore,
-      });
-    } else {
-      openDeleteGroupModal({
-        instanceId, callback,
-      });
-    }
+    const appType = appCatergoryCode === CHART_CATERGORY ? 'instance' : 'deployGroup';
+    openDelete({
+      envId,
+      instanceId,
+      instanceName,
+      callback,
+      deletionStore,
+      type: appType,
+    });
   }
 
   const value = {

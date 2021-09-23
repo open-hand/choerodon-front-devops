@@ -11,13 +11,13 @@ import {
 } from 'choerodon-ui/pro';
 import { map, filter, isEmpty } from 'lodash';
 import classnames from 'classnames';
+import { axios } from '@choerodon/boot';
+import { Loading } from '@choerodon/components';
 import eventStopProp from '@/utils/eventStopProp';
 import {
   Record, FuncType, Placements,
 } from '@/interface';
 import YamlEditor from '@/components/yamlEditor';
-import { axios } from '@choerodon/boot';
-import { Loading } from '@choerodon/components';
 import { useHzeroDeployStore } from '../../stores';
 
 interface ServiceItemProps {
@@ -120,7 +120,7 @@ const ServiceContent = observer(() => {
   }, [serviceDs.current]);
 
   if (serviceDs.status === 'loading') {
-    return <Loading display />;
+    return <Loading display type="c7n" />;
   }
 
   if (!serviceDs.length) {

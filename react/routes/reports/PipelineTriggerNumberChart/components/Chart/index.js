@@ -3,9 +3,9 @@ import ReactEcharts from 'echarts-for-react';
 import React from 'react';
 import map from 'lodash/map';
 import reduce from 'lodash/reduce';
-import { useReportsStore } from '@/routes/reports/stores';
-import Loading from '@/components/loading';
 import { observer } from 'mobx-react-lite';
+import { Loading } from '@choerodon/components';
+import { useReportsStore } from '@/routes/reports/stores';
 import { usePipelineTriggerNumberStore } from '../../stores';
 import mapings from '../../stores/mappings';
 import { getAxis } from '../../../util';
@@ -199,7 +199,7 @@ const Chart = (props) => {
   };
 
   if (pipelineChartDs.status === 'loading') {
-    return <Loading display />;
+    return <Loading display type="c7n" />;
   }
 
   return (

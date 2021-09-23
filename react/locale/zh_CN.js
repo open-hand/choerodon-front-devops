@@ -3097,7 +3097,8 @@ const zhCN = {
   'resource.one.file': '仅能上传一个文件',
 
   // 删除弹框确认信息
-  'instance.delete': '删除应用',
+  'instance.delete': '删除Chart应用',
+  'deployGroup.delete': '删除部署组应用',
   'secret.delete': '删除密文',
   'configMap.delete': '删除配置映射',
   'ingress.delete': '删除域名',
@@ -3119,6 +3120,7 @@ const zhCN = {
   'certificate.delete.message': '删除证书后，将会导致与此证书相关的域名失效。确定要删除该证书吗？',
   'configMap.delete.message': '确认删除配置映射吗？',
   'secret.delete.message': '确认删除密文吗？',
+  'deployGroup.delete.message': '确认删除此部署组应用吗？',
 
   // 0.19
   'data.changed': '基本数据发生变化，已更新。',

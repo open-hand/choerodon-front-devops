@@ -1,13 +1,16 @@
-import React, { Fragment, Suspense, useMemo, useState, useEffect } from 'react';
+/* eslint-disable react/jsx-no-bind */
+import React, {
+  Fragment, Suspense, useMemo, useState, useEffect,
+} from 'react';
 import { observer } from 'mobx-react-lite';
 import { Button, Spin } from 'choerodon-ui/pro';
 import { Choerodon } from '@choerodon/boot';
+import { Loading } from '@choerodon/components';
 import EmptyPage from '../../../../../../components/empty-page';
 import NumberDetail from './number-detail';
 import CollapseDetail from './collapse-detail';
 import { useResourceStore } from '../../../../stores';
 import { useEnvironmentStore } from '../stores';
-import Loading from '../../../../../../components/loading';
 import { useInterval } from '../../../../../../components/costom-hooks';
 
 import './index.less';
@@ -71,11 +74,11 @@ const polaris = observer((props) => {
     const isLoading = loading || statusLoading;
     const envStatus = baseInfoDs.current && baseInfoDs.current.get('connect');
     if (envStore.getPolarisLoading) {
-      return <Loading display />;
+      return <Loading display type="c7n" />;
     }
     if (envStore.getHasInstance) {
       return (
-        <Fragment>
+        <>
           <Button
             className={`${prefixCls}-polaris-wrap-btn`}
             color="primary"
@@ -87,17 +90,16 @@ const polaris = observer((props) => {
           </Button>
           <NumberDetail isLoading={isLoading} />
           <CollapseDetail loading={isLoading} />
-        </Fragment>
-      );
-    } else {
-      return (
-        <EmptyPage
-          title={formatMessage({ id: 'empty.title.instance' })}
-          describe={formatMessage({ id: `${intlPrefix}.polaris.empty.des` })}
-          access
-        />
+        </>
       );
     }
+    return (
+      <EmptyPage
+        title={formatMessage({ id: 'empty.title.instance' })}
+        describe={formatMessage({ id: `${intlPrefix}.polaris.empty.des` })}
+        access
+      />
+    );
   }
 
   useInterval(loadData, delay);

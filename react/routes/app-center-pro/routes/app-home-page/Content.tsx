@@ -61,7 +61,7 @@ const AppHomePage = () => {
 
   const getContent = useMemo(() => {
     if (listDs.status === 'loading' || !listDs) {
-      return <Loading display />;
+      return <Loading display type="c7n" />;
     }
     if (listDs && !listDs.length) {
       // @ts-ignore

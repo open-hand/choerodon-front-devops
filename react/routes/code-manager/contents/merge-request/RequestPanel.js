@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import { Page, Permission } from '@choerodon/boot';
 import map from 'lodash/map';
 import { useRequestStore } from './stores';
-import Loading from '../../../../components/loading';
+import { Loading } from '@choerodon/components';
 import MouseOverWrapper from '../../../../components/MouseOverWrapper';
 import ClickText from '../../../../components/click-text';
 import TimePopover from '../../../../components/timePopover';
@@ -225,7 +225,7 @@ const RequestPanel = withRouter(observer((props) => {
       service={[]}
     >
       {appServiceDs.status !== 'ready' || !appId
-        ? <Loading display />
+        ? <Loading display type="c7n" />
         : (!mergedRequestStore.getIsEmpty ? (<Fragment>
           <Radio.Group
             className="c7ncd-merge-radio"

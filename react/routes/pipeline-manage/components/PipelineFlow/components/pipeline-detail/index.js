@@ -5,10 +5,10 @@ import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
 import forEach from 'lodash/forEach';
 import { Tooltip } from 'choerodon-ui/pro';
+import { Loading } from '@choerodon/components';
 import jobTypesMappings from '@/routes/pipeline-manage/stores/jobsTypeMappings';
 import { usePipelineManageStore } from '../../../../stores';
 import StageType from '../stage-type';
-import Loading from '../../../../../../components/loading';
 
 import './index.less';
 
@@ -249,6 +249,6 @@ export default observer((props) => {
           ))}
         </div>
       </div>
-    ) : <Loading display />
+    ) : <Loading display type="c7n" />
   );
 });

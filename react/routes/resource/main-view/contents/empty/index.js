@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { HeaderButtons } from '@choerodon/master';
+import { Loading } from '@choerodon/components';
 import checkPermission from '../../../../../utils/checkPermission';
 import EmptyPage from '../../../../../components/empty-page';
-import Loading from '../../../../../components/loading';
 import { useResourceStore } from '../../../stores';
 
 export default function EmptyShown() {
@@ -61,7 +61,7 @@ export default function EmptyShown() {
           access={access}
           btnText={formatMessage({ id: 'empty.link.env' })}
         />
-      ) : <Loading display />}
+      ) : <Loading display type="c7n" />}
     </>
   );
 }

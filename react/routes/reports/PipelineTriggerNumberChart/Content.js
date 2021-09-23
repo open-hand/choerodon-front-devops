@@ -5,7 +5,7 @@ import {
 } from '@choerodon/boot';
 import { Button, Form, Select } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
-import Loading from '@/components/loading';
+import { Loading } from '@choerodon/components';
 import PipelineTable from '@/routes/reports/pipeline-duration/components/table';
 import TimePicker from '../Component/TimePicker';
 import NoChart from '../Component/NoChart';
@@ -86,7 +86,7 @@ const PipelineTriggerNumber = () => {
 
   const renderContent = () => {
     if (pipelineSelectDs.status === 'loading') {
-      return <Loading display />;
+      return <Loading display type="c7n" />;
     }
     if (!pipelineSelectDs.length) {
       return <NoChart getProRole={ReportsStore.getProRole} type="pipeline" />;

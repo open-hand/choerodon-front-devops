@@ -7,7 +7,7 @@ import {
 } from '@choerodon/boot';
 import { Button, Form, Select } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
-import Loading from '@/components/loading';
+import { Loading } from '@choerodon/components';
 import MaxTagPopover from '@/routes/reports/Component/MaxTagPopover';
 import TimePicker from '../Component/TimePicker';
 import NoChart from '../Component/NoChart';
@@ -64,7 +64,7 @@ const PipelineTriggerDuration = () => {
 
   const renderContent = () => {
     if (optionsDs.status === 'loading') {
-      return <Loading display />;
+      return <Loading display type="c7n" />;
     }
     if (!optionsDs.length) {
       // @ts-ignore

@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { Icon } from 'choerodon-ui/pro';
 import { Page } from '@choerodon/boot';
 import EmptyPage from '../../../../../components/empty-page';
-import Loading from '../../../../../components/loading';
+import { Loading } from '@choerodon/components';
 import Percentage from '../../../../../components/percentage/Percentage';
 import Rating from '../../../../../components/rating/Rating';
 import { QUALITY_LIST, OBJECT_TYPE } from './components/Constants';
@@ -86,21 +86,21 @@ export default withRouter(observer((props) => {
                           <span className="block-number-percentage">{innerValue.replace(/\d+(\.\d+)?/g, '')}</span>
                           {isPercent && <span className="block-number-percentage">%</span>}
                         </a>) : (
-                          <span className={`block-number ${!innerValue && 'block-number-noValue'}`}>{innerValue || formatMessage({ id: 'nodata' })}</span>
+                        <span className={`block-number ${!innerValue && 'block-number-noValue'}`}>{innerValue || formatMessage({ id: 'nodata' })}</span>
                       )}
                       {rate && key !== 'duplicated_lines_density' && <Rating rating={rate} />}
                       {key === 'coverage' && <Percentage data={Number(innerValue)} />}
                       {key === 'duplicated_lines_density' && <Rating rating={rate} size="18px" type="pie" />}
                       {hasReport && (
-                      <Link
-                        to={{
-                          pathname: '/rdqam/report/code-quality-workplace',
-                          search,
-                          state: { appId: appServiceId, type: OBJECT_TYPE[objKey] },
-                        }}
-                      >
-                        <Icon type="timeline" className="reports-icon" />
-                      </Link>
+                        <Link
+                          to={{
+                            pathname: '/rdqam/report/code-quality-workplace',
+                            search,
+                            state: { appId: appServiceId, type: OBJECT_TYPE[objKey] },
+                          }}
+                        >
+                          <Icon type="timeline" className="reports-icon" />
+                        </Link>
                       )}
                     </div>
                   ))
@@ -123,7 +123,7 @@ export default withRouter(observer((props) => {
       className={classNames('c7n-region', 'c7n-codeQuality-wrapper', 'page-container', styles?.['c7n-branch-theme4-page'])}
       service={[]}
     >
-      {appServiceDs.status !== 'ready' || codeQuality.loading ? <Loading display /> : getDetail()}
+      {appServiceDs.status !== 'ready' || codeQuality.loading ? <Loading display type="c7n" /> : getDetail()}
     </Page>
   );
 }));
