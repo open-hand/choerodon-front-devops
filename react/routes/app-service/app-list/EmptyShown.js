@@ -3,8 +3,7 @@ import {
   Header, Content, Breadcrumb, HeaderButtons,
 } from '@choerodon/boot';
 import { Button } from 'choerodon-ui';
-import { EmptyPage } from '@choerodon/components';
-import Loading from '../../../components/loading';
+import { EmptyPage, Loading } from '@choerodon/components';
 import { useAppTopStore } from '../stores';
 import emptyImage from '../images/empty.svg';
 
@@ -22,7 +21,7 @@ export function EmptyLoading({ formatMessage }) {
       </Header>
       <Breadcrumb />
       <Content>
-        <Loading display />
+        <Loading display type="c7n" />
       </Content>
     </>
   );

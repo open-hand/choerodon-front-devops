@@ -2,9 +2,9 @@ import React, {
   useRef, useMemo, lazy, Suspense,
 } from 'react';
 import { observer } from 'mobx-react-lite';
+import { Loading } from '@choerodon/components';
 import Sidebar from './sidebar';
 import DragBar from '../../../components/drag-bar';
-import Loading from '../../../components/loading';
 import { useClusterStore } from '../stores';
 import { useClusterMainStore } from './stores';
 
@@ -37,8 +37,8 @@ export default observer(() => {
       [NODE_ITEM]: <NodeContent />,
     };
     return cmMaps[itemType]
-      ? <Suspense fallback={<Loading display />}>{cmMaps[itemType]}</Suspense>
-      : <Loading display />;
+      ? <Suspense fallback={<Loading display type="c7n" />}>{cmMaps[itemType]}</Suspense>
+      : <Loading display type="c7n" />;
   }, [itemType]);
 
   return (!treeDs.length && treeDs.status === 'ready') ? (

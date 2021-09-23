@@ -9,7 +9,7 @@ import _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import ReactCodeMirror from 'react-codemirror';
 import { useDeployLogMainStore } from './stores';
-import Loading from '../../../../../../components/loading';
+import { Loading } from '@choerodon/components';
 
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/base16-dark.css';
@@ -174,16 +174,16 @@ const Cases = observer(() => {
   }, []);
 
   function getContent() {
-    return logContentLoading ? <Loading display /> : (
+    return logContentLoading ? <Loading display type="c7n" /> : (
       <div className="case-operation-main">
         {
-        getLogData.length > 0 && getLogData.map((item) => (
-          <LogItem
-            {...item}
-            formatMessage={formatMessage}
-          />
-        ))
-      }
+          getLogData.length > 0 && getLogData.map((item) => (
+            <LogItem
+              {...item}
+              formatMessage={formatMessage}
+            />
+          ))
+        }
       </div>
     );
   }
