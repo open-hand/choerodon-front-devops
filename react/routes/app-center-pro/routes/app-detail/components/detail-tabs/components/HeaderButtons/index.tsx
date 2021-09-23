@@ -2,6 +2,7 @@
 import React, { useMemo } from 'react';
 import { HeaderButtons } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
+import { Tooltip } from 'choerodon-ui/pro';
 import { useAppDetailTabsStore } from '../../stores';
 import { openModifyValueModal } from '@/components/modify-values';
 import { useAppDetailsStore } from '../../../../stores';
@@ -11,7 +12,6 @@ import { openRedeploy } from '@/components/reDeploy';
 import { openMarketUpgradeModal } from '@/components/app-upgrade';
 import { openHzeroUpgradeModal } from '@/components/app-upgrade-hzero';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
-
 import {
   APP_STATUS,
   CHART_CATERGORY,
@@ -166,8 +166,8 @@ const DetailsTabsHeaderButtons = () => {
           },
         },
         {
-          name: '创建域名',
-          disabled: btnDisabledEnv,
+          name: appRecord?.get('existService') ? '创建域名' : <Tooltip title="请先创建一个该应用关联的网络">创建域名</Tooltip>,
+          disabled: btnDisabledEnv || !appRecord?.get('existService'),
           handler: () => {
             openDomainFormModal({
               envId: hostOrEnvId,
