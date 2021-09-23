@@ -1,6 +1,6 @@
 import { AppDeletionWithVertificationStoreProps } from '@/components/app-deletion-with-vertification-code/deletionStore';
 
-type appTypes = 'instance' | 'service' | 'ingress' | 'certificate' | 'configMap' | 'secret' | 'deployGroup'
+type appTypes = 'instance' | 'service' | 'ingress' | 'certificate' | 'configMap' | 'secret' | 'deployGroup' | 'host'
 
 type openDeleteProps = {
   envId:string
