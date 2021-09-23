@@ -446,6 +446,11 @@ const AppCreateForm = (props: any) => {
               break;
             }
           }
+          setKeyValue(
+            submitData,
+            infoMapping.env.name as string,
+            appInfoData[infoMapping.env.name as string],
+          );
           break;
         }
         case deployModeOptionsData[1].value: {
@@ -474,6 +479,11 @@ const AppCreateForm = (props: any) => {
               break;
             }
           }
+          setKeyValue(
+            submitData,
+            infoMapping.host.name as string,
+            appInfoData[infoMapping.host.name as string],
+          );
           break;
         }
         default: {
@@ -573,7 +583,7 @@ const AppCreateForm = (props: any) => {
         return ({
           deployMode: stepData?.current?.[0]?.data?.[infoMapping.deployMode.name as string],
           deployType: stepData?.current?.[0]?.data?.[infoMapping.deployProductType.name as string],
-          envId: stepData?.current?.[1]?.data?.[mapping.env.name as string],
+          envId: stepData?.current?.[0]?.data?.[mapping.env.name as string],
         });
       }
       default: {

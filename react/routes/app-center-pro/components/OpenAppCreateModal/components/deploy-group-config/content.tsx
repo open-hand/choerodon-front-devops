@@ -224,7 +224,7 @@ const Index = observer(() => {
           ]
         }
         {
-          !isPipeline && (
+          !isPipeline && detail && (
             <Select
               newLine
               colSpan={1}

@@ -244,15 +244,20 @@ const Index = observer(() => {
         {
           renderVersion(AppConfigDataSet)
         }
-        <Select
-          name={mapping.env.name}
-          colSpan={1}
-          disabled={Boolean(detail)}
-          optionRenderer={renderEnvOption}
-          onOption={({ record }) => ({
-            disabled: !(record.get('connect') && record.get('synchro') && record.get('permission')),
-          })}
-        />
+        {
+          detail ? (
+            <Select
+              name={mapping.env.name}
+              colSpan={1}
+              disabled={Boolean(detail)}
+              optionRenderer={renderEnvOption}
+              onOption={({ record }) => ({
+                disabled: !(record.get('connect') && record.get('synchro') && record.get('permission')),
+              })}
+            />
+          ) : ''
+        }
+
       </Form>
       {Editor}
     </div>

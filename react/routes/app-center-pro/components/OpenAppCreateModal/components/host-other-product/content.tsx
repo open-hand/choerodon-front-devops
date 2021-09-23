@@ -75,7 +75,7 @@ export default observer(() => {
       style={style || {}}
       className={cssPrefix}
     >
-      <Form
+      {/* <Form
         dataSet={HostOtherProductDataSet}
         columns={3}
       >
@@ -86,7 +86,7 @@ export default observer(() => {
             disabled: !hostRecord.get('connect'),
           })}
         />
-      </Form>
+      </Form> */}
       <div style={{ width: '33.3%' }}>
         <ChunkUploader
           callbackWhenLoadingChange={(loadingIf: boolean) => {
