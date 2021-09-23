@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
+import _ from 'lodash';
 import { Alert, Tabs } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import YamlEditor from '@/components/yamlEditor';
 
 const { TabPane } = Tabs;
+
+let originValue: any;
 
 const Index = observer(({
   dataSet,
@@ -19,9 +22,17 @@ const Index = observer(({
   postName: string,
   style?: object,
 }) => {
+  useEffect(() => {
+    originValue = {
+      [preName]: _.cloneDeep(dataSet.current?.get(preName)),
+      [startName]: _.cloneDeep(dataSet.current?.get(startName)),
+      [postName]: _.cloneDeep(dataSet.current?.get(postName)),
+    };
+  }, []);
+
   const [activeKey, setActiveKey] = useState('1');
 
-  const getValue = (type: 'value' | 'valueChange') => {
+  const getValue = (type: 'value' | 'valueChange' | 'origin') => {
     switch (activeKey) {
       case '1': {
         if (type === 'value') {
@@ -29,6 +40,9 @@ const Index = observer(({
         }
         if (type === 'valueChange') {
           return preName;
+        }
+        if (type === 'origin') {
+          return originValue?.[preName];
         }
         break;
       }
@@ -39,6 +53,9 @@ const Index = observer(({
         if (type === 'valueChange') {
           return startName;
         }
+        if (type === 'origin') {
+          return originValue?.[startName];
+        }
         break;
       }
       case '3': {
@@ -47,6 +64,9 @@ const Index = observer(({
         }
         if (type === 'valueChange') {
           return postName;
+        }
+        if (type === 'origin') {
+          return originValue?.[postName];
         }
         break;
       }
@@ -72,9 +92,9 @@ const Index = observer(({
         <TabPane tab="后置操作" key="3" />
       </Tabs>
       <YamlEditor
-        modeChange={false}
         readOnly={false}
         value={getValue('value')}
+        originValue={getValue('origin')}
         onValueChange={(value: string) => {
             dataSet?.current?.set(getValue('valueChange'), value);
         }}
