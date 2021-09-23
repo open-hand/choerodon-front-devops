@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Form, TextField, Select, TextArea, Button, Password } from 'choerodon-ui/pro';
+import {
+  Form, TextField, Select, TextArea, Button, Password,
+} from 'choerodon-ui/pro';
 import { Icon } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 
 const { Option } = Select;
 
-const DependRepo = observer(({ ds, modal, handleAdd, dsData, handleParentCancel }) => {
+const DependRepo = observer(({
+  ds, modal, handleAdd, dsData, handleParentCancel,
+}) => {
   const [hasData, setHasData] = useState(false);
   useEffect(() => {
     if (dsData) {
-      Object.keys(dsData).forEach(k => {
-        dsData[k].forEach(v => {
+      Object.keys(dsData).forEach((k) => {
+        dsData[k].forEach((v) => {
           ds.create(v);
         });
       });
@@ -51,7 +55,7 @@ const DependRepo = observer(({ ds, modal, handleAdd, dsData, handleParentCancel 
   return (
     <div className="dependRepo">
       {
-        ds.records.filter(d => !d.data.privateIf).map((r, rIndex) => (
+        ds.records.filter((d) => !d.data.privateIf).map((r, rIndex) => (
           <div className="dependRepo_form_container">
             <Form columns={2} record={r}>
               <TextField name="name" />
@@ -81,7 +85,7 @@ const DependRepo = observer(({ ds, modal, handleAdd, dsData, handleParentCancel 
       </div>
       <div className="dependRepo_form_borderline" style={{ marginTop: 10 }} />
       {
-        ds.records.filter(d => d.data.privateIf).map((r, rIndex) => (
+        ds.records.filter((d) => d.data.privateIf).map((r, rIndex) => (
           <div className="dependRepo_form_container" style={{ marginTop: 28 }}>
             <Form columns={2} record={r}>
               <TextField name="name" />
