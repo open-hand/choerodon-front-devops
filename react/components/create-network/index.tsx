@@ -20,8 +20,8 @@ type NetWorkFormProps = {
   appServiceId: string,
   networkId?: string
   refresh?:(...args:any[])=>any;
-  name:string;
-  code:string;
+  name?:string;
+  code?:string;
 }
 
 export const openNetWorkFormModal = (props:NetWorkFormProps) => {
