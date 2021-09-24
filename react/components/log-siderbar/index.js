@@ -203,9 +203,9 @@ export default class LogSidebar extends Component {
             editor.setValue(_.join(logs, ''));
           }
           editor.execCommand('goDocEnd');
-          setTimeout(() => {
-            this.loadLog(false);
-          }, 1000);
+          // setTimeout(() => {
+          //  this.loadLog(false);
+          // }, 1000);
         };
 
         ws.onmessage = (e) => {
