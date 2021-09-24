@@ -297,9 +297,6 @@ export default (
       name: 'username',
       type: 'string',
       label: '用户名',
-      dynamicProps: {
-        required: ({ record }) => record.get('type') === 'cdHost' && record.get(addCDTaskDataSetMap.hostSource) === addCDTaskDataSetMap.customhost,
-      },
     },
     {
       name: 'password',

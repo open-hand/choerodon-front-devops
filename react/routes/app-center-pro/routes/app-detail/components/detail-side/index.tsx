@@ -75,6 +75,8 @@ const DetailAside = () => {
     middlewareMode,
 
     error,
+    effectCommandVersion,
+    commandVersion,
   } = appDs.current?.toData() || {};
 
   const {
@@ -106,7 +108,9 @@ const DetailAside = () => {
         message = formatMessage({ id: 'running' });
         break;
       case 'failed':
-        message = formatMessage({ id: 'deploy_failed' });
+        if (!effectCommandVersion) {
+          message = formatMessage({ id: 'deploy_failed' });
+        }
         break;
       case 'operating':
         message = formatMessage({ id: 'pending' });
@@ -115,7 +119,7 @@ const DetailAside = () => {
         break;
     }
     return (
-      <StatusTag ellipsisTitle={objectStatus === 'operating' && versionName ? `部署版本"${versionName}"` : ''} name={message} colorCode={objectStatus} />
+      message ? <StatusTag ellipsisTitle={objectStatus === 'operating' && commandVersion ? `部署版本"${commandVersion}"` : ''} name={message} colorCode={objectStatus} /> : versionName
     );
   }
 
@@ -140,7 +144,7 @@ const DetailAside = () => {
       </div>
       <div>
         <span>Chart版本</span>
-        {objectStatus === 'running' ? versionName || '-' : getVersionName()}
+        {getVersionName()}
       </div>
     </>
   );

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 import React, {
   useMemo, useImperativeHandle, useState, useEffect, useCallback,
 } from 'react';
@@ -289,7 +290,9 @@ const Version = withRouter(observer((props) => {
                             />
                           )
                         }
-                        <span className="c7ncd-theme4-version-item-version">{version.get('version')}</span>
+                        <Tooltip title={version.get('version')}>
+                          <span className="c7ncd-theme4-version-item-version">{version.get('version')}</span>
+                        </Tooltip>
                         <Action data={renderVersionAction(version)} />
                       </div>
                       <div style={{ justifyContent: 'flex-end' }} className="c7ncd-theme4-version-item-side">
