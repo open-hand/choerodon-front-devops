@@ -142,19 +142,20 @@ const PipelineCreate = observer(() => {
     }
   };
 
-  const handleClickMore = async (e) => {
-    e.stopPropagation();
-    const pageSize = PipelineCreateFormDataSet.current.get('pageSize') + 20;
-    const result = await axios.post(`/devops/v1/projects/${projectId}/app_service/page_app_services_without_ci?page=0&size=${pageSize}`);
-    if (result.length % 20 === 0) {
-      result.push({
-        appServiceId: 'more',
-        appServiceName: '加载更多',
-      });
-    }
-    PipelineCreateFormDataSet.current.set('pageSize', pageSize);
-    PipelineCreateFormDataSet.getField('appServiceId').props.lookup = result;
-  };
+  // const handleClickMore = async (e) => {
+  //  e.stopPropagation();
+  //  const pageSize = PipelineCreateFormDataSet.current.get('pageSize') + 20;
+  //  const result = await axios.post(`/devops/v1/projects/${projectId}/
+  // app_service/page_app_services_without_ci?page=0&size=${pageSize}`);
+  //  if (result.length % 20 === 0) {
+  //    result.push({
+  //      appServiceId: 'more',
+  //      appServiceName: '加载更多',
+  //    });
+  //  }
+  //  PipelineCreateFormDataSet.current.set('pageSize', pageSize);
+  //  PipelineCreateFormDataSet.getField('appServiceId').options.loadData([result.content]);
+  // };
 
   const renderer = ({ text }) => {
     const { appServiceName } = createUseStore.getCurrentAppService || {};
@@ -168,7 +169,7 @@ const PipelineCreate = observer(() => {
     <a
       role="none"
       style={{ width: '100%', height: '100%', display: 'block' }}
-      onClick={handleClickMore}
+    // onClick={handleClickMore}
     >
       {text}
     </a>
@@ -183,7 +184,7 @@ const PipelineCreate = observer(() => {
       <Form columns={3} dataSet={PipelineCreateFormDataSet}>
         <TextField
           name="name"
-          // disabled={dataSource}
+        // disabled={dataSource}
         />
         {/* 应用服务只能选择目前没有关联流水线的应用服务 */}
         <Select
@@ -263,7 +264,7 @@ const PipelineCreate = observer(() => {
                     </p>,
                   ]}
                   />
-)}
+                )}
                 name="versionName"
               />
             ) : (
@@ -272,7 +273,7 @@ const PipelineCreate = observer(() => {
                 colSpan={2}
                 addonAfter={(
                   <Tips helpText='平台默认的版本命名规则为：${C7N_COMMIT_TIME}-${C7N_BRANCH}，即表示该流水线中生成的版本名称为"时间戳+分支名"' />
-                           )}
+                )}
                 name="versionNameRules"
               />
             ),

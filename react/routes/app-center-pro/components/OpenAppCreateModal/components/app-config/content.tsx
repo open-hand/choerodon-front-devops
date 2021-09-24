@@ -145,6 +145,8 @@ const Index = observer(() => {
           <Select
             name={mapping.serviceVersion.name}
             colSpan={1}
+            searchable
+            searchMatcher="query"
           />
         );
         break;

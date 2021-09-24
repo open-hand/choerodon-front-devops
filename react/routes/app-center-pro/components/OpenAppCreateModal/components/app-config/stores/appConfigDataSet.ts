@@ -1,3 +1,4 @@
+import React, { useMemo } from 'react';
 /* eslint-disable max-len */
 import { FieldProps } from 'choerodon-ui/pro/lib/data-set/field';
 import { DataSet } from 'choerodon-ui/pro';
@@ -134,12 +135,15 @@ const marketVersionOptionsDs = {
 const serviceVersionOptionDs = {
   autoQuery: false,
   paging: true,
+  pageSize: 5,
   transport: {
-    read: ({ data }: any) => ({
-      ...appServiceVersionApiConfig.getVersions(data.appServiceId, true, true),
+    read: ({ data, params }: any) => ({
+      ...appServiceVersionApiConfig.getVersions(data.appServiceId, true, true, params),
     }),
   },
 };
+
+const serviceVersionDataSet = new DataSet(serviceVersionOptionDs);
 
 const marketServiceVersionOptionDs = {
   autoQuery: false,
@@ -229,20 +233,20 @@ const mapping: {
     label: '服务版本',
     textField: 'version',
     valueField: 'id',
-    // options: new DataSet(serviceVersionOptionDs),
+    options: serviceVersionDataSet,
     dynamicProps: {
       disabled: ({ record }) => !record.get(mapping.hzeroVersion.name),
       required: ({ record }) => [chartSourceData[0].value, chartSourceData[1].value]
         .includes(record.get(mapping.chartSource.name)),
-      lookupAxiosConfig: ({ record }) => {
-        if (record.get(mapping.hzeroVersion.name)) {
-          return ({
-            ...appServiceVersionApiConfig
-              .getVersions(record.get(mapping.hzeroVersion.name), true, true),
-          });
-        }
-        return undefined;
-      },
+      // lookupAxiosConfig: ({ record }) => {
+      //  if (record.get(mapping.hzeroVersion.name)) {
+      //    return ({
+      //      ...appServiceVersionApiConfig
+      //        .getVersions(record.get(mapping.hzeroVersion.name), true, true),
+      //    });
+      //  }
+      //  return undefined;
+      // },
     },
   },
   value: {
@@ -327,6 +331,8 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
       case 'hzeroVersion': {
         if (detail) {
           item.disabled = true;
+        } else {
+          item.disabled = false;
         }
         break;
       }
@@ -424,6 +430,8 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
         case mapping.hzeroVersion.name: {
           record.set(mapping.serviceVersion.name, undefined);
           record.set(mapping.value.name, '');
+          serviceVersionDataSet.setQueryParameter('appServiceId', value);
+          serviceVersionDataSet.query();
           break;
         }
         case mapping.marketVersion.name: {
