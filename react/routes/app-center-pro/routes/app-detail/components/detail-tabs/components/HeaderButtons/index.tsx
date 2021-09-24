@@ -62,6 +62,7 @@ const DetailsTabsHeaderButtons = () => {
     chartSource,
     commandVersion,
     name,
+    code,
     objectStatus: appStatus,
     devopsHostCommandDTO = {},
     sourceType,
@@ -161,7 +162,7 @@ const DetailsTabsHeaderButtons = () => {
           disabled: btnDisabledEnv,
           handler: () => {
             openNetWorkFormModal({
-              envId: hostOrEnvId, appServiceId, refresh,
+              envId: hostOrEnvId, appServiceId, refresh, name, code,
             });
           },
         },
