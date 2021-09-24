@@ -5,6 +5,7 @@ import map from 'lodash/map';
 import uuidV1 from 'uuid/v1';
 import { axios } from '@choerodon/master';
 import isEmpty from 'lodash/isEmpty';
+import {deployAppCenterApi} from '@/api/DeployAppCenter'
 
 function getRandomName(prefix = '') {
   const randomString = uuidV1();
@@ -96,11 +97,9 @@ export default (({
   }
 
   async function checkName(value:any, name:any, record:any) {
-    const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
-    if (value && pa.test(value)) {
       if (!record.get('environmentId')) return;
       try {
-        const res = await axios.get(`/devops/v1/projects/${projectId}/app_service_instances/check_name?instance_name=${value}&env_id=${record.get('environmentId')}`);
+        const res = await deployAppCenterApi.checkAppName(value,undefined,undefined,record.get('environmentId'));
         if ((res && res.failed) || !res) {
           return formatMessage({ id: 'checkNameExist' });
         }
@@ -108,8 +107,22 @@ export default (({
       } catch (err) {
         return formatMessage({ id: 'checkNameFailed' });
       }
+  }
+
+  async function checkCode(value:any, name:any, record:any) {
+    const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
+    if (value && pa.test(value)) {
+      try {
+        const res =await deployAppCenterApi.checkAppCode(value,undefined,undefined,record.get('environmentId'));
+        if ((res && res.failed) || !res) {
+          return formatMessage({ id: 'checkCodeExist' });
+        }
+        return true;
+      } catch (err) {
+        return formatMessage({ id: 'checkCodeFailed' });
+      }
     } else {
-      return formatMessage({ id: 'checkNameReg' });
+      return formatMessage({ id: 'checkCodeReg' });
     }
   }
 
@@ -174,10 +187,10 @@ export default (({
         name: 'environmentId', type: 'string', textField: 'name', valueField: 'id', label: formatMessage({ id: 'environment' }), required: true, options: envOptionsDs,
       },
       {
-        name: 'appCode', type: 'string', label: formatMessage({ id: `appCode` }), required: true, validator: checkName, maxLength: 53,
+        name: 'appCode', type: 'string', label: formatMessage({ id: `appCode` }), required: true, maxLength: 53,validator: checkCode
       },
       {
-        name: 'appName', type: 'string', label: formatMessage({ id: 'appName' }), required: true, maxLength: 53,
+        name: 'appName', type: 'string', label: formatMessage({ id: 'appName' }), required: true, maxLength: 53,validator: checkName
       },
       {
         name: 'valueId',

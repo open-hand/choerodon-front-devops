@@ -20,8 +20,8 @@ type NetWorkFormProps = {
   appServiceId: string,
   networkId?: string
   refresh?:(...args:any[])=>any;
-  name:string;
-  code:string;
+  name?:string;// 当前的Chart应用名称
+  code?:string;// 当前的Chart应用编码
 }
 
 export const openNetWorkFormModal = (props:NetWorkFormProps) => {
