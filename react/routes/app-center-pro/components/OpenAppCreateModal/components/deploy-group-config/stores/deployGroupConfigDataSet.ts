@@ -42,14 +42,6 @@ const mapping: {
     name: 'name',
     type: 'string' as FieldType,
     label: '应用名称',
-    validator: async (value, type, record: Record) => {
-      let res: any = '应用名称已重复';
-      const flag = await deployAppCenterApi.checkAppName(value, 'deployment', record.get('instanceId'));
-      if (flag) {
-        res = true;
-      }
-      return res;
-    },
   },
   appCode: {
     name: 'code',
@@ -133,6 +125,7 @@ const mapping: {
 const deployGroupConfigDataSet = (
   isPipeline: boolean,
   envId?: string,
+  detail?: any,
 ) => ({
   autoCreate: true,
   transport: {
@@ -167,9 +160,22 @@ const deployGroupConfigDataSet = (
     switch (i) {
       case 'env': {
         item.dynamicProps = {
-          required: () => !isPipeline,
+          required: () => !isPipeline && detail,
         };
         item.disabled = Boolean(envId);
+        break;
+      }
+      case 'appName': {
+        if (detail) {
+          item.validator = async (value, type, record: Record) => {
+            let res: any = '应用名称已重复';
+            const flag = await deployAppCenterApi.checkAppName(value, 'deployment', record.get('instanceId'));
+            if (flag) {
+              res = true;
+            }
+            return res;
+          };
+        }
         break;
       }
       default: {

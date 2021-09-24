@@ -182,14 +182,6 @@ const mapping: {
     name: 'name',
     type: 'string' as FieldType,
     label: '应用名称',
-    validator: async (value, type, record: Record) => {
-      let res: any = '应用名称已重复';
-      const flag = await deployAppCenterApi.checkAppName(value, 'chart', record?.get('instanceId') || record?.get('id'));
-      if (flag) {
-        res = true;
-      }
-      return res;
-    },
   },
   appCode: {
     name: 'code',
@@ -239,6 +231,7 @@ const mapping: {
     valueField: 'id',
     // options: new DataSet(serviceVersionOptionDs),
     dynamicProps: {
+      disabled: ({ record }) => !record.get(mapping.hzeroVersion.name),
       required: ({ record }) => [chartSourceData[0].value, chartSourceData[1].value]
         .includes(record.get(mapping.chartSource.name)),
       lookupAxiosConfig: ({ record }) => {
@@ -269,6 +262,7 @@ const mapping: {
     textField: 'marketServiceName',
     valueField: 'id',
     dynamicProps: {
+      disabled: ({ record }) => !record.get(mapping.marketVersion.name),
       required: ({ record }) => ![chartSourceData[0].value, chartSourceData[1].value]
         .includes(record.get(mapping.chartSource.name)),
       lookupAxiosConfig: ({ record }) => (record.get(mapping.marketVersion.name) ? ({
@@ -311,6 +305,22 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
       case 'env': {
         if (envId) {
           item.disabled = true;
+        }
+        if (!detail) {
+          item.required = false;
+        }
+        break;
+      }
+      case 'appName': {
+        if (detail) {
+          item.validator = async (value, type, record: Record) => {
+            let res: any = '应用名称已重复';
+            const flag = await deployAppCenterApi.checkAppName(value, 'chart', record?.get('instanceId') || record?.get('id'), record.get(mapping.env.name));
+            if (flag) {
+              res = true;
+            }
+            return res;
+          };
         }
         break;
       }

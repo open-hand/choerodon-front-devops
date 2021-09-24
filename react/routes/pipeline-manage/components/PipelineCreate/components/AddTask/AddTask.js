@@ -214,8 +214,8 @@ const AddTask = observer(() => {
           config && config.forEach((c, cIndex) => {
             if (c.repos) {
               c.repo = {
-                privateRepo: c.repos.filter(i => i.private).map(i => {i.privateIf = i.private;return i}),
-                publicRepo: c.repos.filter(i => !i.private).map(i => {i.privateIf = i.private;return i})
+                privateRepo: c.repos.filter(i => i.private).map(i => { i.privateIf = i.private; return i }),
+                publicRepo: c.repos.filter(i => !i.private).map(i => { i.privateIf = i.private; return i })
               };
             }
             if (cIndex === 0) {
@@ -349,7 +349,7 @@ const AddTask = observer(() => {
       }
     };
     init();
-    AddTaskFormDataSet.current.set('type',taskType)
+    AddTaskFormDataSet.current.set('type', taskType)
   }, []);
 
   function encode(str) {
@@ -550,8 +550,8 @@ const AddTask = observer(() => {
     if (text === 'Docker构建') {
       return (
         <Tooltip title="由于该步骤中Dockerfile内kaniko指令限制，建议此步骤作为同任务中最后一个步骤。">
-          <div style={{display:'flex', alignItems:'center'}}>
-            <span style={{marginRight:'5px'}}>{text}</span>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <span style={{ marginRight: '5px' }}>{text}</span>
             <NewTips />
           </div>
         </Tooltip>
@@ -821,7 +821,7 @@ const AddTask = observer(() => {
     }
     const data2 = steps.map((s) => {
       if (s.checked) {
-        const newRepo = flag ? undefined : {
+        const newRepo = {
           privateRepo: [],
           publicRepo: [],
         };
@@ -1061,46 +1061,46 @@ const AddTask = observer(() => {
                 name="bzmc"
               />
               {
-              (function () {
-                if (steps.find((s) => s.checked)) {
-                  const { type } = steps.find((s) => s.checked);
-                  const style = {
-                    width: 339,
-                    marginTop: 30,
-                    marginBottom: 20,
-                  };
-                  if (type === 'Maven') {
-                    return (
-                      <Select
-                        name="nexusMavenRepoIds"
-                        style={style}
-                        renderer={({ text }) => (
-                          <Tooltip title={text}>
-                            {text}
-                          </Tooltip>
-                        )}
-                      />
-                    );
-                  } if (type === 'maven_deploy') {
-                    style.marginBottom = AddTaskFormDataSet.current.getField('zpk').isValid() ? 20 : 40;
-                    return (
-                      <Select
-                        name="zpk"
-                        style={style}
-                      />
-                    );
-                  } if (type === 'upload_jar') {
-                    style.marginBottom = AddTaskFormDataSet.current.getField('jar_zpk').isValid() ? 20 : 40;
-                    return (
-                      <Select
-                        name="jar_zpk"
-                        style={style}
-                      />
-                    );
+                (function () {
+                  if (steps.find((s) => s.checked)) {
+                    const { type } = steps.find((s) => s.checked);
+                    const style = {
+                      width: 339,
+                      marginTop: 30,
+                      marginBottom: 20,
+                    };
+                    if (type === 'Maven') {
+                      return (
+                        <Select
+                          name="nexusMavenRepoIds"
+                          style={style}
+                          renderer={({ text }) => (
+                            <Tooltip title={text}>
+                              {text}
+                            </Tooltip>
+                          )}
+                        />
+                      );
+                    } if (type === 'maven_deploy') {
+                      style.marginBottom = AddTaskFormDataSet.current.getField('zpk').isValid() ? 20 : 40;
+                      return (
+                        <Select
+                          name="zpk"
+                          style={style}
+                        />
+                      );
+                    } if (type === 'upload_jar') {
+                      style.marginBottom = AddTaskFormDataSet.current.getField('jar_zpk').isValid() ? 20 : 40;
+                      return (
+                        <Select
+                          name="jar_zpk"
+                          style={style}
+                        />
+                      );
+                    }
                   }
-                }
-              }())
-            }
+                }())
+              }
             </div>
           ) : null}
           <div>
@@ -1325,7 +1325,7 @@ const AddTask = observer(() => {
                         style={{
                           width: 300,
                         }}
-                        // className="c7ncd-addTask-imageScan"
+                      // className="c7ncd-addTask-imageScan"
                       >
                         <Option value>是</Option>
                         <Option value={false}>否</Option>
@@ -1370,7 +1370,7 @@ const AddTask = observer(() => {
                         marginBottom: 20,
                         display:
                           AddTaskFormDataSet.current.get('securityControl')
-                          && AddTaskFormDataSet.current.get('imageScan') ? 'block' : 'none',
+                            && AddTaskFormDataSet.current.get('imageScan') ? 'block' : 'none',
                       }}
                     >
                       <p
@@ -1628,10 +1628,10 @@ const AddTask = observer(() => {
                   colSpan={2}
                 >
                   {
-                  branchsList.map((b) => (
-                    <Option value={b.value}>{b.name}</Option>
-                  ))
-                }
+                    branchsList.map((b) => (
+                      <Option value={b.value}>{b.name}</Option>
+                    ))
+                  }
                 </Select>
               )}
             </div>,

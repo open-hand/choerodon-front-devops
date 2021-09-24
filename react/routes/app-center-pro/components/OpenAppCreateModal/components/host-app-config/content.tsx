@@ -309,14 +309,14 @@ const Index = observer(() => {
         detail ? '' : (
           <>
             <Form style={{ marginTop: 20 }} columns={3} dataSet={HostAppConfigDataSet}>
-              <Select
+              {/*<Select
                 name={mapping.host.name}
                 optionRenderer={renderHostOption}
                 disabled={Boolean(detail)}
                 onOption={({ record: hostRecord }) => ({
                   disabled: !hostRecord.get('connect'),
                 })}
-              />
+              />*/}
             </Form>
             <p>
               jar包来源

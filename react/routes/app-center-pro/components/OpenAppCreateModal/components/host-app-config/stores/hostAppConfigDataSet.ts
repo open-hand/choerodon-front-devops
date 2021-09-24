@@ -86,7 +86,6 @@ const mapping: {
     name: 'hostId',
     type: 'string' as FieldType,
     label: '主机',
-    required: true,
     textField: 'name',
     valueField: 'id',
     options: new DataSet(hostDataSetConfig()),
@@ -377,9 +376,23 @@ const mapping: {
   },
 };
 
-const hostAppConfigDataSet = (modal: any): DataSetProps => ({
+const hostAppConfigDataSet = (modal: any, detail: any): DataSetProps => ({
   autoCreate: true,
-  fields: Object.keys(mapping).map((i) => mapping[i]),
+  fields: Object.keys(mapping).map((i) => {
+    const item = mapping[i];
+    switch (i) {
+      case 'host': {
+        if (detail) {
+          item.required = true;
+        }
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+    return item;
+  }),
   transport: {
     update: ({ data: [data] }) => {
       let func;

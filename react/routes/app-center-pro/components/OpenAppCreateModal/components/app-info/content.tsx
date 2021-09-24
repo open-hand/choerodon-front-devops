@@ -1,7 +1,10 @@
 import React, { ReactElement, useImperativeHandle } from 'react';
-import { Form, SelectBox, TextField } from 'choerodon-ui/pro';
+import {
+  Form, SelectBox, TextField, Select,
+} from 'choerodon-ui/pro';
 import { CustomSelect } from '@choerodon/components';
 import { observer } from 'mobx-react-lite';
+import StatusDot from '@/components/status-dot';
 import { useAppInfoStore } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-info/stores';
 import { mapping, deployModeOptionsData, deployProductOptionsData } from './stores/appInfoDataSet';
 
@@ -33,6 +36,35 @@ const Index = observer(() => {
   const handleChangeField = (ds: any, field: string, value: string) => {
     ds.current.set(field, value);
   };
+
+  const renderEnvOption = ({ record, text }: any) => (
+    <>
+      <StatusDot
+        // @ts-ignore
+        connect={record.get('connect')}
+        synchronize={record.get('synchro')}
+        active={record.get('active')}
+        size="small"
+      />
+      <span
+        className="c7ncd-appCenterPro-appConfig__env__text"
+      >
+        {text}
+      </span>
+    </>
+  );
+
+  const renderHostOption = ({ record, text }: any) => (
+    <>
+      <StatusDot
+        // @ts-ignore
+        size="small"
+        synchronize
+        connect={record.get('connect')}
+      />
+      {text}
+    </>
+  );
 
   return (
     <Form className="c7ncd-appCenterPro-appInfo__form" columns={2} dataSet={AppInfoDataSet}>
@@ -75,6 +107,26 @@ const Index = observer(() => {
           )}
         />
       </div>
+      {
+        AppInfoDataSet.current.get(mapping.deployMode.name) === deployModeOptionsData[0].value ? (
+          <Select
+            name={mapping.env.name}
+            colSpan={1}
+            optionRenderer={renderEnvOption}
+            onOption={({ record }) => ({
+              disabled: !(record.get('connect') && record.get('synchro') && record.get('permission')),
+            })}
+          />
+        ) : (
+          <Select
+            name={mapping.host.name}
+            optionRenderer={renderHostOption}
+            onOption={({ record: hostRecord }) => ({
+              disabled: !hostRecord.get('connect'),
+            })}
+          />
+        )
+      }
       <p
         className="c7ncd-appCenterPro-appInfo__form__title"
               // @ts-ignore
