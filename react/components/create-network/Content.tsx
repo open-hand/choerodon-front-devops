@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   TextField, Form, Button, Icon, Select, SelectBox, Tooltip,
@@ -22,7 +22,8 @@ function FormContent() {
       formatMessage,
     },
     networkId,
-    appInstanceOptionsDs,
+    name,
+    code,
   } = useNetWorkStore();
 
   const { current } = formDs;
@@ -36,86 +37,38 @@ function FormContent() {
     }
   });
 
-  function createPortGroup() {
+  const createPortGroup = () => {
     portDs.create();
-  }
+  };
 
   function removePortGroup(record: any) {
     portDs.remove(record);
     portDs.validate();
   }
 
-  function createTargetLabelGroup() {
+  const createTargetLabelGroup = () => {
     targetLabelsDs.create();
-  }
+  };
 
   function removeTargetLabelGroup(record: any) {
     targetLabelsDs.remove(record);
     targetLabelsDs.validate();
   }
 
-  function targetPortOptionRenderer({ record, text, value }:any) {
-    return <Tooltip title={value}>{value}</Tooltip>;
-  }
+  const targetPortOptionRenderer = ({
+    record,
+    text,
+    value,
+  }:any) => <Tooltip title={value}>{value}</Tooltip>;
 
-  function targetPortOptionsFilter(record: { get: (arg0: string) => any; }) {
-    return !!record.get('portName');
-  }
+  const targetPortOptionsFilter = (record: { get: (arg0: string) => any; }) => !!record.get('portName');
 
-  function labelOptionRenderer({ record, text, value }:any) {
-    return `${record.get('meaning')}`;
-  }
+  const labelOptionRenderer = ({ record, text, value }:any) => `${record.get('meaning')}`;
 
-  function appInstanceOptionRenderer({ record, text, value }:any) {
-    const status = record.get('status');
-    if (status) {
-      return (
-        <>
-          <Tooltip
-            title={formatMessage({ id: status })}
-            placement="right"
-          >
-            <span className="c7ncd-network-instance-text">{text}</span>
-          </Tooltip>
-          { status !== 'running' && (
-          <Tooltip title={formatMessage({ id: 'deleted' })} placement="top">
-            <Icon type="error" className="c7ncd-instance-status-icon" />
-          </Tooltip>
-          )}
-        </>
-      );
-    }
-    return text;
-  }
-
-  function appInstanceRenderer({ value, text }:any) {
-    const instance = appInstanceOptionsDs.find((r: { get: (arg0: string) => any; }) => r.get('code') === value);
-
-    if (instance && instance.get('status')) {
-      const status = instance.get('status');
-      return (
-        <>
-          <Tooltip
-            title={formatMessage({ id: status })}
-            placement="right"
-          >
-            <span className="c7ncd-network-instance-text">{text}</span>
-          </Tooltip>
-          { status !== 'running' && (
-          <Tooltip title={formatMessage({ id: 'deleted' })} placement="top">
-            <Icon type="error" className="c7ncd-instance-status-icon" />
-          </Tooltip>
-          )}
-        </>
-      );
-    }
-    return text;
-  }
-
-  function clearInputOption(record: { get: (arg0: string) => any; }) {
+  const clearInputOption = (record: { get: (arg0: string) => any; }) => {
     const meaning = record.get('meaning');
     return meaning && meaning.indexOf(':') >= 0;
-  }
+  };
 
   return (
     <>
@@ -134,7 +87,7 @@ function FormContent() {
             colSpan={3}
           >
             <SelectBox name="target">
-              <Option value="instance"><span className="target-instance">{formatMessage({ id: 'network.target.instance' })}</span></Option>
+              <Option value="instance"><span className="target-instance">{formatMessage({ id: 'network.target.application' })}</span></Option>
               <Option value="param">{formatMessage({ id: 'network.target.param' })}</Option>
             </SelectBox>
           </div>
@@ -142,7 +95,11 @@ function FormContent() {
           <div colSpan={3} className="target-form">
             {
               (current && current.get('target') === 'instance')
-                ? <Select searchable name="appInstance" colSpan={3} className="app-instance-select" optionRenderer={appInstanceOptionRenderer} renderer={appInstanceRenderer} />
+                ? (
+                  <Select colSpan={3} name="appInstance" className="app-instance-select" disabled>
+                    <Option value={code}>{name}</Option>
+                  </Select>
+                )
                 : (
                   <div className="label-form">
                     {
