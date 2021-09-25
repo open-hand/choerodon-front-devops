@@ -135,7 +135,7 @@ const marketVersionOptionsDs = {
 const serviceVersionOptionDs = {
   autoQuery: false,
   paging: true,
-  pageSize: 5,
+  pageSize: 20,
   transport: {
     read: ({ data, params }: any) => ({
       ...appServiceVersionApiConfig.getVersions(data.appServiceId, true, true, params),
@@ -148,6 +148,7 @@ const serviceVersionDataSet = new DataSet(serviceVersionOptionDs);
 const marketServiceVersionOptionDs = {
   autoQuery: false,
   paging: true,
+  pageSize: 20,
   transport: {
     read: ({ data }: any) => ({
       ...deployApiConfig.deployVersion(data.version, 'image'),
@@ -170,6 +171,8 @@ const marketServiceVersionOptionDs = {
     }),
   },
 };
+
+const marketServiceVersionDataSet = new DataSet(marketServiceVersionOptionDs);
 
 const envDataSet = {
   autoQuery: true,
@@ -265,29 +268,30 @@ const mapping: {
     label: '市场服务及版本',
     textField: 'marketServiceName',
     valueField: 'id',
+    options: marketServiceVersionDataSet,
     dynamicProps: {
       disabled: ({ record }) => !record.get(mapping.marketVersion.name),
       required: ({ record }) => ![chartSourceData[0].value, chartSourceData[1].value]
         .includes(record.get(mapping.chartSource.name)),
-      lookupAxiosConfig: ({ record }) => (record.get(mapping.marketVersion.name) ? ({
-        ...deployApiConfig.deployVersion(record.get(mapping.marketVersion.name), 'image'),
-        transformResponse: (res: any) => {
-          function init(dt: any) {
-            return dt.map((d: any) => {
-              const newD = d;
-              newD.id = newD.marketServiceDeployObjectVO.id;
-              return d;
-            });
-          }
-          let newRes = res;
-          try {
-            newRes = JSON.parse(res);
-            return init(newRes);
-          } catch (e) {
-            return init(newRes);
-          }
-        },
-      }) : undefined),
+      // lookupAxiosConfig: ({ record }) => (record.get(mapping.marketVersion.name) ? ({
+      //  ...deployApiConfig.deployVersion(record.get(mapping.marketVersion.name), 'image'),
+      //  transformResponse: (res: any) => {
+      //    function init(dt: any) {
+      //      return dt.map((d: any) => {
+      //        const newD = d;
+      //        newD.id = newD.marketServiceDeployObjectVO.id;
+      //        return d;
+      //      });
+      //    }
+      //    let newRes = res;
+      //    try {
+      //      newRes = JSON.parse(res);
+      //      return init(newRes);
+      //    } catch (e) {
+      //      return init(newRes);
+      //    }
+      //  },
+      // }) : undefined),
     },
   },
   env: {
@@ -449,6 +453,8 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
           record.set(mapping.marketServiceVersion.name, undefined);
           record.set(mapping.value.name, '');
           record.set(mapping.originValue.name, '');
+          marketServiceVersionDataSet.setQueryParameter('version', value);
+          marketServiceVersionDataSet.query();
         }
         default: {
           break;
