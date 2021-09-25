@@ -325,6 +325,8 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
             }
             return res;
           };
+        } else {
+          item.validator = async () => true;
         }
         break;
       }
@@ -334,6 +336,15 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
         } else {
           item.disabled = false;
         }
+        break;
+      }
+      case 'marketVersion': {
+        item.disabled = Boolean(detail);
+        break;
+      }
+      case 'marketServiceVersion': {
+        // @ts-ignore
+        item.dynamicProps.disabled = ({ record }: { record: Record }) => !(record.get(mapping.marketVersion.name) && !detail);
         break;
       }
       default: {

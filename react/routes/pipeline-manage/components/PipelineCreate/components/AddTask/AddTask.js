@@ -1162,7 +1162,6 @@ const AddTask = observer(() => {
                       <span>Setting配置</span>
                       <Tooltip
                         title="用于运行过程中，在项目根目录下生成settings文件；您可在脚本中加上 -s 或者 -gs 参数进行使用"
-                        theme="light"
                       >
                         <Icon type="help" />
                       </Tooltip>
@@ -1176,7 +1175,7 @@ const AddTask = observer(() => {
                       className="addTask_authType"
                     >
                       <Option value="custom">
-                        <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+                        <span style={{ display: 'inline-flex', alignItems: 'flex-start' }}>
                           自定义仓库配置
                           <Button
                             onClick={handleOpenRepo}
@@ -1189,6 +1188,10 @@ const AddTask = observer(() => {
                                 }
                                 return 'none';
                               }()),
+                              zIndex: 10,
+                              position: 'absolute',
+                              right: '-30px',
+                              top: '-9px',
                             }}
                           >
                             <Icon
