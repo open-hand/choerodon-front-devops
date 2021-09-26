@@ -35,6 +35,14 @@ const checkIp = async (value: string, num: number) => {
   return true;
 };
 
+const strategyTypeData = [{
+  value: 'RollingUpdate',
+  name: '滚动更新(推荐)',
+}, {
+  value: 'Recreate',
+  name: '重建',
+}];
+
 const mapping: {
   [key: string]: FieldProps
 } = {
@@ -65,6 +73,18 @@ const mapping: {
     defaultValue: 1,
     min: 1,
     step: 1,
+  },
+  strategyType: {
+    name: 'strategyType',
+    type: 'string' as FieldType,
+    label: '更新策略',
+    required: true,
+    textField: 'name',
+    valueField: 'value',
+    defaultValue: strategyTypeData[0].value,
+    options: new DataSet({
+      data: strategyTypeData,
+    }),
   },
   MaxSurge: {
     name: 'maxSurge',

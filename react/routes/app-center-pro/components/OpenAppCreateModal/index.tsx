@@ -175,6 +175,11 @@ const getAppConfigData = ({
   );
   setKeyValue(
     res,
+    deployGroupConfigMapping.strategyType.name as string,
+    appConfig[deployGroupConfigMapping.strategyType.name as string],
+  );
+  setKeyValue(
+    res,
     deployGroupConfigMapping.MaxSurge.name as string,
     appConfig[deployGroupConfigMapping.MaxSurge.name as string],
   );
