@@ -209,7 +209,7 @@ const Index = observer(() => {
     <div
       className="c7ncd-appCenterPro-deployGroup"
       style={{
-        marginTop: detail ? 'unset' : '30px',
+        marginTop: '30px',
       }}
     >
       <Form
@@ -228,6 +228,7 @@ const Index = observer(() => {
             <Select
               newLine
               colSpan={1}
+              disabled
               name={mapping.env.name}
               optionRenderer={renderEnvOption}
               onOption={({ record }) => ({

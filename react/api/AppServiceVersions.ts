@@ -9,6 +9,7 @@ class AppServiceVersionsApi extends Api<AppServiceVersionsApi> {
     appServiceId: string,
     deployOnly: boolean,
     doPage: boolean,
+    othersParams: object = {},
   ) {
     return this.request({
       method: 'post',
@@ -17,6 +18,7 @@ class AppServiceVersionsApi extends Api<AppServiceVersionsApi> {
         app_service_id: appServiceId,
         deploy_only: deployOnly,
         do_page: doPage,
+        ...othersParams,
       },
     });
   }

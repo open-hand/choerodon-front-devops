@@ -118,8 +118,25 @@ const DetailAside = () => {
       default:
         break;
     }
+
+    const renderVersion = () => {
+      let versionNumebr:string = '';
+      if (objectStatus === 'operating' && commandVersion) {
+        versionNumebr = commandVersion;
+      } else if (objectStatus === 'running' && versionName) {
+        versionNumebr = versionName;
+      }
+      return versionNumebr;
+    };
+
     return (
-      message ? <StatusTag ellipsisTitle={objectStatus === 'operating' && commandVersion ? `部署版本"${commandVersion}"` : ''} name={message} colorCode={objectStatus} /> : versionName
+      message ? (
+        <StatusTag
+          ellipsisTitle={renderVersion()}
+          name={message}
+          colorCode={objectStatus}
+        />
+      ) : versionName
     );
   }
 
