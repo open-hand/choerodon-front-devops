@@ -7,7 +7,6 @@ import {
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { Tooltip } from 'choerodon-ui';
-
 import SourceTable from './SourceTable';
 import MarketSourceTable from './components/market-table';
 import GitlabSourceTable from './components/gitlab-table';

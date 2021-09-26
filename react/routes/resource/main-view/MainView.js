@@ -25,7 +25,7 @@ const CertContent = lazy(() => import('./contents/certificate'));
 const ConfigMapContent = lazy(() => import('./contents/configMap'));
 const SecretContent = lazy(() => import('./contents/secret'));
 const CustomContent = lazy(() => import('./contents/custom'));
-const IstListContent = lazy(() => import('./contents/instance-list'));
+const IstListContent = lazy(() => import('./contents/instance-list'));// Chart应用
 const CustomDetail = lazy(() => import('./contents/custom-detail'));
 const IngressDetail = lazy(() => import('./contents/ingress-detail'));
 const CertDetail = lazy(() => import('./contents/certificate-detail'));

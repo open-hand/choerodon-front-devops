@@ -27,8 +27,8 @@ class AppServiceVersionsApi extends Api<AppServiceVersionsApi> {
     appServiceId: string,
   ) {
     return this.request({
-      url: `${this.prefix}/page_by_options?app_service_id=${appServiceId}&deploy_only=false&do_page=true&page=1&size=40`,
-      method: 'post',
+      url: `${this.prefix}/page/share_versions?app_service_id=${appServiceId}&page=0&size=20`,
+      method: 'get',
     });
   }
 
