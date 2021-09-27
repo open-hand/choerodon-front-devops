@@ -20,6 +20,14 @@ class MiddlewareApi extends Api<MiddlewareApi> {
       data,
     });
   }
+
+  updateHost(data: any) {
+    return this.request({
+      method: 'put',
+      url: `${this.prefix}/host/update`,
+      data,
+    });
+  }
 }
 
 const middlewareApi = new MiddlewareApi();

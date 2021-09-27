@@ -111,12 +111,7 @@ const Index = observer(() => {
   }, []);
 
   const handleOk = async () => {
-    const flag = valueCheckValidate(
-      HostAppConfigDataSet.current.get(mapping.value.name),
-        HostAppConfigDataSet.current.get(mapping.startCommand.name),
-        HostAppConfigDataSet.current.get(mapping.postCommand.name)
-    );
-    if (flag) {
+    const finalFunc = async () => {
       const res = await HostAppConfigDataSet.submit();
       if (res !== false) {
         if (refresh) {
@@ -125,6 +120,18 @@ const Index = observer(() => {
         return true;
       }
       return false;
+    }
+    if (detail?.[mapping.jarSource.name] === productSourceData[7].value) {
+      return await finalFunc();
+    } else {
+      const flag = valueCheckValidate(
+        HostAppConfigDataSet.current.get(mapping.value.name),
+          HostAppConfigDataSet.current.get(mapping.startCommand.name),
+          HostAppConfigDataSet.current.get(mapping.postCommand.name)
+      );
+      if (flag) {
+        return await finalFunc();
+      }
     }
     return false;
   };

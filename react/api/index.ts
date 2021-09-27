@@ -16,3 +16,4 @@ export * from './AppService';
 export * from './AppServiceVersions';
 export * from './DeployValue';
 export * from './Polaris';
+export * from './Middleware';

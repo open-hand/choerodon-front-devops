@@ -10,7 +10,9 @@ import {
 } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config/stores/conGroupDataSet';
 import { nexusApiConfig } from '@/api/Nexus';
 import { rdupmApiApiConfig } from '@/api/Rdupm';
-import { deployApi, deployApiConfig, hostApi } from '@/api';
+import {
+  deployApi, deployApiConfig, hostApi, middlewareConfigApi,
+} from '@/api';
 import { hostApiConfig } from '@/api/Host';
 import { setData } from '../content';
 
@@ -398,6 +400,13 @@ const hostAppConfigDataSet = (modal: any, detail: any): DataSetProps => ({
       let func;
       if (data.rdupmType === 'other') {
         return deployApiConfig.deployCustom({
+          ...setData(data),
+          appName: data[mapping.appName.name as string],
+          appCode: data[mapping.appCode.name as string],
+        });
+      }
+      if (data[mapping.jarSource.name as string] === productSourceData[7].value) {
+        return middlewareConfigApi.updateHost({
           ...setData(data),
           appName: data[mapping.appName.name as string],
           appCode: data[mapping.appCode.name as string],
