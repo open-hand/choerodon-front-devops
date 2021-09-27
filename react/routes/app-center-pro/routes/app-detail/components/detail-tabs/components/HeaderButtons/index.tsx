@@ -62,6 +62,7 @@ const DetailsTabsHeaderButtons = () => {
     chartSource,
     commandVersion,
     name,
+    id,
     code,
     objectStatus: appStatus,
     devopsHostCommandDTO = {},
@@ -258,7 +259,7 @@ const DetailsTabsHeaderButtons = () => {
       deployType === ENV_TAB ? deleteEnvApp({
         appCatergoryCode: getAppCategories(rdupmType, deployType).code,
         envId: hostOrEnvId,
-        instanceId,
+        instanceId: appId,
         instanceName: name,
         callback: goBackHomeBaby,
       }) : openDeleteHostAppModal(hostOrEnvId, appId, name, goBackHomeBaby);
