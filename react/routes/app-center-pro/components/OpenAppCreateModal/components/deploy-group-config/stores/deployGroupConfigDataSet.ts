@@ -90,19 +90,23 @@ const mapping: {
     name: 'maxSurge',
     type: 'string' as FieldType,
     label: 'MaxSurge',
-    required: true,
     min: 0,
     defaultValue: '25%',
     validator: checkPercentNum,
+    dynamicProps: {
+      required: ({ record }) => record.get(mapping.strategyType.name) === strategyTypeData[0].value,
+    },
   },
   MaxUnavailable: {
     name: 'maxUnavailable',
     type: 'string' as FieldType,
     label: 'MaxUnavailable',
-    required: true,
     min: 0,
     defaultValue: '25%',
     validator: checkPercentNum,
+    dynamicProps: {
+      required: ({ record }) => record.get(mapping.strategyType.name) === strategyTypeData[0].value,
+    },
   },
   DNSPolicy: {
     name: 'dnsPolicy',
@@ -189,7 +193,7 @@ const deployGroupConfigDataSet = (
         if (detail) {
           item.validator = async (value, type, record: Record) => {
             let res: any = '应用名称已重复';
-            const flag = await deployAppCenterApi.checkAppName(value, 'deployment', record.get('instanceId'));
+            const flag = await deployAppCenterApi.checkAppName(value, 'deployment', record.get('instanceId'), record.get(mapping.env.name));
             if (flag) {
               res = true;
             }
@@ -217,4 +221,4 @@ const deployGroupConfigDataSet = (
 
 export default deployGroupConfigDataSet;
 
-export { mapping };
+export { mapping, strategyTypeData };

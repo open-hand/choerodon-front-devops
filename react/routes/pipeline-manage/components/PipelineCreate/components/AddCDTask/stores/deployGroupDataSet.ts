@@ -43,7 +43,7 @@ const deployGroupDataSet = (ADDCDTaskDataSet: DataSet) => ({
         item.validator = async (value: string) => {
           if (ADDCDTaskDataSet.current?.get(fieldMap.deployWay.name) === deployWayData[0].value) {
             try {
-              const res = await deployAppCenterApi.checkAppName(value);
+              const res = await deployAppCenterApi.checkAppName(value, undefined, undefined, ADDCDTaskDataSet.current?.get('envId'));
               if (res) {
                 return true;
               }
@@ -61,7 +61,7 @@ const deployGroupDataSet = (ADDCDTaskDataSet: DataSet) => ({
         item.validator = async (value: string) => {
           if (ADDCDTaskDataSet.current?.get(fieldMap.deployWay.name) === deployWayData[0].value) {
             try {
-              const res = await deployAppCenterApi.checkAppCode(value);
+              const res = await deployAppCenterApi.checkAppCode(value, undefined, undefined, ADDCDTaskDataSet.current?.get('envId'));
               if (res) {
                 return true;
               }
@@ -83,20 +83,20 @@ const deployGroupDataSet = (ADDCDTaskDataSet: DataSet) => ({
   }),
   events: {
     update: ({ record, name, value }: {
-      record: Record,
-      name: string,
-      value: string,
-    }) => {
+        record: Record,
+        name: string,
+        value: string,
+      }) => {
       switch (name) {
         case mapping().appName.name: {
           if (ADDCDTaskDataSet.current?.get(fieldMap.deployWay.name) === deployWayData[1].value) {
             const item = appNameDataSet.records.find((itemRecord: Record) => itemRecord.get('name') === value);
             if (item) {
               record.set(mapping().appCode.name as string, item.get('code'));
-              record.getField(mapping().appCode.name)?.set('disabled', true);
+                record.getField(mapping().appCode.name)?.set('disabled', true);
             }
           } else {
-            record.getField(mapping().appCode.name)?.set('disabled', false);
+              record.getField(mapping().appCode.name)?.set('disabled', false);
           }
           break;
         }
