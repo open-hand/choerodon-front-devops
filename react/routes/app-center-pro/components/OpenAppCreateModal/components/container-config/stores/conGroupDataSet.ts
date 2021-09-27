@@ -84,6 +84,9 @@ const productSourceData = [{
   value: 'pipeline',
   name: '流水线上游制品',
   img: projectproduct,
+}, {
+  value: 'middleware',
+  name: '中间件',
 }];
 
 const repoTypeData = [{

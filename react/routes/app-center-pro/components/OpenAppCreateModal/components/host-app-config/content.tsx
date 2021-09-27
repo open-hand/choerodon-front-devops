@@ -359,7 +359,7 @@ const Index = observer(() => {
                 })}
               />
               {
-                detail?.rdupmType === 'other' ? '' : (
+                (detail?.rdupmType === 'other') || (detail?.[mapping.jarSource.name] === productSourceData[7].value) ? '' : (
                   <Select
                     name={mapping.jarSource.name}
                     disabled
@@ -371,15 +371,19 @@ const Index = observer(() => {
         }
         { renderFormByProductSource() }
       </Form>
-      <OperationYaml
-        style={{
-          marginBottom: 20,
-        }}
-        dataSet={HostAppConfigDataSet}
-        preName={mapping.value.name}
-        startName={mapping.startCommand.name}
-        postName={mapping.postCommand.name}
-      />
+      {
+        detail && detail?.[mapping.jarSource.name] === productSourceData[7].value ? '' : (
+          <OperationYaml
+            style={{
+              marginBottom: 20,
+            }}
+            dataSet={HostAppConfigDataSet}
+            preName={mapping.value.name}
+            startName={mapping.startCommand.name}
+            postName={mapping.postCommand.name}
+          />
+        )
+      }
     </div>
   );
 });

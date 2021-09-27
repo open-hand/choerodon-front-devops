@@ -4,7 +4,7 @@ import {
   Form, Select, NumberField, TextField, Icon, Button,
 } from 'choerodon-ui/pro';
 import { useDeployGroupConfigStore } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/deploy-group-config/stores';
-import { mapping } from './stores/deployGroupConfigDataSet';
+import { mapping, strategyTypeData } from './stores/deployGroupConfigDataSet';
 import CollapseContainer from './components/collapse-container';
 import { Record, FuncType, DataSet } from '@/interface';
 
@@ -295,16 +295,25 @@ const Index = observer(() => {
                 colSpan={1}
                 name={mapping.strategyType.name}
               />
-              <TextField
-                colSpan={1}
-                name={mapping.MaxSurge.name}
-                addonAfter={<Tips helpText="升级过程中，允许【超出副本数量的实例】的最大数量。" />}
-              />
-              <TextField
-                colSpan={1}
-                name={mapping.MaxUnavailable.name}
-                addonAfter={<Tips helpText="升级过程中，不可用实例的最大数量。" />}
-              />
+              {
+                DeployGroupConfigDataSet.current.get(
+                  mapping.strategyType.name,
+                ) === strategyTypeData[0].value ? (
+                  <>
+                    <TextField
+                      colSpan={1}
+                      name={mapping.MaxSurge.name}
+                      addonAfter={<Tips helpText="升级过程中，允许【超出副本数量的实例】的最大数量。" />}
+                    />
+                    <TextField
+                      colSpan={1}
+                      name={mapping.MaxUnavailable.name}
+                      addonAfter={<Tips helpText="升级过程中，不可用实例的最大数量。" />}
+                    />
+                  </>
+                  ) : ''
+              }
+
               {/* <Select
               colSpan={1}
               name={mapping.DNSPolicy.name}

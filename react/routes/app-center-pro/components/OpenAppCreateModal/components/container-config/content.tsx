@@ -94,7 +94,7 @@ const Index = observer(() => {
     if (typeof (detail) === 'object') {
       setExtraData({
         instanceId: detail.instanceId,
-        envId: detail.environmentId,
+        environmentId: detail.environmentId,
       });
       ConGroupDataSet.loadData(detail.containerConfig.map((item: any, index: number) => ({
         ...item,
