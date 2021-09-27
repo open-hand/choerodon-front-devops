@@ -182,6 +182,74 @@ const envDataSet = {
   },
 };
 
+const handleUpdate = async ({
+  dataSet, name, value, record, detail,
+}: any) => {
+  switch (name) {
+    case mapping.chartSource.name: {
+      // eslint-disable-next-line no-param-reassign
+      dataSet.getField(mapping.hzeroVersion.name).options.queryParameter = {};
+      if (value === chartSourceData[0].value) {
+        dataSet.getField(mapping.hzeroVersion.name).options.setQueryParameter('type', 'normal_service');
+        dataSet.getField(mapping.hzeroVersion.name).options.query();
+      } else if (value === chartSourceData[1].value) {
+        dataSet.getField(mapping.hzeroVersion.name).options.setQueryParameter('type', 'share_service');
+        dataSet.getField(mapping.hzeroVersion.name).options.query();
+      } else if (value === chartSourceData[2].value) {
+        dataSet.getField(mapping.marketVersion.name).options.setQueryParameter('applicationType', 'common');
+        dataSet.getField(mapping.marketVersion.name).options.query();
+      } else {
+        dataSet.getField(mapping.marketVersion.name).options.setQueryParameter('applicationType', 'hzero');
+        dataSet.getField(mapping.marketVersion.name).options.query();
+      }
+      dataSet.current.set(mapping.hzeroVersion.name, undefined);
+      dataSet.current.set(mapping.marketVersion.name, undefined);
+      dataSet.current.set(mapping.serviceVersion.name, undefined);
+      dataSet.current.set(mapping.marketServiceVersion.name, undefined);
+      dataSet.current.set(mapping.originValue.name, undefined);
+      break;
+    }
+    case mapping.serviceVersion.name: {
+      if (value) {
+        let getYamlValues:{yaml:string};
+        if (detail && 'instanceId' in detail) {
+          getYamlValues = await appServiceInstanceApi.getValues(detail?.instanceId, value);
+        } else {
+          getYamlValues = await appServiceInstanceApi.getDeployValue(value);
+        }
+        record.set(mapping.value.name, getYamlValues?.yaml);
+        record.set(mapping.originValue.name, getYamlValues?.yaml);
+      }
+      break;
+    }
+    case mapping.marketServiceVersion.name: {
+      if (value) {
+        const res = await deployApi.getValue(value.id);
+        record.set(mapping.value.name, res?.value);
+        record.set(mapping.originValue.name, res?.value);
+      }
+      break;
+    }
+    case mapping.hzeroVersion.name: {
+      record.set(mapping.serviceVersion.name, undefined);
+      record.set(mapping.value.name, '');
+      serviceVersionDataSet.setQueryParameter('appServiceId', value);
+      serviceVersionDataSet.query();
+      break;
+    }
+    case mapping.marketVersion.name: {
+      record.set(mapping.marketServiceVersion.name, undefined);
+      record.set(mapping.value.name, '');
+      record.set(mapping.originValue.name, '');
+      marketServiceVersionDataSet.setQueryParameter('version', value);
+      marketServiceVersionDataSet.query();
+    }
+    default: {
+      break;
+    }
+  }
+};
+
 const mapping: {
   [key: string]: FieldProps;
 } = {
@@ -397,75 +465,28 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
       value: any,
       record: any,
     }) => {
-      switch (name) {
-        case mapping.chartSource.name: {
-          // eslint-disable-next-line no-param-reassign
-          dataSet.getField(mapping.hzeroVersion.name).options.queryParameter = {};
-          if (value === chartSourceData[0].value) {
-            dataSet.getField(mapping.hzeroVersion.name).options.setQueryParameter('type', 'normal_service');
-            dataSet.getField(mapping.hzeroVersion.name).options.query();
-          } else if (value === chartSourceData[1].value) {
-            dataSet.getField(mapping.hzeroVersion.name).options.setQueryParameter('type', 'share_service');
-            dataSet.getField(mapping.hzeroVersion.name).options.query();
-          } else if (value === chartSourceData[2].value) {
-            dataSet.getField(mapping.marketVersion.name).options.setQueryParameter('applicationType', 'common');
-            dataSet.getField(mapping.marketVersion.name).options.query();
-          } else {
-            dataSet.getField(mapping.marketVersion.name).options.setQueryParameter('applicationType', 'hzero');
-            dataSet.getField(mapping.marketVersion.name).options.query();
-          }
-          dataSet.current.set(mapping.hzeroVersion.name, undefined);
-          dataSet.current.set(mapping.marketVersion.name, undefined);
-          dataSet.current.set(mapping.serviceVersion.name, undefined);
-          dataSet.current.set(mapping.marketServiceVersion.name, undefined);
-          dataSet.current.set(mapping.originValue.name, undefined);
-          break;
-        }
-        case mapping.serviceVersion.name: {
-          if (value) {
-            let getYamlValues:{yaml:string};
-            if (detail && 'instanceId' in detail) {
-              getYamlValues = await appServiceInstanceApi.getValues(detail?.instanceId, value);
-            } else {
-              getYamlValues = await appServiceInstanceApi.getDeployValue(value);
-            }
-            record.set(mapping.value.name, getYamlValues?.yaml);
-            record.set(mapping.originValue.name, getYamlValues?.yaml);
-          }
-          break;
-        }
-        case mapping.marketServiceVersion.name: {
-          if (value) {
-            const res = await deployApi.getValue(value.id);
-            record.set(mapping.value.name, res?.value);
-            record.set(mapping.originValue.name, res?.value);
-          }
-          break;
-        }
-        case mapping.hzeroVersion.name: {
-          record.set(mapping.serviceVersion.name, undefined);
-          record.set(mapping.value.name, '');
-          serviceVersionDataSet.setQueryParameter('appServiceId', value);
-          serviceVersionDataSet.query();
-          break;
-        }
-        case mapping.marketVersion.name: {
-          record.set(mapping.marketServiceVersion.name, undefined);
-          record.set(mapping.value.name, '');
-          record.set(mapping.originValue.name, '');
-          marketServiceVersionDataSet.setQueryParameter('version', value);
-          marketServiceVersionDataSet.query();
-        }
-        default: {
-          break;
-        }
-      }
+      handleUpdate({
+        dataSet, name, value, record, detail,
+      });
     },
     create: ({ record }: {
       record: Record,
     }) => {
       if (envId) {
         record.set(mapping.env.name as string, envId);
+      }
+    },
+    load: ({ dataSet }: {
+      dataSet: DataSet,
+    }) => {
+      const data = dataSet?.current?.toData();
+      if (data[mapping.hzeroVersion.name as string]) {
+        serviceVersionDataSet.setQueryParameter('appServiceId', data[mapping.hzeroVersion.name as string]);
+        serviceVersionDataSet.query();
+      }
+      if (data[mapping.marketVersion.name as string]) {
+        marketServiceVersionDataSet.setQueryParameter('version', data[mapping.marketVersion.name as string]);
+        marketServiceVersionDataSet.query();
       }
     },
   },

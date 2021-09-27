@@ -30,6 +30,7 @@ const mapping: {
     name: 'name',
     type: 'string' as FieldType,
     label: '网络名称',
+    // required: true,
     dynamicProps: {
       required: isRequired,
     },
@@ -67,7 +68,7 @@ const mapping: {
 };
 
 const networkConfigDataSet = (envId: string, PortsDataSet: any) => {
-  async function checkName(value: string, name: string, record: any) {
+  const checkName = async (value: string, name: string, record: any) => {
     if (!envId) {
       return;
     }
@@ -82,7 +83,7 @@ const networkConfigDataSet = (envId: string, PortsDataSet: any) => {
         return '名称已存在';
       }
     }
-  }
+  };
   return ({
     autoCreate: true,
     autoQuery: false,
