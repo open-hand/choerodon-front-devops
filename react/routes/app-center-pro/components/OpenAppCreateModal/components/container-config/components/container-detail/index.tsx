@@ -122,7 +122,8 @@ const Index = inject('AppState')(observer(({
                   <Select
                     colSpan={3}
                     name={mapping.relativeMission.name}
-                    addonAfter={<NewTips helpText="123" />}
+                    addonAfter={<NewTips helpText="此处的关联构建任务，仅会查询出该条流水线中存在'Docker构建'步骤的“构建类型”任务。
+                    若所选任务中存在多个“Docker构建”步骤，则只会部署第一个“Docker构建”步骤产生的镜像" />}
                   />
                 </Form>
               )
@@ -220,7 +221,8 @@ const Index = inject('AppState')(observer(({
                   <Select
                     colSpan={3}
                     name={mapping.relativeMission.name}
-                    addonAfter={<NewTips helpText="123" />}
+                    addonAfter={<NewTips helpText="此处的关联构建任务，仅会查询出该条流水线中存在“上传jar包至制品库”或“Maven发布”步骤的“构建类型”任务。
+                    若所选任务中存在多个满足条件的步骤，则只会部署所选任务中第一个满足条件的步骤产生的jar包" />}
                   />
                 </Form>
               )

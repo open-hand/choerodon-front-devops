@@ -243,9 +243,10 @@ export default observer(() => {
 
   useEffect(() => {
     const value = ADDCDTaskDataSet.current.get('envId');
-    debugger;
     DeployGroupDataSet.getField(deployGroupMapping().appName.name).set('disabled', !value);
     DeployGroupDataSet.getField(deployGroupMapping().appCode.name).set('disabled', !value);
+    DeployChartDataSet.getField(deployChartMapping().appName.name).set('disabled', !value);
+    DeployChartDataSet.getField(deployChartMapping().appCode.name).set('disabled', !value);
   }, [ADDCDTaskDataSet.current.get('envId')])
 
   useEffect(() => {

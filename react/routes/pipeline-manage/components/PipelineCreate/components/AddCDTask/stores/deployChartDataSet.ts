@@ -98,7 +98,7 @@ const deployChartDataSet = (ADDCDTaskDataSet: DataSet) => ({
         item.validator = async (value: string) => {
           if (ADDCDTaskDataSet.current?.get(fieldMap.deployWay.name) === deployWayData[0].value) {
             try {
-              const res = await deployAppCenterApi.checkAppName(value);
+              const res = await deployAppCenterApi.checkAppName(value, undefined, undefined, ADDCDTaskDataSet.current.get('envId'));
               if (res) {
                 return true;
               }
@@ -116,7 +116,7 @@ const deployChartDataSet = (ADDCDTaskDataSet: DataSet) => ({
         item.validator = async (value: string) => {
           if (ADDCDTaskDataSet.current?.get(fieldMap.deployWay.name) === deployWayData[0].value) {
             try {
-              const res = await deployAppCenterApi.checkAppCode(value);
+              const res = await deployAppCenterApi.checkAppCode(value, undefined, undefined, ADDCDTaskDataSet.current.get('envId'));
               if (res) {
                 return true;
               }
