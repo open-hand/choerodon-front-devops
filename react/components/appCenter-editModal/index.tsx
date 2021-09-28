@@ -26,7 +26,7 @@ function openAppConfigModal(data: string | object, refresh: Function) {
 
 function openContainerConfigModal(data: string | object, refresh: Function) {
   Modal.open({
-    title: '修改应用',
+    title: '修改容器配置',
     key: Modal.key(),
     drawer: true,
     style: {

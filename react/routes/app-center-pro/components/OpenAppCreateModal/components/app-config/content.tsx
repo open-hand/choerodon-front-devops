@@ -4,6 +4,7 @@ import React, {
 import {
   Form, Select, TextField, Output,
 } from 'choerodon-ui/pro';
+import _ from 'lodash';
 import { CustomSelect } from '@choerodon/components';
 import { observer } from 'mobx-react-lite';
 import { chartSourceData, mapping } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config/stores/appConfigDataSet';
@@ -50,6 +51,7 @@ const Index = observer(() => {
           ...detail,
           [mapping.chartSource.name as string]: detail?.chartSource || detail?.source,
           [mapping.value.name as string]: res.yaml,
+          [mapping.originValue.name as string]: res.yaml,
           [mapping.marketVersion.name as string]: detail?.mktAppVersionId,
           [mapping.marketServiceVersion.name as string]: detail?.mktDeployObjectId,
         }]);
@@ -143,6 +145,8 @@ const Index = observer(() => {
           <Select
             name={mapping.serviceVersion.name}
             colSpan={1}
+            searchable
+            searchMatcher="query"
           />
         );
         break;
@@ -180,17 +184,14 @@ const Index = observer(() => {
     </>
   );
 
-  const Editor = useMemo(() => (
+  const Editor = (
     <YamlEditor
       readOnly={false}
-      modeChange={false}
       value={AppConfigDataSet.current.get(mapping.value.name)}
       originValue={AppConfigDataSet.current.get(mapping.originValue.name)}
       onValueChange={(value: string) => AppConfigDataSet.current.set(mapping.value.name, value)}
     />
-  ),
-  [AppConfigDataSet.current.get(mapping.value.name),
-    AppConfigDataSet.current.get(mapping.originValue.name)]);
+  );
 
   return (
     <div className="c7ncd-appCenterPro-appConfig">
@@ -245,15 +246,20 @@ const Index = observer(() => {
         {
           renderVersion(AppConfigDataSet)
         }
-        <Select
-          name={mapping.env.name}
-          colSpan={1}
-          disabled={Boolean(detail)}
-          optionRenderer={renderEnvOption}
-          onOption={({ record }) => ({
-            disabled: !(record.get('connect') && record.get('synchro') && record.get('permission')),
-          })}
-        />
+        {
+          detail ? (
+            <Select
+              name={mapping.env.name}
+              colSpan={1}
+              disabled={Boolean(detail)}
+              optionRenderer={renderEnvOption}
+              onOption={({ record }) => ({
+                disabled: !(record.get('connect') && record.get('synchro') && record.get('permission')),
+              })}
+            />
+          ) : ''
+        }
+
       </Form>
       {Editor}
     </div>

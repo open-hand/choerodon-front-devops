@@ -295,9 +295,9 @@ const deployment = {
   'c7ncd.deployment.instance.action.stop': '停用应用',
   'c7ncd.deployment.instance.action.stop.title': '停用应用“{name}”',
   'c7ncd.deployment.instance.action.stop.tips': '确定要停用该应用吗？',
-  'c7ncd.deployment.instance.action.stop.no.tips': '该实例在流水线“{pipelineName}”，阶段“{stageName}”，任务“{jobName}”中作为替换实例，无法停用。若想停用此实例，请先前往该流水线修改界面将替换实例改为其他实例。',
+  'c7ncd.deployment.instance.action.stop.no.tips': '该应用在流水线“{pipelineName}”，阶段“{stageName}”，任务“{jobName}”中作为替换应用，无法停用。若想停用此应用，请先前往该流水线修改界面将替换应用改为其他应用。',
   'c7ncd.deployment.instance.action.delete.title': '删除应用“{name}”',
-  'c7ncd.deployment.instance.action.delete.no.tips': '该实例在流水线“{pipelineName}”，阶段“{stageName}”，任务“{jobName}”中作为替换实例，无法删除。若想删除此实例，请先前往该流水线修改界面将替换实例改为其他实例。',
+  'c7ncd.deployment.instance.action.delete.no.tips': '该应用在流水线“{pipelineName}”，阶段“{stageName}”，任务“{jobName}”中作为替换应用，无法删除。若想删除此应用，请先前往该流水线修改界面将替换应用改为其他应用。',
   'c7ncd.deployment.instance.action.start': '启用应用',
   'c7ncd.deployment.instance.action.start.title': '启用应用“{name}”',
   'c7ncd.deployment.instance.action.start.tips': '确定要启用该应用吗？',
@@ -461,7 +461,7 @@ const deployment = {
   'c7ncd.deployment.custom.delete.des': '确定要删除该自定义资源吗？',
   'c7ncd.deployment.config.delete.disable': '删除部署配置“{name}”',
   'c7ncd.deployment.config.delete.des': '确定要删除该部署配置吗？',
-  'c7ncd.deployment.config.delete.describe': '仅能删除没有关联任务和关联实例的部署配置。',
+  'c7ncd.deployment.config.delete.describe': '仅能删除没有关联流水线任务和关联Chart应用的部署配置。',
   'c7ncd.deployment.sync.empty': '目前部署同步正常，暂无错误信息',
   'c7ncd.deployment.permission.tab.tips':
     '当选择将权限分配至项目下所有成员时，此时便不能在列表中删除任何成员的权限；仅在选择将权限分配给项目下特定成员时，才能在下方列表中管理成员的权限。项目所有者的权限不能被删除',
@@ -481,7 +481,7 @@ const deployment = {
   'c7ncd.deployment.pvc.delete.des': '确定要删除该PVC吗？',
   'c7ncd.deployment.active': '生效',
   'c7ncd.deployment.choose.version': '选择版本',
-  'c7ncd.deployment.polaris.empty.des': '当前环境下暂无实例，无法执行健康检查。',
+  'c7ncd.deployment.polaris.empty.des': '当前环境下暂无容器应用，无法执行健康检查。',
   'c7ncd.deployment.polaris.check.empty': '该实例为空',
   'c7ncd.deployment.pod.disabled.tops': '若想降至0，请直接点击“停用实例”',
   'c7ncd.deployment.marketApp': '市场应用',
@@ -948,7 +948,7 @@ const pipelineManage = {
   'c7ncd.pipelineManage.record.empty.des': '已跳过该流水线的此次执行。您可直接点击全新执行来重跑流水线',
   'c7ncd.pipelineManage.record.empty.title.other': '阶段信息为空',
   'c7ncd.pipelineManage.record.empty.des.other': '未获取到此次执行的阶段信息',
-  'c7ncd.pipelineManage.create.share.title': '共享目录设置',
+  'c7ncd.pipelineManage.create.share.title': '缓存设置',
   'c7ncd.pipelineManage.create.share.tips': '若勾选上传共享目录，则会将此任务中产生的工件或其它文件上传至共享目录，供之后的任务下载使用。若勾选下载共享目录，则会在此任务中下载使用该条流水线中已上传至共享目录中的工件',
   'c7ncd.pipelineManage.settings.global': '全局CI变量配置',
   'c7ncd.pipelineManage.settings.local': '流水线CI变量配置',
@@ -3097,7 +3097,8 @@ const zhCN = {
   'resource.one.file': '仅能上传一个文件',
 
   // 删除弹框确认信息
-  'instance.delete': '删除应用',
+  'instance.delete': '删除Chart应用',
+  'deployGroup.delete': '删除部署组应用',
   'secret.delete': '删除密文',
   'configMap.delete': '删除配置映射',
   'ingress.delete': '删除域名',
@@ -3119,6 +3120,7 @@ const zhCN = {
   'certificate.delete.message': '删除证书后，将会导致与此证书相关的域名失效。确定要删除该证书吗？',
   'configMap.delete.message': '确认删除配置映射吗？',
   'secret.delete.message': '确认删除密文吗？',
+  'deployGroup.delete.message': '确认删除此部署组应用吗？',
 
   // 0.19
   'data.changed': '基本数据发生变化，已更新。',

@@ -9,10 +9,9 @@ import {
 } from 'choerodon-ui/pro';
 import { Collapse } from 'choerodon-ui';
 import { Action, Page, Permission } from '@choerodon/boot';
-import { UserInfo } from '@choerodon/components';
+import { UserInfo, Loading } from '@choerodon/components';
 import TimePopover from '../../../../components/timePopover';
 import EmptyPage from '../../../../components/empty-page';
-import Loading from '../../../../components/loading';
 import { handlePromptError } from '../../../../utils';
 import { useAppTagStore } from './stores';
 import { useCodeManagerStore } from '../../stores';
@@ -277,7 +276,8 @@ export default observer((props) => {
         service={[]}
       >
         {/* 应用/标签是否加载完成的判断，目的是控制Loading的显示 */}
-        {appServiceDs.status !== 'ready' || appTagDs.status !== 'ready' ? <Loading display />
+        {appServiceDs.status !== 'ready' || appTagDs.status !== 'ready' ? <Loading display type="c7n" />
+          // 代码管理-标记loading
           : (
             <div className="c7ncd-tag-content">
               {tagStore.getIsEmpty ? (

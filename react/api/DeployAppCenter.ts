@@ -60,7 +60,7 @@ class DeployAppCenterApi extends Api<DeployAppCenterApi> {
     });
   }
 
-  checkAppName(name: string, rdupmType?: string, objectId?: string) {
+  checkAppName(name: string, rdupmType?: string, objectId?: string, envId?: string) {
     return this.request({
       method: 'get',
       url: `${this.prefix}/check_name`,
@@ -68,11 +68,12 @@ class DeployAppCenterApi extends Api<DeployAppCenterApi> {
         name,
         rdupmType,
         object_id: objectId,
+        env_id: envId,
       },
     });
   }
 
-  checkAppCode(code: string, rdupmType?: string, objectId?: string) {
+  checkAppCode(code: string, rdupmType?: string, objectId?: string, envId?: string) {
     return this.request({
       method: 'get',
       url: `${this.prefix}/check_code`,
@@ -80,6 +81,7 @@ class DeployAppCenterApi extends Api<DeployAppCenterApi> {
         code,
         rdupmType,
         objectId,
+        env_id: envId,
       },
     });
   }
@@ -92,6 +94,13 @@ class DeployAppCenterApi extends Api<DeployAppCenterApi> {
         env_id: envId,
         app_service_id: appServiceId,
       },
+    });
+  }
+
+  checkPipelinelinked(appId:string) {
+    return this.request({
+      method: 'get',
+      url: `${this.prefix}/${appId}/pipeline_reference`,
     });
   }
 }

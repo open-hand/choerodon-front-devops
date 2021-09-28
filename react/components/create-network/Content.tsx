@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   TextField, Form, Button, Icon, Select, SelectBox, Tooltip,
@@ -22,7 +22,8 @@ function FormContent() {
       formatMessage,
     },
     networkId,
-    appInstanceOptionsDs,
+    name,
+    code,
   } = useNetWorkStore();
 
   const { current } = formDs;
@@ -59,6 +60,11 @@ function FormContent() {
     text,
     value,
   }:any) => <Tooltip title={value}>{value}</Tooltip>;
+
+  const targetPortOptionsFilter = (record: { get: (arg0: string) => any; }) => !!record.get('portName');
+
+  const labelOptionRenderer = ({ record, text, value }:any) => `${record.get('meaning')}`;
+
   const targetPortOptionsFilter = (record: { get: (arg0: string) => any; }) => !!record.get('portName');
 
   const labelOptionRenderer = ({ record, text, value }:any) => `${record.get('meaning')}`;
@@ -131,7 +137,7 @@ function FormContent() {
             colSpan={3}
           >
             <SelectBox name="target">
-              <Option value="instance"><span className="target-instance">{formatMessage({ id: 'network.target.instance' })}</span></Option>
+              <Option value="instance"><span className="target-instance">{formatMessage({ id: 'network.target.application' })}</span></Option>
               <Option value="param">{formatMessage({ id: 'network.target.param' })}</Option>
             </SelectBox>
           </div>
@@ -139,7 +145,11 @@ function FormContent() {
           <div colSpan={3} className="target-form">
             {
               (current && current.get('target') === 'instance')
-                ? <Select searchable name="appInstance" colSpan={3} className="app-instance-select" optionRenderer={appInstanceOptionRenderer} renderer={appInstanceRenderer} />
+                ? (
+                  <Select colSpan={3} name="appInstance" className="app-instance-select" disabled>
+                    <Option value={code}>{name}</Option>
+                  </Select>
+                )
                 : (
                   <div className="label-form">
                     {

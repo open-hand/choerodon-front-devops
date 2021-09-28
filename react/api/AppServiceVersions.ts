@@ -9,6 +9,7 @@ class AppServiceVersionsApi extends Api<AppServiceVersionsApi> {
     appServiceId: string,
     deployOnly: boolean,
     doPage: boolean,
+    othersParams: object = {},
   ) {
     return this.request({
       method: 'post',
@@ -17,6 +18,7 @@ class AppServiceVersionsApi extends Api<AppServiceVersionsApi> {
         app_service_id: appServiceId,
         deploy_only: deployOnly,
         do_page: doPage,
+        ...othersParams,
       },
     });
   }
@@ -25,8 +27,8 @@ class AppServiceVersionsApi extends Api<AppServiceVersionsApi> {
     appServiceId: string,
   ) {
     return this.request({
-      url: `${this.prefix}/page_by_options?app_service_id=${appServiceId}&deploy_only=false&do_page=true&page=1&size=40`,
-      method: 'post',
+      url: `${this.prefix}/page/share_versions?app_service_id=${appServiceId}&page=0&size=20`,
+      method: 'get',
     });
   }
 

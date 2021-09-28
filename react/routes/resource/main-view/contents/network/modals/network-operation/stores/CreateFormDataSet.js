@@ -152,7 +152,7 @@ export default ({
       },
       {
         name: 'appDeploy', // 部署组应用
-        type: 'string',
+        type: 'object',
         label: formatMessage({ id: 'network.isChart.deployment' }),
         dynamicProps: {
           required: ({ dataSet, record, name }) => record.get('target') === 'instance' && record.get('isChart') !== 'chart',
@@ -223,7 +223,7 @@ export default ({
             break;
           case 'appDeploy':
             !networkId && handleAppDeployChange({
-              dataSet, record, name, value, appDeployOptionsDs,
+              dataSet, record, value,
             });
             break;
           case 'isChart':
@@ -278,10 +278,10 @@ function handleAppServiceIdChange({
 }
 
 function handleAppDeployChange({
-  dataSet, record, name, value, appDeployOptionsDs,
+  dataSet, record, value,
 }) {
   if (!value) return;
-  const networkName = createNetworkName(appDeployOptionsDs.current, dataSet);
+  const networkName = createNetworkName(value, dataSet);
   record.set('name', networkName);
 }
 /**
@@ -294,7 +294,7 @@ function createNetworkName(opt, dataSet) {
   if (dataSet.current.get('isChart') === 'chart') {
     initName = opt.code;
   } else {
-    initName = opt.get('code');
+    initName = opt.name;
   }
   if (initName.length > 23) {
     // 初始网络名长度限制

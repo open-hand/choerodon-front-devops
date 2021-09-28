@@ -8,7 +8,7 @@ import {FormattedMessage, injectIntl} from 'react-intl';
 import classNames from 'classnames';
 import TimeAgo from 'timeago-react';
 import MouserOverWrapper from '../../../../components/MouseOverWrapper';
-import Loading from '../../../../components/loading';
+import { Loading } from '@choerodon/components';
 import handleMapStore from '../../main-view/store/handleMapStore';
 import { usePipelineStore } from './stores';
 import { useCodeManagerStore } from '../../stores';
@@ -355,7 +355,7 @@ export default injectIntl(observer((props) => {
       service={[]}
     >
       {appServiceDs.status !== 'ready' || !appServiceId
-        ? <Loading display />
+        ? <Loading display type="c7n" />
         : <div className="c7ncd-tab-table">
           <Table
             className="c7n-pipineline-table"

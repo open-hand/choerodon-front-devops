@@ -3,6 +3,8 @@ import { CONSTANTS } from '@choerodon/master';
 import { FieldProps } from 'choerodon-ui/pro/lib/data-set/field';
 import { FieldType } from 'choerodon-ui/pro/lib/data-set/enum';
 import { Record } from '@/interface';
+import { hostDataSetConfig } from '../../host-app-config/stores/hostAppConfigDataSet';
+import { envDataSet } from '../../app-config/stores/appConfigDataSet';
 import { deployAppCenterApi, hostApi } from '@/api';
 import container from '../images/container.png';
 import host from '../images/host.png';
@@ -53,9 +55,18 @@ const mapping: {
     validator: async (value, type, record: Record) => {
       let res: any = '应用名称已重复';
       if (record?.get(mapping.deployMode.name) === deployModeOptionsData[0].value) {
-        const flag = await deployAppCenterApi.checkAppName(value);
-        if (flag) {
-          res = true;
+        if (record.get(mapping.env.name)) {
+          const flag = await deployAppCenterApi.checkAppName(
+            value,
+            undefined,
+            undefined,
+            record.get(mapping.env.name),
+          );
+          if (flag) {
+            res = true;
+          }
+        } else {
+          res = '请先选择环境';
         }
       } else {
         const flag = await hostApi.checkAppName(value);
@@ -79,9 +90,18 @@ const mapping: {
       }
       let res: any = '应用编码重复';
       if (record?.get(mapping.deployMode.name) === deployModeOptionsData[0].value) {
-        const res1 = await deployAppCenterApi.checkAppCode(value);
-        if (res1) {
-          res = true;
+        if (record.get(mapping.env.name)) {
+          const res1 = await deployAppCenterApi.checkAppCode(
+            value,
+            undefined,
+            undefined,
+            record.get(mapping.env.name),
+          );
+          if (res1) {
+            res = true;
+          }
+        } else {
+          res = '请先选择环境';
         }
       } else {
         const res1 = await hostApi.checkAppCode(value);
@@ -113,6 +133,30 @@ const mapping: {
       data: deployProductOptionsData,
     }),
     defaultValue: deployProductOptionsData[0].value,
+  },
+  env: {
+    name: 'environmentId',
+    type: 'string' as FieldType,
+    label: '环境',
+    options: new DataSet(envDataSet),
+    textField: 'name',
+    valueField: 'id',
+    dynamicProps: {
+      required: ({ record }) => record.get(mapping.deployMode.name)
+      === deployModeOptionsData[0].value,
+    },
+  },
+  host: {
+    name: 'hostId',
+    type: 'string' as FieldType,
+    label: '主机',
+    textField: 'name',
+    valueField: 'id',
+    options: new DataSet(hostDataSetConfig()),
+    dynamicProps: {
+      required: ({ record }) => record.get(mapping.deployMode.name)
+      === deployModeOptionsData[1].value,
+    },
   },
 };
 

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 import React, { useEffect } from 'react';
 import { Form, TextField, Select } from 'choerodon-ui/pro';
 import { injectIntl, FormattedMessage } from 'react-intl';
@@ -5,10 +6,10 @@ import { observer } from 'mobx-react-lite';
 import { Icon, Input, Divider } from 'choerodon-ui';
 import { axios, Choerodon } from '@choerodon/boot';
 import includes from 'lodash/includes';
+import { Loading } from '@choerodon/components';
 import { handlePromptError } from '../../../../utils';
 import Settings from './Settings';
 import { useEditAppServiceStore } from './stores';
-import Loading from '../../../../components/loading';
 
 import './index.less';
 
@@ -27,7 +28,7 @@ const CreateForm = injectIntl(observer((props) => {
   } = useEditAppServiceStore();
   const record = formDs.current;
   if (!record) {
-    return <Loading display />;
+    return <Loading display type="c7n" />;
   }
 
   modal.handleOk(async () => {
@@ -117,9 +118,9 @@ const CreateForm = injectIntl(observer((props) => {
           <Icon type="photo_camera" className="edit-img-icon" />
         </div>
         {!record.get('imgUrl') && (
-        <div className="edit-avatar">
-          <span>{record.get('name') && record.get('name').slice(0, 1)}</span>
-        </div>
+          <div className="edit-avatar">
+            <span>{record.get('name') && record.get('name').slice(0, 1)}</span>
+          </div>
         )}
         <Input
           id="file"

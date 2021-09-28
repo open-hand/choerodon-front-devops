@@ -35,6 +35,8 @@ export const StoreProvider = (props: any) => {
     detail,
   } = props;
 
+  console.log(detail);
+
   const AppConfigDataSet = useMemo(
     () => new DataSet(appConfigDataSet(envId, detail)), [envId, detail],
   );

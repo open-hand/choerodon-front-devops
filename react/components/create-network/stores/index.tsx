@@ -26,6 +26,7 @@ function StoreProvider(props:any) {
     envId,
     appServiceId: appId,
     networkId,
+    code,
   } = props;
 
 
@@ -37,7 +38,7 @@ function StoreProvider(props:any) {
 
   const networkInfoDs = useMemo(() => new DataSet(NetworkInfoDataSet(projectId, networkId)), [networkId]);
 
-  const formDs = useMemo(() => new DataSet(CreateFormDataSet({ formatMessage, portDs, targetLabelsDs, appInstanceOptionsDs, projectId, envId, appId, networkEdit: { networkInfoDs, networkId, initTargetLabel, initPorts } })), [projectId, envId, appId]);
+  const formDs = useMemo(() => new DataSet(CreateFormDataSet({ formatMessage, portDs, targetLabelsDs,code, appInstanceOptionsDs, projectId, envId, appId, networkEdit: { networkInfoDs, networkId, initTargetLabel, initPorts } })), [projectId, envId, appId]);
 
 
   useEffect(() => {

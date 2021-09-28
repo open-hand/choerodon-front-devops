@@ -84,6 +84,9 @@ const productSourceData = [{
   value: 'pipeline',
   name: '流水线上游制品',
   img: projectproduct,
+}, {
+  value: 'middleware',
+  name: '中间件',
 }];
 
 const repoTypeData = [{
@@ -609,7 +612,7 @@ const mapping: {
     valueField: 'name',
     name: 'pipelineJobName',
     type: 'string' as FieldType,
-    label: '流水线上游制品',
+    label: '关联构建任务',
   },
 };
 

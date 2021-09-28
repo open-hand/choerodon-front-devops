@@ -76,7 +76,7 @@ const polaris = observer(() => {
     const isLoading = loading || statusLoading;
     const envStatus = baseInfoDs.current && baseInfoDs.current.get('connect');
     if (envStore.getPolarisLoading) {
-      return <Loading display />;
+      return <Loading display type="c7n" />;
     }
     if (envStore.getHasInstance) {
       return (
@@ -97,7 +97,7 @@ const polaris = observer(() => {
     }
     return (
       <EmptyPage
-      // @ts-expect-error
+        // @ts-expect-error
         title={formatMessage({ id: 'empty.title.instance' })}
         describe={formatMessage({ id: `${intlPrefix}.polaris.empty.des` })}
         access

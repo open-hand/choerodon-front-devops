@@ -79,7 +79,7 @@ export default (
         }
         return ({
           method: 'post',
-          url: `/devops/v1/projects/${projectId}/app_service/page_app_services_without_ci?page=0&size=20&random=${mathRandom}`,
+          url: `/devops/v1/projects/${projectId}/app_service/page_app_services_without_ci?page=0&size=0&random=${mathRandom}`,
           data: {
             param: [],
             searchParam: {
@@ -93,8 +93,8 @@ export default (
               if (data.params.appServiceName) {
                 createUseStore.setSearchAppServiceData(newRes);
               }
-              if (newRes.length % 20 === 0 && newRes.length !== 0) {
-                newRes.push({
+              if (newRes.content.length % 20 === 0 && newRes.content.length !== 0) {
+                newRes.content.push({
                   appServiceId: 'more',
                   appServiceName: '加载更多',
                 });

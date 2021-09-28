@@ -5,13 +5,16 @@ import { injectIntl } from 'react-intl';
 import { Action, Choerodon, axios } from '@choerodon/boot';
 import { Modal } from 'choerodon-ui/pro';
 import isEmpty from 'lodash/isEmpty';
-import eventStopProp from '../../../../../utils/eventStopProp';
-import PodCircle from '../../../../../components/pod-circle';
+import eventStopProp from '@/utils/eventStopProp';
+import PodCircle from '@/components/pod-circle';
 import { useResourceStore } from '../../../stores';
 import { useTreeItemStore } from './stores';
-import { handlePromptError } from '../../../../../utils';
+import {
+  openDelete,
+} from '@/components/app-deletion-with-vertification-code';
+import { handlePromptError } from '@/utils';
 import { useMainStore } from '../../stores';
-import openWarnModal from '../../../../../utils/openWarnModal';
+import openWarnModal from '@/utils/openWarnModal';
 
 const stopKey = Modal.key();
 const stopKey2 = Modal.key();
@@ -35,7 +38,7 @@ function InstanceItem({
   } = useResourceStore();
   const { treeItemStore } = useTreeItemStore();
   const {
-    mainStore: { openDeleteModal },
+    deletionStore,
   } = useMainStore();
 
   const podRunningCount = record.get('podRunningCount');
@@ -100,15 +103,6 @@ function InstanceItem({
     });
   }
 
-  async function openDelete(envId, istId, istName) {
-    const hasPipelineReference = await checkPipelineReference();
-    if (!isEmpty(hasPipelineReference)) {
-      openPipelineReferenceModal('delete', hasPipelineReference);
-    } else {
-      openDeleteModal(envId, istId, istName, 'instance', freshMenu);
-    }
-  }
-
   async function openChangeActive(active) {
     const [isExist, hasPipelineReference] = await axios.all([
       checkDataExist(),
@@ -170,7 +164,14 @@ function InstanceItem({
       delete: {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete'],
         text: formatMessage({ id: `${intlPrefix}.instance.action.delete` }),
-        action: () => openDelete(envId, istId, istName),
+        action: () => openDelete({
+          envId,
+          instanceId: istId,
+          instanceName: istName,
+          callback: freshMenu,
+          projectId,
+          deletionStore,
+        }),
       },
     };
     switch (record.get('status')) {

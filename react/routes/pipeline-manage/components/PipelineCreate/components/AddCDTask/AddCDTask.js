@@ -198,6 +198,11 @@ export default observer(() => {
   }
 
   useEffect(() => {
+    const value = ADDCDTaskDataSet.current.get(fieldMap.deployWay.name);
+    ADDCDTaskDataSet.getField(addCDTaskDataSetMap.host).set('disabled', (value === deployWayData[1].value) && ADDCDTaskDataSet.current.get('type') === 'cdHost');
+  }, [ADDCDTaskDataSet.current.get(fieldMap.deployWay.name)])
+
+  useEffect(() => {
     const currentHostDeployType = ADDCDTaskDataSet?.current?.get(
       "hostDeployType"
     );
@@ -235,6 +240,14 @@ export default observer(() => {
     ADDCDTaskDataSet?.current?.get("hostDeployType"),
     pipelineStageMainSource,
   ]);
+
+  useEffect(() => {
+    const value = ADDCDTaskDataSet.current.get('envId');
+    DeployGroupDataSet.getField(deployGroupMapping().appName.name).set('disabled', !value);
+    DeployGroupDataSet.getField(deployGroupMapping().appCode.name).set('disabled', !value);
+    DeployChartDataSet.getField(deployChartMapping().appName.name).set('disabled', !value);
+    DeployChartDataSet.getField(deployChartMapping().appCode.name).set('disabled', !value);
+  }, [ADDCDTaskDataSet.current.get('envId')])
 
   useEffect(() => {
     if (relatedJobOpts && relatedJobOpts.length === 1) {

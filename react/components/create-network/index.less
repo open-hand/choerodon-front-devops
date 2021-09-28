@@ -1,4 +1,4 @@
-@import '~choerodon-ui/lib/style/themes/default';
+@import "~choerodon-ui/lib/style/themes/default";
 
 .c7ncd-create-network {
   width: 512px;
@@ -21,7 +21,8 @@
   .network-panel-target-select {
     margin-bottom: -0.14rem;
   }
-  .type-span, .target-instance {
+  .type-span,
+  .target-instance {
     margin-right: 0.6rem;
   }
 
@@ -35,6 +36,9 @@
   .target-form {
     .app-instance-select {
       width: 100%;
+      input {
+        padding-top: 0 !important;
+      }
     }
   }
 
@@ -42,7 +46,8 @@
     margin-bottom: -0.16rem;
   }
 
-  .network-group-icon, .delete-icon-target {
+  .network-group-icon,
+  .delete-icon-target {
     position: relative;
     font-size: 0.18rem;
   }
@@ -74,5 +79,5 @@
 
 .c7ncd-instance-status-icon {
   color: #f44336;
-  margin-left: .02rem;
+  margin-left: 0.02rem;
 }

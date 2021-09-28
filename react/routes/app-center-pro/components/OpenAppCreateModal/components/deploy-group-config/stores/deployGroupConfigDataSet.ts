@@ -35,6 +35,14 @@ const checkIp = async (value: string, num: number) => {
   return true;
 };
 
+const strategyTypeData = [{
+  value: 'RollingUpdate',
+  name: '滚动更新(推荐)',
+}, {
+  value: 'Recreate',
+  name: '重建',
+}];
+
 const mapping: {
   [key: string]: FieldProps
 } = {
@@ -42,14 +50,6 @@ const mapping: {
     name: 'name',
     type: 'string' as FieldType,
     label: '应用名称',
-    validator: async (value, type, record: Record) => {
-      let res: any = '应用名称已重复';
-      const flag = await deployAppCenterApi.checkAppName(value, 'deployment', record.get('instanceId'));
-      if (flag) {
-        res = true;
-      }
-      return res;
-    },
   },
   appCode: {
     name: 'code',
@@ -74,23 +74,39 @@ const mapping: {
     min: 1,
     step: 1,
   },
+  strategyType: {
+    name: 'strategyType',
+    type: 'string' as FieldType,
+    label: '更新策略',
+    required: true,
+    textField: 'name',
+    valueField: 'value',
+    defaultValue: strategyTypeData[0].value,
+    options: new DataSet({
+      data: strategyTypeData,
+    }),
+  },
   MaxSurge: {
     name: 'maxSurge',
     type: 'string' as FieldType,
     label: 'MaxSurge',
-    required: true,
     min: 0,
     defaultValue: '25%',
     validator: checkPercentNum,
+    dynamicProps: {
+      required: ({ record }) => record.get(mapping.strategyType.name) === strategyTypeData[0].value,
+    },
   },
   MaxUnavailable: {
     name: 'maxUnavailable',
     type: 'string' as FieldType,
     label: 'MaxUnavailable',
-    required: true,
     min: 0,
     defaultValue: '25%',
     validator: checkPercentNum,
+    dynamicProps: {
+      required: ({ record }) => record.get(mapping.strategyType.name) === strategyTypeData[0].value,
+    },
   },
   DNSPolicy: {
     name: 'dnsPolicy',
@@ -133,6 +149,7 @@ const mapping: {
 const deployGroupConfigDataSet = (
   isPipeline: boolean,
   envId?: string,
+  detail?: any,
 ) => ({
   autoCreate: true,
   transport: {
@@ -167,9 +184,22 @@ const deployGroupConfigDataSet = (
     switch (i) {
       case 'env': {
         item.dynamicProps = {
-          required: () => !isPipeline,
+          required: () => !isPipeline && detail,
         };
         item.disabled = Boolean(envId);
+        break;
+      }
+      case 'appName': {
+        if (detail) {
+          item.validator = async (value, type, record: Record) => {
+            let res: any = '应用名称已重复';
+            const flag = await deployAppCenterApi.checkAppName(value, 'deployment', record.get('instanceId'), record.get(mapping.env.name));
+            if (flag) {
+              res = true;
+            }
+            return res;
+          };
+        }
         break;
       }
       default: {
@@ -191,4 +221,4 @@ const deployGroupConfigDataSet = (
 
 export default deployGroupConfigDataSet;
 
-export { mapping };
+export { mapping, strategyTypeData };

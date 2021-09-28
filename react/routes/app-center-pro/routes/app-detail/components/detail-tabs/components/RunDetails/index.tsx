@@ -73,9 +73,9 @@ export default observer(() => {
   const handleClick = async (type:any, name:any, instanceId:string) => {
     // chart包的和部署组的接口不一样
     const groupType = appCatergory.code;
-    const result = await runDetailsStore.loadDeploymentsJson(type, instanceId, name, groupType);
-    runDetailsStore.loadDeploymentsYaml(type, instanceId, name, groupType);
-    if (result) {
+    const jsonRes = await runDetailsStore.loadDeploymentsJson(type, instanceId, name, groupType);
+    const yamlRes = await runDetailsStore.loadDeploymentsYaml(type, instanceId, name, groupType);
+    if (jsonRes && yamlRes) {
       setVisible(true);
     } else {
       setVisible(false);

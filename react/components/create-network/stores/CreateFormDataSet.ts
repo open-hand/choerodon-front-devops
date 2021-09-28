@@ -2,7 +2,7 @@
 import { map, forOwn, isEmpty, forEach } from 'lodash';
 import { axios } from '@choerodon/boot';
 
-export default ({ formatMessage, portDs, targetLabelsDs, appInstanceOptionsDs, networkStore, projectId, envId, appId, networkEdit }:any):any => {
+export default ({ formatMessage, portDs, targetLabelsDs, code, networkStore, projectId, envId, appId, networkEdit }:any):any => {
   const { networkInfoDs, networkId, initTargetLabel, initPorts } = networkEdit;
 
   function checkNetWorkName(projectId: any, envId: any, value: any) {
@@ -46,31 +46,6 @@ export default ({ formatMessage, portDs, targetLabelsDs, appInstanceOptionsDs, n
     }
   }
 
-
-  function checkInstance(value: string, name: any, record: any) {
-    if (!networkId) return;
-    let msg: any;
-    if (value) {
-      const data = value.split(',');
-      forEach(data, (item: any) => {
-        const instance = appInstanceOptionsDs.find((r: { get: (arg0: string) => any; }) => r.get('code') === item);
-        let status;
-        if(instance){
-          status = instance.get('status');
-        }
-        if (instance && status && status !== 'running' && !msg) {
-          msg = formatMessage({ id: 'network.instance.check.failed' });
-        }
-      });
-      if (data[1] && !msg) {
-        msg = formatMessage({ id: 'network.instance.check.failed.more' });
-      }
-    }
-    if (msg) {
-      return msg;
-    }
-  }
-
   return {
     autoCreate: true,
     children: {
@@ -98,15 +73,7 @@ export default ({ formatMessage, portDs, targetLabelsDs, appInstanceOptionsDs, n
       {
         name: 'appInstance',
         type: 'string',
-        label: formatMessage({ id: 'network.target.instance' }),
-        required: true,
-        options: appInstanceOptionsDs,
-        textField: 'code',
-        valueField: 'code',
-        validator: checkInstance,
-        dynamicProps: {
-          required: ({ dataSet, record, name }:any) => record.get('target') !== 'param',
-        },
+        defaultValue:code,
       },
       {
         name: 'externalIps',

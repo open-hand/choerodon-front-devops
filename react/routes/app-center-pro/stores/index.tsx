@@ -4,20 +4,22 @@ import React, {
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { useHistory, useLocation } from 'react-router';
-import { Modal } from 'choerodon-ui/pro';
 import {
   CHART_CATERGORY,
-  DEPLOY_TYPE, ENV_TAB,
+  DEPLOY_TYPE,
 } from './CONST';
 
-import useDeletionStore, { StoreProps } from './deletionStore';
-import { hostApi } from '@/api';
-import { openDelete } from '../components/app-deletion';
-import { deploymentsApi } from '@/api/Deployments';
+import {
+  openDelete,
+  useAppDeletionWithVertificationStore,
+  AppDeletionWithVertificationStoreProps,
+} from '@/components/app-deletion-with-vertification-code';
+import { appTypes } from '@/components/app-deletion-with-vertification-code/interface';
 
 type deletEnvProps ={
   appCatergoryCode:string,
   envId:string,
+  type?: appTypes
   instanceId:string,
   instanceName:string,
   callback:(...args:[])=>any,
@@ -35,9 +37,8 @@ interface ContextProps {
     ENV_TAB: 'env',
     HOST_TAB: 'host',
   }
-  deletionStore: StoreProps
+  deletionStore: AppDeletionWithVertificationStoreProps
   match:any
-  openDeleteHostAppModal: (hostId:string, instanceId:string, callback?:CallableFunction) => any
   deleteEnvApp: (props:deletEnvProps)=>any
   goBackHomeBaby: (...args:any[])=>any
 }
@@ -61,75 +62,25 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const location = useLocation();
 
   // 专门针对环境的应用删除的弹窗
-  const deletionStore = useDeletionStore();
+  const deletionStore = useAppDeletionWithVertificationStore();
 
   function goBackHomeBaby() {
     history.push({ pathname: '/devops/application-center', search: location.search });
-  }
-
-  function openDeleteHostAppModal(hostId: string, instanceId: string, callback?:CallableFunction) {
-    async function deleteHostApp() {
-      try {
-        const res = await hostApi.jarDelete(hostId, instanceId);
-        if (res && res?.failed) {
-          return res;
-        }
-        typeof callback === 'function' && callback();
-        return res;
-      } catch (error) {
-        throw new Error(error);
-      }
-    }
-    Modal.open({
-      key: Modal.key(),
-      title: '删除应用',
-      children: '确认删除此应用吗？',
-      okText: '删除',
-      onOk: deleteHostApp,
-    });
-  }
-
-  // 部署组的删除
-  function openDeleteGroupModal({
-    instanceId, callback,
-  }:{
-    instanceId:string,
-    callback:(...args:[])=>any
-  }) {
-    async function deleteDeployGroupApp() {
-      try {
-        const res = await deploymentsApi.deleleDeployGroupApp(instanceId);
-        if (res && res.failed) {
-          return res;
-        }
-        callback();
-        return true;
-      } catch (error) {
-        throw new Error(error);
-      }
-    }
-    Modal.open({
-      key: Modal.key(),
-      title: '删除应用',
-      children: '确认删除此应用吗？',
-      okText: '删除',
-      onOk: deleteDeployGroupApp,
-    });
   }
 
   // 删除chart和部署组的
   async function deleteEnvApp({
     appCatergoryCode, envId, instanceId, instanceName, callback,
   }:deletEnvProps) {
-    if (appCatergoryCode === CHART_CATERGORY) {
-      openDelete({
-        envId, instanceId, instanceName, callback, projectId, deletionStore,
-      });
-    } else {
-      openDeleteGroupModal({
-        instanceId, callback,
-      });
-    }
+    const appType = appCatergoryCode === CHART_CATERGORY ? 'instance' : 'deployGroup';
+    openDelete({
+      envId,
+      instanceId,
+      instanceName,
+      callback,
+      deletionStore,
+      type: appType,
+    });
   }
 
   const value = {
@@ -139,7 +90,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     formatMessage,
     mainTabKeys,
     deletionStore,
-    openDeleteHostAppModal,
     deleteEnvApp,
     goBackHomeBaby,
   };

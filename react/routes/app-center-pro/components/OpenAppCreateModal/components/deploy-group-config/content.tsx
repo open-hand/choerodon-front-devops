@@ -4,7 +4,7 @@ import {
   Form, Select, NumberField, TextField, Icon, Button,
 } from 'choerodon-ui/pro';
 import { useDeployGroupConfigStore } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/deploy-group-config/stores';
-import { mapping } from './stores/deployGroupConfigDataSet';
+import { mapping, strategyTypeData } from './stores/deployGroupConfigDataSet';
 import CollapseContainer from './components/collapse-container';
 import { Record, FuncType, DataSet } from '@/interface';
 
@@ -209,7 +209,7 @@ const Index = observer(() => {
     <div
       className="c7ncd-appCenterPro-deployGroup"
       style={{
-        marginTop: detail ? 'unset' : '30px',
+        marginTop: '30px',
       }}
     >
       <Form
@@ -224,10 +224,11 @@ const Index = observer(() => {
           ]
         }
         {
-          !isPipeline && (
+          !isPipeline && detail && (
             <Select
               newLine
               colSpan={1}
+              disabled
               name={mapping.env.name}
               optionRenderer={renderEnvOption}
               onOption={({ record }) => ({
@@ -252,20 +253,28 @@ const Index = observer(() => {
         style={{
           marginBottom: 20,
         }}
+        title="注解（Annotations)"
+        helpText="即 kubernetes 中的 annotations，详情请参考 kubernetes 文档。"
+        content={getKeyValueRenderByDs(AnnotationsDataSet, '注解')}
+      />
+      <CollapseContainer
+        style={{
+          marginBottom: 20,
+        }}
         defaultCollapse
-        title="高级配置"
+        title="标签（Label)"
+        helpText="即 kubernetes中的Labels，详情请参考 kubernetes 文档。"
+        content={getKeyValueRenderByDs(LabelsDataSet, '标签')}
+      />
+      <CollapseContainer
+        style={{
+          marginBottom: 20,
+        }}
+        defaultCollapse
+        title="DNS Policy"
+        helpText="即 kubernetes中的Labels，详情请参考 kubernetes 文档。"
         content={(
-          <Form columns={3} dataSet={DeployGroupConfigDataSet}>
-            <TextField
-              colSpan={1}
-              name={mapping.MaxSurge.name}
-              addonAfter={<Tips helpText="升级过程中，允许【超出副本数量的实例】的最大数量。" />}
-            />
-            <TextField
-              colSpan={1}
-              name={mapping.MaxUnavailable.name}
-              addonAfter={<Tips helpText="升级过程中，不可用实例的最大数量。" />}
-            />
+          <Form columns={2} dataSet={DeployGroupConfigDataSet}>
             <Select
               colSpan={1}
               name={mapping.DNSPolicy.name}
@@ -275,6 +284,111 @@ const Index = observer(() => {
         )}
       />
       <CollapseContainer
+        style={{
+          marginBottom: 20,
+        }}
+        title="高级配置"
+        content={(
+          <>
+            <Form columns={3} dataSet={DeployGroupConfigDataSet}>
+              <Select
+                colSpan={1}
+                name={mapping.strategyType.name}
+              />
+              {
+                DeployGroupConfigDataSet.current.get(
+                  mapping.strategyType.name,
+                ) === strategyTypeData[0].value ? (
+                  <>
+                    <TextField
+                      colSpan={1}
+                      name={mapping.MaxSurge.name}
+                      addonAfter={<Tips helpText="升级过程中，允许【超出副本数量的实例】的最大数量。" />}
+                    />
+                    <TextField
+                      colSpan={1}
+                      name={mapping.MaxUnavailable.name}
+                      addonAfter={<Tips helpText="升级过程中，不可用实例的最大数量。" />}
+                    />
+                  </>
+                  ) : ''
+              }
+
+              {/* <Select
+              colSpan={1}
+              name={mapping.DNSPolicy.name}
+              addonAfter={<Tips helpText="可以为每个 Pod 设置 DNS 策略，详情请参考 kubernetes 文档。" />}
+            /> */}
+            </Form>
+            <p style={{ fontWeight: 500 }}>
+              HostAliases
+              <span
+                style={{
+                  marginLeft: '4px',
+                  position: 'relative',
+                  bottom: '2px',
+                }}
+              >
+                <Tips helpText="定义域名解析配置文件的其他选项，常见的有 timeout、attempts 和 ndots 等等。" />
+              </span>
+            </p>
+            {getKeyValueRenderByDs(HostAliasesDataSet, 'HostAliases')}
+            <div>
+              <p style={{ fontWeight: 500 }}>
+                DNS Config
+                <span
+                  style={{
+                    marginLeft: '4px',
+                    position: 'relative',
+                    bottom: '2px',
+                  }}
+                >
+                  <Tips helpText="定义域名解析配置文件的其他选项，常见的有 timeout、attempts 和 ndots 等等。" />
+                </span>
+              </p>
+              <Form columns={2} dataSet={DeployGroupConfigDataSet}>
+                <TextField
+                  colSpan={1}
+                  name={mapping.Nameservers.name}
+                  addonAfter={<Tips helpText="容器解析域名时查询的 DNS 服务器的 IP 地址列表。最多可以指定 3 个 IP 地址" />}
+                />
+                <TextField
+                  colSpan={1}
+                  name={mapping.Searches.name}
+                  addonAfter={<Tips helpText="定义域名的搜索域列表。可选，Kubernetes 最多允许 6 个搜索域。" />}
+                />
+              </Form>
+              <p style={{ fontWeight: 500 }}>
+                Options
+                <span
+                  style={{
+                    marginLeft: '4px',
+                    position: 'relative',
+                    bottom: '2px',
+                  }}
+                >
+                  <Tips helpText="定义域名解析配置文件的其他选项，常见的有 timeout、attempts 和 ndots 等等。" />
+                </span>
+              </p>
+              { getKeyValueRenderByDs(OptionDataSet, 'Options') }
+            </div>
+            <p style={{ fontWeight: 500 }}>
+              节点选择标签
+              <span
+                style={{
+                  marginLeft: '4px',
+                  position: 'relative',
+                  bottom: '2px',
+                }}
+              >
+                <Tips helpText="定义域名解析配置文件的其他选项，常见的有 timeout、attempts 和 ndots 等等。" />
+              </span>
+            </p>
+            {getKeyValueRenderByDs(NodeLabelsDataSet, '标签')}
+          </>
+        )}
+      />
+      {/* <CollapseContainer
         title="DNS Config"
         helpText="为 Pod 设置 DNS 参数，设置的参数将合并到基于 dnsPolicy 策略生成的域名解析文件中，详情请参考 kubernetes 文档。"
         style={{
@@ -309,26 +423,8 @@ const Index = observer(() => {
             { getKeyValueRenderByDs(OptionDataSet, 'Options') }
           </div>
         )}
-      />
-      <CollapseContainer
-        style={{
-          marginBottom: 20,
-        }}
-        defaultCollapse
-        title="注解（Annotations)"
-        helpText="即 kubernetes 中的 annotations，详情请参考 kubernetes 文档。"
-        content={getKeyValueRenderByDs(AnnotationsDataSet, '注解')}
-      />
-      <CollapseContainer
-        style={{
-          marginBottom: 20,
-        }}
-        defaultCollapse
-        title="标签（Label)"
-        helpText="即 kubernetes中的Labels，详情请参考 kubernetes 文档。"
-        content={getKeyValueRenderByDs(LabelsDataSet, '标签')}
-      />
-      <CollapseContainer
+      /> */}
+      {/* <CollapseContainer
         style={{
           marginBottom: 20,
         }}
@@ -336,13 +432,13 @@ const Index = observer(() => {
         title="节点选择标签"
         helpText="节点选择标签即 kubernetes 中的 nodeSelector，详情请参考 kubernetes文档。"
         content={getKeyValueRenderByDs(NodeLabelsDataSet, '标签')}
-      />
-      <CollapseContainer
+      /> */}
+      {/* <CollapseContainer
         defaultCollapse
         title="HostAliases"
         helpText="HostAliases 向 Pod /etc/hosts 文件添加条目，详情请参考 k8s 的 HostAliases文档。"
         content={getKeyValueRenderByDs(HostAliasesDataSet, 'HostAliases')}
-      />
+      /> */}
     </div>
   );
 });

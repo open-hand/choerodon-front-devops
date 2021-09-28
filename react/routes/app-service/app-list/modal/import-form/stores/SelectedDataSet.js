@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { axios } from '@choerodon/boot';
 import includes from 'lodash/includes';
-import { appServiceApi } from '@/api';
+import { appServiceVersionApiConfig } from '@/api';
 
 export default ({ intlPrefix, formatMessage, projectId, importStore }) => {
   function handleUpdate({ dataSet, record, name, value, oldValue }) {

@@ -75,6 +75,8 @@ const DetailAside = () => {
     middlewareMode,
 
     error,
+    effectCommandVersion,
+    commandVersion,
   } = appDs.current?.toData() || {};
 
   const {
@@ -100,23 +102,28 @@ const DetailAside = () => {
   };
 
   function getVersionName() {
-    let message = '';
-    switch (objectStatus) {
-      case 'running':
-        message = formatMessage({ id: 'running' });
-        break;
-      case 'failed':
-        message = formatMessage({ id: 'deploy_failed' });
-        break;
-      case 'operating':
-        message = formatMessage({ id: 'pending' });
-        break;
-      default:
-        break;
+    if (objectStatus === 'running') {
+      return effectCommandVersion;
     }
-    return (
-      <StatusTag ellipsisTitle={objectStatus === 'operating' && versionName ? `部署版本"${versionName}"` : ''} name={message} colorCode={objectStatus} />
-    );
+    if (objectStatus === 'failed' && !effectCommandVersion) {
+      return (
+        <StatusTag
+          ellipsisTitle={commandVersion}
+          name={formatMessage({ id: 'deploy_failed' })}
+          colorCode={objectStatus}
+        />
+      );
+    }
+    if (objectStatus === 'operating') {
+      return (
+        <StatusTag
+          ellipsisTitle={commandVersion}
+          name={formatMessage({ id: 'pending' })}
+          colorCode={objectStatus}
+        />
+      );
+    }
+    return '-';
   }
 
   const renderChartDetails = () => (
@@ -140,7 +147,7 @@ const DetailAside = () => {
       </div>
       <div>
         <span>Chart版本</span>
-        {objectStatus === 'running' ? versionName || '-' : getVersionName()}
+        {getVersionName()}
       </div>
     </>
   );

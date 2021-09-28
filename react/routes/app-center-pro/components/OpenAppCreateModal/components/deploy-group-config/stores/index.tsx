@@ -37,10 +37,15 @@ export const StoreProvider = (props: any) => {
     cRef,
     isPipeline,
     envId,
+    detail,
   } = props;
 
   const DeployGroupConfigDataSet = useMemo(
-    () => new DataSet(deployGroupConfigDataSet(isPipeline, envId)), [isPipeline, envId],
+    () => new DataSet(deployGroupConfigDataSet(
+      isPipeline,
+      envId,
+      detail,
+    )), [isPipeline, envId, detail],
   );
   const OptionDataSet = useMemo(() => new DataSet(optionDataSet()), []);
   const AnnotationsDataSet = useMemo(() => new DataSet(optionDataSet(/^([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$/)), []);

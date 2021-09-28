@@ -2,6 +2,7 @@
 import React, { useMemo } from 'react';
 import { HeaderButtons } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
+import { Tooltip } from 'choerodon-ui/pro';
 import { useAppDetailTabsStore } from '../../stores';
 import { openModifyValueModal } from '@/components/modify-values';
 import { useAppDetailsStore } from '../../../../stores';
@@ -11,7 +12,6 @@ import { openRedeploy } from '@/components/reDeploy';
 import { openMarketUpgradeModal } from '@/components/app-upgrade';
 import { openHzeroUpgradeModal } from '@/components/app-upgrade-hzero';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
-
 import {
   APP_STATUS,
   CHART_CATERGORY,
@@ -29,10 +29,10 @@ import AppCenterProServices from '@/routes/app-center-pro/services';
 import {
   openAppConfigModal, openContainerConfigModal, openDeployGroupConfigModal, openHostAppConfigModal,
 } from '@/components/appCenter-editModal';
+import openDeleteHostAppModal from '@/components/app-deletion-host';
 
 const DetailsTabsHeaderButtons = () => {
   const {
-    openDeleteHostAppModal,
     goBackHomeBaby,
     deleteEnvApp,
     formatMessage,
@@ -62,6 +62,8 @@ const DetailsTabsHeaderButtons = () => {
     chartSource,
     commandVersion,
     name,
+    id,
+    code,
     objectStatus: appStatus,
     devopsHostCommandDTO = {},
     sourceType,
@@ -161,13 +163,13 @@ const DetailsTabsHeaderButtons = () => {
           disabled: btnDisabledEnv,
           handler: () => {
             openNetWorkFormModal({
-              envId: hostOrEnvId, appServiceId, refresh,
+              envId: hostOrEnvId, appServiceId, refresh, name, code,
             });
           },
         },
         {
-          name: '创建域名',
-          disabled: btnDisabledEnv,
+          name: appRecord?.get('existService') ? '创建域名' : <Tooltip title="请先创建一个该应用关联的网络">创建域名</Tooltip>,
+          disabled: btnDisabledEnv || !appRecord?.get('existService'),
           handler: () => {
             openDomainFormModal({
               envId: hostOrEnvId,
@@ -257,10 +259,10 @@ const DetailsTabsHeaderButtons = () => {
       deployType === ENV_TAB ? deleteEnvApp({
         appCatergoryCode: getAppCategories(rdupmType, deployType).code,
         envId: hostOrEnvId,
-        instanceId,
+        instanceId: appId,
         instanceName: name,
         callback: goBackHomeBaby,
-      }) : openDeleteHostAppModal(hostOrEnvId, appId, goBackHomeBaby);
+      }) : openDeleteHostAppModal(hostOrEnvId, appId, name, goBackHomeBaby);
     },
   };
 
@@ -330,7 +332,7 @@ const DetailsTabsHeaderButtons = () => {
     if (appCatergory.code === DEPLOY_CATERGORY) {
       data = [modifyAppObj, ...moreOpts];
     } else {
-      data = [modifyValues, modifyAppObj, createSource, upGrade, redeploy, ...moreOpts];
+      data = [modifyAppObj, createSource, upGrade, redeploy, ...moreOpts];
     }
     return data;
   };
@@ -363,7 +365,7 @@ const DetailsTabsHeaderButtons = () => {
         break;
       case APP_STATUS.STOP:
       case APP_STATUS.FAILED:
-        data = [modifyValues, redeploy, ...moreOpts];
+        data = [redeploy, ...moreOpts];
         break;
       default:
         break;

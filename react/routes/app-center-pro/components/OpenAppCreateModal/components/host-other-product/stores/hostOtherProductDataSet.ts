@@ -9,7 +9,7 @@ const mapping: {
     name: 'hostId',
     type: 'string' as FieldType,
     label: '主机',
-    required: true,
+    required: false,
     textField: 'name',
     valueField: 'id',
     options: new DataSet(hostDataSetConfig()),

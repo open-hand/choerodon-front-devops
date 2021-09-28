@@ -111,12 +111,7 @@ const Index = observer(() => {
   }, []);
 
   const handleOk = async () => {
-    const flag = valueCheckValidate(
-      HostAppConfigDataSet.current.get(mapping.value.name),
-        HostAppConfigDataSet.current.get(mapping.startCommand.name),
-        HostAppConfigDataSet.current.get(mapping.postCommand.name)
-    );
-    if (flag) {
+    const finalFunc = async () => {
       const res = await HostAppConfigDataSet.submit();
       if (res !== false) {
         if (refresh) {
@@ -125,6 +120,18 @@ const Index = observer(() => {
         return true;
       }
       return false;
+    }
+    if (detail?.[mapping.jarSource.name] === productSourceData[7].value) {
+      return await finalFunc();
+    } else {
+      const flag = valueCheckValidate(
+        HostAppConfigDataSet.current.get(mapping.value.name),
+          HostAppConfigDataSet.current.get(mapping.startCommand.name),
+          HostAppConfigDataSet.current.get(mapping.postCommand.name)
+      );
+      if (flag) {
+        return await finalFunc();
+      }
     }
     return false;
   };
@@ -309,14 +316,14 @@ const Index = observer(() => {
         detail ? '' : (
           <>
             <Form style={{ marginTop: 20 }} columns={3} dataSet={HostAppConfigDataSet}>
-              <Select
+              {/*<Select
                 name={mapping.host.name}
                 optionRenderer={renderHostOption}
                 disabled={Boolean(detail)}
                 onOption={({ record: hostRecord }) => ({
                   disabled: !hostRecord.get('connect'),
                 })}
-              />
+              />*/}
             </Form>
             <p>
               jar包来源
@@ -359,7 +366,7 @@ const Index = observer(() => {
                 })}
               />
               {
-                detail?.rdupmType === 'other' ? '' : (
+                (detail?.rdupmType === 'other') || (detail?.[mapping.jarSource.name] === productSourceData[7].value) ? '' : (
                   <Select
                     name={mapping.jarSource.name}
                     disabled
@@ -371,15 +378,19 @@ const Index = observer(() => {
         }
         { renderFormByProductSource() }
       </Form>
-      <OperationYaml
-        style={{
-          marginBottom: 20,
-        }}
-        dataSet={HostAppConfigDataSet}
-        preName={mapping.value.name}
-        startName={mapping.startCommand.name}
-        postName={mapping.postCommand.name}
-      />
+      {
+        detail && detail?.[mapping.jarSource.name] === productSourceData[7].value ? '' : (
+          <OperationYaml
+            style={{
+              marginBottom: 20,
+            }}
+            dataSet={HostAppConfigDataSet}
+            preName={mapping.value.name}
+            startName={mapping.startCommand.name}
+            postName={mapping.postCommand.name}
+          />
+        )
+      }
     </div>
   );
 });

@@ -3,11 +3,11 @@ import React, {
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
+import { Loading } from '@choerodon/components';
 import Sidebar from './sidebar';
 import DragBar from '../../../components/drag-bar';
-import Loading from '../../../components/loading';
 import EmptyPage from '../../../components/empty-page';
-import DeleteModal from './components/delete-modal';
+import { AppDeletionsModal } from '@/components/app-deletion-with-vertification-code';
 import { useResourceStore } from '../stores';
 import { useMainStore } from './stores';
 
@@ -25,7 +25,7 @@ const CertContent = lazy(() => import('./contents/certificate'));
 const ConfigMapContent = lazy(() => import('./contents/configMap'));
 const SecretContent = lazy(() => import('./contents/secret'));
 const CustomContent = lazy(() => import('./contents/custom'));
-const IstListContent = lazy(() => import('./contents/instance-list'));
+const IstListContent = lazy(() => import('./contents/instance-list'));// Chart应用
 const CustomDetail = lazy(() => import('./contents/custom-detail'));
 const IngressDetail = lazy(() => import('./contents/ingress-detail'));
 const CertDetail = lazy(() => import('./contents/certificate-detail'));
@@ -64,20 +64,20 @@ const MainView = observer(() => {
     treeDs,
     intl: { formatMessage },
   } = useResourceStore();
-  const { mainStore } = useMainStore();
+  const { deletionStore, mainStore } = useMainStore();
   const rootRef = useRef(null);
 
   const { getSelectedMenu: { parentId } } = resourceStore;
-  const { getDeleteArr } = mainStore;
+  const { getDeleteArr } = deletionStore;
 
   const deleteModals = useMemo(() => (
     map(getDeleteArr, ({
       name, display, deleteId, type, refresh, envId,
     }) => (
-      <DeleteModal
+      <AppDeletionsModal
         key={deleteId}
         envId={envId || parentId.split('**')[0]}
-        store={mainStore}
+        store={deletionStore}
         title={`${formatMessage({ id: `${type}.delete` })}“${name}”`}
         visible={display}
         objectId={deleteId}
@@ -91,7 +91,7 @@ const MainView = observer(() => {
     const {
       getSelectedMenu: { itemType },
     } = resourceStore;
-    if (!itemType) return <Loading display />;
+    if (!itemType) return <Loading display type="c7n" />;
     const cmMaps = {
       // [ENV_ITEM]: getViewType === IST_VIEW_TYPE ? <EnvContent /> : <ResourceEnvContent />,
       [ENV_ITEM]: <ResourceEnvContent />,
@@ -114,7 +114,7 @@ const MainView = observer(() => {
       [WORKLOAD_GROUP]: <WorkloadContent />,
     };
     return cmMaps[itemType]
-      ? <Suspense fallback={<Loading display />}>{cmMaps[itemType]}</Suspense>
+      ? <Suspense fallback={<Loading display type="c7n" />}>{cmMaps[itemType]}</Suspense>
       : (
         <EmptyPage
           title="没有该类型资源"

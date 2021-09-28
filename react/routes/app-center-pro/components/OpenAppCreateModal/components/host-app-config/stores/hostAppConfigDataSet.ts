@@ -10,7 +10,9 @@ import {
 } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config/stores/conGroupDataSet';
 import { nexusApiConfig } from '@/api/Nexus';
 import { rdupmApiApiConfig } from '@/api/Rdupm';
-import { deployApi, deployApiConfig, hostApi } from '@/api';
+import {
+  deployApi, deployApiConfig, hostApi, middlewareConfigApi,
+} from '@/api';
 import { hostApiConfig } from '@/api/Host';
 import { setData } from '../content';
 
@@ -86,7 +88,6 @@ const mapping: {
     name: 'hostId',
     type: 'string' as FieldType,
     label: '主机',
-    required: true,
     textField: 'name',
     valueField: 'id',
     options: new DataSet(hostDataSetConfig()),
@@ -377,14 +378,35 @@ const mapping: {
   },
 };
 
-const hostAppConfigDataSet = (modal: any): DataSetProps => ({
+const hostAppConfigDataSet = (modal: any, detail: any): DataSetProps => ({
   autoCreate: true,
-  fields: Object.keys(mapping).map((i) => mapping[i]),
+  fields: Object.keys(mapping).map((i) => {
+    const item = mapping[i];
+    switch (i) {
+      case 'host': {
+        if (detail) {
+          item.required = true;
+        }
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+    return item;
+  }),
   transport: {
     update: ({ data: [data] }) => {
       let func;
       if (data.rdupmType === 'other') {
         return deployApiConfig.deployCustom({
+          ...setData(data),
+          appName: data[mapping.appName.name as string],
+          appCode: data[mapping.appCode.name as string],
+        });
+      }
+      if (data[mapping.jarSource.name as string] === productSourceData[7].value) {
+        return middlewareConfigApi.updateHost({
           ...setData(data),
           appName: data[mapping.appName.name as string],
           appCode: data[mapping.appCode.name as string],
