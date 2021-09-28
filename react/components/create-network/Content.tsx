@@ -36,37 +36,34 @@ function FormContent() {
     }
   });
 
-  function createPortGroup() {
+  const createPortGroup = () => {
     portDs.create();
-  }
+  };
 
   function removePortGroup(record: any) {
     portDs.remove(record);
     portDs.validate();
   }
 
-  function createTargetLabelGroup() {
+  const createTargetLabelGroup = () => {
     targetLabelsDs.create();
-  }
+  };
 
   function removeTargetLabelGroup(record: any) {
     targetLabelsDs.remove(record);
     targetLabelsDs.validate();
   }
 
-  function targetPortOptionRenderer({ record, text, value }:any) {
-    return <Tooltip title={value}>{value}</Tooltip>;
-  }
+  const targetPortOptionRenderer = ({
+    record,
+    text,
+    value,
+  }:any) => <Tooltip title={value}>{value}</Tooltip>;
+  const targetPortOptionsFilter = (record: { get: (arg0: string) => any; }) => !!record.get('portName');
 
-  function targetPortOptionsFilter(record: { get: (arg0: string) => any; }) {
-    return !!record.get('portName');
-  }
+  const labelOptionRenderer = ({ record, text, value }:any) => `${record.get('meaning')}`;
 
-  function labelOptionRenderer({ record, text, value }:any) {
-    return `${record.get('meaning')}`;
-  }
-
-  function appInstanceOptionRenderer({ record, text, value }:any) {
+  const appInstanceOptionRenderer = ({ record, text, value }:any) => {
     const status = record.get('status');
     if (status) {
       return (
@@ -86,9 +83,9 @@ function FormContent() {
       );
     }
     return text;
-  }
+  };
 
-  function appInstanceRenderer({ value, text }:any) {
+  const appInstanceRenderer = ({ value, text }:any) => {
     const instance = appInstanceOptionsDs.find((r: { get: (arg0: string) => any; }) => r.get('code') === value);
 
     if (instance && instance.get('status')) {
@@ -110,12 +107,12 @@ function FormContent() {
       );
     }
     return text;
-  }
+  };
 
-  function clearInputOption(record: { get: (arg0: string) => any; }) {
+  const clearInputOption = (record: { get: (arg0: string) => any; }) => {
     const meaning = record.get('meaning');
     return meaning && meaning.indexOf(':') >= 0;
-  }
+  };
 
   return (
     <>

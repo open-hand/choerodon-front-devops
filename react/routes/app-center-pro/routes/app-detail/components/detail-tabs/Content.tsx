@@ -25,9 +25,9 @@ const DetailsTabs = () => {
     appDetailTabStore,
   } = useAppDetailTabsStore();
 
-  function handleTabChange(tabKey:string) {
+  const handleTabChange = (tabKey:string) => {
     appDetailTabStore.setCurrentTabKey(tabKey);
-  }
+  };
 
   const tabContent = useMemo(() => ({
     [APP_EVENT]: <AppEvent />,
