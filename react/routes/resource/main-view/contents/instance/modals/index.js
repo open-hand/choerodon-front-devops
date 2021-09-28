@@ -221,7 +221,7 @@ const IstModals = injectIntl(observer(() => {
     const btnDisabled = !connect || !status || (status !== 'failed' && status !== 'running');
     const marketDisable = isMarket && !appAvailable;
 
-    const buttons = [{
+    const buttons = [!isMiddleware && {
       name: formatMessage({ id: `${intlPrefix}.modal.values` }),
       icon: 'rate_review1',
       handler: openValueModal,
@@ -268,7 +268,7 @@ const IstModals = injectIntl(observer(() => {
       icon: 'refresh',
       handler: refresh,
       display: true,
-    }];
+    }].filter(Boolean);
 
     return <HeaderButtons items={buttons} showClassName />;
   }

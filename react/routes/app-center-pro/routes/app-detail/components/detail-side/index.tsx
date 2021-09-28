@@ -102,42 +102,28 @@ const DetailAside = () => {
   };
 
   function getVersionName() {
-    let message = '';
-    switch (objectStatus) {
-      case 'running':
-        message = formatMessage({ id: 'running' });
-        break;
-      case 'failed':
-        if (!effectCommandVersion) {
-          message = formatMessage({ id: 'deploy_failed' });
-        }
-        break;
-      case 'operating':
-        message = formatMessage({ id: 'pending' });
-        break;
-      default:
-        break;
+    if (objectStatus === 'running') {
+      return effectCommandVersion;
     }
-
-    const renderVersion = () => {
-      let versionNumebr:string = '';
-      if (objectStatus === 'operating' && commandVersion) {
-        versionNumebr = commandVersion;
-      } else if (objectStatus === 'running' && versionName) {
-        versionNumebr = versionName;
-      }
-      return versionNumebr;
-    };
-
-    return (
-      message ? (
+    if (objectStatus === 'failed' && !effectCommandVersion) {
+      return (
         <StatusTag
-          ellipsisTitle={renderVersion()}
-          name={message}
+          ellipsisTitle={commandVersion}
+          name={formatMessage({ id: 'deploy_failed' })}
           colorCode={objectStatus}
         />
-      ) : versionName
-    );
+      );
+    }
+    if (objectStatus === 'operating') {
+      return (
+        <StatusTag
+          ellipsisTitle={commandVersion}
+          name={formatMessage({ id: 'pending' })}
+          colorCode={objectStatus}
+        />
+      );
+    }
+    return '-';
   }
 
   const renderChartDetails = () => (
