@@ -56,7 +56,7 @@ const CreateForm = injectIntl(observer((props) => {
    * 选择文件
    * @param e
    */
-  async function selectFile(e) {
+  const selectFile = async (e) => {
     const formdata = new FormData();
     const img = e.target.files[0];
     if (!includes(FILE_TYPE, img.type)) {
@@ -78,9 +78,9 @@ const CreateForm = injectIntl(observer((props) => {
     } catch (err) {
       Choerodon.handleResponseError(e);
     }
-  }
+  };
 
-  async function handleTestChart() {
+  const handleTestChart = async () => {
     try {
       if (!await record.validate()) {
         return false;
@@ -101,7 +101,7 @@ const CreateForm = injectIntl(observer((props) => {
       record.set('chartStatus', 'failed');
       return false;
     }
-  }
+  };
 
   return (
     <div className={`${prefixCls}-create-wrap`}>
