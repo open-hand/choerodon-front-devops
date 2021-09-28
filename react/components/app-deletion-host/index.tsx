@@ -24,7 +24,7 @@ async function openDeleteHostAppModal(
       throw new Error(error);
     }
   }
-  const resOfPipeline = await hostApi.checkAppPipelineLinked(hostId);
+  const resOfPipeline = await hostApi.checkAppPipelineLinked(appId);
   if (!isEmpty(resOfPipeline)) {
     openPipelineReferenceModal({
       active: 'delete',
