@@ -65,6 +65,56 @@ function FormContent() {
 
   const labelOptionRenderer = ({ record, text, value }:any) => `${record.get('meaning')}`;
 
+  const targetPortOptionsFilter = (record: { get: (arg0: string) => any; }) => !!record.get('portName');
+
+  const labelOptionRenderer = ({ record, text, value }:any) => `${record.get('meaning')}`;
+
+  const appInstanceOptionRenderer = ({ record, text, value }:any) => {
+    const status = record.get('status');
+    if (status) {
+      return (
+        <>
+          <Tooltip
+            title={formatMessage({ id: status })}
+            placement="right"
+          >
+            <span className="c7ncd-network-instance-text">{text}</span>
+          </Tooltip>
+          { status !== 'running' && (
+          <Tooltip title={formatMessage({ id: 'deleted' })} placement="top">
+            <Icon type="error" className="c7ncd-instance-status-icon" />
+          </Tooltip>
+          )}
+        </>
+      );
+    }
+    return text;
+  };
+
+  const appInstanceRenderer = ({ value, text }:any) => {
+    const instance = appInstanceOptionsDs.find((r: { get: (arg0: string) => any; }) => r.get('code') === value);
+
+    if (instance && instance.get('status')) {
+      const status = instance.get('status');
+      return (
+        <>
+          <Tooltip
+            title={formatMessage({ id: status })}
+            placement="right"
+          >
+            <span className="c7ncd-network-instance-text">{text}</span>
+          </Tooltip>
+          { status !== 'running' && (
+          <Tooltip title={formatMessage({ id: 'deleted' })} placement="top">
+            <Icon type="error" className="c7ncd-instance-status-icon" />
+          </Tooltip>
+          )}
+        </>
+      );
+    }
+    return text;
+  };
+
   const clearInputOption = (record: { get: (arg0: string) => any; }) => {
     const meaning = record.get('meaning');
     return meaning && meaning.indexOf(':') >= 0;
