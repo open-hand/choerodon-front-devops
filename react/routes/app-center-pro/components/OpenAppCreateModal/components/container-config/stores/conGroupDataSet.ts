@@ -612,7 +612,7 @@ const mapping: {
     valueField: 'name',
     name: 'pipelineJobName',
     type: 'string' as FieldType,
-    label: '流水线上游制品',
+    label: '关联构建任务',
   },
 };
 
