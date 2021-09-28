@@ -39,10 +39,6 @@ const Settings = injectIntl(observer(({ record, handleTestChart }) => {
           title={formatMessage({ id: `${intlPrefix}.create.settings` })}
         />
       </div>
-      <div className="content-settings-tips">
-        <Icon type="info" className="content-settings-tips-icon" />
-        <FormattedMessage id={`${intlPrefix}.create.settings.tips`} />
-      </div>
       <Form record={record}>
         <Select
           searchable
