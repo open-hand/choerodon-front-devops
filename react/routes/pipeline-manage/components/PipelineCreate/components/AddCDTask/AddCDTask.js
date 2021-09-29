@@ -423,7 +423,7 @@ export default observer(() => {
         ...deployChartData,
         ...ds,
         appName: deployChartData.appName,
-        appCode: deployChartData.appName,
+        appCode: deployChartData.appCode,
       }
       delete ds.value;
     }

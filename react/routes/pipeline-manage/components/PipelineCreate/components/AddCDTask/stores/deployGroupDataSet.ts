@@ -1,7 +1,12 @@
 import { DataSet } from 'choerodon-ui/pro';
+import { CONSTANTS } from '@choerodon/master';
 import { FieldProps, FieldType, Record } from '@/interface';
 import { deployAppCenterApiConfig, deployAppCenterApi } from '@/api/DeployAppCenter';
 import { fieldMap, deployWayData } from './addCDTaskDataSetMap';
+
+const {
+  LCLETTER_NUMREGEX,
+} = CONSTANTS;
 
 const appNameDataSet = new DataSet({
   autoQuery: false,
@@ -59,19 +64,21 @@ const deployGroupDataSet = (ADDCDTaskDataSet: DataSet) => ({
       }
       case 'appCode': {
         item.validator = async (value: string) => {
+          let flag: any = true;
+          if (!LCLETTER_NUMREGEX.regex.test(value)) {
+            flag = LCLETTER_NUMREGEX.text;
+          }
           if (ADDCDTaskDataSet.current?.get(fieldMap.deployWay.name) === deployWayData[0].value) {
             try {
-              const res = await deployAppCenterApi.checkAppCode(value, undefined, undefined, ADDCDTaskDataSet.current?.get('envId'));
-              if (res) {
-                return true;
+              const res = await deployAppCenterApi.checkAppCode(value, undefined, undefined, ADDCDTaskDataSet.current.get('envId'));
+              if (!res) {
+                flag = '编码重复';
               }
-              return '编码重复';
             } catch (e) {
-              return '校验出错';
+              flag = '校验出错';
             }
-          } else {
-            return true;
           }
+          return flag;
         };
         break;
       }
