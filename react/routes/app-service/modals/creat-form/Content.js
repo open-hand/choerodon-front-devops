@@ -4,10 +4,11 @@ import {
 } from 'choerodon-ui/pro';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
-import { Icon, Input } from 'choerodon-ui';
+import { Alert, Button } from 'choerodon-ui';
 import { axios, Choerodon } from '@choerodon/boot';
 import map from 'lodash/map';
 import includes from 'lodash/includes';
+import { CustomSelect, TestConnect } from '@choerodon/components';
 import Tips from '../../../../components/new-tips';
 import { useCreateAppServiceStore } from './stores';
 
@@ -93,13 +94,11 @@ const CreateForm = injectIntl(observer((props) => {
     }
   }
 
-  function renderSourceOption({ text }) {
-    return (
-      <Tooltip title={text} placement="left">
-        {text}
-      </Tooltip>
-    );
-  }
+  const renderSourceOption = ({ text }) => (
+    <Tooltip title={text} placement="left">
+      {text}
+    </Tooltip>
+  );
 
   function getAppServiceOptions() {
     if (store.getAppServiceLoading || !record) {
@@ -120,94 +119,150 @@ const CreateForm = injectIntl(observer((props) => {
       ))
     ));
   }
-
+  const gitlabSelectList = [{ gitLabType: 'inGitlab', value: '内置GitLab仓库' }, { gitLabType: 'outGitlab', value: '外置GitLab仓库' }];
   const renderTemplateOption = useCallback(({ value, text, record: optionRecord }) => {
     if (optionRecord?.get('remark')) {
       return <Tips title={text} helpText={optionRecord?.get('remark')} />;
     }
     return text;
   }, []);
+  const handleGitLabChange = (val) => {
+    formDs.current.set('gitLabType', val.gitLabType);
+  };
 
   return (
     <div className={`${prefixCls}-create-wrap`}>
-      <div
-        style={{
-          backgroundImage: record.get('imgUrl') ? `url('${record.get('imgUrl')}')` : '',
-        }}
-        className={`${prefixCls}-create-img`}
-        onClick={triggerFileBtn}
-        role="none"
-      >
-        <div className="create-img-mask">
-          <Icon type="photo_camera" className="create-img-icon" />
-        </div>
-        <Input
-          id="file"
-          type="file"
-          accept={FILE_TYPE}
-          onChange={selectFile}
-          style={{ display: 'none' }}
+      <div className="create-tips">
+        <Tips
+          helpText={formatMessage({ id: `${intlPrefix}.type.tips` })}
+          title="服务类型"
         />
       </div>
-      <div className={`${prefixCls}-create-text`}>
-        <FormattedMessage id={`${intlPrefix}.icon`} />
-      </div>
       <Form dataSet={formDs}>
-        <Select
+        <SelectBox
           name="type"
-          clearButton={false}
-          addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.type.tips` })} />}
+          className="type-select"
         >
           <Option value="normal">
             {formatMessage({ id: `${intlPrefix}.type.normal` })}
           </Option>
-          <Option value="test">
-            {formatMessage({ id: `${intlPrefix}.type.test` })}
-          </Option>
-        </Select>
+          <Option value="test">{formatMessage({ id: `${intlPrefix}.type.test` })}</Option>
+        </SelectBox>
         <TextField
           name="code"
           autoFocus
           addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.code.tips` })} />}
         />
         <TextField name="name" colSpan={3} />
+
       </Form>
-      <div className={`${prefixCls}-create-wrap-template-title`}>
+      <div className="create-tips">
         <Tips
-          helpText={formatMessage({ id: `${intlPrefix}.template.tips` })}
-          title={formatMessage({ id: `${intlPrefix}.template` })}
+          helpText={formatMessage({ id: `${intlPrefix}.codeRepository.tips` })}
+          title="代码仓库"
         />
       </div>
-      <Form dataSet={formDs} className={`${prefixCls}-create-wrap-form`}>
-        <SelectBox name="appServiceSource" optionRenderer={renderSourceOption} />
-        {
-        ['normal_service', 'share_service'].includes(formDs.current.get('appServiceSource')) ? [
-          <Select
-            name="templateAppServiceId"
-            searchable
-            disabled={!record.get('appServiceSource')}
-            notFoundContent={<FormattedMessage id={`${intlPrefix}.empty`} />}
-          >
-            {getAppServiceOptions()}
-          </Select>,
-          <Select
-            name="templateAppServiceVersionId"
-            searchable
-            searchMatcher="version"
-            clearButton={false}
-            disabled={!record.get('templateAppServiceId')}
-          />,
-        ] : (
-          <Select
-            name="devopsAppTemplateId"
-            searchable
-            searchMatcher="param"
-            addonAfter={<Tips helpText={formatMessage({ id: 'c7ncd.template.tips' })} />}
-            optionRenderer={renderTemplateOption}
+      <Form dataSet={formDs}>
+        <div className="customSelect-wrapper">
+          <CustomSelect
+            onClickCallback={(val) => { handleGitLabChange(val); }}
+            data={gitlabSelectList}
+            identity="gitLabType"
+            mode="single"
+            customChildren={(item) => (
+              <div className="customSelect-item">{item.value}</div>
+            )}
           />
-        )
-      }
+        </div>
+        {
+           formDs.current.get('gitLabType') === 'outGitlab'
+             && (
+               <Alert
+                 className="outGitlab-alert"
+                 message={formatMessage({ id: `${intlPrefix}.outGitlab.alert.tips` })}
+                 type="warning"
+                 showIcon
+               />
+             )
+        }
+
       </Form>
+      {
+          formDs.current.get('gitLabType') === 'inGitlab' ? (
+            <>
+              <div className={`${prefixCls}-create-wrap-template-title`}>
+                <Tips
+                  helpText={formatMessage({ id: `${intlPrefix}.template.tips` })}
+                  title={formatMessage({ id: `${intlPrefix}.template` })}
+                />
+              </div>
+              <div className="create-tips">模板来源</div>
+              <Form dataSet={formDs} className={`${prefixCls}-create-wrap-form`}>
+                <SelectBox name="appServiceSource" optionRenderer={renderSourceOption} />
+                {
+          ['normal_service', 'share_service'].includes(formDs.current.get('appServiceSource')) ? [
+            <Select
+              name="templateAppServiceId"
+              searchable
+              disabled={!record.get('appServiceSource')}
+              notFoundContent={<FormattedMessage id={`${intlPrefix}.empty`} />}
+            >
+              {getAppServiceOptions()}
+            </Select>,
+            <Select
+              name="templateAppServiceVersionId"
+              searchable
+              searchMatcher="version"
+              clearButton={false}
+              disabled={!record.get('templateAppServiceId')}
+            />,
+          ] : (
+            <Select
+              name="devopsAppTemplateId"
+              searchable
+              searchMatcher="param"
+              addonAfter={<Tips helpText={formatMessage({ id: 'c7ncd.template.tips' })} />}
+              optionRenderer={renderTemplateOption}
+            />
+          )
+        }
+              </Form>
+            </>
+          ) : (
+            <>
+              <div className={`${prefixCls}-create-wrap-template-title`}>
+                仓库配置
+              </div>
+              <Form dataSet={formDs}>
+                <TextField name="repositoryUrl" addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.gitLabRepositoryUrl.tips` })} />} />
+              </Form>
+              <div className="create-tips">
+                <Tips
+                  helpText={formatMessage({ id: `${intlPrefix}.approve.setting.tips` })}
+                  title={formatMessage({ id: `${intlPrefix}.approve.setting` })}
+                />
+              </div>
+              <Form dataSet={formDs}>
+                <SelectBox name="authType" className="approveConfig-select">
+                  <Option value="username_password">
+                    {formatMessage({ id: `${intlPrefix}.userInfo` })}
+                  </Option>
+                  <Option value="access_token">{formatMessage({ id: `${intlPrefix}.token` })}</Option>
+                </SelectBox>
+                {formDs.current.get('authType') === 'username_password' ? (
+                  <>
+                    <TextField name="username" colSpan={3} />
+                    <TextField name="password" colSpan={3} />
+                  </>
+                ) : <TextField name="accessToken" colSpan={3} />}
+              </Form>
+              <Button funcType="raised">
+                测试链接
+              </Button>
+              <TestConnect status="failed" failedMessage="失败原因" />
+            </>
+          )
+      }
     </div>
   );
 }));

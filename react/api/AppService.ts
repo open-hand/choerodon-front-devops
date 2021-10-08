@@ -63,6 +63,14 @@ class AppServiceApi extends Api<AppServiceApi> {
       url: `${this.prefix}/list_project_by_share?share=${isShare}`,
     });
   }
+
+  external(res: any) {
+    return this.request({
+      method: 'post',
+      url: `${this.prefix}/external`,
+      data: res,
+    });
+  }
 }
 
 const appServiceApi = new AppServiceApi();
