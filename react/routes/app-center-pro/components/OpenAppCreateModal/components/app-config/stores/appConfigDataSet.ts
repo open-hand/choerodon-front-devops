@@ -480,11 +480,15 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
       dataSet: DataSet,
     }) => {
       const data = dataSet?.current?.toData();
-      if (data[mapping.hzeroVersion.name as string]) {
+      if (data[mapping.hzeroVersion.name as string]
+        && [chartSourceData[0].value, chartSourceData[1].value].includes(data[mapping.chartSource.name as string])
+      ) {
         serviceVersionDataSet.setQueryParameter('appServiceId', data[mapping.hzeroVersion.name as string]);
         serviceVersionDataSet.query();
       }
-      if (data[mapping.marketVersion.name as string]) {
+      if (data[mapping.marketVersion.name as string]
+        && [chartSourceData[2].value, chartSourceData[3].value].includes(data[mapping.chartSource.name as string])
+      ) {
         marketServiceVersionDataSet.setQueryParameter('version', data[mapping.marketVersion.name as string]);
         marketServiceVersionDataSet.query();
       }
