@@ -199,6 +199,9 @@ function FormContent() {
             funcType={'flat' as FuncType}
             onClick={createPortGroup}
             icon="add"
+            style={{
+              marginBottom: '20px',
+            }}
           >
             {formatMessage({ id: 'network.config.addport' })}
           </Button>
