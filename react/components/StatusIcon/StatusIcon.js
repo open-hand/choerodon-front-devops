@@ -3,8 +3,6 @@ import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { Tooltip, Spin, Icon } from 'choerodon-ui/pro';
 import classnames from 'classnames';
-import { StatusTag } from '@choerodon/components';
-import MouseOverWrapper from '../MouseOverWrapper';
 import './StatusIcon.less';
 import ClickText from '../click-text';
 
@@ -64,7 +62,11 @@ function StatusIcon(props) {
   };
 
   return (
-    <>
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+    }}
+    >
       {clickAble ? (
         <ClickText
           value={name}
@@ -80,7 +82,7 @@ function StatusIcon(props) {
         </Tooltip>
       )}
       {statusDom}
-    </>
+    </div>
   );
 }
 

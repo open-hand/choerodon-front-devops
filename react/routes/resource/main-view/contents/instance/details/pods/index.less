@@ -1,6 +1,5 @@
 .c7ncd-pod-wrap {
   display: flex;
-  width: 100px;
 
   .c7ncd-pod-content {
     flex: 1;
@@ -32,21 +31,23 @@
 
     &.c7ncd-pod-btn-wrap {
       padding: 11px 0;
-
+      display: flex;
+      flex-direction: column;
       .c7ncd-pod-btn {
-        display: block;
-        padding: 0 !important;
-        margin-left: 6px;
-
-        .icon {
+        color: var(--primary-color);
+        cursor: pointer;
+        text-align: center;
+        > i {
           font-size: 24px;
-          margin-right: 0;
         }
-
-        button {
-          padding: 0 !important;
-          margin-left: 7px;
+        &-disabled {
+          color: rgba(15, 19, 88, 0.25);
+          cursor: not-allowed;
         }
+      }
+      > * {
+        height: 50%;
+        flex: 1;
       }
     }
   }

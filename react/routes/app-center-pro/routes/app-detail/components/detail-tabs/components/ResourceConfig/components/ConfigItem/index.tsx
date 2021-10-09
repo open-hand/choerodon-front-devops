@@ -349,7 +349,7 @@ const ResourceConfigItem:React.FC<Props> = ({
           </span>
         </div>
         <div style={{
-          maxWidth: 90,
+          maxWidth: 32,
           alignItems: 'flex-end',
         }}
         >
