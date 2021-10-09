@@ -105,7 +105,7 @@ const CreateForm = injectIntl(observer((props) => {
   };
 
   return (
-    <div className={`${prefixCls}-create-wrap`}>
+    <div className={`${prefixCls}-edit-wrap`}>
       <div
         style={{
           backgroundImage: record.get('imgUrl') ? `url('${record.get('imgUrl')}')` : '',
