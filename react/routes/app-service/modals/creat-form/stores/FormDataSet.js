@@ -85,8 +85,8 @@ export default (({
       if (record.get('authType') === 'username_password') {
         record.set('accessToken', null);
       } else {
-        record.set('userName', null);
-        record.set('userPassword', null);
+        record.set('username', null);
+        record.set('password', null);
       }
     }
   }
@@ -148,7 +148,7 @@ export default (({
         name: 'username',
         type: 'string',
         dynamicProps: {
-          required: ({ record }) => record.get('gitLabType') === 'outGitlab' && record.get('approveConfig') === 'userInfo',
+          required: ({ record }) => record.get('gitLabType') === 'outGitlab' && record.get('authType') === 'username_password',
         },
         label: formatMessage({ id: `${intlPrefix}.userName` }),
       },
@@ -161,7 +161,7 @@ export default (({
         name: 'accessToken',
         type: 'string',
         dynamicProps: {
-          required: ({ record }) => record.get('gitLabType') === 'outGitlab' && record.get('approveConfig') === 'token',
+          required: ({ record }) => record.get('gitLabType') === 'outGitlab' && record.get('authType') === 'access_token',
         },
         label: formatMessage({ id: `${intlPrefix}.token` }),
       },
@@ -169,7 +169,7 @@ export default (({
         name: 'password',
         type: 'string',
         dynamicProps: {
-          required: ({ record }) => record.get('gitLabType') === 'outGitlab' && record.get('approveConfig') === 'userInfo',
+          required: ({ record }) => record.get('gitLabType') === 'outGitlab' && record.get('authType') === 'username_password',
         },
         label: formatMessage({ id: `${intlPrefix}.userPassword` }),
       },
