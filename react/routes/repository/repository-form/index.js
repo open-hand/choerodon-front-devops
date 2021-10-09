@@ -101,7 +101,7 @@ export default withRouter(injectIntl(observer(({
             {formatMessage({ id: `${intlPrefix}.harbor.config` })}
           </span>
           <div className={`${prefixCls}-empty-page`}>
-            <div className={`${prefixCls}-empty-page-image`} />
+            {/* <div className={`${prefixCls}-empty-page-image`} /> */}
             <div className={`${prefixCls}-empty-page-text`}>
               <div className={`${prefixCls}-empty-page-title`}>
                 {formatMessage({ id: `${intlPrefix}.empty.title` })}
