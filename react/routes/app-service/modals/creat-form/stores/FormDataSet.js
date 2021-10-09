@@ -1,7 +1,7 @@
 import { axios } from '@choerodon/boot';
 import omit from 'lodash/omit';
 import AppServiceApis from '../../../apis';
-import { appServiceApiConfig } from '@/api/AppService';
+import { appServiceApiConfig, appServiceApi } from '@/api/AppService';
 
 async function fetchLookup(field, record) {
   const data = await field.fetchLookup();
@@ -62,6 +62,14 @@ export default (({
     } else {
       return formatMessage({ id: 'nameCanNotHasSpaces' });
     }
+  }
+
+  async function checkRepositoryUrl(value) {
+    const res = await appServiceApi.checkRepositoryUrl(value);
+    if ((res && res.failed) || !res) {
+      return formatMessage({ id: 'checkRepositoryUrlExist' });
+    }
+    return true;
   }
 
   function handleUpdate({ name, value, record }) {
@@ -139,6 +147,7 @@ export default (({
       {
         name: 'repositoryUrl',
         type: 'string',
+        validator: checkRepositoryUrl,
         dynamicProps: {
           required: ({ record }) => record.get('gitLabType') === 'outGitlab',
         },

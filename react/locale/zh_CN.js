@@ -174,6 +174,7 @@ const commonField = {
   checkNameReg: '名称只能由小写字母、数字、"-"组成，且以小写字母开头，不能以"-"结尾',
   checkCodeFailed: '编码校验失败，请稍后再试',
   checkNameExist: '名称已存在',
+  checkRepositoryUrlExist: '地址已存在',
   checkNameFailed: '名称重名校验失败，请稍后再试',
   nameCanNotHasSpaces: '名称不能包含空格',
   checkNameFail: '网络错误，请稍后重试',

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   Form, TextField, Select, Tooltip, SelectBox, Spin,
 } from 'choerodon-ui/pro';
@@ -11,6 +11,7 @@ import includes from 'lodash/includes';
 import { CustomSelect, TestConnect } from '@choerodon/components';
 import Tips from '../../../../components/new-tips';
 import { useCreateAppServiceStore } from './stores';
+import { appServiceApi } from '@/api/AppService';
 
 import './index.less';
 
@@ -29,7 +30,8 @@ const CreateForm = injectIntl(observer((props) => {
     formDs,
   } = useCreateAppServiceStore();
   const record = formDs.current;
-
+  const [isTest, setIsTest] = useState(false);
+  const [isShow, setIsShow] = useState(false);
   const optionLoading = useMemo(() => (
     <Option value="loading">
       <div
@@ -46,6 +48,10 @@ const CreateForm = injectIntl(observer((props) => {
   ), []);
 
   modal.handleOk(async () => {
+    handleTest();
+    if (!isTest) {
+      return false;
+    }
     try {
       if (await formDs.submit() !== false) {
         refresh();
@@ -119,6 +125,7 @@ const CreateForm = injectIntl(observer((props) => {
       ))
     ));
   }
+  const isTestDisable = record.get('repositoryUrl') && ((record.get('username') && record.get('password')) || record.get('accessToken'));
   const gitlabSelectList = [{ gitLabType: 'inGitlab', value: '内置GitLab仓库' }, { gitLabType: 'outGitlab', value: '外置GitLab仓库' }];
   const renderTemplateOption = useCallback(({ value, text, record: optionRecord }) => {
     if (optionRecord?.get('remark')) {
@@ -130,6 +137,21 @@ const CreateForm = injectIntl(observer((props) => {
     formDs.current.set('gitLabType', val.gitLabType);
   };
 
+  const handleTest = async (val) => {
+    try {
+      const res = await appServiceApi.testConnection({
+        repositoryUrl: record.get('repositoryUrl'),
+        authType: record.get('authType'),
+        accessToken: record.get('accessToken'),
+        username: record.get('username'),
+        password: record.get('password'),
+      });
+      setIsTest(res);
+      setIsShow(true);
+    } catch (e) {
+      Choerodon.handleResponseError(e);
+    }
+  };
   return (
     <div className={`${prefixCls}-create-wrap`}>
       <div className="create-tips">
@@ -256,10 +278,13 @@ const CreateForm = injectIntl(observer((props) => {
                   </>
                 ) : <TextField name="accessToken" colSpan={3} />}
               </Form>
-              <Button funcType="raised">
-                测试链接
-              </Button>
-              <TestConnect status="failed" failedMessage="失败原因" />
+              <div className="testConnect">
+                <Button funcType="raised" disabled={!isTestDisable} onClick={handleTest}>
+                  测试链接
+                </Button>
+                {(isTestDisable && isShow)
+              && <TestConnect status={isTest ? 'success' : 'failed'} failedMessage="失败原因" />}
+              </div>
             </>
           )
       }
