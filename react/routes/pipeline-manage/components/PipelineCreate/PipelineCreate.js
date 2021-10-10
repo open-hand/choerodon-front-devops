@@ -199,6 +199,11 @@ const PipelineCreate = observer(() => {
           renderer={renderer}
         />
         <TextField style={{ display: 'none' }} />
+        <Select
+          multiple
+          name="branch"
+        />
+        <TextField style={{ display: 'none' }} colSpan={2} />
         <div
           role="none"
           className="advanced_text"

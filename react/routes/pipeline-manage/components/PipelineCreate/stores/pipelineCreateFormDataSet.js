@@ -10,6 +10,7 @@ export default (
   dataSource,
   mathRandom,
   appService,
+  BranchOptionsDs,
 ) => {
   function checkImage(value, name, record) {
     const pa = /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}(\/.+)*:.+$/;
@@ -22,6 +23,7 @@ export default (
   function handleUpdate({ dataSet, value, name }) {
     if (name === 'appServiceId') {
       if (value) {
+        BranchOptionsDs.query(0, value);
         let appServiceData = dataSet.getField('appServiceId').getLookupData(value);
         if (isEmpty(appServiceData)) {
           appServiceData = createUseStore.getSearchAppServiceData.find(
@@ -111,6 +113,13 @@ export default (
       type: 'string',
       label: '',
       defaultValue: '0',
+    },
+    {
+      name: 'branch',
+      type: 'string',
+      options: BranchOptionsDs,
+      required: true,
+      label: '分支',
     }, {
       name: 'image',
       type: 'string',

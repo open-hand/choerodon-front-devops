@@ -86,6 +86,12 @@ class AppServiceApi extends Api<AppServiceApi> {
       data: appExternalConfigDTO,
     });
   }
+
+  getBrachs(appServiceId:string, page:number) {
+    return this.request({
+      url: `${this.prefix}/${appServiceId}/git/page_branch_by_options?page=${page}&size=5`,
+    });
+  }
 }
 
 const appServiceApi = new AppServiceApi();
