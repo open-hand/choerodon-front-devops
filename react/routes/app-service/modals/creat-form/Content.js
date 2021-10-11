@@ -48,9 +48,11 @@ const CreateForm = injectIntl(observer((props) => {
   ), []);
 
   modal.handleOk(async () => {
-    handleTest();
-    if (!isTest) {
-      return false;
+    if (record.get('gitLabType') === 'outGitlab') {
+      handleTest();
+      if (!isTest) {
+        return false;
+      }
     }
     try {
       if (await formDs.submit() !== false) {
