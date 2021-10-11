@@ -102,9 +102,6 @@ const DetailAside = () => {
   };
 
   function getVersionName() {
-    if (objectStatus === 'running') {
-      return effectCommandVersion;
-    }
     if (objectStatus === 'failed' && !effectCommandVersion) {
       return (
         <StatusTag
@@ -123,7 +120,7 @@ const DetailAside = () => {
         />
       );
     }
-    return '-';
+    return effectCommandVersion;
   }
 
   const renderChartDetails = () => (

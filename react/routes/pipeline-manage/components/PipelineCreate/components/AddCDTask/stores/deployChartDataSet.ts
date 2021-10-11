@@ -40,12 +40,13 @@ const mapping = (): {
     label: '应用编码',
     required: true,
     maxLength: 64,
-    validator: (value) => {
-      if (LCLETTER_NUMREGEX.regex.test(value)) {
-        return true;
-      }
-      return LCLETTER_NUMREGEX.text;
-    },
+    // validator: (value) => {
+    //  debugger;
+    //  if (LCLETTER_NUMREGEX.regex.test(value)) {
+    //    return true;
+    //  }
+    //  return LCLETTER_NUMREGEX.text;
+    // },
   },
   deployConfig: {
     name: 'valueId',
@@ -114,19 +115,21 @@ const deployChartDataSet = (ADDCDTaskDataSet: DataSet) => ({
       }
       case 'appCode': {
         item.validator = async (value: string) => {
+          let flag: any = true;
+          if (!LCLETTER_NUMREGEX.regex.test(value)) {
+            flag = LCLETTER_NUMREGEX.text;
+          }
           if (ADDCDTaskDataSet.current?.get(fieldMap.deployWay.name) === deployWayData[0].value) {
             try {
               const res = await deployAppCenterApi.checkAppCode(value, undefined, undefined, ADDCDTaskDataSet.current.get('envId'));
-              if (res) {
-                return true;
+              if (!res) {
+                flag = '编码重复';
               }
-              return '编码重复';
             } catch (e) {
-              return '校验出错';
+              flag = '校验出错';
             }
-          } else {
-            return true;
           }
+          return flag;
         };
         break;
       }

@@ -27,7 +27,7 @@ const AppConfigs = observer(() => {
     treeDs,
   } = useResourceStore();
   const { mappingStore, mappingDs } = useApplicationStore();
-  const { mainStore: { openDeleteModal } } = useMainStore();
+  const { deletionStore: { openDeleteModal } } = useMainStore();
   const statusStyle = useMemo(() => ({ marginRight: '0.08rem' }), []);
 
   function refresh() {
@@ -104,7 +104,9 @@ const AppConfigs = observer(() => {
       {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-map'],
         text: formatMessage({ id: 'delete' }),
-        action: () => openDeleteModal(parentId, configId, name, 'configMap', refresh),
+        action: () => openDeleteModal({
+          envId: parentId, instanceId: configId, instanceName: name, type: 'configMap', callback: refresh,
+        }),
       },
     ];
     return <Action data={buttons} />;

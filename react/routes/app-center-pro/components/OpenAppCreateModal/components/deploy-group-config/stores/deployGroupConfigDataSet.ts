@@ -40,7 +40,7 @@ const strategyTypeData = [{
   name: '滚动更新(推荐)',
 }, {
   value: 'Recreate',
-  name: '重建',
+  name: '替换升级',
 }];
 
 const mapping: {

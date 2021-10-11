@@ -53,6 +53,7 @@ const PermissionTable = () => {
     return (
       <div className={`${prefixCls}-resource-user`}>
         <UserInfo
+          className={`${prefixCls}-resource-username`}
           realName={value}
           avatar={imageUrl}
         />
@@ -81,7 +82,7 @@ const PermissionTable = () => {
         <Column renderer={renderAction} width={60} />
       )}
       <Column name="loginName" tooltip={'overflow' as TableColumnTooltip} />
-      <Column name="roles" renderer={renderRole} />
+      <Column name="roles" renderer={renderRole} tooltip={'overflow' as TableColumnTooltip} />
       <Column name="creationDate" renderer={renderDate} width={100} />
     </Table>
   );

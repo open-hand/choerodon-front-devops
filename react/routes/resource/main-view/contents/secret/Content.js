@@ -35,20 +35,20 @@ const ConfigMap = observer((props) => {
     formStore,
     SecretTableDs,
   } = useKeyValueStore();
-  const { mainStore: { openDeleteModal } } = useMainStore();
+  const { deletionStore: { openDeleteModal } } = useMainStore();
 
-  function refresh() {
+  function refresh () {
     treeDs.query();
     SecretTableDs.query();
   }
 
-  function getEnvIsNotRunning() {
+  function getEnvIsNotRunning () {
     const envRecord = treeDs.find((record) => record.get('key') === parentId);
     const connect = envRecord.get('connect');
     return !connect;
   }
 
-  function renderName({ value, record }) {
+  function renderName ({ value, record }) {
     const commandStatus = record.get('commandStatus');
     const disabled = getEnvIsNotRunning() || commandStatus === 'operating';
     const error = record.get('error');
@@ -65,7 +65,7 @@ const ConfigMap = observer((props) => {
     );
   }
 
-  function renderValue({ value = [] }) {
+  function renderValue ({ value = [] }) {
     const keyArr = keys(value);
     return (
       <MouserOverWrapper width={0.5}>
@@ -74,11 +74,11 @@ const ConfigMap = observer((props) => {
     );
   }
 
-  function renderDate({ value }) {
+  function renderDate ({ value }) {
     return <TimePopover content={value} />;
   }
 
-  function renderAction({ record }) {
+  function renderAction ({ record }) {
     const commandStatus = record.get('commandStatus');
     const disabled = getEnvIsNotRunning() || commandStatus === 'operating';
     if (disabled) {
@@ -95,13 +95,15 @@ const ConfigMap = observer((props) => {
       {
         service: permissions.delete,
         text: formatMessage({ id: 'delete' }),
-        action: () => openDeleteModal(parentId, id, name, 'secret', refresh),
+        action: () => openDeleteModal({
+          envId: parentId, instanceId: id, instanceName: name, type: 'secret', callback: refresh
+        }),
       },
     ];
     return <Action data={buttons} />;
   }
 
-  function openModal() {
+  function openModal () {
     Modal.open({
       key: modalKey,
       style: modalStyle,

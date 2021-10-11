@@ -262,8 +262,17 @@ export default class LogSidebar extends Component {
     const url = `${wsUrl}/websocket?key=${key}&group=from_front:${key}&processor=front_download_log&secret_key=${secretKey}&env=${namespace}&podName=${podName}&containerName=${containerName}&logId=${logId}&clusterId=${clusterId}&oauthToken=${getAccessToken()}&projectId=${projectId}`;
     const ws = new WebSocket(url);
     const logData = [];
+    let time = 0;
+    let polling;
     try {
       ws.onopen = () => {
+        polling = setInterval(() => {
+          time += 1;
+          if (time === 10) {
+            clearInterval(polling);
+            ws.close();
+          }
+        }, 1000);
         this.setState({ isDownload: true });
       };
       ws.onerror = (e) => {
@@ -278,6 +287,7 @@ export default class LogSidebar extends Component {
       };
 
       ws.onmessage = (e) => {
+        time = 0;
         if (e.data.size) {
           const reader = new FileReader();
           reader.readAsText(e.data, 'utf-8');

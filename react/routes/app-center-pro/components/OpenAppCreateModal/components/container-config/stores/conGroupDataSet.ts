@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 import { DataSet } from 'choerodon-ui/pro';
 import {
   DataSetProps, FieldProps, FieldType, Record,
@@ -690,7 +696,9 @@ const conGroupDataSet = (
         .updateContainer((data?.dataSet?.queryParameter as any)?.data),
     },
     events: {
-      update: ({ record, name, value }: any) => {
+      update: ({
+        record, name, value, dataSet,
+      }: any) => {
         switch (name) {
           case mapping.productType.name: {
             if (isPipeline) {
@@ -736,6 +744,7 @@ const conGroupDataSet = (
                 break;
               }
             }
+            record.set(mapping.imageVersion.name, undefined);
             break;
           }
           default: {

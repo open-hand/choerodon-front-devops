@@ -37,7 +37,7 @@ const Networking = observer(() => {
     domainStore,
     networkStore,
   } = useApplicationStore();
-  const { mainStore: { openDeleteModal } } = useMainStore();
+  const { deletionStore: { openDeleteModal } } = useMainStore();
 
   function refresh() {
     treeDs.query();
@@ -279,7 +279,9 @@ const Networking = observer(() => {
       {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-net'],
         text: formatMessage({ id: 'delete' }),
-        action: () => openDeleteModal(parentId, netId, name, 'service', refresh),
+        action: () => openDeleteModal({
+          envId: parentId, instanceId: netId, instanceName: name, type: 'service', callback: refresh,
+        }),
       },
     ];
 
@@ -332,7 +334,9 @@ const Networking = observer(() => {
           {
             service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-domain'],
             text: formatMessage({ id: 'delete' }),
-            action: () => openDeleteModal(parentId, itemId, name, 'ingress', refresh),
+            action: () => openDeleteModal({
+              envId: parentId, instanceId: id, instanceName: name, type: 'ingress', callback: refresh,
+            }),
           },
         ];
         const disabled = getEnvIsNotRunning() || status === 'operating';

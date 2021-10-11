@@ -20,7 +20,7 @@ function CertItem({
     itemTypes: { CERT_GROUP },
   } = useResourceStore();
   const {
-    mainStore: { openDeleteModal },
+    deletionStore: { openDeleteModal },
   } = useMainStore();
 
   function freshMenu() {
@@ -53,16 +53,20 @@ function CertItem({
     const actionData = [{
       service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-certificate'],
       text: formatMessage({ id: 'delete' }),
-      action: () => openDeleteModal(envId, id, certName, 'certificate', freshMenu),
+      action: () => openDeleteModal({
+        envId, instanceId: id, instanceName: certName, type: 'certificate', callback: freshMenu,
+      }),
     }];
     return <Action placement="bottomRight" data={actionData} onClick={eventStopProp} />;
   }
 
-  return <Fragment>
-    <Icon type="class" />
-    {name}
-    {getSuffix()}
-  </Fragment>;
+  return (
+    <>
+      <Icon type="class" />
+      {name}
+      {getSuffix()}
+    </>
+  );
 }
 
 CertItem.propTypes = {

@@ -30,7 +30,7 @@ const CertContent = observer(() => {
     AppState: { currentMenuType: { projectId } },
   } = useCertificateStore();
   const {
-    mainStore: { openDeleteModal },
+    deletionStore: { openDeleteModal },
   } = useMainStore();
 
   function refresh() {
@@ -109,7 +109,9 @@ const CertContent = observer(() => {
       {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-certificate'],
         text: formatMessage({ id: 'delete' }),
-        action: () => openDeleteModal(parentId, id, name, 'certificate', refresh),
+        action: () => openDeleteModal({
+          envId: parentId, instanceId: id, instanceName: name, type: 'certificate', callback: refresh,
+        }),
       },
     ];
 

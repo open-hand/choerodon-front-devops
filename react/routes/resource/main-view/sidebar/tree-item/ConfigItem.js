@@ -30,7 +30,7 @@ function ConfigItem({
   } = useResourceStore();
   const {
     configMapStore,
-    mainStore: { openDeleteModal },
+    deletionStore: { openDeleteModal },
   } = useMainStore();
 
   function freshTree() {
@@ -112,7 +112,9 @@ function ConfigItem({
     }, {
       service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-map'],
       text: formatMessage({ id: 'delete' }),
-      action: () => openDeleteModal(envId, id, recordName, 'configMap', freshMenu),
+      action: () => openDeleteModal({
+        envId, instanceId: id, instanceName: recordName, type: 'configMap', callback: freshMenu,
+      }),
     }];
     return <Action placement="bottomRight" data={actionData} onClick={eventStopProp} />;
   }

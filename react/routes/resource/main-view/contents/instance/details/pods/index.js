@@ -3,7 +3,7 @@ import { inject } from 'mobx-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import debounce from 'lodash/debounce';
 import assign from 'lodash/assign';
-import { Button, Tooltip } from 'choerodon-ui';
+import { Icon, Tooltip } from 'choerodon-ui';
 import { Choerodon } from '@choerodon/boot';
 
 import './index.less';
@@ -168,6 +168,8 @@ export default class Pods extends PureComponent {
       || currentPodTargetCount <= 1
       || status !== 'success';
 
+    const increaseDisabled = !(connect && instanceStatus !== 'stopped');
+
     return (
       <div className="c7ncd-pod">
         <div className="c7ncd-pod-wrap">
@@ -176,25 +178,17 @@ export default class Pods extends PureComponent {
           </div>
           {podType === 'deploymentVOS' && (
             <div className="c7ncd-pod-content c7ncd-pod-btn-wrap">
-              <Button
-                disabled={!(connect && status === 'success' && instanceStatus !== 'stopped')}
-                className="c7ncd-pod-btn"
-                size="small"
-                icon="expand_less"
-                onClick={this.handleIncrease}
-              />
+              <div role="none" className={`c7ncd-pod-btn ${increaseDisabled ? 'c7ncd-pod-btn-disabled' : ''}`} onClick={!increaseDisabled ? this.handleIncrease : () => {}}>
+                <Icon type="expand_less" />
+              </div>
+
               <Tooltip
-                title={instanceStatus !== 'stopped' && connect && currentPodTargetCount === 1 && status === 'success' ? formatMessage({ id: 'c7ncd.deployment.pod.disabled.tops' }) : ''}
+                title={instanceStatus !== 'stopped' && connect && currentPodTargetCount === 1 ? formatMessage({ id: 'c7ncd.deployment.pod.disabled.tops' }) : ''}
                 placement="bottom"
               >
-                <Button
-                  disabled={descIsEnable}
-                  className="c7ncd-pod-btn"
-                  size="small"
-                  icon="expand_more"
-                  onClick={this.handleDecrease}
-                  style={{ padding: '0 !important' }}
-                />
+                <div role="none" className={`c7ncd-pod-btn ${descIsEnable ? 'c7ncd-pod-btn-disabled' : ''}`} onClick={!descIsEnable ? this.handleDecrease : () => {}}>
+                  <Icon type="expand_more" />
+                </div>
               </Tooltip>
             </div>
           )}

@@ -1,7 +1,8 @@
+/* eslint-disable import/no-anonymous-default-export */
+import { omit } from 'lodash';
 import { DataSet, DataSetProps, FieldType } from '@/interface';
 import HostConfigApi from '@/routes/host-config/apis/DeployApis';
 import getTablePostData from '@/utils/getTablePostData';
-import { omit } from 'lodash';
 import { StoreProps } from '@/routes/host-config/stores/useStore';
 
 interface ListProps {
