@@ -150,7 +150,7 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
     const record = appServiceDs.find((appServiceRecord) => appServiceRecord.get('id') === value);
     if (record) {
       return (
-        <Tooltip title={record.get('externalConfigId') ? '外置GitLab代码仓库的应用服务不支持代码管理功能' : record.get('code')}>
+        <Tooltip title={!record.get('externalConfigId') ? '外置GitLab代码仓库的应用服务不支持代码管理功能' : record.get('code')}>
           {rendererAppServiceId({ value, text })}
         </Tooltip>
       );
