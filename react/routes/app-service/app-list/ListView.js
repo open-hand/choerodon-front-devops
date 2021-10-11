@@ -469,6 +469,14 @@ const ListView = withRouter(observer((props) => {
                         {
                           renderStatus({ value: record.get('active'), record })
                         }
+                        {(record.get('type')==='normal'&&record.get('appExternalConfigDTO'))&&
+                        <span className="c7ncd-appService-item-center-line-type">
+                          外置仓库
+                        </span>}
+                        {(record.get('type')==='normal'&&(!record.get('appExternalConfigDTO')))&&
+                        <span className="c7ncd-appService-item-center-line-in-type">
+                          内置仓库
+                        </span>}
                         {record.get('errorMessage') && record.get('fail') && <Tooltip overlayStyle={{ maxHeight: 500, overflow: 'auto' }} title={record.get('errorMessage')}>
                           <Icon
                             type="info"

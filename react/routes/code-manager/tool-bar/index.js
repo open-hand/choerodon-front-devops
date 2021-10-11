@@ -146,23 +146,22 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
       return text;
     }
   }
-
-  function renderAppServiceOption({ value, text }) {
+  const renderAppServiceOption = ({ value, text }) => {
     const record = appServiceDs.find((appServiceRecord) => appServiceRecord.get('id') === value);
     if (record) {
       return (
-        <Tooltip title={record.get('code')}>
+        <Tooltip title={record.get('externalConfigId') ? '外置GitLab代码仓库的应用服务不支持代码管理功能' : record.get('code')}>
           {rendererAppServiceId({ value, text })}
         </Tooltip>
       );
     }
     return '';
-  }
+  };
 
-  function renderSearchMatcher({ record, text }) {
+  const renderSearchMatcher = ({ record, text }) => {
     const tempRecord = appServiceDs.find((appServiceRecord) => appServiceRecord.get('id') === record.get('value'));
     return tempRecord.get('code').indexOf(text) !== -1 || tempRecord.get('name').indexOf(text) !== -1;
-  }
+  };
 
   return (
     <div style={{ paddingLeft: 24, display: 'flex', alignItems: 'center' }}>
@@ -191,6 +190,9 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
           disabled={appServiceDs.status !== 'ready' || appServiceDs.length === 0}
           optionRenderer={renderAppServiceOption}
           renderer={({ text }) => text}
+          onOption={(param) => ({
+            disabled: param.record.get('externalConfigId'),
+          })}
         >
           {
             localStorage.getItem('recent-app') && (
