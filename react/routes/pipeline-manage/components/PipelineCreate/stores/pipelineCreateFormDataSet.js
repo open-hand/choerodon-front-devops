@@ -23,7 +23,8 @@ export default (
   function handleUpdate({ dataSet, value, name }) {
     if (name === 'appServiceId') {
       if (value) {
-        BranchOptionsDs.query(0, value);
+        BranchOptionsDs.setQueryParameter('appServiceId', value);
+        BranchOptionsDs.query();
         let appServiceData = dataSet.getField('appServiceId').getLookupData(value);
         if (isEmpty(appServiceData)) {
           appServiceData = createUseStore.getSearchAppServiceData.find(
@@ -118,6 +119,8 @@ export default (
       name: 'branch',
       type: 'string',
       options: BranchOptionsDs,
+      textField: 'branchName',
+      valueField: 'branchName',
       required: true,
       label: '分支',
     }, {

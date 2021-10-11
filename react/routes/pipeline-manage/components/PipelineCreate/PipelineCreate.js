@@ -83,6 +83,7 @@ const PipelineCreate = observer(() => {
         image: origin.selectImage === '1' ? origin.image : null,
         devopsCiStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CI'),
         devopsCdStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CD'),
+        relatedBranches: PipelineCreateFormDataSet.current.get('branch'),
       };
       if (!data.bbcl) {
         delete data.versionName;

@@ -87,9 +87,10 @@ class AppServiceApi extends Api<AppServiceApi> {
     });
   }
 
-  getBrachs(appServiceId:string, page:number) {
+  getBrachs(appServiceId:string) {
     return this.request({
-      url: `${this.prefix}/${appServiceId}/git/page_branch_by_options?page=${page}&size=5`,
+      url: `${this.prefix}/${appServiceId}/git/page_branch_by_options?size=5`,
+      method: 'post',
     });
   }
 }
