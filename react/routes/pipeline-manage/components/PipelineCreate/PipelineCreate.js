@@ -83,6 +83,7 @@ const PipelineCreate = observer(() => {
         image: origin.selectImage === '1' ? origin.image : null,
         devopsCiStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CI'),
         devopsCdStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CD'),
+        relatedBranches: PipelineCreateFormDataSet.current.get('branch'),
       };
       if (!data.bbcl) {
         delete data.versionName;
@@ -199,6 +200,12 @@ const PipelineCreate = observer(() => {
           renderer={renderer}
         />
         <TextField style={{ display: 'none' }} />
+        <Select
+          multiple
+          name="branch"
+          disabled={!PipelineCreateFormDataSet.current.get('appServiceId')}
+        />
+        <TextField style={{ display: 'none' }} colSpan={2} />
         <div
           role="none"
           className="advanced_text"
