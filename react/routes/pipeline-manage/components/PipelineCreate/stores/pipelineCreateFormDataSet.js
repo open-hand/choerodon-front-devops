@@ -121,7 +121,9 @@ export default (
       options: BranchOptionsDs,
       textField: 'branchName',
       valueField: 'branchName',
-      required: true,
+      dynamicProps: {
+        required: ({ record }) => record.get('appServiceId'),
+      },
       label: '分支',
     }, {
       name: 'image',
