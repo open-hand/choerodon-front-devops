@@ -75,14 +75,14 @@ class AppServiceApi extends Api<AppServiceApi> {
   checkRepositoryUrl(repositoryUrl: any) {
     return this.request({
       method: 'get',
-      url: `${this.prefix}/check_gitlab_url?external_gitlab_url=${repositoryUrl}`,
+      url: `${this.prefix}/external/check_gitlab_url?external_gitlab_url=${repositoryUrl}`,
     });
   }
 
   testConnection(appExternalConfigDTO:any) {
     return this.request({
       method: 'post',
-      url: `${this.prefix}/test_connection`,
+      url: `${this.prefix}/external/test_connection`,
       data: appExternalConfigDTO,
     });
   }

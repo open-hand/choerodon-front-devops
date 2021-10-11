@@ -187,6 +187,7 @@ const CreateForm = injectIntl(observer((props) => {
       <Form dataSet={formDs}>
         <div className="customSelect-wrapper">
           <CustomSelect
+            disabledKeys={formDs.current.get('type') === 'test' ? 'outGitlab' : ''}
             onClickCallback={(val) => { handleGitLabChange(val); }}
             data={gitlabSelectList}
             identity="gitLabType"
