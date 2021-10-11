@@ -37,7 +37,7 @@ const NetworkContent = observer(() => {
   } = useResourceStore();
   const {
     networkStore,
-    mainStore: { openDeleteModal },
+    deletionStore: { openDeleteModal },
   } = useMainStore();
   const {
     networkDs,
@@ -49,7 +49,7 @@ const NetworkContent = observer(() => {
     networkDs.query();
   };
 
-  function getEnvIsNotRunning() {
+  function getEnvIsNotRunning () {
     const envRecord = treeDs.find((record) => record.get('key') === parentId);
     const connect = envRecord.get('connect');
     return !connect;
@@ -326,14 +326,16 @@ const NetworkContent = observer(() => {
       {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-net'],
         text: formatMessage({ id: 'delete' }),
-        action: () => openDeleteModal(parentId, id, name, 'service', refresh),
+        action: () => openDeleteModal({
+          envId: parentId, instanceId: id, instanceName: name, type: 'service', callback: refresh
+        }),
       },
     ];
 
     return (<Action data={buttons} />);
   };
 
-  function openModal() {
+  function openModal () {
     Modal.open({
       key: modalKey,
       style: modalStyle,

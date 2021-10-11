@@ -31,7 +31,7 @@ function NetworkItem({
   } = useResourceStore();
   const {
     networkStore,
-    mainStore: { openDeleteModal },
+    deletionStore: { openDeleteModal },
   } = useMainStore();
 
   function freshTree() {
@@ -113,7 +113,9 @@ function NetworkItem({
     }, {
       service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-net'],
       text: formatMessage({ id: 'delete' }),
-      action: () => openDeleteModal(envId, id, netName, 'service', freshMenu),
+      action: () => openDeleteModal({
+        envId, instanceId: id, instanceName: netName, type: 'service', callback: freshMenu,
+      }),
     }];
     return <Action placement="bottomRight" data={actionData} onClick={eventStopProp} />;
   }

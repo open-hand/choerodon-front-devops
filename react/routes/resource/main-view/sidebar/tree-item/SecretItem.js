@@ -30,7 +30,7 @@ function ConfigItem({
   } = useResourceStore();
   const {
     secretStore,
-    mainStore: { openDeleteModal },
+    deletionStore: { openDeleteModal },
   } = useMainStore();
 
   function freshTree() {
@@ -111,7 +111,9 @@ function ConfigItem({
     }, {
       service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-cipher'],
       text: formatMessage({ id: 'delete' }),
-      action: () => openDeleteModal(envId, id, recordName, 'secret', freshMenu),
+      action: () => openDeleteModal({
+        envId, instanceId: id, instanceName: recordName, type: 'secret', callback: freshMenu,
+      }),
     }];
     return <Action placement="bottomRight" data={actionData} onClick={eventStopProp} />;
   }

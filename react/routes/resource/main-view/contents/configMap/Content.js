@@ -35,7 +35,7 @@ const ConfigMap = observer((props) => {
     formStore,
     ConfigMapTableDs,
   } = useKeyValueStore();
-  const { mainStore: { openDeleteModal } } = useMainStore();
+  const { deletionStore: { openDeleteModal } } = useMainStore();
 
   function refresh() {
     treeDs.query();
@@ -93,7 +93,9 @@ const ConfigMap = observer((props) => {
       {
         service: permissions.delete,
         text: formatMessage({ id: 'delete' }),
-        action: () => openDeleteModal(parentId, id, name, 'configMap', refresh),
+        action: () => openDeleteModal({
+          envId: parentId, instanceId: id, instanceName: name, type: 'configMap', callback: refresh,
+        }),
       },
     ];
     return <Action data={buttons} />;

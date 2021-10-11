@@ -34,7 +34,7 @@ const Cipher = observer(() => {
       CIPHER_TAB,
     },
   } = useApplicationStore();
-  const { mainStore: { openDeleteModal } } = useMainStore();
+  const { deletionStore: { openDeleteModal } } = useMainStore();
   const statusStyle = useMemo(() => ({ marginRight: '0.08rem' }), []);
 
   function refresh() {
@@ -110,7 +110,9 @@ const Cipher = observer(() => {
       {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-cipher'],
         text: formatMessage({ id: 'delete' }),
-        action: () => openDeleteModal(parentId, secretId, name, 'secret', refresh),
+        action: () => openDeleteModal({
+          envId: parentId, instanceId: secretId, instanceName: name, type: 'secret', callback: refresh,
+        }),
       },
     ];
     return <Action data={buttons} />;

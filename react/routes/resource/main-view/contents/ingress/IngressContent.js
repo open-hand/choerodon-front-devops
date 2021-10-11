@@ -37,7 +37,7 @@ const IngressContent = observer(() => {
   } = useIngressStore();
   const {
     ingressStore,
-    mainStore: { openDeleteModal },
+    deletionStore: { openDeleteModal },
   } = useMainStore();
 
   function refresh() {
@@ -141,7 +141,9 @@ const IngressContent = observer(() => {
       {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-domain'],
         text: formatMessage({ id: 'delete' }),
-        action: () => openDeleteModal(parentId, id, name, 'ingress', refresh),
+        action: () => openDeleteModal({
+          envId: parentId, instanceId: id, instanceName: name, type: 'ingress', callback: refresh,
+        }),
       },
     ];
 

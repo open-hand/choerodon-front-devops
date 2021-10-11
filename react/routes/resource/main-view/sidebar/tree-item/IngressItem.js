@@ -30,7 +30,7 @@ function IngressItem({
     AppState: { currentMenuType: { projectId } },
   } = useResourceStore();
   const {
-    mainStore: { openDeleteModal },
+    deletionStore: { openDeleteModal },
   } = useMainStore();
 
   function freshTree() {
@@ -111,7 +111,9 @@ function IngressItem({
     }, {
       service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-domain'],
       text: formatMessage({ id: 'delete' }),
-      action: () => openDeleteModal(envId, id, ingressName, 'ingress', freshMenu),
+      action: () => openDeleteModal({
+        envId, instanceId: id, instanceName: ingressName, type: 'ingress', callback: freshMenu,
+      }),
     }];
     return <Action placement="bottomRight" data={actionData} onClick={eventStopProp} />;
   }
