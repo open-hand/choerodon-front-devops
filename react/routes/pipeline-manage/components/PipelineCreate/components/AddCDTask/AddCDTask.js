@@ -422,6 +422,7 @@ export default observer(() => {
       ds = {
         ...deployChartData,
         ...ds,
+        valueId: deployChartData.valueId || ds.valueId,
         appName: deployChartData.appName,
         appCode: deployChartData.appCode,
       }
@@ -830,7 +831,7 @@ export default observer(() => {
       children: (
         <DeployConfig
           envId={ADDCDTaskDataSet.current.get("envId")}
-          appServiceId={PipelineCreateFormDataSet.current.get("appServiceId")}
+          appServiceId={PipelineCreateFormDataSet?.current?.get("appServiceId") || trueAppServiceId}
           appServiceName={appServiceId}
           refresh={({ valueId, value }) => {
             ADDCDTaskUseStore.setValueIdRandom(Math.random());
