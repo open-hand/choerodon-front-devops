@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
+import { debounce } from 'lodash';
 import { Form, Modal, Select } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
-import { axios } from '@choerodon/boot';
 import PipelineCreate from '@/routes/pipeline-manage/components/PipelineCreate';
 
 export default observer(({
@@ -60,6 +60,7 @@ export default observer(({
   const renderer = ({ text }) => text;
 
   const optionRenderer = ({ text }) => (text === '加载更多' ? (
+    // eslint-disable-next-line jsx-a11y/anchor-is-valid
     <a
       role="none"
       style={{ width: '100%', height: '100%', display: 'block' }}
@@ -69,18 +70,31 @@ export default observer(({
     </a>
   ) : text);
 
+  const handleOnInput = (e) => {
+    e.persist();
+    searchVersion(e.target.value);
+  };
+  const searchVersion = useMemo(
+    () => debounce((value) => {
+      if (value) {
+        seletDs.setQueryParameter('params', { appServiceName: value });
+        seletDs.query();
+      }
+    }, 500),
+    [],
+  );
+  const handleBlur = () => {
+    seletDs.setQueryParameter('params', { appServiceName: '' });
+    seletDs.query();
+  };
+
   const handleClickMore = async (e) => {
     e.stopPropagation();
     const pageSize = seletDs.pageSize + 20;
-    const result = await axios.post(`/devops/v1/projects/${projectId}/app_service/page_app_services_without_ci?page=0&size=${pageSize}`);
-    if (result.length % 20 === 0) {
-      result.push({
-        appServiceId: 'more',
-        appServiceName: '加载更多',
-      });
-    }
-    seletDs.current.set('pageSize', pageSize);
-    seletDs.loadData(result);
+    // eslint-disable-next-line no-param-reassign
+    seletDs.pageSize = pageSize;
+    seletDs.setQueryParameter('params', { size: pageSize });
+    seletDs.query();
   };
 
   return (
@@ -92,6 +106,8 @@ export default observer(({
         <Select
           name="appServiceId"
           searchable
+          onInput={handleOnInput}
+          onBlur={handleBlur}
           searchMatcher="appServiceName"
           optionRenderer={optionRenderer}
           renderer={renderer}

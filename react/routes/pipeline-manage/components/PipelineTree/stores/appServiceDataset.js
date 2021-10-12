@@ -10,7 +10,8 @@ export default (projectId) => ({
   transport: {
     read: ({ data }) => ({
       method: 'post',
-      url: `/devops/v1/projects/${projectId}/app_service/page_app_services_without_ci?page=0&size=20`,
+      url: `/devops/v1/projects/${projectId}/app_service/page_app_services_without_ci?
+      page=0&size=${get(data.params, 'size') || '20'}`,
       data: {
         param: [],
         searchParam: {
@@ -18,16 +19,15 @@ export default (projectId) => ({
         },
       },
       transformResponse: (res) => {
-        let newRes;
         try {
-          newRes = JSONBigint.parse(res);
-          if (newRes.length % 20 === 0 && newRes.length !== 0) {
-            newRes.push({
+          const newRes = JSONBigint.parse(res);
+          if (newRes.totalPages > newRes.number + 1 && !newRes.empty) {
+            newRes.content.push({
               appServiceId: 'more',
               appServiceName: '加载更多',
             });
           }
-          return newRes;
+          return newRes.content;
         } catch (e) {
           return res;
         }
