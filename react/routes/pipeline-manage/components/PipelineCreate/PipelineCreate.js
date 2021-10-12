@@ -200,12 +200,18 @@ const PipelineCreate = observer(() => {
           renderer={renderer}
         />
         <TextField style={{ display: 'none' }} />
-        <Select
-          multiple
-          name="branch"
-          disabled={!PipelineCreateFormDataSet.current.get('appServiceId')}
-        />
-        <TextField style={{ display: 'none' }} colSpan={2} />
+        {!isEdit && (
+          <>
+            <Select
+              multiple
+              name="branch"
+              disabled={!PipelineCreateFormDataSet.current.get('appServiceId')}
+            />
+            <TextField style={{ display: 'none' }} colSpan={2} />
+
+          </>
+        )}
+
         <div
           role="none"
           className="advanced_text"
