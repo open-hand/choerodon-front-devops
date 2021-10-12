@@ -31,6 +31,7 @@ const DetailContent = observer(() => {
     },
     versionDs,
     shareDs,
+    type,
   } = useServiceDetailStore();
 
   const [tabValue, setTabValue] = useState('Version');
@@ -65,6 +66,11 @@ const DetailContent = observer(() => {
     }
   }, [accessShare, detailDs.current]);
 
+  useEffect(() => {
+    if (type === 'test') {
+      setTabValue('Version');
+    }
+  }, [type]);
   return (
     <Page
       service={detailPermissions}
@@ -75,7 +81,7 @@ const DetailContent = observer(() => {
         onChange={(e, name, value) => setTabValue(value)}
       />
       {
-        tabValue === 'Version' ? <Version /> : <Share />
+        tabValue === 'Version' || type === 'test' ? <Version /> : <Share />
       }
     </Page>
   );
