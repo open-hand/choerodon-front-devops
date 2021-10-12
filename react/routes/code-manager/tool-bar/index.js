@@ -190,18 +190,18 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
           disabled={appServiceDs.status !== 'ready' || appServiceDs.length === 0}
           optionRenderer={renderAppServiceOption}
           renderer={({ text }) => text}
-          onOption={(param) => ({
-            disabled: param.record.get('externalConfigId'),
-          })}
         >
           {
             localStorage.getItem('recent-app') && (
             <OptGroup label={formatMessage({ id: 'deploy.app-recent' })} key="app-recent">
               {
-                _.map(JSON.parse(localStorage.getItem('recent-app'))[projectId], ({ id, code, name: opName }, index) => (
+                _.map(JSON.parse(localStorage.getItem('recent-app'))[projectId], ({
+                  id, code, externalConfigId, name: opName,
+                }, index) => (
                   <Option
                     value={id}
                     key={index}
+                    disabled={Boolean(externalConfigId)}
                   >
                     {opName}
                   </Option>
@@ -213,10 +213,13 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
 
           <OptGroup label={formatMessage({ id: 'deploy.app' })} key="app">
             {
-            _.map(appServiceDs.toData(), ({ id, code, name: opName }, index) => (
+            _.map(appServiceDs.toData(), ({
+              id, code, externalConfigId, name: opName,
+            }, index) => (
               <Option
                 value={id}
                 key={index}
+                disabled={Boolean(externalConfigId)}
               >
                 {opName}
               </Option>
