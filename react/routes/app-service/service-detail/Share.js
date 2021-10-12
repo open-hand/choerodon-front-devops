@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 import React, { useEffect } from 'react';
 import {
   TabPage, Content, Permission, Breadcrumb, Action,
