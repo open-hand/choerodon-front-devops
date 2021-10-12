@@ -21,7 +21,7 @@ import { useAppServiceStore } from './stores';
 import CreateForm from '../modals/creat-form';
 import EditForm from '../modals/edit-form';
 import ImportForm from './modal/import-form';
-import { StatusTag } from '@choerodon/components';
+import { StatusTag, Loading } from '@choerodon/components';
 import { handlePromptError } from '../../../utils';
 
 import './index.less';
@@ -450,7 +450,7 @@ const ListView = withRouter(observer((props) => {
     return (
       <div className="c7ncd-theme4-appService">
         <div className="c7ncd-theme4-appService-left">
-          <Spin spinning={listDs.status !== 'ready'}>
+          <Loading display={listDs.status !== 'ready'} type="c7n">
             {
               listDs.records.map(record => (
                 <div
@@ -469,14 +469,14 @@ const ListView = withRouter(observer((props) => {
                         {
                           renderStatus({ value: record.get('active'), record })
                         }
-                        {(record.get('type')==='normal'&&record.get('appExternalConfigDTO'))&&
-                        <span className="c7ncd-appService-item-center-line-type">
-                          外置仓库
-                        </span>}
-                        {(record.get('type')==='normal'&&(!record.get('appExternalConfigDTO')))&&
-                        <span className="c7ncd-appService-item-center-line-in-type">
-                          内置仓库
-                        </span>}
+                        {(record.get('type') === 'normal' && record.get('appExternalConfigDTO')) &&
+                          <span className="c7ncd-appService-item-center-line-type">
+                            外置仓库
+                          </span>}
+                        {(record.get('type') === 'normal' && (!record.get('appExternalConfigDTO'))) &&
+                          <span className="c7ncd-appService-item-center-line-in-type">
+                            内置仓库
+                          </span>}
                         {record.get('errorMessage') && record.get('fail') && <Tooltip overlayStyle={{ maxHeight: 500, overflow: 'auto' }} title={record.get('errorMessage')}>
                           <Icon
                             type="info"
@@ -551,7 +551,7 @@ const ListView = withRouter(observer((props) => {
                 </div>
               ))
             }
-          </Spin>
+          </Loading>
           <Pagination
             total={listDs.totalCount}
             pageSize={listDs.pageSize}
