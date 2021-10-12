@@ -319,7 +319,7 @@ const mapping: {
             function init(data: any) {
               const result: any[] = [];
               data.forEach((item: any) => {
-                item.appServiceList.forEach((version: any) => {
+                item.appServiceList?.forEach((version: any) => {
                   result.push({
                     ...version,
                     groupName: item.name,
