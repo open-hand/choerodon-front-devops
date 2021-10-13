@@ -54,7 +54,8 @@ const mapping: {
     maxLength: 64,
     validator: async (value, type, record: Record) => {
       let res: any = '应用名称已重复';
-      if (record?.get(mapping.deployMode.name) === deployModeOptionsData[0].value) {
+      const needCheckEnv = record.getState('checkEnv');
+      if (record?.get(mapping.deployMode.name) === deployModeOptionsData[0].value && needCheckEnv) {
         if (record.get(mapping.env.name)) {
           const flag = await deployAppCenterApi.checkAppName(
             value,
@@ -85,11 +86,12 @@ const mapping: {
     maxLength: 53,
     validator: async (value, name, record: Record) => {
       const flag = LCLETTER_NUM.test(value);
+      const needCheckEnv = record.getState('checkEnv');
       if (!flag) {
         return '编码只能由小写字母、数字、"-"组成，且以小写字母开头，不能以"-"结尾';
       }
       let res: any = '应用编码重复';
-      if (record?.get(mapping.deployMode.name) === deployModeOptionsData[0].value) {
+      if (record?.get(mapping.deployMode.name) === deployModeOptionsData[0].value && needCheckEnv) {
         if (record.get(mapping.env.name)) {
           const res1 = await deployAppCenterApi.checkAppCode(
             value,
@@ -160,15 +162,28 @@ const mapping: {
   },
 };
 
-const appInfoDataSet = () => ({
+const appInfoDataSet = (envId: string | undefined) => ({
   autoCreate: true,
-  fields: Object.keys(mapping).map((i) => mapping[i]),
+  fields: Object.keys(mapping).map((i) => {
+    const item = mapping[i];
+    switch (i) {
+      case 'env': {
+        item.defaultValue = envId || undefined;
+        item.disabled = Boolean(envId);
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+    return item;
+  }),
   events: {
     update: ({ record, name, value }: {
-      record: Record,
-      name: string,
-      value: string,
-    }) => {
+        record: Record,
+        name: string,
+        value: string,
+      }) => {
       switch (name) {
         case mapping.deployMode.name: {
           if (value === deployModeOptionsData[0].value) {

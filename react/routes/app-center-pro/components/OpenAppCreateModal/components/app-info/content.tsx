@@ -20,6 +20,7 @@ const Index = observer(() => {
   useImperativeHandle(cRef, () => ({
     // eslint-disable-next-line no-return-await
     handleOk: async () => {
+      AppInfoDataSet.current.setState('checkEnv', true);
       const flag = await AppInfoDataSet.validate();
       if (flag) {
         return AppInfoDataSet.current.toData();
@@ -27,6 +28,7 @@ const Index = observer(() => {
       return flag;
     },
     handleInit: (data: object) => {
+      AppInfoDataSet.current.setState('checkEnv', false);
       if (data) {
         AppInfoDataSet.loadData([data]);
       }
@@ -100,8 +102,8 @@ const Index = observer(() => {
             <div className="c7ncd-appCenterPro-appInfo__form__customItem">
               <img src={item.img} alt="" />
               <div className="c7ncd-appCenterPro-appInfo__form__customItem--right">
-                <p className="c7ncd-appCenterPro-appInfo__form__customItem--right__name">{ item.name }</p>
-                <p className="c7ncd-appCenterPro-appInfo__form__customItem--right__des">{ item.description }</p>
+                <p className="c7ncd-appCenterPro-appInfo__form__customItem--right__name">{item.name}</p>
+                <p className="c7ncd-appCenterPro-appInfo__form__customItem--right__des">{item.description}</p>
               </div>
             </div>
           )}
@@ -110,6 +112,7 @@ const Index = observer(() => {
       {
         AppInfoDataSet.current.get(mapping.deployMode.name) === deployModeOptionsData[0].value ? (
           <Select
+            newLine
             name={mapping.env.name}
             colSpan={1}
             optionRenderer={renderEnvOption}
@@ -119,6 +122,7 @@ const Index = observer(() => {
           />
         ) : (
           <Select
+            newLine
             name={mapping.host.name}
             optionRenderer={renderHostOption}
             onOption={({ record: hostRecord }) => ({
@@ -129,14 +133,14 @@ const Index = observer(() => {
       }
       <p
         className="c7ncd-appCenterPro-appInfo__form__title"
-              // @ts-ignore
+        // @ts-ignore
         newLine
       >
         部署制品类型
       </p>
       <div
         className="c7ncd-appCenterPro-appInfo__form__selectContainer"
-              // @ts-ignore
+        // @ts-ignore
         colSpan={2}
         newLine
       >
@@ -144,8 +148,8 @@ const Index = observer(() => {
           selectedKeys={AppInfoDataSet.current.get(mapping.deployProductType.name)}
           onClickCallback={(value) => handleChangeField(
             AppInfoDataSet,
-                  mapping.deployProductType.name as string,
-                  value.value,
+            mapping.deployProductType.name as string,
+            value.value,
           )}
           data={
             AppInfoDataSet.current.get(mapping.deployMode.name) === deployModeOptionsData[0].value
@@ -157,8 +161,8 @@ const Index = observer(() => {
           customChildren={(item): any => (
             <div className="c7ncd-appCenterPro-appInfo__form__customItem">
               <div className="c7ncd-appCenterPro-appInfo__form__customItem--right">
-                <p className="c7ncd-appCenterPro-appInfo__form__customItem--right__name">{ item.name }</p>
-                <p className="c7ncd-appCenterPro-appInfo__form__customItem--right__des">{ item.description }</p>
+                <p className="c7ncd-appCenterPro-appInfo__form__customItem--right__name">{item.name}</p>
+                <p className="c7ncd-appCenterPro-appInfo__form__customItem--right__des">{item.description}</p>
               </div>
             </div>
           )}

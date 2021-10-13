@@ -573,6 +573,7 @@ const ListView = withRouter(observer((props) => {
                 projectId: AppState.currentMenuType.projectId,
               }
             }}
+            type={selectedAppService?.type}
           />
         </div>
       </div>

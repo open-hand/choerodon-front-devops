@@ -8,6 +8,7 @@ interface ContextType {
   AppInfoDataSet: any,
   cRef: any,
   isDeploy?: boolean,
+  envId?: string,
 }
 
 const Store = createContext({} as ContextType);
@@ -19,9 +20,10 @@ export function useAppInfoStore() {
 export const StoreProvider = (props: any) => {
   const {
     children,
+    envId,
   } = props;
 
-  const AppInfoDataSet = useMemo(() => new DataSet(appInfoDataSet()), []);
+  const AppInfoDataSet = useMemo(() => new DataSet(appInfoDataSet(envId)), [envId]);
 
   const value = {
     ...props,
