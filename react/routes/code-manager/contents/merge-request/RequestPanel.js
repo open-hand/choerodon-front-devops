@@ -224,7 +224,7 @@ const RequestPanel = withRouter(observer((props) => {
       className={classNames('c7n-region page-container', 'c7n-merge-wrapper', styles?.['c7n-branch-theme4-page'])}
       service={[]}
     >
-      {appServiceDs.status !== 'ready' || !appId
+      {appServiceDs.status !== 'ready'
         ? <Loading display type="c7n" />
         : (!mergedRequestStore.getIsEmpty ? (<Fragment>
           <Radio.Group
