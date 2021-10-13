@@ -837,6 +837,8 @@ export default observer(() => {
             ADDCDTaskUseStore.setValueIdRandom(Math.random());
             ADDCDTaskDataSet.current.set("valueId", valueId);
             if (ADDCDTaskDataSet.current.get('type') === typeData[0].value) {
+              DeployChartDataSet.current.set(mapping().deployConfig.name, valueId);
+              DeployChartDataSet.current.set(mapping().value.name, value);
               initValueIdDataSet(
                 deployConfigDataSet,
                 PipelineCreateFormDataSet.current.get('appServiceId') || trueAppServiceId,
