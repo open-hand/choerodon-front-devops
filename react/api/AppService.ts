@@ -53,14 +53,44 @@ class AppServiceApi extends Api<AppServiceApi> {
   pageByMode(share: any, url: string) {
     return this.request({
       method: 'get',
-      url: `${this.prefix}/page_by_mode?share=${share || true}${url}`,
+      url: `${this.prefix}/page_by_mode?share=${share || true}${url}&include_external=false`,
     });
   }
 
   listProjectsByShare(isShare: any) {
     return this.request({
       method: 'get',
-      url: `${this.prefix}/list_project_by_share?share=${isShare}`,
+      url: `${this.prefix}/list_project_by_share?share=${isShare}&include_external=false`,
+    });
+  }
+
+  external(res: any) {
+    return this.request({
+      method: 'post',
+      url: `${this.prefix}/external`,
+      data: res,
+    });
+  }
+
+  checkRepositoryUrl(repositoryUrl: any) {
+    return this.request({
+      method: 'get',
+      url: `${this.prefix}/external/check_gitlab_url?external_gitlab_url=${repositoryUrl}`,
+    });
+  }
+
+  testConnection(appExternalConfigDTO:any) {
+    return this.request({
+      method: 'post',
+      url: `${this.prefix}/external/test_connection`,
+      data: appExternalConfigDTO,
+    });
+  }
+
+  getBrachs(appServiceId:string) {
+    return this.request({
+      url: `${this.prefix}/${appServiceId}/git/page_branch_by_options?size=5`,
+      method: 'post',
     });
   }
 }

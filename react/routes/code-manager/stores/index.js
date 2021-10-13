@@ -167,7 +167,9 @@ export const StoreProvider = injectIntl(inject('AppState')(
             const cacheId = res.find((i) => String(i.id) === String(localStorage.getItem('selectAppId')));
             newAppServiceId = (cacheId && localStorage.getItem('selectAppId')) || res[0]?.id;
           }
-          selectAppDs.current.set('appServiceId', newAppServiceId);
+          if (!res[0]?.externalConfigId) {
+            selectAppDs.current.set('appServiceId', newAppServiceId);
+          }
         }
       });
     }, [projectId]);

@@ -174,6 +174,7 @@ const commonField = {
   checkNameReg: '名称只能由小写字母、数字、"-"组成，且以小写字母开头，不能以"-"结尾',
   checkCodeFailed: '编码校验失败，请稍后再试',
   checkNameExist: '名称已存在',
+  checkRepositoryUrlExist: '地址已存在',
   checkNameFailed: '名称重名校验失败，请稍后再试',
   nameCanNotHasSpaces: '名称不能包含空格',
   checkNameFail: '网络错误，请稍后重试',
@@ -378,6 +379,7 @@ const deployment = {
   'c7ncd.deployment.service.detail': '服务详情',
   'c7ncd.deployment.service.status': '服务状态',
   'c7ncd.deployment.service.code': '服务编码',
+  'c7ncd.appService.gitLabRepositoryUrl': 'GitLab仓库地址',
   'c7ncd.deployment.service.url': '仓库地址',
   'c7ncd.deployment.domains': '域名地址',
   'c7ncd.deployment.certificate.name': '证书名称',
@@ -528,6 +530,10 @@ const appService = {
   'c7ncd.appService.disable': '停用服务',
   'c7ncd.appService.enable': '启用服务',
   'c7ncd.appService.version': '服务版本',
+  'c7ncd.appService.userInfo': '用户名与密码',
+  'c7ncd.appService.userName': '用户名',
+  'c7ncd.appService.userPassword': '密码',
+  'c7ncd.appService.token': '私有Token',
   'c7ncd.appService.permission': '权限分配',
   'c7ncd.appService.share': '共享设置',
   'c7ncd.appService.permission.manage': '权限管理',
@@ -574,6 +580,8 @@ const appService = {
   'c7ncd.appService.project.all': '组织下所有项目',
   'c7ncd.appService.platform.failed': '列表中存在名称或编码重复的应用服务，请修改后再导入！',
   'c7ncd.appService.template': '服务模板',
+  'c7ncd.appService.outGitlab.setting': '仓库配置',
+  'c7ncd.appService.approve.setting': '认证配置',
   'c7ncd.appService.service.source': '服务来源',
   'c7ncd.appService.source.project': '项目应用服务',
   'c7ncd.appService.source.organization': '共享应用',
@@ -618,11 +626,16 @@ const appService = {
   'c7ncd.appService.code.tips':
     '应用服务的自定义编码，Gitlab仓库的地址将会使用服务编码作为仓库地址的一段路径，同时此编码在项目下唯一且不可修改',
   'c7ncd.appService.template.tips':
-    '您可在此从多个服务来源中选择一个应用服务作为模板，选择应用服务后会默认为您选中对应服务的最新版本，即此次创建的应用服务会使用所选择版本对应的代码库作为模板',
+    '您可基于以下来源的应用服务模板创建一个新的应用服务。',
+  'c7ncd.appService.gitLabRepositoryUrl.tips':
+    '此处需要输入您在私有GitLab中已有的仓库地址；支持填写HTTP或HTTPS地址。',
+  'c7ncd.appService.approve.setting.tips':
+    '选择用户名与密码后，需要输入该仓库Owner角色的用户名与密码。若输入Token，则需使用Owner角色在GitLab中创建含有api权限的Access Token.',
   'c7ncd.appService.setting.tips':
     '您可在高级设置中按需更改预置的Docker仓库或Helm仓库为自定义仓库。若无实质需求，请使用默认仓库！',
   'c7ncd.appService.share.tips':
     '共享应用中包含了组织内其他项目共享至本项目的所有应用服务',
+  'c7ncd.appService.outGitlab.alert.tips': '注意：选择外置代码仓库创建得到应用服务，将无法使用代码管理、代码库管理等功能。服务共享、流水线和部署块等其他功能可正常使用',
   'c7ncd.appService.github.tips':
     '目前仅支持从GitHub公库导入应用服务。仓库为空时不可导入',
   'c7ncd.appService.gitlab.tips':
@@ -649,6 +662,7 @@ const appService = {
     '您可在此选择一个特定版本进行共享。选择后，则只有此版本会被共享出去',
   'c7ncd.appService.detail.scope.tips':
     '此处仅能选择共享至某个项目，或者选择共享至所有项目',
+  'c7ncd.appService.codeRepository.tips': '选择内置GitLab仓库表示将在平台内置的GitLab中新建一个代码仓库来管理应用服务后续的代码。选择外置GitLab仓库后，会基于外部已有的GitLab仓库创建一个新的应用服务。',
   'c7ncd.appService.chart.check.failed': '用户名与密码需配对输入',
   'c7ncd.appService.pom.check.failed': '只能由字母、数字、“_”、“-”和“.”组成',
   'c7ncd.appService.version.delete': '删除版本',
@@ -925,7 +939,7 @@ const pipelineManage = {
   'c7ncd.pipelineManage.execute.retry': '重试',
   'c7ncd.pipelineManage.execute.audit': '人工审核',
   'c7ncd.pipelineManage.delete.title': '删除流水线',
-  'c7ncd.pipelineManage.delete.des': '确定删除该条CI流水线吗？',
+  'c7ncd.pipelineManage.delete.des': '确定删除该条流水线吗？',
   'c7ncd.pipelineManage.stop.title': '停用流水线',
   'c7ncd.pipelineManage.stop.des': '确定停用该条流水线吗？',
   'c7ncd.pipelineManage.record.detail': '流水线记录详情',

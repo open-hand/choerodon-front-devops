@@ -146,23 +146,22 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
       return text;
     }
   }
-
-  function renderAppServiceOption({ value, text }) {
+  const renderAppServiceOption = ({ value, text }) => {
     const record = appServiceDs.find((appServiceRecord) => appServiceRecord.get('id') === value);
     if (record) {
       return (
-        <Tooltip title={record.get('code')}>
+        <Tooltip title={record.get('externalConfigId') ? '外置GitLab代码仓库的应用服务不支持代码管理功能' : record.get('code')}>
           {rendererAppServiceId({ value, text })}
         </Tooltip>
       );
     }
     return '';
-  }
+  };
 
-  function renderSearchMatcher({ record, text }) {
+  const renderSearchMatcher = ({ record, text }) => {
     const tempRecord = appServiceDs.find((appServiceRecord) => appServiceRecord.get('id') === record.get('value'));
     return tempRecord.get('code').indexOf(text) !== -1 || tempRecord.get('name').indexOf(text) !== -1;
-  }
+  };
 
   return (
     <div style={{ paddingLeft: 24, display: 'flex', alignItems: 'center' }}>
@@ -196,10 +195,13 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
             localStorage.getItem('recent-app') && (
             <OptGroup label={formatMessage({ id: 'deploy.app-recent' })} key="app-recent">
               {
-                _.map(JSON.parse(localStorage.getItem('recent-app'))[projectId], ({ id, code, name: opName }, index) => (
+                _.map(JSON.parse(localStorage.getItem('recent-app'))[projectId], ({
+                  id, code, externalConfigId, name: opName,
+                }, index) => (
                   <Option
                     value={id}
                     key={index}
+                    disabled={Boolean(externalConfigId)}
                   >
                     {opName}
                   </Option>
@@ -211,10 +213,13 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
 
           <OptGroup label={formatMessage({ id: 'deploy.app' })} key="app">
             {
-            _.map(appServiceDs.toData(), ({ id, code, name: opName }, index) => (
+            _.map(appServiceDs.toData(), ({
+              id, code, externalConfigId, name: opName,
+            }, index) => (
               <Option
                 value={id}
                 key={index}
+                disabled={Boolean(externalConfigId)}
               >
                 {opName}
               </Option>

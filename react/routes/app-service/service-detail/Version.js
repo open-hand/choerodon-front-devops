@@ -13,6 +13,7 @@ import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import filter from 'lodash/filter';
 import { Icon, Spin } from 'choerodon-ui';
+import { Loading } from '@choerodon/components';
 import AppServiceServices from '@/routes/app-service/services';
 import { useAppTopStore } from '../stores';
 import { useServiceDetailStore } from './stores';
@@ -255,7 +256,7 @@ const Version = withRouter(observer((props) => {
   };
 
   const renderTheme4Version = useCallback(() => (
-    <Spin spinning={versionDs.status !== 'ready'}>
+    <Loading display={versionDs.status !== 'ready'} type="c7n">
       {renderVersionButton()}
       <div className="c7ncd-theme4-version">
         <TextField
@@ -327,7 +328,7 @@ const Version = withRouter(observer((props) => {
           ]
         }
       </div>
-    </Spin>
+    </Loading>
   ), [versionDs.records, selectedVersionList, isProjectOwner]);
 
   return AppState.getCurrentTheme === 'theme4' ? (

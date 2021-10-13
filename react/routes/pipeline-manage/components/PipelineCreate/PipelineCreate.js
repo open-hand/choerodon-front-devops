@@ -83,6 +83,7 @@ const PipelineCreate = observer(() => {
         image: origin.selectImage === '1' ? origin.image : null,
         devopsCiStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CI'),
         devopsCdStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CD'),
+        relatedBranches: PipelineCreateFormDataSet.current.get('branch'),
       };
       if (!data.bbcl) {
         delete data.versionName;
@@ -192,11 +193,25 @@ const PipelineCreate = observer(() => {
           name="appServiceId"
           searchable
           searchMatcher="appServiceName"
-          addonAfter={<Tips helpText="此处仅能看到您有开发权限的启用状态的应用服务，并要求该应用服务必须有master分支，且尚未有关联的流水线" />}
+          addonAfter={(
+            <Tips helpText="此处仅能看到您有开发权限的启用状态的应用服务，并要求该应用服务未有关联的流水线" />
+)}
           optionRenderer={optionRenderer}
           renderer={renderer}
         />
         <TextField style={{ display: 'none' }} />
+        {!isEdit && (
+          <>
+            <Select
+              multiple
+              name="branch"
+              disabled={!PipelineCreateFormDataSet.current.get('appServiceId')}
+            />
+            <TextField style={{ display: 'none' }} colSpan={2} />
+
+          </>
+        )}
+
         <div
           role="none"
           className="advanced_text"

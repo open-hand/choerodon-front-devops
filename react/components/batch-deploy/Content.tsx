@@ -74,18 +74,17 @@ const BatchDeployModal = injectIntl(observer(() => {
     }
   });
 
-  function ChangeConfigValue(value: any) {
+  const ChangeConfigValue = (value: any) => {
     record?.set('values', value);
-  }
+  };
 
-  function handleEnableNext(flag: boolean | ((prevState: boolean) => boolean)) {
+  const handleEnableNext = (flag: boolean | ((prevState: boolean) => boolean)) => {
     setHasYamlFailed(flag);
-  }
+  };
 
-  function renderEnvOption({ record: envRecord, text, value }:any) {
-    return (
-      <>
-        {value && (
+  const renderEnvOption = ({ record: envRecord, text, value }:any) => (
+    <>
+      {value && (
         <StatusDot
           // @ts-expect-error
           connect={envRecord.get('connect') as any}
@@ -93,18 +92,17 @@ const BatchDeployModal = injectIntl(observer(() => {
           active={envRecord.get('active')}
           size="small"
         />
-        )}
-        <span className={`${prefixCls}-select-option-text`}>{text}</span>
-      </>
-    );
-  }
+      )}
+      <span className={`${prefixCls}-select-option-text`}>{text}</span>
+    </>
+  );
 
-  function renderOptionProperty({ record: envRecord }:any) {
+  const renderOptionProperty = ({ record: envRecord }:any) => {
     const isAvailable = envRecord.get('connect') && envRecord.get('synchro') && envRecord.get('permission');
     return ({
       disabled: !isAvailable,
     });
-  }
+  };
 
   function handleExpand(Operating: { (value: React.SetStateAction<boolean>): void; (value: React.SetStateAction<boolean>): void; (value: React.SetStateAction<boolean>): void; (arg0: (pre: any) => boolean): void; }) {
     Operating((pre: any) => !pre);
