@@ -112,6 +112,7 @@ const Index = observer(() => {
       {
         AppInfoDataSet.current.get(mapping.deployMode.name) === deployModeOptionsData[0].value ? (
           <Select
+            newLine
             name={mapping.env.name}
             colSpan={1}
             optionRenderer={renderEnvOption}
@@ -121,6 +122,7 @@ const Index = observer(() => {
           />
         ) : (
           <Select
+            newLine
             name={mapping.host.name}
             optionRenderer={renderHostOption}
             onOption={({ record: hostRecord }) => ({

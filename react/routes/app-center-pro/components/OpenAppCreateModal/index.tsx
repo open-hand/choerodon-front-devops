@@ -244,10 +244,13 @@ const AppCreateForm = (props: any) => {
     title: '应用信息',
     display: true,
     ref: appInfoRef,
-    children: () => (
+    children: ({ envId }: {
+      envId: string | undefined,
+    }) => (
       <AppInfo
         cRef={appInfoRef}
         isDeploy={isDeploy}
+        envId={envId}
       />
     ),
     data: null,
@@ -578,6 +581,11 @@ const AppCreateForm = (props: any) => {
 
   const getChildrenParams = () => {
     switch (current) {
+      case 0: {
+        return ({
+          envId: propsEnvId,
+        });
+      }
       case 1: {
         return ({
           deployMode: stepData?.current?.[0]?.data?.[infoMapping.deployMode.name as string],
@@ -630,6 +638,7 @@ const AppCreateForm = (props: any) => {
 };
 
 AppCreateForm.defaultProps = {
+  // eslint-disable-next-line react/default-props-match-prop-types
   isDeploy: false,
 };
 

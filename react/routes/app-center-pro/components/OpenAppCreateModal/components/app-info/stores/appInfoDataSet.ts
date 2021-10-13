@@ -162,15 +162,28 @@ const mapping: {
   },
 };
 
-const appInfoDataSet = () => ({
+const appInfoDataSet = (envId: string | undefined) => ({
   autoCreate: true,
-  fields: Object.keys(mapping).map((i) => mapping[i]),
+  fields: Object.keys(mapping).map((i) => {
+    const item = mapping[i];
+    switch (i) {
+      case 'env': {
+        item.defaultValue = envId || undefined;
+        item.disabled = Boolean(envId);
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+    return item;
+  }),
   events: {
     update: ({ record, name, value }: {
-      record: Record,
-      name: string,
-      value: string,
-    }) => {
+        record: Record,
+        name: string,
+        value: string,
+      }) => {
       switch (name) {
         case mapping.deployMode.name: {
           if (value === deployModeOptionsData[0].value) {
