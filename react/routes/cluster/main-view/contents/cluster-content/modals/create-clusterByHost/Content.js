@@ -23,7 +23,6 @@ import NodePublicCreate from '../create-public-node';
 
 import TestConnectFinal from './components/test-connect-final';
 
-
 let confirmModal;
 let timer;
 
