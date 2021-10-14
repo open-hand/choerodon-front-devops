@@ -117,7 +117,7 @@ export default (
     },
     {
       name: 'branch',
-      type: 'string',
+      type: 'object',
       options: BranchOptionsDs,
       textField: 'branchName',
       valueField: 'branchName',
@@ -125,6 +125,7 @@ export default (
         required: ({ record }) => record.get('appServiceId'),
       },
       label: '分支',
+      ignore: 'always',
     }, {
       name: 'image',
       type: 'string',
