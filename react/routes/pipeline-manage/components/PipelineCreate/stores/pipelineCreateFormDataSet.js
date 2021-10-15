@@ -117,7 +117,7 @@ export default (
     },
     {
       name: 'branch',
-      type: 'string',
+      type: 'object',
       options: BranchOptionsDs,
       textField: 'branchName',
       valueField: 'branchName',
