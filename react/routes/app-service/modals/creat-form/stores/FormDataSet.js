@@ -2,6 +2,7 @@ import { axios } from '@choerodon/boot';
 import omit from 'lodash/omit';
 import AppServiceApis from '../../../apis';
 import { appServiceApiConfig, appServiceApi } from '@/api/AppService';
+import { appExternalConfigApiConfig } from '@/api/AppExternalConfigs';
 
 async function fetchLookup(field, record) {
   const data = await field.fetchLookup();
@@ -9,27 +10,43 @@ async function fetchLookup(field, record) {
     record.set('templateAppServiceVersionId', data[0].id);
   }
 }
-const getExternalRequest = ({
-  code, password, accessToken, authType, repositoryUrl, username, name, type,
-}) => {
-  const res = {
-    code,
-    appExternalConfigDTO: {
-      password,
-      accessToken,
-      authType,
-      repositoryUrl,
-      username,
-    },
-    name,
-    type,
-  };
-  return res;
-};
-
 export default (({
-  intlPrefix, formatMessage, projectId, sourceDs, store, randomString,
+  intlPrefix,
+  formatMessage,
+  projectId,
+  sourceDs,
+  store,
+  randomString,
+  appServiceId,
+  externalConfigId,
 }) => {
+  const getExternalRequest = ({
+    code, password, accessToken, authType, repositoryUrl, username, name, type, objectVersionNumber,
+  }) => {
+    if (appServiceId) {
+      return {
+        password,
+        accessToken,
+        authType,
+        repositoryUrl,
+        username,
+        objectVersionNumber,
+      };
+    }
+    const res = {
+      code,
+      appExternalConfigDTO: {
+        password,
+        accessToken,
+        authType,
+        repositoryUrl,
+        username,
+      },
+      name,
+      type,
+    };
+    return res;
+  };
   async function checkCode(value) {
     const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
     if (value && pa.test(value)) {
@@ -89,14 +106,6 @@ export default (({
         store.loadAppService(projectId, value);
       }
     }
-    if (name === 'authType') {
-      if (record.get('authType') === 'username_password') {
-        record.set('accessToken', null);
-      } else {
-        record.set('username', null);
-        record.set('password', null);
-      }
-    }
   }
 
   return ({
@@ -104,7 +113,11 @@ export default (({
     autoQuery: false,
     selection: false,
     paging: false,
+    dataToJSON: false,
     transport: {
+      read({ data }) {
+        return appExternalConfigApiConfig.getOutExternal(data.externalConfigId);
+      },
       create: ({ data: [data], record }) => {
         if (data.gitLabType === 'inGitlab') {
           const res = omit(data, ['appServiceSource', '__id', '__status']);
@@ -119,13 +132,17 @@ export default (({
         const res = omit(data, ['appServiceSource', '__id', '__status', 'gitLabType']);
         return appServiceApiConfig.external(getExternalRequest(res));
       },
+      update: ({ data: [data], record }) => {
+        const res = omit(data, ['appServiceSource', 'id', '__status', 'gitLabType']);
+        return appExternalConfigApiConfig.outExternal(getExternalRequest(res), externalConfigId);
+      },
     },
     fields: [
       {
-        name: 'name', type: 'string', label: formatMessage({ id: `${intlPrefix}.name` }), required: true, validator: checkName, maxLength: 40,
+        name: 'name', type: 'string', label: formatMessage({ id: `${intlPrefix}.name` }), required: !appServiceId, validator: !appServiceId ? checkName : '', maxLength: 40,
       },
       {
-        name: 'code', type: 'string', label: formatMessage({ id: `${intlPrefix}.code` }), required: true, maxLength: 30, validator: checkCode,
+        name: 'code', type: 'string', label: formatMessage({ id: `${intlPrefix}.code` }), required: !appServiceId, maxLength: 30, validator: !appServiceId ? checkCode : '',
       },
       {
         name: 'type', type: 'string', defaultValue: 'normal',
@@ -147,9 +164,9 @@ export default (({
       {
         name: 'repositoryUrl',
         type: 'string',
-        validator: checkRepositoryUrl,
+        validator: !appServiceId ? checkRepositoryUrl : '',
         dynamicProps: {
-          required: ({ record }) => record.get('gitLabType') === 'outGitlab',
+          required: ({ record }) => record.get('gitLabType') === 'outGitlab' || appServiceId,
         },
         label: formatMessage({ id: `${intlPrefix}.gitLabRepositoryUrl` }),
       },
@@ -157,7 +174,7 @@ export default (({
         name: 'username',
         type: 'string',
         dynamicProps: {
-          required: ({ record }) => record.get('gitLabType') === 'outGitlab' && record.get('authType') === 'username_password',
+          required: ({ record }) => ((record.get('gitLabType') === 'outGitlab' || appServiceId) && record.get('authType') === 'username_password'),
         },
         label: formatMessage({ id: `${intlPrefix}.userName` }),
       },
@@ -170,7 +187,7 @@ export default (({
         name: 'accessToken',
         type: 'string',
         dynamicProps: {
-          required: ({ record }) => record.get('gitLabType') === 'outGitlab' && record.get('authType') === 'access_token',
+          required: ({ record }) => (record.get('gitLabType') === 'outGitlab' || appServiceId) && record.get('authType') === 'access_token',
         },
         label: formatMessage({ id: `${intlPrefix}.token` }),
       },
@@ -178,7 +195,7 @@ export default (({
         name: 'password',
         type: 'string',
         dynamicProps: {
-          required: ({ record }) => record.get('gitLabType') === 'outGitlab' && record.get('authType') === 'username_password',
+          required: ({ record }) => (record.get('gitLabType') === 'outGitlab' || appServiceId) && record.get('authType') === 'username_password',
         },
         label: formatMessage({ id: `${intlPrefix}.userPassword` }),
       },
