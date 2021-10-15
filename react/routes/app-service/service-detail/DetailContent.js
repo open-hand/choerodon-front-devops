@@ -79,9 +79,10 @@ const DetailContent = observer(() => {
       <CustomTabs
         data={tabData}
         onChange={(e, name, value) => setTabValue(value)}
+        selectedTabValue={tabValue}
       />
       {
-        tabValue === 'Version' || type === 'test' ? <Version /> : <Share />
+        tabValue === 'Version' ? <Version /> : <Share />
       }
     </Page>
   );
