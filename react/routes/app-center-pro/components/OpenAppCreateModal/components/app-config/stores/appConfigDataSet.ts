@@ -138,7 +138,7 @@ const serviceVersionOptionDs = {
   pageSize: 20,
   transport: {
     read: ({ data, params }: any) => ({
-      ...appServiceVersionApiConfig.getVersions(data.appServiceId, true, true, params),
+      ...appServiceVersionApiConfig.getVersions(data.appServiceId, true, true, params, data.appServiceVersionId),
     }),
   },
 };
@@ -483,6 +483,9 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
       if (data[mapping.hzeroVersion.name as string]
         && [chartSourceData[0].value, chartSourceData[1].value].includes(data[mapping.chartSource.name as string])
       ) {
+        if (data[mapping.serviceVersion.name as string]) {
+          serviceVersionDataSet.setQueryParameter('appServiceVersionId', data[mapping.serviceVersion.name as string]);
+        }
         serviceVersionDataSet.setQueryParameter('appServiceId', data[mapping.hzeroVersion.name as string]);
         serviceVersionDataSet.query();
       }
