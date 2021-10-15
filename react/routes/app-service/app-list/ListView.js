@@ -246,6 +246,14 @@ const ListView = withRouter(observer((props) => {
           openEdit();
         },
       },
+      outEdit: {
+        service: ['choerodon.code.project.develop.app-service.ps.update'],
+        text: '修改外置仓库配置',
+        action: () => {
+          setSelectedAppService(record.toData());
+          openOutEdit();
+        },
+      },
       stop: {
         service: ['choerodon.code.project.develop.app-service.ps.disable'],
         text: formatMessage({ id: 'stop' }),
@@ -275,9 +283,14 @@ const ListView = withRouter(observer((props) => {
     let actionItems;
     if (record.get('fail')) {
       actionItems = pick(actionData, ['delete', 'detail']);
-    } else if (record.get('synchro') && record.get('active')) {
+    }
+    else if (record.get('synchro') && record.get('active') && (record.get('type') === 'normal' && record.get('appExternalConfigDTO'))) {
+      actionItems = pick(actionData, ['edit', 'stop', 'detail','outEdit']);
+    }
+     else if (record.get('synchro') && record.get('active')) {
       actionItems = pick(actionData, ['edit', 'stop', 'detail']);
-    } else if (record.get('sagaInstanceId')) {
+    }
+    else if (record.get('sagaInstanceId')) {
       actionItems = pick(actionData, ['delete', 'detail']);
     } else if (record.get('active')) {
       return;
@@ -320,6 +333,26 @@ const ListView = withRouter(observer((props) => {
         appServiceId={appServiceId}
       />,
       okText: formatMessage({ id: 'save' }),
+    });
+  }
+
+  function openOutEdit() {
+    const appServiceId = selectedAppService.id;
+    const externalConfigId = selectedAppService.externalConfigId;
+
+    Modal.open({
+      key: createModalKey,
+      drawer: true,
+      style: modalStyle1,
+      title: '修改外置仓库配置',
+      children: <CreateForm
+        refresh={refresh}
+        intlPrefix={intlPrefix}
+        prefixCls={prefixCls}
+        appServiceId={appServiceId}
+        externalConfigId={externalConfigId}
+      />,
+      okText: '保存',
     });
   }
 
