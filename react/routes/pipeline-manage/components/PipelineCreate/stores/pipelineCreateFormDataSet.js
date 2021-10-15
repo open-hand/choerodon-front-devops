@@ -125,7 +125,6 @@ export default (
         required: ({ record }) => record.get('appServiceId'),
       },
       label: '分支',
-      ignore: 'always',
     }, {
       name: 'image',
       type: 'string',
