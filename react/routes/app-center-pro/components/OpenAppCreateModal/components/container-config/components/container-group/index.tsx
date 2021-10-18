@@ -57,6 +57,7 @@ const Index = observer(({
           <TextField
             autoFocus
             value={record.get('name')}
+            required
             onChange={(value) => record.set('name', value)}
             onBlur={(e) => {
               if (e.target.value) {
