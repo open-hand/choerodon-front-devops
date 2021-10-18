@@ -210,6 +210,7 @@ const commonField = {
   permission_delete_des: '确定要删除该成员的权限吗？',
   permission_assignment: '权限分配',
   permission_addTime: '添加时间',
+  permission_type: '权限类型',
 
   // 资源树名称
   instances: 'Chart应用',

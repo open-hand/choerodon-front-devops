@@ -9,17 +9,17 @@ interface ListProps {
   projectId: number,
   formatMessage(arg0: object, arg1?: object): string,
   intlPrefix: string,
-  mainStore:StoreProps,
+  mainStore: StoreProps,
 }
 
 export default ({
   projectId, formatMessage, intlPrefix, mainStore,
-}: ListProps): DataSetProps => ({
+}: ListProps): DataSetProps & any => ({
   autoCreate: false,
   autoQuery: false,
   selection: false,
   transport: {
-    read: ({ data }) => {
+    read: ({ data }:any) => {
       const postData = getTablePostData(data);
       return ({
         url: HostConfigApi.getHostPermissionList(projectId, mainStore.getSelectedHost?.id),
@@ -27,7 +27,7 @@ export default ({
         data: postData,
       });
     },
-    destroy: ({ data: [data] }) => ({
+    destroy: ({ data: [data] }:any) => ({
       url: HostConfigApi.deletePermission(projectId, mainStore.getSelectedHost?.id, data.iamUserId),
       method: 'delete',
     }),
@@ -37,6 +37,7 @@ export default ({
     { name: 'loginName', label: formatMessage({ id: 'loginName' }) },
     { name: 'roles', label: formatMessage({ id: 'projectRole' }) },
     { name: 'creationDate', label: formatMessage({ id: 'permission_addTime' }) },
+    { name: 'permissionLabel', label: formatMessage({ id: 'permission_type' }) },
   ],
   queryFields: [
     {
