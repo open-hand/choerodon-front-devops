@@ -5,7 +5,7 @@ const app = {
   'c7ncd.app.operation.type.hzero': 'hzero快速部署',
   'c7ncd.app.operation.type.base_component': '基础组件',
   'c7ncd.app.operation.type.batch_deploy': '批量部署',
-  'c7ncd.app.operation.type.pipeline_deploy': '流水先部署',
+  'c7ncd.app.operation.type.pipeline_deploy': '流水线部署',
 };
 
 const commonField = {
