@@ -84,6 +84,7 @@ const PermissionTable = () => {
       <Column name="loginName" tooltip={'overflow' as TableColumnTooltip} />
       <Column name="roles" renderer={renderRole} tooltip={'overflow' as TableColumnTooltip} />
       <Column name="creationDate" renderer={renderDate} width={100} />
+      <Column name="permissionLabel" tooltip={'overflow' as TableColumnTooltip} />
     </Table>
   );
 };
