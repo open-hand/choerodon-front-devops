@@ -220,12 +220,13 @@ const IstModals = injectIntl(observer(() => {
     const upgradeAvailable = record && record.get('upgradeAvailable');
     const btnDisabled = !connect || !status || (status !== 'failed' && status !== 'running');
     const marketDisable = isMarket && !appAvailable;
+    const isOperating = status === 'operating';
 
     const buttons = [!isMiddleware && {
       name: formatMessage({ id: `${intlPrefix}.modal.values` }),
       icon: 'rate_review1',
       handler: openValueModal,
-      display: true,
+      display: !isOperating,
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.values'],
       disabled: btnDisabled || marketDisable,
       tooltipsConfig: {
@@ -238,6 +239,8 @@ const IstModals = injectIntl(observer(() => {
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.updateChart'],
       name: '修改应用',
       icon: 'add_comment-o',
+      disabled: btnDisabled,
+      display: !isOperating,
       handler: () => {
         openAppConfigModal({ ...record?.toData(), instanceId: record.get('id') } || {}, refresh);
       },
@@ -258,6 +261,7 @@ const IstModals = injectIntl(observer(() => {
       name: formatMessage({ id: `${intlPrefix}.modal.redeploy` }),
       icon: 'redeploy_line',
       handler: openRedeploy,
+      display: !isOperating,
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.redeploy'],
       disabled: btnDisabled || marketDisable,
       tooltipsConfig: {
