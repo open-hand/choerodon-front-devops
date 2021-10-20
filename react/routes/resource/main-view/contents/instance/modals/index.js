@@ -5,7 +5,6 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { Choerodon } from '@choerodon/boot';
 import { HeaderButtons } from '@choerodon/master';
 import { handlePromptError } from '../../../../../../utils';
-import DetailsModal from './details';
 import ValueModalContent from './values/Config';
 import UpgradeModalContent from './upgrade';
 import MarketUpgradeModalContent from './market-upgrade';
@@ -15,7 +14,6 @@ import {
   openAppConfigModal,
 } from '@/components/appCenter-editModal';
 
-const detailKey = Modal.key();
 const valuesKey = Modal.key();
 const upgradeKey = Modal.key();
 const redeployKey = Modal.key();

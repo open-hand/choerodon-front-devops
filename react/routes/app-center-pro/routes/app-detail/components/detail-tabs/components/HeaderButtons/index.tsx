@@ -259,7 +259,7 @@ const DetailsTabsHeaderButtons = () => {
       deployType === ENV_TAB ? deleteEnvApp({
         appCatergoryCode: getAppCategories(rdupmType, deployType).code,
         envId: hostOrEnvId,
-        instanceId: appId,
+        instanceId,
         instanceName: name,
         callback: goBackHomeBaby,
       }) : openDeleteHostAppModal(hostOrEnvId, appId, name, goBackHomeBaby);
