@@ -51,6 +51,7 @@ const PipelineCreate = observer(() => {
           appServiceId,
           appServiceName: appService.name,
         }];
+        PipelineCreateFormDataSet.current.set('appServiceId', appService.id);
       }
       PipelineCreateFormDataSet.loadData([{
         name,
