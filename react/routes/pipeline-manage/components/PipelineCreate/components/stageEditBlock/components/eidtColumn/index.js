@@ -128,8 +128,8 @@ export default observer((props) => {
           >
             {jobList.slice().map((item, index) => (
               <Draggable
-                key={`dropJobs-${item.name}`}
-                draggableId={`dropJobs-${item.name}`}
+                key={`dropJobs-${item.name}-${item.id}`}
+                draggableId={`dropJobs-${item.name}-${item.id}`}
                 index={index}
               >
                 {(dragProvidedByColomn, snapshotinnerByJob) => (
