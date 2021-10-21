@@ -94,6 +94,7 @@ const marketVersionOptionsDs = {
     type: 'string',
     group: 0,
   }] as FieldProps[],
+  paging: false,
   transport: {
     read: ({ data: queryData }: any) => ({
       ...deployApiConfig.deployApplication(queryData.applicationType || 'common'),
