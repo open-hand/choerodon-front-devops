@@ -74,8 +74,6 @@ const Index = observer(() => {
     AnnotationDataSet.create();
   }
 
-  console.log(portsList);
-
   return (
     <div className="c7ncd-appCenterPro-ingressConfig">
       <p className="c7ncd-appCenterPro-newConfig__title">域名（Ingress)</p>

@@ -15,7 +15,10 @@ export default ({ searchDs }: ListProps): any => ({
   pageSize: 8,
   queryDataSet: searchDs,
   transport: {
-    read: ({ data }: { data: { typeKey: string, envId:number | string, hostId:number | string } }) => {
+    read: ({ data, params }: {
+      data: { typeKey: string, envId:number | string, hostId:number | string },
+      params: any
+    }) => {
       const { typeKey } = data || {};
       return typeKey === 'env' ? deployAppCenterApiConfig.getDeployCenterAppList() : hostApiConfig.loadHostsAppList();
     },
