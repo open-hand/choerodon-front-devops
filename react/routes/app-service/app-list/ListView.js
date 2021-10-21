@@ -247,7 +247,7 @@ const ListView = withRouter(observer((props) => {
         },
       },
       outEdit: {
-        service: ['choerodon.code.project.develop.app-service.ps.update'],
+        service: ['choerodon.code.project.develop.app-service.ps.out.edit'],
         text: '修改外置仓库配置',
         action: () => {
           setSelectedAppService(record.toData());
