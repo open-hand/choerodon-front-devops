@@ -6,7 +6,6 @@ import { inject } from 'mobx-react';
 import { DataSet } from 'choerodon-ui/pro';
 import { DataSet as DataSetProps } from '@/interface';
 import SelectDataSet from './SelectDataSet';
-import FormDataSet from './FormDataSet';
 
 interface ContextProps {
   prefixCls: string,
@@ -15,7 +14,6 @@ interface ContextProps {
   modal: any,
   projectId: number,
   hostId: string,
-  formDs: DataSetProps,
   selectDs: DataSetProps,
   refresh(): void,
 }
@@ -38,10 +36,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const random = useMemo(() => Math.random(), []);
 
   const selectDs = useMemo(() => new DataSet(SelectDataSet({
-    projectId, hostId, formatMessage, random,
-  })), [hostId]);
-  const formDs = useMemo(() => new DataSet(FormDataSet({
-    projectId, hostId, formatMessage, selectDs, hostData,
+    projectId, hostId, formatMessage, random, hostData,
   })), [hostId]);
 
   const value = {
@@ -51,7 +46,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     formatMessage,
     projectId,
     selectDs,
-    formDs,
   };
   return (
     <Store.Provider value={value}>
