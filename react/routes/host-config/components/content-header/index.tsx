@@ -3,7 +3,7 @@ import { observer, Observer } from 'mobx-react-lite';
 import {
   Button, Form, Icon, Select, TextField,
 } from 'choerodon-ui/pro';
-import { debounce } from 'lodash';
+import { useDebounceFn } from 'ahooks';
 import { LabelLayoutType } from '@/interface';
 import { useHostConfigStore } from '../../stores';
 
@@ -24,6 +24,10 @@ const ContentHeader: React.FC<any> = observer((): any => {
     listDs.query();
   };
 
+  const { run } = useDebounceFn(handleSearch, {
+    wait: 500,
+  });
+
   return (
     <div className={`${prefixCls}-content-search`}>
       {showTestTab && hasExtraTab && tab}
@@ -41,10 +45,8 @@ const ContentHeader: React.FC<any> = observer((): any => {
             colSpan={2}
             placeholder="请输入搜索条件"
             prefix={<Icon type="search" />}
-            onInput={(e:any) => {
-              searchDs.current?.set('search_param', e.currentTarget?.value);
-              listDs.query();
-            }}
+            onInput={run}
+            valueChangeAction={'input' as any}
           />
           <Select
             placeholder="主机状态:"

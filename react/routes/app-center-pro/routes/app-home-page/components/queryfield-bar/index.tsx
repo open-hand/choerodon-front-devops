@@ -6,7 +6,7 @@ import {
 } from 'choerodon-ui/pro';
 import { CustomTabs } from '@choerodon/components';
 import map from 'lodash/map';
-import debounce from 'lodash/debounce';
+import { useDebounceFn } from 'ahooks';
 import { LabelLayoutType, RecordObjectProps } from '@/interface';
 
 import EnvOption from '@/components/env-option';
@@ -61,6 +61,10 @@ const ContentHeader: React.FC<any> = observer((): any => {
   const handleFormChange = () => {
     listDs.query();
   };
+
+  const { run } = useDebounceFn(handleFormChange, {
+    wait: 500,
+  });
 
   return (
     <div className={newPrefixCls}>
@@ -126,10 +130,8 @@ const ContentHeader: React.FC<any> = observer((): any => {
               <Icon type="search" />
             }
             clearButton
-            onInput={(e:any) => {
-              searchDs.current?.set('params', e.currentTarget?.value);
-              listDs.query();
-            }}
+            onChange={run}
+            valueChangeAction={'input' as any}
           />
           <Select
             name="operation_type"
