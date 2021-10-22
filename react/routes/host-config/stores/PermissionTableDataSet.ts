@@ -1,6 +1,5 @@
 /* eslint-disable import/no-anonymous-default-export */
-import { omit } from 'lodash';
-import { DataSet, DataSetProps, FieldType } from '@/interface';
+import { DataSetProps, FieldType } from '@/interface';
 import HostConfigApi from '@/routes/host-config/apis/DeployApis';
 import getTablePostData from '@/utils/getTablePostData';
 import { StoreProps } from '@/routes/host-config/stores/useStore';
@@ -49,6 +48,11 @@ export default ({
       name: 'loginName',
       type: 'string' as FieldType,
       label: formatMessage({ id: 'loginName' }),
+    },
+    {
+      name: 'permissionLabel',
+      type: 'string' as FieldType,
+      label: '权限类型',
     },
   ],
 });
