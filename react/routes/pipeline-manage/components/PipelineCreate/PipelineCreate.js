@@ -7,6 +7,7 @@ import {
 } from 'choerodon-ui/pro';
 import { message, Icon, Tooltip } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
+import { map } from 'lodash';
 import { usePipelineCreateStore } from './stores';
 import Tips from '../../../../components/new-tips';
 import StageEditBlock from './components/stageEditBlock';
@@ -77,6 +78,7 @@ const PipelineCreate = observer(() => {
   const handleCreate = async () => {
     const result = await PipelineCreateFormDataSet.validate();
     if (result) {
+      const branches = map(PipelineCreateFormDataSet.current.get('branch'), 'branchName');
       const origin = PipelineCreateFormDataSet.toData()[0];
       const data = {
         ...dataSource,
@@ -84,7 +86,7 @@ const PipelineCreate = observer(() => {
         image: origin.selectImage === '1' ? origin.image : null,
         devopsCiStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CI'),
         devopsCdStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CD'),
-        relatedBranches: PipelineCreateFormDataSet.current.get('branch'),
+        relatedBranches: branches,
       };
       if (!data.bbcl) {
         delete data.versionName;
