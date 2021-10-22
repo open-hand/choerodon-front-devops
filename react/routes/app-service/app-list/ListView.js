@@ -637,6 +637,7 @@ const ListView = withRouter(observer((props) => {
               suffix={(
                 <Icon type="search" />
               )}
+              clearButton
               onChange={handleDebounceSearch}
               valueChangeAction="input"
             />),

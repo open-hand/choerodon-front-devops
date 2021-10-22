@@ -246,6 +246,7 @@ const Version = withRouter(observer((props) => {
           style={{
             width: '100%',
           }}
+          clearButton
           prefix={(
             <Icon type="search" />
           )}
