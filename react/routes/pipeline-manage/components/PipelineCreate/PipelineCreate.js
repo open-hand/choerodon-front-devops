@@ -78,7 +78,7 @@ const PipelineCreate = observer(() => {
   const handleCreate = async () => {
     const result = await PipelineCreateFormDataSet.validate();
     if (result) {
-      const branches = map(PipelineCreateFormDataSet.current.get('branch'), (item) => Object.values(item)[0]);
+      const branches = map(PipelineCreateFormDataSet.current.get('branch'), 'branchName');
       const origin = PipelineCreateFormDataSet.toData()[0];
       const data = {
         ...dataSource,
