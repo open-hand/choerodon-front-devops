@@ -151,7 +151,9 @@ const ContentHeader: React.FC<any> = observer((): any => {
         </Form>
         <Button
           onClick={() => {
+            const currentTypeKey = searchDs.current?.get('typeKey');
             searchDs.reset();
+            searchDs.current?.set('typeKey', currentTypeKey);
             listDs.query();
           }}
           className={`${newPrefixCls}-btn`}

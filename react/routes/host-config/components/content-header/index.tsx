@@ -45,7 +45,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
             colSpan={2}
             placeholder="请输入搜索条件"
             prefix={<Icon type="search" />}
-            onInput={run}
+            onChange={run}
             valueChangeAction={'input' as any}
           />
           <Select
