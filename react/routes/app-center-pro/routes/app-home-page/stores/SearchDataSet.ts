@@ -1,22 +1,74 @@
 /* eslint-disable import/no-anonymous-default-export */
-import { DataSet, Record } from '@/interface';
-import { ENV_TAB, HOST_TAB } from '@/routes/app-center-pro/stores/CONST';
+import map from 'lodash/map';
+import { DataSet } from 'choerodon-ui/pro';
+import { DataSet as DataSetInterface, Record } from '@/interface';
+import { ENV_TAB, HOST_TAB, APP_OPERATION } from '@/routes/app-center-pro/stores/CONST';
 
 interface SearchProps {
-  envDs: DataSet,
-  hostDs: DataSet,
+  envDs: DataSetInterface,
+  hostDs: DataSetInterface,
   ALL_ENV_KEY: string,
+  formatMessage:any
+  replaceCurrentState: (fiedls:string, value:any)=>void
 }
 
-export default ({ envDs, hostDs, ALL_ENV_KEY }: SearchProps): any => ({
+export default ({
+  envDs, hostDs, ALL_ENV_KEY, formatMessage, replaceCurrentState,
+}: SearchProps): any => ({
   autoCreate: true,
   selection: false,
+  events: {
+    update: ({
+      dataSet, record, name, value, oldValue,
+    }:any) => {
+      replaceCurrentState(name, value);
+    },
+  },
   fields: [
     {
       name: 'typeKey',
       type: 'string',
-      defaultValue: ENV_TAB,
-      ignore: 'always',
+    },
+    {
+      name: 'params',
+      type: 'string',
+    },
+    {
+      name: 'rdupm_type',
+      label: '应用类型',
+      type: 'string',
+      textField: 'name',
+      valueField: 'value',
+      dynamicProps: {
+        ignore: ({ record }:{
+          record: Record
+        }) => record.get('typeKey') === ENV_TAB,
+      },
+      options: new DataSet({
+        data: [
+          {
+            name: 'chart包',
+            value: 'chart',
+          },
+          {
+            name: '部署组',
+            value: 'deployment',
+          },
+        ],
+      }),
+    },
+    {
+      name: 'operation_type',
+      type: 'string',
+      label: '操作类型',
+      textField: 'name',
+      valueField: 'value',
+      options: new DataSet({
+        data: map(APP_OPERATION, (value:keyof typeof APP_OPERATION) => ({
+          name: formatMessage({ id: `c7ncd.app.operation.type.${value}` }),
+          value,
+        })),
+      }),
     },
     {
       name: 'env_id',
@@ -49,9 +101,6 @@ export default ({ envDs, hostDs, ALL_ENV_KEY }: SearchProps): any => ({
         },
       },
       options: hostDs,
-    },
-    {
-      name: 'params',
     },
   ],
 });

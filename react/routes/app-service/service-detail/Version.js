@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-bind */
 import React, {
-  useMemo, useImperativeHandle, useState, useEffect, useCallback,
+  useMemo, useState, useEffect, useCallback,
 } from 'react';
 import {
   TabPage, Content, Breadcrumb, Permission, Action,
@@ -11,15 +11,14 @@ import {
 import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
-import filter from 'lodash/filter';
-import { Icon, Spin } from 'choerodon-ui';
+import { Icon } from 'choerodon-ui';
 import { Loading } from '@choerodon/components';
+import { useDebounceFn } from 'ahooks';
 import AppServiceServices from '@/routes/app-service/services';
 import { useAppTopStore } from '../stores';
 import { useServiceDetailStore } from './stores';
 import HeaderButtons from './HeaderButtons';
 import TimePopover from '../../../components/timePopover/TimePopover';
-import Tips from '../../../components/new-tips';
 import NoData from './images/nodata.png';
 
 import './index.less';
@@ -86,27 +85,6 @@ const Version = withRouter(observer((props) => {
       location,
     } = props;
     history.push(`/rducm/code-lib-management/assign${location.search}&appServiceIds=${appServiceIds}`);
-    // Modal.open({
-    //   key: modalKey1,
-    //   title: <Tips
-    //     helpText={formatMessage({ id: `${intlPrefix}.detail.allocation.tips` })}
-    //     title={formatMessage({ id: `${intlPrefix}.permission.manage` })}
-    //   />,
-    //   children: <ServicePermission
-    //     dataSet={permissionDs}
-    //     baseDs={detailDs}
-    //     store={appServiceStore}
-    //     nonePermissionDs={nonePermissionDs}
-    //     intlPrefix="c7ncd.deployment"
-    //     prefixCls={prefixCls}
-    //     formatMessage={formatMessage}
-    //     projectId={id}
-    //     refresh={refresh}
-    //   />,
-    //   drawer: true,
-    //   style: modalStyle,
-    //   okText: formatMessage({ id: 'save' }),
-    // });
   }
 
   function handleDelete(list, item) {
@@ -255,6 +233,10 @@ const Version = withRouter(observer((props) => {
     setSelectedVersionList(selfSelectedList);
   };
 
+  const { run: handleDebounceSearch } = useDebounceFn(handleChangeSearch, {
+    wait: 500,
+  });
+
   const renderTheme4Version = useCallback(() => (
     <Loading display={versionDs.status !== 'ready'} type="c7n">
       {renderVersionButton()}
@@ -267,8 +249,8 @@ const Version = withRouter(observer((props) => {
           prefix={(
             <Icon type="search" />
           )}
-          onEnterDown={(e) => handleChangeSearch(e.target.value)}
-          onChange={handleChangeSearch}
+          onChange={handleDebounceSearch}
+          valueChangeAction="input"
         />
         {
           versionDs.records && versionDs.records.length > 0 ? (
