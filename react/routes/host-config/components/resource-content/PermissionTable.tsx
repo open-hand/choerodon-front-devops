@@ -76,7 +76,7 @@ const PermissionTable = () => {
     // }
     const actionData = [
       {
-        // service: ['choerodon.code.project.deploy.host.ps.permission.edit'],
+        service: ['choerodon.code.project.deploy.host.ps.permission.edit'],
         text: '修改',
         action: () => handleEdit(record),
       },
