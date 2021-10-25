@@ -18,6 +18,7 @@ const PermissionTable = () => {
     permissionDs,
     formatMessage,
     mainStore,
+    refresh: allRefresh,
     projectId,
     prefixCls,
   } = useHostConfigStore();
@@ -25,6 +26,10 @@ const PermissionTable = () => {
   useEffect(() => {
     permissionDs.query();
   }, []);
+
+  useEffect(() => {
+    permissionDs.query();
+  }, [mainStore.getSelectedHost?.id]);
 
   const refresh = useCallback(() => {
     permissionDs.query();
@@ -37,8 +42,10 @@ const PermissionTable = () => {
       okText: formatMessage({ id: 'delete' }),
     };
     const res = await permissionDs.delete(record, modalProps);
-    if (res && res.success) {
+    if (!res.refreshAll) {
       refresh();
+    } else {
+      allRefresh();
     }
   }, []);
 
@@ -57,13 +64,8 @@ const PermissionTable = () => {
         mainStore={mainStore}
         projectId={projectId}
       />,
-      onOk: handleSubmit,
     });
   }, []);
-
-  const handleSubmit = () => {
-
-  };
 
   const renderAction = useCallback(({ record }: RecordObjectProps) => {
     if (record.get('gitlabProjectOwner') || record.get('creator')) {
@@ -74,14 +76,14 @@ const PermissionTable = () => {
     // }
     const actionData = [
       {
+        // service: ['choerodon.code.project.deploy.host.ps.permission.edit'],
+        text: '修改',
+        action: () => handleEdit(record),
+      },
+      {
         service: ['choerodon.code.project.deploy.host.ps.permission.delete'],
         text: formatMessage({ id: 'delete' }),
         action: () => handleDelete(record),
-      },
-      {
-      // service: ['choerodon.code.project.deploy.host.ps.permission.edit'],
-        text: '修改',
-        action: () => handleEdit(record),
       },
     ];
     return (
