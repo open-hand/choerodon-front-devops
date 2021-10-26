@@ -10,11 +10,13 @@ class AppServiceVersionsApi extends Api<AppServiceVersionsApi> {
     deployOnly: boolean,
     doPage: boolean,
     othersParams: object = {},
+    appServiceVersionId?: any,
   ) {
     return this.request({
       method: 'post',
       url: `${this.prefix}/page_by_options`,
       params: {
+        app_service_version_id: appServiceVersionId,
         app_service_id: appServiceId,
         deploy_only: deployOnly,
         do_page: doPage,

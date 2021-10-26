@@ -66,7 +66,7 @@ const BASE_COMPONENT = 'base_component';
   */
 const BATCH_DEPLOY = 'batch_deploy';
 /**
-  * 流水先部署
+  * 流水线部署
   */
 const PIPELINE_DEPLOY = 'pipeline_deploy';
 
