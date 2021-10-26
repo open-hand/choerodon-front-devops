@@ -42,7 +42,7 @@ const PermissionTable = () => {
       okText: formatMessage({ id: 'delete' }),
     };
     const res = await permissionDs.delete(record, modalProps);
-    if (!res.refreshAll) {
+    if (!res.list[0].refreshAll) {
       refresh();
     } else {
       allRefresh();
