@@ -110,7 +110,7 @@ const handleSetSubmitDataByAppConfig = ({
         res,
         mapping.marketVersion.name as string,
         appConfigData[mapping.marketServiceVersion.name as string]
-          .marketServiceDeployObjectVO.marketServiceId,
+          ?.marketServiceDeployObjectVO?.marketServiceId || undefined,
       );
       setKeyValue(
         res,
@@ -558,6 +558,7 @@ const AppCreateForm = (props: any) => {
           refresh(key, result);
           return true;
         } catch (e) {
+          console.log(e);
           return false;
         }
       }
