@@ -251,8 +251,7 @@ const ListView = withRouter(observer((props) => {
         service: ['choerodon.code.project.develop.app-service.ps.out.edit'],
         text: '修改外置仓库配置',
         action: () => {
-          setSelectedAppService(record.toData());
-          openOutEdit();
+          openOutEdit(record);
         },
       },
       stop: {
@@ -337,9 +336,9 @@ const ListView = withRouter(observer((props) => {
     });
   }
 
-  function openOutEdit () {
-    const appServiceId = selectedAppService.id;
-    const externalConfigId = selectedAppService.externalConfigId;
+  function openOutEdit (record) {
+    const appServiceId = record.get('id');
+    const externalConfigId = record.get('externalConfigId');
 
     Modal.open({
       key: createModalKey,
