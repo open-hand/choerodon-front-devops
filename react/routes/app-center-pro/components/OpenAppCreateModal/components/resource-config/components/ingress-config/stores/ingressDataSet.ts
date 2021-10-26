@@ -54,7 +54,7 @@ function isRequired({ record }: any) {
 }
 
 function renderLookupUrl({ record }: any) {
-  const parentRecord = record.cascadeParent;
+  const parentRecord = record?.cascadeParent;
   if (!parentRecord) {
     return;
   }

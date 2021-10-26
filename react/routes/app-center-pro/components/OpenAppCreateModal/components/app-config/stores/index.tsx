@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 import React, { createContext, useContext, useMemo } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import appConfigDataSet
@@ -34,8 +40,6 @@ export const StoreProvider = (props: any) => {
     envId,
     detail,
   } = props;
-
-  console.log(detail);
 
   const AppConfigDataSet = useMemo(
     () => new DataSet(appConfigDataSet(envId, detail)), [envId, detail],
