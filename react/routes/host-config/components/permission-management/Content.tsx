@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Select, Form, Button,
@@ -16,6 +16,10 @@ const HostPermission = () => {
     refresh,
     modal,
   } = useHostPermissionStore();
+
+  useEffect(() => {
+    selectDs.setState('permissionLabel', 'common');
+  }, []);
 
   modal.handleOk(async () => {
     try {
@@ -62,11 +66,10 @@ const HostPermission = () => {
 
   const handleCreate = useCallback(() => {
     selectDs.create();
-    selectDs.setState('permissionLabel', 'common');
   }, []);
 
   const handleClick = (value:any) => {
-    selectDs.setState('permissionLabel', 'administrator');
+    selectDs.setState('permissionLabel', value.value);
   };
 
   const data = [{
