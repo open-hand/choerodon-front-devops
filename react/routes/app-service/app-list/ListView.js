@@ -50,6 +50,7 @@ const ListView = withRouter(observer((props) => {
   } = useAppTopStore();
 
   const ref = useRef();
+  const searchRef = useRef();
 
   const {
     intl: { formatMessage },
@@ -585,11 +586,15 @@ const ListView = withRouter(observer((props) => {
         ...AppState.getCurrentTheme === 'theme4' ? {
           extraNode: (
             <TextField
+              ref={searchRef}
               className="theme4-c7n-member-search"
               placeholder="搜索应用服务"
               style={{ marginLeft: 32 }}
               suffix={(
-                <Icon type="search" />
+                <Icon
+                    type="search"
+                    onClick={() => searchRef.current.blur()}
+                />
               )}
               onEnterDown={(e) => handleChangeSearch(e.target.value)}
               onChange={handleChangeSearch}
