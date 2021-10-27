@@ -1,4 +1,6 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, {
+  useCallback, useEffect, useMemo, useState,
+} from 'react';
 import {
   Form, TextField, Select, Tooltip, SelectBox, Spin,
 } from 'choerodon-ui/pro';
@@ -33,6 +35,10 @@ const CreateForm = injectIntl(observer((props) => {
   const record = formDs.current;
   const [testStatus, setTestStatus] = useState('loading');
   const [isShow, setIsShow] = useState(false);
+  useEffect(() => {
+    setIsShow(false);
+  },
+  [record.get('authType')]);
   const optionLoading = useMemo(() => (
     <Option value="loading">
       <div
