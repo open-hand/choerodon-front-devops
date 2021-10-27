@@ -8,7 +8,9 @@ import { appServiceApiConfig } from '@/api/AppService';
 import { deployApiConfig, deployApi } from '@/api/Deploy';
 import { appServiceVersionApiConfig } from '@/api/AppServiceVersions';
 import { environmentApiConfig } from '@/api/Environment';
-import { appServiceInstanceApi, deployAppCenterApi, uniqueApiConfig } from '@/api';
+import {
+  appServiceInstanceApi, appServiceInstanceApiConfig, deployAppCenterApi, uniqueApiConfig,
+} from '@/api';
 import { OPTIONAL } from '../constant';
 import hzero from '../images/hzero.png';
 import market from '../images/market.png';
@@ -464,7 +466,7 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
     update: ({ data: [data] }: any) => {
       if ([chartSourceData[0].value, chartSourceData[1].value]
         .includes(data[mapping.chartSource.name as string])) {
-        return appServiceInstanceApi.updateAppServiceInstance({
+        return appServiceInstanceApiConfig.updateAppServiceInstance({
           ...data,
           appName: data[mapping.appName.name as string],
           appCode: data[mapping.appCode.name as string],
@@ -476,7 +478,7 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
           marketAppServiceId: data.appServiceId,
         });
       }
-      return appServiceInstanceApi.updateMarketAppService(
+      return appServiceInstanceApiConfig.updateMarketAppService(
         data.instanceId,
         {
           ...data,
