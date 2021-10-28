@@ -1,5 +1,5 @@
 /* eslint-disable import/no-anonymous-default-export */
-import { DataSetProps, FieldType } from '@/interface';
+import { DataSetProps, FieldType, DataSet } from '@/interface';
 import HostConfigApi from '@/routes/host-config/apis/DeployApis';
 import getTablePostData from '@/utils/getTablePostData';
 import { StoreProps } from '@/routes/host-config/stores/useStore';
@@ -53,6 +53,20 @@ export default ({
       name: 'permissionLabel',
       type: 'string' as FieldType,
       label: '权限类型',
+      textField: 'text',
+      valueField: 'value',
+      options: new DataSet({
+        data: [
+          {
+            text: '主机管理权限',
+            value: 'administrator',
+          },
+          {
+            text: '主机使用权限',
+            value: 'common',
+          },
+        ],
+      }),
     },
   ],
 });
