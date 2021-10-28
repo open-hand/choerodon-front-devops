@@ -25,6 +25,10 @@ import { getAppCategories } from '@/routes/app-center-pro/utils';
 import {
   CHART_CATERGORY, DEPLOY_CATERGORY, HOST_CATERGORY, MIDDLWARE_CATERGORY, OTHER_CATERGORY,
 } from '@/routes/app-center-pro/stores/CONST';
+import {
+  ConfigurationCenterDataSet,
+  ConfigCompareOptsDS,
+} from '@/components/configuration-center/stores/ConfigurationCenterDataSet';
 
 interface ContextProps {
   subfixCls: string,
@@ -38,6 +42,7 @@ interface ContextProps {
   podDetailsDs: DataSet,
   runDetailsStore: DetailsStoreProps,
   resourceConfigDs: DataSet,
+  configurationCenterDataSet:DataSet,
   podDetialsQuery:(...args:any[]) => any;
   projectId: string,
 }
@@ -52,7 +57,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
   const {
     children,
     intl: { formatMessage },
-    AppState: { currentMenuType: { projectId } },
+    AppState: { currentMenuType: { projectId, organizationId } },
   } = props;
 
   const {
@@ -107,6 +112,20 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
   // 运行详情
   const runDetailsStore = runningDetailsStore({ projectId, appCenterId, envId: hostOrEnvId });
 
+  // 配置中心详情
+  const configCompareOptsDS = useMemo(
+    () => new DataSet(ConfigCompareOptsDS({ projectId, organizationId })),
+    [],
+  );
+
+  const configurationCenterDataSet = useMemo(
+    () => new DataSet(
+      // @ts-ignore
+      ConfigurationCenterDataSet({ projectId, organizationId, optsDS: configCompareOptsDS }),
+    ),
+    [],
+  );
+
   const appDetailTabStore = useStore({ defaultKey: tabKeys[0] });
 
   const loadData = useCallback(() => {
@@ -155,6 +174,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     projectId,
     podDetailsDs,
     loadData,
+    configurationCenterDataSet,
   };
   return (
     <Store.Provider value={value}>

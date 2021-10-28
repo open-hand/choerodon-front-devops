@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import {
   Form,
   Select,
@@ -10,69 +10,74 @@ import {
   Button,
   Modal,
   TextArea,
-} from "choerodon-ui/pro";
-import { NewTips } from "@choerodon/components";
-import { Icon, Spin } from "choerodon-ui";
-import { axios, Choerodon } from "@choerodon/boot";
-import { Base64 } from "js-base64";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import { observer } from "mobx-react-lite";
-import JSONbig from "json-bigint";
-import { get } from "lodash";
-import DeployConfig from "@/components/deploy-config-form";
-import StatusDot from "@/components/status-dot";
+  DataSet,
+} from 'choerodon-ui/pro';
+import { NewTips } from '@choerodon/components';
+import { Icon, Spin } from 'choerodon-ui';
+import { axios, Choerodon } from '@choerodon/boot';
+import { Base64 } from 'js-base64';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { observer } from 'mobx-react-lite';
+import JSONbig from 'json-bigint';
+import { get } from 'lodash';
+import DeployConfig from '@/components/deploy-config-form';
+import StatusDot from '@/components/status-dot';
 import {
   handleSetSubmitDataByDeployGroupConfig,
   handleSetSubmitDataByContainerConfig,
-} from "@/routes/app-center-pro/components/OpenAppCreateModal";
-import { initValueIdDataSet } from "@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/addCDTaskDataSet";
-import { deployConfigDataSet, appNameChartDataSet } from "./stores/deployChartDataSet";
-import DeployChart from "./components/deploy-chart";
+} from '@/routes/app-center-pro/components/OpenAppCreateModal';
+import { initValueIdDataSet } from '@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/addCDTaskDataSet';
+import { deployConfigDataSet, appNameChartDataSet } from './stores/deployChartDataSet';
+import DeployChart from './components/deploy-chart';
 import DeployGroup from './components/deploy-group';
 import addCDTaskDataSetMap, {
   typeData,
   fieldMap,
   deployWayData,
-} from "./stores/addCDTaskDataSetMap";
+} from './stores/addCDTaskDataSetMap';
 import { mapping } from './stores/deployChartDataSet';
-import { useAddCDTaskStore } from "./stores";
-import YamlEditor from "../../../../../../components/yamlEditor";
-import Tips from "../../../../../../components/new-tips";
-import "./index.less";
-import deployChartDataSet, { mapping as deployChartMapping }
-  from "@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/deployChartDataSet";
-import deployGroupDataSet, { mapping as deployGroupMapping, appNameDataSet }
-  from "@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/deployGroupDataSet";
+import { useAddCDTaskStore } from './stores';
+import YamlEditor from '../../../../../../components/yamlEditor';
+import Tips from '../../../../../../components/new-tips';
+import './index.less';
+import deployChartDataSet, {
+  mapping as deployChartMapping,
+} from '@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/deployChartDataSet';
+import deployGroupDataSet, {
+  mapping as deployGroupMapping,
+  appNameDataSet,
+} from '@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/deployGroupDataSet';
 import { productTypeData } from './stores/addCDTaskDataSetMap';
 import OperationYaml from '../../../../../app-center-pro/components/OpenAppCreateModal/components/operation-yaml';
 import { valueCheckValidate } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-app-config/content';
+
 
 let currentSize = 10;
 
 const originBranchs = [
   {
-    value: "master",
-    name: "master",
+    value: 'master',
+    name: 'master',
   },
   {
-    value: "feature",
-    name: "feature",
+    value: 'feature',
+    name: 'feature',
   },
   {
-    value: "bugfix",
-    name: "bugfix",
+    value: 'bugfix',
+    name: 'bugfix',
   },
   {
-    value: "hotfix",
-    name: "hotfix",
+    value: 'hotfix',
+    name: 'hotfix',
   },
   {
-    value: "release",
-    name: "release",
+    value: 'release',
+    name: 'release',
   },
   {
-    value: "tag",
-    name: "tag",
+    value: 'tag',
+    name: 'tag',
   },
 ];
 
@@ -100,67 +105,63 @@ export default observer(() => {
     DeployGroupDataSet,
     trueAppServiceId,
     HostJarDataSet,
+    configurationCenterDataSet,
+    configCompareOptsDS,
   } = useAddCDTaskStore();
 
   const deployGroupcRef = useRef();
 
   const [deployGroupDetail, setDeployGroupDetail] = useState(undefined);
   const [branchsList, setBranchsList] = useState([]);
-  const [valueIdValues, setValueIdValues] = useState("");
+  const [valueIdValues, setValueIdValues] = useState('');
   const [customValues, setCustomValues] = useState(
-    "# 自定义ssh指令\n# 比如部署镜像\n# 需要包括部署镜像指令以及二次触发部署的停用删除逻辑\ndocker stop mynginx & docker rm mynginx & docker run --name mynginx -d nginx:latest"
+    '# 自定义ssh指令\n# 比如部署镜像\n# 需要包括部署镜像指令以及二次触发部署的停用删除逻辑\ndocker stop mynginx & docker rm mynginx & docker run --name mynginx -d nginx:latest',
   );
   const [imageDeployValues, setImageDeployValues] = useState(
-    "# docker run指令\n# 不可删除${containerName}和${imageName}占位符\n# 不可删除 -d: 后台运行容器\n# 其余参数可参考可根据需要添加\ndocker run --name=${containerName} -d ${imageName}"
+    '# docker run指令\n# 不可删除${containerName}和${imageName}占位符\n# 不可删除 -d: 后台运行容器\n# 其余参数可参考可根据需要添加\ndocker run --name=${containerName} -d ${imageName}',
   );
   const [jarValues, setJarValues] = useState(
-    "# java -jar指令\n" +
-    "# 不可删除${jar}\n" +
-    "# java -jar 后台运行参数会自动添加 不需要在重复添加\n" +
-    "# 其余参数可参考可根据需要添加\n" +
-    "java -jar ${jar}\n" +
-    "# 相关文件存放目录：jar包下载目录为$HOME/choerodon/实例id/temp-jar/, 日志存放目录为$HOME/choerodon/实例id/temp-jar/',\n"
+    '# java -jar指令\n' +
+      '# 不可删除${jar}\n' +
+      '# java -jar 后台运行参数会自动添加 不需要在重复添加\n' +
+      '# 其余参数可参考可根据需要添加\n' +
+      'java -jar ${jar}\n' +
+      "# 相关文件存放目录：jar包下载目录为$HOME/choerodon/实例id/temp-jar/, 日志存放目录为$HOME/choerodon/实例id/temp-jar/',\n",
   );
   // + '# 默认工作目录，当前工作目录(./)，jar包下载存放目录为：./temp-jar/xxx.jar 日志存放目录为：./temp-log/xxx.log\n'
   // + '# 填写工作目录，jar包下载存放目录为：工作目录/temp-jar/xxx.jar 日志存放目录为：工作目录/temp-jar/xxx.log\n'
   // + '# 请确保用户有该目录操作权限');
-  const [testStatus, setTestStatus] = useState("");
-  const [accountKeyValue, setAccountKeyValue] = useState("");
+  const [testStatus, setTestStatus] = useState('');
+  const [accountKeyValue, setAccountKeyValue] = useState('');
   const [relatedJobOpts, setRelatedJobOpts] = useState([]);
   const [isProjectOwner, setIsProjectOwner] = useState(false);
-  const [pipelineCallbackAddress, setPipelineCallbackAddress] = useState(
-    undefined
-  );
+  const [pipelineCallbackAddress, setPipelineCallbackAddress] = useState(undefined);
   const [preJobList, setPreJobList] = useState([]);
 
   useEffect(() => {
     ADDCDTaskUseStore.setValueIdRandom(Math.random());
-    axios
-      .get(`/iam/choerodon/v1/projects/${projectId}/check_admin_permission`)
-      .then((res) => {
-        setIsProjectOwner(res);
-      });
-    axios
-      .get("/devops/v1/cd_pipeline/external_approval_task/callback_url")
-      .then((res) => {
-        setPipelineCallbackAddress(res);
-      });
-    ADDCDTaskDataSet.current.set("type", taskType);
+    axios.get(`/iam/choerodon/v1/projects/${projectId}/check_admin_permission`).then((res) => {
+      setIsProjectOwner(res);
+    });
+    axios.get('/devops/v1/cd_pipeline/external_approval_task/callback_url').then((res) => {
+      setPipelineCallbackAddress(res);
+    });
+    ADDCDTaskDataSet.current.set('type', taskType);
     const newData = {
       type: taskType,
       glyyfw:
         appServiceId ||
-        PipelineCreateFormDataSet.getField("appServiceId").getText(
-          PipelineCreateFormDataSet.current.get("appServiceId")
+        PipelineCreateFormDataSet.getField('appServiceId').getText(
+          PipelineCreateFormDataSet.current.get('appServiceId'),
         ),
-      triggerType: "refs",
-      deployType: "create",
-      authType: "accountPassword",
-      hostDeployType: "jar",
-      deploySource: "pipelineDeploy",
+      triggerType: 'refs',
+      deployType: 'create',
+      authType: 'accountPassword',
+      hostDeployType: 'jar',
+      deploySource: 'pipelineDeploy',
       [addCDTaskDataSetMap.hostSource]: addCDTaskDataSetMap.alreadyhost,
-      workingPath: "./",
-      name: ADDCDTaskDataSet.current.get("name") || undefined,
+      workingPath: './',
+      name: ADDCDTaskDataSet.current.get('name') || undefined,
       [addCDTaskDataSetMap.alarm]: false,
       [addCDTaskDataSetMap.whetherBlock]: true,
       [fieldMap.deployWay.name]: deployWayData[0].value,
@@ -170,7 +171,7 @@ export default observer(() => {
       [fieldMap.runCommand.name]: fieldMap.runCommand.defaultValue,
       [fieldMap.postCommand.name]: fieldMap.postCommand.defaultValue,
     };
-    if (taskType === "cdHost" && relatedJobOpts && relatedJobOpts.length === 1) {
+    if (taskType === 'cdHost' && relatedJobOpts && relatedJobOpts.length === 1) {
       newData.pipelineTask = relatedJobOpts[0].name;
     }
     ADDCDTaskDataSet.loadData([newData]);
@@ -182,53 +183,47 @@ export default observer(() => {
     let itemPreJobLists = [];
     filterColumns.forEach((item, itemIndex) => {
       if (itemIndex + 1 < columnIndex) {
-        itemPreJobLists = [
-          ...itemPreJobLists,
-          ...item.jobList,
-        ]
+        itemPreJobLists = [...itemPreJobLists, ...item.jobList];
       } else {
         item.jobList.forEach((jobItem, jobItemIndex) => {
           if (jobItemIndex + 1 < witchColumnJobIndex) {
             itemPreJobLists.push(jobItem);
           }
-        })
+        });
       }
-    })
+    });
     setPreJobList(itemPreJobLists);
-  }
+  };
 
   useEffect(() => {
     const value = ADDCDTaskDataSet.current.get(fieldMap.deployWay.name);
-    ADDCDTaskDataSet.getField(addCDTaskDataSetMap.host).set('disabled', (value === deployWayData[1].value) && ADDCDTaskDataSet.current.get('type') === 'cdHost');
-  }, [ADDCDTaskDataSet.current.get(fieldMap.deployWay.name)])
+    ADDCDTaskDataSet.getField(addCDTaskDataSetMap.host).set(
+      'disabled',
+      value === deployWayData[1].value && ADDCDTaskDataSet.current.get('type') === 'cdHost',
+    );
+  }, [ADDCDTaskDataSet.current.get(fieldMap.deployWay.name)]);
 
   useEffect(() => {
-    const currentHostDeployType = ADDCDTaskDataSet?.current?.get(
-      "hostDeployType"
-    );
+    const currentHostDeployType = ADDCDTaskDataSet?.current?.get('hostDeployType');
     const tempArr =
       pipelineStageMainSource &&
       pipelineStageMainSource.length > 0 &&
       pipelineStageMainSource.map((item) => item?.jobList.slice());
-    const jobArr = tempArr
-      ? tempArr.length > 0 && [].concat.apply(...tempArr)
-      : [];
+    const jobArr = tempArr ? tempArr.length > 0 && [].concat.apply(...tempArr) : [];
     let filterArr;
-    if (jobArr && currentHostDeployType && currentHostDeployType === "image") {
-      filterArr = jobArr.filter(
-        (x) => x.configJobTypes?.includes("docker") && x.type === "build"
-      );
-    } else if (currentHostDeployType === "jar") {
+    if (jobArr && currentHostDeployType && currentHostDeployType === 'image') {
+      filterArr = jobArr.filter((x) => x.configJobTypes?.includes('docker') && x.type === 'build');
+    } else if (currentHostDeployType === 'jar') {
       filterArr = jobArr.filter(
         (x) =>
-          (x.configJobTypes?.includes("maven_deploy") ||
-            x.configJobTypes?.includes("upload_jar")) &&
-          x.type === "build"
+          (x.configJobTypes?.includes('maven_deploy') ||
+            x.configJobTypes?.includes('upload_jar')) &&
+          x.type === 'build',
       );
     }
     if (filterArr && filterArr.length === 1) {
-      if (typeof filterArr[0] === "object") {
-        ADDCDTaskDataSet.current.set("pipelineTask", filterArr[0].name);
+      if (typeof filterArr[0] === 'object') {
+        ADDCDTaskDataSet.current.set('pipelineTask', filterArr[0].name);
       }
     }
     if (filterArr && filterArr.length > 0) {
@@ -236,10 +231,7 @@ export default observer(() => {
     } else {
       setRelatedJobOpts([]);
     }
-  }, [
-    ADDCDTaskDataSet?.current?.get("hostDeployType"),
-    pipelineStageMainSource,
-  ]);
+  }, [ADDCDTaskDataSet?.current?.get('hostDeployType'), pipelineStageMainSource]);
 
   useEffect(() => {
     const value = ADDCDTaskDataSet.current.get('envId');
@@ -247,99 +239,92 @@ export default observer(() => {
     DeployGroupDataSet.getField(deployGroupMapping().appCode.name).set('disabled', !value);
     DeployChartDataSet.getField(deployChartMapping().appName.name).set('disabled', !value);
     DeployChartDataSet.getField(deployChartMapping().appCode.name).set('disabled', !value);
-  }, [ADDCDTaskDataSet.current.get('envId')])
+  }, [ADDCDTaskDataSet.current.get('envId')]);
 
   useEffect(() => {
     if (relatedJobOpts && relatedJobOpts.length === 1) {
-      ADDCDTaskDataSet.current.set("pipelineTask", relatedJobOpts[0].name);
+      ADDCDTaskDataSet.current.set('pipelineTask', relatedJobOpts[0].name);
     } else {
-      ADDCDTaskDataSet.current.init("pipelineTask");
+      ADDCDTaskDataSet.current.init('pipelineTask');
     }
-  }, [relatedJobOpts, ADDCDTaskDataSet?.current?.get("hostDeployType")]);
+  }, [relatedJobOpts, ADDCDTaskDataSet?.current?.get('hostDeployType')]);
 
   /**
    * 这里是如果有关联构建任务 则默认选中该关联任务的匹配类型和触发分支
    * 并且将匹配类型禁用 然后设置触发分支可选项只能为该关联任务的触发分支
    */
   useEffect(() => {
-    const pipelineTask = ADDCDTaskDataSet?.current?.get("pipelineTask");
-    const hostDeployType = ADDCDTaskDataSet?.current?.get("hostDeployType");
-    const deploySource = ADDCDTaskDataSet?.current?.get("deploySource");
-    const type = ADDCDTaskDataSet?.current?.get("type");
+    const pipelineTask = ADDCDTaskDataSet?.current?.get('pipelineTask');
+    const hostDeployType = ADDCDTaskDataSet?.current?.get('hostDeployType');
+    const deploySource = ADDCDTaskDataSet?.current?.get('deploySource');
+    const type = ADDCDTaskDataSet?.current?.get('type');
     // 如果是主机部署并且部署模式是镜像部署或者jar包部署并且部署来源是流水线制品
     if (
-      type === "cdHost" &&
-      ["image", "jar"].includes(hostDeployType) &&
-      deploySource === "pipelineDeploy" &&
+      type === 'cdHost' &&
+      ['image', 'jar'].includes(hostDeployType) &&
+      deploySource === 'pipelineDeploy' &&
       pipelineTask &&
       relatedJobOpts &&
       relatedJobOpts.length > 0
     ) {
-      const { triggerType, triggerValue } = relatedJobOpts.find(
-        (i) => i.name === pipelineTask
-      );
-      ADDCDTaskDataSet.current.set("triggerType", triggerType);
-      ADDCDTaskDataSet.getField("triggerType").set("disabled", true);
-      ADDCDTaskDataSet.current.set("triggerValue", triggerValue?.split(","));
+      const { triggerType, triggerValue } = relatedJobOpts.find((i) => i.name === pipelineTask);
+      ADDCDTaskDataSet.current.set('triggerType', triggerType);
+      ADDCDTaskDataSet.getField('triggerType').set('disabled', true);
+      ADDCDTaskDataSet.current.set('triggerValue', triggerValue?.split(','));
       setBranchsList(
-        triggerValue?.split(",").map((i) => ({
+        triggerValue?.split(',').map((i) => ({
           value: i,
           name: i,
-        }))
+        })),
       );
     } else {
-      ADDCDTaskDataSet.getField("triggerType").set("disabled", false);
+      ADDCDTaskDataSet.getField('triggerType').set('disabled', false);
       setBranchsList(originBranchs);
       // ADDCDTaskDataSet.getField('triggerValue').set('disabled', false);
     }
   }, [
-    ADDCDTaskDataSet?.current?.get("pipelineTask"),
-    ADDCDTaskDataSet?.current?.get("type"),
-    ADDCDTaskDataSet?.current?.get("hostDeployType"),
-    ADDCDTaskDataSet?.current?.get("deploySource"),
+    ADDCDTaskDataSet?.current?.get('pipelineTask'),
+    ADDCDTaskDataSet?.current?.get('type'),
+    ADDCDTaskDataSet?.current?.get('hostDeployType'),
+    ADDCDTaskDataSet?.current?.get('deploySource'),
   ]);
 
   function getMetadata(ds, deployChartData, extraData) {
     ds[fieldMap.preCommand.name] = Base64.encode(ds[fieldMap.preCommand.name]);
     ds[fieldMap.runCommand.name] = Base64.encode(ds[fieldMap.runCommand.name]);
     ds[fieldMap.postCommand.name] = Base64.encode(ds[fieldMap.postCommand.name]);
-    if (ds.type === "cdDeploy") {
+    if (ds.type === 'cdDeploy') {
       ds.value = Base64.encode(valueIdValues);
       // 如果部署模式是新建 则删掉多余的实例id
-      if (ds.deployType && ds.deployType === "create") {
+      if (ds.deployType && ds.deployType === 'create') {
         delete ds.instanceId;
       } else {
         // 如果是替换 则除了传id 还需要传对应的name
-        const instanceName = ADDCDTaskUseStore.getInstanceList?.find(
-          (i) => i.id === ds.instanceId
-        )?.code;
+        const instanceName = ADDCDTaskUseStore.getInstanceList?.find((i) => i.id === ds.instanceId)
+          ?.code;
         ds.instanceName = instanceName;
       }
     }
     if (ds.type === addCDTaskDataSetMap.apiTest) {
       ds.apiTestTaskName = ADDCDTaskUseStore.getApiTestArray.find(
-        (i) =>
-          i.id ==
-          ADDCDTaskDataSet.current.get(addCDTaskDataSetMap.apiTestMission)
+        (i) => i.id == ADDCDTaskDataSet.current.get(addCDTaskDataSetMap.apiTestMission),
       ).name;
       ds[addCDTaskDataSetMap.relativeMission] = ADDCDTaskDataSet.current.get(
-        addCDTaskDataSetMap.relativeMission
+        addCDTaskDataSetMap.relativeMission,
       );
       ds.warningSettingVO = {
-        [addCDTaskDataSetMap.whetherBlock]:
-          ds[addCDTaskDataSetMap.whetherBlock],
+        [addCDTaskDataSetMap.whetherBlock]: ds[addCDTaskDataSetMap.whetherBlock],
         [addCDTaskDataSetMap.alarm]: ds[addCDTaskDataSetMap.alarm],
         [addCDTaskDataSetMap.threshold]: ds[addCDTaskDataSetMap.threshold],
-        [addCDTaskDataSetMap.notifyObject]:
-          ds[addCDTaskDataSetMap.notifyObject],
+        [addCDTaskDataSetMap.notifyObject]: ds[addCDTaskDataSetMap.notifyObject],
       };
       if (ds[addCDTaskDataSetMap.notifyWay]) {
-        ds[addCDTaskDataSetMap.notifyWay].split(",").forEach((item) => {
+        ds[addCDTaskDataSetMap.notifyWay].split(',').forEach((item) => {
           ds.warningSettingVO[item] = true;
         });
       }
     }
-    if (ds.type === "cdHost") {
+    if (ds.type === 'cdHost') {
       ds.hostConnectionVO = {
         [addCDTaskDataSetMap.hostSource]: ds[addCDTaskDataSetMap.hostSource],
         [addCDTaskDataSetMap.host]: ds[addCDTaskDataSetMap.host],
@@ -348,24 +333,24 @@ export default observer(() => {
         authType: ds.authType,
         username: ds.username,
         password:
-          ds.authType === "accountPassword"
+          ds.authType === 'accountPassword'
             ? ds.password
             : accountKeyValue && Base64.encode(accountKeyValue),
       };
       const currentObj = {
         deploySource: ds.deploySource,
       };
-      if (ds.hostDeployType === "customize") {
+      if (ds.hostDeployType === 'customize') {
         ds.customize = {
           values: Base64.encode(customValues),
         };
-      } else if (ds.hostDeployType === "image") {
-        if (ds.deploySource === "matchDeploy") {
+      } else if (ds.hostDeployType === 'image') {
+        if (ds.deploySource === 'matchDeploy') {
           const repo = ADDCDTaskUseStore.getRepoList?.find(
-            (i) => String(i.repoId) === String(ds.repoId)
+            (i) => String(i.repoId) === String(ds.repoId),
           );
           const img = ADDCDTaskUseStore.getImageList?.find(
-            (i) => String(i.imageId) === String(ds.imageId)
+            (i) => String(i.imageId) === String(ds.imageId),
           );
           ds.imageDeploy = {
             ...currentObj,
@@ -379,7 +364,7 @@ export default observer(() => {
             containerName: ds.containerName,
             value: Base64.encode(imageDeployValues),
           };
-        } else if (ds.deploySource === "pipelineDeploy") {
+        } else if (ds.deploySource === 'pipelineDeploy') {
           ds.imageDeploy = {
             ...currentObj,
             pipelineTask: ds.pipelineTask,
@@ -387,8 +372,8 @@ export default observer(() => {
             value: Base64.encode(imageDeployValues),
           };
         }
-      } else if (ds.hostDeployType === "jar") {
-        if (ds.deploySource === "matchDeploy") {
+      } else if (ds.hostDeployType === 'jar') {
+        if (ds.deploySource === 'matchDeploy') {
           ds.jarDeploy = {
             ...currentObj,
             serverName: ds.serverName,
@@ -398,7 +383,7 @@ export default observer(() => {
             versionRegular: ds.versionRegular,
             value: Base64.encode(jarValues),
           };
-        } else if (ds.deploySource === "pipelineDeploy") {
+        } else if (ds.deploySource === 'pipelineDeploy') {
           ds.jarDeploy = {
             ...currentObj,
             pipelineTask: ds.pipelineTask,
@@ -425,7 +410,7 @@ export default observer(() => {
         valueId: deployChartData.valueId || ds.valueId,
         appName: deployChartData.appName,
         appCode: deployChartData.appCode,
-      }
+      };
       delete ds.value;
     }
     if (['cdHost', typeData[1].value].includes(ds.type)) {
@@ -433,16 +418,18 @@ export default observer(() => {
         ...ds,
         ...extraData,
         [fieldMap.deployWay.name]: ds[fieldMap.deployWay.name],
-      }
+      };
     }
-    ds.appServiceId = PipelineCreateFormDataSet?.current?.get("appServiceId") || trueAppServiceId;
+    ds.appServiceId = PipelineCreateFormDataSet?.current?.get('appServiceId') || trueAppServiceId;
     return JSON.stringify(ds).replace(/"/g, "'");
   }
 
+  // TODO: 流水线CD-校验
   const handleAdd = async () => {
     let deployChartData;
     const result = await ADDCDTaskDataSet.current.validate(true);
-    if (result) {
+    const configResult = await configurationCenterDataSet.validate();
+    if (result && configResult) {
       let submitData = {};
       const ds = JSON.parse(JSON.stringify(ADDCDTaskDataSet.toData()[0]));
       if (ds.type === 'cdHost') {
@@ -451,9 +438,14 @@ export default observer(() => {
           ADDCDTaskDataSet.current.get(fieldMap.preCommand.name),
           ADDCDTaskDataSet.current.get(fieldMap.runCommand.name),
           ADDCDTaskDataSet.current.get(fieldMap.postCommand.name),
-        )
+        );
         if (flag && hostjarValidate) {
+            const configData = configurationCenterDataSet.toData().map(o=>{
+                return {configId:o.configId,mountPath:o.mountPath,configGroup:o.configGroup,configCode:o.configCode};
+            })
           submitData = HostJarDataSet.current.toData();
+          submitData.configSettingIVO = configData;
+        //   console.log('cdHost',submitData);
         } else {
           return false;
         }
@@ -463,13 +455,18 @@ export default observer(() => {
         if (chartDeployValidate) {
           let appId = {
             appId: undefined,
-          }
+          };
           if (ADDCDTaskDataSet.current.get(fieldMap.deployWay.name) === deployWayData[1].value) {
-            const options = DeployChartDataSet.current.getField(deployChartMapping().appName.name).options;
-            const item = options.records.find(item => item.get('name') === DeployChartDataSet.current.get(deployChartMapping().appName.name));
+            const options = DeployChartDataSet.current.getField(deployChartMapping().appName.name)
+              .options;
+            const item = options.records.find(
+              (item) =>
+                item.get('name') ===
+                DeployChartDataSet.current.get(deployChartMapping().appName.name),
+            );
             appId = {
-              appId: item.get('id')
-            }
+              appId: item.get('id'),
+            };
           }
           deployChartData = {
             ...DeployChartDataSet.current.toData(),
@@ -487,7 +484,7 @@ export default observer(() => {
           submitData = {
             ...submitData,
             ...DeployGroupDataSet.current.toData(),
-          }
+          };
           const returnData = handleSetSubmitDataByDeployGroupConfig({
             appConfigData: data.appConfig,
             submitData,
@@ -498,9 +495,14 @@ export default observer(() => {
           });
           let appId;
           if (ADDCDTaskDataSet.current.get(fieldMap.deployWay.name) === deployWayData[1].value) {
-            const options = DeployGroupDataSet.current.getField(deployGroupMapping().appName.name).options;
-            const item = options.records.find(item => item.get('name') === DeployGroupDataSet.current.get(deployGroupMapping().appName.name));
-            appId = item.get('id')
+            const options = DeployGroupDataSet.current.getField(deployGroupMapping().appName.name)
+              .options;
+            const item = options.records.find(
+              (item) =>
+                item.get('name') ===
+                DeployGroupDataSet.current.get(deployGroupMapping().appName.name),
+            );
+            appId = item.get('id');
           }
           submitData = {
             ...result,
@@ -513,18 +515,14 @@ export default observer(() => {
       //     return false;
       //   }
       // }
-      const cdAuditUserIds = ds.cdAuditUserIds.map((x) =>
-        typeof x === "object" ? x.id : x
-      );
+      const cdAuditUserIds = ds.cdAuditUserIds.map((x) => (typeof x === 'object' ? x.id : x));
       const data = {
         ...ds,
         cdAuditUserIds,
         triggerValue:
-          typeof ds.triggerValue === "object"
-            ? ds.triggerValue?.join(",")
-            : ds.triggerValue,
+          typeof ds.triggerValue === 'object' ? ds.triggerValue?.join(',') : ds.triggerValue,
       };
-      if (ds.type !== "cdAudit") {
+      if (ds.type !== 'cdAudit') {
         data.metadata = getMetadata(ds, deployChartData, {
           ...submitData,
           envId: data.envId,
@@ -560,26 +558,26 @@ export default observer(() => {
             });
             extra[addCDTaskDataSetMap.notifyWay] = [];
             if (metadata.warningSettingVO.sendEmail) {
-              extra[addCDTaskDataSetMap.notifyWay].push("sendEmail");
+              extra[addCDTaskDataSetMap.notifyWay].push('sendEmail');
             }
             if (metadata.warningSettingVO.sendSiteMessage) {
-              extra[addCDTaskDataSetMap.notifyWay].push("sendSiteMessage");
+              extra[addCDTaskDataSetMap.notifyWay].push('sendSiteMessage');
             }
-            extra[addCDTaskDataSetMap.notifyWay] = extra[
-              addCDTaskDataSetMap.notifyWay
-            ].join(",");
+            extra[addCDTaskDataSetMap.notifyWay] = extra[addCDTaskDataSetMap.notifyWay].join(',');
           }
         }
-      } else if (jobDetail.type === "cdHost") {
+      } else if (jobDetail.type === 'cdHost') {
         const metadata = JSONbig.parse(jobDetail.metadata.replace(/'/g, '"'));
         preCommand = Base64.decode(metadata[fieldMap.preCommand.name]);
         runCommand = Base64.decode(metadata[fieldMap.runCommand.name]);
         postCommand = Base64.decode(metadata[fieldMap.postCommand.name]);
-        HostJarDataSet.loadData([{
-          appName: metadata.appName,
-          appCode: metadata.appCode,
-          appId: metadata.appId,
-        }]);
+        HostJarDataSet.loadData([
+          {
+            appName: metadata.appName,
+            appCode: metadata.appCode,
+            appId: metadata.appId,
+          },
+        ]);
         extra = {
           ...metadata?.hostConnectionVO,
           ...metadata?.jarDeploy,
@@ -587,36 +585,32 @@ export default observer(() => {
         };
         // 如果初始值没有主机来源值 说明是老数据 前端默认将主机来源设置成自定义
         if (!extra[addCDTaskDataSetMap.hostSource]) {
-          extra[addCDTaskDataSetMap.hostSource] =
-            addCDTaskDataSetMap.customhost;
+          extra[addCDTaskDataSetMap.hostSource] = addCDTaskDataSetMap.customhost;
         }
-        if (extra?.authType === "accountKey") {
+        if (extra?.authType === 'accountKey') {
           setAccountKeyValue(Base64.decode(extra.password));
         }
         const { hostDeployType } = metadata;
-        if (hostDeployType === "customize") {
+        if (hostDeployType === 'customize') {
           setCustomValues(Base64.decode(metadata.customize?.values));
-        } else if (hostDeployType === "image") {
+        } else if (hostDeployType === 'image') {
           setImageDeployValues(Base64.decode(metadata.imageDeploy.value));
         }
         //  else if (hostDeployType === "jar") {
         //   extra.appInstanceName = metadata.jarDeploy.name;
         //   setJarValues(Base64.decode(metadata.jarDeploy.value));
         // }
-      } else if (jobDetail.type === "cdAudit") {
+      } else if (jobDetail.type === 'cdAudit') {
         if (jobDetail.metadata) {
-          const { cdAuditUserIds } = JSON.parse(
-            jobDetail.metadata.replace(/'/g, '"')
-          );
+          const { cdAuditUserIds } = JSON.parse(jobDetail.metadata.replace(/'/g, '"'));
           newCdAuditUserIds = cdAuditUserIds && [...cdAuditUserIds];
         }
       } else if (jobDetail.type === typeData[0].value) {
-        const metadata = JSONbig.parse(
-          jobDetail.metadata.replace(/'/g, '"'));
+        const metadata = JSONbig.parse(jobDetail.metadata.replace(/'/g, '"'));
         DeployChartDataSet.loadData([metadata]);
         function afterQuery(res) {
           const id = String(metadata.valueId);
-          const config = res.find(item => item.id === id);
+          const config = res.find((item) => item.id === id);
           DeployChartDataSet.current.set(deployChartMapping().value.name, config.value);
         }
         initValueIdDataSet(
@@ -625,15 +619,10 @@ export default observer(() => {
           metadata.envId,
           ADDCDTaskUseStore.getValueIdRandom,
           afterQuery,
-        )
-        initValueIdDataSet(
-          appNameChartDataSet,
-          trueAppServiceId,
-          metadata.envId,
         );
+        initValueIdDataSet(appNameChartDataSet, trueAppServiceId, metadata.envId);
       } else if (jobDetail.type === typeData[1].value) {
-        const metadata = JSON.parse(
-          jobDetail.metadata.replace(/'/g, '"'));
+        const metadata = JSON.parse(jobDetail.metadata.replace(/'/g, '"'));
         setDeployGroupDetail(metadata);
       }
 
@@ -642,15 +631,16 @@ export default observer(() => {
         ...extra,
         ...(jobDetail.metadata
           ? {
-            ...JSONbig.parse(jobDetail.metadata.replace(/'/g, '"')),
-            checkEnvPermissionFlag: !JSONbig.parse(jobDetail.metadata.replace(/'/g, '"'))?.skipCheckPermission,
-          }
+              ...JSONbig.parse(jobDetail.metadata.replace(/'/g, '"')),
+              checkEnvPermissionFlag: !JSONbig.parse(jobDetail.metadata.replace(/'/g, '"'))
+                ?.skipCheckPermission,
+            }
           : {}),
         cdAuditUserIds: newCdAuditUserIds && [...newCdAuditUserIds],
         triggerValue:
-          jobDetail.triggerType === "regex"
+          jobDetail.triggerType === 'regex'
             ? jobDetail.triggerValue
-            : jobDetail.triggerValue?.split(","),
+            : jobDetail.triggerValue?.split(','),
         preCommand,
         runCommand,
         postCommand,
@@ -665,26 +655,26 @@ export default observer(() => {
       ADDCDTaskDataSet.loadData([newJobDetail]);
     }
     ADDCDTaskDataSet.current.set(
-      "glyyfw",
+      'glyyfw',
       appServiceId ||
-      PipelineCreateFormDataSet.getField("appServiceId").getText(
-        PipelineCreateFormDataSet.current.get("appServiceId")
-      )
+        PipelineCreateFormDataSet.getField('appServiceId').getText(
+          PipelineCreateFormDataSet.current.get('appServiceId'),
+        ),
     );
     handleClickMore();
   }, [ADDCDTaskDataSet, PipelineCreateFormDataSet, appServiceId, jobDetail]);
 
   useEffect(() => {
     async function initBranchs() {
-      const value = ADDCDTaskDataSet.current.get("triggerType");
-      if (value && !value.includes("exact")) {
+      const value = ADDCDTaskDataSet.current.get('triggerType');
+      if (value && !value.includes('exact')) {
         setBranchsList(originBranchs);
       } else {
         getBranchsList();
       }
     }
     initBranchs();
-  }, [currentSize, ADDCDTaskDataSet.current.get("triggerType")]);
+  }, [currentSize, ADDCDTaskDataSet.current.get('triggerType')]);
 
   const getTestDom = () => {
     const res = {
@@ -697,19 +687,19 @@ export default observer(() => {
       success: (
         <div
           style={{
-            background: "rgba(0,191,165,0.04)",
-            borderColor: "rgba(0,191,165,1)",
+            background: 'rgba(0,191,165,0.04)',
+            borderColor: 'rgba(0,191,165,1)',
           }}
           className="testConnectCD"
         >
-          <span style={{ color: "#3A345F" }}>测试连接：</span>
-          <span style={{ color: "#00BFA5" }}>
+          <span style={{ color: '#3A345F' }}>测试连接：</span>
+          <span style={{ color: '#00BFA5' }}>
             <Icon
               style={{
-                border: "1px solid rgb(0, 191, 165)",
-                borderRadius: "50%",
+                border: '1px solid rgb(0, 191, 165)',
+                borderRadius: '50%',
                 marginRight: 2,
-                fontSize: "9px",
+                fontSize: '9px',
               }}
               type="done"
             />
@@ -720,19 +710,19 @@ export default observer(() => {
       error: (
         <div
           style={{
-            background: "rgba(247,122,112,0.04)",
-            borderColor: "rgba(247,122,112,1)",
+            background: 'rgba(247,122,112,0.04)',
+            borderColor: 'rgba(247,122,112,1)',
           }}
           className="testConnectCD"
         >
-          <span style={{ color: "#3A345F" }}>测试连接：</span>
-          <span style={{ color: "#F77A70" }}>
+          <span style={{ color: '#3A345F' }}>测试连接：</span>
+          <span style={{ color: '#F77A70' }}>
             <Icon
               style={{
-                border: "1px solid #F77A70",
-                borderRadius: "50%",
+                border: '1px solid #F77A70',
+                borderRadius: '50%',
                 marginRight: 2,
-                fontSize: "9px",
+                fontSize: '9px',
               }}
               type="close"
             />
@@ -765,18 +755,18 @@ export default observer(() => {
             hostPort,
             username,
             password:
-              authType === "accountPassword"
+              authType === 'accountPassword'
                 ? password
                 : accountKeyValue && Base64.encode(accountKeyValue),
             authType,
-          }
+          },
         )
         .then((res) => {
-          setTestStatus(res ? "success" : "error");
+          setTestStatus(res ? 'success' : 'error');
           resolve(res);
         })
         .catch(() => {
-          setTestStatus("error");
+          setTestStatus('error');
           resolve(false);
         });
     });
@@ -816,7 +806,7 @@ export default observer(() => {
   // };
 
   function searchMatcher({ record, text }) {
-    return record.get("pipelineTask")?.indexOf(text) !== -1;
+    return record.get('pipelineTask')?.indexOf(text) !== -1;
   }
 
   const handleClickCreateValue = (e) => {
@@ -826,25 +816,25 @@ export default observer(() => {
       key: Modal.key(),
       drawer: true,
       style: {
-        width: "740px",
+        width: '740px',
       },
       children: (
         <DeployConfig
-          envId={ADDCDTaskDataSet.current.get("envId")}
-          appServiceId={PipelineCreateFormDataSet?.current?.get("appServiceId") || trueAppServiceId}
+          envId={ADDCDTaskDataSet.current.get('envId')}
+          appServiceId={PipelineCreateFormDataSet?.current?.get('appServiceId') || trueAppServiceId}
           appServiceName={appServiceId}
           refresh={({ valueId, value }) => {
             ADDCDTaskUseStore.setValueIdRandom(Math.random());
-            ADDCDTaskDataSet.current.set("valueId", valueId);
+            ADDCDTaskDataSet.current.set('valueId', valueId);
             if (ADDCDTaskDataSet.current.get('type') === typeData[0].value) {
               DeployChartDataSet.current.set(mapping().deployConfig.name, valueId);
               DeployChartDataSet.current.set(mapping().value.name, value);
               initValueIdDataSet(
                 deployConfigDataSet,
                 PipelineCreateFormDataSet.current.get('appServiceId') || trueAppServiceId,
-                ADDCDTaskDataSet.current.get("envId"),
+                ADDCDTaskDataSet.current.get('envId'),
                 ADDCDTaskUseStore.getValueIdRandom,
-              )
+              );
             }
             // const origin = ADDCDTaskUseStore.getValueIdList;
             setValueIdValues(value);
@@ -852,39 +842,38 @@ export default observer(() => {
           appSelectDisabled
         />
       ),
-      title: "创建部署配置",
-      okText: "创建",
+      title: '创建部署配置',
+      okText: '创建',
     });
   };
 
   const rendererValueId = ({ value, text, record }) =>
-    text === "创建部署配置" ? (
+    text === '创建部署配置' ? (
       <a
         style={{
-          width: "calc(100% + 0.24rem)",
-          display: "inline-block",
-          position: "relative",
-          right: "0.12rem",
+          width: 'calc(100% + 0.24rem)',
+          display: 'inline-block',
+          position: 'relative',
+          right: '0.12rem',
         }}
         role="none"
         onClick={(e) => handleClickCreateValue(e)}
       >
-        <span style={{ marginLeft: "0.12rem" }}>{text}</span>
+        <span style={{ marginLeft: '0.12rem' }}>{text}</span>
       </a>
     ) : (
       text
     );
 
-  const optionRenderValueId = ({ value, text, record }) =>
-    rendererValueId({ text });
+  const optionRenderValueId = ({ value, text, record }) => rendererValueId({ text });
 
   const renderOptionProperty = ({ record }) => ({
-    disabled: !record.get("connect"),
+    disabled: !record.get('connect'),
   });
 
   const renderEnvOption = ({ record, text }) => (
     <>
-      <StatusDot size="small" synchronize connect={record.get("connect")} />
+      <StatusDot size="small" synchronize connect={record.get('connect')} />
       <span style={{ marginLeft: 5 }}>{text}</span>
     </>
   );
@@ -896,10 +885,10 @@ export default observer(() => {
         <div
           colSpan={1}
           style={{
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "space-between",
-            position: "relative",
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            position: 'relative',
           }}
           newLine
         >
@@ -909,11 +898,9 @@ export default observer(() => {
             optionRenderer={renderEnvOption}
             onOption={renderOptionProperty}
             onChange={(value2) => {
-              const item = ADDCDTaskUseStore.getHostList.find(
-                (i) => i.id == value2
-              );
-              ADDCDTaskDataSet.current.set("hostIp", item.hostIp);
-              ADDCDTaskDataSet.current.set("hostPort", item.sshPort);
+              const item = ADDCDTaskUseStore.getHostList.find((i) => i.id == value2);
+              ADDCDTaskDataSet.current.set('hostIp', item.hostIp);
+              ADDCDTaskDataSet.current.set('hostPort', item.sshPort);
             }}
           />
           {/* <div style={{ flex: 1, marginLeft: 16 }}>
@@ -925,7 +912,7 @@ export default observer(() => {
         </div>,
       ];
     }
-    return "";
+    return '';
     // return [
     //   <TextField newLine colSpan={1} name="hostIp" />,
     //   <TextField colSpan={1} name="hostPort" />,
@@ -959,19 +946,15 @@ export default observer(() => {
    * 修改配置信息事件
    */
   const handleChangeValueIdValues = (data) => {
-    const {
-      value,
-      valueIdList,
-      valueId,
-    } = data;
+    const { value, valueIdList, valueId } = data;
     let tempValues = value ? value : valueIdValues;
     const item = (valueIdList ? valueIdList : ADDCDTaskUseStore.getValueIdList).find(
-      (i) => String(i.id) === String(valueId ? valueId : ADDCDTaskDataSet.current.get("valueId"))
+      (i) => String(i.id) === String(valueId ? valueId : ADDCDTaskDataSet.current.get('valueId')),
     );
     Modal.open({
       key: Modal.key(),
       drawer: true,
-      title: `修改部署配置"${item?.name || ""}"的配置信息`,
+      title: `修改部署配置"${item?.name || ''}"的配置信息`,
       children: (
         <div
           style={{
@@ -991,14 +974,14 @@ export default observer(() => {
         </div>
       ),
       style: {
-        width: "740px",
+        width: '740px',
       },
-      okText: "修改",
+      okText: '修改',
       onOk: async () => {
         await axios.post(`/devops/v1/projects/${projectId}/deploy_value`, {
           ...(valueIdList ? valueIdList : ADDCDTaskUseStore.getValueIdList).find(
             (i) =>
-              String(i.id) === String(valueId ? valueId : ADDCDTaskDataSet.current.get("valueId"))
+              String(i.id) === String(valueId ? valueId : ADDCDTaskDataSet.current.get('valueId')),
           ),
           value: tempValues,
         });
@@ -1008,13 +991,13 @@ export default observer(() => {
           DeployChartDataSet.current.set(mapping().value.name, tempValues);
         }
       },
-      onCancel: () => { },
+      onCancel: () => {},
     });
   };
 
   const getOtherConfig = () => {
     function getModeDom() {
-      const currentDepoySource = ADDCDTaskDataSet?.current?.get("deploySource");
+      const currentDepoySource = ADDCDTaskDataSet?.current?.get('deploySource');
       const result = {
         customize: (
           <YamlEditor
@@ -1039,7 +1022,7 @@ export default observer(() => {
             <Option value="pipelineDeploy">流水线制品部署</Option>
             <Option value="matchDeploy">匹配制品部署</Option>
           </Select>,
-          currentDepoySource === "pipelineDeploy" && (
+          currentDepoySource === 'pipelineDeploy' && (
             <Select
               colSpan={3}
               name="pipelineTask"
@@ -1054,13 +1037,9 @@ export default observer(() => {
               ))}
             </Select>
           ),
-          currentDepoySource === "matchDeploy" && (
-            <Select colSpan={3} name="repoId" />
-          ),
-          currentDepoySource === "matchDeploy" && (
-            <Select colSpan={3} name="imageId" />
-          ),
-          currentDepoySource === "matchDeploy" && (
+          currentDepoySource === 'matchDeploy' && <Select colSpan={3} name="repoId" />,
+          currentDepoySource === 'matchDeploy' && <Select colSpan={3} name="imageId" />,
+          currentDepoySource === 'matchDeploy' && (
             <Select colSpan={3} name="matchType">
               <Option value="refs">模糊匹配</Option>
               <Option value="regex">正则匹配</Option>
@@ -1068,9 +1047,7 @@ export default observer(() => {
               <Option value="exact_exclude">精确排除</Option>
             </Select>
           ),
-          currentDepoySource === "matchDeploy" && (
-            <TextField colSpan={3} name="matchContent" />
-          ),
+          currentDepoySource === 'matchDeploy' && <TextField colSpan={3} name="matchContent" />,
           // <TextField colSpan={3} name="containerName" />,
           <YamlEditor
             colSpan={6}
@@ -1082,48 +1059,42 @@ export default observer(() => {
           />,
         ],
         jar: [
-          ADDCDTaskDataSet.current.get(fieldMap.productType.name) === productTypeData[0].value ? [
-            <Select
-              newLine
-              colSpan={3}
-              name="deploySource"
-              clearButton={false}
-              addonAfter={
-                <Tips helpText="流水线制品部署表示直接使用所选关联构建任务中生成的jar包进行部署。" />
-              }
-            >
-              <Option value="pipelineDeploy">流水线制品部署</Option>
-              <Option value="matchDeploy">匹配制品部署</Option>
-            </Select>,
-            currentDepoySource === "pipelineDeploy" && (
-              <Select
-                colSpan={3}
-                name="pipelineTask"
-                searchable
-                addonAfter={
-                  <Tips helpText="此处的关联构建任务，仅会查询出该条流水线中存在'上传jar包至制品库'或“Maven发布”步骤的“构建类型”任务。若所选任务中存在多个满足条件的步骤，则只会部署所选任务中第一个满足条件的步骤产生的jar包；" />
-                }
-                searchMatcher={searchMatcher}
-              >
-                {relatedJobOpts.map((item) => (
-                  <Option value={item.name}>{item.name}</Option>
-                ))}
-              </Select>
-            ),
-          ] : '',
-          currentDepoySource === "matchDeploy" && (
-            <Select colSpan={3} name="serverName" />
-          ),
-          currentDepoySource === "matchDeploy" && (
-            <Select colSpan={3} name="repositoryId" />
-          ),
-          currentDepoySource === "matchDeploy" && (
-            <Select colSpan={3} name="groupId" />
-          ),
-          currentDepoySource === "matchDeploy" && (
-            <Select colSpan={3} name="artifactId" />
-          ),
-          currentDepoySource === "matchDeploy" && (
+          ADDCDTaskDataSet.current.get(fieldMap.productType.name) === productTypeData[0].value
+            ? [
+                <Select
+                  newLine
+                  colSpan={3}
+                  name="deploySource"
+                  clearButton={false}
+                  addonAfter={
+                    <Tips helpText="流水线制品部署表示直接使用所选关联构建任务中生成的jar包进行部署。" />
+                  }
+                >
+                  <Option value="pipelineDeploy">流水线制品部署</Option>
+                  <Option value="matchDeploy">匹配制品部署</Option>
+                </Select>,
+                currentDepoySource === 'pipelineDeploy' && (
+                  <Select
+                    colSpan={3}
+                    name="pipelineTask"
+                    searchable
+                    addonAfter={
+                      <Tips helpText="此处的关联构建任务，仅会查询出该条流水线中存在'上传jar包至制品库'或“Maven发布”步骤的“构建类型”任务。若所选任务中存在多个满足条件的步骤，则只会部署所选任务中第一个满足条件的步骤产生的jar包；" />
+                    }
+                    searchMatcher={searchMatcher}
+                  >
+                    {relatedJobOpts.map((item) => (
+                      <Option value={item.name}>{item.name}</Option>
+                    ))}
+                  </Select>
+                ),
+              ]
+            : '',
+          currentDepoySource === 'matchDeploy' && <Select colSpan={3} name="serverName" />,
+          currentDepoySource === 'matchDeploy' && <Select colSpan={3} name="repositoryId" />,
+          currentDepoySource === 'matchDeploy' && <Select colSpan={3} name="groupId" />,
+          currentDepoySource === 'matchDeploy' && <Select colSpan={3} name="artifactId" />,
+          currentDepoySource === 'matchDeploy' && (
             <TextField
               colSpan={6}
               name="versionRegular"
@@ -1155,10 +1126,12 @@ export default observer(() => {
             colSpan={6}
             newLine
             dataSet={ADDCDTaskDataSet}
+            configDataSet={configurationCenterDataSet}
+            optsDS={configCompareOptsDS}
             preName={fieldMap.preCommand.name}
             startName={fieldMap.runCommand.name}
             postName={fieldMap.postCommand.name}
-          />
+          />,
           // <YamlEditor
           //   colSpan={6}
           //   newLine
@@ -1175,11 +1148,7 @@ export default observer(() => {
       cdDeploy: [
         <div className="addcdTask-divided" />,
         <p className="addcdTask-title">配置信息</p>,
-        <Form
-          className="addcdTask-form2"
-          columns={3}
-          dataSet={ADDCDTaskDataSet}
-        >
+        <Form className="addcdTask-form2" columns={3} dataSet={ADDCDTaskDataSet}>
           <Select
             colSpan={2}
             name="valueId"
@@ -1192,14 +1161,14 @@ export default observer(() => {
             className="addCdTask-form2-valueId"
           />
           <div newLine colSpan={3}>
-            <Icon style={{ color: "rgb(244, 67, 54)" }} type="error" />
+            <Icon style={{ color: 'rgb(244, 67, 54)' }} type="error" />
             <span
               style={{
-                fontSize: "12px",
-                fontFamily: "PingFangSC-Regular, PingFang SC",
+                fontSize: '12px',
+                fontFamily: 'PingFangSC-Regular, PingFang SC',
                 fontWeight: 400,
-                color: "var(--text-color3)",
-                lineHeight: "20px",
+                color: 'var(--text-color3)',
+                lineHeight: '20px',
               }}
             >
               修改配置信息后，所选的部署配置中的配置信息也将随之改动。
@@ -1209,7 +1178,7 @@ export default observer(() => {
               color="blue"
               icon="edit-o"
               onClick={handleChangeValueIdValues}
-              disabled={!ADDCDTaskDataSet.current.get("valueId")}
+              disabled={!ADDCDTaskDataSet.current.get('valueId')}
             >
               修改配置信息
             </Button>
@@ -1232,7 +1201,10 @@ export default observer(() => {
             name={fieldMap.deployWay.name}
             onChange={(value) => {
               HostJarDataSet.deleteAll(false);
-              ADDCDTaskDataSet.getField(addCDTaskDataSetMap.host).set('disabled', value === deployWayData[1].value);
+              ADDCDTaskDataSet.getField(addCDTaskDataSetMap.host).set(
+                'disabled',
+                value === deployWayData[1].value,
+              );
             }}
           />
           <SelectBox name={fieldMap.productType.name} />
@@ -1240,11 +1212,11 @@ export default observer(() => {
         <div className="addcdTask-divided" />,
         <p className="addcdTask-title">应用信息</p>,
         <Form columns={2} dataSet={HostJarDataSet}>
-          {
-            ADDCDTaskDataSet.current.get(fieldMap.deployWay.name) === deployWayData[0].value ?
-              <TextField name="appName" /> :
-              <Select name="appName" />
-          }
+          {ADDCDTaskDataSet.current.get(fieldMap.deployWay.name) === deployWayData[0].value ? (
+            <TextField name="appName" />
+          ) : (
+            <Select name="appName" />
+          )}
           <TextField name="appCode" />
         </Form>,
         <div className="addcdTask-divided" />,
@@ -1353,20 +1325,17 @@ export default observer(() => {
           <Tooltip title="启用告警设置后，若该API测试任务的执行率低于某个设定值，便会通过邮件或站内信通知到指定的通知对象。">
             <Icon
               style={{
-                position: "relative",
-                bottom: "2px",
-                marginLeft: "5px",
-                color: "rgba(0, 0, 0, 0.36)",
+                position: 'relative',
+                bottom: '2px',
+                marginLeft: '5px',
+                color: 'rgba(0, 0, 0, 0.36)',
               }}
               type="help"
             />
           </Tooltip>
         </p>,
         <Form style={{ marginTop: 20 }} columns={2} dataSet={ADDCDTaskDataSet}>
-          <div
-            className="addcdTask-whetherBlock"
-            style={{ position: "relative" }}
-          >
+          <div className="addcdTask-whetherBlock" style={{ position: 'relative' }}>
             <SelectBox name={addCDTaskDataSetMap.alarm}>
               <Option value>是</Option>
               <Option value={false}>否</Option>
@@ -1385,15 +1354,9 @@ export default observer(() => {
               }
               onChange={(value) => {
                 if (Number(value) > 100) {
-                  ADDCDTaskDataSet.current.set(
-                    addCDTaskDataSetMap.threshold,
-                    "100"
-                  );
+                  ADDCDTaskDataSet.current.set(addCDTaskDataSetMap.threshold, '100');
                 } else if (Number(value) < 0) {
-                  ADDCDTaskDataSet.current.set(
-                    addCDTaskDataSetMap.threshold,
-                    "0"
-                  );
+                  ADDCDTaskDataSet.current.set(addCDTaskDataSetMap.threshold, '0');
                 }
               }}
             />,
@@ -1402,18 +1365,13 @@ export default observer(() => {
               searchMatcher="param"
               newLine
               name={addCDTaskDataSetMap.notifyObject}
-              addonAfter={
-                <Tips helpText="可选择项目下任意人员作为通知对象。" />
-              }
+              addonAfter={<Tips helpText="可选择项目下任意人员作为通知对象。" />}
             />,
             <SelectBox newLine name={addCDTaskDataSetMap.notifyWay}>
               <Option value="sendEmail">邮件</Option>
               <Option value="sendSiteMessage">站内信</Option>
             </SelectBox>,
-            <div
-              className="addcdTask-whetherBlock"
-              style={{ position: "relative" }}
-            >
+            <div className="addcdTask-whetherBlock" style={{ position: 'relative' }}>
               <SelectBox name={addCDTaskDataSetMap.whetherBlock}>
                 <Option value>是</Option>
                 <Option value={false}>否</Option>
@@ -1432,10 +1390,10 @@ export default observer(() => {
               >
                 <Icon
                   style={{
-                    position: "absolute",
-                    top: "5px",
-                    right: "150px",
-                    color: "rgba(0, 0, 0, 0.36)",
+                    position: 'absolute',
+                    top: '5px',
+                    right: '150px',
+                    color: 'rgba(0, 0, 0, 0.36)',
                   }}
                   type="help"
                 />
@@ -1463,59 +1421,59 @@ export default observer(() => {
           cRef={deployGroupcRef}
           detail={deployGroupDetail}
           preJobList={preJobList}
-        />
-      ]
+        />,
+      ],
     };
-    return obj[ADDCDTaskDataSet?.current?.get("type")];
+    return obj[ADDCDTaskDataSet?.current?.get('type')];
   };
 
   async function handleClickMore(e, realName) {
-    if (!ADDCDTaskDataSet.current.get("pageSize")) {
-      ADDCDTaskDataSet.current.set("pageSize", 20);
+    if (!ADDCDTaskDataSet.current.get('pageSize')) {
+      ADDCDTaskDataSet.current.set('pageSize', 20);
     }
     e && e.stopPropagation();
     const pageSize = !e
-      ? ADDCDTaskDataSet.current.get("pageSize")
-      : ADDCDTaskDataSet.current.get("pageSize") + 20;
+      ? ADDCDTaskDataSet.current.get('pageSize')
+      : ADDCDTaskDataSet.current.get('pageSize') + 20;
     const url = `/devops/v1/projects/${projectId}/users/app_services/${PipelineCreateFormDataSet.current.get(
-      "appServiceId"
+      'appServiceId',
     )}?page=0&size=${pageSize}`;
     const cdAuditsUserIds = [];
     jobDetail?.cdAuditUserIds &&
       jobDetail.cdAuditUserIds.forEach((obj) => {
-        if (typeof obj === "string") {
+        if (typeof obj === 'string') {
           cdAuditsUserIds.push(obj);
-        } else if (typeof obj === "object") {
+        } else if (typeof obj === 'object') {
           cdAuditsUserIds.push(obj?.id);
         }
       });
     const res = await axios.post(url, {
-      userName: realName || "",
+      userName: realName || '',
       ids: cdAuditsUserIds || [],
     });
     if (res.content.length % 20 === 0 && res.content.length !== 0) {
       res.content.push({
-        realName: "加载更多",
-        id: "more",
+        realName: '加载更多',
+        id: 'more',
       });
     }
-    ADDCDTaskDataSet.current.set("pageSize", pageSize);
+    ADDCDTaskDataSet.current.set('pageSize', pageSize);
     if (realName) {
-      ADDCDTaskDataSet.getField("cdAuditUserIds").props.lookup = [
+      ADDCDTaskDataSet.getField('cdAuditUserIds').props.lookup = [
         ...res.content,
-        ...ADDCDTaskDataSet.getField("cdAuditUserIds").props.lookup,
+        ...ADDCDTaskDataSet.getField('cdAuditUserIds').props.lookup,
       ];
     } else {
-      ADDCDTaskDataSet.getField("cdAuditUserIds").props.lookup = res.content;
+      ADDCDTaskDataSet.getField('cdAuditUserIds').props.lookup = res.content;
     }
   }
 
   const renderderAuditUsersList = ({ text, record }) => {
-    const ldap = record.get("ldap");
-    if (text === "加载更多") {
+    const ldap = record.get('ldap');
+    if (text === '加载更多') {
       return (
         <a
-          style={{ display: "block", width: "100%", height: "100%" }}
+          style={{ display: 'block', width: '100%', height: '100%' }}
           onClick={handleClickMore}
           role="none"
         >
@@ -1523,27 +1481,25 @@ export default observer(() => {
         </a>
       );
     }
-    return ldap
-      ? `${text}(${record.get("loginName")})`
-      : `${text}(${record.get("email")})`;
+    return ldap ? `${text}(${record.get('loginName')})` : `${text}(${record.get('email')})`;
   };
 
   /**
    * 外部卡点回调地址的复制事件
    */
   const handleCopy = () => {
-    Choerodon.prompt("复制成功");
+    Choerodon.prompt('复制成功');
   };
 
   const getBranchsList = useCallback(async () => {
     const url = `devops/v1/projects/${projectId}/app_service/${PipelineCreateFormDataSet.current.get(
-      "appServiceId"
+      'appServiceId',
     )}/git/page_branch_by_options?page=1&size=${currentSize}`;
     const res = await axios.post(url);
     if (res.content.length % 10 === 0 && res.content.length !== 0) {
       res.content.push({
-        name: "加载更多",
-        value: "more",
+        name: '加载更多',
+        value: 'more',
       });
     }
     setBranchsList(
@@ -1553,15 +1509,15 @@ export default observer(() => {
           c.value = c.branchName;
         }
         return c;
-      })
+      }),
     );
   }, [PipelineCreateFormDataSet, projectId]);
 
   const renderderBranchs = ({ text }) =>
-    text === "加载更多" ? (
+    text === '加载更多' ? (
       // eslint-disable-next-line jsx-a11y/click-events-have-key-events
       <a
-        style={{ width: "100%", height: "100%", display: "block" }}
+        style={{ width: '100%', height: '100%', display: 'block' }}
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -1576,14 +1532,14 @@ export default observer(() => {
     );
 
   function renderTriggerTypeTips() {
-    const type = ADDCDTaskDataSet.current.get("triggerType");
+    const type = ADDCDTaskDataSet.current.get('triggerType');
     switch (type) {
-      case "refs":
-        return "您可在此选择或输入触发该任务的分支类型；支持多填多选；若不填写，则默认为所有分支和tag";
-      case "exact_match":
-        return "您可在此精确选择或输入触发该任务的具体分支名称；支持多填多选；若不填写，则默认为所有分支和tag";
+      case 'refs':
+        return '您可在此选择或输入触发该任务的分支类型；支持多填多选；若不填写，则默认为所有分支和tag';
+      case 'exact_match':
+        return '您可在此精确选择或输入触发该任务的具体分支名称；支持多填多选；若不填写，则默认为所有分支和tag';
       default:
-        return "您可在此选择或输入某几个具体的分支名称以此来精确排除；此处支持多填多选；若不填写，则默认为没有需要排除的分支或tag";
+        return '您可在此选择或输入某几个具体的分支名称以此来精确排除；此处支持多填多选；若不填写，则默认为没有需要排除的分支或tag';
     }
   }
 
@@ -1592,14 +1548,12 @@ export default observer(() => {
       {text && (
         <i
           style={{
-            display: "inline-block",
+            display: 'inline-block',
             marginRight: 3,
-            width: "0.08rem",
-            height: "0.08rem",
-            borderRadius: "50%",
-            backgroundColor: record.get("connected")
-              ? "rgb(0, 191, 165)"
-              : "#ff9915",
+            width: '0.08rem',
+            height: '0.08rem',
+            borderRadius: '50%',
+            backgroundColor: record.get('connected') ? 'rgb(0, 191, 165)' : '#ff9915',
           }}
         />
       )}
@@ -1608,7 +1562,7 @@ export default observer(() => {
   );
 
   const optionRenderer = ({ record, text, value }) => (
-    <Tooltip title={!record.get("connected") && "未连接"}>
+    <Tooltip title={!record.get('connected') && '未连接'}>
       {renderer({ record, text, value })}
     </Tooltip>
   );
@@ -1620,7 +1574,7 @@ export default observer(() => {
     let lists = [];
     JSON.parse(JSON.stringify(pipelineStageMainSource)).forEach((i, iIndex) => {
       // 是cd阶段
-      if (i.type === "CD") {
+      if (i.type === 'CD') {
         // 如果遍历列小于当前列 则直接存入joblist
         if (iIndex < columnIndex - 1) {
           lists = [...lists, ...i.jobList];
@@ -1632,7 +1586,7 @@ export default observer(() => {
     });
     // 返回任务是部署任务的options
     return lists
-      .filter((l) => l.type === "cdDeploy")
+      .filter((l) => l.type === 'cdDeploy')
       .map((i) => <Option value={i.name}>{i.name}</Option>);
   };
 
@@ -1682,9 +1636,7 @@ export default observer(() => {
           <Select
             name="triggerType"
             className="addcdTask-triggerType"
-            onChange={() =>
-              ADDCDTaskDataSet.current.set("triggerValue", undefined)
-            }
+            onChange={() => ADDCDTaskDataSet.current.set('triggerValue', undefined)}
             colSpan={2}
             clearButton={false}
           >
@@ -1693,7 +1645,7 @@ export default observer(() => {
             <Option value="exact_match">精确匹配</Option>
             <Option value="exact_exclude">精确排除</Option>
           </Select>
-          {ADDCDTaskDataSet.current.get("triggerType") === "regex" ? (
+          {ADDCDTaskDataSet.current.get('triggerType') === 'regex' ? (
             <TextField
               className="addcdTask-triggerValue"
               name="triggerValue"
@@ -1713,85 +1665,75 @@ export default observer(() => {
               optionRenderer={({ text }) => renderderBranchs({ text })}
               maxTagCount={3}
               maxTagPlaceholder={(omittedValues) => (
-                <Tooltip title={omittedValues.join(",")}>
-                  {`+${omittedValues.length}`}
-                </Tooltip>
+                <Tooltip title={omittedValues.join(',')}>{`+${omittedValues.length}`}</Tooltip>
               )}
               renderer={renderderBranchs}
               colSpan={4}
             >
-              {branchsList?.map((b) => (
-                <Option value={b.value}>{b.name}</Option>
-              ))}
+              {branchsList?.map((b) => <Option value={b.value}>{b.name}</Option>)}
             </Select>
           )}
         </div>
-        {ADDCDTaskDataSet.current.get("type") ===
-          addCDTaskDataSetMap.apiTest && [
-            <Select
-              newLine
-              colSpan={3}
-              searchable
-              searchMatcher="task_name"
-              name={addCDTaskDataSetMap.apiTestMission}
-              addonAfter={
-                <Tips helpText="此处仅能从项目下已有的API测试任务中进行选择" />
-              }
-            />,
-            <Select
-              colSpan={3}
-              name={addCDTaskDataSetMap.relativeMission}
-              addonAfter={
-                <Tips
-                  helpText={
-                    <>
-                      <p>
-                        1.
-                        此处为非必选，若不选关联部署任务，则代表，API测试任务在执行前不会做任何判断
-                      </p>
-                      <p>
-                        2. 此处仅支持选择该任务之前的任一部署任务；
-                        选择后，在执行此API测试任务前便会校验：关联的部署任务中对应的新版本是否已部署成功。只有该版本对应的pod状态为可用时，测试任务才会执行
-                      </p>
-                    </>
-                  }
-                />
-              }
-            >
-              {renderRelatedMission()}
-            </Select>,
-          ]}
-        {[typeData[0].value, typeData[1].value].includes(ADDCDTaskDataSet?.current?.get("type")) && [
+        {ADDCDTaskDataSet.current.get('type') === addCDTaskDataSetMap.apiTest && [
+          <Select
+            newLine
+            colSpan={3}
+            searchable
+            searchMatcher="task_name"
+            name={addCDTaskDataSetMap.apiTestMission}
+            addonAfter={<Tips helpText="此处仅能从项目下已有的API测试任务中进行选择" />}
+          />,
+          <Select
+            colSpan={3}
+            name={addCDTaskDataSetMap.relativeMission}
+            addonAfter={
+              <Tips
+                helpText={
+                  <>
+                    <p>
+                      1. 此处为非必选，若不选关联部署任务，则代表，API测试任务在执行前不会做任何判断
+                    </p>
+                    <p>
+                      2. 此处仅支持选择该任务之前的任一部署任务；
+                      选择后，在执行此API测试任务前便会校验：关联的部署任务中对应的新版本是否已部署成功。只有该版本对应的pod状态为可用时，测试任务才会执行
+                    </p>
+                  </>
+                }
+              />
+            }
+          >
+            {renderRelatedMission()}
+          </Select>,
+        ]}
+        {[typeData[0].value, typeData[1].value].includes(
+          ADDCDTaskDataSet?.current?.get('type'),
+        ) && [
           <Select
             colSpan={3}
             name="envId"
             optionRenderer={optionRenderer}
             // renderer={renderer}
             onOption={({ record }) => ({
-              disabled: !record.get("connected"),
+              disabled: !record.get('connected'),
             })}
           />,
           <div
             className="addcdTask-whetherBlock addcdTask-triggersTasks"
             style={{
-              position: "relative",
+              position: 'relative',
             }}
             colSpan={3}
           >
             <SelectBox name={addCDTaskDataSetMap.triggersTasks.name}>
-              <Option value={addCDTaskDataSetMap.triggersTasks.values[0]}>
-                是
-              </Option>
-              <Option value={addCDTaskDataSetMap.triggersTasks.values[1]}>
-                否
-              </Option>
+              <Option value={addCDTaskDataSetMap.triggersTasks.values[0]}>是</Option>
+              <Option value={addCDTaskDataSetMap.triggersTasks.values[1]}>否</Option>
             </SelectBox>
             <NewTips
               helpText="此处仅项目所有者可以设置；默认为是，即触发用户在没有该部署任务的环境权限时，将会直接使用管理员账户触发部署；若选择为否，触发成员在没有环境权限时，将会直接跳过此部署任务。"
               style={{
-                position: "absolute",
-                top: "7px",
-                left: "195px",
+                position: 'absolute',
+                top: '7px',
+                left: '195px',
               }}
             />
           </div>,
@@ -1864,32 +1806,30 @@ export default observer(() => {
         {/*    <Select newLine colSpan={2} name="instanceId" />*/}
         {/*  ),*/}
         {/*]}*/}
-        {ADDCDTaskDataSet?.current?.get("type") === "cdAudit" && (
-          <div colSpan={3} style={{ display: "flex" }}>
-            <div style={{ width: "47.5%", marginRight: 8 }} colSpan={2}>
+        {ADDCDTaskDataSet?.current?.get('type') === 'cdAudit' && (
+          <div colSpan={3} style={{ display: 'flex' }}>
+            <div style={{ width: '47.5%', marginRight: 8 }} colSpan={2}>
               <Select
                 popupCls="addcdTask-auditUsers"
                 searchable
-                style={{ width: "100%" }}
+                style={{ width: '100%' }}
                 name="cdAuditUserIds"
                 maxTagCount={3}
                 searchMatcher="realName"
                 onOption={({ record }) => ({
-                  disabled: record.get("id") === "more",
+                  disabled: record.get('id') === 'more',
                 })}
                 onChange={() => {
                   handleClickMore(null);
                 }}
                 maxTagPlaceholder={(omittedValues) => {
                   const tempArr = omittedValues.map((item) => {
-                    const tempId = typeof item === "string" ? item : item?.id;
-                    return ADDCDTaskDataSet.getField("cdAuditUserIds").getText(
-                      tempId
-                    );
+                    const tempId = typeof item === 'string' ? item : item?.id;
+                    return ADDCDTaskDataSet.getField('cdAuditUserIds').getText(tempId);
                   });
                   return (
-                    <Tooltip title={tempArr && tempArr.join("，")}>
-                      <span style={{ width: "31px", display: "block" }}>
+                    <Tooltip title={tempArr && tempArr.join('，')}>
+                      <span style={{ width: '31px', display: 'block' }}>
                         {`+${omittedValues.length}`}
                         ...
                       </span>
@@ -1898,8 +1838,8 @@ export default observer(() => {
                 }}
                 optionRenderer={renderderAuditUsersList}
                 renderer={({ text, value }) => {
-                  if (typeof value === "object") {
-                    const isLdap = get(value, "ldap");
+                  if (typeof value === 'object') {
+                    const isLdap = get(value, 'ldap');
                     return (
                       <Tooltip
                         title={
@@ -1916,10 +1856,10 @@ export default observer(() => {
                 }}
               />
             </div>
-            {ADDCDTaskDataSet?.current?.get("cdAuditUserIds")?.length > 1 && (
-              <div style={{ width: "calc(100% - 47.5% - 8px)" }} colSpan={1}>
+            {ADDCDTaskDataSet?.current?.get('cdAuditUserIds')?.length > 1 && (
+              <div style={{ width: 'calc(100% - 47.5% - 8px)' }} colSpan={1}>
                 <Select
-                  style={{ width: "100%" }}
+                  style={{ width: '100%' }}
                   name="countersigned"
                   addonAfter={
                     <Tips helpText="会签模式中，需要所有审核人员都审核通过才能通过，审核人员中任一人点击终止，则流水线终止；或签模式中，仅需任一审核人员审核即可，即第一个审核的人点击通过则通过，点击终止则终止" />
@@ -1932,62 +1872,47 @@ export default observer(() => {
             )}
           </div>
         )}
-        {ADDCDTaskDataSet.current.get("type") ===
-          addCDTaskDataSetMap.externalStuck && [
-            <div colSpan={6} className="addcdTask-missionDes">
-              <span style={{ fontWeight: 500 }}>任务说明：</span>
-              <span style={{ display: "inline-block" }}>
-                -
-                外部卡点任务用于对接Choerodon平台外的工作流或系统。此任务触发时，
-                会默认将projectId、pipelineRecordId、stageRecordId
-                、jobRecordId、callback_token、
-                currentCdJob以及pipelineRecordDetails发送至外部地址。
-              </span>
-              <span style={{ display: "inline-block" }}>
-                - 外部系统执行结束后，会往{" "}
-                <span className="addcdTask-missionDes-focus">流水线回调地址</span>{" "}
-                发送一个状态来作为外部卡点的任务状态。成功后会接着执行后续任务，失败则停留在此任务。
-              </span>
-              <br />
-              <span style={{ display: "block", marginTop: 10, fontWeight: 500 }}>
-                流水线回调地址参数说明：
-              </span>
-              <span style={{ display: "block" }}>
-                - pipelineRecordId： 流水线记录id
-              </span>
-              <span style={{ display: "block" }}>
-                - stageRecordId: 流水线阶段记录id
-              </span>
-              <span style={{ display: "block" }}>
-                - jobRecordId: 流水线任务记录id
-              </span>
-              <span style={{ display: "block" }}>
-                - callback_token: 回调时的认证token
-              </span>
-              <span style={{ display: "block" }}>
-                - approval_status： 任务执行状态（true/false
-                ,代表外部卡点任务执行成功或失败）
-              </span>
-            </div>,
-            <TextField
-              label="流水线回调地址"
-              colSpan={6}
-              addonAfter={
-                <CopyToClipboard
-                  text={pipelineCallbackAddress}
-                  onCopy={handleCopy}
-                >
-                  <Icon style={{ cursor: "pointer" }} type="content_copy" />
-                </CopyToClipboard>
-              }
-              disabled
-              required
-              value={pipelineCallbackAddress}
-            />,
-            <TextArea name={addCDTaskDataSetMap.externalAddress} colSpan={6} />,
-            <TextArea name={addCDTaskDataSetMap.externalToken} colSpan={6} />,
-            <TextArea name={addCDTaskDataSetMap.missionDes} colSpan={6} />,
-          ]}
+        {ADDCDTaskDataSet.current.get('type') === addCDTaskDataSetMap.externalStuck && [
+          <div colSpan={6} className="addcdTask-missionDes">
+            <span style={{ fontWeight: 500 }}>任务说明：</span>
+            <span style={{ display: 'inline-block' }}>
+              - 外部卡点任务用于对接Choerodon平台外的工作流或系统。此任务触发时，
+              会默认将projectId、pipelineRecordId、stageRecordId 、jobRecordId、callback_token、
+              currentCdJob以及pipelineRecordDetails发送至外部地址。
+            </span>
+            <span style={{ display: 'inline-block' }}>
+              - 外部系统执行结束后，会往{' '}
+              <span className="addcdTask-missionDes-focus">流水线回调地址</span>{' '}
+              发送一个状态来作为外部卡点的任务状态。成功后会接着执行后续任务，失败则停留在此任务。
+            </span>
+            <br />
+            <span style={{ display: 'block', marginTop: 10, fontWeight: 500 }}>
+              流水线回调地址参数说明：
+            </span>
+            <span style={{ display: 'block' }}>- pipelineRecordId： 流水线记录id</span>
+            <span style={{ display: 'block' }}>- stageRecordId: 流水线阶段记录id</span>
+            <span style={{ display: 'block' }}>- jobRecordId: 流水线任务记录id</span>
+            <span style={{ display: 'block' }}>- callback_token: 回调时的认证token</span>
+            <span style={{ display: 'block' }}>
+              - approval_status： 任务执行状态（true/false ,代表外部卡点任务执行成功或失败）
+            </span>
+          </div>,
+          <TextField
+            label="流水线回调地址"
+            colSpan={6}
+            addonAfter={
+              <CopyToClipboard text={pipelineCallbackAddress} onCopy={handleCopy}>
+                <Icon style={{ cursor: 'pointer' }} type="content_copy" />
+              </CopyToClipboard>
+            }
+            disabled
+            required
+            value={pipelineCallbackAddress}
+          />,
+          <TextArea name={addCDTaskDataSetMap.externalAddress} colSpan={6} />,
+          <TextArea name={addCDTaskDataSetMap.externalToken} colSpan={6} />,
+          <TextArea name={addCDTaskDataSetMap.missionDes} colSpan={6} />,
+        ]}
       </Form>
       {getOtherConfig()}
     </div>

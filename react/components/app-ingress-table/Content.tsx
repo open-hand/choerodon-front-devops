@@ -5,13 +5,16 @@ import { observer } from 'mobx-react-lite';
 import { Action } from '@choerodon/boot';
 import { Modal, Table, Tooltip } from 'choerodon-ui/pro';
 import { StatusTag, TimePopover, UserInfo } from '@choerodon/components';
+import { MIDDLE } from '@/utils/getModalWidth';
 import { TableQueryBarType } from '@/interface';
 import { useAppIngressTableStore } from './stores';
 import HostConfigServices from './services';
+import ConfigurationModal from '@/components/configuration-center/ConfigurationModal';
 
 import './index.less';
 
 const { Column } = Table;
+const ConfigurationModalKey = Modal.key();
 
 const AppIngress = observer(() => {
   const {
@@ -19,6 +22,7 @@ const AppIngress = observer(() => {
     appIngressDataset,
     intl: { formatMessage },
     projectId,
+    configurationCenterDataSet,
   } = useAppIngressTableStore();
 
   function refresh() {
@@ -78,6 +82,18 @@ const AppIngress = observer(() => {
     }
   }, [appIngressDataset, refresh]);
 
+  const handleOpenConfigurationModal = () => {
+    Modal.open({
+      key: ConfigurationModalKey,
+      title: '配置文件详情',
+      style: { width: MIDDLE },
+      children: <ConfigurationModal type="modal" configurationCenterDataSet={configurationCenterDataSet} />,
+      okText: formatMessage({ id: 'close' }),
+      okCancel: false,
+      drawer: true,
+    });
+  };
+
   const renderAction = useCallback(({ record: tableRecord }) => {
     const devopsHostCommandDTO = tableRecord.get('devopsHostCommandDTO');
     const operateStatus = devopsHostCommandDTO?.status;
@@ -88,11 +104,16 @@ const AppIngress = observer(() => {
 
     const status = tableRecord.get('status');
 
-    const actionData = [{
-      service: ['choerodon.code.project.deploy.host.ps.docker.delete'],
-      text: formatMessage({ id: 'delete' }),
-      action: () => handleDelete({ record: tableRecord }),
-    }];
+    const actionData = [
+      {
+        service: ['choerodon.code.project.deploy.host.ps.docker.delete'],
+        text: formatMessage({ id: 'delete' }),
+        action: () => handleDelete({ record: tableRecord }),
+      }, {
+        // service: ['choerodon.code.project.deploy.host.ps.docker.delete'],
+        text: '查看配置文件',
+        action: () => handleOpenConfigurationModal(),
+      }];
 
     if (!status || (['normal_process', 'java_process'].includes(tableRecord.get('instanceType')))) {
       return <Action data={actionData} />;

@@ -1,9 +1,9 @@
 /* eslint-disable */
 // @ts-nocheck
-import React, { useImperativeHandle, useEffect } from 'react';
+import React, { useImperativeHandle, useEffect,useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Form, Select, Button, TextField, Output,
+  Form, Select, Button, TextField, Output, DataSet,
 } from 'choerodon-ui/pro';
 import { Upload, Icon, Button as OldButton, Tabs, Alert, message } from 'choerodon-ui';
 import { CustomSelect, ChunkUploader } from '@choerodon/components';
@@ -39,7 +39,7 @@ const valueCheckValidate = (value, startCommand, postCommand) => {
   return true;
 }
 
-const setData = (data: any) => {
+const setData = (data: any,configData?:any) => {  
   const newData = data;
   newData.prodJarInfoVO = {
     [mapping.projectProductRepo.name as string]: newData[
@@ -67,6 +67,7 @@ const setData = (data: any) => {
   newData[mapping.postCommand.name as string] = newData[mapping.postCommand.name as string] ? Base64.encode(newData[mapping.postCommand.name as string]) : '';
   // newData.deployObjectId = newData[
   //   mapping.marketServiceVersion.name as string]?.marketServiceDeployObjectVO?.id;
+  newData.configSettingIVO = configData || data.configSettingIVO;
   return newData;
 };
 
@@ -78,6 +79,8 @@ const Index = observer(() => {
     modal,
     refresh,
     AppState: { currentMenuType: { organizationId } },
+    configurationCenterDataSet,
+    configCompareOptsDS,
   } = useHostAppConfigStore();
 
   const queryMarketAppVersionOptions = (data: any, ds: any) => {
@@ -110,7 +113,12 @@ const Index = observer(() => {
     }
   }, []);
 
+   // TODO: 修改主机应用 校验+数据
   const handleOk = async () => {
+    const configData = configurationCenterDataSet.toData().map(o=>{
+        return {configId:o.configId,mountPath:o.mountPath,configGroup:o.configGroup,configCode:o.configCode};
+    });
+    HostAppConfigDataSet.current?.set('configSettingIVO',configData)
     const finalFunc = async () => {
       const res = await HostAppConfigDataSet.submit();
       if (res !== false) {
@@ -140,6 +148,7 @@ const Index = observer(() => {
     modal.handleOk(handleOk);
   }
 
+  // TODO: 创建主机应用 校验+数据
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
       if (valueCheckValidate(
@@ -148,8 +157,13 @@ const Index = observer(() => {
         HostAppConfigDataSet.current.get(mapping.postCommand.name)
       )) {
         const flag = await HostAppConfigDataSet.validate();
-        if (flag) {
-          return setData(HostAppConfigDataSet.current.toData());
+        const configFlag = await configurationCenterDataSet.validate();
+        const configData = configurationCenterDataSet.toData().map(o=>{
+            return {configId:o.configId,mountPath:o.mountPath,configGroup:o.configGroup,configCode:o.configCode};
+        });
+        // console.log("创建主机应用",configData);
+        if (flag && configFlag) {
+          return setData(HostAppConfigDataSet.current.toData(),configData);
         }
         return false;
       }
@@ -385,6 +399,8 @@ const Index = observer(() => {
               marginBottom: 20,
             }}
             dataSet={HostAppConfigDataSet}
+            configDataSet={configurationCenterDataSet}
+            optsDS={configCompareOptsDS}
             preName={mapping.value.name}
             startName={mapping.startCommand.name}
             postName={mapping.postCommand.name}
