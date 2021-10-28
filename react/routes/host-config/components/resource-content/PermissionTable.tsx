@@ -129,7 +129,7 @@ const PermissionTable = () => {
 
   return (
     <Table dataSet={permissionDs} className="c7ncd-tab-table">
-      <Column name="realName" renderer={renderUserInfo} />
+      <Column name="realName" width={180} renderer={renderUserInfo} />
       <Column renderer={renderAction} width={60} />
       <Column name="loginName" tooltip={'overflow' as TableColumnTooltip} />
       <Column name="roles" renderer={renderRole} tooltip={'overflow' as TableColumnTooltip} />
