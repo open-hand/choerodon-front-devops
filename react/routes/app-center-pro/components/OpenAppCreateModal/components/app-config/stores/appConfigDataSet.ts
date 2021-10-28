@@ -143,7 +143,7 @@ const serviceVersionOptionDs = {
   pageSize: 20,
   transport: {
     read: ({ data, params }: any) => ({
-      ...appServiceVersionApiConfig.getVersions(data.appServiceId, true, true, params),
+      ...appServiceVersionApiConfig.getVersions(data.appServiceId, true, true, params, data.appServiceVersionId),
     }),
   },
 };
@@ -470,7 +470,7 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
           ...data,
           appName: data[mapping.appName.name as string],
           appCode: data[mapping.appCode.name as string],
-          instanceId: data?.id || data?.instanceId,
+          instanceId: data?.instanceId || data?.id,
         });
       } if (data[mapping.chartSource.name as string] === chartSourceData[4].value) {
         return middlewareConfigApi.updateMiddleware(data.id || data.instanceId, {
@@ -484,7 +484,7 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
           ...data,
           appName: data[mapping.appName.name as string],
           appCode: data[mapping.appCode.name as string],
-          instanceId: data?.id || data?.instanceId,
+          instanceId: data?.instanceId || data?.id,
           marketAppServiceId: data[mapping.hzeroVersion.name as string],
         },
       );
@@ -520,6 +520,9 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
       if (data[mapping.hzeroVersion.name as string]
           && [chartSourceData[0].value, chartSourceData[1].value].includes(data[mapping.chartSource.name as string])
       ) {
+        if (data[mapping.serviceVersion.name as string]) {
+          serviceVersionDataSet.setQueryParameter('appServiceVersionId', data[mapping.serviceVersion.name as string]);
+        }
         serviceVersionDataSet.setQueryParameter('appServiceId', data[mapping.hzeroVersion.name as string]);
         serviceVersionDataSet.query();
       }

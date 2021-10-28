@@ -272,7 +272,7 @@ const Index = observer(() => {
         }}
         defaultCollapse
         title="DNS Policy"
-        helpText="即 kubernetes中的Labels，详情请参考 kubernetes 文档。"
+        helpText="可以为每个 Pod 设置 DNS 策略，详情请参考 kubernetes 文档。"
         content={(
           <Form columns={2} dataSet={DeployGroupConfigDataSet}>
             <Select
@@ -329,7 +329,7 @@ const Index = observer(() => {
                   bottom: '2px',
                 }}
               >
-                <Tips helpText="定义域名解析配置文件的其他选项，常见的有 timeout、attempts 和 ndots 等等。" />
+                <Tips helpText="HostAliases 向 Pod /etc/hosts 文件添加条目，详情请参考 k8s 的 HostAliases文档。" />
               </span>
             </p>
             {getKeyValueRenderByDs(HostAliasesDataSet, 'HostAliases')}
@@ -343,7 +343,7 @@ const Index = observer(() => {
                     bottom: '2px',
                   }}
                 >
-                  <Tips helpText="定义域名解析配置文件的其他选项，常见的有 timeout、attempts 和 ndots 等等。" />
+                  <Tips helpText="为 Pod 设置 DNS 参数，设置的参数将合并到基于 dnsPolicy 策略生成的域名解析文件中，详情请参考 kubernetes 文档。" />
                 </span>
               </p>
               <Form columns={2} dataSet={DeployGroupConfigDataSet}>
@@ -381,7 +381,7 @@ const Index = observer(() => {
                   bottom: '2px',
                 }}
               >
-                <Tips helpText="定义域名解析配置文件的其他选项，常见的有 timeout、attempts 和 ndots 等等。" />
+                <Tips helpText="节点选择标签即 kubernetes 中的 nodeSelector，详情请参考 kubernetes文档。" />
               </span>
             </p>
             {getKeyValueRenderByDs(NodeLabelsDataSet, '标签')}

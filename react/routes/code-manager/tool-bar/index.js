@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 import React, { useEffect, useState, Fragment } from 'react';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
@@ -117,7 +118,7 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
               text={(currentApp && currentApp.sshRepositoryUrl) || noRepoUrl}
               onCopy={handleCopy}
             >
-              <Icon type="content_copy" style={{ cursor: 'pointer' }} />
+              <Icon type="content_copy" style={{ cursor: 'pointer', color: '#5365ea' }} />
             </CopyToClipboard>
           )}
         />
@@ -130,7 +131,7 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
               text={(currentApp && currentApp.repoUrl) || noRepoUrl}
               onCopy={handleCopy}
             >
-              <Icon type="content_copy" style={{ cursor: 'pointer' }} />
+              <Icon type="content_copy" style={{ cursor: 'pointer', color: '#5365ea' }} />
             </CopyToClipboard>
           )}
         />
@@ -167,11 +168,11 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
     <div style={{ paddingLeft: 24, display: 'flex', alignItems: 'center' }}>
       <Form
         {
-          ...theme4 ? {
-            labelLayout: 'horizontal',
-          } : {
-            labelLayout: 'float',
-          }
+        ...theme4 ? {
+          labelLayout: 'horizontal',
+        } : {
+          labelLayout: 'float',
+        }
         }
         columns={2}
         style={{ maxWidth: '5.5rem' }}

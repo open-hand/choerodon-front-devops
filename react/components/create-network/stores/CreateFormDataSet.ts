@@ -93,9 +93,7 @@ export default ({ formatMessage, portDs, targetLabelsDs, code, networkStore, pro
       update({ dataSet, record, name, value, oldValue }:any) {
         switch (name) {
           case 'target':
-            networkId
-              ? record.init('instance', initTargetLabel({ targetLabelsDs, type: value, record, networkInfoDs, formatMessage }))
-              : handleTargetChange({ targetLabelsDs, value, record, dataSet });
+            networkId && record.init('instance', initTargetLabel({ targetLabelsDs, type: value, record, networkInfoDs, formatMessage }))
             break;
           case 'type':
             networkId
@@ -109,17 +107,6 @@ export default ({ formatMessage, portDs, targetLabelsDs, code, networkStore, pro
     },
   };
 };
-
-function handleTargetChange({ targetLabelsDs, value, record }:any) {
-  const isParam = value === 'param';
-  if (isParam) {
-    record.set('appInstance', null);
-  } else {
-    targetLabelsDs.reset();
-    targetLabelsDs.create();
-  }
-}
-
 
 function handleTypeChange({ portDs, value, record }:any) {
   portDs.reset();

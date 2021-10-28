@@ -66,9 +66,9 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
 
   useEffect(() => {
     if (!syncStatus?.open && syncStatus?.saas) {
-      formDs.current?.set('appType', 'saas');
+      formDs.current?.set('appType', 'sass');
     } else {
-      formDs.current?.set('appType', 'open');
+     formDs.current?.set('appType', 'open');
     }
   }, []);
 

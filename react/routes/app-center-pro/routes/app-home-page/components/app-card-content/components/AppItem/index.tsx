@@ -97,7 +97,7 @@ const AppItem = observer(({
     isEnv ? deleteEnvApp({
       appCatergoryCode,
       envId,
-      instanceId: id,
+      instanceId,
       instanceName: name,
       callback: refresh,
     }) : openDeleteHostAppModal(hostId, id, name, refresh);

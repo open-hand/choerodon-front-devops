@@ -103,6 +103,7 @@ const AppIngress = observer(() => {
     }
 
     const status = tableRecord.get('status');
+    console.log(status);
 
     const actionData = [
       {
@@ -123,28 +124,28 @@ const AppIngress = observer(() => {
       return null;
     }
 
-    switch (status) {
-      case 'running':
-        actionData.unshift({
-          service: ['choerodon.code.project.deploy.host.ps.docker.stop'],
-          text: '停止',
-          action: () => openStopModal({ record: tableRecord }),
-        }, {
-          service: ['choerodon.code.project.deploy.host.ps.docker.restart'],
-          text: '重启',
-          action: () => handleRestart({ record: tableRecord }),
-        });
-        break;
-      case 'removed':
-        break;
-      default:
-        actionData.unshift({
-          service: ['choerodon.code.project.deploy.host.ps.docker.start'],
-          text: '启动',
-          action: () => handleStart({ record: tableRecord }),
-        });
-        break;
-    }
+    // switch (status) {
+    //   case 'running':
+    //     actionData.unshift({
+    //       service: ['choerodon.code.project.deploy.host.ps.docker.stop'],
+    //       text: '停止',
+    //       action: () => openStopModal({ record: tableRecord }),
+    //     }, {
+    //       service: ['choerodon.code.project.deploy.host.ps.docker.restart'],
+    //       text: '重启',
+    //       action: () => handleRestart({ record: tableRecord }),
+    //     });
+    //     break;
+    //   case 'removed':
+    //     break;
+    //   default:
+    //     actionData.unshift({
+    //       service: ['choerodon.code.project.deploy.host.ps.docker.start'],
+    //       text: '启动',
+    //       action: () => handleStart({ record: tableRecord }),
+    //     });
+    //     break;
+    // }
     return <Action data={actionData} />;
   }, [handleDelete, handleRestart, handleStart, openStopModal]);
 
