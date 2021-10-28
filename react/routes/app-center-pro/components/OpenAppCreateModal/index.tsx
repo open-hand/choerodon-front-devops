@@ -2,7 +2,7 @@ import React, {
   useEffect, useRef, useState, useMemo,
 } from 'react';
 import { CONSTANTS } from '@choerodon/master';
-import { Modal, Button } from 'choerodon-ui/pro';
+import { Modal, Button, DataSet } from 'choerodon-ui/pro';
 import { Steps } from 'choerodon-ui';
 import AppInfo from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-info';
 import AppConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config';
@@ -27,6 +27,7 @@ const setKeyValue = (obj: { [key: string]: any }, key: string, value: any) => {
   obj[key] = value;
 };
 
+// @ts-ignore
 const handleSetSubmitDataByContainerConfig = ({
   resourceConfigData,
   submitData,
