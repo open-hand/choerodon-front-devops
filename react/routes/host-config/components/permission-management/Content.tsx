@@ -24,6 +24,9 @@ const HostPermission = () => {
   modal.handleOk(async () => {
     try {
       const res = await selectDs.submit();
+      if (res === false) {
+        return false;
+      }
       if (res && res.failed) {
         return false;
       }

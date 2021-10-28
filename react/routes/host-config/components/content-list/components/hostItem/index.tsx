@@ -178,7 +178,7 @@ const HostsItem: React.FC<any> = observer(({
         </div>
         <div className={`${prefixCls}-content-list-item-header-right`}>
           {
-            mainStore.getSelectedHost?.permissionLabel === 'administrator'
+           record?.get('permissionLabel') === 'administrator'
             && (
               <Action
                 data={getActionData()}
