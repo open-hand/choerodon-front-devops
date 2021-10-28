@@ -136,6 +136,7 @@ const CreateForm = injectIntl(observer((props) => {
   }
   const isTestDisable = record.get('repositoryUrl') && ((record.get('username') && record.get('password') && record.get('authType') === 'username_password') || (record.get('accessToken') && record.get('authType') === 'access_token'));
   const gitlabSelectList = [{ gitLabType: 'inGitlab', value: '内置GitLab仓库' }, { gitLabType: 'outGitlab', value: '外置GitLab仓库' }];
+  const authTypeList = [{ authType: 'username_password', title: '用户名与密码', content: '需至少输入该仓库内Maintainer角色的用户名和密码' }, { authType: 'access_token', title: '私有Token', content: '需至少使用Maintainer角色在GitLab中创建含有api权限的Access Token' }];
   const renderTemplateOption = useCallback(({ value, text, record: optionRecord }) => {
     if (optionRecord?.get('remark')) {
       return <Tips title={text} helpText={optionRecord?.get('remark')} />;
@@ -144,6 +145,9 @@ const CreateForm = injectIntl(observer((props) => {
   }, []);
   const handleGitLabChange = (val) => {
     formDs.current.set('gitLabType', val.gitLabType);
+  };
+  const handleAuthTypeChange = (val) => {
+    formDs.current.set('authType', val.authType);
   };
 
   const handleTest = async (val) => {
@@ -283,12 +287,20 @@ const CreateForm = injectIntl(observer((props) => {
               />
             </div>
             <Form dataSet={formDs}>
-              <SelectBox name="authType" className="approveConfig-select">
-                <Option value="username_password">
-                  {formatMessage({ id: `${intlPrefix}.userInfo` })}
-                </Option>
-                <Option value="access_token">{formatMessage({ id: `${intlPrefix}.token` })}</Option>
-              </SelectBox>
+              <div className="customSelect-wrapper">
+                <CustomSelect
+                  onClickCallback={(val) => { handleAuthTypeChange(val); }}
+                  data={authTypeList}
+                  identity="authType"
+                  mode="single"
+                  customChildren={(item) => (
+                    <div className="customSelect-authType-item">
+                      <div className="title">{item.title}</div>
+                      <div className="content">{item.content}</div>
+                    </div>
+                  )}
+                />
+              </div>
               {formDs.current?.get('authType') === 'username_password' ? (
                 <>
                   <TextField name="username" colSpan={3} />
