@@ -37,7 +37,6 @@ const AppService = withRouter(observer(() => {
   } = useAppServiceStore();
 
   const [access, setAccess] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function judgeRole() {
@@ -50,7 +49,6 @@ const AppService = withRouter(observer(() => {
       try {
         const res = await checkPermission(data);
         setAccess(res);
-        setLoading(false);
       } catch (e) {
         setAccess(false);
       }

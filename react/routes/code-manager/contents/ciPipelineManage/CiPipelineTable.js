@@ -354,7 +354,7 @@ export default injectIntl(observer((props) => {
       className={classNames('c7n-ciPipeline', 'page-container', styles?.['c7n-branch-theme4-page'])}
       service={[]}
     >
-      {appServiceDs.status !== 'ready' || !appServiceId
+      {appServiceDs.status !== 'ready'
         ? <Loading display type="c7n" />
         : <div className="c7ncd-tab-table">
           <Table

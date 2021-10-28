@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 import React, { useEffect } from 'react';
 import {
   TabPage, Content, Permission, Breadcrumb, Action,
@@ -10,6 +11,7 @@ import {
 } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { withRouter } from 'react-router-dom';
+import { Loading } from '@choerodon/components';
 import { FormattedMessage } from 'react-intl';
 import NoData from '@/routes/app-service/service-detail/images/nodata.png';
 import { useAppTopStore } from '../stores';
@@ -228,7 +230,7 @@ const Share = withRouter(observer((props) => {
 
   function renderTheme4Share() {
     return (
-      <Spin spinning={shareDs.status !== 'ready'}>
+      <Loading display={shareDs.status !== 'ready'} type="c7n">
         {renderShareButton()}
         <div className="c7ncd-theme4-version">
           <TextField
@@ -313,7 +315,7 @@ const Share = withRouter(observer((props) => {
             ]
           }
         </div>
-      </Spin>
+      </Loading>
     );
   }
 

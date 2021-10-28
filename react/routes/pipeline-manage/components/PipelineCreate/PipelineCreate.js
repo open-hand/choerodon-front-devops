@@ -7,6 +7,7 @@ import {
 } from 'choerodon-ui/pro';
 import { message, Icon, Tooltip } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
+import { map } from 'lodash';
 import { usePipelineCreateStore } from './stores';
 import Tips from '../../../../components/new-tips';
 import StageEditBlock from './components/stageEditBlock';
@@ -51,6 +52,7 @@ const PipelineCreate = observer(() => {
           appServiceId,
           appServiceName: appService.name,
         }];
+        PipelineCreateFormDataSet.current.set('appServiceId', appService.id);
       }
       PipelineCreateFormDataSet.loadData([{
         name,
@@ -76,6 +78,7 @@ const PipelineCreate = observer(() => {
   const handleCreate = async () => {
     const result = await PipelineCreateFormDataSet.validate();
     if (result) {
+      const branches = map(PipelineCreateFormDataSet.current.get('branch'), 'branchName');
       const origin = PipelineCreateFormDataSet.toData()[0];
       const data = {
         ...dataSource,
@@ -83,6 +86,7 @@ const PipelineCreate = observer(() => {
         image: origin.selectImage === '1' ? origin.image : null,
         devopsCiStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CI'),
         devopsCdStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CD'),
+        relatedBranches: branches,
       };
       if (!data.bbcl) {
         delete data.versionName;
@@ -192,11 +196,27 @@ const PipelineCreate = observer(() => {
           name="appServiceId"
           searchable
           searchMatcher="appServiceName"
-          addonAfter={<Tips helpText="此处仅能看到您有开发权限的启用状态的应用服务，并要求该应用服务必须有master分支，且尚未有关联的流水线" />}
+          addonAfter={(
+            <Tips helpText="此处仅能看到您有开发权限的启用状态的应用服务，并要求该应用服务未有关联的流水线" />
+)}
           optionRenderer={optionRenderer}
           renderer={renderer}
         />
         <TextField style={{ display: 'none' }} />
+        {!isEdit && (
+          <>
+            <Select
+              multiple
+              name="branch"
+              searchable
+              searchMatcher="params"
+              disabled={!PipelineCreateFormDataSet.current.get('appServiceId')}
+            />
+            <TextField style={{ display: 'none' }} colSpan={2} />
+
+          </>
+        )}
+
         <div
           role="none"
           className="advanced_text"

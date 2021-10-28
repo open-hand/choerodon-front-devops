@@ -45,7 +45,7 @@ const HostConfig: React.FC<any> = observer((): any => {
   const openPermissionManagement = useCallback(() => {
     Modal.open({
       key: permissionKey,
-      title: formatMessage({ id: 'permission_management' }),
+      title: '添加权限',
       style: {
         width: SMALL,
       },
@@ -83,9 +83,9 @@ const HostConfig: React.FC<any> = observer((): any => {
             permissions: ['choerodon.code.project.deploy.host.ps.create'],
             handler: () => handleAdd(),
           }, {
-            name: formatMessage({ id: 'permission_management' }),
+            name: '添加权限',
             icon: 'settings-o',
-            display: !!listDs.length && mainStore.getSelectedHost?.showPermission,
+            display: !!listDs.length && mainStore.getSelectedHost?.permissionLabel === 'administrator',
             permissions: ['choerodon.code.project.deploy.host.ps.permission'],
             handler: openPermissionManagement,
           }, {

@@ -16,19 +16,19 @@ const Settings = injectIntl(observer(({ record, handleTestChart }) => {
     intlPrefix,
   } = useEditAppServiceStore();
 
-  function renderOption({ record: optionRecord, value, text }) {
+  const renderOption = ({ record: optionRecord, value, text }) => {
     if (optionRecord.get('type') === 'DEFAULT_REPO') {
       return `${text} (默认Docker仓库)`;
     }
     return text;
-  }
+  };
 
-  function renderInput({ value, text }) {
+  const renderInput = ({ value, text }) => {
     if (value && value.type === 'DEFAULT_REPO') {
       return `${text} (默认Docker仓库)`;
     }
     return text;
-  }
+  };
 
   return (
     <div className="content-settings">
@@ -38,10 +38,6 @@ const Settings = injectIntl(observer(({ record, handleTestChart }) => {
           helpText={formatMessage({ id: `${intlPrefix}.setting.tips` })}
           title={formatMessage({ id: `${intlPrefix}.create.settings` })}
         />
-      </div>
-      <div className="content-settings-tips">
-        <Icon type="info" className="content-settings-tips-icon" />
-        <FormattedMessage id={`${intlPrefix}.create.settings.tips`} />
       </div>
       <Form record={record}>
         <Select

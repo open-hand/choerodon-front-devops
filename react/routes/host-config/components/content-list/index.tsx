@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { CardPagination } from '@choerodon/components';
+import { CardPagination, EmptyPage } from '@choerodon/components';
 import HostItemServices from '@/routes/host-config/components/content-list/components/hostItem/services';
 import HostsItem from './components/hostItem';
 import { useHostConfigStore } from '../../stores';

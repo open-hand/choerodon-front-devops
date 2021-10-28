@@ -8,7 +8,10 @@ import { appServiceApiConfig } from '@/api/AppService';
 import { deployApiConfig, deployApi } from '@/api/Deploy';
 import { appServiceVersionApiConfig } from '@/api/AppServiceVersions';
 import { environmentApiConfig } from '@/api/Environment';
-import { appServiceInstanceApi, deployAppCenterApi } from '@/api';
+import {
+  appServiceInstanceApi, appServiceInstanceApiConfig, deployAppCenterApi, uniqueApiConfig,
+} from '@/api';
+import { OPTIONAL } from '../constant';
 import hzero from '../images/hzero.png';
 import market from '../images/market.png';
 import project from '../images/project.png';
@@ -58,12 +61,12 @@ const appServiceOptionsDs = {
       transformResponse: (res: any) => {
         let newRes = res;
         function init(d: {
-            name: string,
-            appServiceList: object[]
-          }[]) {
+              name: string,
+              appServiceList: object[]
+            }[]) {
           let result: {
-            groupName: string
-          }[] = [];
+              groupName: string
+            }[] = [];
           d.forEach((item) => {
             const itemData = item.appServiceList.map((i) => ({
               ...i,
@@ -94,6 +97,7 @@ const marketVersionOptionsDs = {
     type: 'string',
     group: 0,
   }] as FieldProps[],
+  paging: false,
   transport: {
     read: ({ data: queryData }: any) => ({
       ...deployApiConfig.deployApplication(queryData.applicationType || 'common'),
@@ -110,8 +114,9 @@ const marketVersionOptionsDs = {
               id: string,
             }) => ({
               ...app,
-              versionId: app.id,
               name: i.name,
+              // 如果没有分类 则是选配
+              versionId: i.name ? app.id : 'optional',
             }));
             result = [
               ...result,
@@ -150,25 +155,46 @@ const marketServiceVersionOptionDs = {
   paging: true,
   pageSize: 20,
   transport: {
-    read: ({ data }: any) => ({
-      ...deployApiConfig.deployVersion(data.version, 'image'),
-      transformResponse: (res: any) => {
-        function init(dt: any) {
-          return dt.map((d: any) => {
-            const newD = d;
-            newD.id = newD.marketServiceDeployObjectVO.id;
-            return d;
+    read: ({ data }: any) => {
+      if (data.type) {
+        // 如果是选配
+        if (data.type === OPTIONAL) {
+          return ({
+            ...uniqueApiConfig.getOptionalService(),
+            transformResponse: (res: any) => {
+              const newRes = JSON.parse(res);
+              return newRes.map((i: any) => ({
+                ...i,
+                id: i.deployObjectId,
+                marketServiceName: i.version,
+              }));
+            },
           });
         }
-        let newRes = res;
-        try {
-          newRes = JSON.parse(res);
-          return init(newRes);
-        } catch (e) {
-          return init(newRes);
-        }
-      },
-    }),
+      } else if (data.version) {
+        // 如果是普通类型查服务版本
+        return ({
+          ...deployApiConfig.deployVersion(data.version, 'image'),
+          transformResponse: (res: any) => {
+            function init(dt: any) {
+              return dt.map((d: any) => {
+                const newD = d;
+                newD.id = newD.marketServiceDeployObjectVO.id;
+                return d;
+              });
+            }
+            let newRes = res;
+            try {
+              newRes = JSON.parse(res);
+              return init(newRes);
+            } catch (e) {
+              return init(newRes);
+            }
+          },
+        });
+      }
+      return undefined;
+    },
   },
 };
 
@@ -224,7 +250,7 @@ const handleUpdate = async ({
     }
     case mapping.marketServiceVersion.name: {
       if (value) {
-        const res = await deployApi.getValue(value.id);
+        const res = await deployApi.getValue(record.get(mapping.marketVersion.name) === OPTIONAL ? value.deployObjectId : value.id);
         record.set(mapping.value.name, res?.value);
         record.set(mapping.originValue.name, res?.value);
       }
@@ -241,8 +267,19 @@ const handleUpdate = async ({
       record.set(mapping.marketServiceVersion.name, undefined);
       record.set(mapping.value.name, '');
       record.set(mapping.originValue.name, '');
-      marketServiceVersionDataSet.setQueryParameter('version', value);
-      marketServiceVersionDataSet.query();
+      switch (value) {
+        // 如果是选配
+        case OPTIONAL: {
+          marketServiceVersionDataSet.setQueryParameter('type', value);
+          marketServiceVersionDataSet.query();
+          break;
+        }
+        default: {
+          marketServiceVersionDataSet.setQueryParameter('version', value);
+          marketServiceVersionDataSet.query();
+          break;
+        }
+      }
     }
     default: {
       break;
@@ -429,7 +466,7 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
     update: ({ data: [data] }: any) => {
       if ([chartSourceData[0].value, chartSourceData[1].value]
         .includes(data[mapping.chartSource.name as string])) {
-        return appServiceInstanceApi.updateAppServiceInstance({
+        return appServiceInstanceApiConfig.updateAppServiceInstance({
           ...data,
           appName: data[mapping.appName.name as string],
           appCode: data[mapping.appCode.name as string],
@@ -441,7 +478,7 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
           marketAppServiceId: data.appServiceId,
         });
       }
-      return appServiceInstanceApi.updateMarketAppService(
+      return appServiceInstanceApiConfig.updateMarketAppService(
         data.instanceId,
         {
           ...data,
@@ -460,28 +497,28 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
       value,
       record,
     }: {
-      dataSet: any,
-      name: string,
-      value: any,
-      record: any,
-    }) => {
+        dataSet: any,
+        name: string,
+        value: any,
+        record: any,
+      }) => {
       handleUpdate({
         dataSet, name, value, record, detail,
       });
     },
     create: ({ record }: {
-      record: Record,
-    }) => {
+        record: Record,
+      }) => {
       if (envId) {
         record.set(mapping.env.name as string, envId);
       }
     },
     load: ({ dataSet }: {
-      dataSet: DataSet,
-    }) => {
+        dataSet: DataSet,
+      }) => {
       const data = dataSet?.current?.toData();
       if (data[mapping.hzeroVersion.name as string]
-        && [chartSourceData[0].value, chartSourceData[1].value].includes(data[mapping.chartSource.name as string])
+          && [chartSourceData[0].value, chartSourceData[1].value].includes(data[mapping.chartSource.name as string])
       ) {
         if (data[mapping.serviceVersion.name as string]) {
           serviceVersionDataSet.setQueryParameter('appServiceVersionId', data[mapping.serviceVersion.name as string]);
@@ -490,7 +527,7 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
         serviceVersionDataSet.query();
       }
       if (data[mapping.marketVersion.name as string]
-        && [chartSourceData[2].value, chartSourceData[3].value].includes(data[mapping.chartSource.name as string])
+          && [chartSourceData[2].value, chartSourceData[3].value].includes(data[mapping.chartSource.name as string])
       ) {
         marketServiceVersionDataSet.setQueryParameter('version', data[mapping.marketVersion.name as string]);
         marketServiceVersionDataSet.query();

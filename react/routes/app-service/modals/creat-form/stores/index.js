@@ -1,5 +1,5 @@
 import React, {
-  createContext, useContext, useMemo,
+  createContext, useContext, useMemo, useEffect,
 } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
@@ -21,6 +21,8 @@ export const StoreProvider = injectIntl(inject('AppState')(
       intl: { formatMessage },
       children,
       intlPrefix,
+      externalConfigId,
+      appServiceId,
     } = props;
 
     // 确保每次打开弹窗时能够重新请求数据
@@ -56,7 +58,18 @@ export const StoreProvider = injectIntl(inject('AppState')(
       sourceDs,
       store,
       randomString,
-    })), [projectId]);
+      appServiceId,
+      externalConfigId,
+    })), [projectId, externalConfigId]);
+
+    useEffect(() => {
+      appServiceId && loadData();
+    }, [appServiceId]);
+
+    function loadData() {
+      formDs.setQueryParameter('externalConfigId', externalConfigId);
+      formDs.query();
+    }
 
     const value = {
       ...props,

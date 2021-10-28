@@ -19,7 +19,7 @@ import app from '@/images/app.svg';
 import image from '@/images/image.svg';
 import jar from '@/images/jar.svg';
 import hzero from '@/images/hzero.svg';
-import { SMALL } from '@/utils/getModalWidth';
+import { SMALL, MIDDLE } from '@/utils/getModalWidth';
 import { mapping } from './stores/ListDataSet';
 import { useDeployStore } from './stores';
 import TimePopover from '../../components/timePopover/TimePopover';
@@ -33,6 +33,7 @@ import HzeroDeployDetail from './modals/hzero-deploy-detail';
 import { LARGE } from '../../utils/getModalWidth';
 import { deployRecordApi } from '../../api';
 import { getHzeroDeployBtnConfig } from '@/components/hzero-deploy';
+import ConfigurationModal from '@/components/configuration-center/ConfigurationModal';
 
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/base16-dark.css';
@@ -44,6 +45,7 @@ const commandModalKey = Modal.key();
 const hzeroDeployModalKey = Modal.key();
 const hzeroDeployDetailModalKey = Modal.key();
 const hzeroStopModalKey = Modal.key();
+const ConfigurationModalKey = Modal.key();
 const modalStyle2 = {
   width: 'calc(100vw - 3.52rem)',
 };
@@ -71,6 +73,7 @@ const Deployment = withRouter(observer((props) => {
     listDs,
     deployStore,
     hasMarket,
+    configurationCenterDataSet,
   } = useDeployStore();
 
   useEffect(() => {
@@ -390,6 +393,18 @@ const Deployment = withRouter(observer((props) => {
     });
   }, []);
 
+  const openConfigurationModal = () => {
+    Modal.open({
+      key: ConfigurationModalKey,
+      title: '配置文件详情',
+      style: { width: MIDDLE },
+      children: <ConfigurationModal type="modal" configurationCenterDataSet={configurationCenterDataSet} />,
+      okText: formatMessage({ id: 'close' }),
+      okCancel: false,
+      drawer: true,
+    });
+  };
+
   const handleHzeroRetry = useCallback(async (record) => {
     try {
       await deployRecordApi.retryRecord(record.get('id'));
@@ -483,7 +498,14 @@ const Deployment = withRouter(observer((props) => {
         />
       );
     }
-    return null;
+    return (
+      <Action data={[{
+        text: '查看配置文件',
+        action: () => openConfigurationModal(),
+      }]}
+      />
+    );
+    // return null;
   }, []);
 
   const getHeaderButtons = () => {

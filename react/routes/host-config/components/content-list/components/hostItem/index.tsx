@@ -20,23 +20,23 @@ import './index.less';
 
 const commandModalKey = Modal.key();
 
-const HostsItem:React.FC<any> = observer(({
-  sshPort, // 主机ssh的端口
+const HostsItem: React.FC<any> = observer(({
+  // sshPort, // 主机ssh的端口
   hostStatus, // 主机状态
-  hostIp, // 主机ip
+  // hostIp, // 主机ip
   name, // 主机名称
   id, // 主键
-  jmeterPort, // jmeter进程的端口号
-  jmeterStatus, // jmeter状态
-  authType, // 认证类型
+  // jmeterPort, // jmeter进程的端口号
+  // jmeterStatus, // jmeter状态
+  // authType, // 认证类型
   // type, // 主机类型 deploy / distribute_test
-  jmeterPath, // jmeter二进制文件的路径
-  username, // 用户名
+  // jmeterPath, // jmeter二进制文件的路径
+  // username, // 用户名
   lastUpdateDate,
   creatorInfo,
-  listDs,
+  // listDs,
   record,
-  handleCreateTestHost,
+  // handleCreateTestHost,
   handleCreateDeployHost,
   showPermission, // 是否可见权限管理
 }) => {
@@ -55,7 +55,7 @@ const HostsItem:React.FC<any> = observer(({
     [`${prefixCls}-content-list-item-selected`]: mainStore.getSelectedHost?.id === id,
   }), [hostStatus, mainStore.getSelectedHost, id]);
 
-  async function deleteRecord():Promise<boolean> {
+  const deleteRecord = async (): Promise<boolean> => {
     try {
       const res = await HostConfigApis.getDeleteHostUrl(projectId, id);
       if (res && res.failed) {
@@ -66,7 +66,7 @@ const HostsItem:React.FC<any> = observer(({
     } catch (error) {
       throw new Error(error);
     }
-  }
+  };
 
   async function handleDelete() {
     const modalProps = {
@@ -177,14 +177,19 @@ const HostsItem:React.FC<any> = observer(({
           </Tooltip>
         </div>
         <div className={`${prefixCls}-content-list-item-header-right`}>
-          <Action
-            data={getActionData()}
-            onClick={eventStopProp}
-            style={{
-              color: '#5365EA',
-              marginRight: '4px',
-            }}
-          />
+          {
+           record?.get('permissionLabel') === 'administrator'
+            && (
+              <Action
+                data={getActionData()}
+                onClick={eventStopProp}
+                style={{
+                  color: '#5365EA',
+                  marginRight: '4px',
+                }}
+              />
+            )
+          }
         </div>
       </div>
       <main className={`${prefixCls}-content-list-item-main`}>

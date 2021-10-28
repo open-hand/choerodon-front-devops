@@ -21,7 +21,6 @@ const ResourceContent = observer(() => {
     intlPrefix,
     formatMessage,
     prefixCls,
-    projectId,
     mainStore,
     appInstanceTableDs,
     usageDs,
@@ -57,7 +56,7 @@ const ResourceContent = observer(() => {
             <EmptyPage image={EmptySvg} description="暂未获取到该主机资源信息" />
           )}
         </TabPane>
-        {mainStore.getSelectedHost?.showPermission ? (
+        {mainStore.getSelectedHost?.permissionLabel === 'administrator' ? (
           <TabPane
             tab={formatMessage({ id: 'permission_management' })}
             key="permission"

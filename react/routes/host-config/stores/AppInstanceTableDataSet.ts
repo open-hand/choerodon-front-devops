@@ -31,23 +31,5 @@ export default ({ formatMessage, intlPrefix }: ListProps): DataSetProps => ({
       label: formatMessage({ id: 'name' }),
     },
     { name: 'status', label: formatMessage({ id: 'status' }) },
-    {
-      name: 'type',
-      label: '类型1】',
-      textField: 'text',
-      valueField: 'value',
-      options: new DataSet({
-        data: [
-          {
-            text: 'docker',
-            value: 'docker_process',
-          },
-          {
-            text: '实例进程',
-            value: 'normal_process',
-          },
-        ],
-      }),
-    },
   ],
 });

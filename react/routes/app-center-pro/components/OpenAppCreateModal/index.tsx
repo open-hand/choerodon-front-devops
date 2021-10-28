@@ -2,7 +2,7 @@ import React, {
   useEffect, useRef, useState, useMemo,
 } from 'react';
 import { CONSTANTS } from '@choerodon/master';
-import { Modal, Button } from 'choerodon-ui/pro';
+import { Modal, Button, DataSet } from 'choerodon-ui/pro';
 import { Steps } from 'choerodon-ui';
 import AppInfo from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-info';
 import AppConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config';
@@ -27,6 +27,7 @@ const setKeyValue = (obj: { [key: string]: any }, key: string, value: any) => {
   obj[key] = value;
 };
 
+// @ts-ignore
 const handleSetSubmitDataByContainerConfig = ({
   resourceConfigData,
   submitData,
@@ -110,7 +111,7 @@ const handleSetSubmitDataByAppConfig = ({
         res,
         mapping.marketVersion.name as string,
         appConfigData[mapping.marketServiceVersion.name as string]
-          .marketServiceDeployObjectVO.marketServiceId,
+          ?.marketServiceDeployObjectVO?.marketServiceId || undefined,
       );
       setKeyValue(
         res,
@@ -558,6 +559,7 @@ const AppCreateForm = (props: any) => {
           refresh(key, result);
           return true;
         } catch (e) {
+          console.log(e);
           return false;
         }
       }

@@ -1,9 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {
   createContext, useMemo, useContext, useEffect, useCallback,
 } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
-import { DataSet, message } from 'choerodon-ui/pro';
+import { DataSet } from 'choerodon-ui/pro';
+import { useHistory, useLocation, useParams } from 'react-router';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
 import EnvOptionsDataSet from '@/routes/app-center-pro/stores/EnvOptionsDataSet';
 import HostOptionsDataSet from '@/routes/app-center-pro/stores/HostOptionsDataSet';
@@ -50,14 +52,33 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     intlPrefix,
   } = useAppCenterProStore();
 
+  const location = useLocation();
+  const history = useHistory();
+  const searchObj = new URLSearchParams(location.search);
+
   const defaultTypeTabKey = typeTabKeys.ENV_TAB;
   const ALL_ENV_KEY = 'All';
-  const mainStore = useStore({ defaultTypeTabKey });
+  const mainStore = useStore();
   const hasMarket = useHasMarket();
 
   const envDs = useMemo(() => new DataSet(EnvOptionsDataSet()), []);
   const hostDs = useMemo(() => new DataSet(HostOptionsDataSet()), []);
-  const searchDs = useMemo(() => new DataSet(SearchDataSet({ envDs, hostDs, ALL_ENV_KEY })), []);
+
+  function replaceCurrentState(field:string, value:any) {
+    if ((value ?? '') !== '') {
+      searchObj.set(field, value);
+    } else {
+      searchObj.delete(field);
+    }
+    history.replace({
+      pathname: location.pathname,
+      search: searchObj.toString(),
+    });
+  }
+
+  const searchDs = useMemo(() => new DataSet(SearchDataSet({
+    envDs, hostDs, ALL_ENV_KEY, formatMessage, replaceCurrentState,
+  })), []);
 
   const listDs = useMemo(() => new DataSet(ListDataSet({
     searchDs,
@@ -71,7 +92,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
       permission: true,
       connect: true,
     }]);
-    searchDs.current?.init('env_id', ALL_ENV_KEY);
   }, []);
 
   const loadHostData = useCallback(async () => {
@@ -80,11 +100,26 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
       name: '全部主机',
       id: ALL_ENV_KEY,
     }]);
-    searchDs.current?.init('host_id', ALL_ENV_KEY);
   }, []);
 
+  const initSearchDsData = () => {
+    const typeKey = searchObj.get('typeKey') || defaultTypeTabKey;
+    const envId = searchObj.get('env_id') || ALL_ENV_KEY;
+    const hostId = searchObj.get('host_id') || ALL_ENV_KEY;
+    const operationType = searchObj.get('operation_type');
+    const rdupmType = searchObj.get('rdupm_type');
+    const params = searchObj.get('params');
+
+    searchDs.current?.set('typeKey', typeKey);
+    envId && searchDs.current?.set('env_id', envId);
+    hostId && searchDs.current?.set('host_id', hostId);
+    params && searchDs.current?.set('params', params);
+    rdupmType && searchDs.current?.set('rdupm_type', rdupmType);
+    operationType && searchDs.current?.set('operation_type', operationType);
+  };
+
   useEffect(() => {
-    listDs.setQueryParameter('typeKey', defaultTypeTabKey);
+    initSearchDsData();
     loadEnvData();
     loadHostData();
   }, []);
@@ -97,7 +132,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     if (key && [ENV_TAB, HOST_TAB].includes(key)) {
       listDs.setQueryParameter('typeKey', key);
       searchDs.current?.set('typeKey', key);
-      mainStore.setCurrentTypeTabKey(key);
     }
     listDs.query();
   };

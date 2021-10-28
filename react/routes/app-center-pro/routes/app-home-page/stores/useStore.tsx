@@ -1,18 +1,8 @@
 import { useLocalStore } from 'mobx-react-lite';
 import { marketHzeroApi } from '@/api';
 
-export default function useStore({
-  defaultTypeTabKey,
-}: { defaultTypeTabKey: string }) {
+export default function useStore() {
   return useLocalStore(() => ({
-    currentTypeTabKey: defaultTypeTabKey,
-    setCurrentTypeTabKey(key:string) {
-      this.currentTypeTabKey = key;
-    },
-    get getCurrentTypeTabKey() {
-      return this.currentTypeTabKey;
-    },
-
     selectedApp: {},
     setSelectedApp(data: object) {
       this.selectedselectedAppHost = data;

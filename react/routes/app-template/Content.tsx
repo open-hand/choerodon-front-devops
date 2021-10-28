@@ -5,11 +5,11 @@ import {
 import { Table, Modal } from 'choerodon-ui/pro';
 import { Button } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
+import isEmpty from 'lodash/isEmpty';
 import { useAppTemplateStore } from '@/routes/app-template/stores';
 import TimePopover from '@/components/time-popover';
 import TemplateServices from '@/routes/app-template/services';
 import { Record } from '@/interface';
-import isEmpty from 'lodash/isEmpty';
 import AddTemplate from './components/addTemplate';
 import { mapping } from './stores/TableDataSet';
 

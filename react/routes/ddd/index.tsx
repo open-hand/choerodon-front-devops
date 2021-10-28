@@ -23,8 +23,6 @@ export default () => {
     }));
   };
 
-  console.log(goodsList);
-
   const renderGoods = () => goodsList.map((g, index: number) => {
     const data = g.getData();
     return [
