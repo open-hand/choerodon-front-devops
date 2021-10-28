@@ -208,6 +208,8 @@ const PipelineCreate = observer(() => {
             <Select
               multiple
               name="branch"
+              searchable
+              searchMatcher="params"
               disabled={!PipelineCreateFormDataSet.current.get('appServiceId')}
             />
             <TextField style={{ display: 'none' }} colSpan={2} />

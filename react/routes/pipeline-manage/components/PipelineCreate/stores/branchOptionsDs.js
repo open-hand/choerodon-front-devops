@@ -6,7 +6,9 @@ export default () => ({
   paging: true,
   transport: {
     read({ data, params: { page, pageSize } }) {
-      return appServiceApiConfig.getBrachs(data.appServiceId);
+      const { key } = data;
+      const res = { searchParam: { branchName: key } };
+      return appServiceApiConfig.getBrachs(data.appServiceId, res);
     },
   },
   autoQuery: false,
