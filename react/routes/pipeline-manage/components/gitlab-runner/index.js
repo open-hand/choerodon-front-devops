@@ -104,7 +104,7 @@ export default function GitlabRunner() {
 
       <p>第四步：安装 Gitlab Runner</p>
       <pre className="code">
-        {`helm install c7n/gitlab-runner \\
+        {`helm install runner c7n/gitlab-runner \\
 --set rbac.create=true \\
 --set env.concurrent=3 \\
 --set env.gitlabUrl=${paramsObj['gitlab-url']} \\
@@ -113,11 +113,10 @@ export default function GitlabRunner() {
 --set env.persistence.runner-maven-pvc="/root/.m2" \\
 --set env.persistence.runner-cache-pvc="/cache" \\
 --set enabled_mount_host_docker_sock=true \\
---name runner \\
 --version 0.2.4 \\
 --namespace c7n-system`}
         <CopyToClipboard
-          text={`helm install c7n/gitlab-runner \\
+          text={`helm install runner c7n/gitlab-runner \\
           --set rbac.create=true \\
           --set env.concurrent=3 \\
           --set env.gitlabUrl=${paramsObj['gitlab-url']} \\
@@ -126,7 +125,6 @@ export default function GitlabRunner() {
           --set env.persistence.runner-maven-pvc="/root/.m2" \\
           --set env.persistence.runner-cache-pvc="/cache" \\
           --set enabled_mount_host_docker_sock=true \\
-          --name runner \\
           --version 0.2.4 \\
           --namespace c7n-system`}
           onCopy={handleCopy}
