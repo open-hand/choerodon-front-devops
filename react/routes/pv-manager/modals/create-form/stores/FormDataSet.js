@@ -2,6 +2,13 @@ import { axios } from '@choerodon/boot';
 import {
   omit, pick, map, compact, forEach, get, isEmpty,
 } from 'lodash';
+import { CONSTANTS } from '@choerodon/master';
+
+const {
+  WEBSITE_REGEX: {
+    regex,
+  },
+} = CONSTANTS;
 
 function getIpRequired({ record }) {
   return record.get('type') === 'NFS';
@@ -35,8 +42,8 @@ export default (({
 
   function checkIp(value) {
     const pa = /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/;
-    if (value && !pa.test(value)) {
-      return formatMessage({ id: `${intlPrefix}.ip.failed` });
+    if (value && !pa.test(value) && !regex.test(value)) {
+      return '请输入正确的ip地址或者网页地址';
     }
     return true;
   }
