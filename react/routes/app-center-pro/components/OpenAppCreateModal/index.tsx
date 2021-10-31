@@ -17,6 +17,7 @@ import { mapping as deployGroupConfigMapping } from './components/deploy-group-c
 import { devopsDeployGroupApi } from '@/api/DevopsDeployGroup';
 import { ENV_TAB, HOST_TAB } from '@/routes/app-center-pro/stores/CONST';
 import HostOtherProduct from './components/host-other-product';
+import { stepDataTitleList } from '@/routes/app-center-pro/components/OpenAppCreateModal/constant';
 
 import './index.less';
 
@@ -242,7 +243,7 @@ const AppCreateForm = (props: any) => {
   const [current, setCurrent] = useState(0);
 
   const stepData = useRef([{
-    title: '应用信息',
+    title: stepDataTitleList.appInfo.title,
     display: true,
     ref: appInfoRef,
     children: ({ envId }: {
@@ -256,7 +257,7 @@ const AppCreateForm = (props: any) => {
     ),
     data: null,
   }, {
-    title: '应用配置',
+    title: stepDataTitleList.appConfig.title,
     ref: appConfigRef,
     display: true,
     children: ({ deployMode, deployType }: any) => {
@@ -314,7 +315,7 @@ const AppCreateForm = (props: any) => {
     },
     data: null,
   }, {
-    title: '网络配置',
+    title: stepDataTitleList.networkConfig.title,
     ref: resourceConfigRef,
     display: true,
     children: ({ envId, deployMode, deployType }: any) => {
@@ -360,10 +361,10 @@ const AppCreateForm = (props: any) => {
   const changeStepDataTitle = (data: any) => {
     if (data[(infoMapping?.deployProductType?.name) as string]
       === deployProductOptionsData[0].value) {
-      stepData.current[2].title = '网络配置';
+      stepData.current[2].title = stepDataTitleList.networkConfig.title;
     } else if (data[(infoMapping?.deployProductType?.name) as string]
       === deployProductOptionsData[1].value) {
-      stepData.current[2].title = '容器配置';
+      stepData.current[2].title = stepDataTitleList.containerConfig.title;
     }
   };
 
