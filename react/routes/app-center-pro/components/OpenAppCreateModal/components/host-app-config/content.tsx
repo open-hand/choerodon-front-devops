@@ -139,7 +139,6 @@ const Index = observer(() => {
       );
       const configFlag = await configurationCenterDataSet.validate();
       if (flag && configFlag) {
-        // console.log('修改应用校验');
         return await finalFunc();
       }
     }
@@ -160,7 +159,6 @@ const Index = observer(() => {
         HostAppConfigDataSet.current.get(mapping.postCommand.name)
         ) && configCenterFlag) {
         const flag = await HostAppConfigDataSet.validate();
-        // const configCenterFlag = await configurationCenterDataSet.validate();
         const configData = configurationCenterDataSet.toData().map(o=>{
             return {configId:o.configId,mountPath:o.mountPath,configGroup:o.configGroup,configCode:o.configCode};
         });

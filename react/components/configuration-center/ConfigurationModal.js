@@ -13,7 +13,7 @@ const ConfigurationModal = observer((props) => {
   } = props;
 
   useEffect(() => {
-    if (kind === 'host' || kind === 'hostDetail') {
+    if (['host', 'hostDetail'].includes(kind)) {
       if (!isNil(id)) {
         configurationDetailDataSet.setQueryParameter('value', id);
         configurationDetailDataSet.setQueryParameter('key', 'instance_id');

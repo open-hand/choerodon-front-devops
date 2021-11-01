@@ -1,15 +1,9 @@
-import { isNil } from 'lodash';
+import { isNil, every, some } from 'lodash';
+import { configApiConfig } from '@/api/ConfigCenter';
 
 const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
   selection: false,
   autoQuery: false,
-  //   transport: {
-  //     read: () => ({
-  //       url: `/governance/v1/${organizationId}/${projectId}/configs`,
-  //       //   url: `/devops/v1/projects/${projectId}/deploy_config`,
-  //       method: 'get',
-  //     }),
-  //   },
   fields: [
     {
       name: 'mountPath',
@@ -18,10 +12,15 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
       // eslint-disable-next-line consistent-return
       validator: (value, name, record) => {
         const { configGroup, configCode, versionName } = record.toData();
-        if ((!isNil(configGroup) || !isNil(versionName) || !isNil(configCode)) && isNil(value)) {
+        if (
+          some([!isNil(configGroup), !isNil(versionName), !isNil(configCode)], Boolean)
+          && isNil(value)
+        ) {
           return '请输入挂载路径';
         }
-        if (isNil(configGroup) && isNil(configCode) && isNil(versionName) && isNil(value)) {
+        if (
+          every([isNil(value), isNil(configGroup), isNil(configCode), isNil(versionName)], Boolean)
+        ) {
           return true;
         }
       },
@@ -49,10 +48,13 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
       // eslint-disable-next-line consistent-return
       validator: (value, name, record) => {
         const { mountPath, configCode, versionName } = record.toData();
-        if ((!isNil(mountPath) || !isNil(versionName) || !isNil(configCode)) && isNil(value)) {
+        if (
+          some([!isNil(mountPath), !isNil(versionName), !isNil(configCode)], Boolean)
+          && isNil(value)
+        ) {
           return '请输入配置分组';
         }
-        if (isNil(mountPath) && isNil(configCode) && isNil(versionName) && isNil(value)) {
+        if (every([isNil(value), isNil(value), isNil(configCode), isNil(versionName)], Boolean)) {
           return true;
         }
       },
@@ -84,10 +86,13 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
       // eslint-disable-next-line consistent-return
       validator: (value, name, record) => {
         const { mountPath, configGroup, versionName } = record.toData();
-        if ((!isNil(mountPath) || !isNil(configGroup) || !isNil(versionName)) && isNil(value)) {
+        if (
+          some([!isNil(mountPath), !isNil(versionName), !isNil(configGroup)], Boolean)
+          && isNil(value)
+        ) {
           return '请输入配置文件';
         }
-        if (isNil(configGroup) && isNil(versionName) && isNil(mountPath) && isNil(value)) {
+        if (every([isNil(value), isNil(configGroup), isNil(value), isNil(versionName)], Boolean)) {
           return true;
         }
       },
@@ -100,10 +105,13 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
       // eslint-disable-next-line consistent-return
       validator: (value, name, record) => {
         const { mountPath, configGroup, configCode } = record.toData();
-        if ((!isNil(mountPath) || !isNil(configGroup) || !isNil(configCode)) && isNil(value)) {
+        if (
+          some([!isNil(mountPath), !isNil(configCode), !isNil(configGroup)], Boolean)
+          && isNil(value)
+        ) {
           return '请输入配置文件版本';
         }
-        if (isNil(configGroup) && isNil(configCode) && isNil(mountPath) && isNil(value)) {
+        if (every([isNil(value), isNil(configGroup), isNil(configCode), isNil(value)], Boolean)) {
           return true;
         }
       },
@@ -147,11 +155,7 @@ const ConfigCompareOptsDS = ({ projectId, organizationId }) => ({
 const ConfigurationDetailDataSet = ({ projectId }) => ({
   selection: false,
   transport: {
-    read: ({ data }) => ({
-      url: `/devops/v1/projects/${projectId}/deploy_config?${data.key}=${data.value}`,
-      method: 'get',
-      data: null,
-    }),
+    read: ({ data }) => configApiConfig.getConfigData(data),
   },
   fields: [
     {

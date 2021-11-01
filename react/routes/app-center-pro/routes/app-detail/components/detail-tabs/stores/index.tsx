@@ -58,7 +58,6 @@ export function useAppDetailTabsStore() {
 export const StoreProvider = injectIntl(inject('AppState')(observer((props: any) => {
   const {
     children,
-    instanceId,
     intl: { formatMessage },
     AppState: { currentMenuType: { projectId, organizationId } },
   } = props;
@@ -173,7 +172,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     podDetailsDs,
     loadData,
     configurationDetailDataSet,
-    instanceId,
+    instanceId: appDs.current?.get('instanceId'),
   };
   return (
     <Store.Provider value={value}>

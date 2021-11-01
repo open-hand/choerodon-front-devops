@@ -13,13 +13,12 @@ const AppDetail = () => {
   if (appDs.status === 'loading') {
     return <Loading />;
   }
-
   return (
     <Page className={`${subfixCls}`}>
       <Breadcrumb title="应用详情" />
       <Content className={`${subfixCls}-content`}>
         <DetailAside />
-        <DetailsTabs instanceId={appDs.current?.get('instanceId')} />
+        <DetailsTabs />
       </Content>
     </Page>
   );

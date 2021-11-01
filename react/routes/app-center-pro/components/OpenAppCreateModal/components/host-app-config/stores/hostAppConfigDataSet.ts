@@ -402,7 +402,6 @@ const hostAppConfigDataSet = (modal: any, detail: any): DataSetProps => ({
   transport: {
     update: ({ data: [data] }) => {
       let func;
-      //   console.log('修改应用', data);
       if (data.rdupmType === 'other') {
         return deployApiConfig.deployCustom({
           ...setData(data),

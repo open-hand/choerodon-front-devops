@@ -428,7 +428,6 @@ const Deployment = withRouter(
     }, []);
 
     const openConfigurationModal = (deployId) => {
-    //   console.log('部署', id);
       Modal.open({
         key: ConfigurationModalKey,
         title: '配置文件详情',

@@ -445,7 +445,6 @@ export default observer(() => {
             })
           submitData = HostJarDataSet.current.toData();
           submitData.configSettingIVO = configData;
-        //   console.log('cdHost',submitData);
         } else {
           return false;
         }

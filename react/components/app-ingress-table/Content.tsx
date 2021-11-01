@@ -85,7 +85,6 @@ const AppIngress = observer(() => {
   }, [appIngressDataset, refresh]);
 
   const handleOpenConfigurationModal = ({ record: tableRecord }) => {
-    // console.log('主机管理', tableRecord.toData().instanceId);
     const { instanceId } = tableRecord.toData();
     Modal.open({
       key: ConfigurationModalKey,
@@ -114,7 +113,6 @@ const AppIngress = observer(() => {
         text: formatMessage({ id: 'delete' }),
         action: () => handleDelete({ record: tableRecord }),
       }, {
-        // service: ['choerodon.code.project.deploy.host.ps.docker.delete'],
         text: '查看配置文件',
         action: () => handleOpenConfigurationModal({ record: tableRecord }),
       }];

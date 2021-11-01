@@ -6,14 +6,13 @@ import {
 } from 'choerodon-ui/pro';
 import { Input, message } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
-import { isNil, isEmpty } from 'lodash';
+import { isNil, isEmpty, every } from 'lodash';
 import styles from './index.less';
 
 const Content = observer((props) => {
   const { configurationCenterDataSet, configCompareOptsDS } = props;
   const [content, setContent] = useState('');
   useEffect(() => {
-    // configurationCenterDataSet.query();
     configurationCenterDataSet.create({}, 0);
   }, []);
 
@@ -108,8 +107,10 @@ const Content = observer((props) => {
         configCode,
         versionName,
       } = configurationCenterDataSet.current?.toData();
-      // eslint-disable-next-line max-len
-      const isEmptyRecord = isNil(mountPath) && isNil(configGroup) && isNil(configCode) && isNil(versionName);
+      const isEmptyRecord = every(
+        [isNil(mountPath), isNil(configGroup), isNil(configCode), isNil(versionName)],
+        Boolean,
+      );
       const validate = await configurationCenterDataSet.validate();
       if (validate && !isEmptyRecord) {
         configurationCenterDataSet.create({}, 0);
@@ -143,14 +144,6 @@ const Content = observer((props) => {
       'configGroup',
       configurationCenterDataSet.current?.get('configGroup'),
     );
-    // configCompareOptsDS.setQueryParameter(
-    //   'excludeConfigCode',
-    //   configurationCenterDataSet.current?.get('configCode'),
-    // );
-    // configCompareOptsDS.setQueryParameter(
-    //   'excludeConfigGroup',
-    //   configurationCenterDataSet.current?.get('configGroup'),
-    // );
     await configCompareOptsDS.query();
     configurationCenterDataSet.getField('versionName').set('options', configCompareOptsDS);
     if (configCompareOptsDS.length > 0) {
