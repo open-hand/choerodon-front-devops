@@ -13,7 +13,7 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
       // eslint-disable-next-line consistent-return
       validator: (value, name, record) => {
         const { configGroup, configCode, versionName } = record.toData();
-        if (some([configGroup, versionName, configCode], Boolean) && isNil(value)) {
+        if (some([configGroup, configCode, versionName], Boolean) && isNil(value)) {
           return '请输入挂载路径';
         }
         if (every([value, configGroup, configCode, versionName], Boolean)) {
@@ -44,10 +44,10 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
       // eslint-disable-next-line consistent-return
       validator: (value, name, record) => {
         const { mountPath, configCode, versionName } = record.toData();
-        if (some([mountPath, versionName, configCode], Boolean) && isNil(value)) {
+        if (some([mountPath, configCode, versionName], Boolean) && isNil(value)) {
           return '请输入配置分组';
         }
-        if (every([value, value, configCode, versionName], Boolean)) {
+        if (every([value, mountPath, configCode, versionName], Boolean)) {
           return true;
         }
       },
@@ -79,10 +79,10 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
       // eslint-disable-next-line consistent-return
       validator: (value, name, record) => {
         const { mountPath, configGroup, versionName } = record.toData();
-        if (some([mountPath, versionName, configGroup], Boolean) && isNil(value)) {
+        if (some([mountPath, configGroup, versionName], Boolean) && isNil(value)) {
           return '请输入配置文件';
         }
-        if (every([value, configGroup, value, versionName], Boolean)) {
+        if (every([value, mountPath, configGroup, versionName], Boolean)) {
           return true;
         }
       },
@@ -95,10 +95,10 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
       // eslint-disable-next-line consistent-return
       validator: (value, name, record) => {
         const { mountPath, configGroup, configCode } = record.toData();
-        if (some([mountPath, configCode, configGroup], Boolean) && isNil(value)) {
+        if (some([mountPath, configGroup, configCode], Boolean) && isNil(value)) {
           return '请输入配置文件版本';
         }
-        if (every([value, configGroup, configCode, value], Boolean)) {
+        if (every([value, mountPath, configGroup, configCode], Boolean)) {
           return true;
         }
       },
