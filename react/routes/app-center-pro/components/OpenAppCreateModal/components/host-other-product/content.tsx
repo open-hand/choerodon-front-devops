@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useImperativeHandle } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Form, Select } from 'choerodon-ui/pro';
@@ -29,12 +30,13 @@ export default observer(() => {
 
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
+      const configCenterFlag = await configurationCenterDataSet.validate();
       if (
         valueCheckValidate(
           HostOtherProductDataSet.current.get(mapping.value.name),
           HostOtherProductDataSet.current.get(mapping.startCommand.name),
           HostOtherProductDataSet.current.get(mapping.postCommand.name),
-        )
+        ) && configCenterFlag
       ) {
         const flag = await HostOtherProductDataSet.validate();
         if (flag) {
@@ -95,7 +97,7 @@ export default observer(() => {
       <div style={{ width: '33.3%' }}>
         <ChunkUploader
           callbackWhenLoadingChange={(loadingIf: boolean) => {
-            console.log(loadingIf);
+            // console.log(loadingIf);
             // modal.update({
             //   okProps: {
             //     disabled: loadingIf,

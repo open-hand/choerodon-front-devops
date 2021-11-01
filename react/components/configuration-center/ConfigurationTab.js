@@ -1,18 +1,25 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+// @ts-nocheck
 import React, { useState, useMemo, useEffect } from 'react';
 import {
   Table, Form, TextField, Icon, Button, Tooltip, Select,
 } from 'choerodon-ui/pro';
 import { Input, message } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
-import { isEmpty } from 'lodash';
+import { isNil } from 'lodash';
 import styles from './index.less';
 
 const Content = observer((props) => {
   const { configurationCenterDataSet, configCompareOptsDS } = props;
   const [content, setContent] = useState('');
   useEffect(() => {
-    configurationCenterDataSet.query();
+    // configurationCenterDataSet.query();
+    configurationCenterDataSet.create({}, 0);
   }, []);
+
+  useEffect(() => {
+    configurationCenterDataSet.current?.set('isQuery', 'true');
+  }, [configurationCenterDataSet.current]);
 
   const columns = useMemo(
     () => [
@@ -56,22 +63,32 @@ const Content = observer((props) => {
         renderer: ({ record }) => (
           <div className={styles['action-link']}>
             <Tooltip title="点击后将复制由挂载路径和配置文件名称组合而成的路径，配置文件按照此路径存储于主机中。可以把复制的配置文件路径应用在前置操作、启动命令、以及后置操作等地方。">
-              <Icon
-                type="content_copy"
+              <Button
+                className={styles['action-button']}
                 onClick={() => copyContent(record)}
-                className={styles['action-icon']}
-              />
+                disabled={
+                  !!(
+                    isNil(record.get('mountPath'))
+                    || isNil(record.get('configGroup'))
+                    || isNil(record.get('configCode'))
+                    || isNil(record.get('versionName'))
+                  )
+                }
+              >
+                <Icon type="content_copy" className={styles['action-icon']} />
+              </Button>
             </Tooltip>
-            <Icon
-              type="delete_black-o"
+            <Button
+              className={styles['action-button']}
               onClick={() => configurationCenterDataSet.delete(record)}
-              className={styles['action-icon']}
-            />
+            >
+              <Icon type="delete_black-o" className={styles['action-icon']} />
+            </Button>
           </div>
         ),
       },
     ],
-    [configurationCenterDataSet, configCompareOptsDS],
+    [configurationCenterDataSet.current, configCompareOptsDS],
   );
 
   const handleGroupChange = () => {
@@ -80,6 +97,7 @@ const Content = observer((props) => {
   };
 
   // 新建配置文件
+  // eslint-disable-next-line consistent-return
   const handleCreate = async () => {
     const {
       mountPath,
@@ -88,10 +106,12 @@ const Content = observer((props) => {
       versionName,
     } = configurationCenterDataSet.current.toData();
     // eslint-disable-next-line max-len
-    const isEmptyRecord = isEmpty(mountPath) && isEmpty(configGroup) && isEmpty(configCode) && isEmpty(versionName);
+    const isEmptyRecord = isNil(mountPath) && isNil(configGroup) && isNil(configCode) && isNil(versionName);
     const validate = await configurationCenterDataSet.validate();
     if (validate && !isEmptyRecord) {
       configurationCenterDataSet.create({}, 0);
+    } else {
+      return false;
     }
   };
 

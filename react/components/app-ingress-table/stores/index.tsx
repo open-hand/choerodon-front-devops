@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable max-len */
 import React, {
   createContext, useContext, useMemo, useEffect, useCallback,
@@ -10,15 +12,14 @@ import HostConfigApi from '../apis';
 import DsBasicObj from './ingressDsBasic';
 import { hostApi } from '@/api';
 import {
-  ConfigurationCenterDataSet,
-  ConfigCompareOptsDS,
+  ConfigurationDetailDataSet,
 } from '@/components/configuration-center/stores/ConfigurationCenterDataSet';
 
 interface ContextProps {
   prefixCls: string,
   intl: { formatMessage(arg0: object, arg1?: object): string },
   appIngressDataset: DataSet,
-  configurationCenterDataSet:DataSet,
+  configurationDetailDataSet?:DataSet,
   projectId: number,
 }
 
@@ -31,7 +32,7 @@ export function useAppIngressTableStore() {
 export const StoreProvider = injectIntl(inject('AppState')(
   observer((props:any) => {
     const {
-      AppState: { currentMenuType: { projectId, organizationId } },
+      AppState: { currentMenuType: { projectId } },
       children,
       appIngressDataset,
       intl,
@@ -55,15 +56,10 @@ export const StoreProvider = injectIntl(inject('AppState')(
     }, [appIngressDataset, projectId]);
 
     // 配置中心详情
-    const configCompareOptsDS = useMemo(
-      () => new DataSet(ConfigCompareOptsDS({ projectId, organizationId })),
-      [],
-    );
-
-    const configurationCenterDataSet = useMemo(
+    const configurationDetailDataSet = useMemo(
       () => new DataSet(
       // @ts-ignore
-        ConfigurationCenterDataSet({ projectId, organizationId, optsDS: configCompareOptsDS }),
+        ConfigurationDetailDataSet({ projectId }),
       ),
       [],
     );
@@ -76,7 +72,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       ...props,
       prefixCls: 'c7ncd-appIngress-table',
       appIngressDataset,
-      configurationCenterDataSet,
+      configurationDetailDataSet,
       intl,
       projectId,
     };

@@ -137,7 +137,9 @@ const Index = observer(() => {
           HostAppConfigDataSet.current.get(mapping.startCommand.name),
           HostAppConfigDataSet.current.get(mapping.postCommand.name)
       );
-      if (flag) {
+      const configFlag = await configurationCenterDataSet.validate();
+      if (flag && configFlag) {
+        // console.log('修改应用校验');
         return await finalFunc();
       }
     }
@@ -151,18 +153,18 @@ const Index = observer(() => {
   // TODO: 创建主机应用 校验+数据
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
+       const configCenterFlag = await configurationCenterDataSet.validate();
       if (valueCheckValidate(
         HostAppConfigDataSet.current.get(mapping.value.name),
         HostAppConfigDataSet.current.get(mapping.startCommand.name),
         HostAppConfigDataSet.current.get(mapping.postCommand.name)
-      )) {
+        ) && configCenterFlag) {
         const flag = await HostAppConfigDataSet.validate();
-        const configFlag = await configurationCenterDataSet.validate();
+        // const configCenterFlag = await configurationCenterDataSet.validate();
         const configData = configurationCenterDataSet.toData().map(o=>{
             return {configId:o.configId,mountPath:o.mountPath,configGroup:o.configGroup,configCode:o.configCode};
         });
-        // console.log("创建主机应用",configData);
-        if (flag && configFlag) {
+        if (flag) {
           return setData(HostAppConfigDataSet.current.toData(),configData);
         }
         return false;

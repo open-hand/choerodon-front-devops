@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {
   createContext, useContext, useEffect, useMemo,
 } from 'react';
@@ -14,8 +15,7 @@ import usePipelineStore from './usePipelineStore';
 import OptionsDataSet from './OptionsDataSet';
 import useHasMarket from '@/hooks/useHasMarket';
 import {
-  ConfigurationCenterDataSet,
-  ConfigCompareOptsDS,
+  ConfigurationDetailDataSet,
 } from '@/components/configuration-center/stores/ConfigurationCenterDataSet';
 
 const Store = createContext();
@@ -30,7 +30,7 @@ export const StoreProvider = withRouter(
     inject('AppState')((props) => {
       const {
         AppState: {
-          currentMenuType: { projectId, organizationId },
+          currentMenuType: { projectId },
         },
         intl: { formatMessage },
         children,
@@ -119,15 +119,11 @@ export const StoreProvider = withRouter(
       }, []);
 
       // 配置中心详情
-      const configCompareOptsDS = useMemo(
-        () => new DataSet(ConfigCompareOptsDS({ projectId, organizationId })),
-        [],
-      );
 
-      const configurationCenterDataSet = useMemo(
+      const configurationDetailDataSet = useMemo(
         () => new DataSet(
           // @ts-ignore
-          ConfigurationCenterDataSet({ projectId, organizationId, optsDS: configCompareOptsDS }),
+          ConfigurationDetailDataSet({ projectId }),
         ),
         [],
       );
@@ -152,7 +148,7 @@ export const StoreProvider = withRouter(
         envOptionsDs,
         pipelineOptionsDs,
         hasMarket,
-        configurationCenterDataSet,
+        configurationDetailDataSet,
       };
       return <Store.Provider value={value}>{children}</Store.Provider>;
     }),
