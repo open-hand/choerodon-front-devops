@@ -7,7 +7,7 @@ import {
   Table, Modal, TextField, Pagination, Button as ProButton,
 } from 'choerodon-ui/pro';
 import {
-  Button, Icon, Tooltip, Spin,
+  Button, Icon, Tooltip, Spin, Alert,
 } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { withRouter } from 'react-router-dom';
@@ -233,6 +233,18 @@ const Share = withRouter(observer((props) => {
       <Loading display={shareDs.status !== 'ready'} type="c7n">
         {renderShareButton()}
         <div className="c7ncd-theme4-version">
+          <Alert
+            className="share-alert"
+            message={(
+              <div>
+                {formatMessage({ id: `${intlPrefix}.share.alert.tips.one` })}
+                <br />
+                {formatMessage({ id: `${intlPrefix}.share.alert.tips.two` })}
+              </div>
+)}
+            type="warning"
+            showIcon
+          />
           <TextField
             placeholder="搜索共享设置"
             style={{

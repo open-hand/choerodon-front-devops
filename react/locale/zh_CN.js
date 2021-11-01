@@ -637,6 +637,8 @@ const appService = {
   'c7ncd.appService.share.tips':
     '共享应用中包含了组织内其他项目共享至本项目的所有应用服务',
   'c7ncd.appService.outGitlab.alert.tips': '注意：选择外置代码仓库创建得到应用服务，将无法使用代码管理、代码库管理等功能。服务共享、流水线和部署块等其他功能可正常使用',
+  'c7ncd.appService.share.alert.tips.one': '1、内置仓库类型的服务将共享：源代码、Docker镜像、Chart包',
+  'c7ncd.appService.share.alert.tips.two': ' 2、外置仓库类型的服务仅会共享：Docker镜像与Chart包',
   'c7ncd.appService.github.tips':
     '目前仅支持从GitHub公库导入应用服务。仓库为空时不可导入',
   'c7ncd.appService.gitlab.tips':
