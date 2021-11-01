@@ -318,7 +318,7 @@ const mapping: {
           transformResponse: (res) => {
             function init(data: any) {
               const result: any[] = [];
-              data.forEach((item: any) => {
+              data?.forEach((item: any) => {
                 item.appServiceList?.forEach((version: any) => {
                   result.push({
                     ...version,
