@@ -376,8 +376,8 @@ const mapping: {
     name: 'fileName',
     type: 'string' as FieldType,
   },
-  configSettingIVO: {
-    name: 'configSettingIVO',
+  configSettingVOS: {
+    name: 'configSettingVOS',
     type: 'array' as FieldType,
   },
 };

@@ -2,6 +2,7 @@
 import React, { useImperativeHandle } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Form, Select } from 'choerodon-ui/pro';
+import { map } from 'lodash';
 import { Button as OldButton, Icon } from 'choerodon-ui';
 import { ChunkUploader } from '@choerodon/components';
 import { Base64 } from 'js-base64';
@@ -28,6 +29,7 @@ export default observer(() => {
     configCompareOptsDS,
   } = useHostOtherProductStore();
 
+  // TODO: 其他制品-新建
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
       const configCenterFlag = await configurationCenterDataSet.validate();
@@ -36,13 +38,21 @@ export default observer(() => {
           HostOtherProductDataSet.current.get(mapping.value.name),
           HostOtherProductDataSet.current.get(mapping.startCommand.name),
           HostOtherProductDataSet.current.get(mapping.postCommand.name),
-        ) && configCenterFlag
+        )
+        && configCenterFlag
       ) {
+        const configData = map(configurationCenterDataSet.toData(), (o:any) => ({
+          configId: o.configId,
+          mountPath: o.mountPath,
+          configGroup: o.configGroup,
+          configCode: o.configCode,
+        }));
         const flag = await HostOtherProductDataSet.validate();
         if (flag) {
           const data = HostOtherProductDataSet.current.toData();
           const res = {
             ...data,
+            configSettingVOS: configData,
             fileInfoVO: {
               [mapping.fileName.name as string]: data[mapping.fileName.name as string],
               [mapping.uploadUrl.name as string]: data[mapping.uploadUrl.name as string],

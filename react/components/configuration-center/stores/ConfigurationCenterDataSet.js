@@ -1,9 +1,10 @@
 import { isNil, every, some } from 'lodash';
-import { configApiConfig } from '@/api/ConfigCenter';
+import { deployConfigApiConfig } from '@/api/ConfigCenter';
 
 const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
   selection: false,
   autoQuery: false,
+  autoCreate: true,
   fields: [
     {
       name: 'mountPath',
@@ -12,15 +13,10 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
       // eslint-disable-next-line consistent-return
       validator: (value, name, record) => {
         const { configGroup, configCode, versionName } = record.toData();
-        if (
-          some([!isNil(configGroup), !isNil(versionName), !isNil(configCode)], Boolean)
-          && isNil(value)
-        ) {
+        if (some([configGroup, versionName, configCode], Boolean) && isNil(value)) {
           return '请输入挂载路径';
         }
-        if (
-          every([isNil(value), isNil(configGroup), isNil(configCode), isNil(versionName)], Boolean)
-        ) {
+        if (every([value, configGroup, configCode, versionName], Boolean)) {
           return true;
         }
       },
@@ -48,13 +44,10 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
       // eslint-disable-next-line consistent-return
       validator: (value, name, record) => {
         const { mountPath, configCode, versionName } = record.toData();
-        if (
-          some([!isNil(mountPath), !isNil(versionName), !isNil(configCode)], Boolean)
-          && isNil(value)
-        ) {
+        if (some([mountPath, versionName, configCode], Boolean) && isNil(value)) {
           return '请输入配置分组';
         }
-        if (every([isNil(value), isNil(value), isNil(configCode), isNil(versionName)], Boolean)) {
+        if (every([value, value, configCode, versionName], Boolean)) {
           return true;
         }
       },
@@ -86,13 +79,10 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
       // eslint-disable-next-line consistent-return
       validator: (value, name, record) => {
         const { mountPath, configGroup, versionName } = record.toData();
-        if (
-          some([!isNil(mountPath), !isNil(versionName), !isNil(configGroup)], Boolean)
-          && isNil(value)
-        ) {
+        if (some([mountPath, versionName, configGroup], Boolean) && isNil(value)) {
           return '请输入配置文件';
         }
-        if (every([isNil(value), isNil(configGroup), isNil(value), isNil(versionName)], Boolean)) {
+        if (every([value, configGroup, value, versionName], Boolean)) {
           return true;
         }
       },
@@ -105,23 +95,16 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
       // eslint-disable-next-line consistent-return
       validator: (value, name, record) => {
         const { mountPath, configGroup, configCode } = record.toData();
-        if (
-          some([!isNil(mountPath), !isNil(configCode), !isNil(configGroup)], Boolean)
-          && isNil(value)
-        ) {
+        if (some([mountPath, configCode, configGroup], Boolean) && isNil(value)) {
           return '请输入配置文件版本';
         }
-        if (every([isNil(value), isNil(configGroup), isNil(configCode), isNil(value)], Boolean)) {
+        if (every([value, configGroup, configCode, value], Boolean)) {
           return true;
         }
       },
     },
     {
       name: 'configId',
-      type: 'string',
-    },
-    {
-      name: 'isQuery',
       type: 'string',
     },
   ],
@@ -155,7 +138,7 @@ const ConfigCompareOptsDS = ({ projectId, organizationId }) => ({
 const ConfigurationDetailDataSet = ({ projectId }) => ({
   selection: false,
   transport: {
-    read: ({ data }) => configApiConfig.getConfigData(data),
+    read: ({ data }) => deployConfigApiConfig.getDeployConfigData(data),
   },
   fields: [
     {

@@ -1,11 +1,11 @@
 import Api from './Api';
 
-class ConfigCenterApi extends Api<ConfigCenterApi> {
+class DeployConfigApi extends Api<DeployConfigApi> {
   get prefix() {
     return `/devops/v1/projects/${this.projectId}/deploy_config`;
   }
 
-  getConfigData(data: any) {
+  getDeployConfigData(data: any) {
     return this.request({
       method: 'get',
       url: `${this.prefix}?${data.key}=${data.value}`,
@@ -14,6 +14,6 @@ class ConfigCenterApi extends Api<ConfigCenterApi> {
   }
 }
 
-const configApi = new ConfigCenterApi();
-const configApiConfig = new ConfigCenterApi(true);
-export { configApi, configApiConfig };
+const deployConfigApi = new DeployConfigApi();
+const deployConfigApiConfig = new DeployConfigApi(true);
+export { deployConfigApi, deployConfigApiConfig };

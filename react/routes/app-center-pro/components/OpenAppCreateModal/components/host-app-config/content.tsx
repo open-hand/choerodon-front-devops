@@ -67,7 +67,7 @@ const setData = (data: any,configData?:any) => {
   newData[mapping.postCommand.name as string] = newData[mapping.postCommand.name as string] ? Base64.encode(newData[mapping.postCommand.name as string]) : '';
   // newData.deployObjectId = newData[
   //   mapping.marketServiceVersion.name as string]?.marketServiceDeployObjectVO?.id;
-  newData.configSettingIVO = configData || data.configSettingIVO;
+  newData.configSettingVOS= configData || data.configSettingVOS;
   return newData;
 };
 
@@ -118,7 +118,7 @@ const Index = observer(() => {
     const configData = configurationCenterDataSet.toData().map(o=>{
         return {configId:o.configId,mountPath:o.mountPath,configGroup:o.configGroup,configCode:o.configCode};
     });
-    HostAppConfigDataSet.current?.set('configSettingIVO',configData)
+    HostAppConfigDataSet.current?.set('configSettingVOS',configData)
     const finalFunc = async () => {
       const res = await HostAppConfigDataSet.submit();
       if (res !== false) {
