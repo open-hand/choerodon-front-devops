@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable max-len */
 import React, {
   createContext, useMemo, useContext, useEffect, useCallback,
@@ -26,8 +28,7 @@ import {
   CHART_CATERGORY, DEPLOY_CATERGORY, HOST_CATERGORY, MIDDLWARE_CATERGORY, OTHER_CATERGORY,
 } from '@/routes/app-center-pro/stores/CONST';
 import {
-  ConfigurationCenterDataSet,
-  ConfigCompareOptsDS,
+  ConfigurationDetailDataSet,
 } from '@/components/configuration-center/stores/ConfigurationCenterDataSet';
 
 interface ContextProps {
@@ -42,9 +43,10 @@ interface ContextProps {
   podDetailsDs: DataSet,
   runDetailsStore: DetailsStoreProps,
   resourceConfigDs: DataSet,
-  configurationCenterDataSet:DataSet,
+  configurationDetailDataSet:DataSet,
   podDetialsQuery:(...args:any[]) => any;
   projectId: string,
+  instanceId?:any,
 }
 
 const Store = createContext({} as ContextProps);
@@ -113,15 +115,10 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
   const runDetailsStore = runningDetailsStore({ projectId, appCenterId, envId: hostOrEnvId });
 
   // 配置中心详情
-  const configCompareOptsDS = useMemo(
-    () => new DataSet(ConfigCompareOptsDS({ projectId, organizationId })),
-    [],
-  );
-
-  const configurationCenterDataSet = useMemo(
+  const configurationDetailDataSet = useMemo(
     () => new DataSet(
       // @ts-ignore
-      ConfigurationCenterDataSet({ projectId, organizationId, optsDS: configCompareOptsDS }),
+      ConfigurationDetailDataSet({ projectId }),
     ),
     [],
   );
@@ -174,7 +171,8 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     projectId,
     podDetailsDs,
     loadData,
-    configurationCenterDataSet,
+    configurationDetailDataSet,
+    instanceId: appDs.current?.get('instanceId'),
   };
   return (
     <Store.Provider value={value}>

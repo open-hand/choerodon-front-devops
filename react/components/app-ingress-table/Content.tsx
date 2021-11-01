@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable max-len */
 // @ts-nocheck
 import React, { useMemo, useState, useCallback } from 'react';
@@ -22,7 +24,7 @@ const AppIngress = observer(() => {
     appIngressDataset,
     intl: { formatMessage },
     projectId,
-    configurationCenterDataSet,
+    configurationDetailDataSet,
   } = useAppIngressTableStore();
 
   function refresh() {
@@ -82,12 +84,13 @@ const AppIngress = observer(() => {
     }
   }, [appIngressDataset, refresh]);
 
-  const handleOpenConfigurationModal = () => {
+  const handleOpenConfigurationModal = ({ record: tableRecord }) => {
+    const { instanceId } = tableRecord.toData();
     Modal.open({
       key: ConfigurationModalKey,
       title: '配置文件详情',
       style: { width: MIDDLE },
-      children: <ConfigurationModal type="modal" configurationCenterDataSet={configurationCenterDataSet} />,
+      children: <ConfigurationModal type="modal" configurationDetailDataSet={configurationDetailDataSet} id={instanceId} kind="host" />,
       okText: formatMessage({ id: 'close' }),
       okCancel: false,
       drawer: true,
@@ -111,9 +114,8 @@ const AppIngress = observer(() => {
         text: formatMessage({ id: 'delete' }),
         action: () => handleDelete({ record: tableRecord }),
       }, {
-        // service: ['choerodon.code.project.deploy.host.ps.docker.delete'],
         text: '查看配置文件',
-        action: () => handleOpenConfigurationModal(),
+        action: () => handleOpenConfigurationModal({ record: tableRecord }),
       }];
 
     if (!status || (['normal_process', 'java_process'].includes(tableRecord.get('instanceType')))) {

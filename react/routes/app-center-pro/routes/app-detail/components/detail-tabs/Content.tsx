@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { Suspense, useMemo } from 'react';
 import { map } from 'lodash';
 import { observer } from 'mobx-react-lite';
@@ -29,7 +30,8 @@ const DetailsTabs = () => {
     subfixCls,
     tabKeys,
     appDetailTabStore,
-    configurationCenterDataSet,
+    configurationDetailDataSet,
+    instanceId,
   } = useAppDetailTabsStore();
 
   const handleTabChange = (tabKey: string) => {
@@ -44,11 +46,15 @@ const DetailsTabs = () => {
       [RESOURCE]: <ResourceConfig />,
       [HOST_RUNNING_DETAILS]: <RunDetailsOfHost />,
       [PROFILE_DETAILS]: (
-      // @ts-ignore
-        <ConfigurationModal configurationCenterDataSet={configurationCenterDataSet} />
+        <ConfigurationModal
+          // @ts-ignore
+          configurationDetailDataSet={configurationDetailDataSet}
+          id={instanceId}
+          kind="hostDetail"
+        />
       ),
     }),
-    [],
+    [instanceId],
   );
 
   return (

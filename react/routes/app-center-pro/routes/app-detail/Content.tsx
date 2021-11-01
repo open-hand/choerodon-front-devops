@@ -8,15 +8,11 @@ import './index.less';
 import { useAppDetailsStore } from './stores';
 
 const AppDetail = () => {
-  const {
-    subfixCls,
-    appDs,
-  } = useAppDetailsStore();
+  const { subfixCls, appDs } = useAppDetailsStore();
 
   if (appDs.status === 'loading') {
     return <Loading />;
   }
-
   return (
     <Page className={`${subfixCls}`}>
       <Breadcrumb title="应用详情" />

@@ -1,16 +1,31 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useMemo, useEffect } from 'react';
 import { Table } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import { EmptyPage } from '@choerodon/components';
-import { isEmpty } from 'lodash';
+import { isEmpty, isNil } from 'lodash';
 
 import NoData from '@/routes/app-center-pro/assets/nodata.png';
 
 const ConfigurationModal = observer((props) => {
-  const { type, configurationCenterDataSet } = props;
+  const {
+    type, configurationDetailDataSet, id, kind,
+  } = props;
+
   useEffect(() => {
-    configurationCenterDataSet.query();
-  }, []);
+    if (['host', 'hostDetail'].includes(kind)) {
+      if (!isNil(id)) {
+        configurationDetailDataSet.setQueryParameter('value', id);
+        configurationDetailDataSet.setQueryParameter('key', 'instance_id');
+        configurationDetailDataSet.query();
+      }
+    } else if (kind === 'deploy') {
+      configurationDetailDataSet.setQueryParameter('value', id);
+      configurationDetailDataSet.setQueryParameter('key', 'record_id');
+      configurationDetailDataSet.query();
+    }
+  }, [id]);
+
   const columns = useMemo(
     () => [
       {
@@ -31,15 +46,15 @@ const ConfigurationModal = observer((props) => {
 
   return (
     <>
-      {(!isEmpty(configurationCenterDataSet) || type === 'modal') && (
+      {(!isEmpty(configurationDetailDataSet) || type === 'modal') && (
         <Table
-          dataSet={configurationCenterDataSet}
+          dataSet={configurationDetailDataSet}
           columns={columns}
           queryBar="none"
           pagination={false}
         />
       )}
-      {isEmpty(configurationCenterDataSet) && type !== 'modal' && (
+      {isEmpty(configurationDetailDataSet) && type !== 'modal' && (
         <EmptyPage image={NoData} description={<>暂无配置文件详情</>} />
       )}
     </>

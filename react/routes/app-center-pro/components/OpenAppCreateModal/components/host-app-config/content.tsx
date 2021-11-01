@@ -67,7 +67,7 @@ const setData = (data: any,configData?:any) => {
   newData[mapping.postCommand.name as string] = newData[mapping.postCommand.name as string] ? Base64.encode(newData[mapping.postCommand.name as string]) : '';
   // newData.deployObjectId = newData[
   //   mapping.marketServiceVersion.name as string]?.marketServiceDeployObjectVO?.id;
-  newData.configSettingIVO = configData || data.configSettingIVO;
+  newData.configSettingVOS= configData || data.configSettingVOS;
   return newData;
 };
 
@@ -118,7 +118,7 @@ const Index = observer(() => {
     const configData = configurationCenterDataSet.toData().map(o=>{
         return {configId:o.configId,mountPath:o.mountPath,configGroup:o.configGroup,configCode:o.configCode};
     });
-    HostAppConfigDataSet.current?.set('configSettingIVO',configData)
+    HostAppConfigDataSet.current?.set('configSettingVOS',configData)
     const finalFunc = async () => {
       const res = await HostAppConfigDataSet.submit();
       if (res !== false) {
@@ -137,7 +137,8 @@ const Index = observer(() => {
           HostAppConfigDataSet.current.get(mapping.startCommand.name),
           HostAppConfigDataSet.current.get(mapping.postCommand.name)
       );
-      if (flag) {
+      const configFlag = await configurationCenterDataSet.validate();
+      if (flag && configFlag) {
         return await finalFunc();
       }
     }
@@ -151,18 +152,17 @@ const Index = observer(() => {
   // TODO: 创建主机应用 校验+数据
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
+       const configCenterFlag = await configurationCenterDataSet.validate();
       if (valueCheckValidate(
         HostAppConfigDataSet.current.get(mapping.value.name),
         HostAppConfigDataSet.current.get(mapping.startCommand.name),
         HostAppConfigDataSet.current.get(mapping.postCommand.name)
-      )) {
+        ) && configCenterFlag) {
         const flag = await HostAppConfigDataSet.validate();
-        const configFlag = await configurationCenterDataSet.validate();
         const configData = configurationCenterDataSet.toData().map(o=>{
             return {configId:o.configId,mountPath:o.mountPath,configGroup:o.configGroup,configCode:o.configCode};
         });
-        // console.log("创建主机应用",configData);
-        if (flag && configFlag) {
+        if (flag) {
           return setData(HostAppConfigDataSet.current.toData(),configData);
         }
         return false;

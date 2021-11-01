@@ -1,14 +1,10 @@
-import { isEmpty } from 'lodash';
+import { isNil, every, some } from 'lodash';
+import { deployConfigApiConfig } from '@/api/ConfigCenter';
 
 const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
   selection: false,
   autoQuery: false,
-  transport: {
-    read: () => ({
-      url: `/governance/v1/${organizationId}/${projectId}/configs`,
-      method: 'get',
-    }),
-  },
+  autoCreate: true,
   fields: [
     {
       name: 'mountPath',
@@ -17,13 +13,10 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
       // eslint-disable-next-line consistent-return
       validator: (value, name, record) => {
         const { configGroup, configCode, versionName } = record.toData();
-        if (
-          (!isEmpty(configGroup) || !isEmpty(versionName) || !isEmpty(configCode))
-          && isEmpty(value)
-        ) {
+        if (some([configGroup, configCode, versionName], Boolean) && isNil(value)) {
           return '请输入挂载路径';
         }
-        if (isEmpty(configGroup) && isEmpty(configCode) && isEmpty(versionName) && isEmpty(value)) {
+        if (every([value, configGroup, configCode, versionName], Boolean)) {
           return true;
         }
       },
@@ -51,13 +44,10 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
       // eslint-disable-next-line consistent-return
       validator: (value, name, record) => {
         const { mountPath, configCode, versionName } = record.toData();
-        if (
-          (!isEmpty(mountPath) || !isEmpty(versionName) || !isEmpty(configCode))
-          && isEmpty(value)
-        ) {
+        if (some([mountPath, configCode, versionName], Boolean) && isNil(value)) {
           return '请输入配置分组';
         }
-        if (isEmpty(mountPath) && isEmpty(configCode) && isEmpty(versionName) && isEmpty(value)) {
+        if (every([value, mountPath, configCode, versionName], Boolean)) {
           return true;
         }
       },
@@ -89,13 +79,10 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
       // eslint-disable-next-line consistent-return
       validator: (value, name, record) => {
         const { mountPath, configGroup, versionName } = record.toData();
-        if (
-          (!isEmpty(mountPath) || !isEmpty(configGroup) || !isEmpty(versionName))
-          && isEmpty(value)
-        ) {
+        if (some([mountPath, configGroup, versionName], Boolean) && isNil(value)) {
           return '请输入配置文件';
         }
-        if (isEmpty(configGroup) && isEmpty(versionName) && isEmpty(mountPath) && isEmpty(value)) {
+        if (every([value, mountPath, configGroup, versionName], Boolean)) {
           return true;
         }
       },
@@ -108,13 +95,10 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
       // eslint-disable-next-line consistent-return
       validator: (value, name, record) => {
         const { mountPath, configGroup, configCode } = record.toData();
-        if (
-          (!isEmpty(mountPath) || !isEmpty(configGroup) || !isEmpty(configCode))
-          && isEmpty(value)
-        ) {
+        if (some([mountPath, configGroup, configCode], Boolean) && isNil(value)) {
           return '请输入配置文件版本';
         }
-        if (isEmpty(configGroup) && isEmpty(configCode) && isEmpty(mountPath) && isEmpty(value)) {
+        if (every([value, mountPath, configGroup, configCode], Boolean)) {
           return true;
         }
       },
@@ -151,4 +135,28 @@ const ConfigCompareOptsDS = ({ projectId, organizationId }) => ({
   },
 });
 
-export { ConfigurationCenterDataSet, ConfigCompareOptsDS };
+const ConfigurationDetailDataSet = ({ projectId }) => ({
+  selection: false,
+  transport: {
+    read: ({ data }) => deployConfigApiConfig.getDeployConfigData(data),
+  },
+  fields: [
+    {
+      name: 'mountPath',
+      label: '挂载路径',
+      type: 'string',
+    },
+    {
+      name: 'configGroup',
+      label: '配置分组',
+      type: 'string',
+    },
+    {
+      name: 'configCode',
+      label: '配置编码',
+      type: 'string',
+    },
+  ],
+});
+
+export { ConfigurationCenterDataSet, ConfigCompareOptsDS, ConfigurationDetailDataSet };

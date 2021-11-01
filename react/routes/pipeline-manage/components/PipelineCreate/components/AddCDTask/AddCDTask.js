@@ -444,8 +444,7 @@ export default observer(() => {
                 return {configId:o.configId,mountPath:o.mountPath,configGroup:o.configGroup,configCode:o.configCode};
             })
           submitData = HostJarDataSet.current.toData();
-          submitData.configSettingIVO = configData;
-        //   console.log('cdHost',submitData);
+          submitData.configSettingVOS = configData;
         } else {
           return false;
         }
