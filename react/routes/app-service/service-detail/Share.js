@@ -235,7 +235,13 @@ const Share = withRouter(observer((props) => {
         <div className="c7ncd-theme4-version">
           <Alert
             className="share-alert"
-            message={formatMessage({ id: `${intlPrefix}.share.alert.tips` })}
+            message={(
+              <div>
+                {formatMessage({ id: `${intlPrefix}.share.alert.tips.one` })}
+                <br />
+                {formatMessage({ id: `${intlPrefix}.share.alert.tips.two` })}
+              </div>
+)}
             type="warning"
             showIcon
           />
