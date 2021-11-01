@@ -73,6 +73,13 @@ const EnvModals = observer(() => {
     const connect = envRecord.get('connect');
     const disabled = !connect || !certStore.getHasCertManager;
 
+    let tooltipsConfig = {};
+    if (disabled) {
+      tooltipsConfig = {
+        title: '环境所在集群未安装certmanager，无法创建证书',
+      };
+    }
+
     return ([{
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.create-certifications'],
       name: formatMessage({ id: `${intlPrefix}.create.certificate` }),
@@ -81,6 +88,7 @@ const EnvModals = observer(() => {
       display: true,
       service: permissions,
       disabled,
+      tooltipsConfig,
     }, {
       icon: 'refresh',
       handler: refresh,

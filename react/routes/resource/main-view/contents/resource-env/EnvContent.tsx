@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { runInAction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { Spin } from 'choerodon-ui';
+import { Loading } from '@choerodon/components';
 import PageTitle from '@/components/page-title';
 import EnvItem from '@/components/env-item';
 import HeaderButtons from './components/HeaderButtons';
@@ -11,7 +12,6 @@ import { useResourceStore } from '../../../stores';
 import { useREStore } from './stores';
 import { instanceMappingsType } from './interface';
 import EnvironmentTabs from './components/EnvTabs';
-
 import './index.less';
 import openWarnModal from '@/utils/openWarnModal';
 import ItemNumberByResource from './components/ItemNumberByResource';
@@ -19,7 +19,7 @@ import ItemNumberByResource from './components/ItemNumberByResource';
 const Content = observer(() => {
   const statusCount = ['runningInstanceCount', 'operatingInstanceCount', 'stoppedInstanceCount', 'failedInstanceCount'];
 
-  const resourceCount:instanceMappingsType[] = [
+  const resourceCount: instanceMappingsType[] = [
     'instanceCount',
     'workloadCount',
     'podCount',
@@ -43,7 +43,7 @@ const Content = observer(() => {
     resourceCountDs,
   } = useREStore();
 
-  function getCounts(type?:string) {
+  function getCounts(type?: string) {
     const record = resourceCountDs.current;
 
     if (type === 'status') {
@@ -61,7 +61,7 @@ const Content = observer(() => {
         );
       });
     }
-    return resourceCount.map((item:instanceMappingsType) => {
+    return resourceCount.map((item: instanceMappingsType) => {
       const count = record ? record.get(item) : 0;
       const name = formatMessage({ id: `${intlPrefix}.resource.${item}` });
       return (
@@ -100,7 +100,7 @@ const Content = observer(() => {
       const {
         id, name, active, connect,
       } = currentBase;
-      const menuItem = treeDs.find((item:any) => item.get('key') === String(id));
+      const menuItem = treeDs.find((item: any) => item.get('key') === String(id));
       if (menuItem) {
         // 清除已经停用的环境
         if (!active) {
@@ -145,7 +145,7 @@ const Content = observer(() => {
     <div className={`${prefixCls}-re`}>
       <HeaderButtons />
       <PageTitle content={getTitle()} fallback={getFallBack()} />
-      <Spin spinning={resourceCountDs.status === 'loading'}>
+      <Loading display={resourceCountDs.status === 'loading'} type="c7n">
         <div className={`${prefixCls}-re-card-wrap`}>
           <div className={`${prefixCls}-re-card ${prefixCls}-re-card_left`}>
             <div className={`${prefixCls}-re-card-title`}>{formatMessage({ id: `${intlPrefix}.resource.deploy` })}</div>
@@ -158,7 +158,7 @@ const Content = observer(() => {
             <div className={`${prefixCls}-re-grid-right`}>{getCounts('status')}</div>
           </div>
         </div>
-      </Spin>
+      </Loading>
       {/* <SyncSituation /> */}
       <EnvironmentTabs />
     </div>

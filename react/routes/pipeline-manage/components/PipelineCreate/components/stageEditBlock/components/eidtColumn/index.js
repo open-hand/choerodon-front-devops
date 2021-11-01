@@ -307,7 +307,7 @@ export default observer((props) => {
       ),
       children: renderNewTaskModalChildren(taskType),
       style: {
-        width: '740px',
+        width: '900px',
       },
       drawer: true,
       okText: '添加',

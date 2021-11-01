@@ -35,9 +35,9 @@ const AppItem = observer(({
   } = useAppCenterProStore();
 
   const {
-    mainStore,
     typeTabKeys,
     projectId,
+    searchDs,
   } = useAppHomePageStore();
 
   const {
@@ -52,27 +52,18 @@ const AppItem = observer(({
     hostId,
     hostName,
     devopsHostCommandDTO,
-
-    creator = {},
-
     appServiceId,
     appServiceName,
     appServiceVersionId,
 
     code,
     rdupmType, // 部署对象
-    operationType, // 操作类型
     chartSource, // 制品来源
 
     status: appStatus, // 应用状态
     objectId: instanceId,
-    code: instanceName,
     error,
-
-    creationDate,
-
     podRunningCount,
-    podUnlinkCount,
     podCount,
 
     // 市场应用
@@ -80,7 +71,7 @@ const AppItem = observer(({
     currentVersionAvailable,
   } = record.toData();
 
-  const currentType = mainStore.getCurrentTypeTabKey;
+  const currentType = searchDs.current?.get('typeKey');
 
   const isEnv = currentType === typeTabKeys.ENV_TAB;
 

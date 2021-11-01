@@ -1,29 +1,32 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  SelectBox, Select, Form, Button,
+  Select, Form, Button,
 } from 'choerodon-ui/pro';
-import { UserInfo } from '@choerodon/components';
+import { UserInfo, CustomSelect, NewTips as Tips } from '@choerodon/components';
 import { useHostPermissionStore } from '@/routes/host-config/components/permission-management/stores';
-import { Record, UserDTOProps, FuncType } from '@/interface';
-import map from 'lodash/map';
-
-const { Option } = Select;
+import { Record, FuncType } from '@/interface';
+import './index.less';
 
 const HostPermission = () => {
   const {
     selectDs,
     prefixCls,
-    intlPrefix,
     formatMessage,
     refresh,
     modal,
-    formDs,
   } = useHostPermissionStore();
+
+  useEffect(() => {
+    selectDs.setState('permissionLabel', 'common');
+  }, []);
 
   modal.handleOk(async () => {
     try {
-      const res = await formDs.submit();
+      const res = await selectDs.submit();
+      if (res === false) {
+        return false;
+      }
       if (res && res.failed) {
         return false;
       }
@@ -68,15 +71,45 @@ const HostPermission = () => {
     selectDs.create();
   }, []);
 
+  const handleClick = (value:any) => {
+    selectDs.setState('permissionLabel', value.value);
+  };
+
+  const data = [{
+    title: '主机使用权限',
+    content: '分配了此权限的人员,可以在该主机中部署应用,并对应用进行删除、修改等操作。',
+    value: 'common',
+  },
+  {
+    title: '主机管理权限',
+    content: '该权限包含了主机使用权限。分配了此权限的人员,还可以进行连接主机、断开连接主机、删除主机、修改主机、为【项目所有者】以外的成员分配该主机权限等操作。',
+    value: 'administrator',
+  },
+  ];
+
   return (
     <>
-      <Form dataSet={formDs} className={`${prefixCls}-form`}>
-        <SelectBox name="skipCheckPermission">
-          <Option value>{formatMessage({ id: 'member_all' })}</Option>
-          <Option value={false}>{formatMessage({ id: 'member_specific' })}</Option>
-        </SelectBox>
-      </Form>
-      {formDs.current && !formDs.current.get('skipCheckPermission') && ([
+      <CustomSelect
+        onClickCallback={(value) => handleClick(
+          value,
+        )}
+        selectedKeys={0}
+        data={data}
+        identity="value"
+        mode="single"
+        customChildren={(item): any => (
+          <div className={`${prefixCls}-select-item`}>
+            <h4>{item.title}</h4>
+            <p>{item.content}</p>
+          </div>
+        )}
+      />
+      <p style={{ color: '#898BAC' }}>
+        权限分配
+        {' '}
+        <Tips helpText="对项目下【项目所有者】以外的成员进行权限分配。" />
+      </p>
+      {([
         selectDs.map((record: Record) => (
           <Form record={record} columns={10} key={record.id}>
             <Select

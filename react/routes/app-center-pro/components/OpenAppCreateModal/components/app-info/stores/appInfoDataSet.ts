@@ -140,7 +140,6 @@ const mapping: {
     name: 'environmentId',
     type: 'string' as FieldType,
     label: '环境',
-    options: new DataSet(envDataSet),
     textField: 'name',
     valueField: 'id',
     dynamicProps: {
@@ -170,6 +169,7 @@ const appInfoDataSet = (envId: string | undefined) => ({
       case 'env': {
         item.defaultValue = envId || undefined;
         item.disabled = Boolean(envId);
+        item.options = new DataSet(envDataSet);
         break;
       }
       default: {

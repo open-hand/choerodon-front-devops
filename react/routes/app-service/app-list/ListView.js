@@ -21,12 +21,13 @@ import { useAppServiceStore } from './stores';
 import CreateForm from '../modals/creat-form';
 import EditForm from '../modals/edit-form';
 import ImportForm from './modal/import-form';
-import { StatusTag } from '@choerodon/components';
+import { StatusTag, Loading } from '@choerodon/components';
 import { handlePromptError } from '../../../utils';
 
 import './index.less';
 import './theme4.less';
 import ClickText from "../../../components/click-text";
+import { useDebounceFn } from 'ahooks';
 
 const { Column } = Table;
 const modalKey1 = Modal.key();
@@ -80,7 +81,7 @@ const ListView = withRouter(observer((props) => {
     }
   }, [listDs.status]);
 
-  function refresh() {
+  function refresh () {
     listDs.query();
     appListStore.checkCreate(projectId);
   }
@@ -153,7 +154,7 @@ const ListView = withRouter(observer((props) => {
     }]);
   };
 
-  function renderName({ value, record }) {
+  function renderName ({ value, record }) {
     const {
       location: {
         search,
@@ -184,15 +185,15 @@ const ListView = withRouter(observer((props) => {
     );
   }
 
-  function renderType({ value }) {
+  function renderType ({ value }) {
     return value && <FormattedMessage id={`${intlPrefix}.type.${value}`} />;
   }
 
-  function renderDate({ value }) {
+  function renderDate ({ value }) {
     return <TimePopover content={value} />;
   }
 
-  function renderUrl({ value }) {
+  function renderUrl ({ value }) {
     return (
       <a href={value} rel="nofollow me noopener noreferrer" target="_blank">
         {value ? `../${value.split('/')[value.split('/').length - 1]}` : ''}
@@ -200,7 +201,7 @@ const ListView = withRouter(observer((props) => {
     );
   }
 
-  function renderStatus({ value: active, record }) {
+  function renderStatus ({ value: active, record }) {
     const isSynchro = record.get('synchro');
     const isFailed = record.get('fail');
     let colorCode;
@@ -230,7 +231,7 @@ const ListView = withRouter(observer((props) => {
     );
   }
 
-  function renderActions({ record }) {
+  function renderActions ({ record }) {
     const actionData = {
       detail: {
         service: ['choerodon.code.project.develop.app-service.ps.default'],
@@ -245,6 +246,13 @@ const ListView = withRouter(observer((props) => {
         action: () => {
           setSelectedAppService(record.toData());
           openEdit();
+        },
+      },
+      outEdit: {
+        service: ['choerodon.code.project.develop.app-service.ps.out.edit'],
+        text: '修改外置仓库配置',
+        action: () => {
+          openOutEdit(record);
         },
       },
       stop: {
@@ -276,9 +284,14 @@ const ListView = withRouter(observer((props) => {
     let actionItems;
     if (record.get('fail')) {
       actionItems = pick(actionData, ['delete', 'detail']);
-    } else if (record.get('synchro') && record.get('active')) {
+    }
+    else if (record.get('synchro') && record.get('active') && (record.get('type') === 'normal' && record.get('appExternalConfigDTO'))) {
+      actionItems = pick(actionData, ['edit', 'stop', 'detail', 'outEdit']);
+    }
+    else if (record.get('synchro') && record.get('active')) {
       actionItems = pick(actionData, ['edit', 'stop', 'detail']);
-    } else if (record.get('sagaInstanceId')) {
+    }
+    else if (record.get('sagaInstanceId')) {
       actionItems = pick(actionData, ['delete', 'detail']);
     } else if (record.get('active')) {
       return;
@@ -291,7 +304,7 @@ const ListView = withRouter(observer((props) => {
     return <Action data={Object.values(actionItems)} />;
   }
 
-  function openCreate() {
+  function openCreate () {
     Modal.open({
       key: createModalKey,
       drawer: true,
@@ -306,7 +319,7 @@ const ListView = withRouter(observer((props) => {
     });
   }
 
-  function openEdit() {
+  function openEdit () {
     const appServiceId = selectedAppService.id;
 
     Modal.open({
@@ -324,8 +337,28 @@ const ListView = withRouter(observer((props) => {
     });
   }
 
+  function openOutEdit (record) {
+    const appServiceId = record.get('id');
+    const externalConfigId = record.get('externalConfigId');
+
+    Modal.open({
+      key: createModalKey,
+      drawer: true,
+      style: modalStyle1,
+      title: '修改外置仓库配置',
+      children: <CreateForm
+        refresh={refresh}
+        intlPrefix={intlPrefix}
+        prefixCls={prefixCls}
+        appServiceId={appServiceId}
+        externalConfigId={externalConfigId}
+      />,
+      okText: '保存',
+    });
+  }
+
   // 因为在应用服务那边做了最近访问前端缓存，如果要删除，也必须要删除这个缓存
-  function checkLocalstorage(appId) {
+  function checkLocalstorage (appId) {
     const recentApp = JSON.parse(localStorage.getItem('recent-app'));
     if (recentApp && recentApp[projectId]) {
       const currentProjectApp = recentApp[projectId];
@@ -337,7 +370,7 @@ const ListView = withRouter(observer((props) => {
     }
   }
 
-  async function handleDelete(record) {
+  async function handleDelete (record) {
     const appId = record.get('id');
     const modalProps = {
       title: formatMessage({ id: `${intlPrefix}.delete.title` }, { name: record.get('name') }),
@@ -351,7 +384,7 @@ const ListView = withRouter(observer((props) => {
     }
   }
 
-  async function changeActive(active, record) {
+  async function changeActive (active, record) {
     if (!active) {
       Modal.open({
         key: modalKey3,
@@ -365,7 +398,7 @@ const ListView = withRouter(observer((props) => {
     }
   }
 
-  async function handleChangeActive(active, record) {
+  async function handleChangeActive (active, record) {
     try {
       if (await appServiceStore.changeActive(projectId, record.get('id'), active)) {
         checkLocalstorage(record.get('id'));
@@ -379,7 +412,7 @@ const ListView = withRouter(observer((props) => {
     }
   }
 
-  function openStop(record) {
+  function openStop (record) {
     const id = record.get('id');
 
     const stopModal = Modal.open({
@@ -431,7 +464,7 @@ const ListView = withRouter(observer((props) => {
     });
   }
 
-  function getHeader() {
+  function getHeader () {
     return (
       <Header title={<FormattedMessage id="app.head" />}>
         <HeaderButtons
@@ -451,7 +484,7 @@ const ListView = withRouter(observer((props) => {
     return (
       <div className="c7ncd-theme4-appService">
         <div className="c7ncd-theme4-appService-left">
-          <Spin spinning={listDs.status !== 'ready'}>
+          <Loading display={listDs.status === 'loading'} type="c7n">
             {
               listDs.records.map(record => (
                 <div
@@ -470,6 +503,14 @@ const ListView = withRouter(observer((props) => {
                         {
                           renderStatus({ value: record.get('active'), record })
                         }
+                        {(record.get('type') === 'normal' && record.get('appExternalConfigDTO')) &&
+                          <span className="c7ncd-appService-item-center-line-type">
+                            外置仓库
+                          </span>}
+                        {(record.get('type') === 'normal' && (!record.get('appExternalConfigDTO'))) &&
+                          <span className="c7ncd-appService-item-center-line-in-type">
+                            内置仓库
+                          </span>}
                         {record.get('errorMessage') && record.get('fail') && <Tooltip overlayStyle={{ maxHeight: 500, overflow: 'auto' }} title={record.get('errorMessage')}>
                           <Icon
                             type="info"
@@ -544,7 +585,7 @@ const ListView = withRouter(observer((props) => {
                 </div>
               ))
             }
-          </Spin>
+          </Loading>
           <Pagination
             total={listDs.totalCount}
             pageSize={listDs.pageSize}
@@ -573,10 +614,14 @@ const ListView = withRouter(observer((props) => {
     )
   }
 
-  function handleChangeSearch(value) {
+  function handleChangeSearch (value) {
     listDs.setQueryParameter('params', value);
     listDs.query()
   }
+
+  const { run: handleDebounceSearch } = useDebounceFn(handleChangeSearch, {
+    wait: 500
+  })
 
   return (
     <>
@@ -596,8 +641,9 @@ const ListView = withRouter(observer((props) => {
                     onClick={() => searchRef.current.blur()}
                 />
               )}
-              onEnterDown={(e) => handleChangeSearch(e.target.value)}
-              onChange={handleChangeSearch}
+              clearButton
+              onChange={handleDebounceSearch}
+              valueChangeAction="input"
             />),
         } : {}
         }

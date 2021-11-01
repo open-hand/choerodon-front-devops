@@ -542,7 +542,7 @@ function Branch(props) {
       className={classNames('c7n-region c7n-branch', styles?.['c7n-branch-theme4-page'])}
       service={['choerodon.code.project.develop.code-management.ps.branch.create']}
     >
-      {!appServiceId || appServiceDs.status !== 'ready' ? <Loading display type="c7n" /> : tableBranch()}
+      {appServiceDs.status !== 'ready' ? <Loading display type="c7n" /> : tableBranch()}
           </Page>
   );
 }

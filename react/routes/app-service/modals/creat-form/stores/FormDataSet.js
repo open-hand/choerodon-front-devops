@@ -1,6 +1,8 @@
 import { axios } from '@choerodon/boot';
 import omit from 'lodash/omit';
 import AppServiceApis from '../../../apis';
+import { appServiceApiConfig, appServiceApi } from '@/api/AppService';
+import { appExternalConfigApiConfig } from '@/api/AppExternalConfigs';
 
 async function fetchLookup(field, record) {
   const data = await field.fetchLookup();
@@ -8,10 +10,43 @@ async function fetchLookup(field, record) {
     record.set('templateAppServiceVersionId', data[0].id);
   }
 }
-
 export default (({
-  intlPrefix, formatMessage, projectId, sourceDs, store, randomString,
+  intlPrefix,
+  formatMessage,
+  projectId,
+  sourceDs,
+  store,
+  randomString,
+  appServiceId,
+  externalConfigId,
 }) => {
+  const getExternalRequest = ({
+    code, password, accessToken, authType, repositoryUrl, username, name, type, objectVersionNumber,
+  }) => {
+    if (appServiceId) {
+      return {
+        password,
+        accessToken,
+        authType,
+        repositoryUrl,
+        username,
+        objectVersionNumber,
+      };
+    }
+    const res = {
+      code,
+      appExternalConfigDTO: {
+        password,
+        accessToken,
+        authType,
+        repositoryUrl,
+        username,
+      },
+      name,
+      type,
+    };
+    return res;
+  };
   async function checkCode(value) {
     const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
     if (value && pa.test(value)) {
@@ -46,6 +81,14 @@ export default (({
     }
   }
 
+  async function checkRepositoryUrl(value) {
+    const res = await appServiceApi.checkRepositoryUrl(value);
+    if ((res && res.failed) || !res) {
+      return formatMessage({ id: 'checkRepositoryUrlExist' });
+    }
+    return true;
+  }
+
   function handleUpdate({ name, value, record }) {
     if (name === 'templateAppServiceId') {
       record.set('templateAppServiceVersionId', null);
@@ -70,27 +113,39 @@ export default (({
     autoQuery: false,
     selection: false,
     paging: false,
+    dataToJSON: false,
     transport: {
-      create: ({ data: [data] }) => {
-        const res = omit(data, ['appServiceSource', '__id', '__status']);
-        return ({
-          url: ['organization_template', 'site_template'].includes(data.appServiceSource) && data.devopsAppTemplateId
-            ? AppServiceApis.createAppServiceByTemplate(projectId)
-            : `/devops/v1/projects/${projectId}/app_service`,
-          method: 'post',
-          data: { ...res, isSkipCheckPermission: true },
-        });
+      read({ data }) {
+        return appExternalConfigApiConfig.getOutExternal(data.externalConfigId);
+      },
+      create: ({ data: [data], record }) => {
+        if (data.gitLabType === 'inGitlab') {
+          const res = omit(data, ['appServiceSource', '__id', '__status']);
+          return ({
+            url: ['organization_template', 'site_template'].includes(data.appServiceSource) && data.devopsAppTemplateId
+              ? AppServiceApis.createAppServiceByTemplate(projectId)
+              : `/devops/v1/projects/${projectId}/app_service`,
+            method: 'post',
+            data: { ...res, isSkipCheckPermission: true },
+          });
+        }
+        const res = omit(data, ['appServiceSource', '__id', '__status', 'gitLabType']);
+        return appServiceApiConfig.external(getExternalRequest(res));
+      },
+      update: ({ data: [data], record }) => {
+        const res = omit(data, ['appServiceSource', 'id', '__status', 'gitLabType']);
+        return appExternalConfigApiConfig.outExternal(getExternalRequest(res), externalConfigId);
       },
     },
     fields: [
       {
-        name: 'name', type: 'string', label: formatMessage({ id: `${intlPrefix}.name` }), required: true, validator: checkName, maxLength: 40,
+        name: 'name', type: 'string', label: formatMessage({ id: `${intlPrefix}.name` }), required: !appServiceId, validator: !appServiceId ? checkName : '', maxLength: 40,
       },
       {
-        name: 'code', type: 'string', label: formatMessage({ id: `${intlPrefix}.code` }), required: true, maxLength: 30, validator: checkCode,
+        name: 'code', type: 'string', label: formatMessage({ id: `${intlPrefix}.code` }), required: !appServiceId, maxLength: 30, validator: !appServiceId ? checkCode : '',
       },
       {
-        name: 'type', type: 'string', defaultValue: 'normal', label: formatMessage({ id: `${intlPrefix}.type` }), required: true,
+        name: 'type', type: 'string', defaultValue: 'normal',
       },
       { name: 'imgUrl', type: 'string' },
       {
@@ -99,8 +154,50 @@ export default (({
         type: 'string',
         textField: 'text',
         valueField: 'value',
-        label: formatMessage({ id: `${intlPrefix}.service.source` }),
         options: sourceDs,
+      },
+      {
+        name: 'gitLabType',
+        defaultValue: 'inGitlab',
+        type: 'string',
+      },
+      {
+        name: 'repositoryUrl',
+        type: 'string',
+        validator: !appServiceId ? checkRepositoryUrl : '',
+        dynamicProps: {
+          required: ({ record }) => record.get('gitLabType') === 'outGitlab' || appServiceId,
+        },
+        label: formatMessage({ id: `${intlPrefix}.gitLabRepositoryUrl` }),
+      },
+      {
+        name: 'username',
+        type: 'string',
+        dynamicProps: {
+          required: ({ record }) => ((record.get('gitLabType') === 'outGitlab' || appServiceId) && record.get('authType') === 'username_password'),
+        },
+        label: formatMessage({ id: `${intlPrefix}.userName` }),
+      },
+      {
+        name: 'authType',
+        type: 'string',
+        defaultValue: 'username_password',
+      },
+      {
+        name: 'accessToken',
+        type: 'string',
+        dynamicProps: {
+          required: ({ record }) => (record.get('gitLabType') === 'outGitlab' || appServiceId) && record.get('authType') === 'access_token',
+        },
+        label: formatMessage({ id: `${intlPrefix}.token` }),
+      },
+      {
+        name: 'password',
+        type: 'string',
+        dynamicProps: {
+          required: ({ record }) => (record.get('gitLabType') === 'outGitlab' || appServiceId) && record.get('authType') === 'username_password',
+        },
+        label: formatMessage({ id: `${intlPrefix}.userPassword` }),
       },
       { name: 'templateAppServiceId', type: 'string', label: formatMessage({ id: intlPrefix }) },
       {

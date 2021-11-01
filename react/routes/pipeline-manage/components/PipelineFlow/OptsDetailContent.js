@@ -119,6 +119,6 @@ export default observer((props) => {
             {renderStage()}
           </div>
         </div>
-      ) : <Loading display={getDetailLoading} />
+      ) : <Loading display={getDetailLoading} type="c7n" />
   );
 });

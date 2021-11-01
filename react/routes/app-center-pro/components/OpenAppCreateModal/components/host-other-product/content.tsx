@@ -20,20 +20,22 @@ export default observer(() => {
     HostOtherProductDataSet,
     style,
     AppState: {
-      currentMenuType: {
-        organizationId,
-      },
+      currentMenuType: { organizationId },
     },
     cRef,
+    configurationCenterDataSet,
+    configCompareOptsDS,
   } = useHostOtherProductStore();
 
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
-      if (valueCheckValidate(
-        HostOtherProductDataSet.current.get(mapping.value.name),
-        HostOtherProductDataSet.current.get(mapping.startCommand.name),
-        HostOtherProductDataSet.current.get(mapping.postCommand.name),
-      )) {
+      if (
+        valueCheckValidate(
+          HostOtherProductDataSet.current.get(mapping.value.name),
+          HostOtherProductDataSet.current.get(mapping.startCommand.name),
+          HostOtherProductDataSet.current.get(mapping.postCommand.name),
+        )
+      ) {
         const flag = await HostOtherProductDataSet.validate();
         if (flag) {
           const data = HostOtherProductDataSet.current.toData();
@@ -43,9 +45,15 @@ export default observer(() => {
               [mapping.fileName.name as string]: data[mapping.fileName.name as string],
               [mapping.uploadUrl.name as string]: data[mapping.uploadUrl.name as string],
             },
-            [mapping.value.name as string]: data[mapping.value.name as string] ? Base64.encode(data[mapping.value.name as string]) : '',
-            [mapping.startCommand.name as string]: data[mapping.startCommand.name as string] ? Base64.encode(data[mapping.startCommand.name as string]) : '',
-            [mapping.postCommand.name as string]: data[mapping.postCommand.name as string] ? Base64.encode(data[mapping.postCommand.name as string]) : '',
+            [mapping.value.name as string]: data[mapping.value.name as string]
+              ? Base64.encode(data[mapping.value.name as string])
+              : '',
+            [mapping.startCommand.name as string]: data[mapping.startCommand.name as string]
+              ? Base64.encode(data[mapping.startCommand.name as string])
+              : '',
+            [mapping.postCommand.name as string]: data[mapping.postCommand.name as string]
+              ? Base64.encode(data[mapping.postCommand.name as string])
+              : '',
           };
           if (data[mapping.uploadUrl.name as string]) {
             res.sourceType = 'upload';
@@ -71,10 +79,7 @@ export default observer(() => {
   );
 
   return (
-    <div
-      style={style || {}}
-      className={cssPrefix}
-    >
+    <div style={style || {}} className={cssPrefix}>
       {/* <Form
         dataSet={HostOtherProductDataSet}
         columns={3}
@@ -91,20 +96,20 @@ export default observer(() => {
         <ChunkUploader
           callbackWhenLoadingChange={(loadingIf: boolean) => {
             console.log(loadingIf);
-          // modal.update({
-          //   okProps: {
-          //     disabled: loadingIf,
-          //   },
-          // });
+            // modal.update({
+            //   okProps: {
+            //     disabled: loadingIf,
+            //   },
+            // });
           }}
-        // eslint-disable-next-line
-        combineUrl={`${window._env_.API_HOST}/hfle/v1/${organizationId}/upload/fragment-combine`}
-                  // disabled={!ImportFileDataSet?.current?.get(mapping().folderId.name)}
-        // suffix=".jar"
+          // eslint-disable-next-line
+          combineUrl={`${window._env_.API_HOST}/hfle/v1/${organizationId}/upload/fragment-combine`}
+          // disabled={!ImportFileDataSet?.current?.get(mapping().folderId.name)}
+          // suffix=".jar"
           paramsData={{
             bucketName: 'devops-service',
           }}
-        // accept=".jar"
+          // accept=".jar"
           prefixPatch="/hfle"
           showUploadList
           onSuccess={(res: any, file: any) => {
@@ -114,49 +119,45 @@ export default observer(() => {
             HostOtherProductDataSet.current.set(mapping.uploadUrl.name, str);
           }}
         >
-          <OldButton
-            type="dashed"
-            icon="file_upload_black-o"
-          >
+          <OldButton type="dashed" icon="file_upload_black-o">
             上传文件
-
           </OldButton>
         </ChunkUploader>
-        { HostOtherProductDataSet.current.get(mapping.uploadUrl.name) && (
-        <p
-        // @ts-ignore
-          newLine
-          className="c7ncd-appCenterPro-conDetail__fileName"
-          style={{
-            width: '100%',
-            marginTop: 20,
-          }}
-        >
-          <span className="c7ncd-appCenterPro-conDetail__fileName__fileIcon">
-            <Icon type="attach_file" />
-            <span>
-              {HostOtherProductDataSet.current.get(mapping.fileName.name)}
-            </span>
-          </span>
-          <Icon
-            onClick={() => {
-              HostOtherProductDataSet.current.set(mapping.fileName.name, '');
-              HostOtherProductDataSet.current.set(mapping.uploadUrl.name, '');
-            }}
-            type="delete"
+        {HostOtherProductDataSet.current.get(mapping.uploadUrl.name) && (
+          <p
+            // @ts-ignore
+            newLine
+            className="c7ncd-appCenterPro-conDetail__fileName"
             style={{
-              cursor: 'pointer',
-              color: '#5365EA',
+              width: '100%',
+              marginTop: 20,
             }}
-          />
-        </p>
-        ) }
+          >
+            <span className="c7ncd-appCenterPro-conDetail__fileName__fileIcon">
+              <Icon type="attach_file" />
+              <span>{HostOtherProductDataSet.current.get(mapping.fileName.name)}</span>
+            </span>
+            <Icon
+              onClick={() => {
+                HostOtherProductDataSet.current.set(mapping.fileName.name, '');
+                HostOtherProductDataSet.current.set(mapping.uploadUrl.name, '');
+              }}
+              type="delete"
+              style={{
+                cursor: 'pointer',
+                color: '#5365EA',
+              }}
+            />
+          </p>
+        )}
       </div>
       <OperationYaml
         style={{
           marginTop: 30,
         }}
         dataSet={HostOtherProductDataSet}
+        configDataSet={configurationCenterDataSet}
+        optsDS={configCompareOptsDS}
         preName={mapping.value.name as string}
         startName={mapping.startCommand.name as string}
         postName={mapping.postCommand.name as string}

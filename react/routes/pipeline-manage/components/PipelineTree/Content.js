@@ -6,14 +6,12 @@ import { runInAction } from 'mobx';
 import { Icon, TextField, Tree } from 'choerodon-ui/pro';
 import { Collapse } from 'choerodon-ui';
 import toUpper from 'lodash/toUpper';
-import debounce from 'lodash/debounce';
+import { useDebounceFn } from 'ahooks';
 import ScrollContext from 'react-infinite-scroll-component';
 import { usePipelineManageStore } from '../../stores';
 import TreeItem from './TreeItem';
 
 import './index.less';
-
-const { Panel } = Collapse;
 
 const TreeMenu = observer(() => {
   const {
@@ -26,10 +24,6 @@ const TreeMenu = observer(() => {
 
   const bounds = useMemo(() => mainStore.getNavBounds, [mainStore.getNavBounds]);
 
-  function nodeRenderer({ record }) {
-    return <TreeItem record={record} search={mainStore.getSearchValue} />;
-  }
-
   /**
    * 展开节点的所有父节点
    * 通过Record内置的方法展开目标节点
@@ -37,7 +31,7 @@ const TreeMenu = observer(() => {
    * @param record
    * @param expendedKeys
    */
-  function expandParents(record, expendedKeys) {
+  function expandParents (record, expendedKeys) {
     if (!record.isExpanded) {
       const { children, parent } = record;
 
@@ -53,7 +47,7 @@ const TreeMenu = observer(() => {
     }
   }
 
-  const handleSearch = useCallback(async (value) => {
+  const handleSearch = async (value) => {
     const realValue = value || '';
     const expandedKeys = [];
 
@@ -98,7 +92,11 @@ const TreeMenu = observer(() => {
 
     const uniqKeys = new Set(expandedKeys);
     handleExpanded([...uniqKeys]);
-  }, []);
+  };
+
+  const { run: handelDebounceSearch } = useDebounceFn(handleSearch, {
+    wait: 1000,
+  });
 
   function handleExpanded(keys) {
     mainStore.setExpandedKeys(keys);
@@ -116,7 +114,7 @@ const TreeMenu = observer(() => {
     }
   };
 
-  function nodeCover({ record }) {
+  function nodeCover ({ record }) {
     const nodeProps = {
       title: <TreeItem record={record} search={mainStore.getSearchValue} />,
     };
@@ -135,7 +133,8 @@ const TreeMenu = observer(() => {
         name="search"
         prefix={<Icon type="search" />}
         value={mainStore.getSearchValue}
-        onChange={handleSearch}
+        onChange={handelDebounceSearch}
+        valueChangeAction="input"
       />
       {!treeDs.length && treeDs.status === 'ready' ? (
         <span className={`${prefixCls}-sidebar-empty`}>{formatMessage({ id: 'nodata' })}</span>

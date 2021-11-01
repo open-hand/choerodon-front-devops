@@ -9,9 +9,12 @@ import {
   Button,
   Icon,
 } from 'choerodon-ui/pro';
+import { forEach, toUpper } from 'lodash';
+
+import { Alert } from 'choerodon-ui';
+
 import Tips from '@/components/new-tips';
 
-import { forEach, toUpper } from 'lodash';
 import { useFormStore } from './stores';
 
 import NodesCreate from '../create-nodes';
@@ -270,6 +273,13 @@ function CreateClusterHostForm() {
             <TextField name="name" colSpan={2} />
             <TextField name="code" disabled={isEdit} colSpan={2} />
             <TextArea newLine colSpan={4} className={`${prefixCls}-createByHost-headerForm-desc`} name="description" resize="vertical" />
+            <Alert
+              newLine
+              colSpan={4}
+              message="注意：每台节点系统必须关闭sudo命令输入密码限制。"
+              type="warning"
+              showIcon
+            />
           </Form>
         </div>
         <div className={`${prefixCls}-createByHost-section`}>

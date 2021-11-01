@@ -3,10 +3,16 @@ import { map } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { Tabs, Spin } from 'choerodon-ui/pro';
 import { useAppDetailTabsStore } from './stores';
+import ConfigurationModal from '@/components/configuration-center/ConfigurationModal';
 
 import './index.less';
 import {
-  APP_EVENT, HOST_RUNNING_DETAILS, POD_DETAILS, RESOURCE, RUNNING_DETAILS,
+  APP_EVENT,
+  HOST_RUNNING_DETAILS,
+  POD_DETAILS,
+  RESOURCE,
+  RUNNING_DETAILS,
+  PROFILE_DETAILS,
 } from './stores/CONST';
 import DetailsTabsHeaderButtons from './components/HeaderButtons';
 
@@ -23,19 +29,27 @@ const DetailsTabs = () => {
     subfixCls,
     tabKeys,
     appDetailTabStore,
+    configurationCenterDataSet,
   } = useAppDetailTabsStore();
 
-  const handleTabChange = (tabKey:string) => {
+  const handleTabChange = (tabKey: string) => {
     appDetailTabStore.setCurrentTabKey(tabKey);
   };
 
-  const tabContent = useMemo(() => ({
-    [APP_EVENT]: <AppEvent />,
-    [POD_DETAILS]: <PodDetail />,
-    [RUNNING_DETAILS]: <RunDetails />,
-    [RESOURCE]: <ResourceConfig />,
-    [HOST_RUNNING_DETAILS]: <RunDetailsOfHost />,
-  }), []);
+  const tabContent = useMemo(
+    () => ({
+      [APP_EVENT]: <AppEvent />,
+      [POD_DETAILS]: <PodDetail />,
+      [RUNNING_DETAILS]: <RunDetails />,
+      [RESOURCE]: <ResourceConfig />,
+      [HOST_RUNNING_DETAILS]: <RunDetailsOfHost />,
+      [PROFILE_DETAILS]: (
+      // @ts-ignore
+        <ConfigurationModal configurationCenterDataSet={configurationCenterDataSet} />
+      ),
+    }),
+    [],
+  );
 
   return (
     <div className={`${subfixCls}-tabs`}>
@@ -46,11 +60,8 @@ const DetailsTabs = () => {
         activeKey={appDetailTabStore.currentTabKey}
         onChange={handleTabChange}
       >
-        {map(tabKeys, (value: { name: string, key: string}, key: string) => (
-          <TabPane
-            key={value.key}
-            tab={value.name}
-          >
+        {map(tabKeys, (value: { name: string; key: string }, key: string) => (
+          <TabPane key={value.key} tab={value.name}>
             <Suspense fallback={<Spin />}>
               {/* @ts-ignore */}
               {tabContent[value.key]}
