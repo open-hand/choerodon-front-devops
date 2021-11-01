@@ -262,7 +262,7 @@ const PipelineCreate = observer(() => {
                   className="c7ncd-select-tips-icon"
                   style={{
                     position: 'absolute',
-                    top: '-12px',
+                    top: '7px',
                     left: '55px',
                   }}
                 />
