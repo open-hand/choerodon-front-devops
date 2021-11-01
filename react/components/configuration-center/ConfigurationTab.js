@@ -6,7 +6,7 @@ import {
 } from 'choerodon-ui/pro';
 import { Input, message } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
-import { isNil } from 'lodash';
+import { isNil, isEmpty } from 'lodash';
 import styles from './index.less';
 
 const Content = observer((props) => {
@@ -99,19 +99,23 @@ const Content = observer((props) => {
   // 新建配置文件
   // eslint-disable-next-line consistent-return
   const handleCreate = async () => {
-    const {
-      mountPath,
-      configGroup,
-      configCode,
-      versionName,
-    } = configurationCenterDataSet.current.toData();
-    // eslint-disable-next-line max-len
-    const isEmptyRecord = isNil(mountPath) && isNil(configGroup) && isNil(configCode) && isNil(versionName);
-    const validate = await configurationCenterDataSet.validate();
-    if (validate && !isEmptyRecord) {
+    if (isEmpty(configurationCenterDataSet)) {
       configurationCenterDataSet.create({}, 0);
     } else {
-      return false;
+      const {
+        mountPath,
+        configGroup,
+        configCode,
+        versionName,
+      } = configurationCenterDataSet.current?.toData();
+      // eslint-disable-next-line max-len
+      const isEmptyRecord = isNil(mountPath) && isNil(configGroup) && isNil(configCode) && isNil(versionName);
+      const validate = await configurationCenterDataSet.validate();
+      if (validate && !isEmptyRecord) {
+        configurationCenterDataSet.create({}, 0);
+      } else if (isEmptyRecord) {
+        return false;
+      }
     }
   };
 
