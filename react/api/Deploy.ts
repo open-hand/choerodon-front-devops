@@ -52,7 +52,7 @@ class DeployApi extends Api<DeployApi> {
   getValue(id: string) {
     return this.request({
       method: 'get',
-      url: `/market/v1/projects/${this.projectId}/deploy/values`,
+      url: `/market/v1/projects/${this.projectId}/deploy/market/values`,
       params: {
         deploy_object_id: id,
       },
