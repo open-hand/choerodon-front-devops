@@ -80,6 +80,7 @@ const DetailItem = (props) => {
       children: (
         <CodeLog
           type={typeItem}
+          appServiceId={appServiceId}
           gitlabProjectId={gitlabProjectId}
           projectId={projectId}
           gitlabJobId={gitlabJobId}
@@ -111,7 +112,7 @@ const DetailItem = (props) => {
 
   async function handleJobRetry() {
     try {
-      const res = await retryJob(projectId, gitlabProjectId, gitlabJobId);
+      const res = await retryJob(projectId, gitlabProjectId, gitlabJobId, appServiceId);
       if (handlePromptError(res)) {
         handleRefresh();
         return true;
@@ -526,7 +527,7 @@ const DetailItem = (props) => {
   // 自定义任务manual状态时的执行操作
   async function handleExecute() {
     try {
-      const res = await executeCustomJob(projectId, gitlabProjectId, gitlabJobId);
+      const res = await executeCustomJob(projectId, gitlabProjectId, gitlabJobId, appServiceId);
       if (handlePromptError(res)) {
         handleRefresh();
         return true;

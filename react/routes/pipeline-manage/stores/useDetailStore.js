@@ -39,15 +39,15 @@ export default function useStore(mainStore) {
     get getDetailLoading() {
       return this.detailLoading;
     },
-    retryJob(projectId, gitlabProjectId, jobId) {
-      return axios.get(`/devops/v1/projects/${projectId}/ci_jobs/gitlab_projects/${gitlabProjectId}/gitlab_jobs/${jobId}/retry`);
+    retryJob(projectId, gitlabProjectId, jobId, appServiceId) {
+      return axios.get(`/devops/v1/projects/${projectId}/ci_jobs/gitlab_projects/${gitlabProjectId}/gitlab_jobs/${jobId}/retry?app_service_id=${appServiceId}`);
     },
     retryCdJob(projectId, pipelineRecordId) {
       return axios.get(`devops/v1/projects/${projectId}/cicd_pipelines_record/retry_cd_task?cd_pipeline_record_id=${pipelineRecordId}`);
     },
 
-    executeCustomJob(projectId, gitlabProjectId, jobId) {
-      return axios.get(`/devops/v1/projects/${projectId}/ci_jobs/gitlab_projects/${gitlabProjectId}/gitlab_jobs/${jobId}/play`);
+    executeCustomJob(projectId, gitlabProjectId, jobId, appServiceId) {
+      return axios.get(`/devops/v1/projects/${projectId}/ci_jobs/gitlab_projects/${gitlabProjectId}/gitlab_jobs/${jobId}/play?app_service_id=${appServiceId}`);
     },
   }));
 }
