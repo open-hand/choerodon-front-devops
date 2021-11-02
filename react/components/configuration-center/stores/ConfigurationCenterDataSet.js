@@ -60,7 +60,7 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
       label: '配置文件',
       type: 'string',
       lookupAxiosConfig: ({ data, params, record }) => {
-        const configGroup = record?.get('configGroup');
+        const configGroup = record.get('configGroup');
         return {
           url: `/governance/v1/${organizationId}/${projectId}/configs/group/latest_config?configGroup=${configGroup}`,
           params: { ...data, ...params },

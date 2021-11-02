@@ -35,7 +35,7 @@ const Content = observer((props) => {
         name: 'configCode',
         renderer: ({ record }) => (
           <Form record={record} key="type-form" labelLayout="float">
-            <Select name="configCode" label="配置文件" onChange={handleChangeCode} />
+            <Select name="configCode" label="配置文件" onChange={handleChangeCode} noCache />
           </Form>
         ),
       },
