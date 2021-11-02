@@ -14,8 +14,15 @@ import './index.less';
 
 export default observer((props) => {
   const {
-    gitlabJobId, projectId, gitlabProjectId, type, cdRecordId,
-    stageRecordId, jobRecordId, viewId,
+    gitlabJobId,
+    projectId,
+    gitlabProjectId,
+    type,
+    cdRecordId,
+    stageRecordId,
+    jobRecordId,
+    viewId,
+    appServiceId,
   } = props;
 
   const prefixCls = useMemo(() => 'c7n-pipelineManage-codeLog', []);
@@ -40,7 +47,7 @@ export default observer((props) => {
           term.writeln('暂无日志');
         }
       } else {
-        const res = await axios.get(`/devops/v1/projects/${projectId}/ci_jobs/gitlab_projects/${gitlabProjectId}/gitlab_jobs/${gitlabJobId}/trace`);
+        const res = await axios.get(`/devops/v1/projects/${projectId}/ci_jobs/gitlab_projects/${gitlabProjectId}/gitlab_jobs/${gitlabJobId}/trace?app_service_id=${appServiceId}`);
         if (res && !res.failed) {
           const newRes = res.split(/\n/);
           forEach(newRes, (item) => term.writeln(item));
@@ -84,9 +91,6 @@ export default observer((props) => {
               loadData();
               term.open(document.getElementById('jobLog'));
               fit(term);
-              // term.open(document.getElementById('jobLog'));
-              // term.writeln('空');
-              // loadData();
             }}
           />
           <Button
