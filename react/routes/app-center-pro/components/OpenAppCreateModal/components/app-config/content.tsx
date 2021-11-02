@@ -101,6 +101,8 @@ const Index = observer(() => {
           <Select
             name={mapping.hzeroVersion.name}
             colSpan={1}
+            searchable
+            searchMatcher="param"
           />
         );
         break;
