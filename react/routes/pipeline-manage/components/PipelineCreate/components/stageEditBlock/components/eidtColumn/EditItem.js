@@ -3,6 +3,7 @@ import {
   Modal, Icon, Button, Tooltip,
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
+import { LARGE } from '@/utils/getModalWidth';
 import { usePipelineStageEditStore } from '../../stores';
 import AddTask from '../../../AddTask';
 import AddCDTask from '../../../AddCDTask';
@@ -58,7 +59,7 @@ const EditItem = (props) => {
         </div>
       ),
       style: {
-        width: '900px',
+        width: LARGE,
       },
       children:
         stageType === 'CI' ? (
