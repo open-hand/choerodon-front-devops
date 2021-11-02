@@ -51,7 +51,6 @@ import { productTypeData } from './stores/addCDTaskDataSetMap';
 import OperationYaml from '../../../../../app-center-pro/components/OpenAppCreateModal/components/operation-yaml';
 import { valueCheckValidate } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-app-config/content';
 
-
 let currentSize = 10;
 
 const originBranchs = [
@@ -137,7 +136,6 @@ export default observer(() => {
   const [isProjectOwner, setIsProjectOwner] = useState(false);
   const [pipelineCallbackAddress, setPipelineCallbackAddress] = useState(undefined);
   const [preJobList, setPreJobList] = useState([]);
-
   useEffect(() => {
     ADDCDTaskUseStore.setValueIdRandom(Math.random());
     axios.get(`/iam/choerodon/v1/projects/${projectId}/check_admin_permission`).then((res) => {
@@ -429,6 +427,14 @@ export default observer(() => {
     let deployChartData;
     const result = await ADDCDTaskDataSet.current.validate(true);
     const configResult = await configurationCenterDataSet.validate();
+    const configData = configurationCenterDataSet.toData().map((o) => {
+        return {
+          configId: o.versionName,
+          mountPath: o.mountPath,
+          configGroup: o.configGroup,
+          configCode: o.configCode,
+        };
+      });
     if (result && configResult) {
       let submitData = {};
       const ds = JSON.parse(JSON.stringify(ADDCDTaskDataSet.toData()[0]));
@@ -440,9 +446,6 @@ export default observer(() => {
           ADDCDTaskDataSet.current.get(fieldMap.postCommand.name),
         );
         if (flag && hostjarValidate) {
-            const configData = configurationCenterDataSet.toData().map(o=>{
-                return {configId:o.configId,mountPath:o.mountPath,configGroup:o.configGroup,configCode:o.configCode};
-            })
           submitData = HostJarDataSet.current.toData();
           submitData.configSettingVOS = configData;
         } else {
@@ -1194,6 +1197,7 @@ export default observer(() => {
           />
         </Form>,
       ],
+      // TODO: 更新应用
       cdHost: [
         <Form columns={2} className="addcdTask-cdHost" dataSet={ADDCDTaskDataSet}>
           <SelectBox

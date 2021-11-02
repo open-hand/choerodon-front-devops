@@ -115,9 +115,9 @@ const Index = observer(() => {
 
    // TODO: 修改主机应用 校验+数据
   const handleOk = async () => {
-    const configData = configurationCenterDataSet.toData().map(o=>{
-        return {configId:o.configId,mountPath:o.mountPath,configGroup:o.configGroup,configCode:o.configCode};
-    });
+      const configData = configurationCenterDataSet.toData().map(o=>{
+          return {configId:o.versionName,mountPath:o.mountPath,configGroup:o.configGroup,configCode:o.configCode};
+        });
     HostAppConfigDataSet.current?.set('configSettingVOS',configData)
     const finalFunc = async () => {
       const res = await HostAppConfigDataSet.submit();
@@ -160,7 +160,7 @@ const Index = observer(() => {
         ) && configCenterFlag) {
         const flag = await HostAppConfigDataSet.validate();
         const configData = configurationCenterDataSet.toData().map(o=>{
-            return {configId:o.configId,mountPath:o.mountPath,configGroup:o.configGroup,configCode:o.configCode};
+            return {configId:o.versionName,mountPath:o.mountPath,configGroup:o.configGroup,configCode:o.configCode};
         });
         if (flag) {
           return setData(HostAppConfigDataSet.current.toData(),configData);
