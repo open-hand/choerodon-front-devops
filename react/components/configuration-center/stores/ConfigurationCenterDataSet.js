@@ -5,6 +5,9 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
   selection: false,
   autoQuery: false,
   autoCreate: true,
+  transport: {
+    read: ({ data }) => deployConfigApiConfig.getDeployConfigData(data),
+  },
   fields: [
     {
       name: 'mountPath',
@@ -103,10 +106,6 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
         }
       },
     },
-    {
-      name: 'configId',
-      type: 'string',
-    },
   ],
 });
 
@@ -123,8 +122,8 @@ const ConfigCompareOptsDS = ({ projectId, organizationId }) => ({
         try {
           let nextContent = JSON.parse(res);
           nextContent = nextContent.map((lineData) => {
-            const { versionName, content } = lineData;
-            return { value: versionName, meaning: versionName, content };
+            const { versionName, content, configId } = lineData;
+            return { value: configId, meaning: versionName, content };
           });
           return nextContent;
         } catch (err) {
@@ -135,7 +134,7 @@ const ConfigCompareOptsDS = ({ projectId, organizationId }) => ({
   },
 });
 
-const ConfigurationDetailDataSet = ({ projectId }) => ({
+const ConfigurationDetailDataSet = () => ({
   selection: false,
   transport: {
     read: ({ data }) => deployConfigApiConfig.getDeployConfigData(data),

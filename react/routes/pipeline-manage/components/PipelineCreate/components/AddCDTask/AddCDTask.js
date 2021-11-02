@@ -51,7 +51,6 @@ import { productTypeData } from './stores/addCDTaskDataSetMap';
 import OperationYaml from '../../../../../app-center-pro/components/OpenAppCreateModal/components/operation-yaml';
 import { valueCheckValidate } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-app-config/content';
 
-
 let currentSize = 10;
 
 const originBranchs = [
@@ -137,7 +136,6 @@ export default observer(() => {
   const [isProjectOwner, setIsProjectOwner] = useState(false);
   const [pipelineCallbackAddress, setPipelineCallbackAddress] = useState(undefined);
   const [preJobList, setPreJobList] = useState([]);
-
   useEffect(() => {
     ADDCDTaskUseStore.setValueIdRandom(Math.random());
     axios.get(`/iam/choerodon/v1/projects/${projectId}/check_admin_permission`).then((res) => {
@@ -424,11 +422,14 @@ export default observer(() => {
     return JSON.stringify(ds).replace(/"/g, "'");
   }
 
-  // TODO: 流水线CD-校验
+  // TODO: 流水线CD -校验
   const handleAdd = async () => {
     let deployChartData;
     const result = await ADDCDTaskDataSet.current.validate(true);
     const configResult = await configurationCenterDataSet.validate();
+    const configData = configurationCenterDataSet.map(o=>{
+        return {configId:o.get('versionName'),mountPath:o.get('mountPath'),configGroup:o.get('configGroup'),configCode:o.get('configCode')};
+      });
     if (result && configResult) {
       let submitData = {};
       const ds = JSON.parse(JSON.stringify(ADDCDTaskDataSet.toData()[0]));
@@ -440,9 +441,6 @@ export default observer(() => {
           ADDCDTaskDataSet.current.get(fieldMap.postCommand.name),
         );
         if (flag && hostjarValidate) {
-            const configData = configurationCenterDataSet.toData().map(o=>{
-                return {configId:o.configId,mountPath:o.mountPath,configGroup:o.configGroup,configCode:o.configCode};
-            })
           submitData = HostJarDataSet.current.toData();
           submitData.configSettingVOS = configData;
         } else {
@@ -520,6 +518,7 @@ export default observer(() => {
         cdAuditUserIds,
         triggerValue:
           typeof ds.triggerValue === 'object' ? ds.triggerValue?.join(',') : ds.triggerValue,
+        configSettingVOS: configData,
       };
       if (ds.type !== 'cdAudit') {
         data.metadata = getMetadata(ds, deployChartData, {
@@ -1194,6 +1193,7 @@ export default observer(() => {
           />
         </Form>,
       ],
+      // TODO: 更新应用- 获取instanceId
       cdHost: [
         <Form columns={2} className="addcdTask-cdHost" dataSet={ADDCDTaskDataSet}>
           <SelectBox
