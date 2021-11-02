@@ -5,10 +5,10 @@ class AppServiceApi extends Api<AppServiceApi> {
     return `/devops/v1/projects/${this.projectId}/app_service`;
   }
 
-  getAppService(deployOnly: boolean, serviceType: string, type: string) {
+  getAppService(deployOnly: boolean, serviceType: string, type: string, param?: string) {
     return this.request({
       method: 'get',
-      url: `${this.prefix}/list_all_app_services?deploy_only=${deployOnly}&service_type=${serviceType}&type=${type}`,
+      url: `${this.prefix}/list_all_app_services?deploy_only=${deployOnly}&service_type=${serviceType}&type=${type}&param=${param || ''}`,
     });
   }
 

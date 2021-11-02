@@ -52,41 +52,42 @@ const appServiceOptionsDs = {
     group: 0,
   }] as FieldProps[],
   transport: {
-    read: ({ data }: {
-      data: {
-        type: string,
-      }
-    }) => ({
-      ...appServiceApiConfig.getAppService(true, 'normal', data?.type || 'normal_service'),
-      transformResponse: (res: any) => {
-        let newRes = res;
-        function init(d: {
-              name: string,
-              appServiceList: object[]
-            }[]) {
-          let result: {
+    read: (params: any) => {
+      const { data } = params;
+      // 这里不知道为啥 searchMatcher的值变成了key
+      const { key } = data;
+      return ({
+        ...appServiceApiConfig.getAppService(true, 'normal', data?.type || 'normal_service', key),
+        transformResponse: (res: any) => {
+          let newRes = res;
+          function init(d: {
+            name: string,
+            appServiceList: object[]
+          }[]) {
+            let result: {
               groupName: string
             }[] = [];
-          d.forEach((item) => {
-            const itemData = item.appServiceList.map((i) => ({
-              ...i,
-              groupName: item.name,
-            }));
-            result = [
-              ...result,
-              ...itemData,
-            ];
-          });
-          return result;
-        }
-        try {
-          newRes = JSON.parse(res);
-          return init(newRes);
-        } catch (e) {
-          return init(newRes);
-        }
-      },
-    }),
+            d.forEach((item) => {
+              const itemData = item.appServiceList.map((i) => ({
+                ...i,
+                groupName: item.name,
+              }));
+              result = [
+                ...result,
+                ...itemData,
+              ];
+            });
+            return result;
+          }
+          try {
+            newRes = JSON.parse(res);
+            return init(newRes);
+          } catch (e) {
+            return init(newRes);
+          }
+        },
+      });
+    },
   },
 };
 
