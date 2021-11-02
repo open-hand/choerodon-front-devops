@@ -30,7 +30,7 @@ export const StoreProvider = withRouter(
     inject('AppState')((props) => {
       const {
         AppState: {
-          currentMenuType: { projectId },
+          currentMenuType: { projectId, organizationId },
         },
         intl: { formatMessage },
         children,
@@ -115,7 +115,7 @@ export const StoreProvider = withRouter(
         if (state && state.pipelineId) {
           listDs.queryDataSet.getField('pipelineId').set('defaultValue', state.pipelineId);
         }
-        hasMarket && deployStore.loadHzeroSyncStatus();
+        hasMarket && deployStore.loadHzeroSyncStatus(organizationId);
       }, []);
 
       // 配置中心详情

@@ -18,10 +18,10 @@ class MarketHzeroApi extends Api<MarketHzeroApi> {
   /**
    * 加载HZERO应用同步状态
    */
-  loadSyncStatus() {
+  loadSyncStatus(organizationId:string) {
     return this.request({
       method: 'get',
-      url: `${this.sitePrefix}/hzero/sync_status`,
+      url: `${this.sitePrefix}/${organizationId}/hzero/sync_status`,
     });
   }
 
@@ -29,10 +29,10 @@ class MarketHzeroApi extends Api<MarketHzeroApi> {
    * 加载HZERO应用版本
    * @param type HZERO应用类型 open/sass
    */
-  loadHzeroVersions(type = 'open') {
+  loadHzeroVersions(type = 'open', organizationId:string) {
     return this.request({
       method: 'get',
-      url: `${this.sitePrefix}/hzero/versions`,
+      url: `${this.sitePrefix}/${organizationId}/hzero/versions`,
       params: { type },
     });
   }
@@ -42,10 +42,10 @@ class MarketHzeroApi extends Api<MarketHzeroApi> {
    * @param applicationId
    * @param appVersionId
    */
-  loadHzeroServices(applicationId: string, appVersionId: string) {
+  loadHzeroServices(applicationId: string, appVersionId: string, organizationId:string) {
     return this.request({
       method: 'get',
-      url: `${this.sitePrefix}/deploy_object/hzero`,
+      url: `${this.sitePrefix}/${organizationId}/deploy_object/hzero`,
       params: {
         application_id: applicationId,
         app_version_id: appVersionId,

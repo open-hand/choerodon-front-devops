@@ -96,6 +96,7 @@ export default function useStore() {
       } catch (e) {
         Choerodon.handleResponseError(e);
       }
+      return '';
     },
 
     async loadDeployValue(projectId: any, id: any) {
@@ -108,6 +109,7 @@ export default function useStore() {
       } catch (e) {
         Choerodon.handleResponseError(e);
       }
+      return '';
     },
 
     async loadMarketDeployValue(projectId: any, id: any) {
@@ -120,6 +122,7 @@ export default function useStore() {
       } catch (e) {
         Choerodon.handleResponseError(e);
       }
+      return '';
     },
 
     checkNetWorkName(projectId: any, envId: any, value: any) {
@@ -145,9 +148,9 @@ export default function useStore() {
       return axios.get(`/devops/v1/projects/${projectId}/ingress/check_domain?domain=${domain}&env_id=${env}&path=${value}&id=${id}`);
     },
 
-    async loadHzeroSyncStatus() {
+    async loadHzeroSyncStatus(organizationId:string) {
       try {
-        const res = await marketHzeroApi.loadSyncStatus();
+        const res = await marketHzeroApi.loadSyncStatus(organizationId);
         if (res && !res.failed) {
           this.setHzeroSyncStatus(res);
         } else {

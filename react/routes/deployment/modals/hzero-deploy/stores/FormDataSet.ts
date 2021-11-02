@@ -1,5 +1,7 @@
 /* eslint-disable no-param-reassign */
 
+import { map, isEmpty, pick } from 'lodash';
+import uuidV1 from 'uuid/v1';
 import {
   DataSet, DataSetProps, FieldType, UpdateEventProps, DataSetStatus,
 } from '@/interface';
@@ -9,8 +11,6 @@ import {
   marketHzeroApi,
   deployApiConfig,
 } from '@/api';
-import { map, isEmpty, pick } from 'lodash';
-import uuidV1 from 'uuid/v1';
 import { StoreProps } from './useStore';
 
 interface FormProps {
@@ -20,6 +20,7 @@ interface FormProps {
   typeDs: DataSet,
   random: number,
   mainStore: StoreProps,
+  organizationId:string,
 }
 
 export interface ServiceItemProps {
@@ -31,6 +32,7 @@ export interface ServiceItemProps {
   marketServiceCode: string,
   marketServiceName: string,
   required: boolean,
+
 }
 
 function getInstanceName(code: string) {
@@ -45,6 +47,7 @@ export default ({
   random,
   typeDs,
   mainStore,
+  organizationId,
 }: FormProps): DataSetProps => {
   async function handleUpdate({ value, name, record }: UpdateEventProps) {
     if (name === 'mktAppVersion') {
@@ -53,6 +56,7 @@ export default ({
         const serviceData = await marketHzeroApi.loadHzeroServices(
           record.get('mktAppId'),
           record.get('mktAppVersion')?.id,
+          organizationId,
         );
         const newServiceData = map(serviceData, (item: ServiceItemProps) => ({
           ...item,
@@ -127,7 +131,7 @@ export default ({
         valueField: 'id',
         required: true,
         dynamicProps: {
-          lookupAxiosConfig: ({ record }) => marketHzeroApiConfig.loadHzeroVersions(record.get('appType')),
+          lookupAxiosConfig: ({ record }) => marketHzeroApiConfig.loadHzeroVersions(record.get('appType'), organizationId),
         },
       },
     ],
