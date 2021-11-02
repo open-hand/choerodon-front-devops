@@ -422,18 +422,13 @@ export default observer(() => {
     return JSON.stringify(ds).replace(/"/g, "'");
   }
 
-  // TODO: 流水线CD-校验
+  // TODO: 流水线CD -校验
   const handleAdd = async () => {
     let deployChartData;
     const result = await ADDCDTaskDataSet.current.validate(true);
     const configResult = await configurationCenterDataSet.validate();
-    const configData = configurationCenterDataSet.toData().map((o) => {
-        return {
-          configId: o.versionName,
-          mountPath: o.mountPath,
-          configGroup: o.configGroup,
-          configCode: o.configCode,
-        };
+    const configData = configurationCenterDataSet.map(o=>{
+        return {configId:o.get('versionName'),mountPath:o.get('mountPath'),configGroup:o.get('configGroup'),configCode:o.get('configCode')};
       });
     if (result && configResult) {
       let submitData = {};
@@ -523,6 +518,7 @@ export default observer(() => {
         cdAuditUserIds,
         triggerValue:
           typeof ds.triggerValue === 'object' ? ds.triggerValue?.join(',') : ds.triggerValue,
+        configSettingVOS: configData,
       };
       if (ds.type !== 'cdAudit') {
         data.metadata = getMetadata(ds, deployChartData, {
@@ -1197,7 +1193,7 @@ export default observer(() => {
           />
         </Form>,
       ],
-      // TODO: 更新应用
+      // TODO: 更新应用- 获取instanceId
       cdHost: [
         <Form columns={2} className="addcdTask-cdHost" dataSet={ADDCDTaskDataSet}>
           <SelectBox

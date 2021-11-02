@@ -5,6 +5,9 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
   selection: false,
   autoQuery: false,
   autoCreate: true,
+  transport: {
+    read: ({ data }) => deployConfigApiConfig.getDeployConfigData(data),
+  },
   fields: [
     {
       name: 'mountPath',
@@ -131,7 +134,7 @@ const ConfigCompareOptsDS = ({ projectId, organizationId }) => ({
   },
 });
 
-const ConfigurationDetailDataSet = ({ projectId }) => ({
+const ConfigurationDetailDataSet = () => ({
   selection: false,
   transport: {
     read: ({ data }) => deployConfigApiConfig.getDeployConfigData(data),
