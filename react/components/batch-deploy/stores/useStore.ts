@@ -93,8 +93,9 @@ export default function useStore() {
           this.setConfigValue(res.value);
           return res.value;
         }
+        return true;
       } catch (e) {
-        Choerodon.handleResponseError(e);
+        return Choerodon.handleResponseError(e);
       }
     },
 
@@ -105,8 +106,9 @@ export default function useStore() {
           this.setConfigValue(res.yaml);
           return res.yaml;
         }
+        return true;
       } catch (e) {
-        Choerodon.handleResponseError(e);
+        return Choerodon.handleResponseError(e);
       }
     },
 
@@ -117,8 +119,9 @@ export default function useStore() {
           this.setConfigValue(res.value);
           return res.value;
         }
+        return true;
       } catch (e) {
-        Choerodon.handleResponseError(e);
+        return Choerodon.handleResponseError(e);
       }
     },
 

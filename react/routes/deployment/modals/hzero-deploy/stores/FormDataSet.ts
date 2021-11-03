@@ -1,5 +1,7 @@
 /* eslint-disable no-param-reassign */
 
+import { map, isEmpty, pick } from 'lodash';
+import uuidV1 from 'uuid/v1';
 import {
   DataSet, DataSetProps, FieldType, UpdateEventProps, DataSetStatus,
 } from '@/interface';
@@ -9,8 +11,6 @@ import {
   marketHzeroApi,
   deployApiConfig,
 } from '@/api';
-import { map, isEmpty, pick } from 'lodash';
-import uuidV1 from 'uuid/v1';
 import { StoreProps } from './useStore';
 
 interface FormProps {
@@ -31,6 +31,7 @@ export interface ServiceItemProps {
   marketServiceCode: string,
   marketServiceName: string,
   required: boolean,
+
 }
 
 function getInstanceName(code: string) {
