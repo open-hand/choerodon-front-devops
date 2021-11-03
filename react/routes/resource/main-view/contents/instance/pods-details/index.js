@@ -153,7 +153,7 @@ const PodDetail = memo(() => {
         action: () => deletePod(),
       },
     ];
-    if (record.get('containers')?.length) {
+    if (record.get('containers')?.length && record.get('status') === 'Running') {
       buttons.unshift({
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.pod.log'],
         text: intl.formatMessage({ id: `${intlPrefix}.instance.log` }),
