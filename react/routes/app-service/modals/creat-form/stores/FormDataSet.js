@@ -112,12 +112,11 @@ export default (({
     autoCreate: true,
     autoQuery: false,
     selection: false,
+    autoQueryAfterSubmit: false,
     paging: false,
     dataToJSON: false,
     transport: {
-      read({ data }) {
-        return appExternalConfigApiConfig.getOutExternal(data.externalConfigId);
-      },
+      read: ({ data }) => appExternalConfigApiConfig.getOutExternal(data.externalConfigId),
       create: ({ data: [data], record }) => {
         if (data.gitLabType === 'inGitlab') {
           const res = omit(data, ['appServiceSource', '__id', '__status']);

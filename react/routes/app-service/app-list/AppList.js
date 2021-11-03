@@ -70,7 +70,7 @@ const AppService = withRouter(observer(() => {
       },
       title: formatMessage({ id: `${intlPrefix}.create` }),
       children: <CreateForm
-        refresh
+        refresh={refresh}
         intlPrefix={intlPrefix}
         prefixCls={prefixCls}
       />,
