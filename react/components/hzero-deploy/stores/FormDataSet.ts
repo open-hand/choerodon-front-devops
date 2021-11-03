@@ -54,7 +54,6 @@ export default ({
         const serviceData = await marketHzeroApi.loadHzeroServices(
           record.get('mktAppId'),
           record.get('mktAppVersion')?.id,
-          marketHzeroApi.orgId,
         );
         const newServiceData = map(serviceData, (item: ServiceItemProps) => ({
           ...item,
@@ -131,7 +130,7 @@ export default ({
         valueField: 'id',
         required: true,
         dynamicProps: {
-          lookupAxiosConfig: ({ record }:any) => marketHzeroApiConfig.loadHzeroVersions(record.get('appType'), marketHzeroApiConfig.orgId),
+          lookupAxiosConfig: ({ record }:any) => marketHzeroApiConfig.loadHzeroVersions(record.get('appType')),
         },
       },
     ],

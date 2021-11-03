@@ -43,6 +43,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const {
     children,
     intl: { formatMessage },
+    AppState: { currentMenuType: { projectId } },
   } = props;
 
   const {

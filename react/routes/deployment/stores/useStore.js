@@ -150,7 +150,7 @@ export default function useStore() {
 
     async loadHzeroSyncStatus() {
       try {
-        const res = await marketHzeroApi.loadSyncStatus(marketHzeroApi.orgId);
+        const res = await marketHzeroApi.loadSyncStatus();
         if (res && !res.failed) {
           this.setHzeroSyncStatus(res);
         } else {
