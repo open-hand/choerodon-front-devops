@@ -67,7 +67,7 @@ const setData = (data: any,configData?:any) => {
   newData[mapping.postCommand.name as string] = newData[mapping.postCommand.name as string] ? Base64.encode(newData[mapping.postCommand.name as string]) : '';
   // newData.deployObjectId = newData[
   //   mapping.marketServiceVersion.name as string]?.marketServiceDeployObjectVO?.id;
-  newData.configSettingVOS= configData || data.configSettingVOS;
+//   newData.configSettingVOS= configData || data.configSettingVOS;
   return newData;
 };
 
@@ -79,8 +79,8 @@ const Index = observer(() => {
     modal,
     refresh,
     AppState: { currentMenuType: { organizationId } },
-    configurationCenterDataSet,
-    configCompareOptsDS,
+    // configurationCenterDataSet,
+    // configCompareOptsDS,
   } = useHostAppConfigStore();
 
   const queryMarketAppVersionOptions = (data: any, ds: any) => {
@@ -115,10 +115,10 @@ const Index = observer(() => {
 
    // TODO: 修改主机应用 校验+数据
   const handleOk = async () => {
-    const configData = configurationCenterDataSet.toData().map(o=>{
-        return {configId:o.configId,mountPath:o.mountPath,configGroup:o.configGroup,configCode:o.configCode};
-    });
-    HostAppConfigDataSet.current?.set('configSettingVOS',configData)
+    // const configData = configurationCenterDataSet.toData().map(o=>{
+    //     return {configId:o.configId,mountPath:o.mountPath,configGroup:o.configGroup,configCode:o.configCode};
+    // });
+    // HostAppConfigDataSet.current?.set('configSettingVOS',configData)
     const finalFunc = async () => {
       const res = await HostAppConfigDataSet.submit();
       if (res !== false) {
@@ -137,8 +137,9 @@ const Index = observer(() => {
           HostAppConfigDataSet.current.get(mapping.startCommand.name),
           HostAppConfigDataSet.current.get(mapping.postCommand.name)
       );
-      const configFlag = await configurationCenterDataSet.validate();
-      if (flag && configFlag) {
+    //   const configFlag = await configurationCenterDataSet.validate();
+    // && configFlag
+      if (flag) {
         return await finalFunc();
       }
     }
@@ -152,18 +153,20 @@ const Index = observer(() => {
   // TODO: 创建主机应用 校验+数据
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
-       const configCenterFlag = await configurationCenterDataSet.validate();
+    //    const configCenterFlag = await configurationCenterDataSet.validate();
+    // && configCenterFlag
       if (valueCheckValidate(
         HostAppConfigDataSet.current.get(mapping.value.name),
         HostAppConfigDataSet.current.get(mapping.startCommand.name),
         HostAppConfigDataSet.current.get(mapping.postCommand.name)
-        ) && configCenterFlag) {
+        ) ) {
         const flag = await HostAppConfigDataSet.validate();
-        const configData = configurationCenterDataSet.toData().map(o=>{
-            return {configId:o.configId,mountPath:o.mountPath,configGroup:o.configGroup,configCode:o.configCode};
-        });
+        // const configData = configurationCenterDataSet.toData().map(o=>{
+        //     return {configId:o.configId,mountPath:o.mountPath,configGroup:o.configGroup,configCode:o.configCode};
+        // });
         if (flag) {
-          return setData(HostAppConfigDataSet.current.toData(),configData);
+        //   return setData(HostAppConfigDataSet.current.toData(),configData);
+        return setData(HostAppConfigDataSet.current.toData());
         }
         return false;
       }
@@ -399,8 +402,8 @@ const Index = observer(() => {
               marginBottom: 20,
             }}
             dataSet={HostAppConfigDataSet}
-            configDataSet={configurationCenterDataSet}
-            optsDS={configCompareOptsDS}
+            // configDataSet={configurationCenterDataSet}
+            // optsDS={configCompareOptsDS}
             preName={mapping.value.name}
             startName={mapping.startCommand.name}
             postName={mapping.postCommand.name}

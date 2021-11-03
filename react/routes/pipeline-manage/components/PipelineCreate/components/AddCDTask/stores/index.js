@@ -9,10 +9,10 @@ import deployGroupDataSet from '@/routes/pipeline-manage/components/PipelineCrea
 import hostJarDataSet from './hostJarDataSet';
 import useStore from './useStore';
 import { fieldMap } from './addCDTaskDataSetMap';
-import {
-  ConfigurationCenterDataSet,
-  ConfigCompareOptsDS,
-} from '@/components/configuration-center/stores/ConfigurationCenterDataSet';
+// import {
+//   ConfigurationCenterDataSet,
+//   ConfigCompareOptsDS,
+// } from '@/components/configuration-center/stores/ConfigurationCenterDataSet';
 
 const Store = createContext();
 
@@ -58,18 +58,18 @@ export const StoreProvider = injectIntl(
       ADDCDTaskDataSet?.current?.get('envId'),
     ]);
     const HostJarDataSet = useMemo(() => new DataSet(hostJarDataSet(ADDCDTaskDataSet)), []);
-    const configCompareOptsDS = useMemo(
-      () => new DataSet(ConfigCompareOptsDS({ projectId, organizationId })),
-      [],
-    );
+    // const configCompareOptsDS = useMemo(
+    //   () => new DataSet(ConfigCompareOptsDS({ projectId, organizationId })),
+    //   [],
+    // );
 
-    const configurationCenterDataSet = useMemo(
-      () => new DataSet(
-        // @ts-ignore
-        ConfigurationCenterDataSet({ projectId, organizationId, optsDS: configCompareOptsDS }),
-      ),
-      [],
-    );
+    // const configurationCenterDataSet = useMemo(
+    //   () => new DataSet(
+    //     // @ts-ignore
+    //     ConfigurationCenterDataSet({ projectId, organizationId, optsDS: configCompareOptsDS }),
+    //   ),
+    //   [],
+    // );
 
     const value = {
       ...props,
@@ -78,8 +78,8 @@ export const StoreProvider = injectIntl(
       DeployChartDataSet,
       DeployGroupDataSet,
       HostJarDataSet,
-      configurationCenterDataSet,
-      configCompareOptsDS,
+    //   configurationCenterDataSet,
+    //   configCompareOptsDS,
     };
 
     return <Store.Provider value={value}>{children}</Store.Provider>;
