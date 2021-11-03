@@ -124,7 +124,7 @@ export default (
       dynamicProps: {
         required: ({ record }) => record.get('appServiceId'),
       },
-      label: '分支',
+      label: '关联分支',
     }, {
       name: 'image',
       type: 'string',
