@@ -19,9 +19,9 @@ export default function useStore() {
       this.hzeroSyncStatus = data;
     },
 
-    async loadHzeroSyncStatus(organizationId:string) {
+    async loadHzeroSyncStatus() {
       try {
-        const res = await marketHzeroApi.loadSyncStatus(organizationId);
+        const res = await marketHzeroApi.loadSyncStatus(marketHzeroApi.orgId);
         if (res && !res.failed) {
           this.setHzeroSyncStatus(res);
         } else {

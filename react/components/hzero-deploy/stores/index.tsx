@@ -32,7 +32,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     children,
     intl: { formatMessage },
     syncStatus,
-    AppState: { currentMenuType: { organizationId } },
   } = props;
 
   const intlPrefix = useMemo(() => 'c7ncd.deploy.hzero', []);
@@ -63,7 +62,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     random,
     typeDs,
     mainStore,
-    organizationId,
   })), []);
 
   useEffect(() => {

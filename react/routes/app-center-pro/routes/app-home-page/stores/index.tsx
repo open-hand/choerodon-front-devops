@@ -43,7 +43,6 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const {
     children,
     intl: { formatMessage },
-    AppState: { currentMenuType: { projectId, organizationId } },
   } = props;
 
   const {
@@ -125,7 +124,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   }, []);
 
   useEffect(() => {
-    hasMarket && mainStore.loadHzeroSyncStatus(organizationId);
+    hasMarket && mainStore.loadHzeroSyncStatus();
   }, []);
 
   const refresh = (key?: typeof ENV_TAB | typeof HOST_TAB) => {

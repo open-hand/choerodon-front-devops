@@ -93,10 +93,10 @@ export default function useStore() {
           this.setConfigValue(res.value);
           return res.value;
         }
+        return true;
       } catch (e) {
-        Choerodon.handleResponseError(e);
+        return Choerodon.handleResponseError(e);
       }
-      return '';
     },
 
     async loadDeployValue(projectId: any, id: any) {
@@ -106,10 +106,10 @@ export default function useStore() {
           this.setConfigValue(res.yaml);
           return res.yaml;
         }
+        return true;
       } catch (e) {
-        Choerodon.handleResponseError(e);
+        return Choerodon.handleResponseError(e);
       }
-      return '';
     },
 
     async loadMarketDeployValue(projectId: any, id: any) {
@@ -119,10 +119,10 @@ export default function useStore() {
           this.setConfigValue(res.value);
           return res.value;
         }
+        return true;
       } catch (e) {
-        Choerodon.handleResponseError(e);
+        return Choerodon.handleResponseError(e);
       }
-      return '';
     },
 
     checkNetWorkName(projectId: any, envId: any, value: any) {
@@ -148,9 +148,9 @@ export default function useStore() {
       return axios.get(`/devops/v1/projects/${projectId}/ingress/check_domain?domain=${domain}&env_id=${env}&path=${value}&id=${id}`);
     },
 
-    async loadHzeroSyncStatus(organizationId:string) {
+    async loadHzeroSyncStatus() {
       try {
-        const res = await marketHzeroApi.loadSyncStatus(organizationId);
+        const res = await marketHzeroApi.loadSyncStatus(marketHzeroApi.orgId);
         if (res && !res.failed) {
           this.setHzeroSyncStatus(res);
         } else {

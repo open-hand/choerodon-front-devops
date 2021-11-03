@@ -20,7 +20,6 @@ interface FormProps {
   typeDs: DataSet,
   random: number,
   mainStore: StoreProps,
-  organizationId:string,
 }
 
 export interface ServiceItemProps {
@@ -47,7 +46,6 @@ export default ({
   random,
   typeDs,
   mainStore,
-  organizationId,
 }: FormProps): DataSetProps => {
   async function handleUpdate({ value, name, record }: UpdateEventProps) {
     if (name === 'mktAppVersion') {
@@ -56,7 +54,7 @@ export default ({
         const serviceData = await marketHzeroApi.loadHzeroServices(
           record.get('mktAppId'),
           record.get('mktAppVersion')?.id,
-          organizationId,
+          marketHzeroApi.orgId,
         );
         const newServiceData = map(serviceData, (item: ServiceItemProps) => ({
           ...item,
@@ -131,7 +129,7 @@ export default ({
         valueField: 'id',
         required: true,
         dynamicProps: {
-          lookupAxiosConfig: ({ record }) => marketHzeroApiConfig.loadHzeroVersions(record.get('appType'), organizationId),
+          lookupAxiosConfig: ({ record }) => marketHzeroApiConfig.loadHzeroVersions(record.get('appType'), marketHzeroApiConfig.orgId),
         },
       },
     ],
