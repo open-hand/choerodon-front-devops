@@ -3,7 +3,7 @@ import filter from 'lodash/filter';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
 import { useLocalStore } from 'mobx-react-lite';
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import {
   notificationRecordApi, appServiceInstanceApiConfig, serviceApiConfig, configMapApiConfig, secretApiConfig,
 } from '@/api';

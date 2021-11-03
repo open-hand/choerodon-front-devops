@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { withRouter } from 'react-router-dom';
-import { Page } from '@choerodon/boot';
+import { Page } from '@choerodon/master';
 import { Modal } from 'choerodon-ui/pro';
 import checkPermission from '../../../utils/checkPermission';
 import ListView from './ListView';

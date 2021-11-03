@@ -1,6 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import uuidV1 from 'uuid/v1';
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import forEach from 'lodash/forEach';
 import JSONbig from 'json-bigint';
 import addCDTaskDataSetMap, { fieldMap, typeData, deployWayData } from './addCDTaskDataSetMap';

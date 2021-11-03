@@ -8,7 +8,7 @@ import {
   Select,
   Tooltip,
 } from 'choerodon-ui/pro';
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import {
   Record, RecordObjectProps,
 } from '@/interface';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ThemeWrap } from '@choerodon/boot';
+import { ThemeWrap } from '@choerodon/master';
 import { branchMap } from '@/routes/code-manager/main-view/themeMapItemPage';
 import { StoreProvider } from './stores';
 import CiPipelineTable from './CiPipelineTable';

@@ -1,4 +1,4 @@
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 
 export default class HostConfigApi {
   static checkName(projectId: number, name: string) {

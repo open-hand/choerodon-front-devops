@@ -1,14 +1,13 @@
 import React, {
-  Fragment, lazy, Suspense, useEffect, useMemo, useState,
+  lazy, Suspense,
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Tabs, Spin } from 'choerodon-ui';
-import { axios } from '@choerodon/boot';
+import { NewTips } from '@choerodon/components';
 import { useClusterContentStore } from './stores';
 import Modals from './modals';
 import PageTitle from '../../../../../components/page-title';
 import StatusDot from '../../../../../components/status-dot';
-import Tips from '../../../../../components/new-tips';
 
 import './index.less';
 
@@ -19,7 +18,6 @@ const PermissionList = lazy(() => import('./permission-list'));
 const Monitor = lazy(() => import('./monitor'));
 const ComponentManage = lazy(() => import('./component-manage'));
 const Polaris = lazy(() => import('./polaris'));
-const EnvManage = lazy(() => import('./env-manage'));
 
 export default observer((props) => {
   const {
@@ -91,16 +89,6 @@ export default observer((props) => {
             </div>
           </Suspense>
         </TabPane>
-        {/* <TabPane
-          key={ENV_TAB}
-          tab={formatMessage({ id: `${intlPrefix}.env.manage` })}
-        >
-          <Suspense fallback={<Spin />}>
-            <div className="c7ncd-cluster-node-list">
-              <EnvManage />
-            </div>
-          </Suspense>
-        </TabPane> */}
         <TabPane
           key={POLARIS_TAB}
           tab={formatMessage({ id: `${intlPrefix}.polaris` })}
@@ -112,7 +100,7 @@ export default observer((props) => {
         <TabPane
           key={ASSIGN_TAB}
           tab={(
-            <Tips
+            <NewTips
               helpText={formatMessage({ id: `${intlPrefix}.permission.tab.tips` })}
               title={formatMessage({ id: `${intlPrefix}.permission.assign` })}
             />

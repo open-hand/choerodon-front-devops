@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import {
   TabPage, Content, Breadcrumb, Permission, Action,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import {
   Table, Tooltip, Button, CheckBox, TextField, Pagination,
 } from 'choerodon-ui/pro';

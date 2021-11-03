@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect, Fragment } from 'react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import { Form, Select, TextField, NumberField } from 'choerodon-ui/pro';
 import { usePVCCreateStore } from './stores';
 

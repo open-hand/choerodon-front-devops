@@ -1,4 +1,4 @@
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import { Record } from '@/interface';
 /* eslint-disable import/no-anonymous-default-export */
 /* eslint-disable max-len */

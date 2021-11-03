@@ -1,4 +1,4 @@
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import forEach from 'lodash/forEach';
 import map from 'lodash/map';
 import includes from 'lodash/includes';

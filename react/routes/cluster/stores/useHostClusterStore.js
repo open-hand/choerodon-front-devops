@@ -2,7 +2,7 @@
 import {
   forEach, omit, map, difference, without,
 } from 'lodash';
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import { useLocalStore } from 'mobx-react-lite';
 import { Base64 } from 'js-base64';
 

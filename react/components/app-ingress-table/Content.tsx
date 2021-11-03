@@ -4,7 +4,7 @@
 // @ts-nocheck
 import React, { useMemo, useState, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Action } from '@choerodon/boot';
+import { Action } from '@choerodon/master';
 import { Modal, Table, Tooltip } from 'choerodon-ui/pro';
 import { StatusTag, TimePopover, UserInfo } from '@choerodon/components';
 import { MIDDLE } from '@/utils/getModalWidth';

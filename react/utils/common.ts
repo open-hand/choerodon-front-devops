@@ -1,4 +1,4 @@
-import { stores } from '@choerodon/boot';
+import { stores } from '@choerodon/master';
 
 const { AppState } = stores;
 

@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import React, { useMemo, useState, useEffect } from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Action, Choerodon } from '@choerodon/boot';
+import { Action, Choerodon } from '@choerodon/master';
 import {
   Modal, Icon, Spin, TextField,
 } from 'choerodon-ui/pro';

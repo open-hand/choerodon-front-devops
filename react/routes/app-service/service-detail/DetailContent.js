@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { PageWrap, PageTab, Page } from '@choerodon/boot';
+import { PageWrap, PageTab, Page } from '@choerodon/master';
 import { Spin } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { CustomTabs } from '@choerodon/components';

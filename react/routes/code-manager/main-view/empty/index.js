@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-bind */
 import React, { Fragment, useEffect, useState } from 'react';
-import { Header, Content, Breadcrumb } from '@choerodon/boot';
+import { Header, Content, Breadcrumb } from '@choerodon/master';
 import { Button } from 'choerodon-ui';
 import { Loading } from '@choerodon/components';
 import EmptyPage from '../../../../components/empty-page';

@@ -2,7 +2,7 @@
 import React, { useMemo } from 'react';
 import { Route, Switch } from 'react-router';
 import { PermissionRoute } from '@choerodon/master';
-import { nomatch } from '@choerodon/boot';
+import { NoMatch } from '@choerodon/master';
 import map from 'lodash/map';
 
 import { observer } from 'mobx-react-lite';
@@ -53,7 +53,7 @@ const AppCenterPro = observer(() => {
       <Switch>
         <Route exact path={match.url} component={AppHomePage} />
         <PermissionRoute service={['choerodon.code.project.deploy.app-deployment.application-center.details']} exact path={`${match.url}/detail/:appId/:chartSource/:deployType/:deployTypeId/:rdupmType`} component={AppDetail} />
-        <Route path="*" component={nomatch} />
+        <Route path="*" component={NoMatch} />
       </Switch>
     </>
   );

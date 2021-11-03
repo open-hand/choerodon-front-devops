@@ -1,6 +1,6 @@
 import {
   axios, store, stores, Choerodon,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import moment from 'moment';
 import { useLocalStore } from 'mobx-react-lite';
 import { handlePromptError } from '../../../utils';

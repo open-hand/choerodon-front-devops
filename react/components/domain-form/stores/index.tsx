@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useMemo, useEffect } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import { DataSet } from 'choerodon-ui/pro';
 import forEach from 'lodash/forEach';
 import find from 'lodash/find';

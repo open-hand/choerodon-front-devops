@@ -5,7 +5,7 @@ import {
   Form, Icon, TextField, Tooltip,
 } from 'choerodon-ui/pro';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import { Loading } from '@choerodon/components';
 import { useRecordDetailStore } from './stores';
 

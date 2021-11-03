@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import {
   Page, Header, Content, Breadcrumb,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import { Button, Form, Select } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import { Loading } from '@choerodon/components';

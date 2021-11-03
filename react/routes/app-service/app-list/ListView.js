@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router-dom';
 import {
   Page, Content, Header, Action, Breadcrumb, Choerodon, HeaderButtons
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import {
   SagaDetails,
 } from '@choerodon/master';

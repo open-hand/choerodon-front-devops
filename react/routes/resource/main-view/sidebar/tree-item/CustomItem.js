@@ -2,7 +2,7 @@ import React, { Fragment, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
-import { Action, axios } from '@choerodon/boot';
+import { Action, axios } from '@choerodon/master';
 import { Icon } from 'choerodon-ui';
 import { Modal } from 'choerodon-ui/pro';
 import { useResourceStore } from '../../../stores';

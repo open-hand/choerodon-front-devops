@@ -2,7 +2,7 @@ import React, { useContext, useMemo, useEffect, createContext } from 'react';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import { DataSet } from 'choerodon-ui/pro/lib';
 import { useClusterStore } from '../../../../stores';
 import NodePodsDataSet from './NodePodsDataSet';

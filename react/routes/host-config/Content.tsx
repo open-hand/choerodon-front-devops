@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Page, Header, Breadcrumb, Content, HeaderButtons,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import {
   Modal,
 } from 'choerodon-ui/pro';

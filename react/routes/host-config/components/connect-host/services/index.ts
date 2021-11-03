@@ -1,4 +1,4 @@
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import HostConfigApi from '@/routes/host-config/apis/DeployApis';
 
 export default class HostConnectServices {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ThemeWrap } from '@choerodon/boot';
+import { ThemeWrap } from '@choerodon/master';
 import { StoreProvider } from './stores';
 import Branch from './Branch';
 import { branchMap } from '../../main-view/themeMapItemPage';

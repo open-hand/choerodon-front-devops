@@ -35,27 +35,32 @@ export const statusMappings = {
  *   4. 是否已连接集群
  *
  */
-export function getEnvStatus({ connect, synchronize, active, failed }) {
+export function getEnvStatus({
+  connect, synchronize, active, failed,
+}) {
   if (!synchronize) {
     return statusMappings.OPERATING;
-  } else if (failed) {
+  } if (failed) {
     return statusMappings.FAILED;
-  } else if (!active) {
+  } if (!active) {
     return statusMappings.STOPPED;
-  } else if (connect) {
+  } if (connect) {
     return statusMappings.RUNNING;
-  } else {
-    return statusMappings.DISCONNECTED;
   }
+  return statusMappings.DISCONNECTED;
 }
 
-const StatusDot = memo(({ connect, synchronize, active, size, getStatus, failed }) => {
+const StatusDot = memo(({
+  connect, synchronize, active, size, getStatus, failed,
+}) => {
   let status;
   let text;
   if (getStatus && typeof getStatus === 'function') {
     [status, text] = getStatus();
   } else {
-    status = getEnvStatus({ connect, synchronize, active, failed });
+    status = getEnvStatus({
+      connect, synchronize, active, failed,
+    });
   }
 
   const styled = classnames({
@@ -64,12 +69,14 @@ const StatusDot = memo(({ connect, synchronize, active, size, getStatus, failed 
     [`c7ncd-env-status-${size}`]: true,
   });
   const dot = <i className={styled} />;
-  return status ? <Tooltip
-    placement="top"
-    title={<FormattedMessage id={text || status} />}
-  >
-    {dot}
-  </Tooltip> : dot;
+  return status ? (
+    <Tooltip
+      placement="top"
+      title={<FormattedMessage id={text || status} />}
+    >
+      {dot}
+    </Tooltip>
+  ) : dot;
 });
 
 StatusDot.propTypes = {

@@ -6,7 +6,7 @@ import {
   Modal, Icon, Form, Input, Select, Radio, Tooltip,
 } from 'choerodon-ui';
 import { Button } from 'choerodon-ui/pro';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import _ from 'lodash';
 import StageCard from '../components/stageCard';
 import StageCreateModal from '../components/stageCreateModal';

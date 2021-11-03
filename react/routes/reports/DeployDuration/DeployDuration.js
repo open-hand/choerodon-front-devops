@@ -1,7 +1,7 @@
 import React, { Component, useState, useEffect } from 'react';
 import {
   Page, Header, Content, Breadcrumb,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import {
   Select, Button, Table, Spin, Form,
 } from 'choerodon-ui/pro';

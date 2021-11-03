@@ -1,5 +1,5 @@
 import React from 'react';
-import { Action } from '@choerodon/boot';
+import { Action } from '@choerodon/master';
 import { Table } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import TimePopover from '../../../../../components/time-popover';

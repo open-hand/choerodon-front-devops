@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Action, Choerodon } from '@choerodon/boot';
+import { Action, Choerodon } from '@choerodon/master';
 import {
   Form, Select, TextField, TextArea, NumberField, SelectBox, Table, Button, Modal,
 } from 'choerodon-ui/pro';

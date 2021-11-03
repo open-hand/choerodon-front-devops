@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import { HeaderButtons } from '@choerodon/master';
 import { handlePromptError } from '../../../../../../utils';
 import ValueModalContent from './values/Config';

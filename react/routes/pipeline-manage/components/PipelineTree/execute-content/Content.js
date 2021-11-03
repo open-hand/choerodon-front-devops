@@ -6,7 +6,7 @@ import {
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import { map, some, debounce } from 'lodash';
-import { axios, Choerodon } from '@choerodon/boot';
+import { axios, Choerodon } from '@choerodon/master';
 import { useExecuteContentStore } from './stores';
 
 import './index.less';

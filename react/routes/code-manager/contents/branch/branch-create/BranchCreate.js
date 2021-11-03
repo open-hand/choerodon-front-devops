@@ -7,7 +7,7 @@ import { observer } from 'mobx-react-lite';
 import {
   Form, TextField, Select, Progress,
 } from 'choerodon-ui/pro';
-import { Content, axios } from '@choerodon/boot';
+import { Content, axios } from '@choerodon/master';
 import { injectIntl } from 'react-intl';
 import _ from 'lodash';
 import debounce from 'lodash/debounce';

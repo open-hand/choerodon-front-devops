@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Action } from '@choerodon/boot';
+import { Action } from '@choerodon/master';
 import {
   Tooltip, Modal, TextField, message,
 } from 'choerodon-ui/pro';

@@ -4,7 +4,7 @@ import forEach from 'lodash/forEach';
 import map from 'lodash/map';
 import pick from 'lodash/pick';
 import uuidV1 from 'uuid/v1';
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import isEmpty from 'lodash/isEmpty';
 import JSONbig from 'json-bigint';
 import { Base64 } from 'js-base64';

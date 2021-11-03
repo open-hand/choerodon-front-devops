@@ -4,7 +4,7 @@ import {
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import { CustomSelect } from '@choerodon/components';
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import HostConfigApi from '@/routes/host-config/apis/DeployApis';
 import './index.less';
 

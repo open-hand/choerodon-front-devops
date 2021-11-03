@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Button, Spin } from 'choerodon-ui/pro';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import { Loading } from '@choerodon/components';
 import EmptyPage from '../../../../../../components/empty-page';
 import NumberDetail from './number-detail';

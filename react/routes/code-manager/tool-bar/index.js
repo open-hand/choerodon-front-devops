@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
 import {
   Header, Choerodon, HeaderButtons, ButtonGroup,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import {
   Button, Select, Form, Menu, Dropdown, Icon, UrlField, TextField,
 } from 'choerodon-ui/pro';

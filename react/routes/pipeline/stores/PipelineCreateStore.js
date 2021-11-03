@@ -1,7 +1,7 @@
 /* eslint-disable no-plusplus */
 
 import { observable, action, computed, set, remove } from 'mobx';
-import { axios, store, Choerodon } from '@choerodon/boot';
+import { axios, store, Choerodon } from '@choerodon/master';
 import _ from 'lodash';
 import { handlePromptError } from '../../../utils';
 import {

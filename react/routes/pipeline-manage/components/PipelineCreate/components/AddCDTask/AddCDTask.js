@@ -14,7 +14,7 @@ import {
 } from 'choerodon-ui/pro';
 import { NewTips } from '@choerodon/components';
 import { Icon, Spin } from 'choerodon-ui';
-import { axios, Choerodon } from '@choerodon/boot';
+import { axios, Choerodon } from '@choerodon/master';
 import { Base64 } from 'js-base64';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { observer } from 'mobx-react-lite';

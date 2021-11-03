@@ -2,7 +2,7 @@ import React, { Fragment, useState, useMemo } from 'react';
 import { Input } from 'choerodon-ui';
 import { Tooltip, Icon } from 'choerodon-ui';
 import CopyToBoard from 'react-copy-to-clipboard';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 
 import './index.less';
 

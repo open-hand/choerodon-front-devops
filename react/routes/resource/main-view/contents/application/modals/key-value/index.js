@@ -3,7 +3,7 @@ import React, { Component, Fragment } from 'react';
 import { observer, inject } from 'mobx-react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import _ from 'lodash';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import { Button, Form, Input, Modal, Icon, Table, Tooltip } from 'choerodon-ui';
 import { EditableCell, EditableFormRow } from './editableTable';
 import { objToYaml, yamlToObj, takeObject, ConfigNode, makePostData } from '../utils';

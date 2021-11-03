@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-bind */
 import React from 'react';
-import { Action } from '@choerodon/boot';
+import { Action } from '@choerodon/master';
 import { Table, Tooltip } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import { TimePopover } from '@choerodon/components';

@@ -6,7 +6,7 @@ import { observer } from 'mobx-react-lite';
 import { FormattedMessage } from 'react-intl';
 import { Icon } from 'choerodon-ui';
 import { Button, Select, Table, Spin, Modal } from 'choerodon-ui/pro';
-import { Permission, Content, Header, Page, Action, Breadcrumb, Choerodon, HeaderButtons } from '@choerodon/boot';
+import { Permission, Content, Header, Page, Action, Breadcrumb, Choerodon, HeaderButtons } from '@choerodon/master';
 import { usePiplineStore } from './stores';
 import { handlePromptError } from '../../utils';
 

@@ -1,4 +1,4 @@
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import CodeManagerApis from '@/routes/code-manager/apis';
 
 export default ({

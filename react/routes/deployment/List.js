@@ -12,7 +12,7 @@ import {
   Choerodon,
   HeaderButtons,
   Action,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import {
   Table, Modal, Select, Icon, Tooltip,
 } from 'choerodon-ui/pro';

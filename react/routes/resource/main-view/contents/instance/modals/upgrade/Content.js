@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import { Form, Select } from 'choerodon-ui/pro';
 import { Spin } from 'choerodon-ui';
 import debounce from 'lodash/debounce';

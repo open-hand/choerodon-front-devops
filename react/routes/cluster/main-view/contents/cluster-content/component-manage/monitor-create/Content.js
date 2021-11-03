@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import {
   Form, Password, Select, Spin, TextField, SelectBox,
 } from 'choerodon-ui/pro';

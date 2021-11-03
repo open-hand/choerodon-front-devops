@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 import { Link, withRouter } from 'react-router-dom';
 import {
   Page, Header, Content, Breadcrumb,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import { HeaderButtons } from '@choerodon/master';
 import { Spin, Breadcrumb as Bread } from 'choerodon-ui';
 import {

@@ -3,7 +3,7 @@
 import React, { Component, Fragment } from 'react';
 import { observer, inject } from 'mobx-react';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Content, Choerodon } from '@choerodon/boot';
+import { Content, Choerodon } from '@choerodon/master';
 import _ from 'lodash';
 import classnames from 'classnames';
 import {

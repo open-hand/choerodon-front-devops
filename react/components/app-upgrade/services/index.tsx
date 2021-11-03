@@ -1,4 +1,4 @@
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import InstanceApis from '@/routes/resource/apis/instanceApis';
 
 export default class MarkerUpgradeServices {

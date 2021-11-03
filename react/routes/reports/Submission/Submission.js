@@ -6,7 +6,7 @@ import { observer } from 'mobx-react-lite';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import {
   Page, Header, Content, Breadcrumb,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import { Select, Button, Form } from 'choerodon-ui/pro';
 import _ from 'lodash';
 import moment from 'moment';

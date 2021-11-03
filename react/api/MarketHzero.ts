@@ -1,4 +1,4 @@
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import { getProjectId, getOrganizationId } from '@/utils/common';
 import Api from './Api';
 

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import includes from 'lodash/includes';
 import { appServiceVersionApiConfig } from '@/api';
 

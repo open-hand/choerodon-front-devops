@@ -5,7 +5,7 @@ import { Table, Button, Tabs } from 'choerodon-ui/pro';
 import { withRouter } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import classNames from 'classnames';
-import { Page, Permission } from '@choerodon/boot';
+import { Page, Permission } from '@choerodon/master';
 import map from 'lodash/map';
 import { useRequestStore } from './stores';
 import { Loading } from '@choerodon/components';

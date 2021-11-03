@@ -5,7 +5,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import debounce from 'lodash/debounce';
 import assign from 'lodash/assign';
 import { Button, Tooltip, Icon } from 'choerodon-ui/pro';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 
 import './index.less';
 

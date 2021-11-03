@@ -5,7 +5,7 @@ import forEach from 'lodash/forEach';
 import { Terminal } from 'xterm';
 import { fit } from 'xterm/lib/addons/fit/fit';
 import { observer } from 'mobx-react-lite';
-import { axios, Choerodon } from '@choerodon/boot';
+import { axios, Choerodon } from '@choerodon/master';
 import { Button } from 'choerodon-ui/pro';
 import { saveAs } from 'file-saver';
 

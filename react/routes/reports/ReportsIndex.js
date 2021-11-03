@@ -3,12 +3,12 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
-import { nomatch } from '@choerodon/boot';
+import { NoMatch } from '@choerodon/master';
 import { Charts, PermissionRoute } from '@choerodon/master';
 import { has, get } from '@choerodon/inject';
 import { StoreProvider } from './stores';
 
-const securityGet = (code, notfound = nomatch) => (has(code) ? get(code) : () => notfound);
+const securityGet = (code, notfound = NoMatch) => (has(code) ? get(code) : () => notfound);
 
 const SUBMISSION = React.lazy(() => import('./Submission'));
 const BUILDNUMBER = React.lazy(() => import('./BuildNumber'));
@@ -57,7 +57,7 @@ const ReportsIndex = (props) => {
           path={`${match.url}/pipeline-duration`}
           component={PipelineDuration}
         />
-        <Route path="*" component={nomatch} />
+        <Route path="*" component={NoMatch} />
       </Switch>
     </StoreProvider>
   );

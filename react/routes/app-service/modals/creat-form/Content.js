@@ -7,7 +7,7 @@ import {
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { Alert, Button } from 'choerodon-ui';
-import { axios, Choerodon } from '@choerodon/boot';
+import { axios, Choerodon } from '@choerodon/master';
 import map from 'lodash/map';
 import includes from 'lodash/includes';
 import { CustomSelect, TestConnect } from '@choerodon/components';

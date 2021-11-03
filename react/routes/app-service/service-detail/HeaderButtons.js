@@ -2,7 +2,7 @@ import React, {
   memo, useMemo, Fragment, useImperativeHandle,
 } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Header, Permission, Choerodon } from '@choerodon/boot';
+import { Header, Permission, Choerodon } from '@choerodon/master';
 import { Button, Tooltip } from 'choerodon-ui';
 import { Modal, Spin } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';

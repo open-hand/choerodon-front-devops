@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import omit from 'lodash/omit';
 import forEach from 'lodash/forEach';
 import map from 'lodash/map';

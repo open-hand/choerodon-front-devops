@@ -1,5 +1,5 @@
 import { observable, action, computed } from 'mobx';
-import { axios, Choerodon } from '@choerodon/boot';
+import { axios, Choerodon } from '@choerodon/master';
 import { handlePromptError } from '../../../../../../utils';
 
 export default class InstanceDetails {

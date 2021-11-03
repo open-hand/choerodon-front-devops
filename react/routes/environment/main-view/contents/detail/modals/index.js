@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
-import { HeaderButtons } from '@choerodon/boot';
+import { HeaderButtons } from '@choerodon/master';
 import EnvDetail from '../../../../../../components/env-detail';
 import Permission from '../../../../../resource/main-view/contents/environment/modals/permission';
 import { useEnvironmentStore } from '../../../../stores';

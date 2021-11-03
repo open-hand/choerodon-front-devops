@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { map, forOwn, isEmpty, forEach } from 'lodash';
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 
 export default ({ formatMessage, portDs, targetLabelsDs, code, networkStore, projectId, envId, appId, networkEdit }:any):any => {
   const { networkInfoDs, networkId, initTargetLabel, initPorts } = networkEdit;

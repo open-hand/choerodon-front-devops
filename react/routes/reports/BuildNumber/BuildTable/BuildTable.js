@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router-dom';
 import { Button, Tooltip, Table, Popover } from 'choerodon-ui';
-import { Permission, stores } from '@choerodon/boot';
+import { Permission, stores } from '@choerodon/master';
 import MouserOverWrapper from '../../../../components/MouseOverWrapper';
 import '../../../code-manager/contents/ciPipelineManage/index.less';
 import './BuildTable.less';

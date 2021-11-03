@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { inject } from 'mobx-react';
-import { asyncLocaleProvider, nomatch } from '@choerodon/boot';
+import { asyncLocaleProvider, NoMatch } from '@choerodon/master';
 import { PermissionRoute, Charts } from '@choerodon/master';
 import { ModalContainer } from 'choerodon-ui/pro';
 
@@ -70,7 +70,7 @@ function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
             path={`${match.url}/application-center`}
             component={AppCenter}
           />
-          <Route path="*" component={nomatch} />
+          <Route path="*" component={NoMatch} />
         </Switch>
         <ModalContainer />
       </div>
