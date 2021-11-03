@@ -4,7 +4,7 @@ import { map } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { Tabs, Spin } from 'choerodon-ui/pro';
 import { useAppDetailTabsStore } from './stores';
-import ConfigurationModal from '@/components/configuration-center/ConfigurationModal';
+// import ConfigurationModal from '@/components/configuration-center/ConfigurationModal';
 
 import './index.less';
 import {
@@ -13,7 +13,7 @@ import {
   POD_DETAILS,
   RESOURCE,
   RUNNING_DETAILS,
-  PROFILE_DETAILS,
+  //   PROFILE_DETAILS,
 } from './stores/CONST';
 import DetailsTabsHeaderButtons from './components/HeaderButtons';
 
@@ -30,8 +30,8 @@ const DetailsTabs = () => {
     subfixCls,
     tabKeys,
     appDetailTabStore,
-    configurationDetailDataSet,
-    instanceId,
+    // configurationDetailDataSet,
+    // instanceId,
   } = useAppDetailTabsStore();
 
   const handleTabChange = (tabKey: string) => {
@@ -45,16 +45,17 @@ const DetailsTabs = () => {
       [RUNNING_DETAILS]: <RunDetails />,
       [RESOURCE]: <ResourceConfig />,
       [HOST_RUNNING_DETAILS]: <RunDetailsOfHost />,
-      [PROFILE_DETAILS]: (
-        <ConfigurationModal
-          // @ts-ignore
-          configurationDetailDataSet={configurationDetailDataSet}
-          id={instanceId}
-          kind="hostDetail"
-        />
-      ),
+      //   [PROFILE_DETAILS]: (
+      //     <ConfigurationModal
+      //       // @ts-ignore
+      //       configurationDetailDataSet={configurationDetailDataSet}
+      //       id={instanceId}
+      //       kind="hostDetail"
+      //     />
+      //   ),
     }),
-    [instanceId],
+    [],
+    // [instanceId],
   );
 
   return (

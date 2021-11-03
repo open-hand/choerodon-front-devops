@@ -105,8 +105,8 @@ export default observer(() => {
     DeployGroupDataSet,
     trueAppServiceId,
     HostJarDataSet,
-    configurationCenterDataSet,
-    configCompareOptsDS,
+    // configurationCenterDataSet,
+    // configCompareOptsDS,
   } = useAddCDTaskStore();
 
   const deployGroupcRef = useRef();
@@ -428,8 +428,9 @@ export default observer(() => {
   const handleAdd = async () => {
     let deployChartData;
     const result = await ADDCDTaskDataSet.current.validate(true);
-    const configResult = await configurationCenterDataSet.validate();
-    if (result && configResult) {
+    // const configResult = await configurationCenterDataSet.validate();
+    // && configResult
+    if (result) {
       let submitData = {};
       const ds = JSON.parse(JSON.stringify(ADDCDTaskDataSet.toData()[0]));
       if (ds.type === 'cdHost') {
@@ -440,11 +441,11 @@ export default observer(() => {
           ADDCDTaskDataSet.current.get(fieldMap.postCommand.name),
         );
         if (flag && hostjarValidate) {
-            const configData = configurationCenterDataSet.toData().map(o=>{
-                return {configId:o.configId,mountPath:o.mountPath,configGroup:o.configGroup,configCode:o.configCode};
-            })
+            // const configData = configurationCenterDataSet.toData().map(o=>{
+            //     return {configId:o.configId,mountPath:o.mountPath,configGroup:o.configGroup,configCode:o.configCode};
+            // })
           submitData = HostJarDataSet.current.toData();
-          submitData.configSettingVOS = configData;
+        //   submitData.configSettingVOS = configData;
         } else {
           return false;
         }
@@ -1125,8 +1126,8 @@ export default observer(() => {
             colSpan={6}
             newLine
             dataSet={ADDCDTaskDataSet}
-            configDataSet={configurationCenterDataSet}
-            optsDS={configCompareOptsDS}
+            // configDataSet={configurationCenterDataSet}
+            // optsDS={configCompareOptsDS}
             preName={fieldMap.preCommand.name}
             startName={fieldMap.runCommand.name}
             postName={fieldMap.postCommand.name}

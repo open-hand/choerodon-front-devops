@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { DataSet } from 'choerodon-ui/pro';
 import omit from 'lodash/omit';
 import { Base64 } from 'js-base64';
@@ -376,10 +377,10 @@ const mapping: {
     name: 'fileName',
     type: 'string' as FieldType,
   },
-  configSettingVOS: {
-    name: 'configSettingVOS',
-    type: 'array' as FieldType,
-  },
+//   configSettingVOS: {
+//     name: 'configSettingVOS',
+//     type: 'array' as FieldType,
+//   },
 };
 
 const hostAppConfigDataSet = (modal: any, detail: any): DataSetProps => ({

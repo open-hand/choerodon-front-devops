@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { DataSet, Tooltip, Icon } from 'choerodon-ui/pro';
 import _ from 'lodash';
 import { Alert, Tabs } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import YamlEditor from '@/components/yamlEditor';
-import ConfigurationTab from '@/components/configuration-center/ConfigurationTab';
+// import ConfigurationTab from '@/components/configuration-center/ConfigurationTab';
 
 const { TabPane } = Tabs;
 
@@ -92,7 +93,7 @@ const Index = observer(({
         message="【前置命令】、【启动命令】、【后置命令】三者之中，必须至少填写一个"
       />
       <Tabs onChange={(value) => setActiveKey(value)} activeKey={activeKey}>
-        <TabPane
+        {/* <TabPane
           tab={(
             <div style={{ display: 'flex', alignItems: 'center' }}>
               配置中心
@@ -112,21 +113,21 @@ const Index = observer(({
             configurationCenterDataSet={configDataSet}
             configCompareOptsDS={optsDS}
           />
-        </TabPane>
+        </TabPane> */}
         <TabPane tab="前置操作" key="1" />
         <TabPane tab="启动命令" key="2" />
         <TabPane tab="后置操作" key="3" />
       </Tabs>
-      {activeKey !== 'configurationCenter' && (
-        <YamlEditor
-          readOnly={false}
-          value={getValue('value')}
-          originValue={getValue('origin')}
-          onValueChange={(value: string) => {
+      {/* {activeKey !== 'configurationCenter' && ( */}
+      <YamlEditor
+        readOnly={false}
+        value={getValue('value')}
+        originValue={getValue('origin')}
+        onValueChange={(value: string) => {
                         dataSet?.current?.set(getValue('valueChange'), value);
-          }}
-        />
-      )}
+        }}
+      />
+      {/* )} */}
     </div>
   );
 });

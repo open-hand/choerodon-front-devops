@@ -11,7 +11,7 @@ import { MIDDLE } from '@/utils/getModalWidth';
 import { TableQueryBarType } from '@/interface';
 import { useAppIngressTableStore } from './stores';
 import HostConfigServices from './services';
-import ConfigurationModal from '@/components/configuration-center/ConfigurationModal';
+// import ConfigurationModal from '@/components/configuration-center/ConfigurationModal';
 
 import './index.less';
 
@@ -24,7 +24,7 @@ const AppIngress = observer(() => {
     appIngressDataset,
     intl: { formatMessage },
     projectId,
-    configurationDetailDataSet,
+    // configurationDetailDataSet,
   } = useAppIngressTableStore();
 
   function refresh() {
@@ -84,18 +84,18 @@ const AppIngress = observer(() => {
     }
   }, [appIngressDataset, refresh]);
 
-  const handleOpenConfigurationModal = ({ record: tableRecord }) => {
-    const { instanceId } = tableRecord.toData();
-    Modal.open({
-      key: ConfigurationModalKey,
-      title: '配置文件详情',
-      style: { width: MIDDLE },
-      children: <ConfigurationModal type="modal" configurationDetailDataSet={configurationDetailDataSet} id={instanceId} kind="host" />,
-      okText: formatMessage({ id: 'close' }),
-      okCancel: false,
-      drawer: true,
-    });
-  };
+  //   const handleOpenConfigurationModal = ({ record: tableRecord }) => {
+  //     const { instanceId } = tableRecord.toData();
+  //     Modal.open({
+  //       key: ConfigurationModalKey,
+  //       title: '配置文件详情',
+  //       style: { width: MIDDLE },
+  //     //   children: <ConfigurationModal type="modal" configurationDetailDataSet={configurationDetailDataSet} id={instanceId} kind="host" />,
+  //       okText: formatMessage({ id: 'close' }),
+  //       okCancel: false,
+  //       drawer: true,
+  //     });
+  //   };
 
   const renderAction = useCallback(({ record: tableRecord }) => {
     const devopsHostCommandDTO = tableRecord.get('devopsHostCommandDTO');
@@ -106,17 +106,19 @@ const AppIngress = observer(() => {
     }
 
     const status = tableRecord.get('status');
-    console.log(status);
+    // console.log(status);
 
     const actionData = [
       {
         service: ['choerodon.code.project.deploy.host.ps.docker.delete'],
         text: formatMessage({ id: 'delete' }),
         action: () => handleDelete({ record: tableRecord }),
-      }, {
-        text: '查看配置文件',
-        action: () => handleOpenConfigurationModal({ record: tableRecord }),
-      }];
+      },
+    //   {
+    //     text: '查看配置文件',
+    //     action: () => handleOpenConfigurationModal({ record: tableRecord }),
+    //   }
+    ];
 
     if (!status || (['normal_process', 'java_process'].includes(tableRecord.get('instanceType')))) {
       return <Action data={actionData} />;
