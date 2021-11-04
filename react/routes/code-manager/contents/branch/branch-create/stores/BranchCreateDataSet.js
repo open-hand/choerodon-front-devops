@@ -1,9 +1,11 @@
+/* eslint-disable import/no-anonymous-default-export */
+import JSONBigint from 'json-bigint';
 import { axios } from '@choerodon/master';
 import CodeManagerApis from '@/routes/code-manager/apis';
 
 export default ({
   projectId, appServiceId, formatMessage, contentStore, projectOptionsDs,
-  currentProjectData,
+  currentProjectData, getUserId,
 }) => {
   async function checkBranchName(value) {
     const endWith = /(\/|\.|\.lock)$/;
@@ -40,12 +42,30 @@ export default ({
         textField: 'summary',
         valueField: 'issueId',
         label: formatMessage({ id: 'branch.issueName' }),
-        lookupAxiosConfig: ({ record }) => {
+        lookupAxiosConfig: ({ dataSet, record, params }) => {
           const project = record?.get('project');
           const selectedProjectId = project?.id ?? projectId;
+          const userIds = dataSet.getState('myquestionBool') ? [getUserId] : [];
           return {
             url: CodeManagerApis.loadSummaryData(selectedProjectId),
-            method: 'get',
+            method: 'post',
+            data: {
+              onlyActiveSprint: false,
+              self: true,
+              content: params.content,
+              userIds,
+            },
+            transformResponse: (res) => {
+              try {
+                const newRes = JSONBigint.parse(res);
+                newRes.content.unshift({
+                  summary: '我的问题myquestion',
+                });
+                return newRes.content;
+              } catch (e) {
+                return res;
+              }
+            },
           };
         },
       },

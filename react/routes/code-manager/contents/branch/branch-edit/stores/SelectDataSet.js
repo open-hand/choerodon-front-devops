@@ -1,11 +1,12 @@
-import map from 'lodash/map';
+/* eslint-disable import/no-anonymous-default-export */
 import compact from 'lodash/compact';
+import JSONBigint from 'json-bigint';
 import uniq from 'lodash/uniq';
 import CodeManagerApis from '@/routes/code-manager/apis';
 
 export default ({
   projectId, formatMessage, appServiceId, objectVersionNumber,
-  branchName, projectOptionsDs, projectName,
+  branchName, projectOptionsDs, projectName, getUserId,
 }) => ({
   autoCreate: false,
   autoQuery: false,
@@ -18,14 +19,31 @@ export default ({
       textField: 'summary',
       valueField: 'issueId',
       label: formatMessage({ id: 'branch.issueName' }),
-      lookupAxiosConfig: ({ record }) => {
+      lookupAxiosConfig: ({ dataSet, record, params }) => {
         const project = record?.get('project');
-        const issue = record?.get('issue');
         const selectedProjectId = project?.id ?? projectId;
-        const issueId = issue?.issueId;
+        const userIds = dataSet.getState('myquestionBool') ? [getUserId] : [];
         return {
-          url: CodeManagerApis.loadSummaryData(selectedProjectId, issueId ?? ''),
-          method: 'get',
+          url: CodeManagerApis.loadSummaryData(selectedProjectId),
+          method: 'post',
+          data: {
+            onlyActiveSprint: false,
+            self: true,
+            content: params.content,
+            userIds,
+          },
+          transformResponse: (res) => {
+            try {
+              const newRes = JSONBigint.parse(res);
+              newRes.content.unshift({
+                summary: '我的问题myquestion',
+                issueId: '-1',
+              });
+              return newRes.content;
+            } catch (e) {
+              return res;
+            }
+          },
         };
       },
     },
