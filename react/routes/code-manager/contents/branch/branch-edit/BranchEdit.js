@@ -2,7 +2,7 @@ import React, {
   useCallback, useMemo, useState,
 } from 'react';
 import {
-  Form, Select, Button, Tooltip,
+  Form, Select, Button, Tooltip, CheckBox,
 } from 'choerodon-ui/pro';
 import { injectIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
@@ -140,16 +140,33 @@ function BranchEdit() {
     );
   };
 
+  const myquestionChange = (bool) => {
+    selectDs.setState('myquestionBool', bool);
+    selectDs.getField('issue').fetchLookup(true);
+  };
+
   const issueNameOptionRender = ({ record }) => {
+    const typeCode = record.get('typeCode');
     const issueNum = record.get('issueNum');
     const summary = record.get('summary');
     const issueTypeVO = record.get('issueTypeVO');
-    return (
-      <span>
-        {renderIssueName({
-          issueNum, summary, issueTypeVO,
-        })}
-      </span>
+    console.log(summary);
+    return summary === '我的问题myquestion' ? (
+      <div role="none" onClick={(e) => { e.stopPropagation(); }} style={{ paddingLeft: 4, borderBottom: '1px solid #D9E6F2', paddingBottom: 20 }}>
+        <CheckBox name="base" onChange={myquestionChange}>
+          <span style={{ marginLeft: 4 }}>
+            我的问题
+          </span>
+
+        </CheckBox>
+      </div>
+    ) : (
+      renderIssueName({
+        typeCode,
+        issueNum,
+        summary,
+        issueTypeVO,
+      })
     );
   };
 
