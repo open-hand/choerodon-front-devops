@@ -110,6 +110,9 @@ export default observer(() => {
 
   const deployGroupcRef = useRef();
 
+  const [oldValue, setOldValue] = useState('');
+  const [deployWay, setDeployWay] = useState('');
+  const [isQueryDeployConfig, setIsQueryDeployConfig] = useState(true);
   const [deployGroupDetail, setDeployGroupDetail] = useState(undefined);
   const [branchsList, setBranchsList] = useState([]);
   const [valueIdValues, setValueIdValues] = useState('');
@@ -136,6 +139,17 @@ export default observer(() => {
   const [isProjectOwner, setIsProjectOwner] = useState(false);
   const [pipelineCallbackAddress, setPipelineCallbackAddress] = useState(undefined);
   const [preJobList, setPreJobList] = useState([]);
+  useEffect(() => {
+    setDeployWay(ADDCDTaskDataSet.current.get(fieldMap.deployWay.name));
+    const id = ADDCDTaskDataSet.toData()[0]?.id;
+    if (deployWay === 'update' && isQueryDeployConfig) {
+      configurationCenterDataSet.setQueryParameter('value', id);
+      configurationCenterDataSet.setQueryParameter('key', 'instance_id');
+      configurationCenterDataSet.query();
+      setIsQueryDeployConfig(false);
+    }
+  }, [ADDCDTaskDataSet.current.get(fieldMap.deployWay.name), deployWay]);
+
   useEffect(() => {
     ADDCDTaskUseStore.setValueIdRandom(Math.random());
     axios.get(`/iam/choerodon/v1/projects/${projectId}/check_admin_permission`).then((res) => {
@@ -427,9 +441,14 @@ export default observer(() => {
     let deployChartData;
     const result = await ADDCDTaskDataSet.current.validate(true);
     const configResult = await configurationCenterDataSet.validate();
-    const configData = configurationCenterDataSet.map(o=>{
-        return {configId:o.get('versionName'),mountPath:o.get('mountPath'),configGroup:o.get('configGroup'),configCode:o.get('configCode')};
-      });
+    const configData = configurationCenterDataSet.map((o) => {
+      return {
+        configId: o.get('versionName'),
+        mountPath: o.get('mountPath'),
+        configGroup: o.get('configGroup'),
+        configCode: o.get('configCode'),
+      };
+    });
     if (result && configResult) {
       let submitData = {};
       const ds = JSON.parse(JSON.stringify(ADDCDTaskDataSet.toData()[0]));
@@ -1204,6 +1223,14 @@ export default observer(() => {
                 'disabled',
                 value === deployWayData[1].value,
               );
+              const id = ADDCDTaskDataSet.toData()[0]?.id;
+              if (isQueryDeployConfig && value === 'update' && value !== oldValue) {
+                setOldValue(value);
+                configurationCenterDataSet.setQueryParameter('value', id);
+                configurationCenterDataSet.setQueryParameter('key', 'instance_id');
+                configurationCenterDataSet.query();
+                setIsQueryDeployConfig(false);
+              }
             }}
           />
           <SelectBox name={fieldMap.productType.name} />

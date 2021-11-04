@@ -68,9 +68,10 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
           transformResponse: (res) => {
             try {
               let nextContent = JSON.parse(res);
-              nextContent = nextContent.map((lineData) => {
-                const { configCode, content } = lineData;
-                return { value: configCode, meaning: configCode, content };
+              nextContent = nextContent.content.map((lineData) => {
+                const { configCode, content, contentTypeName } = lineData;
+                const configName = `${configCode}${contentTypeName}`;
+                return { value: configCode, meaning: configName, content };
               });
               return nextContent;
             } catch (err) {
@@ -121,7 +122,7 @@ const ConfigCompareOptsDS = ({ projectId, organizationId }) => ({
       transformResponse: (res) => {
         try {
           let nextContent = JSON.parse(res);
-          nextContent = nextContent.map((lineData) => {
+          nextContent = nextContent.content.map((lineData) => {
             const { versionName, content, configId } = lineData;
             return { value: configId, meaning: versionName, content };
           });
