@@ -63,6 +63,7 @@ export const StoreProvider = injectIntl(
       [],
     );
 
+    // 配置中心详情
     const configurationCenterDataSet = useMemo(
       () => new DataSet(
         // @ts-ignore

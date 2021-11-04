@@ -12,6 +12,7 @@ import styles from './index.less';
 const Content = observer((props) => {
   const { configurationCenterDataSet, configCompareOptsDS } = props;
   const [content, setContent] = useState('');
+  const configNameMap = new Map();
 
   const columns = useMemo(
     () => [
@@ -35,7 +36,13 @@ const Content = observer((props) => {
         name: 'configCode',
         renderer: ({ record }) => (
           <Form record={record} key="type-form" labelLayout="float">
-            <Select name="configCode" label="配置文件" onChange={handleChangeCode} noCache />
+            <Select
+              name="configCode"
+              label="配置文件"
+              onChange={handleChangeCode}
+              noCache
+              optionRenderer={optionRenderer}
+            />
           </Form>
         ),
       },
@@ -86,6 +93,11 @@ const Content = observer((props) => {
     [configurationCenterDataSet.current, configCompareOptsDS],
   );
 
+  const optionRenderer = ({ text, value }) => {
+    configNameMap.set(value, text);
+    return text;
+  };
+
   const handleGroupChange = () => {
     configurationCenterDataSet.current?.set('versionName', '');
     configurationCenterDataSet.current?.set('configCode', '');
@@ -115,7 +127,8 @@ const Content = observer((props) => {
 
   // 复制配置文件
   const copyContent = async (record) => {
-    const text = `${record.get('mountPath')}${record.get('configCode')}`;
+    const configName = configNameMap.get(record.get('configCode'));
+    const text = `${record.get('mountPath')}${configName}`;
     await setContent(text);
     setTimeout(handleCopy(), 100);
   };
