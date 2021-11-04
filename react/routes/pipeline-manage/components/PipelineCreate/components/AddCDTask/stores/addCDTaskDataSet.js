@@ -3,6 +3,7 @@ import uuidV1 from 'uuid/v1';
 import { axios } from '@choerodon/master';
 import forEach from 'lodash/forEach';
 import JSONbig from 'json-bigint';
+import { DataSet } from 'choerodon-ui/pro';
 import addCDTaskDataSetMap, { fieldMap, typeData, deployWayData } from './addCDTaskDataSetMap';
 import { appNameDataSet } from './deployGroupDataSet';
 import { appNameChartDataSet } from './deployChartDataSet';
@@ -606,46 +607,54 @@ export default (
       textField: 'realName',
       multiple: true,
       valueField: 'id',
-      lookupAxiosConfig: ({ params, dataSet }) => {
-        const cdAuditIdsArrayObj = dataSet.current?.get('cdAuditUserIds');
-        let cdAuditIds = [];
-        forEach(cdAuditIdsArrayObj, (obj) => {
-          if (typeof obj === 'string') {
-            cdAuditIds.push(obj);
-          } else if (typeof obj === 'object') {
-            cdAuditIds.push(obj?.id);
-          }
-        });
-        if (params.realName && params.id) {
-          cdAuditIds = [...cdAuditIds, params.id];
-        }
-        return {
-          method: 'post',
-          url: `/devops/v1/projects/${projectId}/users/app_services/${PipelineCreateFormDataSet?.current?.get('appServiceId') || trueAppServiceId}?page=0&size=20`,
-          data: {
-            userName: params.realName || '',
-            ids: cdAuditIds || [],
-          },
-          transformResponse: (res) => {
-            let newRes;
-            try {
-              newRes = JSON.parse(res);
-              if (
-                newRes.totalElements % 20 === 0
-                && newRes.content.length !== 0
-              ) {
-                newRes.content.push({
-                  id: 'more',
-                  realName: '加载更多',
-                });
+      options: new DataSet({
+        autoQuery: true,
+        paging: true,
+        pageSize: 10,
+        transport: {
+          read: ({ dataSet, data }) => {
+            const realName = data?.key;
+            const cdAuditIdsArrayObj = dataSet.current?.get('cdAuditUserIds');
+            let cdAuditIds = [];
+            forEach(cdAuditIdsArrayObj, (obj) => {
+              if (typeof obj === 'string') {
+                cdAuditIds.push(obj);
+              } else if (typeof obj === 'object') {
+                cdAuditIds.push(obj?.id);
               }
-              return newRes;
-            } catch (e) {
-              return res;
+            });
+            if (realName && data.id) {
+              cdAuditIds = [...cdAuditIds, data.id];
             }
+            return {
+              method: 'post',
+              url: `/devops/v1/projects/${projectId}/users/app_services/${PipelineCreateFormDataSet?.current?.get('appServiceId') || trueAppServiceId}`,
+              data: {
+                userName: realName || '',
+                ids: cdAuditIds || [],
+              },
+              transformResponse: (res) => {
+                let newRes;
+                try {
+                  newRes = JSON.parse(res);
+                  if (
+                    newRes.totalElements % 20 === 0
+                    && newRes.content.length !== 0
+                  ) {
+                    newRes.content.push({
+                      id: 'more',
+                      realName: '加载更多',
+                    });
+                  }
+                  return newRes;
+                } catch (e) {
+                  return res;
+                }
+              },
+            };
           },
-        };
-      },
+        },
+      }),
     },
     {
       name: 'countersigned',

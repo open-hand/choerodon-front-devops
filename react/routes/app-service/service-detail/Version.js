@@ -147,7 +147,6 @@ const Version = withRouter(observer((props) => {
     service: ['choerodon.code.project.develop.app-service.ps.version.delete'],
     text: formatMessage({ id: `${intlPrefix}.version.delete` }),
     action: () => handleDelete(null, record),
-    disabled: !selectedRecordLength,
   }]);
 
   const handleChangeListPage = (page, pageSize) => {
