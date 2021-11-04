@@ -831,7 +831,7 @@ export default observer(() => {
               DeployChartDataSet.current.set(mapping().value.name, value);
               initValueIdDataSet(
                 deployConfigDataSet,
-                PipelineCreateFormDataSet.current.get('appServiceId') || trueAppServiceId,
+                PipelineCreateFormDataSet?.current?.get('appServiceId') || trueAppServiceId,
                 ADDCDTaskDataSet.current.get('envId'),
                 ADDCDTaskUseStore.getValueIdRandom,
               );
