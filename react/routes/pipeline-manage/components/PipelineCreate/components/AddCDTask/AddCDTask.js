@@ -141,7 +141,7 @@ export default observer(() => {
   const [preJobList, setPreJobList] = useState([]);
   useEffect(() => {
     setDeployWay(ADDCDTaskDataSet.current.get(fieldMap.deployWay.name));
-    const id = JSON.parse(JSON.stringify(ADDCDTaskDataSet.toData()[0])).id;
+    const id = ADDCDTaskDataSet.toData()[0]?.id;
     if (deployWay === 'update' && isQueryDeployConfig) {
       configurationCenterDataSet.setQueryParameter('value', id);
       configurationCenterDataSet.setQueryParameter('key', 'instance_id');
@@ -1223,7 +1223,7 @@ export default observer(() => {
                 'disabled',
                 value === deployWayData[1].value,
               );
-              const id = JSON.parse(JSON.stringify(ADDCDTaskDataSet.toData()[0])).id;
+              const id = ADDCDTaskDataSet.toData()[0]?.id;
               if (isQueryDeployConfig && value === 'update' && value !== oldValue) {
                 setOldValue(value);
                 configurationCenterDataSet.setQueryParameter('value', id);
