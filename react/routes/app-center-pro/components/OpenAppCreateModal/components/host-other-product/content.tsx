@@ -42,7 +42,7 @@ export default observer(() => {
         && configCenterFlag
       ) {
         const configData = map(configurationCenterDataSet.toData(), (o:any) => ({
-          configId: o.configId,
+          configId: o.versionName,
           mountPath: o.mountPath,
           configGroup: o.configGroup,
           configCode: o.configCode,
