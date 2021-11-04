@@ -150,7 +150,6 @@ function BranchEdit() {
     const issueNum = record.get('issueNum');
     const summary = record.get('summary');
     const issueTypeVO = record.get('issueTypeVO');
-    console.log(summary);
     return summary === '我的问题myquestion' ? (
       <div role="none" onClick={(e) => { e.stopPropagation(); }} style={{ paddingLeft: 4, borderBottom: '1px solid #D9E6F2', paddingBottom: 20 }}>
         <CheckBox name="base" onChange={myquestionChange}>

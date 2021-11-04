@@ -39,7 +39,6 @@ export default ({
                 summary: '我的问题myquestion',
                 issueId: '-1',
               });
-              console.log(newRes.content);
               return newRes.content;
             } catch (e) {
               return res;
