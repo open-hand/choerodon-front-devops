@@ -1,4 +1,5 @@
 /* eslint-disable import/no-anonymous-default-export */
+import JSONbig from 'json-bigint';
 import {
   Record, DataSetProps, FieldIgnore, DataSet, RecordObjectProps,
 } from '@/interface';
@@ -64,6 +65,11 @@ export default ({
         url: DeployConfigApis.createDeployConfig(projectId),
         method: 'get',
         params: { value_id: deployConfigId },
+        transformResponse: (res:any) => {
+          const newRes = JSONbig.parse(res);
+          newRes.oldValue = newRes.value;
+          return newRes;
+        },
       },
       submit: ({ data: [data] }) => ({
         url: DeployConfigApis.createDeployConfig(projectId),
@@ -100,7 +106,12 @@ export default ({
     {
       name: 'value',
       required: true,
-    }, {
+    },
+    {
+      name: 'oldValue',
+      required: true,
+    },
+    {
       name: 'envId',
       required: true,
       defaultValue: envId,
