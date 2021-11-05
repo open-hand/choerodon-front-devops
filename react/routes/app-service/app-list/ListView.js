@@ -237,7 +237,7 @@ const ListView = withRouter(observer((props) => {
         service: ['choerodon.code.project.develop.app-service.ps.default'],
         text: formatMessage({ id: `${intlPrefix}.detail` }),
         action: () => {
-          ref?.current?.openDetail();
+          ref?.current?.openDetail(record);
         },
       },
       edit: {
@@ -491,7 +491,7 @@ const ListView = withRouter(observer((props) => {
                   style={{
                     background: record.get('id') === selectedAppService?.id ? 'rgba(104, 135, 232, 0.08)' : 'unset',
                   }}
-                  onClick={() => setSelectedAppService(record.toData())}
+                  onClick={() => {setSelectedAppService(record.toData())}}
                 >
                   <div className="c7ncd-appService-item-center">
                     <div className="c7ncd-appService-item-center-line" style={{ justifyContent: 'space-between' }}>

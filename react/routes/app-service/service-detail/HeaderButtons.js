@@ -39,16 +39,16 @@ const HeaderButtons = observer(({ children, theme4 }) => {
     openDetail,
   }));
 
-  function refresh() {
+  const refresh = () => {
     detailDs.query();
-  }
+  };
 
-  function openDetail() {
+  const openDetail = (record) => {
     Modal.open({
       key: modalKey1,
       title: formatMessage({ id: `${intlPrefix}.detail` }),
       children: <Detail
-        record={detailCurrent}
+        record={record}
         intlPrefix={intlPrefix}
         prefixCls={prefixCls}
         formatMessage={formatMessage}
@@ -58,9 +58,9 @@ const HeaderButtons = observer(({ children, theme4 }) => {
       okText: formatMessage({ id: 'close' }),
       okCancel: false,
     });
-  }
+  };
 
-  function openEdit() {
+  const openEdit = () => {
     const appServiceId = detailCurrent.get('id');
 
     Modal.open({
@@ -76,7 +76,7 @@ const HeaderButtons = observer(({ children, theme4 }) => {
       />,
       okText: formatMessage({ id: 'save' }),
     });
-  }
+  };
 
   function getActiveText() {
     const active = serviceActive ? 'disable' : 'enable';
