@@ -450,9 +450,6 @@ const Index = inject('AppState')(observer(({
               customChildren={(item, index): any => (
                 <div
                   className="c7ncd-appCenterPro-conDetail__productSource__item"
-                  style={{
-                    marginTop: isPipeline && index > 4 ? 20 : 'unset',
-                  }}
                 >
                   <img src={item.img} alt="" />
                   <p>
