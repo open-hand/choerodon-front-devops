@@ -58,9 +58,9 @@ export default ({
             transformResponse: (res) => {
               try {
                 const newRes = JSONBigint.parse(res);
-                newRes.content.unshift({
-                  summary: '我的问题myquestion',
-                });
+                // newRes.content.unshift({
+                //   summary: '我的问题myquestion',
+                // });
                 return newRes.content;
               } catch (e) {
                 return res;

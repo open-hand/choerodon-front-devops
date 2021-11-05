@@ -35,10 +35,10 @@ export default ({
           transformResponse: (res) => {
             try {
               const newRes = JSONBigint.parse(res);
-              newRes.content.unshift({
-                summary: '我的问题myquestion',
-                issueId: '-1',
-              });
+              // newRes.content.unshift({
+              //   summary: '我的问题myquestion',
+              //   issueId: '-1',
+              // });
               return newRes.content;
             } catch (e) {
               return res;
