@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { inject } from 'mobx-react';
-import { asyncLocaleProvider, NoMatch } from '@choerodon/master';
-import { PermissionRoute, Charts } from '@choerodon/master';
+import {
+  asyncLocaleProvider, NoMatch, PermissionRoute,
+} from '@choerodon/master';
 import { ModalContainer } from 'choerodon-ui/pro';
 
 import './style/index.less';

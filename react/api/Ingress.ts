@@ -19,7 +19,7 @@ class IngressApi extends Api<IngressApi> {
   checkDomain(domain: string, envId: string, path: string, ingressId: string) {
     return this.request({
       method: 'get',
-      url: `/${this.prefix}/check_domain`,
+      url: `${this.prefix}/check_domain`,
       params: {
         domain,
         env_id: envId,
@@ -33,7 +33,7 @@ class IngressApi extends Api<IngressApi> {
   deleteInstance(id:string) {
     return this.request({
       method: 'delete',
-      url: `/${id}`,
+      url: `${this.prefix}/${id}`,
     });
   }
 }
