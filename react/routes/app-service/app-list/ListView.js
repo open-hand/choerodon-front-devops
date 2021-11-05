@@ -245,7 +245,7 @@ const ListView = withRouter(observer((props) => {
         text: formatMessage({ id: 'edit' }),
         action: () => {
           setSelectedAppService(record.toData());
-          openEdit();
+          openEdit(record.get('id'));
         },
       },
       outEdit: {
@@ -319,9 +319,8 @@ const ListView = withRouter(observer((props) => {
     });
   }
 
-  function openEdit () {
-    const appServiceId = selectedAppService.id;
-
+  function openEdit (id) {
+    const appServiceId = id || selectedAppService.id;
     Modal.open({
       key: editModalKey,
       drawer: true,
