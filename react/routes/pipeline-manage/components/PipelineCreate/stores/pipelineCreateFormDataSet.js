@@ -11,6 +11,7 @@ export default (
   mathRandom,
   appService,
   BranchOptionsDs,
+  isEdit,
 ) => {
   function checkImage(value, name, record) {
     const pa = /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}(\/.+)*:.+$/;
@@ -122,7 +123,7 @@ export default (
       textField: 'branchName',
       valueField: 'branchName',
       dynamicProps: {
-        required: ({ record }) => record.get('appServiceId'),
+        required: !isEdit,
       },
       label: '关联分支',
     }, {
