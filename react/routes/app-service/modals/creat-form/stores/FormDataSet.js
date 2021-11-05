@@ -103,8 +103,12 @@ export default (({
       record.set('devopsAppTemplateId', null);
       store.setAppService([]);
       if (['normal_service', 'share_service'].includes(value)) {
-        store.loadAppService(projectId, value);
+        store.loadAppService(value);
       }
+    }
+    if (name === 'type') {
+      record.set('gitLabType', 'inGitlab');
+      record.set('disabledValue', record.get('type') === 'test' ? 'outGitlab' : '');
     }
   }
 
@@ -231,7 +235,7 @@ export default (({
     ],
     events: {
       create: () => {
-        store.loadAppService(projectId, 'normal_service');
+        store.loadAppService('normal_service');
       },
       update: handleUpdate,
     },
