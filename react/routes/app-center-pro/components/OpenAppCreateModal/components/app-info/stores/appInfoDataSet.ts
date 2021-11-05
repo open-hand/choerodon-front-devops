@@ -153,7 +153,6 @@ const mapping: {
     label: '主机',
     textField: 'name',
     valueField: 'id',
-    options: new DataSet(hostDataSetConfig()),
     dynamicProps: {
       required: ({ record }) => record.get(mapping.deployMode.name)
       === deployModeOptionsData[1].value,
@@ -171,6 +170,9 @@ const appInfoDataSet = (envId: string | undefined) => ({
         item.disabled = Boolean(envId);
         item.options = new DataSet(envDataSet);
         break;
+      }
+      case 'host': {
+        item.options = new DataSet(hostDataSetConfig());
       }
       default: {
         break;

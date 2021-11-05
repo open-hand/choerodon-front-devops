@@ -318,7 +318,6 @@ const mapping: {
     label: '应用服务',
     textField: 'name',
     valueField: 'id',
-    options: new DataSet(appServiceOptionsDs),
     dynamicProps: {
       required: ({ record }) => [chartSourceData[0].value, chartSourceData[1].value]
         .includes(record.get(mapping.chartSource.name)),
@@ -446,6 +445,7 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
         } else {
           item.disabled = false;
         }
+        item.options = new DataSet(appServiceOptionsDs);
         break;
       }
       case 'marketVersion': {
