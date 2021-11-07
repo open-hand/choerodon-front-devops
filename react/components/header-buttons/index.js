@@ -4,7 +4,7 @@ import groupBy from 'lodash/groupBy';
 import initial from 'lodash/initial';
 import flatten from 'lodash/flatten';
 import map from 'lodash/map';
-import { Permission, Action } from '@choerodon/boot';
+import { Permission, Action } from '@choerodon/master';
 // import { Button, Tooltip } from 'choerodon-ui/pro';
 import { Tooltip, Divider } from 'choerodon-ui';
 import { Button } from 'choerodon-ui/pro';

@@ -52,7 +52,6 @@ const Content = observer((props) => {
         renderer: ({ record }) => (
           <Form record={record} key="type-form" labelLayout="float" disabled>
             <TextField name="versionName" label="配置文件版本" />
-            {/* <Select name="versionName" label="配置文件版本" /> */}
           </Form>
         ),
       },

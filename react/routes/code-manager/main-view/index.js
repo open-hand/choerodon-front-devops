@@ -1,6 +1,6 @@
 import React, { Fragment, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
-import { PageWrap, PageTab, Page } from '@choerodon/boot';
+import { PageWrap, PageTab, Page } from '@choerodon/master';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { useTabActiveKey } from '@choerodon/components';

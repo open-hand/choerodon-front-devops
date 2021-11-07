@@ -1,5 +1,5 @@
 import React, { useMemo, Fragment } from 'react';
-import { Action, Choerodon } from '@choerodon/boot';
+import { Action, Choerodon } from '@choerodon/master';
 import {
   Table, Modal, Tooltip, Spin,
 } from 'choerodon-ui/pro';

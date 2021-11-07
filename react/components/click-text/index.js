@@ -2,7 +2,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Permission } from '@choerodon/boot';
+import { Permission } from '@choerodon/master';
 import { Tooltip } from 'choerodon-ui';
 import isEmpty from 'lodash/isEmpty';
 

@@ -5,7 +5,7 @@ import { withRouter, Link } from 'react-router-dom';
 import _ from 'lodash';
 import classNames from 'classnames';
 import { Icon } from 'choerodon-ui/pro';
-import { Page } from '@choerodon/boot';
+import { Page } from '@choerodon/master';
 import EmptyPage from '../../../../../components/empty-page';
 import { Loading } from '@choerodon/components';
 import Percentage from '../../../../../components/percentage/Percentage';

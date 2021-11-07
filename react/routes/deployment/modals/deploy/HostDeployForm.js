@@ -6,7 +6,7 @@ import { Spin } from 'choerodon-ui';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import { mapping } from '@/routes/deployment/modals/deploy/stores/ManualDeployDataSet';
 import StatusDot from '@/components/status-dot';
 import YamlEditor from '../../../../components/yamlEditor';

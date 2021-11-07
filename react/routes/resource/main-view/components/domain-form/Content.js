@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import {
   Form, Select, TextField, SelectBox, Button, Icon, Tooltip, Spin, TextArea,
 } from 'choerodon-ui/pro';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import map from 'lodash/map';
 import { useDomainFormStore } from './stores';
 import Tips from '../../../../../components/new-tips';

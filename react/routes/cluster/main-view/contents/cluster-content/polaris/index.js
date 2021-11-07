@@ -1,7 +1,7 @@
 import React, { Fragment, Suspense, useMemo, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Button } from 'choerodon-ui/pro';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import { useClusterMainStore } from '../../../stores';
 import { useClusterContentStore } from '../stores';
 import EmptyPage from '../../../../../../components/empty-page';

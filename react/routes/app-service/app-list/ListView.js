@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router-dom';
 import {
   Page, Content, Header, Action, Breadcrumb, Choerodon, HeaderButtons
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import {
   SagaDetails,
 } from '@choerodon/master';
@@ -237,7 +237,7 @@ const ListView = withRouter(observer((props) => {
         service: ['choerodon.code.project.develop.app-service.ps.default'],
         text: formatMessage({ id: `${intlPrefix}.detail` }),
         action: () => {
-          ref?.current?.openDetail();
+          ref?.current?.openDetail(record);
         },
       },
       edit: {
@@ -245,7 +245,7 @@ const ListView = withRouter(observer((props) => {
         text: formatMessage({ id: 'edit' }),
         action: () => {
           setSelectedAppService(record.toData());
-          openEdit();
+          openEdit(record.get('id'));
         },
       },
       outEdit: {
@@ -319,9 +319,8 @@ const ListView = withRouter(observer((props) => {
     });
   }
 
-  function openEdit () {
-    const appServiceId = selectedAppService.id;
-
+  function openEdit (id) {
+    const appServiceId = id || selectedAppService.id;
     Modal.open({
       key: editModalKey,
       drawer: true,
@@ -492,7 +491,7 @@ const ListView = withRouter(observer((props) => {
                   style={{
                     background: record.get('id') === selectedAppService?.id ? 'rgba(104, 135, 232, 0.08)' : 'unset',
                   }}
-                  onClick={() => setSelectedAppService(record.toData())}
+                  onClick={() => {setSelectedAppService(record.toData())}}
                 >
                   <div className="c7ncd-appService-item-center">
                     <div className="c7ncd-appService-item-center-line" style={{ justifyContent: 'space-between' }}>

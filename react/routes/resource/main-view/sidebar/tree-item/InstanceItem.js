@@ -2,7 +2,7 @@ import React, { Fragment, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
-import { Action, Choerodon, axios } from '@choerodon/boot';
+import { Action, Choerodon, axios } from '@choerodon/master';
 import { Modal } from 'choerodon-ui/pro';
 import isEmpty from 'lodash/isEmpty';
 import eventStopProp from '@/utils/eventStopProp';

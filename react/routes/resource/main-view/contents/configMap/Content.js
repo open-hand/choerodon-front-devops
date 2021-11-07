@@ -2,7 +2,7 @@
 /* eslint-disable jsx-quotes */
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Action } from '@choerodon/boot';
+import { Action } from '@choerodon/master';
 import { Table, Modal } from 'choerodon-ui/pro';
 import KeyValueModal from '@/components/key-value';
 import MouserOverWrapper from '../../../../../components/MouseOverWrapper/MouserOverWrapper';

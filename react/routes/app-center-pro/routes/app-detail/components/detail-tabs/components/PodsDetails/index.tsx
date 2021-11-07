@@ -1,9 +1,10 @@
+/* eslint-disable react/jsx-no-bind */
 import React, {
   useState, useCallback,
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import { FormattedMessage } from 'react-intl';
-import { Action } from '@choerodon/boot';
+import { Action } from '@choerodon/master';
 import { Table } from 'choerodon-ui/pro';
 import { Icon, Popover, Tooltip } from 'choerodon-ui';
 import map from 'lodash/map';

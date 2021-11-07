@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useMemo } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import DetailDataSet from '../../repository/stores/DetailDataSet';
 import useStore from './useStore';
 

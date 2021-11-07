@@ -1,5 +1,5 @@
 import BaseComDeployApis from '@/routes/deployment/modals/base-comDeploy/apis';
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 
 export default class BaseComDeployServices {
   static axiosGetParamsSetting(middlewareName, deployPattern, deployModel) {

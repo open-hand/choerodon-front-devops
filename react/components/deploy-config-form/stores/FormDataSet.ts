@@ -1,4 +1,5 @@
 /* eslint-disable import/no-anonymous-default-export */
+import JSONbig from 'json-bigint';
 import {
   Record, DataSetProps, FieldIgnore, DataSet, RecordObjectProps,
 } from '@/interface';
@@ -6,22 +7,29 @@ import DeployConfigApis from '../apis';
 import DeployConfigServices from '../services';
 
 interface FormProps {
-  formatMessage(arg0: object, arg1?: object): string,
-  projectId: number,
-  deployConfigId?: string,
-  envId: string,
-  appServiceId?: string,
-  appOptionDs: DataSet,
-  appSelectDisabled?: boolean,
-  appServiceName?: string,
-  setValueLoading:CallableFunction,
+  formatMessage(arg0: object, arg1?: object): string;
+  projectId: number;
+  deployConfigId?: string;
+  envId: string;
+  appServiceId?: string;
+  appOptionDs: DataSet;
+  appSelectDisabled?: boolean;
+  appServiceName?: string;
+  setValueLoading: CallableFunction;
 }
 
 export default ({
-  formatMessage, projectId, envId, deployConfigId,
-  appOptionDs, appServiceId, appSelectDisabled, appServiceName, setValueLoading,
+  formatMessage,
+  projectId,
+  envId,
+  deployConfigId,
+  appOptionDs,
+  appServiceId,
+  appSelectDisabled,
+  appServiceName,
+  setValueLoading,
 }: FormProps): DataSetProps => {
-  const loadValue = async ({ id, record }: { id: string, record: Record }) => {
+  const loadValue = async ({ id, record }: { id: string; record: Record }) => {
     !deployConfigId && setValueLoading(true);
     const res = await DeployConfigServices.getAppServiceValue(projectId, id);
     res && record.set('oldValue', res);
@@ -64,6 +72,11 @@ export default ({
         url: DeployConfigApis.createDeployConfig(projectId),
         method: 'get',
         params: { value_id: deployConfigId },
+        transformResponse: (res: any) => {
+          const newRes = JSONbig.parse(res);
+          newRes.oldValue = newRes.value;
+          return newRes;
+        },
       },
       submit: ({ data: [data] }) => ({
         url: DeployConfigApis.createDeployConfig(projectId),
@@ -71,40 +84,50 @@ export default ({
         data: { ...data, envId },
       }),
     },
-    fields: [{
-      name: 'name',
-      label: '部署配置名称',
-      required: true,
-      maxLength: 30,
-      validator: nameValidator,
-    }, {
-      name: 'description',
-      required: true,
-      label: formatMessage({ id: 'description' }),
-      maxLength: 200,
-    }, {
-      name: 'appServiceId',
-      textField: 'appServiceName',
-      valueField: 'appServiceId',
-      label: formatMessage({ id: 'appService' }),
-      required: true,
-      defaultValue: appServiceId,
-      options: appOptionDs,
-    }, {
-      name: 'appServiceName',
-      label: formatMessage({ id: 'appService' }),
-      readOnly: true,
-      ignore: 'always' as FieldIgnore,
-      defaultValue: appSelectDisabled ? appServiceName : null,
-    },
-    {
-      name: 'value',
-      required: true,
-    }, {
-      name: 'envId',
-      required: true,
-      defaultValue: envId,
-    }],
+    fields: [
+      {
+        name: 'name',
+        label: '部署配置名称',
+        required: true,
+        maxLength: 30,
+        validator: nameValidator,
+      },
+      {
+        name: 'description',
+        required: true,
+        label: formatMessage({ id: 'description' }),
+        maxLength: 200,
+      },
+      {
+        name: 'appServiceId',
+        textField: 'appServiceName',
+        valueField: 'appServiceId',
+        label: formatMessage({ id: 'appService' }),
+        required: true,
+        defaultValue: appServiceId,
+        options: appOptionDs,
+      },
+      {
+        name: 'appServiceName',
+        label: formatMessage({ id: 'appService' }),
+        readOnly: true,
+        ignore: 'always' as FieldIgnore,
+        defaultValue: appSelectDisabled ? appServiceName : null,
+      },
+      {
+        name: 'value',
+        required: true,
+      },
+      {
+        name: 'oldValue',
+        required: true,
+      },
+      {
+        name: 'envId',
+        required: true,
+        defaultValue: envId,
+      },
+    ],
     events: {
       create: ({ record }: RecordObjectProps) => {
         appServiceId && loadValue({ id: appServiceId, record });

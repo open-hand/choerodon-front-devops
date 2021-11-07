@@ -1,4 +1,4 @@
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import some from 'lodash/some';
 import forEach from 'lodash/forEach';
 

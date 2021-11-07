@@ -1,5 +1,5 @@
 import { isNil, every, some } from 'lodash';
-import { deployConfigApiConfig } from '@/api/ConfigCenter';
+import { deployConfigApiConfig } from '@/api/DeployAppCenter';
 
 const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
   selection: false,

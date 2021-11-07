@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { createContext, useContext, useMemo } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { inject } from 'mobx-react';
@@ -42,9 +43,8 @@ export const StoreProvider = inject('AppState')((props: any) => {
     },
   } = props;
 
-  const HostAppConfigDataSet = useMemo(() => new DataSet(hostAppConfigDataSet(modal, detail)), [
-    detail,
-  ]);
+  // eslint-disable-next-line max-len
+  const HostAppConfigDataSet = useMemo(() => new DataSet(hostAppConfigDataSet(modal, detail)), [detail]);
 
   const configCompareOptsDS = useMemo(
     () => new DataSet(ConfigCompareOptsDS({ projectId, organizationId })),

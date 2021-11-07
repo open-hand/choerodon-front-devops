@@ -10,7 +10,7 @@ import {
   forEach, isEmpty, map, keys,
 } from 'lodash';
 import { DataSet } from 'choerodon-ui/pro';
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import CreateFormDataSet, { transFormData } from './CreateFormDataSet';
 import PortDataSet from './PortDataSet';
 import AppInstanceOptionsDataSet from './AppInstanceOptionsDataSet';

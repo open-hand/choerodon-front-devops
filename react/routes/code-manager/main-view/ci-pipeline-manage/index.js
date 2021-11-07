@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { TabPage, ThemeWrap } from '@choerodon/boot';
+import { TabPage, ThemeWrap } from '@choerodon/master';
 import { inject } from 'mobx-react';
 import CodeManagerHeader from '../../header';
 import CodeManagerToolBar, { SelectApp } from '../../tool-bar';

@@ -1,1 +1,1 @@
-declare module '@choerodon/boot'
+declare module '@choerodon/master'

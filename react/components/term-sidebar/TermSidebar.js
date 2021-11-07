@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Select, Modal } from 'choerodon-ui';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Content } from '@choerodon/boot';
+import { Content } from '@choerodon/master';
 import _ from 'lodash';
 import uuidv1 from 'uuid/v1';
 import Cookies from 'universal-cookie';

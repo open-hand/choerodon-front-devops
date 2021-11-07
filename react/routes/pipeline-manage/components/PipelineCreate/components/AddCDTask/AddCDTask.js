@@ -14,7 +14,7 @@ import {
 } from 'choerodon-ui/pro';
 import { NewTips } from '@choerodon/components';
 import { Icon, Spin } from 'choerodon-ui';
-import { axios, Choerodon } from '@choerodon/boot';
+import { axios, Choerodon } from '@choerodon/master';
 import { Base64 } from 'js-base64';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { observer } from 'mobx-react-lite';
@@ -848,7 +848,7 @@ export default observer(() => {
               DeployChartDataSet.current.set(mapping().value.name, value);
               initValueIdDataSet(
                 deployConfigDataSet,
-                PipelineCreateFormDataSet.current.get('appServiceId') || trueAppServiceId,
+                PipelineCreateFormDataSet?.current?.get('appServiceId') || trueAppServiceId,
                 ADDCDTaskDataSet.current.get('envId'),
                 ADDCDTaskUseStore.getValueIdRandom,
               );
@@ -1005,6 +1005,7 @@ export default observer(() => {
         ADDCDTaskUseStore.setValueIdRandom(Math.random());
         setValueIdValues(tempValues);
         if (data) {
+          DeployChartDataSet.current.set(mapping().deployConfig.name, data.valueId);
           DeployChartDataSet.current.set(mapping().value.name, tempValues);
         }
       },
@@ -1461,9 +1462,9 @@ export default observer(() => {
     const pageSize = !e
       ? ADDCDTaskDataSet.current.get('pageSize')
       : ADDCDTaskDataSet.current.get('pageSize') + 20;
-    const url = `/devops/v1/projects/${projectId}/users/app_services/${PipelineCreateFormDataSet.current.get(
+    const url = `/devops/v1/projects/${projectId}/users/app_services/${PipelineCreateFormDataSet?.current?.get(
       'appServiceId',
-    )}?page=0&size=${pageSize}`;
+    ) || trueAppServiceId}?page=0&size=${pageSize}`;
     const cdAuditsUserIds = [];
     jobDetail?.cdAuditUserIds &&
       jobDetail.cdAuditUserIds.forEach((obj) => {

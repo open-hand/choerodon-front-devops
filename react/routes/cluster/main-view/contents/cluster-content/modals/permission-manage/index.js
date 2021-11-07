@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import { map, some, compact } from 'lodash';
 import { SelectBox, Select, Form, Tooltip } from 'choerodon-ui/pro';
 import DynamicSelect from '../../../../../../../components/dynamic-select-new';

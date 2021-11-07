@@ -1,4 +1,4 @@
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import React, {
   useEffect, useState,
 } from 'react';
@@ -209,6 +209,18 @@ const PipelineCreate = observer(() => {
             <Select
               multiple
               name="branch"
+              addonAfter={(
+                <Tips helpText={(
+                  <div>
+                    仅会在关联分支上创建流水线，即后续仅能在关联分支或基于关联分支创建出来的分支上执行流水线；
+                    <br />
+                    此处最多可选择5个分支，建议您选择为maser等长期存在的分支；
+                    <br />
+                    且此处为必选，若应用服务中没有分支，则无法创建流水线。
+                  </div>
+)}
+                />
+)}
               searchable
               searchMatcher="params"
               disabled={!PipelineCreateFormDataSet.current.get('appServiceId')}

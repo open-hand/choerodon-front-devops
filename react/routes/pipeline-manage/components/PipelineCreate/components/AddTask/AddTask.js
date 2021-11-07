@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import {
   Form,
   Select,

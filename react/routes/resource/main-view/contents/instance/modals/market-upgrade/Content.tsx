@@ -2,7 +2,7 @@ import React, {
   useEffect, useMemo, useState, Fragment, useCallback,
 } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import {
   Button, Form, Select, TextField,
 } from 'choerodon-ui/pro';

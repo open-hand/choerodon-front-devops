@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { Fragment, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import {Action, axios, Choerodon} from '@choerodon/boot';
+import {Action, axios, Choerodon} from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 import {
   Icon, Modal, Spin, Tooltip, Select, Form

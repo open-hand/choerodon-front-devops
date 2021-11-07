@@ -1,26 +1,22 @@
 /* eslint-disable */
-import React, {
-  useState, useEffect, useMemo, useCallback,
-} from 'react';
-import { withRouter } from 'react-router-dom';
-import { observer } from 'mobx-react-lite';
-import {
-  Form, TextField, Select, Progress,
-} from 'choerodon-ui/pro';
-import { Content, axios } from '@choerodon/boot';
-import { injectIntl } from 'react-intl';
-import _ from 'lodash';
-import debounce from 'lodash/debounce';
-import get from 'lodash/get';
-import some from 'lodash/some';
-import MouserOverWrapper from '../../../../../components/MouseOverWrapper';
-import { useFormStore } from './stores';
-import { handlePromptError } from '../../../../../utils';
-import IssueType from '../../../components/issue-type';
+import React, { useState, useEffect, useMemo, useCallback } from "react";
+import { withRouter } from "react-router-dom";
+import { observer } from "mobx-react-lite";
+import { Form, TextField, Select, Progress,CheckBox } from "choerodon-ui/pro";
+import { Content, axios } from "@choerodon/master";
+import { injectIntl } from "react-intl";
+import _ from "lodash";
+import debounce from "lodash/debounce";
+import get from "lodash/get";
+import some from "lodash/some";
+import MouserOverWrapper from "../../../../../components/MouseOverWrapper";
+import { useFormStore } from "./stores";
+import { handlePromptError } from "../../../../../utils";
+import IssueType from "../../../components/issue-type";
 
-import '../../../../main.less';
-import './index.less';
-import '../index.less';
+import "../../../../main.less";
+import "./index.less";
+import "../index.less";
 
 const { Option, OptGroup } = Select;
 
@@ -34,12 +30,14 @@ function BranchCreate(props) {
     appServiceId,
     intl: { formatMessage },
     projectOptionsDs,
-    AppState: { currentMenuType: { categories } },
+    AppState: {
+      currentMenuType: { categories },
+    },
   } = useFormStore();
 
   const [branchPageSize, setBranchPageSize] = useState(3);
   const [tagPageSize, setTagPageSize] = useState(3);
-  const [prefixData, setPrefixeData] = useState('');
+  const [prefixData, setPrefixeData] = useState("");
   const [branchOringData, setBranchOringData] = useState([]);
   const [branchTagData, setBranchTagData] = useState([]);
   const [loadMoreBranch, setLoadMoreBranch] = useState(false);
@@ -49,10 +47,10 @@ function BranchCreate(props) {
   const [selectCom, setSelectCom] = useState(null);
   const [isCallHandleInput, setIsCallHandleInput] = useState(false);
   const [isOPERATIONS, setIsOPERATIONS] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
-    setIsOPERATIONS(!some(categories || [], ['code', 'N_AGILE']));
+    setIsOPERATIONS(!some(categories || [], ["code", "N_AGILE"]));
   }, [categories]);
 
   useEffect(() => {
@@ -60,42 +58,71 @@ function BranchCreate(props) {
     loadTagData(tagPageSize);
   }, [appServiceId]);
 
-  const searchData = useMemo(() => _.debounce((text) => {
-    if (selectCom && selectCom.options) {
-      selectCom.options.changeStatus('loading');
-    }
-    axios.all([contentStore.loadBranchData(projectId, appServiceId, branchPageSize, text),
-    contentStore.loadTagData(projectId, appServiceId, tagPageSize, text)])
-      .then(axios.spread((branchs, tags) => {
+  const searchData = useMemo(
+    () =>
+      _.debounce((text) => {
         if (selectCom && selectCom.options) {
-          selectCom.options.changeStatus('ready');
+          selectCom.options.changeStatus("loading");
         }
-        if (handlePromptError(branchs) || handlePromptError(tags)) {
-          setLoadMoreBranch(judgeShowMore(branchs));
-          setLoadMoreTag(judgeShowMore(tags));
-          const value = formDs.current.get('branchOrigin');
-          if (!text
-            && value
-            && !(_.findIndex(branchs.list, (item) => item.branchName === value.slice(0, -7)) !== -1
-              // eslint-disable-next-line max-len
-              || _.findIndex(tags.list, (item) => item.release.tagName === value.slice(0, -7)) !== -1)) {
-            if (value.slice(-7) === '_type_b') {
-              branchs.list.push({
-                branchName: value.slice(0, -7),
-              });
-            } else {
-              tags.list.push({
-                release: {
-                  tagName: value.slice(0, -7),
-                },
-              });
-            }
-          }
-          setBranchOringData(branchs.list || []);
-          setBranchTagData(tags.list || []);
-        }
-      }));
-  }, 700), [selectCom, projectId, appServiceId, branchPageSize, tagPageSize]);
+        axios
+          .all([
+            contentStore.loadBranchData(
+              projectId,
+              appServiceId,
+              branchPageSize,
+              text
+            ),
+            contentStore.loadTagData(
+              projectId,
+              appServiceId,
+              tagPageSize,
+              text
+            ),
+          ])
+          .then(
+            axios.spread((branchs, tags) => {
+              if (selectCom && selectCom.options) {
+                selectCom.options.changeStatus("ready");
+              }
+              if (handlePromptError(branchs) || handlePromptError(tags)) {
+                setLoadMoreBranch(judgeShowMore(branchs));
+                setLoadMoreTag(judgeShowMore(tags));
+                const value = formDs.current.get("branchOrigin");
+                if (
+                  !text &&
+                  value &&
+                  !(
+                    _.findIndex(
+                      branchs.list,
+                      (item) => item.branchName === value.slice(0, -7)
+                    ) !== -1 ||
+                    // eslint-disable-next-line max-len
+                    _.findIndex(
+                      tags.list,
+                      (item) => item.release.tagName === value.slice(0, -7)
+                    ) !== -1
+                  )
+                ) {
+                  if (value.slice(-7) === "_type_b") {
+                    branchs.list.push({
+                      branchName: value.slice(0, -7),
+                    });
+                  } else {
+                    tags.list.push({
+                      release: {
+                        tagName: value.slice(0, -7),
+                      },
+                    });
+                  }
+                }
+                setBranchOringData(branchs.list || []);
+                setBranchTagData(tags.list || []);
+              }
+            })
+          );
+      }, 700),
+    [selectCom, projectId, appServiceId, branchPageSize, tagPageSize]
+  );
 
   /**
    * 加载分支数据
@@ -103,7 +130,11 @@ function BranchCreate(props) {
    */
   async function loadBranchData(BranchPageSize) {
     setMoreBranchLoading(true);
-    const data = await contentStore.loadBranchData(projectId, appServiceId, BranchPageSize);
+    const data = await contentStore.loadBranchData(
+      projectId,
+      appServiceId,
+      BranchPageSize
+    );
     setMoreBranchLoading(false);
     if (handlePromptError(data)) {
       setBranchOringData(data.list);
@@ -117,7 +148,11 @@ function BranchCreate(props) {
    */
   async function loadTagData(TagPageSize) {
     setMoreTagLoading(true);
-    const data = await contentStore.loadTagData(projectId, appServiceId, TagPageSize);
+    const data = await contentStore.loadTagData(
+      projectId,
+      appServiceId,
+      TagPageSize
+    );
     setMoreTagLoading(false);
     if (handlePromptError(data)) {
       setBranchTagData(data.list);
@@ -147,27 +182,30 @@ function BranchCreate(props) {
   const changeIssue = (value) => {
     let type;
     const { typeCode, issueNum } = value || {};
-    formDs.current.set('branchName', issueNum);
+    if(issueNum=== '我的问题myquestion') {
+      return
+    }
+    formDs.current.set("branchName", issueNum);
     switch (typeCode) {
-      case 'story':
-        type = 'feature';
+      case "story":
+        type = "feature";
         break;
-      case 'bug':
-        type = 'bugfix';
+      case "bug":
+        type = "bugfix";
         break;
-      case 'issue_epic':
-        type = 'custom';
+      case "issue_epic":
+        type = "custom";
         break;
-      case 'sub_task':
-        type = 'feature';
+      case "sub_task":
+        type = "feature";
         break;
-      case 'task':
-        type = 'feature';
+      case "task":
+        type = "feature";
         break;
       default:
-        type = 'custom';
+        type = "custom";
     }
-    formDs.current.set('branchType', type);
+    formDs.current.set("branchType", type);
   };
 
   /**
@@ -178,19 +216,19 @@ function BranchCreate(props) {
   const getIcon = (type) => {
     let icon;
     switch (type) {
-      case 'feature':
+      case "feature":
         icon = <span className="c7n-branch-icon icon-feature">F</span>;
         break;
-      case 'bugfix':
+      case "bugfix":
         icon = <span className="c7n-branch-icon icon-develop">B</span>;
         break;
-      case 'hotfix':
+      case "hotfix":
         icon = <span className="c7n-branch-icon icon-hotfix">H</span>;
         break;
-      case 'master':
+      case "master":
         icon = <span className="c7n-branch-icon icon-master">M</span>;
         break;
-      case 'release':
+      case "release":
         icon = <span className="c7n-branch-icon icon-release">R</span>;
         break;
       default:
@@ -201,76 +239,74 @@ function BranchCreate(props) {
 
   // 用于分支类型的渲染函数
   const renderBranchType = ({ text }) => {
-    if (text !== 'custom') {
-      setPrefixeData(text ? `${text}-` : '');
-      contentStore.setBranchPrefix(text ? `${text}-` : '');
+    if (text !== "custom") {
+      setPrefixeData(text ? `${text}-` : "");
+      contentStore.setBranchPrefix(text ? `${text}-` : "");
     } else {
       contentStore.setBranchPrefix(null);
       setPrefixeData(null);
     }
-    return (
-      text ? (
-        <div>
-          <div style={{ width: '100%' }}>
-            {getIcon(text)}
-            <span className="c7n-branch-text">{text}</span>
-          </div>
+    return text ? (
+      <div>
+        <div style={{ width: "100%" }}>
+          {getIcon(text)}
+          <span className="c7n-branch-text">{text}</span>
         </div>
-      ) : null
-    );
+      </div>
+    ) : null;
   };
   // 用于分支类型的渲染函数
   const renderOptionsBranchType = ({ text }) => (
-    <div style={{ width: '100%' }}>
+    <div style={{ width: "100%" }}>
       {getIcon(text)}
       <span className="c7n-branch-text">{text}</span>
     </div>
   );
 
   // 用于问题名称的渲染函数
-  const renderIssueName = ({
-    typeCode, issueNum, summary, issueTypeVO,
-  }) => {
-    let mes = '';
-    let icon = '';
-    let color = '';
+  const renderIssueName = ({ typeCode, issueNum, summary, issueTypeVO }) => {
+    let mes = "";
+    let icon = "";
+    let color = "";
     switch (typeCode) {
-      case 'story':
-        mes = formatMessage({ id: 'branch.issue.story' });
-        icon = 'agile_story';
-        color = '#00bfa5';
+      case "story":
+        mes = formatMessage({ id: "branch.issue.story" });
+        icon = "agile_story";
+        color = "#00bfa5";
         break;
-      case 'bug':
-        mes = formatMessage({ id: 'branch.issue.bug' });
-        icon = 'agile_fault';
-        color = '#f44336';
+      case "bug":
+        mes = formatMessage({ id: "branch.issue.bug" });
+        icon = "agile_fault";
+        color = "#f44336";
         break;
-      case 'issue_epic':
-        mes = formatMessage({ id: 'branch.issue.epic' });
-        icon = 'agile_epic';
-        color = '#743be7';
+      case "issue_epic":
+        mes = formatMessage({ id: "branch.issue.epic" });
+        icon = "agile_epic";
+        color = "#743be7";
         break;
-      case 'sub_task':
-        mes = formatMessage({ id: 'branch.issue.subtask' });
-        icon = 'agile_subtask';
-        color = '#4d90fe';
+      case "sub_task":
+        mes = formatMessage({ id: "branch.issue.subtask" });
+        icon = "agile_subtask";
+        color = "#4d90fe";
         break;
       default:
-        mes = formatMessage({ id: 'branch.issue.task' });
-        icon = 'agile_task';
-        color = '#4d90fe';
+        mes = formatMessage({ id: "branch.issue.task" });
+        icon = "agile_task";
+        color = "#4d90fe";
     }
     return (
       <>
-        {issueTypeVO ? <IssueType data={issueTypeVO} /> : (
+        {issueTypeVO ? (
+          <IssueType data={issueTypeVO} />
+        ) : (
           <div style={{ color }} className="branch-issue">
             <i className={`icon icon-${icon}`} />
           </div>
         )}
         <span className="branch-issue-content">
-          <span style={{ color: 'rgb(0,0,0,0.65)' }}>{issueNum}</span>
+          <span style={{ color: "rgb(0,0,0,0.65)" }}>{issueNum}</span>
           <MouserOverWrapper
-            style={{ display: 'inline-block', verticalAlign: 'sub' }}
+            style={{ display: "inline-block", verticalAlign: "sub" }}
             width="350px"
             text={summary}
           >
@@ -282,36 +318,48 @@ function BranchCreate(props) {
   };
 
   const issueNameRender = ({ text, value }) => {
-    const {
-      typeCode, issueNum, summary, issueTypeVO,
-    } = value || {};
-    return (
-      typeCode || issueTypeVO ? (
-        <span>
-          {renderIssueName({
-            typeCode, issueNum, summary, issueTypeVO,
-          })}
-        </span>
-      ) : null
-    );
-  };
-  const issueNameOptionRender = ({ record }) => {
-    const typeCode = record.get('typeCode');
-    const issueNum = record.get('issueNum');
-    const summary = record.get('summary');
-    const issueTypeVO = record.get('issueTypeVO');
-    return (
+    const { typeCode, issueNum, summary, issueTypeVO } = value || {};
+    return typeCode || issueTypeVO ? (
       <span>
         {renderIssueName({
-          typeCode, issueNum, summary, issueTypeVO,
+          typeCode,
+          issueNum,
+          summary,
+          issueTypeVO,
         })}
       </span>
+    ) : null;
+  };
+
+  const myquestionChange = (bool) => {
+    formDs.setState('myquestionBool',bool)
+    formDs.getField('issue').fetchLookup(true)
+  };
+
+  const issueNameOptionRender = ({ record }) => {
+    const typeCode = record.get("typeCode");
+    const issueNum = record.get("issueNum");
+    const summary = record.get("summary");
+    const issueTypeVO = record.get("issueTypeVO");
+    return summary === "我的问题myquestion" ? (
+      <div onClick={(e)=>{e.stopPropagation();}} style={{paddingLeft:4,borderBottom: '1px solid #D9E6F2',paddingBottom:20}}>
+        <CheckBox name="base" onChange={myquestionChange}><span style={{marginLeft:4}}>
+        我的问题
+          </span></CheckBox>
+      </div>
+    ) : (
+      renderIssueName({
+        typeCode,
+        issueNum,
+        summary,
+        issueTypeVO,
+      })
     );
   };
 
   const loadMore = (type, e) => {
     e.stopPropagation();
-    if (type === 'branch') {
+    if (type === "branch") {
       const pageSize = branchPageSize + 10;
       setBranchPageSize(pageSize);
       loadBranchData(pageSize);
@@ -325,27 +373,33 @@ function BranchCreate(props) {
   const rednerBranchOptionOrigin = (args) => {
     const { record, text } = args;
     // meaning是默认的textfiled 此处用于判断 是否是加载更多的按钮
-    if (!record.get('meaning')) {
+    if (!record.get("meaning")) {
       // 根据value来判断是哪一个加载更多的按钮
       let progress = null;
-      if (record.get('value') === 'tag') {
-        progress = moreTagLoading ? <Progress type="loading" size="small" /> : null;
+      if (record.get("value") === "tag") {
+        progress = moreTagLoading ? (
+          <Progress type="loading" size="small" />
+        ) : null;
       } else {
-        progress = moreBranchLoading ? <Progress type="loading" size="small" /> : null;
+        progress = moreBranchLoading ? (
+          <Progress type="loading" size="small" />
+        ) : null;
       }
       return (
         <div
-          onClick={loadMore.bind(this, record.get('value'))}
+          onClick={loadMore.bind(this, record.get("value"))}
           className="c7n-option-popover"
           role="none"
         >
           {progress}
-          <span className="c7n-option-span">{formatMessage({ id: 'loadMore' })}</span>
+          <span className="c7n-option-span">
+            {formatMessage({ id: "loadMore" })}
+          </span>
         </div>
       );
     }
 
-    return renderOption(record.get('value'));
+    return renderOption(record.get("value"));
   };
 
   // 用于渲染分支来源
@@ -361,7 +415,11 @@ function BranchCreate(props) {
     if (!text) return null;
     return (
       <span>
-        <i className={`icon c7n-branch-formItem-icon ${text.slice(-7) === '_type_t' ? 'icon-local_offer' : 'icon-branch'}`} />
+        <i
+          className={`icon c7n-branch-formItem-icon ${
+            text.slice(-7) === "_type_t" ? "icon-local_offer" : "icon-branch"
+          }`}
+        />
         {text && text.slice(0, -7)}
       </span>
     );
@@ -390,9 +448,9 @@ function BranchCreate(props) {
 
   function handleBlur(e) {
     if (branchOringData.length === 0 && branchTagData.length === 0) {
-      formDs.current.set('branchOrigin', null);
+      formDs.current.set("branchOrigin", null);
     }
-    searchData('');
+    searchData("");
   }
 
   const loadProjectData = useCallback(() => {
@@ -404,15 +462,19 @@ function BranchCreate(props) {
     searchProjectData(e.target.value);
   }, []);
 
-  const searchProjectData = useMemo(() => debounce((value) => {
-    projectOptionsDs.setQueryParameter('params', value);
-    setSearchValue(value);
-    loadProjectData();
-  }, 500), []);
+  const searchProjectData = useMemo(
+    () =>
+      debounce((value) => {
+        projectOptionsDs.setQueryParameter("params", value);
+        setSearchValue(value);
+        loadProjectData();
+      }, 500),
+    []
+  );
 
   const handleProjectBlur = useCallback(() => {
     if (searchValue) {
-      searchProjectData('');
+      searchProjectData("");
     }
   }, [searchValue]);
 
@@ -424,45 +486,40 @@ function BranchCreate(props) {
   }, []);
 
   const renderProject = useCallback(({ value }) => {
-    const currentValue = get(value, 'id');
-    const text = get(value, 'name');
+    const currentValue = get(value, "id");
+    const text = get(value, "name");
     return renderProjectOption({ text, value: currentValue });
   }, []);
 
   return (
     <div className="sidebar-content c7n-createBranch">
-      <div style={{ width: '75%' }}>
-        <Form
-          dataSet={formDs}
-          columns={5}
-          ref={changeRef}
-        >
-          {
-            !isOPERATIONS
-            && ([
-              <Select
-                name="project"
-                colSpan={5}
-                searchable
-                searchMatcher={() => true}
-                onInput={handleProjectSearch}
-                optionRenderer={renderProjectOption}
-                renderer={renderProject}
-                onBlur={handleProjectBlur}
-                clearButton={false}
-                pagingOptionContent={<span className="c7ncd-select-load-more-text">加载更多</span>}
-              />,
-              <Select
-                name="issue"
-                colSpan={5}
-                onChange={changeIssue}
-                optionRenderer={issueNameOptionRender}
-                renderer={issueNameRender}
-                searchable
-                searchMatcher="content"
-              />,
-            ])
-          }
+      <div style={{ width: "75%" }}>
+        <Form dataSet={formDs} columns={5} ref={changeRef}>
+          {!isOPERATIONS && [
+            <Select
+              name="project"
+              colSpan={5}
+              searchable
+              searchMatcher={() => true}
+              onInput={handleProjectSearch}
+              optionRenderer={renderProjectOption}
+              renderer={renderProject}
+              onBlur={handleProjectBlur}
+              clearButton={false}
+              pagingOptionContent={
+                <span className="c7ncd-select-load-more-text">加载更多</span>
+              }
+            />,
+            <Select
+              name="issue"
+              colSpan={5}
+              onChange={changeIssue}
+              optionRenderer={issueNameOptionRender}
+              renderer={issueNameRender}
+              searchable
+              searchMatcher="content"
+            />,
+          ]}
           <Select
             colSpan={5}
             name="branchOrigin"
@@ -474,42 +531,53 @@ function BranchCreate(props) {
             renderer={({ text }) => text}
           >
             <OptGroup
-              label={formatMessage({ id: 'branch.branch' })}
+              label={formatMessage({ id: "branch.branch" })}
               key="proGroup"
             >
               {branchOringData.map((s) => (
-                <Option value={`${s.branchName}_type_b`} key={s.branchName} title={s.branchName}>
+                <Option
+                  value={`${s.branchName}_type_b`}
+                  key={s.branchName}
+                  title={s.branchName}
+                >
                   {s.branchName}
                 </Option>
               ))}
-              {loadMoreBranch ? (
-                <Option value="branch" />
-              ) : null}
+              {loadMoreBranch ? <Option value="branch" /> : null}
             </OptGroup>
-            <OptGroup
-              label={formatMessage({ id: 'branch.tag' })}
-              key="more"
-            >
-              {branchTagData.map((s) => (s.release
-                ? (
-                  <Option value={`${s.release.tagName}_type_t`} key={s.release.tagName}>
+            <OptGroup label={formatMessage({ id: "branch.tag" })} key="more">
+              {branchTagData.map((s) =>
+                s.release ? (
+                  <Option
+                    value={`${s.release.tagName}_type_t`}
+                    key={s.release.tagName}
+                  >
                     {s.release.tagName}
                   </Option>
-                ) : null))}
-              {loadMoreTag ? (
-                <Option value="tag" />) : null}
+                ) : null
+              )}
+              {loadMoreTag ? <Option value="tag" /> : null}
             </OptGroup>
           </Select>
-          <Select colSpan={2} name="branchType" renderer={renderBranchType} optionRenderer={renderOptionsBranchType}>
-            {['feature', 'bugfix', 'release', 'hotfix', 'custom'].map(
-              (s) => (
-                <Option value={s} key={s} title={s}>
-                  {s}
-                </Option>
-              ),
-            )}
+          <Select
+            colSpan={2}
+            name="branchType"
+            renderer={renderBranchType}
+            optionRenderer={renderOptionsBranchType}
+          >
+            {["feature", "bugfix", "release", "hotfix", "custom"].map((s) => (
+              <Option value={s} key={s} title={s}>
+                {s}
+              </Option>
+            ))}
           </Select>
-          <TextField colSpan={3} name="branchName" renderer={({ value }) => (value ? `${prefixData || ''}${value}` : value)} />
+          <TextField
+            colSpan={3}
+            name="branchName"
+            renderer={({ value }) =>
+              value ? `${prefixData || ""}${value}` : value
+            }
+          />
         </Form>
       </div>
     </div>

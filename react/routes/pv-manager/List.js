@@ -1,7 +1,7 @@
 import React, { useCallback, Fragment } from 'react';
 import {
   Page, Content, Header, Permission, Action, Breadcrumb, Choerodon, HeaderButtons,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import {
   Table, Modal, Spin, Tooltip,
 } from 'choerodon-ui/pro';

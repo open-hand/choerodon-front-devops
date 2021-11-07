@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
 import { Spin } from 'choerodon-ui';
-import { Permission } from '@choerodon/boot';
+import { Permission } from '@choerodon/master';
 import ResourceTitle from '../../components/resource-title';
 import { useResourceStore } from '../../../stores';
 import { useCertDetailStore } from './stores';

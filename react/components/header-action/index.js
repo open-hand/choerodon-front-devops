@@ -4,19 +4,31 @@
  */
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
-import { Permission } from '@choerodon/boot';
+import { Permission } from '@choerodon/master';
 import { Dropdown, Menu, Button } from 'choerodon-ui';
 import map from 'lodash/map';
 
 import './index.less';
 
-const HeaderAction = memo(({ menuClick, items, placement, style, buttonStyle }) => {
+const HeaderAction = memo(({
+  menuClick, items, placement, style, buttonStyle,
+}) => {
   function getMenuItem() {
-    const menuItem = map(items, ({ key, text, display, service, ...rest }) => {
-      const item = <Menu.Item key={key} {...rest}>{text}</Menu.Item>;
-      const itemWithPermission = service ? <Permission key={key} service={service}>
-        {item}
-      </Permission> : item;
+    const menuItem = map(items, ({
+      key, text, display, service, ...rest
+    }) => {
+      const item = (
+        <Menu.Item key={key} {...rest}>
+          {text}
+        </Menu.Item>
+      );
+      const itemWithPermission = service ? (
+        <Permission key={key} service={service}>
+          {item}
+        </Permission>
+      ) : (
+        item
+      );
       return display ? itemWithPermission : null;
     });
     return <Menu onClick={menuClick}>{menuItem}</Menu>;
@@ -26,22 +38,20 @@ const HeaderAction = memo(({ menuClick, items, placement, style, buttonStyle }) 
     e.stopPropagation();
   }
 
-  return <div className="c7ncd-action-wrap" style={style}>
-    <Dropdown
-      placement={placement}
-      trigger={['click']}
-      overlay={getMenuItem()}
-    >
-      <Button
-        style={{ ...buttonStyle }}
-        size="small"
-        shape="circle"
-        funcType="flat"
-        icon="more_vert"
-        onClick={handleClick}
-      />
-    </Dropdown>
-  </div>;
+  return (
+    <div className="c7ncd-action-wrap" style={style}>
+      <Dropdown placement={placement} trigger={['click']} overlay={getMenuItem()}>
+        <Button
+          style={{ ...buttonStyle }}
+          size="small"
+          shape="circle"
+          funcType="flat"
+          icon="more_vert"
+          onClick={handleClick}
+        />
+      </Dropdown>
+    </div>
+  );
 });
 
 HeaderAction.propTypes = {

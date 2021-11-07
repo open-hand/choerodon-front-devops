@@ -13,8 +13,8 @@ interface ContextType {
   HostOtherProductDataSet: any;
   style: object;
   AppState: any;
-  configurationCenterDataSet:DataSet;
-  configCompareOptsDS:DataSet;
+  configurationCenterDataSet: DataSet;
+  configCompareOptsDS: DataSet;
 }
 
 const Store = createContext({} as ContextType);
@@ -32,6 +32,7 @@ export const StoreProvider = inject('AppState')((props: any) => {
   } = props;
 
   const HostOtherProductDataSet = useMemo(() => new DataSet(hostOtherProductDataSet()), []);
+
   const configCompareOptsDS = useMemo(
     () => new DataSet(ConfigCompareOptsDS({ projectId, organizationId })),
     [],

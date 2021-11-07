@@ -7,7 +7,7 @@ import {
 } from 'choerodon-ui/pro';
 import { injectIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import keys from 'lodash/keys';
 import countBy from 'lodash/countBy';
 import pickBy from 'lodash/pickBy';

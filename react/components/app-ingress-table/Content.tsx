@@ -4,7 +4,7 @@
 // @ts-nocheck
 import React, { useMemo, useState, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Action } from '@choerodon/boot';
+import { Action } from '@choerodon/master';
 import { Modal, Table, Tooltip } from 'choerodon-ui/pro';
 import { StatusTag, TimePopover, UserInfo } from '@choerodon/components';
 import { MIDDLE } from '@/utils/getModalWidth';
@@ -106,17 +106,19 @@ const AppIngress = observer(() => {
     }
 
     const status = tableRecord.get('status');
-    console.log(status);
+    // console.log(status);
 
     const actionData = [
       {
         service: ['choerodon.code.project.deploy.host.ps.docker.delete'],
         text: formatMessage({ id: 'delete' }),
         action: () => handleDelete({ record: tableRecord }),
-      }, {
+      },
+      {
         text: '查看配置文件',
         action: () => handleOpenConfigurationModal({ record: tableRecord }),
-      }];
+      },
+    ];
 
     if (!status || (['normal_process', 'java_process'].includes(tableRecord.get('instanceType')))) {
       return <Action data={actionData} />;

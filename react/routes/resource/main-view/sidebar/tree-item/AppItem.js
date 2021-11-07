@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
-import { Action, Choerodon } from '@choerodon/boot';
+import { Action, Choerodon } from '@choerodon/master';
 import { Icon, Modal, Tooltip } from 'choerodon-ui/pro';
 import AppName from '../../../../../components/appName';
 import { handlePromptError } from '../../../../../utils';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Spin } from 'choerodon-ui/pro';
 import map from 'lodash/map';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 import { useClusterMainStore } from '../../../stores';
 import { useClusterContentStore } from '../stores';

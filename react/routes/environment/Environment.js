@@ -1,5 +1,5 @@
 import React from 'react';
-import { Page, Content } from '@choerodon/boot';
+import { Page, Content } from '@choerodon/master';
 import CustomHeader from '../../components/custom-header';
 import MainView from './main-view';
 import { useEnvironmentStore } from './stores';

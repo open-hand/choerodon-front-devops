@@ -1,4 +1,4 @@
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import {
   omit, pick, map, compact, forEach, get, isEmpty,
 } from 'lodash';

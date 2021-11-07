@@ -1,5 +1,5 @@
 import { useLocalStore } from 'mobx-react-lite';
-import { axios, Choerodon } from '@choerodon/boot';
+import { axios, Choerodon } from '@choerodon/master';
 import {
   map, isEmpty, forEach, omit, pick, concat,
 } from 'lodash';

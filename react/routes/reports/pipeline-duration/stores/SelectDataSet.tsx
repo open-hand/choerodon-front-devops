@@ -1,5 +1,5 @@
 import { DataSetProps, DataSet, Record } from '@/interface';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import isEmpty from 'lodash/isEmpty';
 
 interface SelectProps {

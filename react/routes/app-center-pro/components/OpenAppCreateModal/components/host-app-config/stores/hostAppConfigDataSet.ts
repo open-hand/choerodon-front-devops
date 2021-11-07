@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { DataSet } from 'choerodon-ui/pro';
 import omit from 'lodash/omit';
 import { Base64 } from 'js-base64';

@@ -38,8 +38,7 @@ export default observer(() => {
           HostOtherProductDataSet.current.get(mapping.value.name),
           HostOtherProductDataSet.current.get(mapping.startCommand.name),
           HostOtherProductDataSet.current.get(mapping.postCommand.name),
-        )
-        && configCenterFlag
+        ) && configCenterFlag
       ) {
         const configData = map(configurationCenterDataSet.toData(), (o:any) => ({
           configId: o.versionName,

@@ -3,7 +3,7 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
-import { asyncRouter, nomatch } from '@choerodon/boot';
+import { asyncRouter, NoMatch } from '@choerodon/master';
 import { Charts, PermissionRoute } from '@choerodon/master';
 
 import { StoreProvider } from './stores';
@@ -27,7 +27,7 @@ const ReportsIndex = (props) => {
           path={`${match.url}/deploy-duration`}
           component={DeployDuration}
         />
-        <Route path="*" component={nomatch} />
+        <Route path="*" component={NoMatch} />
       </Switch>
     </StoreProvider>
   );

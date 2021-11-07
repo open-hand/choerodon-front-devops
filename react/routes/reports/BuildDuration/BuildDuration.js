@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import {
   Page, Header, Content, Breadcrumb,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import { Form, Select, Spin } from 'choerodon-ui/pro';
 import ReactEcharts from 'echarts-for-react';
 import _ from 'lodash';

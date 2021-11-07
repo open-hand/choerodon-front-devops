@@ -5,7 +5,7 @@ import React, {
 import { observer } from 'mobx-react-lite';
 import {
   Page, Header, Breadcrumb, Content, HeaderButtons,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import { Modal, Button } from 'choerodon-ui/pro';
 import { toJS } from 'mobx';
 import PipelineTree from './components/PipelineTree';

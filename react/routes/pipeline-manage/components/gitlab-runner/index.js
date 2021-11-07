@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Icon } from 'choerodon-ui/pro';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import {
   text1, text2, text3,
 } from './Constant';

@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import {
   Header, Content, Breadcrumb, HeaderButtons,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import { Button } from 'choerodon-ui';
 import { EmptyPage, Loading } from '@choerodon/components';
 import { useAppTopStore } from '../stores';

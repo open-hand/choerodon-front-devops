@@ -1,5 +1,5 @@
 import { useLocalStore } from 'mobx-react-lite';
-import { axios, Choerodon } from '@choerodon/boot';
+import { axios, Choerodon } from '@choerodon/master';
 import { handlePromptError } from '../../../utils';
 import { marketHzeroApi } from '../../../api';
 
@@ -93,8 +93,9 @@ export default function useStore() {
           this.setConfigValue(res.value);
           return res.value;
         }
+        return true;
       } catch (e) {
-        Choerodon.handleResponseError(e);
+        return Choerodon.handleResponseError(e);
       }
     },
 
@@ -105,8 +106,9 @@ export default function useStore() {
           this.setConfigValue(res.yaml);
           return res.yaml;
         }
+        return true;
       } catch (e) {
-        Choerodon.handleResponseError(e);
+        return Choerodon.handleResponseError(e);
       }
     },
 
@@ -117,8 +119,9 @@ export default function useStore() {
           this.setConfigValue(res.value);
           return res.value;
         }
+        return true;
       } catch (e) {
-        Choerodon.handleResponseError(e);
+        return Choerodon.handleResponseError(e);
       }
     },
 

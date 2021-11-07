@@ -1,4 +1,4 @@
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import omit from 'lodash/omit';
 import AppServiceApis from '../../../apis';
 import { appServiceApiConfig, appServiceApi } from '@/api/AppService';
@@ -103,8 +103,12 @@ export default (({
       record.set('devopsAppTemplateId', null);
       store.setAppService([]);
       if (['normal_service', 'share_service'].includes(value)) {
-        store.loadAppService(projectId, value);
+        store.loadAppService(value);
       }
+    }
+    if (name === 'type') {
+      record.set('gitLabType', 'inGitlab');
+      record.set('disabledValue', record.get('type') === 'test' ? 'outGitlab' : '');
     }
   }
 
@@ -112,12 +116,11 @@ export default (({
     autoCreate: true,
     autoQuery: false,
     selection: false,
+    autoQueryAfterSubmit: false,
     paging: false,
     dataToJSON: false,
     transport: {
-      read({ data }) {
-        return appExternalConfigApiConfig.getOutExternal(data.externalConfigId);
-      },
+      read: ({ data }) => appExternalConfigApiConfig.getOutExternal(data.externalConfigId),
       create: ({ data: [data], record }) => {
         if (data.gitLabType === 'inGitlab') {
           const res = omit(data, ['appServiceSource', '__id', '__status']);
@@ -232,7 +235,7 @@ export default (({
     ],
     events: {
       create: () => {
-        store.loadAppService(projectId, 'normal_service');
+        store.loadAppService('normal_service');
       },
       update: handleUpdate,
     },

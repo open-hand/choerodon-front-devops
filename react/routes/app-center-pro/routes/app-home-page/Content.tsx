@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import {
   Page, HeaderButtons, Header, Breadcrumb, Content,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import { get, has } from '@choerodon/inject';
 import { Loading } from '@choerodon/components';
 import { observer } from 'mobx-react-lite';

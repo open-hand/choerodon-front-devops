@@ -4,7 +4,7 @@ import React, {
 import {
   Form, SelectBox, Select, Spin, Button,
 } from 'choerodon-ui/pro';
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 
 let timer;

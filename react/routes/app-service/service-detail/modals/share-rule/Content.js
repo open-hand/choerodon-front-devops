@@ -1,7 +1,9 @@
-import React, { useEffect, useState, Fragment, useMemo } from 'react';
+import React, {
+  useEffect, useState, Fragment, useMemo,
+} from 'react';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import { Select, Form, TextField } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import find from 'lodash/find';
@@ -30,7 +32,7 @@ export default observer(() => {
       return false;
     }
     try {
-      if (await formDs.submit() !== false) {
+      if ((await formDs.submit()) !== false) {
         refresh();
       } else {
         return false;
@@ -41,9 +43,14 @@ export default observer(() => {
     }
   });
 
+  // eslint-disable-next-line no-unused-vars
   async function fetchLookup(field) {
     const res = await field.fetchLookup();
-    if (record.get('versionType') && record.get('version') && !find(res, ({ version }) => version === record.get('version'))) {
+    if (
+      record.get('versionType')
+      && record.get('version')
+      && !find(res, ({ version }) => version === record.get('version'))
+    ) {
       record.set('version', null);
     }
   }
@@ -52,34 +59,40 @@ export default observer(() => {
     return;
   }
 
-  return (<Fragment>
-    <Form record={record}>
-      <Select
-        name="versionType"
-        combo
-        addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.detail.type.tips` })} />}
-      >
-        {map(VERSION_TYPE, (item) => (
-          <Option value={item} key={item}>{item}</Option>
-        ))}
-      </Select>
-      <Select
-        name="version"
-        searchable
-        searchMatcher="version"
-        addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.detail.version.tips` })} />}
-      />
-      <Select
-        name="shareLevel"
-        searchable
-        searchMatcher="name"
-        addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.detail.scope.tips` })} />}
-      />
-    </Form>
-    {record.get('hasFailed') && (
-      <span className={`${prefixCls}-share-failed`}>
-        {formatMessage({ id: `${intlPrefix}.share.failed` })}
-      </span>
-    )}
-  </Fragment>);
+  return (
+    <>
+      <Form record={record}>
+        <Select
+          name="versionType"
+          combo
+          addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.detail.type.tips` })} />}
+        >
+          {map(VERSION_TYPE, (item) => (
+            <Option value={item} key={item}>
+              {item}
+            </Option>
+          ))}
+        </Select>
+        <Select
+          name="version"
+          searchable
+          searchMatcher="version"
+          addonAfter={
+            <Tips helpText={formatMessage({ id: `${intlPrefix}.detail.version.tips` })} />
+          }
+        />
+        <Select
+          name="shareLevel"
+          searchable
+          searchMatcher="name"
+          addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.detail.scope.tips` })} />}
+        />
+      </Form>
+      {record.get('hasFailed') && (
+        <span className={`${prefixCls}-share-failed`}>
+          {formatMessage({ id: `${intlPrefix}.share.failed` })}
+        </span>
+      )}
+    </>
+  );
 });

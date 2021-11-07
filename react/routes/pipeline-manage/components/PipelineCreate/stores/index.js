@@ -24,6 +24,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
       },
     },
     appService,
+    isEdit,
   } = props;
 
   const createUseStore = useStore();
@@ -38,6 +39,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
       mathRandom,
       appService,
       BranchOptionsDs,
+      isEdit,
     )), [dataSource, mathRandom],
   );
 
