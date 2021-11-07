@@ -12,6 +12,7 @@ import { fieldMap } from './addCDTaskDataSetMap';
 import {
   ConfigurationCenterDataSet,
   ConfigCompareOptsDS,
+  DeployConfigDataSet,
 } from '@/components/configuration-center/stores/ConfigurationCenterDataSet';
 
 const Store = createContext();
@@ -70,6 +71,15 @@ export const StoreProvider = injectIntl(
       [],
     );
 
+    // 更新应用
+    const deployConfigUpDateDataSet = useMemo(
+      () => new DataSet(
+        // @ts-ignore
+        DeployConfigDataSet({ projectId, organizationId, optsDS: configCompareOptsDS }),
+      ),
+      [],
+    );
+
     const value = {
       ...props,
       ADDCDTaskUseStore,
@@ -79,6 +89,7 @@ export const StoreProvider = injectIntl(
       HostJarDataSet,
       configurationCenterDataSet,
       configCompareOptsDS,
+      deployConfigUpDateDataSet,
     };
 
     return <Store.Provider value={value}>{children}</Store.Provider>;

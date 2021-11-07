@@ -6,6 +6,7 @@ import {
   Form, Select, Button, TextField, Output, DataSet,
 } from 'choerodon-ui/pro';
 import { Upload, Icon, Button as OldButton, Tabs, Alert, message } from 'choerodon-ui';
+import { isNil } from 'lodash';
 import { CustomSelect, ChunkUploader } from '@choerodon/components';
 import { Base64 } from 'js-base64';
 import { useHostAppConfigStore } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-app-config/stores';
@@ -81,7 +82,26 @@ const Index = observer(() => {
     AppState: { currentMenuType: { organizationId } },
     configurationCenterDataSet,
     configCompareOptsDS,
+    deployConfigDataSet,
   } = useHostAppConfigStore();
+
+
+  // 更新应用获取数据
+  useEffect(() => {
+      if(!isNil(detail)){
+        handleInitDeployConfig();
+      }
+  }, [detail])
+
+  const handleInitDeployConfig = async ()=>{
+    configurationCenterDataSet.setQueryParameter('value', detail.instanceId);
+    configurationCenterDataSet.setQueryParameter('key', 'instance_id');
+    await configurationCenterDataSet.query();
+    configurationCenterDataSet.toData().forEach((item) => {
+      deployConfigDataSet.create({ ...item });
+    });
+  }
+  
 
   const queryMarketAppVersionOptions = (data: any, ds: any) => {
     if (data[mapping.jarSource.name] === 'hzero') {
@@ -115,9 +135,9 @@ const Index = observer(() => {
 
    // TODO: 修改主机应用 校验+数据
   const handleOk = async () => {
-      const configData = configurationCenterDataSet.map(o=>{
-          return {configId:o.get('versionName'),mountPath:o.get('mountPath'),configGroup:o.get('configGroup'),configCode:o.get('configCode')};
-      });
+    const configData = deployConfigDataSet.map(o=>{
+        return {configId:o.get('versionName'),mountPath:o.get('mountPath'),configGroup:o.get('configGroup'),configCode:o.get('configCode')};
+    });
     HostAppConfigDataSet.current?.set('configSettingVOS',configData)
     const finalFunc = async () => {
       const res = await HostAppConfigDataSet.submit();
@@ -333,14 +353,6 @@ const Index = observer(() => {
         detail ? '' : (
           <>
             <Form style={{ marginTop: 20 }} columns={3} dataSet={HostAppConfigDataSet}>
-              {/*<Select
-                name={mapping.host.name}
-                optionRenderer={renderHostOption}
-                disabled={Boolean(detail)}
-                onOption={({ record: hostRecord }) => ({
-                  disabled: !hostRecord.get('connect'),
-                })}
-              />*/}
             </Form>
             <p>
               jar包来源
@@ -402,7 +414,7 @@ const Index = observer(() => {
               marginBottom: 20,
             }}
             dataSet={HostAppConfigDataSet}
-            configDataSet={configurationCenterDataSet}
+            configDataSet={isNil(detail)?configurationCenterDataSet:deployConfigDataSet}
             optsDS={configCompareOptsDS}
             preName={mapping.value.name}
             startName={mapping.startCommand.name}

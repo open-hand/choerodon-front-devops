@@ -19,7 +19,7 @@ import { Base64 } from 'js-base64';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { observer } from 'mobx-react-lite';
 import JSONbig from 'json-bigint';
-import { get } from 'lodash';
+import { get,isNil } from 'lodash';
 import DeployConfig from '@/components/deploy-config-form';
 import StatusDot from '@/components/status-dot';
 import {
@@ -50,6 +50,7 @@ import deployGroupDataSet, {
 import { productTypeData } from './stores/addCDTaskDataSetMap';
 import OperationYaml from '../../../../../app-center-pro/components/OpenAppCreateModal/components/operation-yaml';
 import { valueCheckValidate } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-app-config/content';
+import { queryConfigCodeOptions } from '@/components/configuration-center/ConfigurationTab';
 
 let currentSize = 10;
 
@@ -106,6 +107,7 @@ export default observer(() => {
     HostJarDataSet,
     configurationCenterDataSet,
     configCompareOptsDS,
+    deployConfigUpDateDataSet,
   } = useAddCDTaskStore();
 
   const deployGroupcRef = useRef();
@@ -139,16 +141,34 @@ export default observer(() => {
   const [isProjectOwner, setIsProjectOwner] = useState(false);
   const [pipelineCallbackAddress, setPipelineCallbackAddress] = useState(undefined);
   const [preJobList, setPreJobList] = useState([]);
+
   useEffect(() => {
     setDeployWay(ADDCDTaskDataSet.current.get(fieldMap.deployWay.name));
-    const id = ADDCDTaskDataSet.toData()[0]?.id;
     if (deployWay === 'update' && isQueryDeployConfig) {
-      configurationCenterDataSet.setQueryParameter('value', id);
-      configurationCenterDataSet.setQueryParameter('key', 'instance_id');
-      configurationCenterDataSet.query();
-      setIsQueryDeployConfig(false);
+      handleInitDeployConfig(HostJarDataSet.current?.get('appName'));
+    } else {
+      deployConfigUpDateDataSet.removeAll();
     }
-  }, [ADDCDTaskDataSet.current.get(fieldMap.deployWay.name), deployWay]);
+  }, [ADDCDTaskDataSet.current, deployWay, HostJarDataSet.current]);
+
+  const handleInitDeployConfig = (value) => {
+    const id = HostJarDataSet.current?.getField('appName')?.options?.records?.find((i) => i.get('name') === value)?.get('instanceId');
+    if (!isNil(id)) {
+      getDetailData(id);
+    }
+  };
+
+  const getDetailData = async (id) => {
+    configurationCenterDataSet.setQueryParameter('value', id);
+    configurationCenterDataSet.setQueryParameter('key', 'instance_id');
+    await configurationCenterDataSet.query();
+    setIsQueryDeployConfig(false);
+    deployConfigUpDateDataSet.removeAll();
+    configurationCenterDataSet.toData().forEach((item) => {
+      deployConfigUpDateDataSet.create({ ...item });
+    });
+    queryConfigCodeOptions(configCompareOptsDS, deployConfigUpDateDataSet);
+  };
 
   useEffect(() => {
     ADDCDTaskUseStore.setValueIdRandom(Math.random());
@@ -441,7 +461,7 @@ export default observer(() => {
     let deployChartData;
     const result = await ADDCDTaskDataSet.current.validate(true);
     const configResult = await configurationCenterDataSet.validate();
-    const configData = configurationCenterDataSet.map((o) => {
+    const configData = deployConfigUpDateDataSet.map((o) => {
       return {
         configId: o.get('versionName'),
         mountPath: o.get('mountPath'),
@@ -1144,7 +1164,9 @@ export default observer(() => {
             colSpan={6}
             newLine
             dataSet={ADDCDTaskDataSet}
-            configDataSet={configurationCenterDataSet}
+            configDataSet={
+              deployWay === 'update' ? deployConfigUpDateDataSet : configurationCenterDataSet
+            }
             optsDS={configCompareOptsDS}
             preName={fieldMap.preCommand.name}
             startName={fieldMap.runCommand.name}
@@ -1224,13 +1246,9 @@ export default observer(() => {
                 'disabled',
                 value === deployWayData[1].value,
               );
-              const id = ADDCDTaskDataSet.toData()[0]?.id;
               if (isQueryDeployConfig && value === 'update' && value !== oldValue) {
                 setOldValue(value);
-                configurationCenterDataSet.setQueryParameter('value', id);
-                configurationCenterDataSet.setQueryParameter('key', 'instance_id');
-                configurationCenterDataSet.query();
-                setIsQueryDeployConfig(false);
+                handleInitDeployConfig(HostJarDataSet.current.get('appName'));
               }
             }}
           />
@@ -1242,7 +1260,12 @@ export default observer(() => {
           {ADDCDTaskDataSet.current.get(fieldMap.deployWay.name) === deployWayData[0].value ? (
             <TextField name="appName" />
           ) : (
-            <Select name="appName" />
+            <Select
+              name="appName"
+              onChange={(value) => {
+                handleInitDeployConfig(value);
+              }}
+            />
           )}
           <TextField name="appCode" />
         </Form>,
