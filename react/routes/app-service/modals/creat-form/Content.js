@@ -7,7 +7,7 @@ import {
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { Alert, Button } from 'choerodon-ui';
-import { axios, Choerodon } from '@choerodon/boot';
+import { axios, Choerodon } from '@choerodon/master';
 import map from 'lodash/map';
 import includes from 'lodash/includes';
 import { CustomSelect, TestConnect } from '@choerodon/components';
@@ -35,10 +35,11 @@ const CreateForm = injectIntl(observer((props) => {
   const record = formDs.current;
   const [testStatus, setTestStatus] = useState('loading');
   const [isShow, setIsShow] = useState(false);
+
   useEffect(() => {
     setIsShow(false);
-  },
-  [record.get('authType')]);
+  }, [record.get('authType')]);
+
   const optionLoading = useMemo(() => (
     <Option value="loading">
       <div
@@ -205,9 +206,10 @@ const CreateForm = injectIntl(observer((props) => {
             <Form dataSet={formDs}>
               <div className="customSelect-wrapper">
                 <CustomSelect
-                  disabledKeys={formDs.current.get('type') === 'test' ? 'outGitlab' : ''}
+                  disabledKeys={formDs.current.get('disabledValue')}
                   onClickCallback={(val) => { handleGitLabChange(val); }}
                   data={gitlabSelectList}
+                  selectedKeys={formDs.current.get('gitLabType')}
                   identity="gitLabType"
                   mode="single"
                   customChildren={(item) => (
@@ -292,6 +294,7 @@ const CreateForm = injectIntl(observer((props) => {
                   onClickCallback={(val) => { handleAuthTypeChange(val); }}
                   data={authTypeList}
                   identity="authType"
+                  selectedKeys={appServiceId ? formDs.current?.get('authType') : 'username_password'}
                   mode="single"
                   customChildren={(item) => (
                     <div className="customSelect-authType-item">
@@ -312,8 +315,8 @@ const CreateForm = injectIntl(observer((props) => {
               <Button funcType="raised" disabled={!isTestDisable} onClick={handleTest}>
                 测试链接
               </Button>
-              { (isTestDisable && isShow)
-                && <TestConnect status={testStatus} failedMessage="失败原因" />}
+              {(isTestDisable && isShow)
+                && <TestConnect status={testStatus} />}
             </div>
           </>
         )

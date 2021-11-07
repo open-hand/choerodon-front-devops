@@ -25,9 +25,9 @@ export const StoreProvider = injectIntl(
     const {
       children,
       random,
-      // PipelineCreateFormDataSet,
-      // AppServiceOptionsDs,
       PipelineCreateFormDataSet,
+      //   AppServiceOptionsDs,
+      //   PipelineCreateFormDataSet,
       AppState: {
         menuType: { projectId, organizationId },
       },
@@ -51,9 +51,7 @@ export const StoreProvider = injectIntl(
       ),
       [ADDCDTaskUseStore, random],
     );
-    const DeployChartDataSet = useMemo(() => new DataSet(deployChartDataSet(ADDCDTaskDataSet)), [
-      ADDCDTaskDataSet?.current?.get(fieldMap.deployWay.name),
-    ]);
+    const DeployChartDataSet = useMemo(() => new DataSet(deployChartDataSet(ADDCDTaskDataSet)), []);
     const DeployGroupDataSet = useMemo(() => new DataSet(deployGroupDataSet(ADDCDTaskDataSet)), [
       ADDCDTaskDataSet?.current?.get('envId'),
     ]);

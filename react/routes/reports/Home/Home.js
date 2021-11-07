@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
   Page, Header, Content, stores,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import _ from 'lodash';
 import { deployReportList, developReportList } from './reportList';
 import './Home.less';

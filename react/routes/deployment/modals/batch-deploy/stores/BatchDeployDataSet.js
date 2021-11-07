@@ -3,7 +3,7 @@ import omit from 'lodash/omit';
 import forEach from 'lodash/forEach';
 import map from 'lodash/map';
 import uuidV1 from 'uuid/v1';
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import isEmpty from 'lodash/isEmpty';
 
 function getRandomName(prefix = '') {

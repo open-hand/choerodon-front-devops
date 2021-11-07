@@ -1,8 +1,10 @@
-import React, { useEffect, useMemo } from 'react';
+/* eslint-disable react/prop-types */
+import React, { useMemo } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { inject } from 'mobx-react';
-import { asyncLocaleProvider, nomatch } from '@choerodon/boot';
-import { PermissionRoute, Charts } from '@choerodon/master';
+import {
+  asyncLocaleProvider, NoMatch, PermissionRoute,
+} from '@choerodon/master';
 import { ModalContainer } from 'choerodon-ui/pro';
 
 import './style/index.less';
@@ -26,6 +28,7 @@ const OrgTemplate = React.lazy(() => import('./routes/app-template/OrgIndex'));
 const SiteTemplate = React.lazy(() => import('./routes/app-template/SiteIndex'));
 const AppCenter = React.lazy(() => import('./routes/app-center-pro'));
 
+// eslint-disable-next-line react/prop-types
 function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
   const IntlProviderAsync = useMemo(() => asyncLocaleProvider(language, () => import(`./locale/${language}`)), []);
   return (
@@ -70,7 +73,7 @@ function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
             path={`${match.url}/application-center`}
             component={AppCenter}
           />
-          <Route path="*" component={nomatch} />
+          <Route path="*" component={NoMatch} />
         </Switch>
         <ModalContainer />
       </div>

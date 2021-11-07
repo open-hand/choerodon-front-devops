@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 
 /**
  * 数据请求后的错误拦截

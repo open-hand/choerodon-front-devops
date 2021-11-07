@@ -1,6 +1,7 @@
 import { useLocalStore } from 'mobx-react-lite';
-import { axios, Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import { handlePromptError } from '../../../../../utils';
+import { appServiceApi } from '@/api';
 
 export default function useStore() {
   return useLocalStore(() => ({
@@ -20,11 +21,11 @@ export default function useStore() {
       return this.appService.slice();
     },
 
-    async loadAppService(projectId, type) {
+    async loadAppService(type) {
       this.setAppService([]);
       this.setAppServiceLoading(true);
       try {
-        const res = await axios.get(`/devops/v1/projects/${projectId}/app_service/list_all_app_services?deploy_only=false&type=${type}`);
+        const res = await appServiceApi.listAllAppservices(type);
         if (handlePromptError(res)) {
           this.setAppService(res);
         }

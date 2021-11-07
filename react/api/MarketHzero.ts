@@ -1,4 +1,4 @@
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import { getProjectId, getOrganizationId } from '@/utils/common';
 import Api from './Api';
 
@@ -21,7 +21,7 @@ class MarketHzeroApi extends Api<MarketHzeroApi> {
   loadSyncStatus() {
     return this.request({
       method: 'get',
-      url: `${this.sitePrefix}/hzero/sync_status`,
+      url: `${this.sitePrefix}/${this.orgId}/hzero/sync_status`,
     });
   }
 
@@ -32,7 +32,7 @@ class MarketHzeroApi extends Api<MarketHzeroApi> {
   loadHzeroVersions(type = 'open') {
     return this.request({
       method: 'get',
-      url: `${this.sitePrefix}/hzero/versions`,
+      url: `${this.sitePrefix}/${this.orgId}/hzero/versions`,
       params: { type },
     });
   }
@@ -45,7 +45,7 @@ class MarketHzeroApi extends Api<MarketHzeroApi> {
   loadHzeroServices(applicationId: string, appVersionId: string) {
     return this.request({
       method: 'get',
-      url: `${this.sitePrefix}/deploy_object/hzero`,
+      url: `${this.sitePrefix}/${this.orgId}/deploy_object/hzero`,
       params: {
         application_id: applicationId,
         app_version_id: appVersionId,

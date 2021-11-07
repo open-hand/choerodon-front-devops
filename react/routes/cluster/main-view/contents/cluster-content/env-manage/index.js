@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Modal, Table } from 'choerodon-ui/pro';
-import { Action } from '@choerodon/boot';
+import { Action } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 import TimePopover from '@/components/timePopover';
 import { useClusterContentStore } from '../stores';

@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Action } from '@choerodon/boot';
+import { Action } from '@choerodon/master';
 import { Table, Tooltip } from 'choerodon-ui/pro';
 import StatusTags from '../../../../../components/status-tag';
 import { useResourceStore } from '../../../stores';

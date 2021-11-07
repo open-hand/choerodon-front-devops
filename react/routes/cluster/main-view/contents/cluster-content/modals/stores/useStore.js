@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import { useLocalStore } from 'mobx-react-lite';
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import { omit, map, forEach } from 'lodash';
 import { handlePromptError } from '../../../../../../../utils';
 

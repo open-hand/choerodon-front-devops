@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Action } from '@choerodon/boot';
+import { Action } from '@choerodon/master';
 import { Table, Modal, SelectBox, Form, Icon } from 'choerodon-ui/pro';
 import { Button } from 'choerodon-ui';
 import { injectIntl, FormattedMessage } from 'react-intl';

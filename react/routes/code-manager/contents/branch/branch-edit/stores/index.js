@@ -42,6 +42,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       projectOptionsDs,
       initIssues,
       projectName,
+      getUserId,
     }), [projectId]));
 
     useEffect(() => {

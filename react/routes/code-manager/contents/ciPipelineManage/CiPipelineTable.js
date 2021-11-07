@@ -3,7 +3,7 @@ import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Tooltip } from 'choerodon-ui';
 import { Table } from 'choerodon-ui/pro';
-import { Action, Page } from '@choerodon/boot';
+import { Action, Page } from '@choerodon/master';
 import {FormattedMessage, injectIntl} from 'react-intl';
 import classNames from 'classnames';
 import TimeAgo from 'timeago-react';

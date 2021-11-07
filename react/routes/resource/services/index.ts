@@ -1,5 +1,5 @@
 import ResourceApis from '@/routes/resource/apis';
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import WorkloadApis from '@/routes/resource/apis/WorkloadApis';
 
 export default class ResourceServices {

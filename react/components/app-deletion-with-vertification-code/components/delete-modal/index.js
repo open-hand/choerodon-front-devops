@@ -6,7 +6,7 @@ import {
   Modal, Form, Input, Spin,
 } from 'choerodon-ui';
 import PropTypes from 'prop-types';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import { Button } from 'choerodon-ui/pro';
 import { handlePromptError } from '@/utils';
 

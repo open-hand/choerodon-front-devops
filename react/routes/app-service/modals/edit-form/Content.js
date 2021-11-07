@@ -4,7 +4,7 @@ import { Form, TextField, Select } from 'choerodon-ui/pro';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { Icon, Input, Divider } from 'choerodon-ui';
-import { axios, Choerodon } from '@choerodon/boot';
+import { axios, Choerodon } from '@choerodon/master';
 import includes from 'lodash/includes';
 import { Loading } from '@choerodon/components';
 import { handlePromptError } from '../../../../utils';

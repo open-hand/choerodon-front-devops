@@ -6,7 +6,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import {
   Button, Modal, Spin, Tooltip, Form, Input, Select, Radio, Icon,
 } from 'choerodon-ui';
-import { Content, Choerodon } from '@choerodon/boot';
+import { Content, Choerodon } from '@choerodon/master';
 import classnames from 'classnames';
 import _ from 'lodash';
 import uuidv1 from 'uuid/v1';

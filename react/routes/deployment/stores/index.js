@@ -119,7 +119,6 @@ export const StoreProvider = withRouter(
       }, []);
 
       // 配置中心详情
-
       const configurationDetailDataSet = useMemo(
         () => new DataSet(
           // @ts-ignore

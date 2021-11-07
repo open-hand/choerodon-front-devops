@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import {
   TabPage, Content, Permission, Breadcrumb, Action,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import {
   Table, Modal, TextField, Pagination, Button as ProButton,
 } from 'choerodon-ui/pro';

@@ -50,9 +50,13 @@ const DeployConfigForm = () => {
     }
   });
 
-  const handleValueChange = useCallback((value) => {
+  const handleValueChange = (value:any) => {
     record?.set('value', value);
-  }, [record]);
+  };
+
+  const handleEnableNext = (flag: boolean) => {
+    setValueError(flag);
+  };
 
   const renderValue = () => {
     const app = record?.get('appServiceId');
@@ -65,7 +69,7 @@ const DeployConfigForm = () => {
         value={record?.get('value')}
         originValue={record?.get('oldValue') || record?.get('value')}
         onValueChange={handleValueChange}
-        handleEnableNext={setValueError}
+        handleEnableNext={handleEnableNext}
       />
     ) : null;
   };

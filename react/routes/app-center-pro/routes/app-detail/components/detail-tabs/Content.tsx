@@ -47,7 +47,7 @@ const DetailsTabs = () => {
       [HOST_RUNNING_DETAILS]: <RunDetailsOfHost />,
       [PROFILE_DETAILS]: (
         <ConfigurationModal
-          // @ts-ignore
+            // @ts-ignore
           configurationDetailDataSet={configurationDetailDataSet}
           id={instanceId}
           kind="hostDetail"

@@ -2,7 +2,7 @@
 /* eslint-disable prefer-destructuring */
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { reduce, map } from 'lodash';

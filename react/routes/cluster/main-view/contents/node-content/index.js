@@ -1,5 +1,5 @@
 import React from 'react';
-import { Permission } from '@choerodon/boot';
+import { Permission } from '@choerodon/master';
 import { NodeContentStoreProvider } from './stores';
 import Content from './Content';
 

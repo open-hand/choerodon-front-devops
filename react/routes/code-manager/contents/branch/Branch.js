@@ -6,7 +6,7 @@ import {
 import { Popover } from 'choerodon-ui';
 import {
   Page, Permission, stores, Action,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import classNames from 'classnames';
 import map from 'lodash/map';
 import forEach from 'lodash/forEach';

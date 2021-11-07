@@ -1,4 +1,4 @@
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 
 export default ({ formatMessage, intlPrefix, projectId }) => {
   const nameValidator = async (value) => {

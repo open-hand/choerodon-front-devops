@@ -8,7 +8,7 @@ import {
   Pagination, Icon, Button, Modal,
 } from 'choerodon-ui/pro';
 import { Collapse } from 'choerodon-ui';
-import { Action, Page, Permission } from '@choerodon/boot';
+import { Action, Page, Permission } from '@choerodon/master';
 import { UserInfo, Loading } from '@choerodon/components';
 import TimePopover from '../../../../components/timePopover';
 import EmptyPage from '../../../../components/empty-page';

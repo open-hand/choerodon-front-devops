@@ -4,7 +4,7 @@ import React, {
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Content, Choerodon } from '@choerodon/boot';
+import { Content, Choerodon } from '@choerodon/master';
 import { Radio } from 'choerodon-ui/pro';
 import {
   Form,

@@ -94,6 +94,13 @@ class AppServiceApi extends Api<AppServiceApi> {
       data: res,
     });
   }
+
+  listAllAppservices(type:string) {
+    return this.request({
+      url: `${this.prefix}/list_all_app_services?deploy_only=false&type=${type}&include_external=false`,
+      method: 'get',
+    });
+  }
 }
 
 const appServiceApi = new AppServiceApi();

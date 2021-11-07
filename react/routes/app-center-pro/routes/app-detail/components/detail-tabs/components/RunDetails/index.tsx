@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import _ from 'lodash';
 import TimeAgo from 'timeago-react';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import {
   Tooltip, Button, Icon, Popover, Spin,
 } from 'choerodon-ui';

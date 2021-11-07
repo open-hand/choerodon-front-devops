@@ -4,7 +4,7 @@ import React, {
 import { observer } from 'mobx-react-lite';
 import { FormattedMessage } from 'react-intl';
 import _ from 'lodash';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import {
   Form, DataSet, TextField, TextArea,
 } from 'choerodon-ui/pro';

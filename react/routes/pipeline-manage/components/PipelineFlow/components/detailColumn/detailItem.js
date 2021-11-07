@@ -8,7 +8,7 @@ import {
 } from 'web-streams-polyfill/ponyfill';
 import {
   Choerodon, Action,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import copy from 'copy-to-clipboard';
 import StreamSaver from 'streamsaver';
 import { Base64 } from 'js-base64';

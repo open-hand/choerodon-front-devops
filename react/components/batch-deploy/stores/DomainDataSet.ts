@@ -1,5 +1,5 @@
 /* eslint-disable import/no-anonymous-default-export */
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import some from 'lodash/some';
 
 export default ({

@@ -1,7 +1,8 @@
 /* eslint-disable */
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import includes from 'lodash/includes';
 import { appServiceVersionApiConfig } from '@/api';
+import { appServiceApi } from '@/api';
 
 export default ({ intlPrefix, formatMessage, projectId, importStore }) => {
   function handleUpdate({ dataSet, record, name, value, oldValue }) {
@@ -20,6 +21,7 @@ export default ({ intlPrefix, formatMessage, projectId, importStore }) => {
   async function checkCode(value, name, record) {
     const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
     if (value && pa.test(value)) {
+     
       const dataSet = record.dataSet;
       const repeatRecord = dataSet.find((eachRecord) => eachRecord.id !== record.id && eachRecord.get('code') === value);
       const { listCode } = importStore.getRepeatData || {};
@@ -38,6 +40,7 @@ export default ({ intlPrefix, formatMessage, projectId, importStore }) => {
         } catch (err) {
           return formatMessage({ id: 'checkCodeFailed' });
         }
+        return true;
       }
     } else {
       return formatMessage({ id: 'checkCodeReg' });

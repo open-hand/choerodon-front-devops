@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 
 import { useLocalStore } from 'mobx-react-lite';
-import { axios, Choerodon } from '@choerodon/boot';
+import { axios, Choerodon } from '@choerodon/master';
 import map from 'lodash/map';
 import { handlePromptError } from '../../../utils';
 

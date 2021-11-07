@@ -9,7 +9,7 @@ import {
 import { Button } from 'choerodon-ui/pro';
 import {
   Content, Header, Page, Choerodon,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import _ from 'lodash';
 import Sidebar from 'choerodon-ui/lib/modal/Sidebar';
 import StageCard from '../components/stageCard';

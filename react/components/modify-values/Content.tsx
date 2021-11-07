@@ -1,7 +1,8 @@
+/* eslint-disable react/jsx-no-bind */
 import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Spin, message } from 'choerodon-ui';
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import YamlEditor from '@/components/yamlEditor';
 import InterceptMask from '@/components/intercept-mask';
 

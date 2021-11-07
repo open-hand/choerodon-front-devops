@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
-import { Action, Choerodon } from '@choerodon/boot';
+import { Action, Choerodon } from '@choerodon/master';
 import { Modal, Spin } from 'choerodon-ui/pro';
 import { handlePromptError } from '../../../../../utils';
 import eventStopProp from '../../../../../utils/eventStopProp';

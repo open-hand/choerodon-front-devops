@@ -3,7 +3,7 @@ import React, { lazy, Suspense, useEffect } from 'react';
 import { runInAction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { Tabs, Spin } from 'choerodon-ui';
-import { Permission } from '@choerodon/boot';
+import { Permission } from '@choerodon/master';
 import { useEnvironmentStore } from './stores';
 import { useResourceStore } from '../../../stores';
 import PageTitle from '../../../../../components/page-title';

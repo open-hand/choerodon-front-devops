@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Choerodon } from '@choerodon/boot';
+import { Choerodon } from '@choerodon/master';
 import { Button, Tooltip, Radio, Input, Form, Select, Icon } from 'choerodon-ui';
 import _ from 'lodash';
 import PropTypes from 'prop-types';

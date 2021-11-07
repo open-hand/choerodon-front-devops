@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   Page, Content, Header, Permission, Action, Breadcrumb, HeaderButtons,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import { Table, Modal } from 'choerodon-ui/pro';
 import { Button } from 'choerodon-ui';
 import { FormattedMessage } from 'react-intl';

@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
-import { Breadcrumb } from '@choerodon/boot';
+import { Breadcrumb } from '@choerodon/master';
 
 import './index.less';
 

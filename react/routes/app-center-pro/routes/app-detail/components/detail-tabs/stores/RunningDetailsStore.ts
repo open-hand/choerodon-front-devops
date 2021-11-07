@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import { useLocalStore } from 'mobx-react-lite';
-import { axios, Choerodon } from '@choerodon/boot';
+import { axios, Choerodon } from '@choerodon/master';
 import { handlePromptError } from '@/utils';
 import { CHART_CATERGORY, DEPLOY_CATERGORY } from '@/routes/app-center-pro/stores/CONST';
 import { appServiceInstanceApi, appServiceInstanceApiConfig, deployAppCenterApi } from '@/api';

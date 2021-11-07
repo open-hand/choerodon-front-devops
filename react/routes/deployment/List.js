@@ -12,7 +12,7 @@ import {
   Choerodon,
   HeaderButtons,
   Action,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import {
   Table, Modal, Select, Icon, Tooltip,
 } from 'choerodon-ui/pro';
@@ -534,6 +534,7 @@ const Deployment = withRouter(
               text: formatMessage({ id: `${intlPrefix}.hzero.stop` }),
               action: () => openHzeroStopModal(record),
             });
+          // eslint-disable-next-line no-fallthrough
           default:
         }
         return <Action data={actionData} />;
@@ -550,18 +551,18 @@ const Deployment = withRouter(
           />
         );
       }
-      if (record.get('deployMode') === 'host' && record.get('deployType') !== 'baseComponent') {
-        return (
-          <Action
-            data={[
-              {
-                text: '查看配置文件',
-                action: () => openConfigurationModal(record.get('id')),
-              },
-            ]}
-          />
-        );
-      }
+      //   if (record.get('deployMode') === 'host' && record.get('deployType') !== 'baseComponent') {
+      //     return (
+      //       <Action
+      //         data={[
+      //           {
+      //             text: '查看配置文件',
+      //             action: () => openConfigurationModal(record.get('id')),
+      //           },
+      //         ]}
+      //       />
+      //     );
+      //   }
       return null;
     }, []);
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { DataSet, Tooltip, Icon } from 'choerodon-ui/pro';
 import _ from 'lodash';
 import { Alert, Tabs } from 'choerodon-ui';
@@ -118,14 +119,14 @@ const Index = observer(({
         <TabPane tab="后置操作" key="3" />
       </Tabs>
       {activeKey !== 'configurationCenter' && (
-        <YamlEditor
-          readOnly={false}
-          value={getValue('value')}
-          originValue={getValue('origin')}
-          onValueChange={(value: string) => {
+      <YamlEditor
+        readOnly={false}
+        value={getValue('value')}
+        originValue={getValue('origin')}
+        onValueChange={(value: string) => {
                         dataSet?.current?.set(getValue('valueChange'), value);
-          }}
-        />
+        }}
+      />
       )}
     </div>
   );

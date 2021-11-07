@@ -11,7 +11,7 @@ import {
 } from 'choerodon-ui/pro';
 import { map, filter, isEmpty } from 'lodash';
 import classnames from 'classnames';
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import { Loading } from '@choerodon/components';
 import eventStopProp from '@/utils/eventStopProp';
 import {

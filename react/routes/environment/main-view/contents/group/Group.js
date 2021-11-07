@@ -2,7 +2,7 @@ import React, {
   Fragment, useMemo, useEffect, useState,
 } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Action, Choerodon } from '@choerodon/boot';
+import { Action, Choerodon } from '@choerodon/master';
 import {
   Modal, Table, Spin, Icon,
 } from 'choerodon-ui/pro';

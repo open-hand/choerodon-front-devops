@@ -6,7 +6,7 @@ import { observer, inject } from 'mobx-react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Modal, Select, message } from 'choerodon-ui';
 import { Button } from 'choerodon-ui/pro';
-import { Content } from '@choerodon/boot';
+import { Content } from '@choerodon/master';
 import ReactCodeMirror from 'react-codemirror';
 import uuidv1 from 'uuid/v1';
 import Cookies from 'universal-cookie';

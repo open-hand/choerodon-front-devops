@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Page } from '@choerodon/boot';
+import { Page } from '@choerodon/master';
 import CustomHeader from '../../components/custom-header';
 import MainView from './main-view';
 import { useResourceStore } from './stores';

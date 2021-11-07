@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Action } from '@choerodon/boot';
+import { Action } from '@choerodon/master';
 import { Modal, Table } from 'choerodon-ui/pro';
 import keys from 'lodash/keys';
 import KeyValueModal from '@/components/key-value';

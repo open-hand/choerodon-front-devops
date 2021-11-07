@@ -1,5 +1,5 @@
 import React from 'react';
-import { Permission, Action } from '@choerodon/boot';
+import { Permission, Action } from '@choerodon/master';
 import { Table } from 'choerodon-ui/pro';
 import { useClusterContentStore } from '../stores';
 

@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import {
   TabPage, Content, Breadcrumb, Permission, Action,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import {
   Table, Tooltip, Button, CheckBox, TextField, Pagination,
 } from 'choerodon-ui/pro';
@@ -147,7 +147,6 @@ const Version = withRouter(observer((props) => {
     service: ['choerodon.code.project.develop.app-service.ps.version.delete'],
     text: formatMessage({ id: `${intlPrefix}.version.delete` }),
     action: () => handleDelete(null, record),
-    disabled: !selectedRecordLength,
   }]);
 
   const handleChangeListPage = (page, pageSize) => {

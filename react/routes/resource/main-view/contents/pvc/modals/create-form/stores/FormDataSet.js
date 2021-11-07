@@ -1,4 +1,4 @@
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import omit from 'lodash/omit';
 import indexOf from 'lodash/indexOf';
 

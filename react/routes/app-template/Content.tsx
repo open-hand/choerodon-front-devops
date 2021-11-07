@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import {
   Page, Header, Breadcrumb, Content, Permission, Action, Choerodon, HeaderButtons,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import { Table, Modal } from 'choerodon-ui/pro';
 import { Button } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';

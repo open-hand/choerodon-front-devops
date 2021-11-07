@@ -138,6 +138,7 @@ const Index = observer(() => {
           HostAppConfigDataSet.current.get(mapping.postCommand.name)
       );
       const configFlag = await configurationCenterDataSet.validate();
+    // && configFlag
       if (flag && configFlag) {
         return await finalFunc();
       }
@@ -153,6 +154,7 @@ const Index = observer(() => {
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
        const configCenterFlag = await configurationCenterDataSet.validate();
+    // && configCenterFlag
       if (valueCheckValidate(
         HostAppConfigDataSet.current.get(mapping.value.name),
         HostAppConfigDataSet.current.get(mapping.startCommand.name),
@@ -162,8 +164,9 @@ const Index = observer(() => {
         const configData = configurationCenterDataSet.map(o=>{
             return {configId:o.get('versionName'),mountPath:o.get('mountPath'),configGroup:o.get('configGroup'),configCode:o.get('configCode')};
           });
-        if (flag) {
+        if (flag ) {
           return setData(HostAppConfigDataSet.current.toData(),configData);
+        return setData(HostAppConfigDataSet.current.toData());
         }
         return false;
       }

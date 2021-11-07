@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  DataSet, Form, TextField, Select, Button,
+  DataSet, Form, TextField, Select, Button, Modal,
 } from 'choerodon-ui/pro';
 import { Icon } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
@@ -66,11 +66,13 @@ export default observer(({
         color={'blue' as ButtonColor}
         icon="edit-o"
         style={{ marginLeft: 16 }}
-        onClick={() => handleChangeValueIdValues({
-          value: dataSet?.current?.get(mapping().value.name),
-          valueIdList: dataSet?.current?.getField(mapping().deployConfig.name)?.options?.toData(),
-          valueId: dataSet?.current?.get(mapping().deployConfig.name),
-        })}
+        onClick={() => {
+          handleChangeValueIdValues({
+            value: dataSet?.current?.get(mapping().value.name),
+            valueIdList: dataSet?.current?.getField(mapping().deployConfig.name)?.options?.toData(),
+            valueId: dataSet?.current?.get(mapping().deployConfig.name),
+          });
+        }}
         disabled={!dataSet?.current?.get(mapping().deployConfig.name)}
       >
         修改配置信息

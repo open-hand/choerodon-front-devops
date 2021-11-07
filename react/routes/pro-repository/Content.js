@@ -1,5 +1,5 @@
 import React, { useCallback, Fragment, useEffect } from 'react';
-import { Page, Content, Header, Breadcrumb, Permission } from '@choerodon/boot';
+import { Page, Content, Header, Breadcrumb, Permission } from '@choerodon/master';
 import { Modal, Button, Spin } from 'choerodon-ui/pro';
 import { FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router-dom';

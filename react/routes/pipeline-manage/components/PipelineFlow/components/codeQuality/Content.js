@@ -4,7 +4,7 @@ import { withRouter, Link } from 'react-router-dom';
 import _ from 'lodash';
 
 import { Icon } from 'choerodon-ui/pro';
-import { Page } from '@choerodon/boot';
+import { Page } from '@choerodon/master';
 
 import { Loading } from '@choerodon/components';
 import EmptyPage from '../../../../../../components/empty-page';

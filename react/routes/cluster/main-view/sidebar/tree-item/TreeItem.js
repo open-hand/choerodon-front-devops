@@ -3,7 +3,7 @@ import React, { Fragment, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
 import toUpper from 'lodash/toUpper';
-import { Action } from '@choerodon/boot';
+import { Action } from '@choerodon/master';
 import { Icon, Tooltip } from 'choerodon-ui/pro';
 import folderNoCheck from '../../../../../images/folder_no_check.svg';
 import ClusterItem from './ClusterItem';

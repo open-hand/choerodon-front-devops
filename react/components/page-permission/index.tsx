@@ -1,6 +1,6 @@
 import React, { ComponentType } from 'react';
 import { Spin } from 'choerodon-ui/pro';
-import { Permission } from '@choerodon/boot';
+import { Permission } from '@choerodon/master';
 // @ts-ignore
 import NoAccess from '@choerodon/master/lib/containers/components/c7n/tools/error-pages/403';
 import { Size } from 'choerodon-ui/pro/lib/core/enum';
