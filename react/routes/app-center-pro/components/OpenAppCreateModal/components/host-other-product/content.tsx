@@ -41,7 +41,7 @@ export default observer(() => {
         ) && configCenterFlag
       ) {
         const configData = map(configurationCenterDataSet.toData(), (o:any) => ({
-          configId: o.versionName,
+          configId: configCompareOptsDS.find((i) => i.get('versionName') === o.versionName)?.get('configId'),
           mountPath: o.mountPath,
           configGroup: o.configGroup,
           configCode: o.configCode,

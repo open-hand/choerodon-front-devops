@@ -1,11 +1,12 @@
 /* eslint-disable */
 // @ts-nocheck
-import React, { useImperativeHandle, useEffect,useMemo } from 'react';
+import React, { useImperativeHandle, useEffect,useMemo ,useState} from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Form, Select, Button, TextField, Output, DataSet,
 } from 'choerodon-ui/pro';
 import { Upload, Icon, Button as OldButton, Tabs, Alert, message } from 'choerodon-ui';
+import { isNil } from 'lodash';
 import { CustomSelect, ChunkUploader } from '@choerodon/components';
 import { Base64 } from 'js-base64';
 import { useHostAppConfigStore } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-app-config/stores';
@@ -23,6 +24,7 @@ import '../container-config/components/container-detail/index.less';
 import '../container-config/components/container-detail/index.less';
 import StatusDot from '@/components/status-dot';
 import { LabelAlignType, LabelLayoutType } from '@/interface';
+import { queryConfigCodeOptions } from '@/components/configuration-center/ConfigurationTab';
 
 const TabPane = Tabs.TabPane;
 
@@ -81,7 +83,29 @@ const Index = observer(() => {
     AppState: { currentMenuType: { organizationId } },
     configurationCenterDataSet,
     configCompareOptsDS,
+    deployConfigDataSet,
   } = useHostAppConfigStore();
+  const [configDataSet, setConfigDataSet] = useState(configurationCenterDataSet);
+
+  // 更新应用获取数据
+  useEffect(() => {
+      if(!isNil(detail)){
+        handleInitDeployConfig();
+      }
+  }, [detail])
+
+  const handleInitDeployConfig = async ()=>{
+    configurationCenterDataSet.setQueryParameter('value', detail.instanceId);
+    configurationCenterDataSet.setQueryParameter('key', 'instance_id');
+    await configurationCenterDataSet.query();
+    deployConfigDataSet.removeAll();
+    configurationCenterDataSet.toData().forEach((item) => {
+      deployConfigDataSet.create({ ...item });
+    });
+    queryConfigCodeOptions(configCompareOptsDS, deployConfigDataSet);
+    setConfigDataSet(deployConfigDataSet);
+  }
+  
 
   const queryMarketAppVersionOptions = (data: any, ds: any) => {
     if (data[mapping.jarSource.name] === 'hzero') {
@@ -115,9 +139,9 @@ const Index = observer(() => {
 
    // TODO: 修改主机应用 校验+数据
   const handleOk = async () => {
-      const configData = configurationCenterDataSet.map(o=>{
-          return {configId:o.get('versionName'),mountPath:o.get('mountPath'),configGroup:o.get('configGroup'),configCode:o.get('configCode')};
-      });
+    const configData = deployConfigDataSet.map(o=>{
+        return {configId:configCompareOptsDS.find((i) => i.get('versionName') === o.get('versionName'))?.get('configId'),mountPath:o.get('mountPath'),configGroup:o.get('configGroup'),configCode:o.get('configCode')};
+    });
     HostAppConfigDataSet.current?.set('configSettingVOS',configData)
     const finalFunc = async () => {
       const res = await HostAppConfigDataSet.submit();
@@ -154,7 +178,6 @@ const Index = observer(() => {
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
        const configCenterFlag = await configurationCenterDataSet.validate();
-    // && configCenterFlag
       if (valueCheckValidate(
         HostAppConfigDataSet.current.get(mapping.value.name),
         HostAppConfigDataSet.current.get(mapping.startCommand.name),
@@ -162,11 +185,10 @@ const Index = observer(() => {
         ) && configCenterFlag) {
         const flag = await HostAppConfigDataSet.validate();
         const configData = configurationCenterDataSet.map(o=>{
-            return {configId:o.get('versionName'),mountPath:o.get('mountPath'),configGroup:o.get('configGroup'),configCode:o.get('configCode')};
+            return {configId: configCompareOptsDS.find((i) => i.get('versionName') === o.get('versionName'))?.get('configId') ,mountPath:o.get('mountPath'),configGroup:o.get('configGroup'),configCode:o.get('configCode')};
           });
         if (flag ) {
           return setData(HostAppConfigDataSet.current.toData(),configData);
-        return setData(HostAppConfigDataSet.current.toData());
         }
         return false;
       }
@@ -333,14 +355,6 @@ const Index = observer(() => {
         detail ? '' : (
           <>
             <Form style={{ marginTop: 20 }} columns={3} dataSet={HostAppConfigDataSet}>
-              {/*<Select
-                name={mapping.host.name}
-                optionRenderer={renderHostOption}
-                disabled={Boolean(detail)}
-                onOption={({ record: hostRecord }) => ({
-                  disabled: !hostRecord.get('connect'),
-                })}
-              />*/}
             </Form>
             <p>
               jar包来源
@@ -402,7 +416,8 @@ const Index = observer(() => {
               marginBottom: 20,
             }}
             dataSet={HostAppConfigDataSet}
-            configDataSet={configurationCenterDataSet}
+            // configDataSet={isNil(detail)?configurationCenterDataSet:deployConfigDataSet}
+            configDataSet={configDataSet}
             optsDS={configCompareOptsDS}
             preName={mapping.value.name}
             startName={mapping.startCommand.name}

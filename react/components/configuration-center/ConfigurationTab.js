@@ -1,13 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // @ts-nocheck
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
-  Table, Form, TextField, Icon, Button, Tooltip, Select,
+  Table, Form, TextField, Icon, Button, Tooltip, Select, DataSet,
 } from 'choerodon-ui/pro';
 import { Input, message } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { isEmpty, every } from 'lodash';
 import styles from './index.less';
+
+export const queryConfigCodeOptions = (configCompareOptsDS, configurationCenterDataSet) => {
+  configurationCenterDataSet.forEach(async (o, index) => {
+    configCompareOptsDS.setQueryParameter('configGroup', o.get('configGroup'));
+    await configCompareOptsDS.query();
+    configurationCenterDataSet.getField('versionName').set('options', configCompareOptsDS);
+    if (configCompareOptsDS.length > 0) {
+      const { value: optValue } = configCompareOptsDS.get(0).toData();
+      o.set('versionName', optValue);
+    } else {
+      configurationCenterDataSet.current.init('configCode', '');
+    }
+  });
+};
 
 const Content = observer((props) => {
   const { configurationCenterDataSet, configCompareOptsDS } = props;
@@ -57,7 +71,7 @@ const Content = observer((props) => {
       },
       {
         header: '操作',
-        width: 80,
+        width: 120,
         renderer: ({ record }) => (
           <div className={styles['c7ncd-action-link']}>
             <Tooltip title="点击后将复制由挂载路径和配置文件名称组合而成的路径，配置文件按照此路径存储于主机中。可以把复制的配置文件路径应用在前置操作、启动命令、以及后置操作等地方。">
@@ -89,7 +103,7 @@ const Content = observer((props) => {
         ),
       },
     ],
-    [configurationCenterDataSet.current, configCompareOptsDS],
+    [configurationCenterDataSet.current, configCompareOptsDS.current],
   );
 
   const optionRenderer = ({ text, value }) => {
@@ -144,7 +158,7 @@ const Content = observer((props) => {
   };
 
   // 联动显示配置版本
-  const queryConfigCodeOptions = async (currentValue) => {
+  const queryVersionOptions = async (currentValue) => {
     configCompareOptsDS.setQueryParameter(
       'configGroup',
       configurationCenterDataSet.current?.get('configGroup'),
@@ -161,7 +175,7 @@ const Content = observer((props) => {
 
   const handleChangeCode = async (currentValue) => {
     if (currentValue) {
-      queryConfigCodeOptions(currentValue);
+      queryVersionOptions();
     } else {
       configurationCenterDataSet.current.init('configCode', '');
     }

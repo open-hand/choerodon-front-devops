@@ -12,6 +12,7 @@ import {
   Choerodon,
   HeaderButtons,
   Action,
+  TabCode,
 } from '@choerodon/master';
 import {
   Table, Modal, Select, Icon, Tooltip,
@@ -21,7 +22,7 @@ import { withRouter } from 'react-router-dom';
 import { get, has } from '@choerodon/inject';
 import { observer } from 'mobx-react-lite';
 import { StatusTag, NewTips as Tips } from '@choerodon/components';
-import { TabCode } from '@choerodon/master';
+
 import ReactCodeMirror from 'react-codemirror';
 import app from '@/images/app.svg';
 import image from '@/images/image.svg';
@@ -551,18 +552,18 @@ const Deployment = withRouter(
           />
         );
       }
-      //   if (record.get('deployMode') === 'host' && record.get('deployType') !== 'baseComponent') {
-      //     return (
-      //       <Action
-      //         data={[
-      //           {
-      //             text: '查看配置文件',
-      //             action: () => openConfigurationModal(record.get('id')),
-      //           },
-      //         ]}
-      //       />
-      //     );
-      //   }
+      if (record.get('deployMode') === 'host' && record.get('deployType') !== 'baseComponent') {
+        return (
+          <Action
+            data={[
+              {
+                text: '查看配置文件',
+                action: () => openConfigurationModal(record.get('id')),
+              },
+            ]}
+          />
+        );
+      }
       return null;
     }, []);
 

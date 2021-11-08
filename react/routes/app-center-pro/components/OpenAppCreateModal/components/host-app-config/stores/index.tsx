@@ -6,6 +6,7 @@ import hostAppConfigDataSet from '@/routes/app-center-pro/components/OpenAppCrea
 import {
   ConfigurationCenterDataSet,
   ConfigCompareOptsDS,
+  DeployConfigDataSet,
 } from '@/components/configuration-center/stores/ConfigurationCenterDataSet';
 
 interface ContextType {
@@ -59,11 +60,20 @@ export const StoreProvider = inject('AppState')((props: any) => {
     [],
   );
 
+  const deployConfigDataSet = useMemo(
+    () => new DataSet(
+      // @ts-ignore
+      DeployConfigDataSet({ projectId, organizationId, optsDS: configCompareOptsDS }),
+    ),
+    [],
+  );
+
   const value = {
     ...props,
     HostAppConfigDataSet,
     configCompareOptsDS,
     configurationCenterDataSet,
+    deployConfigDataSet,
   };
 
   return <Store.Provider value={value}>{children}</Store.Provider>;
