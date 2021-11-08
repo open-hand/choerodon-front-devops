@@ -1,6 +1,6 @@
 /* eslint-disable */
 // @ts-nocheck
-import React, { useImperativeHandle, useEffect,useMemo } from 'react';
+import React, { useImperativeHandle, useEffect,useMemo ,useState} from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Form, Select, Button, TextField, Output, DataSet,
@@ -24,6 +24,7 @@ import '../container-config/components/container-detail/index.less';
 import '../container-config/components/container-detail/index.less';
 import StatusDot from '@/components/status-dot';
 import { LabelAlignType, LabelLayoutType } from '@/interface';
+import { queryConfigCodeOptions } from '@/components/configuration-center/ConfigurationTab';
 
 const TabPane = Tabs.TabPane;
 
@@ -84,7 +85,7 @@ const Index = observer(() => {
     configCompareOptsDS,
     deployConfigDataSet,
   } = useHostAppConfigStore();
-
+  const [configDataSet, setConfigDataSet] = useState(configurationCenterDataSet);
 
   // 更新应用获取数据
   useEffect(() => {
@@ -97,9 +98,12 @@ const Index = observer(() => {
     configurationCenterDataSet.setQueryParameter('value', detail.instanceId);
     configurationCenterDataSet.setQueryParameter('key', 'instance_id');
     await configurationCenterDataSet.query();
+    deployConfigDataSet.removeAll();
     configurationCenterDataSet.toData().forEach((item) => {
       deployConfigDataSet.create({ ...item });
     });
+    queryConfigCodeOptions(configCompareOptsDS, deployConfigDataSet);
+    setConfigDataSet(deployConfigDataSet);
   }
   
 
@@ -414,7 +418,8 @@ const Index = observer(() => {
               marginBottom: 20,
             }}
             dataSet={HostAppConfigDataSet}
-            configDataSet={isNil(detail)?configurationCenterDataSet:deployConfigDataSet}
+            // configDataSet={isNil(detail)?configurationCenterDataSet:deployConfigDataSet}
+            configDataSet={configDataSet}
             optsDS={configCompareOptsDS}
             preName={mapping.value.name}
             startName={mapping.startCommand.name}

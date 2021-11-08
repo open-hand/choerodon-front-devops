@@ -11,15 +11,12 @@ import styles from './index.less';
 
 export const queryConfigCodeOptions = (configCompareOptsDS, configurationCenterDataSet) => {
   configurationCenterDataSet.forEach(async (o, index) => {
-    configCompareOptsDS.setQueryParameter(
-      'configGroup',
-      configurationCenterDataSet.get(index)?.get('configGroup'),
-    );
+    configCompareOptsDS.setQueryParameter('configGroup', o.get('configGroup'));
     await configCompareOptsDS.query();
     configurationCenterDataSet.getField('versionName').set('options', configCompareOptsDS);
     if (configCompareOptsDS.length > 0) {
       const { value: optValue, meaning } = configCompareOptsDS.get(0).toData();
-      configurationCenterDataSet.get(index).set('versionName', optValue);
+      o.set('versionName', { value: optValue, meaning });
     } else {
       configurationCenterDataSet.current.init('configCode', '');
     }
@@ -30,14 +27,6 @@ const Content = observer((props) => {
   const { configurationCenterDataSet, configCompareOptsDS } = props;
   const [content, setContent] = useState('');
   const configNameMap = new Map();
-
-  useEffect(() => {
-    queryVersionOptions();
-  }, [configurationCenterDataSet.current]);
-
-  useEffect(() => {
-    queryConfigCodeOptions(configCompareOptsDS, configurationCenterDataSet);
-  }, []);
 
   const columns = useMemo(
     () => [
@@ -172,7 +161,7 @@ const Content = observer((props) => {
   const queryVersionOptions = async (currentValue) => {
     configCompareOptsDS.setQueryParameter(
       'configGroup',
-        configurationCenterDataSet.current?.get('configGroup'),
+      configurationCenterDataSet.current?.get('configGroup'),
     );
     await configCompareOptsDS.query();
     configurationCenterDataSet.getField('versionName').set('options', configCompareOptsDS);

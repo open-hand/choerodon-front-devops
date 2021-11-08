@@ -6,7 +6,7 @@ import { DataSet } from 'choerodon-ui/pro';
 import deployChartDataSet, { deployConfigDataSet } from './deployChartDataSet';
 import addCDTaskDataSet from './addCDTaskDataSet';
 import deployGroupDataSet from '@/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores/deployGroupDataSet';
-import hostJarDataSet from './hostJarDataSet';
+import { hostJarDataSet, hotJarOptionsDataSet } from './hostJarDataSet';
 import useStore from './useStore';
 import { fieldMap } from './addCDTaskDataSetMap';
 import {
@@ -80,6 +80,8 @@ export const StoreProvider = injectIntl(
       [],
     );
 
+    const HotJarOptionsDataSet = useMemo(() => new DataSet(hotJarOptionsDataSet()), []);
+
     const value = {
       ...props,
       ADDCDTaskUseStore,
@@ -90,6 +92,7 @@ export const StoreProvider = injectIntl(
       configurationCenterDataSet,
       configCompareOptsDS,
       deployConfigUpDateDataSet,
+      HotJarOptionsDataSet,
     };
 
     return <Store.Provider value={value}>{children}</Store.Provider>;

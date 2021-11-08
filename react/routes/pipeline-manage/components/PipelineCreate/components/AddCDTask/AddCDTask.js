@@ -19,7 +19,7 @@ import { Base64 } from 'js-base64';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { observer } from 'mobx-react-lite';
 import JSONbig from 'json-bigint';
-import { get,isNil } from 'lodash';
+import { get, isNil, isEmpty } from 'lodash';
 import DeployConfig from '@/components/deploy-config-form';
 import StatusDot from '@/components/status-dot';
 import {
@@ -108,6 +108,7 @@ export default observer(() => {
     configurationCenterDataSet,
     configCompareOptsDS,
     deployConfigUpDateDataSet,
+    HotJarOptionsDataSet,
   } = useAddCDTaskStore();
 
   const deployGroupcRef = useRef();
@@ -141,6 +142,7 @@ export default observer(() => {
   const [isProjectOwner, setIsProjectOwner] = useState(false);
   const [pipelineCallbackAddress, setPipelineCallbackAddress] = useState(undefined);
   const [preJobList, setPreJobList] = useState([]);
+  const [configDataSet, setConfigDataSet] = useState(configurationCenterDataSet);
 
   useEffect(() => {
     setDeployWay(ADDCDTaskDataSet.current.get(fieldMap.deployWay.name));
@@ -149,10 +151,10 @@ export default observer(() => {
     } else {
       deployConfigUpDateDataSet.removeAll();
     }
-  }, [ADDCDTaskDataSet.current, deployWay, HostJarDataSet.current]);
+  }, [ADDCDTaskDataSet.current, deployWay, HostJarDataSet.current, HotJarOptionsDataSet.current]);
 
   const handleInitDeployConfig = (value) => {
-    const id = HostJarDataSet.current?.getField('appName')?.options?.records?.find((i) => i.get('name') === value)?.get('instanceId');
+    const id = HotJarOptionsDataSet.find((i) => i.get('name') === value)?.get('instanceId');
     if (!isNil(id)) {
       getDetailData(id);
     }
@@ -168,6 +170,7 @@ export default observer(() => {
       deployConfigUpDateDataSet.create({ ...item });
     });
     queryConfigCodeOptions(configCompareOptsDS, deployConfigUpDateDataSet);
+    setConfigDataSet(deployConfigUpDateDataSet);
   };
 
   useEffect(() => {
@@ -1164,9 +1167,10 @@ export default observer(() => {
             colSpan={6}
             newLine
             dataSet={ADDCDTaskDataSet}
-            configDataSet={
-              deployWay === 'update' ? deployConfigUpDateDataSet : configurationCenterDataSet
-            }
+            // configDataSet={
+            //     !isEmpty(HotJarOptionsDataSet.toData()) ? deployConfigUpDateDataSet : configurationCenterDataSet
+            // }
+            configDataSet={configDataSet}
             optsDS={configCompareOptsDS}
             preName={fieldMap.preCommand.name}
             startName={fieldMap.runCommand.name}
