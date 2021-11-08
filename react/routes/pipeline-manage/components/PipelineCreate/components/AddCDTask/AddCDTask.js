@@ -172,7 +172,7 @@ export default observer(() => {
     queryConfigCodeOptions(configCompareOptsDS, deployConfigUpDateDataSet);
     setConfigDataSet(deployConfigUpDateDataSet);
   };
-
+  
   useEffect(() => {
     ADDCDTaskUseStore.setValueIdRandom(Math.random());
     axios.get(`/iam/choerodon/v1/projects/${projectId}/check_admin_permission`).then((res) => {
@@ -458,6 +458,7 @@ export default observer(() => {
     ds.appServiceId = PipelineCreateFormDataSet?.current?.get('appServiceId') || trueAppServiceId;
     return JSON.stringify(ds).replace(/"/g, "'");
   }
+  
 
   // TODO: 流水线CD -校验
   const handleAdd = async () => {
@@ -466,7 +467,7 @@ export default observer(() => {
     const configResult = await configurationCenterDataSet.validate();
     const configData = deployConfigUpDateDataSet.map((o) => {
       return {
-        configId: o.get('versionName'),
+        configId: configCompareOptsDS.find((i) => i.get('versionName') === o.get('versionName'))?.get('configId'),
         mountPath: o.get('mountPath'),
         configGroup: o.get('configGroup'),
         configCode: o.get('configCode'),

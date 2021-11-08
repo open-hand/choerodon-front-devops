@@ -15,8 +15,8 @@ export const queryConfigCodeOptions = (configCompareOptsDS, configurationCenterD
     await configCompareOptsDS.query();
     configurationCenterDataSet.getField('versionName').set('options', configCompareOptsDS);
     if (configCompareOptsDS.length > 0) {
-      const { value: optValue, meaning } = configCompareOptsDS.get(0).toData();
-      o.set('versionName', { value: optValue, meaning });
+      const { value: optValue } = configCompareOptsDS.get(0).toData();
+      o.set('versionName', optValue);
     } else {
       configurationCenterDataSet.current.init('configCode', '');
     }
@@ -71,7 +71,7 @@ const Content = observer((props) => {
       },
       {
         header: '操作',
-        width: 80,
+        width: 120,
         renderer: ({ record }) => (
           <div className={styles['c7ncd-action-link']}>
             <Tooltip title="点击后将复制由挂载路径和配置文件名称组合而成的路径，配置文件按照此路径存储于主机中。可以把复制的配置文件路径应用在前置操作、启动命令、以及后置操作等地方。">

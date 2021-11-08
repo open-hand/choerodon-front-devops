@@ -140,7 +140,7 @@ const Index = observer(() => {
    // TODO: 修改主机应用 校验+数据
   const handleOk = async () => {
     const configData = deployConfigDataSet.map(o=>{
-        return {configId:o.get('versionName'),mountPath:o.get('mountPath'),configGroup:o.get('configGroup'),configCode:o.get('configCode')};
+        return {configId:configCompareOptsDS.find((i) => i.get('versionName') === o.get('versionName'))?.get('configId'),mountPath:o.get('mountPath'),configGroup:o.get('configGroup'),configCode:o.get('configCode')};
     });
     HostAppConfigDataSet.current?.set('configSettingVOS',configData)
     const finalFunc = async () => {
@@ -178,7 +178,6 @@ const Index = observer(() => {
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
        const configCenterFlag = await configurationCenterDataSet.validate();
-    // && configCenterFlag
       if (valueCheckValidate(
         HostAppConfigDataSet.current.get(mapping.value.name),
         HostAppConfigDataSet.current.get(mapping.startCommand.name),
@@ -186,11 +185,10 @@ const Index = observer(() => {
         ) && configCenterFlag) {
         const flag = await HostAppConfigDataSet.validate();
         const configData = configurationCenterDataSet.map(o=>{
-            return {configId:o.get('versionName'),mountPath:o.get('mountPath'),configGroup:o.get('configGroup'),configCode:o.get('configCode')};
+            return {configId: configCompareOptsDS.find((i) => i.get('versionName') === o.get('versionName'))?.get('configId') ,mountPath:o.get('mountPath'),configGroup:o.get('configGroup'),configCode:o.get('configCode')};
           });
         if (flag ) {
           return setData(HostAppConfigDataSet.current.toData(),configData);
-        return setData(HostAppConfigDataSet.current.toData());
         }
         return false;
       }

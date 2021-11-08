@@ -123,8 +123,8 @@ const ConfigCompareOptsDS = ({ projectId, organizationId }) => ({
         try {
           let nextContent = JSON.parse(res);
           nextContent = nextContent.content.map((lineData) => {
-            const { versionName, content, configId } = lineData;
-            return { value: configId, meaning: versionName, content };
+            const { versionName, content } = lineData;
+            return { value: versionName, meaning: versionName, ...lineData };
           });
           return nextContent;
         } catch (err) {
