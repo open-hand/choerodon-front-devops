@@ -8,14 +8,23 @@ import { observer } from 'mobx-react-lite';
 import { axios, Choerodon } from '@choerodon/master';
 import { Button } from 'choerodon-ui/pro';
 import { saveAs } from 'file-saver';
+import { useInterval } from 'ahooks';
 
 import 'xterm/dist/xterm.css';
 import './index.less';
+import { isNil } from 'lodash';
+import { ciJobsApi, pipeLineRecordsApi } from '@/api';
+
+const term = new Terminal({
+  fontSize: 13,
+  fontWeight: 400,
+  fontFamily: 'monospace',
+  disableStdin: true,
+});
 
 export default observer((props) => {
   const {
     gitlabJobId,
-    projectId,
     gitlabProjectId,
     type,
     cdRecordId,
@@ -26,35 +35,30 @@ export default observer((props) => {
   } = props;
 
   const prefixCls = useMemo(() => 'c7n-pipelineManage-codeLog', []);
+  const [interval, setInterTime] = useState(5000);
   const [logData, setLogData] = useState();
 
-  const term = new Terminal({
-    fontSize: 13,
-    fontWeight: 400,
-    fontFamily: 'monospace',
-    disableStdin: true,
-  });
-
   async function loadData() {
+    const getData = ['cdHost', 'cdDeploy', 'cdExternalApproval', 'cdDeployment'].includes(type)
+      ? pipeLineRecordsApi.getCdPipelineLogs(cdRecordId, stageRecordId, jobRecordId)
+      : ciJobsApi.getCiPipelineLogs(gitlabProjectId, gitlabJobId, appServiceId);
     try {
-      if (['cdHost', 'cdDeploy', 'cdExternalApproval', 'cdDeployment'].includes(type)) {
-        const res = await axios.get(`/devops/v1/projects/${projectId}/pipeline_records/${cdRecordId}/stage_records/${stageRecordId}/job_records/log/${jobRecordId}`);
-        if (res && !res.failed) {
-          const newRes = res.split(/\n/);
-          forEach(newRes, (item) => term.writeln(item));
-          setLogData(res);
-        } else {
-          term.writeln('暂无日志');
+      const res = await getData;
+      if (!res?.failed) {
+        if (logData) {
+          const tempStr = res.slice(logData.length);
+          if (tempStr.length) {
+            setLogData(res);
+            term.write();
+            forEach(tempStr.split(/\n/), (str) => term.write(str));
+          }
+          return;
         }
+        const newRes = res.split(/\n/);
+        forEach(newRes, (item) => term.writeln(item));
+        setLogData(res);
       } else {
-        const res = await axios.get(`/devops/v1/projects/${projectId}/ci_jobs/gitlab_projects/${gitlabProjectId}/gitlab_jobs/${gitlabJobId}/trace?app_service_id=${appServiceId}`);
-        if (res && !res.failed) {
-          const newRes = res.split(/\n/);
-          forEach(newRes, (item) => term.writeln(item));
-          setLogData(res);
-        } else {
-          term.writeln('暂无日志');
-        }
+        term.writeln('暂无日志');
       }
     } catch (e) {
       Choerodon.handleResponseError(e);
@@ -62,9 +66,11 @@ export default observer((props) => {
   }
 
   useEffect(() => {
-    loadData();
     term.open(document.getElementById('jobLog'));
     fit(term);
+    return () => {
+      term.clear();
+    };
   }, []);
 
   const handleDownload = useCallback(() => {
@@ -73,25 +79,30 @@ export default observer((props) => {
     saveAs(blob, filename);
   }, [logData]);
 
+  const refresh = () => {
+    loadData();
+    term.scrollToBottom();
+  };
+
+  useInterval(() => {
+    refresh();
+  }, interval, { immediate: true });
+
+  const handleTimer = () => {
+    if (!isNil(interval)) {
+      setInterTime(null);
+    } else {
+      setInterTime(5000);
+    }
+  };
+
   return (
     <>
       {type === 'build' && (
         <div className={`${prefixCls}-btn`}>
           <Button
-            icon="refresh"
-            onClick={() => {
-              const joblog = document.getElementById('jobLog');
-              joblog.parentNode.removeChild(joblog);
-              const parent = document.querySelector('.c7n-pro-modal-body');
-              const child = document.createElement('div');
-              child.setAttribute('id', 'jobLog');
-              child.setAttribute('class', `${prefixCls} ${type === 'build' ? `${prefixCls}-hasBtn` : ''}`);
-              parent.appendChild(child);
-              term.clear();
-              loadData();
-              term.open(document.getElementById('jobLog'));
-              fit(term);
-            }}
+            icon={isNil(interval) ? 'play_arrow' : 'stop'}
+            onClick={handleTimer}
           />
           <Button
             icon="get_app-o"
