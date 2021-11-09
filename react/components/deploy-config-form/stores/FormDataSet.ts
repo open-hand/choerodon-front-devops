@@ -109,7 +109,6 @@ export default ({
     },
     {
       name: 'oldValue',
-      required: true,
     },
     {
       name: 'envId',
