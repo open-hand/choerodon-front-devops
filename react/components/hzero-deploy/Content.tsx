@@ -63,7 +63,6 @@ const HzeroDeploy = observer(() => {
       <span>{text}</span>
     </Tooltip>
   ), []);
-
   return (
     <div className={`${prefixCls}`}>
       <Form dataSet={formDs} columns={6}>

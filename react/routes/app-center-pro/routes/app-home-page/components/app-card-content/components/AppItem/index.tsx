@@ -100,6 +100,7 @@ const AppItem = observer(({
       instanceId,
       instanceName: name,
       callback: refresh,
+      appId: id,
     }) : openDeleteHostAppModal(hostId, id, name, refresh);
   };
 

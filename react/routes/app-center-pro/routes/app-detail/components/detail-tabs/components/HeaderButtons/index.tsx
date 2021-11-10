@@ -261,6 +261,7 @@ const DetailsTabsHeaderButtons = () => {
         envId: hostOrEnvId,
         instanceId,
         instanceName: name,
+        appId,
         callback: goBackHomeBaby,
       }) : openDeleteHostAppModal(hostOrEnvId, appId, name, goBackHomeBaby);
     },

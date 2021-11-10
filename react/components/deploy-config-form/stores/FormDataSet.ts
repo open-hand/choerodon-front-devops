@@ -84,50 +84,44 @@ export default ({
         data: { ...data, envId },
       }),
     },
-    fields: [
-      {
-        name: 'name',
-        label: '部署配置名称',
-        required: true,
-        maxLength: 30,
-        validator: nameValidator,
-      },
-      {
-        name: 'description',
-        required: true,
-        label: formatMessage({ id: 'description' }),
-        maxLength: 200,
-      },
-      {
-        name: 'appServiceId',
-        textField: 'appServiceName',
-        valueField: 'appServiceId',
-        label: formatMessage({ id: 'appService' }),
-        required: true,
-        defaultValue: appServiceId,
-        options: appOptionDs,
-      },
-      {
-        name: 'appServiceName',
-        label: formatMessage({ id: 'appService' }),
-        readOnly: true,
-        ignore: 'always' as FieldIgnore,
-        defaultValue: appSelectDisabled ? appServiceName : null,
-      },
-      {
-        name: 'value',
-        required: true,
-      },
-      {
-        name: 'oldValue',
-        required: true,
-      },
-      {
-        name: 'envId',
-        required: true,
-        defaultValue: envId,
-      },
-    ],
+    fields: [{
+      name: 'name',
+      label: '部署配置名称',
+      required: true,
+      maxLength: 30,
+      validator: nameValidator,
+    }, {
+      name: 'description',
+      required: true,
+      label: formatMessage({ id: 'description' }),
+      maxLength: 200,
+    }, {
+      name: 'appServiceId',
+      textField: 'appServiceName',
+      valueField: 'appServiceId',
+      label: formatMessage({ id: 'appService' }),
+      required: true,
+      defaultValue: appServiceId,
+      options: appOptionDs,
+    }, {
+      name: 'appServiceName',
+      label: formatMessage({ id: 'appService' }),
+      readOnly: true,
+      ignore: 'always' as FieldIgnore,
+      defaultValue: appSelectDisabled ? appServiceName : null,
+    },
+    {
+      name: 'value',
+      required: true,
+    },
+    {
+      name: 'oldValue',
+    },
+    {
+      name: 'envId',
+      required: true,
+      defaultValue: envId,
+    }],
     events: {
       create: ({ record }: RecordObjectProps) => {
         appServiceId && loadValue({ id: appServiceId, record });

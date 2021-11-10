@@ -4,6 +4,7 @@ type appTypes = 'instance' | 'service' | 'ingress' | 'certificate' | 'configMap'
 
 type openDeleteProps = {
   envId:string
+  appId?:string
   type?: appTypes
   instanceId:string
   instanceName:string
