@@ -20,6 +20,7 @@ type deletEnvProps ={
   appCatergoryCode:string,
   envId:string,
   type?: appTypes
+  appId:string
   instanceId:string,
   instanceName:string,
   callback:(...args:[])=>any,
@@ -70,7 +71,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
 
   // 删除chart和部署组的
   async function deleteEnvApp({
-    appCatergoryCode, envId, instanceId, instanceName, callback,
+    appCatergoryCode, envId, instanceId, instanceName, callback, appId,
   }:deletEnvProps) {
     const appType = appCatergoryCode === CHART_CATERGORY ? 'instance' : 'deployGroup';
     openDelete({
@@ -80,6 +81,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
       callback,
       deletionStore,
       type: appType,
+      appId,
     });
   }
 

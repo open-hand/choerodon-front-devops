@@ -142,7 +142,6 @@ function InstanceItem({
 
   function getSuffix() {
     const istId = record.get('id');
-    const appId = record.get('appId');
     const istName = record.get('name');
     const [envId] = record.get('parentId').split('**');
     const envRecord = treeDs.find((eachRecord) => eachRecord.get('key') === envId);
@@ -167,7 +166,7 @@ function InstanceItem({
         text: formatMessage({ id: `${intlPrefix}.instance.action.delete` }),
         action: () => openDelete({
           envId,
-          instanceId: appId,
+          instanceId: istId,
           instanceName: istName,
           callback: freshMenu,
           projectId,
