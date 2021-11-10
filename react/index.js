@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo } from 'react';
+/* eslint-disable react/prop-types */
+import React, { useMemo } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { inject } from 'mobx-react';
 import {
@@ -27,6 +28,7 @@ const OrgTemplate = React.lazy(() => import('./routes/app-template/OrgIndex'));
 const SiteTemplate = React.lazy(() => import('./routes/app-template/SiteIndex'));
 const AppCenter = React.lazy(() => import('./routes/app-center-pro'));
 
+// eslint-disable-next-line react/prop-types
 function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
   const IntlProviderAsync = useMemo(() => asyncLocaleProvider(language, () => import(`./locale/${language}`)), []);
   return (

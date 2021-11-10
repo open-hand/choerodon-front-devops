@@ -11,15 +11,15 @@ import { injectIntl } from 'react-intl';
 import HostConfigApi from '../apis';
 import DsBasicObj from './ingressDsBasic';
 import { hostApi } from '@/api';
-// import {
-//   ConfigurationDetailDataSet,
-// } from '@/components/configuration-center/stores/ConfigurationCenterDataSet';
+import {
+  ConfigurationDetailDataSet,
+} from '@/components/configuration-center/stores/ConfigurationCenterDataSet';
 
 interface ContextProps {
   prefixCls: string,
   intl: { formatMessage(arg0: object, arg1?: object): string },
   appIngressDataset: DataSet,
-//   configurationDetailDataSet?:DataSet,
+  configurationDetailDataSet?:DataSet,
   projectId: number,
 }
 
@@ -55,14 +55,14 @@ export const StoreProvider = injectIntl(inject('AppState')(
       }
     }, [appIngressDataset, projectId]);
 
-    // // 配置中心详情
-    // const configurationDetailDataSet = useMemo(
-    //   () => new DataSet(
-    //   // @ts-ignore
-    //     ConfigurationDetailDataSet({ projectId }),
-    //   ),
-    //   [],
-    // );
+    // 配置中心详情
+    const configurationDetailDataSet = useMemo(
+      () => new DataSet(
+      // @ts-ignore
+        ConfigurationDetailDataSet({ projectId }),
+      ),
+      [],
+    );
 
     useEffect(() => {
       initDs();
@@ -72,7 +72,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       ...props,
       prefixCls: 'c7ncd-appIngress-table',
       appIngressDataset,
-      //   configurationDetailDataSet,
+      configurationDetailDataSet,
       intl,
       projectId,
     };

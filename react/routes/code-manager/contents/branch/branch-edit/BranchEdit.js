@@ -1,6 +1,5 @@
-import React, {
-  useCallback, useMemo, useState,
-} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   Form, Select, Button, Tooltip, CheckBox,
 } from 'choerodon-ui/pro';
@@ -8,7 +7,6 @@ import { injectIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import debounce from 'lodash/debounce';
 import get from 'lodash/get';
-import MouserOverWrapper from '../../../../../components/MouseOverWrapper';
 import IssueType from '../../../components/issue-type';
 import { useSelectStore } from './stores';
 
@@ -19,7 +17,9 @@ function BranchEdit() {
     handleRefresh,
     selectDs,
     projectOptionsDs,
-    AppState: { currentMenuType: { projectId } },
+    AppState: {
+      currentMenuType: { projectId },
+    },
   } = useSelectStore();
 
   const [searchValue, setSearchValue] = useState('');
@@ -50,11 +50,14 @@ function BranchEdit() {
     searchData(e.target.value);
   }, []);
 
-  const searchData = useMemo(() => debounce((value) => {
-    projectOptionsDs.setQueryParameter('params', value);
-    setSearchValue(value);
-    loadData();
-  }, 500), []);
+  const searchData = useMemo(
+    () => debounce((value) => {
+      projectOptionsDs.setQueryParameter('params', value);
+      setSearchValue(value);
+      loadData();
+    }, 500),
+    [],
+  );
 
   const handleBlur = useCallback(() => {
     if (searchValue) {
@@ -110,16 +113,16 @@ function BranchEdit() {
     }
     return (
       <>
-        {issueTypeVO ? <IssueType data={issueTypeVO} /> : (
+        {issueTypeVO ? (
+          <IssueType data={issueTypeVO} />
+        ) : (
           <div style={{ color }} className="branch-issue">
             <i className={`icon icon-${icon}`} />
           </div>
         )}
         <span className="branch-issue-content">
           <span style={{ color: 'rgb(0,0,0,0.65)' }}>{issueNum}</span>
-          <Tooltip title={summary}>
-            {summary}
-          </Tooltip>
+          <Tooltip title={summary}>{summary}</Tooltip>
         </span>
       </>
     );
@@ -129,15 +132,16 @@ function BranchEdit() {
     const {
       typeCode, issueNum, summary, issueTypeVO,
     } = value || {};
-    return (
-      typeCode || issueTypeVO ? (
-        <span>
-          {renderIssueName({
-            typeCode, issueNum, summary, issueTypeVO,
-          })}
-        </span>
-      ) : null
-    );
+    return typeCode || issueTypeVO ? (
+      <span>
+        {renderIssueName({
+          typeCode,
+          issueNum,
+          summary,
+          issueTypeVO,
+        })}
+      </span>
+    ) : null;
   };
 
   const myquestionChange = (bool) => {
@@ -151,12 +155,15 @@ function BranchEdit() {
     const summary = record.get('summary');
     const issueTypeVO = record.get('issueTypeVO');
     return summary === '我的问题myquestion' ? (
-      <div role="none" onClick={(e) => { e.stopPropagation(); }} style={{ paddingLeft: 4, borderBottom: '1px solid #D9E6F2', paddingBottom: 20 }}>
+      <div
+        role="none"
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+        style={{ paddingLeft: 4, borderBottom: '1px solid #D9E6F2', paddingBottom: 20 }}
+      >
         <CheckBox name="base" onChange={myquestionChange}>
-          <span style={{ marginLeft: 4 }}>
-            我的问题
-          </span>
-
+          <span style={{ marginLeft: 4 }}>我的问题</span>
         </CheckBox>
       </div>
     ) : (
@@ -169,9 +176,12 @@ function BranchEdit() {
     );
   };
 
-  const handleDeleteRecord = useCallback((record) => {
-    selectDs.remove(record);
-  }, [selectDs]);
+  const handleDeleteRecord = useCallback(
+    (record) => {
+      selectDs.remove(record);
+    },
+    [selectDs],
+  );
 
   const handleAddRecord = useCallback(() => {
     selectDs.create();
@@ -216,11 +226,7 @@ function BranchEdit() {
           />
         </Form>
       ))}
-      <Button
-        icon="add"
-        funcType="flat"
-        onClick={handleAddRecord}
-      >
+      <Button icon="add" funcType="flat" onClick={handleAddRecord}>
         添加关联问题
       </Button>
     </div>

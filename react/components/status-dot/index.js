@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import React, { memo } from 'react';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';

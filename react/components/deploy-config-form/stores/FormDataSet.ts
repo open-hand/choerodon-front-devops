@@ -7,22 +7,29 @@ import DeployConfigApis from '../apis';
 import DeployConfigServices from '../services';
 
 interface FormProps {
-  formatMessage(arg0: object, arg1?: object): string,
-  projectId: number,
-  deployConfigId?: string,
-  envId: string,
-  appServiceId?: string,
-  appOptionDs: DataSet,
-  appSelectDisabled?: boolean,
-  appServiceName?: string,
-  setValueLoading:CallableFunction,
+  formatMessage(arg0: object, arg1?: object): string;
+  projectId: number;
+  deployConfigId?: string;
+  envId: string;
+  appServiceId?: string;
+  appOptionDs: DataSet;
+  appSelectDisabled?: boolean;
+  appServiceName?: string;
+  setValueLoading: CallableFunction;
 }
 
 export default ({
-  formatMessage, projectId, envId, deployConfigId,
-  appOptionDs, appServiceId, appSelectDisabled, appServiceName, setValueLoading,
+  formatMessage,
+  projectId,
+  envId,
+  deployConfigId,
+  appOptionDs,
+  appServiceId,
+  appSelectDisabled,
+  appServiceName,
+  setValueLoading,
 }: FormProps): DataSetProps => {
-  const loadValue = async ({ id, record }: { id: string, record: Record }) => {
+  const loadValue = async ({ id, record }: { id: string; record: Record }) => {
     !deployConfigId && setValueLoading(true);
     const res = await DeployConfigServices.getAppServiceValue(projectId, id);
     res && record.set('oldValue', res);
@@ -65,7 +72,7 @@ export default ({
         url: DeployConfigApis.createDeployConfig(projectId),
         method: 'get',
         params: { value_id: deployConfigId },
-        transformResponse: (res:any) => {
+        transformResponse: (res: any) => {
           const newRes = JSONbig.parse(res);
           newRes.oldValue = newRes.value;
           return newRes;

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Spin, message } from 'choerodon-ui';

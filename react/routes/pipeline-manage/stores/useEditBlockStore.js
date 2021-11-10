@@ -66,7 +66,8 @@ export default function useStore(mainStore) {
       const { cdAuditUserIds } = data;
       const stepObj = {
         ...data,
-        cdAuditUserIds: cdAuditUserIds && cdAuditUserIds.map((x) => (typeof x === 'object' ? x.id : x)),
+        cdAuditUserIds:
+          cdAuditUserIds && cdAuditUserIds.map((x) => (typeof x === 'object' ? x.id : x)),
         name: data.step,
         jobList: [],
       };
@@ -116,6 +117,7 @@ export default function useStore(mainStore) {
             this.dataSource[index].jobList = [data];
           }
         }
+        this.dataSource[index].configSettingVOS = data.configSettingVOS;
       });
     },
     editJob(sequence, key, data) {
@@ -123,6 +125,7 @@ export default function useStore(mainStore) {
         if (item.sequence === sequence) {
           this.dataSource[index].jobList[key] = { ...data };
         }
+        this.dataSource[index].configSettingVOS = data.configSettingVOS;
       });
     },
     editJobLists(sequence, type, jobList) {
