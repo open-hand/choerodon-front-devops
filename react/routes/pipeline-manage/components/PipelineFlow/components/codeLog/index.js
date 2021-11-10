@@ -39,6 +39,39 @@ export default observer((props) => {
   const [interval, setInterTime] = useState(isCd ? null : 5000);
   const [logData, setLogData] = useState();
 
+  /**
+   * 处理ci type === 'build' 类型任务的logs
+   * @param {*} ciLogsData
+   * @return {*}
+   */
+  function handleCiLogs(ciLogsData) {
+    const {
+      logs,
+      endFlag,
+    } = ciLogsData || {};
+    if (endFlag) setInterTime(null);
+    if (logData) {
+      const logDataArr = logData.split(/\n/); // 旧数据
+      const newLogsArr = logs.split(/\n/); // 新数据
+      let diffArr = [];
+      // 找出旧数据和新数据不一样的地方，这里对比数组长度
+      // 如果长度相等，相当于前后数据可能就只有最后一行发生了变化，对比最后一行数据长度
+      if (logDataArr.length === newLogsArr.length) {
+        diffArr = [newLogsArr[newLogsArr.length - 1]];
+      } else {
+        diffArr = newLogsArr.slice(logDataArr.length);
+      }
+      if (diffArr.length) {
+        setLogData(logs);
+        forEach(diffArr, (str) => term.writeln(str));
+      }
+      return;
+    }
+    const newRes = logs.split(/\n/);
+    forEach(newRes, (item) => term.writeln(item));
+    setLogData(logs);
+  }
+
   async function loadData() {
     const getData = isCd
       ? pipeLineRecordsApi.getCdPipelineLogs(cdRecordId, stageRecordId, jobRecordId)
@@ -46,31 +79,13 @@ export default observer((props) => {
     try {
       const res = await getData;
       if (!res?.failed) {
-        const {
-          logs,
-          endFlag,
-        } = res || {};
-        if (endFlag) setInterTime(null);
-        if (logData) {
-          const logDataArr = logData.split(/\n/); // 旧数据
-          const newLogsArr = logs.split(/\n/); // 新数据
-          let diffArr = [];
-          // 找出旧数据和新数据不一样的地方，这里对比数组长度
-          // 如果长度相等，相当于前后数据可能就只有最后一行发生了变化，对比最后一行数据长度
-          if (logDataArr.length === newLogsArr.length) {
-            diffArr = [newLogsArr[newLogsArr.length - 1]];
-          } else {
-            diffArr = newLogsArr.slice(logDataArr.length);
-          }
-          if (diffArr.length) {
-            setLogData(logs);
-            forEach(diffArr, (str) => term.writeln(str));
-          }
+        if (!isCd) {
+          handleCiLogs(res);
           return;
         }
-        const newRes = logs.split(/\n/);
+        const newRes = res.split(/\n/);
         forEach(newRes, (item) => term.writeln(item));
-        setLogData(logs);
+        setLogData(res);
       } else {
         term.writeln('暂无日志');
       }
@@ -93,6 +108,10 @@ export default observer((props) => {
     }
   };
 
+  const goTop = () => {
+    term.scrollToTop();
+  };
+
   useMount(() => {
     term.open(document.getElementById('jobLog'));
     fit(term);
@@ -104,16 +123,13 @@ export default observer((props) => {
 
   useInterval(() => {
     loadData();
+    term.scrollToBottom();
   }, interval, { immediate: true });
 
   return (
     <>
       {type === 'build' && (
         <div className={`${prefixCls}-btn`}>
-          <Button
-            icon={isNil(interval) ? 'play_arrow' : 'stop'}
-            onClick={handleTimer}
-          />
           <Button
             icon="get_app-o"
             color="primary"
@@ -124,7 +140,27 @@ export default observer((props) => {
           </Button>
         </div>
       )}
-      <div className={`${prefixCls} ${type === 'build' ? `${prefixCls}-hasBtn` : ''}`} id="jobLog" />
+      <div className={`${prefixCls}-container`}>
+        <div className={`${prefixCls} ${type === 'build' ? `${prefixCls}-hasBtn` : ''}`} id="jobLog" />
+        {type === 'build' && (
+          <div className={`${prefixCls}-btnGorups`}>
+            <div
+              onClick={handleTimer}
+              role="none"
+              className={`${prefixCls}-btnGorups-btn ${prefixCls}-btnGorups-btn-following`}
+            >
+              {isNil(interval) ? 'Start Following' : 'Stop Following'}
+            </div>
+            <div
+              onClick={goTop}
+              role="none"
+              className={`${prefixCls}-btnGorups-btn ${prefixCls}-btnGorups-btn-top`}
+            >
+              Go Top
+            </div>
+          </div>
+        )}
+      </div>
     </>
   );
 });
