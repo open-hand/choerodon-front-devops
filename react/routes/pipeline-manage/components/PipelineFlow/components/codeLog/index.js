@@ -52,11 +52,19 @@ export default observer((props) => {
         } = res || {};
         if (endFlag) setInterTime(null);
         if (logData) {
-          const tempStr = logs.slice(logData.length);
-          if (tempStr.length) {
+          const logDataArr = logData.split(/\n/); // 旧数据
+          const newLogsArr = logs.split(/\n/); // 新数据
+          let diffArr = [];
+          // 找出旧数据和新数据不一样的地方，这里对比数组长度
+          // 如果长度相等，相当于前后数据可能就只有最后一行发生了变化，对比最后一行数据长度
+          if (logDataArr.length === newLogsArr.length) {
+            diffArr = [newLogsArr[newLogsArr.length - 1]];
+          } else {
+            diffArr = newLogsArr.slice(logDataArr.length);
+          }
+          if (diffArr.length) {
             setLogData(logs);
-            term.write();
-            forEach(tempStr.split(/\n/), (str) => term.write(str));
+            forEach(diffArr, (str) => term.writeln(str));
           }
           return;
         }
