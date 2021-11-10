@@ -55,10 +55,12 @@ export const getHzeroDeployBtnConfig = ({
   display: hasMarket,
   disabled: !(syncStatus.open || syncStatus.sass),
   permissions: ['choerodon.code.project.deploy.app-deployment.deployment-operation.ps.hzero'],
-  handler: () => openHzeroDeploy({
-    syncStatus,
-    refresh,
-  }),
+  handler: () => {
+    openHzeroDeploy({
+      syncStatus,
+      refresh,
+    });
+  },
   tooltipsConfig: {
     title: !(syncStatus.open || syncStatus.sass) ? '未从开放平台同步HZERO应用至C7N平台，无法执行此操作' : '',
   },

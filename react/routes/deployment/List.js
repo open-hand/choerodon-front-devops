@@ -12,6 +12,7 @@ import {
   Choerodon,
   HeaderButtons,
   Action,
+  TabCode,
 } from '@choerodon/master';
 import {
   Table, Modal, Select, Icon, Tooltip,
@@ -21,7 +22,7 @@ import { withRouter } from 'react-router-dom';
 import { get, has } from '@choerodon/inject';
 import { observer } from 'mobx-react-lite';
 import { StatusTag, NewTips as Tips } from '@choerodon/components';
-import { TabCode } from '@choerodon/master';
+
 import ReactCodeMirror from 'react-codemirror';
 import app from '@/images/app.svg';
 import image from '@/images/image.svg';
