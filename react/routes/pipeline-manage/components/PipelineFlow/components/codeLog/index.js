@@ -33,14 +33,17 @@ export default observer((props) => {
     viewId,
     appServiceId,
   } = props;
+  // 是cd阶段的这些类型
   const isCd = ['cdHost', 'cdDeploy', 'cdExternalApproval', 'cdDeployment'].includes(type);
+  // 是ci阶段的这些类型
+  const isCi = ['build', 'sonar', 'custom', 'chart'].includes(type);
 
   const prefixCls = useMemo(() => 'c7n-pipelineManage-codeLog', []);
-  const [interval, setInterTime] = useState(isCd ? null : 5000);
+  const [interval, setInterTime] = useState(isCi ? 5000 : null);
   const [logData, setLogData] = useState();
 
   /**
-   * 处理ci type === 'build' 类型任务的logs
+   * 处理ci isCi 类型任务的logs
    * @param {*} ciLogsData
    * @return {*}
    */
@@ -73,13 +76,16 @@ export default observer((props) => {
   }
 
   async function loadData() {
+    if (!isCd && !isCi) {
+      return;
+    }
     const getData = isCd
       ? pipeLineRecordsApi.getCdPipelineLogs(cdRecordId, stageRecordId, jobRecordId)
       : ciJobsApi.getCiPipelineLogs(gitlabProjectId, gitlabJobId, appServiceId);
     try {
       const res = await getData;
       if (!res?.failed) {
-        if (!isCd) {
+        if (isCi) {
           handleCiLogs(res);
           return;
         }
@@ -128,7 +134,7 @@ export default observer((props) => {
 
   return (
     <>
-      {type === 'build' && (
+      {isCi && (
         <div className={`${prefixCls}-btn`}>
           <Button
             icon="get_app-o"
@@ -141,8 +147,8 @@ export default observer((props) => {
         </div>
       )}
       <div className={`${prefixCls}-container`}>
-        <div className={`${prefixCls} ${type === 'build' ? `${prefixCls}-hasBtn` : ''}`} id="jobLog" />
-        {type === 'build' && (
+        <div className={`${prefixCls} ${isCi ? `${prefixCls}-hasBtn` : ''}`} id="jobLog" />
+        {isCi && (
           <div className={`${prefixCls}-btnGorups`}>
             <div
               onClick={handleTimer}
