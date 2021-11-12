@@ -103,7 +103,7 @@ export default observer((props) => {
 
   const handleDownload = useCallback(() => {
     const blob = new Blob([logData], { type: 'text/plain' });
-    const filename = `${jobName}-构建日志.log`;
+    const filename = `${jobName}-日志.log`;
     saveAs(blob, filename);
   }, [logData]);
 
