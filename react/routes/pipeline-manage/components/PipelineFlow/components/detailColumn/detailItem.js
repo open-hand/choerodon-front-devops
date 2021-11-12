@@ -80,6 +80,7 @@ const DetailItem = (props) => {
       children: (
         <CodeLog
           type={typeItem}
+          jobName={jobName}
           appServiceId={appServiceId}
           gitlabProjectId={gitlabProjectId}
           projectId={projectId}
