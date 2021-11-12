@@ -143,7 +143,7 @@ export default observer((props) => {
             onClick={handleDownload}
             className={`${prefixCls}-download`}
           >
-            下载构建日志
+            下载日志
           </Button>
         </div>
       )}
