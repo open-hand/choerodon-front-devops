@@ -32,6 +32,7 @@ export default observer((props) => {
     jobRecordId,
     viewId,
     appServiceId,
+    jobName,
   } = props;
   // 是cd阶段的这些类型
   const isCd = ['cdHost', 'cdDeploy', 'cdExternalApproval', 'cdDeployment'].includes(type);
@@ -102,7 +103,7 @@ export default observer((props) => {
 
   const handleDownload = useCallback(() => {
     const blob = new Blob([logData], { type: 'text/plain' });
-    const filename = `#${viewId}-构建日志.log`;
+    const filename = `#${jobName}-构建日志.log`;
     saveAs(blob, filename);
   }, [logData]);
 
