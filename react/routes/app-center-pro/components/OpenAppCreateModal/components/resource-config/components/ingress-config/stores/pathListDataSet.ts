@@ -60,10 +60,6 @@ export default (): DataSetProps => {
     }
   }
 
-  function isRequired({ dataSet, record }: any) {
-    return Boolean(record.get('serviceName'));
-  }
-
   return ({
     autoCreate: true,
     autoQuery: false,
@@ -82,17 +78,16 @@ export default (): DataSetProps => {
         name: 'serviceName',
         type: 'string',
         label: '网络',
-        dynamicProps: {
-          required: isRequired,
-        },
+        required: false,
+        // dynamicProps: {
+        //   required: ,
+        // },
       },
       {
         name: 'servicePort',
         type: 'number',
         label: '端口',
-        dynamicProps: {
-          required: isRequired,
-        },
+        required: false,
       },
       {
         name: 'ports',

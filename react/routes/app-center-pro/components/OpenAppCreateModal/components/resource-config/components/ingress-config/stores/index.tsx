@@ -29,9 +29,9 @@ export const StoreProvider = (props: any) => {
     children,
   } = props;
 
-  const IngressDataSet = useMemo(() => new DataSet(ingressDataSet()), []);
   const PathListDataSet = useMemo(() => new DataSet(pathListDataSet()), []);
   const AnnotationDataSet = useMemo(() => new DataSet(annotationDataSet()), []);
+  const IngressDataSet = useMemo(() => new DataSet(ingressDataSet(PathListDataSet)), []);
 
   const value = {
     ...props,
