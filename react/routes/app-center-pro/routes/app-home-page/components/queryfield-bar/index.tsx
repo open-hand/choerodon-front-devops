@@ -89,72 +89,74 @@ const ContentHeader: React.FC<any> = observer((): any => {
         className={`${newPrefixCls}-form-wrap`}
         role="none"
       >
-        <Form
-          dataSet={searchDs}
-          columns={3}
-          className={`${newPrefixCls}-form`}
-          labelLayout={'horizontal' as LabelLayoutType}
-          labelWidth={1}
-        >
-          {isEnvTab ? (
-            <Select
-              prefix="环境:"
-              name="env_id"
-              colSpan={3}
-              searchable
-              key="env"
-              clearButton={false}
-              optionRenderer={renderEnvOption}
-              onOption={renderOptionProperty}
-              onChange={handleFormChange}
-            />
-          ) : (
-            <Select
-              prefix="主机:"
-              name="host_id"
-              key="host"
-              colSpan={3}
-              searchable
-              clearButton={false}
-              optionRenderer={renderHostOption}
-              onChange={handleFormChange}
-            />
-          )}
-        </Form>
-        <Form
-          dataSet={searchDs}
-          className={`${newPrefixCls}-form-params`}
-          columns={4}
-          labelLayout={'horizontal' as LabelLayoutType}
-          labelWidth={1}
-        >
-          <TextField
-            placeholder="请输入搜索条件"
-            name="params"
-            colSpan={2}
-            prefix={
-              <Icon type="search" />
+        <div style={{ marginLeft: 'auto', width: '100%', display: 'flex' }}>
+          <Form
+            dataSet={searchDs}
+            columns={3}
+            className={`${newPrefixCls}-form`}
+            labelLayout={'horizontal' as LabelLayoutType}
+            labelWidth={1}
+          >
+            {isEnvTab ? (
+              <Select
+                prefix="环境:"
+                name="env_id"
+                colSpan={3}
+                searchable
+                key="env"
+                clearButton={false}
+                optionRenderer={renderEnvOption}
+                onOption={renderOptionProperty}
+                onChange={handleFormChange}
+              />
+            ) : (
+              <Select
+                prefix="主机:"
+                name="host_id"
+                key="host"
+                colSpan={3}
+                searchable
+                clearButton={false}
+                optionRenderer={renderHostOption}
+                onChange={handleFormChange}
+              />
+            )}
+          </Form>
+          <Form
+            dataSet={searchDs}
+            className={`${newPrefixCls}-form-params`}
+            columns={4}
+            labelLayout={'horizontal' as LabelLayoutType}
+            labelWidth={1}
+          >
+            <TextField
+              placeholder="请输入搜索条件"
+              name="params"
+              colSpan={2}
+              prefix={
+                <Icon type="search" />
             }
-            clearButton
-            onChange={run}
-            valueChangeAction={'input' as any}
-          />
-          <Select
-            name="operation_type"
-            colSpan={isEnvTab ? 1 : 2}
-            placeholder="操作类型："
-            onChange={handleFormChange}
-          />
-          {isEnvTab && (
-          <Select
-            placeholder="应用类型："
-            name="rdupm_type"
-            colSpan={1}
-            clearButton
-            onChange={handleFormChange}
-          />
-          )}
-        </Form>
+              clearButton
+              onChange={run}
+              valueChangeAction={'input' as any}
+            />
+            <Select
+              name="operation_type"
+              colSpan={isEnvTab ? 1 : 2}
+              placeholder="操作类型："
+              onChange={handleFormChange}
+            />
+            {isEnvTab && (
+            <Select
+              placeholder="应用类型："
+              name="rdupm_type"
+              colSpan={1}
+              clearButton
+              onChange={handleFormChange}
+            />
+            )}
+          </Form>
+        </div>
         <Button
           onClick={handleReset}
           className={`${newPrefixCls}-btn`}
