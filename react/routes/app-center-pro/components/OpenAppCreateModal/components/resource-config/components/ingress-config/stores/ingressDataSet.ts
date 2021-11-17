@@ -66,7 +66,7 @@ function renderLookupUrl({ record }: any) {
   }
 }
 
-const ingressDataSet = (): DataSetProps => ({
+const ingressDataSet = (PathListDataSet: any): DataSetProps => ({
   autoCreate: true,
   autoQuery: false,
   selection: false,
@@ -119,6 +119,25 @@ const ingressDataSet = (): DataSetProps => ({
       lookupAxiosConfig: renderLookupUrl,
     },
   }] as FieldProps[],
+  events: {
+    update: ({ value, name, record }: any) => {
+      switch (name) {
+        case 'name': {
+          PathListDataSet.current.getField('servicePort').set('required', value);
+          PathListDataSet.current.getField('serviceName').set('required', value);
+          break;
+        }
+        case 'domain': {
+          PathListDataSet.current.getField('servicePort').set('required', value);
+          PathListDataSet.current.getField('serviceName').set('required', value);
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    },
+  },
 });
 
 export default ingressDataSet;

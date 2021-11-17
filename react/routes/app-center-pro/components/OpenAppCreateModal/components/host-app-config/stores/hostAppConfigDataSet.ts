@@ -154,10 +154,15 @@ const mapping: {
             ),
             transformResponse: (res) => {
               function init(data: any) {
-                return data.map((i: string) => ({
-                  name: i,
-                  value: i,
-                }));
+                return data.map((i: any) => {
+                  if (typeof i === 'string') {
+                    return ({
+                      name: i,
+                      value: i,
+                    });
+                  }
+                  return i;
+                });
               }
               let newRes = res;
               try {
@@ -192,10 +197,15 @@ const mapping: {
             ),
             transformResponse: (res) => {
               function init(data: any) {
-                return data.map((i: string) => ({
-                  name: i,
-                  value: i,
-                }));
+                return data.map((i: any) => {
+                  if (typeof i === 'string') {
+                    return ({
+                      name: i,
+                      value: i,
+                    });
+                  }
+                  return i;
+                });
               }
               let newRes = res;
               try {
@@ -456,6 +466,22 @@ const hostAppConfigDataSet = (modal: any, detail: any): DataSetProps => ({
         }
         case mapping.fileName.name: {
           updateModalProps(record, modal);
+          break;
+        }
+        case mapping.nexus.name: {
+          record.set(mapping.projectProductRepo.name, undefined);
+          break;
+        }
+        case mapping.artifactId.name: {
+          record.set(mapping.jarVersion.name, undefined);
+          break;
+        }
+        case mapping.groupId.name: {
+          record.set(mapping.artifactId.name, undefined);
+          break;
+        }
+        case mapping.projectProductRepo.name: {
+          record.set(mapping.groupId.name, undefined);
           break;
         }
         default: {
