@@ -3,16 +3,19 @@ import React, {
   useEffect, useState,
 } from 'react';
 import {
-  Form, TextField, Select, SelectBox,
+  Form, TextField, Select, SelectBox, Button, Modal,
 } from 'choerodon-ui/pro';
 import { message, Icon, Tooltip } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { usePipelineCreateStore } from './stores';
 import Tips from '../../../../components/new-tips';
+import CustomFunc from './components/custom-function';
 import StageEditBlock from './components/stageEditBlock';
 import './pipelineCreate.less';
 
 const { Option } = Select;
+
+const cssPrefix = 'c7ncd-pipelineCreate';
 
 const PipelineCreate = observer(() => {
   const {
@@ -71,6 +74,18 @@ const PipelineCreate = observer(() => {
     };
     init();
   }, [PipelineCreateFormDataSet, createUseStore, dataSource]);
+
+  const handleCustomFunc = () => {
+    Modal.open({
+      key: Modal.key(),
+      title: '自定义函数管理',
+      drawer: true,
+      style: {
+        width: '740px',
+      },
+      children: <CustomFunc useStore={createUseStore} />,
+    });
+  };
 
   const handleCreate = async () => {
     const result = await PipelineCreateFormDataSet.validate();
@@ -252,7 +267,7 @@ const PipelineCreate = observer(() => {
                     <p style={{ margin: 0 }}>
                       {`同时，支持使用动态参数及各种变量，例如：\${CI_PIPELINE_ID}-\${C7N_BRANCH} ，则表示命名规则为：gitlab流水线id+分支名。
 更多支持的变量，请参考 `}
-                      <a style={{ color: 'cornflowerblue' }} target="_blank" href="https://docs.gitlab.com/ee/ci/variables/predefined_variables.html">GitLab变量</a>
+                      <a style={{ color: 'cornflowerblue' }} target="_blank" href="https://docs.gitlab.com/ee/ci/variables/predefined_variables.html" rel="noreferrer">GitLab变量</a>
                     </p>,
                   ]}
                   />
@@ -269,6 +284,12 @@ const PipelineCreate = observer(() => {
                 name="versionNameRules"
               />
             ),
+            <div className={`${cssPrefix}__customFunc`} newLine>
+              <p className={`${cssPrefix}__customFunc__title`}>自定义函数</p>
+              <Button onClick={handleCustomFunc} style={{ width: '50%' }}>
+                自定义函数管理
+              </Button>
+            </div>,
           ] : ''
         }
       </Form>

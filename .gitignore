@@ -21,6 +21,8 @@ application-localtest.yml
 *.iml
 *.ipr
 .vscode
+.yalc
+yalc.lock
 
 ### NetBeans ###
 /nbproject/private/

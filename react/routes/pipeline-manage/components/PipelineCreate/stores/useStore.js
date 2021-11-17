@@ -1,8 +1,24 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 import { useLocalStore } from 'mobx-react-lite';
-import { axios, Choerodon } from '@choerodon/boot';
+import { axios, Choerodon } from '@choerodon/master';
 
 export default function useStore() {
   return useLocalStore(() => ({
+    funcList: [],
+
+    get getFuncList() {
+      return this.funcList;
+    },
+
+    setFuncList(data) {
+      this.funcList = data;
+    },
+
     defaultImage: '',
 
     axiosGetDefaultImage() {
