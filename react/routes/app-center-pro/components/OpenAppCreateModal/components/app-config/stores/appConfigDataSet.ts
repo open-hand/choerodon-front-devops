@@ -539,4 +539,6 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
 
 export default appConfigDataSet;
 
-export { mapping, chartSourceData, envDataSet };
+export {
+  mapping, chartSourceData, envDataSet, marketServiceVersionOptionDs,
+};
