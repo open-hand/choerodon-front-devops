@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 /* eslint-disable max-len */
 import React, { useMemo, useState, useEffect } from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';

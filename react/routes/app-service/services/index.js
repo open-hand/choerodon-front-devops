@@ -1,5 +1,5 @@
-import AppServiceApis from '@/routes/app-service/apis';
 import { axios } from '@choerodon/master';
+import AppServiceApis from '@/routes/app-service/apis';
 
 export default class AppServiceServices {
   static axiosGetCheckAdminPermission(projectId) {

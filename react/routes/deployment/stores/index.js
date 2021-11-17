@@ -14,9 +14,9 @@ import useStore from './useStore';
 import usePipelineStore from './usePipelineStore';
 import OptionsDataSet from './OptionsDataSet';
 import useHasMarket from '@/hooks/useHasMarket';
-// import {
-//   ConfigurationDetailDataSet,
-// } from '@/components/configuration-center/stores/ConfigurationCenterDataSet';
+import {
+  ConfigurationDetailDataSet,
+} from '@/components/configuration-center/stores/ConfigurationCenterDataSet';
 
 const Store = createContext();
 const STATUS = ['success', 'failed', 'operating'];
@@ -119,13 +119,13 @@ export const StoreProvider = withRouter(
       }, []);
 
       // 配置中心详情
-      //   const configurationDetailDataSet = useMemo(
-      //     () => new DataSet(
-      //       // @ts-ignore
-      //       ConfigurationDetailDataSet({ projectId }),
-      //     ),
-      //     [],
-      //   );
+      const configurationDetailDataSet = useMemo(
+        () => new DataSet(
+          // @ts-ignore
+          ConfigurationDetailDataSet({ projectId }),
+        ),
+        [],
+      );
 
       const value = {
         ...props,
@@ -147,7 +147,7 @@ export const StoreProvider = withRouter(
         envOptionsDs,
         pipelineOptionsDs,
         hasMarket,
-        // configurationDetailDataSet,
+        configurationDetailDataSet,
       };
       return <Store.Provider value={value}>{children}</Store.Provider>;
     }),

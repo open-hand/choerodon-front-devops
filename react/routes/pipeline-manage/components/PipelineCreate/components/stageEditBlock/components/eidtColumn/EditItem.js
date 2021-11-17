@@ -3,6 +3,7 @@ import {
   Modal, Icon, Button, Tooltip,
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
+import { LARGE } from '@/utils/getModalWidth';
 import { usePipelineStageEditStore } from '../../stores';
 import AddTask from '../../../AddTask';
 import AddCDTask from '../../../AddCDTask';
@@ -31,13 +32,9 @@ const EditItem = (props) => {
 
   const prefixCls = 'c7n-piplineManage-edit-column-item';
 
-  const {
-    editBlockStore,
-  } = usePipelineStageEditStore();
+  const { editBlockStore } = usePipelineStageEditStore();
 
-  const {
-    editJob, removeStepTask, getStepData,
-  } = editBlockStore;
+  const { editJob, removeStepTask, getStepData } = editBlockStore;
 
   function handleEditOk(data) {
     editJob(sequence, index, data);
@@ -49,57 +46,53 @@ const EditItem = (props) => {
       title: (
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <span className="c7n-piplineManage-edit-title-text">{`编辑${name}任务`}</span>
-          {
-            stageType === 'CI' && (
-              <div
-                className="c7n-piplineManage-edit-title-text-btn"
-                onClick={() => openVariableModal()}
-                role="none"
-              >
-                <Icon
-                  type="find_in_page-o"
-                  className="c7n-piplineManage-edit-title-btn"
-                />
-                <span>查看流水线变量</span>
-              </div>
-            )
-          }
+          {stageType === 'CI' && (
+            <div
+              className="c7n-piplineManage-edit-title-text-btn"
+              onClick={() => openVariableModal()}
+              role="none"
+            >
+              <Icon type="find_in_page-o" className="c7n-piplineManage-edit-title-btn" />
+              <span>查看流水线变量</span>
+            </div>
+          )}
         </div>
       ),
       style: {
-        width: '740px',
+        width: LARGE,
       },
-      children: stageType === 'CI' ? (
-        <AddTask
-          jobDetail={jobDetail}
-          appServiceId={appServiceName}
-          appServiceName={appServiceName}
-          PipelineCreateFormDataSet={PipelineCreateFormDataSet}
-          AppServiceOptionsDs={AppServiceOptionsDs}
-          image={image}
-          columnIndex={columnIndex}
-          witchColumnJobIndex={witchColumnJobIndex}
-          sequence={sequence}
-          index={index}
-          // eslint-disable-next-line react/jsx-no-bind
-          handleOk={handleEditOk}
-        />
-      ) : (
-        <AddCDTask
-          random={Math.random()}
-          jobDetail={jobDetail}
-          appServiceId={appServiceName}
-          appServiceName={appServiceName}
-          trueAppServiceId={appServiceId}
-          pipelineStageMainSource={getStepData}
-          columnIndex={columnIndex}
-          witchColumnJobIndex={witchColumnJobIndex}
-          sequence={sequence}
-          index={index}
-          // eslint-disable-next-line react/jsx-no-bind
-          handleOk={handleEditOk}
-        />
-      ),
+      children:
+        stageType === 'CI' ? (
+          <AddTask
+            jobDetail={jobDetail}
+            appServiceId={appServiceName}
+            appServiceName={appServiceName}
+            PipelineCreateFormDataSet={PipelineCreateFormDataSet}
+            AppServiceOptionsDs={AppServiceOptionsDs}
+            image={image}
+            columnIndex={columnIndex}
+            witchColumnJobIndex={witchColumnJobIndex}
+            sequence={sequence}
+            index={index}
+            // eslint-disable-next-line react/jsx-no-bind
+            handleOk={handleEditOk}
+          />
+        ) : (
+          <AddCDTask
+            random={Math.random()}
+            jobDetail={jobDetail}
+            appServiceId={appServiceName}
+            appServiceName={appServiceName}
+            trueAppServiceId={appServiceId}
+            pipelineStageMainSource={getStepData}
+            columnIndex={columnIndex}
+            witchColumnJobIndex={witchColumnJobIndex}
+            sequence={sequence}
+            index={index}
+            // eslint-disable-next-line react/jsx-no-bind
+            handleOk={handleEditOk}
+          />
+        ),
 
       drawer: true,
       okText: '添加',
@@ -124,7 +117,10 @@ const EditItem = (props) => {
     cursor: 'all-scroll',
   });
 
-  const isCdDisabled = useMemo(() => (typeof edit === 'boolean' && !edit && stageType === 'CD'), [edit, stageType]);
+  const isCdDisabled = useMemo(() => typeof edit === 'boolean' && !edit && stageType === 'CD', [
+    edit,
+    stageType,
+  ]);
 
   const renderOptsBtn = () => {
     const toolText = '该用户没有部署任务对应的环境权限，无法修改';
@@ -161,10 +157,7 @@ const EditItem = (props) => {
       ref={innerRef}
       {...dragProvided.draggableProps}
       {...dragProvided.dragHandleProps}
-      style={getItemStyle(
-        snapshotinner.isDragging,
-        dragProvided.draggableProps.style,
-      )}
+      style={getItemStyle(snapshotinner.isDragging, dragProvided.draggableProps.style)}
     >
       <div className={`${prefixCls}-header`}>
         【
@@ -172,9 +165,7 @@ const EditItem = (props) => {
         】
         {name}
       </div>
-      <div className={`${prefixCls}-btnGroup`}>
-        {renderOptsBtn()}
-      </div>
+      <div className={`${prefixCls}-btnGroup`}>{renderOptsBtn()}</div>
     </div>
   );
 };

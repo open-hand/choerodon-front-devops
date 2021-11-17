@@ -8,7 +8,7 @@ const RESOURCE = 'resource';
 
 const HOST_RUNNING_DETAILS = 'host_running_details';
 
-// const PROFILE_DETAILS = 'profile_details';
+const PROFILE_DETAILS = 'profile_details';
 
 const deployGroupKeys = [
   {
@@ -38,10 +38,10 @@ const hostKeys = [
     key: HOST_RUNNING_DETAILS,
     name: '运行详情',
   },
-  //   {
-  //     key: PROFILE_DETAILS,
-  //     name: '配置文件详情',
-  //   },
+  {
+    key: PROFILE_DETAILS,
+    name: '配置文件详情',
+  },
 ];
 
 export {
@@ -53,5 +53,5 @@ export {
   RUNNING_DETAILS,
   RESOURCE,
   HOST_RUNNING_DETAILS,
-//   PROFILE_DETAILS,
+  PROFILE_DETAILS,
 };

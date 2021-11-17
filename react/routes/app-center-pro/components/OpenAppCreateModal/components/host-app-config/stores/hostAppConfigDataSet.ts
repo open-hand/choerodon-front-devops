@@ -387,10 +387,10 @@ const mapping: {
     name: 'fileName',
     type: 'string' as FieldType,
   },
-//   configSettingVOS: {
-//     name: 'configSettingVOS',
-//     type: 'array' as FieldType,
-//   },
+  configSettingVOS: {
+    name: 'configSettingVOS',
+    type: 'array' as FieldType,
+  },
 };
 
 const hostAppConfigDataSet = (modal: any, detail: any): DataSetProps => ({

@@ -12,12 +12,7 @@ const hostJarDataSet = (ADDCDTaskDataSet: DataSet) => ({
     required: true,
     textField: 'name',
     valueField: 'name',
-    options: new DataSet({
-      autoQuery: true,
-      transport: {
-        read: () => hostApiConfig.loadHostsAppList(),
-      },
-    }),
+    options: new DataSet(hotJarOptionsDataSet()),
   }, {
     name: 'appCode',
     type: 'string',
@@ -55,4 +50,11 @@ const hostJarDataSet = (ADDCDTaskDataSet: DataSet) => ({
   },
 });
 
-export default hostJarDataSet;
+const hotJarOptionsDataSet = () => ({
+  autoQuery: true,
+  transport: {
+    read: () => hostApiConfig.loadHostsAppList(),
+  },
+});
+
+export { hotJarOptionsDataSet, hostJarDataSet };

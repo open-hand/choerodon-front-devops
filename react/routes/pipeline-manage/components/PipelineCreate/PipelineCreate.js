@@ -1,19 +1,28 @@
-import { axios } from '@choerodon/master';
+import { axios, CONSTANTS } from '@choerodon/master';
 import React, {
   useEffect, useState,
 } from 'react';
 import {
-  Form, TextField, Select, SelectBox,
+  Form, TextField, Select, SelectBox, Button, Modal,
 } from 'choerodon-ui/pro';
 import { message, Icon, Tooltip } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { map } from 'lodash';
 import { usePipelineCreateStore } from './stores';
 import Tips from '../../../../components/new-tips';
+import CustomFunc from './components/custom-function';
 import StageEditBlock from './components/stageEditBlock';
 import './pipelineCreate.less';
 
+const {
+  MODAL_WIDTH: {
+    MIDDLE,
+  },
+} = CONSTANTS;
+
 const { Option } = Select;
+
+const cssPrefix = 'c7ncd-pipelineCreate';
 
 const PipelineCreate = observer(() => {
   const {
@@ -75,6 +84,18 @@ const PipelineCreate = observer(() => {
     init();
   }, [PipelineCreateFormDataSet, createUseStore, dataSource]);
 
+  const handleCustomFunc = () => {
+    Modal.open({
+      key: Modal.key(),
+      title: '自定义函数管理',
+      drawer: true,
+      style: {
+        width: MIDDLE,
+      },
+      children: <CustomFunc useStore={createUseStore} />,
+    });
+  };
+
   const handleCreate = async () => {
     const result = await PipelineCreateFormDataSet.validate();
     if (result) {
@@ -86,6 +107,7 @@ const PipelineCreate = observer(() => {
         image: origin.selectImage === '1' ? origin.image : null,
         devopsCiStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CI'),
         devopsCdStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CD'),
+        configSettingVOS: editBlockStore.getStepData.map((o) => o.configSettingVOS)[0],
         relatedBranches: branches,
       };
       if (!data.bbcl) {
@@ -309,6 +331,12 @@ const PipelineCreate = observer(() => {
                 name="versionNameRules"
               />
             ),
+            <div className={`${cssPrefix}__customFunc`} newLine>
+              <p className={`${cssPrefix}__customFunc__title`}>自定义函数</p>
+              <Button onClick={handleCustomFunc} style={{ width: '50%' }}>
+                自定义函数管理
+              </Button>
+            </div>,
           ] : ''
         }
       </Form>
