@@ -468,10 +468,15 @@ const mapping: {
             ),
             transformResponse: (res) => {
               function init(data: any) {
-                return data.map((i: string) => ({
-                  name: i,
-                  value: i,
-                }));
+                return data.map((i: any) => {
+                  if (typeof i === 'string') {
+                    return ({
+                      name: i,
+                      value: i,
+                    });
+                  }
+                  return i;
+                });
               }
               let newRes = res;
               try {
@@ -506,10 +511,15 @@ const mapping: {
             ),
             transformResponse: (res) => {
               function init(data: any) {
-                return data.map((i: string) => ({
-                  name: i,
-                  value: i,
-                }));
+                return data.map((i: any) => {
+                  if (typeof i === 'string') {
+                    return ({
+                      name: i,
+                      value: i,
+                    });
+                  }
+                  return i;
+                });
               }
               let newRes = res;
               try {
@@ -700,6 +710,18 @@ const conGroupDataSet = (
         record, name, value, dataSet,
       }: any) => {
         switch (name) {
+          case mapping.artifactId.name: {
+            record.set(mapping.jarVersion.name, undefined);
+            break;
+          }
+          case mapping.groupId.name: {
+            record.set(mapping.artifactId.name, undefined);
+            break;
+          }
+          case mapping.shareAppService.name: {
+            record.set(mapping.shareServiceVersion.name, undefined);
+            break;
+          }
           case mapping.productType.name: {
             if (isPipeline) {
               record.set(mapping.productSource.name, productSourceData[6].value);
@@ -745,6 +767,27 @@ const conGroupDataSet = (
               }
             }
             record.set(mapping.imageVersion.name, undefined);
+            break;
+          }
+          case mapping.image.name: {
+            record.set(mapping.imageVersion.name, undefined);
+            break;
+          }
+          case mapping.projectImageRepo.name: {
+            record.set(mapping.image.name, undefined);
+            record.set(mapping.imageVersion.name, undefined);
+            break;
+          }
+          case mapping.marketAppVersion.name: {
+            record.set(mapping.marketServiceVersion.name, undefined);
+            break;
+          }
+          case mapping.projectProductRepo.name: {
+            record.set(mapping.groupId.name, undefined);
+            break;
+          }
+          case mapping.nexus.name: {
+            record.set(mapping.projectProductRepo.name, undefined);
             break;
           }
           default: {
