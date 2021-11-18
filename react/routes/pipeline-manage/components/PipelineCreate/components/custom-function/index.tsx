@@ -183,6 +183,7 @@ const Index = observer(({
       <div className={`${cssPrefix}__content`}>
         {funcList.some((item: any) => item.focus) && (
           <YamlEditor
+            showError={false}
             value={funcList.find((item: any) => item.focus)?.script || ''}
             readOnly={false}
             modeChange={false}
