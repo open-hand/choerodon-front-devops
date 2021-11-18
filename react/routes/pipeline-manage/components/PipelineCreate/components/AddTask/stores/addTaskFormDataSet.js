@@ -329,13 +329,10 @@ export default (
           if (!record.get('openParallel')) {
             return true;
           } else {
-            if (parseInt(value) > 50) {
-              return '最大数不能超过50';
+            if ((parseInt(value) < 2) || (parseInt(value) > 50) || (parseInt(value) % 2 !== 0)) {
+              return '此处仅能填写大于等于2，且小于50的整数';
             }
-            if (parseInt(value) % 2 === 0) {
-                return true;
-            }
-            return '并发数必须为2的整数';
+            return true;
           }
         },
         dynamicProps: {
