@@ -330,6 +330,10 @@ export default (
           return true;
         }
         // eslint-disable-next-line
+        if (parseInt(value) > 50) {
+          return '最大数不能超过50';
+        }
+        // eslint-disable-next-line
         if (parseInt(value) % 2 === 0) {
           return true;
         }
