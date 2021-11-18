@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import _ from 'lodash';
 import { Button, TextField, Modal } from 'choerodon-ui/pro';
+import { cicdPipelineApi } from '@choerodon/master';
 import classNames from 'classnames';
 import { observer } from 'mobx-react-lite';
 import { useDebounceFn } from 'ahooks';
@@ -21,8 +22,8 @@ const Index = observer(({
 }) => {
   const [funcList, setFuncList] = useState<{
     edit: boolean,
-    text: string,
-    value: string,
+    name: string,
+    script: string,
     focus?: boolean,
   }[]>(JSON.parse(JSON.stringify(useStore.getFuncList)));
 
@@ -30,12 +31,12 @@ const Index = observer(({
     let flag = '';
     const funcName: string[] = [];
     for (let i = 0; i < funcList.length; i += 1) {
-      const item = funcList[0];
-      if (funcName.includes(item.text)) {
+      const item = funcList[i];
+      if (funcName.includes(item.name)) {
         flag = '函数集合名称不能重复';
         break;
       } else {
-        funcName.push(item.text);
+        funcName.push(item.name);
       }
     }
     if (flag) {
@@ -54,7 +55,7 @@ const Index = observer(({
     const index = funcList.findIndex((item: any) => item.focus);
     setFuncList(funcList.map((item: any, iIndex: number) => ({
       ...item,
-      value: iIndex === index ? v : item.value,
+      script: iIndex === index ? v : item.script,
     })));
   }, {
     wait: 500,
@@ -65,8 +66,8 @@ const Index = observer(({
       ...funcList,
       {
         edit: true,
-        text: '',
-        value: '',
+        name: '',
+        script: '',
       },
     ]);
   };
@@ -75,7 +76,7 @@ const Index = observer(({
     if (v) {
       funcList[index] = {
         ...funcList[index],
-        text: v,
+        name: v,
         edit: false,
       };
     } else {
@@ -102,7 +103,7 @@ const Index = observer(({
   const handleDeleteItem = (index: number) => {
     Modal.confirm({
       title: '删除函数集合',
-      children: `确定删除函数集合${funcList[index].text}吗`,
+      children: `确定删除函数集合${funcList[index].name}吗`,
       okText: '删除',
       onOk: () => {
         funcList.splice(index, 1);
@@ -127,30 +128,41 @@ const Index = observer(({
           <TextField
             autoFocus
             className={`${cssPrefix}__side__item__left`}
-            value={item.text}
+            value={item.name}
             maxLength={60}
             onChange={(v: string) => console.log(v)}
             onBlur={(e) => handleChangeText(e.target.value, index)}
           />
         ) : (
-          <p className={`${cssPrefix}__side__item__left`}>{ item.text }</p>
+          <p className={`${cssPrefix}__side__item__left`}>{ item.name }</p>
         )
       }
       <div className={`${cssPrefix}__side__item__buttons`}>
         {
-          !item.edit && (
-            <Icon
-              className={`${cssPrefix}__side__item__buttons__icon`}
-              type="edit-o"
-              onClick={() => handleEditItem(index)}
-            />
+          item.devopsPipelineId === 0 ? (
+            <div className={`${cssPrefix}__side__item__buttons__preset`}>
+              预置
+            </div>
+          ) : (
+            <>
+              {
+                !item.edit && (
+                  <Icon
+                    className={`${cssPrefix}__side__item__buttons__icon`}
+                    type="edit-o"
+                    onClick={() => handleEditItem(index)}
+                  />
+                )
+              }
+              <Icon
+                className={`${cssPrefix}__side__item__buttons__icon`}
+                type="delete_black-o"
+                onClick={() => handleDeleteItem(index)}
+              />
+            </>
           )
         }
-        <Icon
-          className={`${cssPrefix}__side__item__buttons__icon`}
-          type="delete_black-o"
-          onClick={() => handleDeleteItem(index)}
-        />
+
       </div>
     </div>
   )), [funcList]);
@@ -171,7 +183,7 @@ const Index = observer(({
       <div className={`${cssPrefix}__content`}>
         {funcList.some((item: any) => item.focus) && (
           <YamlEditor
-            value={funcList.find((item: any) => item.focus)?.value || ''}
+            value={funcList.find((item: any) => item.focus)?.script || ''}
             readOnly={false}
             modeChange={false}
             onValueChange={(v: string) => run(v)}

@@ -43,6 +43,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
     PipelineCreateFormDataSet,
     AppServiceOptionsDs,
     createUseStore,
+    projectId,
   };
 
   return (

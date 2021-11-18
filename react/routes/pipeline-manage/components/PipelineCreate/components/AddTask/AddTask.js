@@ -15,7 +15,7 @@ import {
 } from 'choerodon-ui/pro';
 import _ from 'lodash';
 import {
-  Icon, Spin, Tooltip,
+  Icon, Spin, Tooltip, Row, Col
 } from 'choerodon-ui';
 import { Base64 } from 'js-base64';
 import { NewTips } from '@choerodon/components';
@@ -31,6 +31,8 @@ import './index.less';
 const { Option } = Select;
 
 let currentSize = 10;
+
+const cssPrefix = 'c7ncd-addTask'
 
 const originBranchs = [{
   value: 'master',
@@ -297,6 +299,7 @@ const AddTask = observer(() => {
             sonarUrl,
             private: newSteps.length > 0 && newSteps?.find((s) => s.checked)?.repos ? ['custom'] : '',
             share,
+            openParallel: !!jobDetail.parallel,
           };
           AddTaskFormDataSet.loadData([data]);
 
@@ -377,6 +380,7 @@ const AddTask = observer(() => {
       data = {
         ...data,
         // eslint-disable-next-line no-nested-ternary
+        parallel: data.openParallel ? data.parallel : undefined,
         triggerValue: data.triggerValue && data.triggerType !== 'regex' ? (typeof data.triggerValue === 'object' ? data.triggerValue.join(',') : data.triggerValue) : data.triggerValue,
         image: data.selectImage === '1' ? data.image : null,
 
@@ -1027,7 +1031,7 @@ const AddTask = observer(() => {
   const getMissionOther = () => {
     if (AddTaskFormDataSet.current.get('type') === 'build') {
       return [
-        <div colSpan={4} className="AddTask_configStep" style={{ marginTop: `${expandIf ? '-.3rem' : '0'}` }}>
+        <div newLine colSpan={4} className="AddTask_configStep" style={{ marginTop: `${expandIf ? '-.3rem' : '0'}` }}>
           <p>配置步骤</p>
         </div>,
         <Select colSpan={2} onChange={handleChangeBuildTemple} name="gjmb">
@@ -1521,6 +1525,26 @@ const AddTask = observer(() => {
     }
   };
 
+  /**
+   * 高级设置 并发设置
+   */
+  const getConcurrentSetting = () => expandIf ? (
+    <div newLine colSpan={4} className="border-advanced-after">
+      <Row>
+        <Col span={12}>
+          <SelectBox className={`${cssPrefix}__openParallel`} name="openParallel" />
+        </Col>
+        <Col span={12}>
+          {
+            AddTaskFormDataSet.current.get('openParallel') && (
+              <NumberField style={{ width: '100%' }} name="parallel" />
+            )
+          }
+        </Col>
+      </Row>
+    </div>
+  ) : '';
+
   const getImageDom = () => [
     <div
       colSpan={4}
@@ -1553,7 +1577,7 @@ const AddTask = observer(() => {
   ];
 
   const getShareSettings = () => (expandIf && AddTaskFormDataSet.current.get('type') === 'build' ? [
-    <div className="border-advanced-after" newLine colSpan={4} style={{ marginTop: '-19px' }}>
+    <div newLine colSpan={4} style={{ marginTop: '-19px' }}>
       <Tips
         title={formatMessage({ id: 'c7ncd.pipelineManage.create.share.title' })}
         helpText={formatMessage({ id: 'c7ncd.pipelineManage.create.share.tips' })}
@@ -1641,6 +1665,7 @@ const AddTask = observer(() => {
             </div>,
             getImageDom(),
             getShareSettings(),
+            getConcurrentSetting(),
             AddTaskFormDataSet.current.get('type') !== 'chart' ? getMissionOther() : '',
           ] : [<YamlEditor
             readOnly={false}

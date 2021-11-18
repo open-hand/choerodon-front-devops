@@ -1,17 +1,21 @@
+/* eslint-disable */
 import React, {
   useState, useMemo, useEffect, useRef,
 } from 'react';
 import {
-  Form, Progress, Select, Icon, TextField,
+  Form, Progress, Select, Icon, TextField, Button,
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import { map, some, debounce } from 'lodash';
-import { axios, Choerodon } from '@choerodon/boot';
+import { axios, Choerodon } from '@choerodon/master';
 import { useExecuteContentStore } from './stores';
+import { mapping } from './stores/variableDataSet';
 
 import './index.less';
 
 const { OptGroup, Option } = Select;
+
+const cssPrefix = 'c7ncd-executeContent';
 
 export default observer(() => {
   const {
@@ -26,6 +30,7 @@ export default observer(() => {
     mainStore,
     refresh,
     record,
+    VariableDataSet,
   } = useExecuteContentStore();
 
   const formRef = useRef();
@@ -49,7 +54,8 @@ export default observer(() => {
   // eslint-disable-next-line consistent-return
   modal.handleOk(async () => {
     try {
-      if (await selectDs.submit() !== false) {
+      const res = await VariableDataSet.validate();
+      if (res && await selectDs.submit() !== false) {
         mainStore.setExpandedKeys([pipelineId]);
         mainStore.setSelectedMenu(record.toData());
         refresh();
@@ -203,51 +209,77 @@ export default observer(() => {
   }
 
   return (
-    <Form
-      dataSet={selectDs}
-      // style={{ width: 340 }}
-      ref={formRef}
-      columns={3}
-    >
-      <TextField name="appServiceName" disabled />
-      <Select
-        name="branch"
-        searchable
-        searchMatcher={searchMatcher}
-        onInput={handleInput}
-        onBlur={handleBlur}
-        clearButton={false}
-        optionRenderer={renderBranchOptionOrigin}
-        renderer={renderBranchOrigin}
-        colSpan={2}
+    <>
+      <Form
+        dataSet={selectDs}
+        // style={{ width: 340 }}
+        ref={formRef}
+        columns={3}
       >
-        <OptGroup
-          label={formatMessage({ id: 'branch' })}
-          key="proGroup"
+        <TextField name="appServiceName" disabled />
+        <Select
+          name="branch"
+          searchable
+          searchMatcher={searchMatcher}
+          onInput={handleInput}
+          onBlur={handleBlur}
+          clearButton={false}
+          optionRenderer={renderBranchOptionOrigin}
+          renderer={renderBranchOrigin}
+          colSpan={2}
         >
-          {map(getBranchData, ({ branchName }) => (
-            <Option value={`${branchName}_type_b`} key={branchName} title={branchName}>
-              {branchName}
-            </Option>
-          ))}
-          {getHasMoreBranch ? (
-            <Option value="branch" />
-          ) : null}
-        </OptGroup>
-        <OptGroup
-          label={formatMessage({ id: 'tag' })}
-          key="more"
-        >
-          {map(getTagData, ({ release }) => (release
-            ? (
-              <Option value={`${release.tagName}_type_t`} key={release.tagName}>
-                {release.tagName}
+          <OptGroup
+            label={formatMessage({ id: 'branch' })}
+            key="proGroup"
+          >
+            {map(getBranchData, ({ branchName }) => (
+              <Option value={`${branchName}_type_b`} key={branchName} title={branchName}>
+                {branchName}
               </Option>
-            ) : null))}
-          {getHasMoreTag ? (
-            <Option value="tag" />) : null }
-        </OptGroup>
-      </Select>
-    </Form>
+            ))}
+            {getHasMoreBranch ? (
+              <Option value="branch" />
+            ) : null}
+          </OptGroup>
+          <OptGroup
+            label={formatMessage({ id: 'tag' })}
+            key="more"
+          >
+            {map(getTagData, ({ release }) => (release
+              ? (
+                <Option value={`${release.tagName}_type_t`} key={release.tagName}>
+                  {release.tagName}
+                </Option>
+              ) : null))}
+            {getHasMoreTag ? (
+              <Option value="tag" />) : null }
+          </OptGroup>
+        </Select>
+      </Form>
+      <p className={`${cssPrefix}__title`}>变量配置</p>
+      {
+        VariableDataSet.records.map((vRecord, index) => (
+          <Form record={vRecord} columns={14}>
+            <TextField colSpan={6} name={mapping.key.name} />
+            <p className={`${cssPrefix}__equal`} colSpan={1}>=</p>
+            <TextField colSpan={6} name={mapping.value.name} />
+            <Icon
+              style={{
+                position: 'relative',
+                top: '15px',
+              }}
+              colSpan={1}
+              type="delete"
+              onClick={() => {
+                VariableDataSet.splice(index, 1);
+              }}
+            />
+          </Form>
+        ))
+      }
+      <Button onClick={() => VariableDataSet.create()} icon="add">
+        添加变量
+      </Button>
+    </>
   );
 });

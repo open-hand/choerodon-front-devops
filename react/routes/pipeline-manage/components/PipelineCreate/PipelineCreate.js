@@ -1,4 +1,4 @@
-import { axios } from '@choerodon/boot';
+import { axios } from '@choerodon/master';
 import React, {
   useEffect, useState,
 } from 'react';
@@ -23,6 +23,7 @@ const PipelineCreate = observer(() => {
     modal,
     editBlockStore,
     createUseStore,
+    projectId,
     AppState: {
       currentMenuType: {
         id,
@@ -39,6 +40,17 @@ const PipelineCreate = observer(() => {
   } = usePipelineCreateStore();
 
   const [expandIf, setExpandIf] = useState(false);
+
+  /**
+   * 获取预置模板
+   */
+  useEffect(() => {
+    async function init() {
+      const res = await axios.post(`/devops/v1/projects/${projectId}/cicd_pipelines/${dataSource ? dataSource?.id : 0}/functions?include_default=${dataSource ? true : undefined}`);
+      createUseStore.setFuncList(res);
+    }
+    init();
+  }, []);
 
   useEffect(() => {
     if (dataSource) {
@@ -97,6 +109,9 @@ const PipelineCreate = observer(() => {
         image: origin.selectImage === '1' ? origin.image : null,
         devopsCiStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CI'),
         devopsCdStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CD'),
+        configSettingVOS: editBlockStore.getStepData.map((o) => o.configSettingVOS)[0],
+        devopsCiPipelineFunctionDTOList: createUseStore
+          .getFuncList.filter((item) => item.devopsPipelineId !== 0),
       };
       if (!data.bbcl) {
         delete data.versionName;
