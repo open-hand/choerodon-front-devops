@@ -438,8 +438,10 @@ const hostAppConfigDataSet = (modal: any, detail: any): DataSetProps => ({
     update: async ({ record, name, value }: any) => {
       switch (name) {
         case mapping.jarSource.name: {
-          record.set(mapping.marketAppVersion.name, '');
-          record.set(mapping.marketServiceVersion.name, '');
+          record.set(mapping.marketAppVersion.name, undefined);
+          record.set(mapping.marketServiceVersion.name, undefined);
+          record.set(mapping.nexus.name, undefined);
+
           updateModalProps(record, modal);
           switch (value) {
             case productSourceData[1].value: {

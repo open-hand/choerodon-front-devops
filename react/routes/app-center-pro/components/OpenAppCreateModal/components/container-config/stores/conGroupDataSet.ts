@@ -735,6 +735,9 @@ const conGroupDataSet = (
           case mapping.productSource.name: {
             record.set(mapping.marketAppVersion.name, undefined);
             record.set(mapping.marketServiceVersion.name, undefined);
+            record.set(mapping.imageVersion.name, undefined);
+            record.set(mapping.projectImageRepo.name, undefined);
+            record.set(mapping.shareAppService.name, undefined);
             if (value === productSourceData[6].value) {
               record.getField(mapping.relativeMission.name).set('required', true);
             } else {
@@ -757,7 +760,6 @@ const conGroupDataSet = (
                 break;
               }
             }
-            record.set(mapping.imageVersion.name, undefined);
             break;
           }
           case mapping.image.name: {
