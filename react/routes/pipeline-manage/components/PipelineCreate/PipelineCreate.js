@@ -1,4 +1,4 @@
-import { axios, CONSTANTS } from '@choerodon/master';
+import { axios, CONSTANTS, cicdPipelineApi } from '@choerodon/master';
 import React, {
   useEffect, useState,
 } from 'react';
@@ -47,6 +47,18 @@ const PipelineCreate = observer(() => {
   } = usePipelineCreateStore();
 
   const [expandIf, setExpandIf] = useState(false);
+
+  /**
+   * 获取预置模板
+   */
+  useEffect(() => {
+    async function init() {
+      const res = await cicdPipelineApi
+        .getTemplate(dataSource ? dataSource?.id : 0, dataSource ? true : undefined);
+      createUseStore.setFuncList(res);
+    }
+    init();
+  }, []);
 
   useEffect(() => {
     if (dataSource) {
@@ -109,6 +121,8 @@ const PipelineCreate = observer(() => {
         devopsCdStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CD'),
         configSettingVOS: editBlockStore.getStepData.map((o) => o.configSettingVOS)[0],
         relatedBranches: branches,
+        devopsCiPipelineFunctionDTOList: createUseStore
+          .getFuncList.filter((item) => item.devopsPipelineId !== 0),
       };
       if (!data.bbcl) {
         delete data.versionName;

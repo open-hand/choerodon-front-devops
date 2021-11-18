@@ -5,6 +5,7 @@ import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
 import SelectDataSet from './SelectDataSet';
+import variableDataSet from './variableDataSet';
 import useStore from './useStore';
 
 const Store = createContext();
@@ -25,14 +26,16 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
   } = props;
 
   const store = useStore();
+  const VariableDataSet = useMemo(() => new DataSet(variableDataSet()), []);
   const selectDs = useMemo(() => new DataSet(SelectDataSet({
-    projectId, formatMessage, gitlabProjectId, pipelineId, appServiceName,
+    projectId, formatMessage, gitlabProjectId, pipelineId, appServiceName, VariableDataSet,
   })), [projectId, gitlabProjectId, pipelineId]);
 
   const value = {
     ...props,
     selectDs,
     store,
+    VariableDataSet,
   };
 
   return (

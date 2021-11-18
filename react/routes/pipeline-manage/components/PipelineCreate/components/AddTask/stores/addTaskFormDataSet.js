@@ -92,9 +92,9 @@ export default (
       name: 'bzmc',
       type: 'string',
       label: '步骤名称',
-      dynamicProps: ({ record, name }) => ({
-        required: record.get('type') === 'build',
-      }),
+      dynamicProps: {
+        required: ({ record, name }) => record.get('type') === 'build',
+      }
     },
     //   {
     //   name: 'yhm',
@@ -256,37 +256,37 @@ export default (
       type: 'string',
       label: 'SonarQube账号配置',
       defaultValue: 'username',
-      dynamicProps: ({ record, name }) => ({
-        required: record.get('type') === 'sonar' && record.get('configType') === 'custom',
-      }),
+      dynamicProps: {
+        required: ({ record, name }) => record.get('type') === 'sonar' && record.get('configType') === 'custom',
+      }
     }, {
       name: 'username',
       type: 'string',
       label: 'SonarQube用户名',
-      dynamicProps: ({ record, name }) => ({
-        required: record.get('type') === 'sonar' && record.get('configType') === 'custom' && record.get('authType') === 'username',
-      }),
+      dynamicProps: {
+        required: ({ record, name }) => record.get('type') === 'sonar' && record.get('configType') === 'custom' && record.get('authType') === 'username',
+      },
     }, {
       name: 'password',
       type: 'string',
       label: '密码',
-      dynamicProps: ({ record, name }) => ({
-        required: record.get('type') === 'sonar' && record.get('configType') === 'custom' && record.get('authType') === 'username',
-      }),
+        dynamicProps: {
+          required: ({ record, name }) => record.get('type') === 'sonar' && record.get('configType') === 'custom' && record.get('authType') === 'username',
+        },
     }, {
       name: 'sonarUrl',
       type: 'string',
       label: 'SonarQube地址',
-      dynamicProps: ({ record, name }) => ({
-        required: record.get('type') === 'sonar' && record.get('configType') === 'custom',
-      }),
+        dynamicProps: {
+          required: ({ record, name }) => record.get('type') === 'sonar' && record.get('configType') === 'custom',
+        },
     }, {
       name: 'token',
       type: 'string',
       label: 'Token',
-      dynamicProps: ({ record, name }) => ({
-        required: record.get('type') === 'sonar' && record.get('authType') === 'token',
-      }),
+        dynamicProps: {
+          required: ({ record, name }) => record.get('type') === 'sonar' && record.get('authType') === 'token',
+        },
     }, {
       name: 'selectImage',
       type: 'string',
@@ -296,15 +296,49 @@ export default (
       name: 'image',
       type: 'string',
       label: 'CI任务Runner镜像',
-      dynamicProps: ({ record, name }) => ({
-        required: record.get('type') !== 'custom',
-      }),
+        dynamicProps: {
+          required: ({ record, name }) => record.get('type') !== 'custom',
+        },
       validator: checkImage,
       defaultValue: AddTaskUseStore.getDefaultImage,
     }, {
       name: 'share',
       type: 'string',
       multiple: true,
-    }],
+    }, {
+      name: 'openParallel',
+      type: 'boolean',
+      label: '是否开启此任务的并发',
+      textField: 'name',
+      valueField: 'value',
+      defaultValue: false,
+        options: new DataSet({
+          data: [{
+            name: '是',
+            value: true,
+          }, {
+            name: '否',
+            value: false,
+          }]
+        })
+    }, {
+      name: 'parallel',
+        type: 'string',
+        label: '并发数',
+        validator: (value, name, record) => {
+          if (!record.get('openParallel')) {
+            return true;
+          } else {
+            if (parseInt(value) % 2 === 0) {
+                return true;
+            } else {
+              return '并发数必须为2的整数';
+            }
+          }
+        },
+        dynamicProps: {
+          required: ({ record }) => record.get('openParallel'),
+        }
+      }],
   });
 };
