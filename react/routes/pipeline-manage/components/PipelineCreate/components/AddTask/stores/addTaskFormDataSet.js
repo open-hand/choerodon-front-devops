@@ -329,11 +329,13 @@ export default (
           if (!record.get('openParallel')) {
             return true;
           } else {
+            if (parseInt(value) > 50) {
+              return '最大数不能超过50';
+            }
             if (parseInt(value) % 2 === 0) {
                 return true;
-            } else {
-              return '并发数必须为2的整数';
             }
+            return '并发数必须为2的整数';
           }
         },
         dynamicProps: {
