@@ -1085,8 +1085,8 @@ const AddTask = observer(() => {
                       style.marginBottom = AddTaskFormDataSet.current.getField('zpk').isValid() ? 20 : 40;
                       return (
                         <Select
-                          name="zpk"
                           style={style}
+                          name="zpk"
                         />
                       );
                     } if (type === 'upload_jar') {
