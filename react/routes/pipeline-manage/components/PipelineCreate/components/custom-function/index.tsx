@@ -1,6 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import _ from 'lodash';
-import { Button, TextField, Modal } from 'choerodon-ui/pro';
+import {
+  Button, TextField, Modal, Tooltip,
+} from 'choerodon-ui/pro';
 import { cicdPipelineApi } from '@choerodon/master';
 import classNames from 'classnames';
 import { observer } from 'mobx-react-lite';
@@ -134,7 +136,9 @@ const Index = observer(({
             onBlur={(e) => handleChangeText(e.target.value, index)}
           />
         ) : (
-          <p className={`${cssPrefix}__side__item__left`}>{ item.name }</p>
+          <Tooltip title={item.name}>
+            <p className={`${cssPrefix}__side__item__left`}>{ item.name }</p>
+          </Tooltip>
         )
       }
       <div className={`${cssPrefix}__side__item__buttons`}>
