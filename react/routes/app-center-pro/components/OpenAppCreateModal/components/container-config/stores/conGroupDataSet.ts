@@ -7,7 +7,7 @@
 import { DataSet } from 'choerodon-ui/pro';
 import { marketServiceVersionOptionDs } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config/stores/appConfigDataSet';
 import {
-  DataSetProps, FieldProps, FieldType, Record,
+  DataSetProps, FieldProps, FieldType, Record, DataToJSON,
 } from '@/interface';
 import docker from '../images/docker.svg';
 import jar from '../images/jar.svg';
@@ -660,6 +660,7 @@ const conGroupDataSet = (
     });
   }
   return ({
+    dataToJSON: 'all' as DataToJSON,
     autoCreate: true,
     fields: Object.keys(mapping).map((i) => {
       const item = mapping[i];
