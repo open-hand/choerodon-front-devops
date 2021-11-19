@@ -5,11 +5,11 @@ import forEach from 'lodash/forEach';
 import moment from 'moment';
 import setEnvRecentItem from '../../../utils/setEnvRecentItem';
 import {
-  itemTypeMappings, viewTypeMappings, RES_TYPES, ENV_KEYS,
+  itemTypeMappings, viewTypeMappings, ENV_KEYS,
 } from './mappings';
 
 const { IST_VIEW_TYPE, RES_VIEW_TYPE } = viewTypeMappings;
-const { ENV_ITEM, APP_ITEM, IST_ITEM } = itemTypeMappings;
+const { ENV_ITEM } = itemTypeMappings;
 
 function formatResource({ value, expandsKeys, formatMessage }) {
   if (isEmpty(value)) return [];
@@ -143,7 +143,8 @@ export default ({
             if (data && data.failed) {
               return data;
             }
-            const expandsKeys = store.getExpandedKeys;
+            // 这里加上data[0].id是为了默认展开第一个环境的节点
+            const expandsKeys = [...store.getExpandedKeys, data[0]?.id].filter(Boolean);
             store.getSearchValue && store.setSearchValue('');
             return formatMaps[type]({ value: data, expandsKeys, formatMessage });
           } catch (e) {
