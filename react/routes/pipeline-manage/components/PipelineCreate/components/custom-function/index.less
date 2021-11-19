@@ -24,6 +24,8 @@
       }
       &__left {
         flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       &__buttons {
         &__icon {
@@ -51,5 +53,17 @@
   &__content {
     width: calc(100% - 300px);
     overflow: auto;
+    .c7ncd-yaml-wrapper {
+      height: 100%;
+      .c7ncd-codemirror {
+        height: 100%;
+        div:first-child {
+          height: 100%;
+          .CodeMirror {
+            height: 100% !important;
+          }
+        }
+      }
+    }
   }
 }

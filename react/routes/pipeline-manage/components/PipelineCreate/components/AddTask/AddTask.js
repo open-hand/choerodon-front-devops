@@ -1532,7 +1532,18 @@ const AddTask = observer(() => {
     <div newLine colSpan={4} className="border-advanced-after">
       <Row>
         <Col span={12}>
-          <SelectBox className={`${cssPrefix}__openParallel`} name="openParallel" />
+          <SelectBox
+            className={`${cssPrefix}__openParallel`}
+            name="openParallel"
+            label={(
+              <>
+                <span>
+                是否开启此任务的并发
+                </span>
+                <NewTips helpText="开启此任务的并发后，之后在执行时，便会按照设置的并发数同时执行多个相同的任务。" />
+              </>
+            )}
+          />
         </Col>
         <Col span={12}>
           {

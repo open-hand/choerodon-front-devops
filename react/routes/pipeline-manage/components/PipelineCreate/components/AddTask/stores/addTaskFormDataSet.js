@@ -308,7 +308,7 @@ export default (
     }, {
       name: 'openParallel',
       type: 'boolean',
-      label: '是否开启此任务的并发',
+      // label: '是否开启此任务的并发',
       textField: 'name',
       valueField: 'value',
       defaultValue: false,

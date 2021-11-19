@@ -39,6 +39,7 @@ export default observer(() => {
   const [moreTagLoading, setMoreTagLoading] = useState(false);
   const [moreBranchLoading, setMoreBranchLoading] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+  const [cancelDisabled, setCancelDisabled] = useState(false);
 
   const {
     getBranchData,
@@ -48,21 +49,33 @@ export default observer(() => {
   } = store;
 
   useEffect(() => {
+    modal.update({
+      cancelProps: {
+        disabled: cancelDisabled
+      }
+    })
+  }, [cancelDisabled])
+
+  useEffect(() => {
     loadData('');
   }, []);
 
   // eslint-disable-next-line consistent-return
   modal.handleOk(async () => {
     try {
+      setCancelDisabled(true);
       const res = await VariableDataSet.validate();
       if (res && await selectDs.submit() !== false) {
+        setCancelDisabled(false);
         mainStore.setExpandedKeys([pipelineId]);
         mainStore.setSelectedMenu(record.toData());
         refresh();
       } else {
+        setCancelDisabled(false);
         return false;
       }
     } catch (e) {
+      setCancelDisabled(false);
       throw new Error(e);
     }
   });
