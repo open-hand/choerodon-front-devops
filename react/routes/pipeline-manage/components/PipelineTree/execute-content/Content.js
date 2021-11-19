@@ -76,7 +76,7 @@ export default observer(() => {
       }
     } catch (e) {
       setCancelDisabled(false);
-      throw new Error(e);
+      console.log(e);
     }
   });
 
