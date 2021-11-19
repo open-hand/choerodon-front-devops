@@ -34,6 +34,10 @@ const Index = observer(({
     const funcName: string[] = [];
     for (let i = 0; i < funcList.length; i += 1) {
       const item = funcList[i];
+      if (!item.script) {
+        flag = '函数内容不能为空';
+        break;
+      }
       if (funcName.includes(item.name)) {
         flag = '函数集合名称不能重复';
         break;
