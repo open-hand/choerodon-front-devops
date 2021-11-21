@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import { observer } from 'mobx-react-lite';
 import { useDebounceFn } from 'ahooks';
 import { Icon, message } from 'choerodon-ui';
-import { YamlEditor } from '@choerodon/components';
+import YamlEditor from '@/components/yamlEditor';
 import { FuncType } from '@/interface';
 
 import './index.less';

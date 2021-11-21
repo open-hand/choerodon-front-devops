@@ -23,7 +23,6 @@ const PipelineCreate = observer(() => {
     modal,
     editBlockStore,
     createUseStore,
-    projectId,
     AppState: {
       currentMenuType: {
         id,
