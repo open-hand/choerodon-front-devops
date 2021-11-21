@@ -329,7 +329,7 @@ export default (
           if (!record.get('openParallel')) {
             return true;
           } else {
-            if ((parseInt(value) < 2) || (parseInt(value) > 50) || (parseInt(value) % 2 !== 0)) {
+            if ((parseInt(value) < 2) || (parseInt(value) > 50)) {
               return '此处仅能填写大于等于2，且小于50的整数';
             }
             return true;
