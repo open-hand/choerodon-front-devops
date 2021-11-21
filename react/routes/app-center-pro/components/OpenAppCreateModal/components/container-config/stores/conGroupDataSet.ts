@@ -739,6 +739,9 @@ const conGroupDataSet = (
             record.set(mapping.imageVersion.name, undefined);
             record.set(mapping.projectImageRepo.name, undefined);
             record.set(mapping.shareAppService.name, undefined);
+            record.set(mapping.repoAddress.name, undefined);
+            record.set(mapping.username.name, undefined);
+            record.set(mapping.password.name, undefined);
             if (value === productSourceData[6].value) {
               record.getField(mapping.relativeMission.name).set('required', true);
             } else {
