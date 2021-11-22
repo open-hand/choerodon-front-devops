@@ -27,6 +27,7 @@ const Index = observer(({
     name: string,
     script: string,
     focus?: boolean,
+    devopsPipelineId?: any,
   }[]>(JSON.parse(JSON.stringify(useStore.getFuncList)));
 
   const handleOk = () => {
@@ -196,7 +197,7 @@ const Index = observer(({
             }}
             showError={false}
             value={funcList.find((item: any) => item.focus)?.script || ''}
-            readOnly={false}
+            readOnly={funcList.find((item: any) => item.focus)?.devopsPipelineId === 0}
             modeChange={false}
             onValueChange={(v: string) => run(v)}
           />
