@@ -2,7 +2,7 @@ import React, {
   useCallback, useEffect, useMemo, useState,
 } from 'react';
 import {
-  Form, TextField, Select, Tooltip, SelectBox, Spin,
+  Form, TextField, Select, Tooltip, SelectBox, Spin, Password,
 } from 'choerodon-ui/pro';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
@@ -307,9 +307,9 @@ const CreateForm = injectIntl(observer((props) => {
               {formDs.current?.get('authType') === 'username_password' ? (
                 <>
                   <TextField name="username" colSpan={3} />
-                  <TextField name="password" colSpan={3} />
+                  <Password name="password" colSpan={3} />
                 </>
-              ) : <TextField name="accessToken" colSpan={3} />}
+              ) : <Password name="accessToken" colSpan={3} />}
             </Form>
             <div className="testConnect">
               <Button funcType="raised" disabled={!isTestDisable} onClick={handleTest}>
