@@ -325,6 +325,7 @@ export default (
       name: 'parallel',
         type: 'string',
         label: '并发数',
+        step: 1,
         validator: (value, name, record) => {
           if (!record.get('openParallel')) {
             return true;
