@@ -45,7 +45,7 @@ const PipelineCreate = observer(() => {
    */
   useEffect(() => {
     async function init() {
-      const res = await axios.post(`/devops/v1/projects/${projectId}/cicd_pipelines/${dataSource ? dataSource?.id : 0}/functions?include_default=${dataSource ? true : undefined}`);
+      const res = await axios.post(`/devops/v1/projects/${projectId}/cicd_pipelines/${dataSource ? dataSource?.id : 0}/functions?include_default=true`);
       createUseStore.setFuncList(res);
     }
     init();
