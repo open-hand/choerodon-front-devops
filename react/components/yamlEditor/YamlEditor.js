@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component, Fragment } from 'react';
 import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
@@ -46,17 +47,6 @@ export default class YamlEditor extends Component {
     super(props);
     this.state = {
       errorTip: false,
-    };
-    this.options = {
-      // chd 自定制的主题配色
-      theme: 'chd',
-      mode: 'text/chd-yaml',
-      readOnly: props.readOnly,
-      lineNumbers: !props.readOnly,
-      lineWrapping: true,
-      viewportMargin: Infinity,
-      lint: !props.readOnly && props.showError,
-      gutters: !props.readOnly ? ['CodeMirror-lint-markers'] : [],
     };
   }
 
@@ -115,6 +105,18 @@ export default class YamlEditor extends Component {
       showError,
       className,
     } = this.props;
+    this.options = {
+      // chd 自定制的主题配色
+      theme: 'chd',
+      mode: 'text/chd-yaml',
+      readOnly: this.props.readOnly,
+      lineNumbers: !this.props.readOnly,
+      lineWrapping: true,
+      viewportMargin: Infinity,
+      lint: !this.props.readOnly && this.props.showError,
+      gutters: !this.props.readOnly ? ['CodeMirror-lint-markers'] : [],
+    };
+
     const { errorTip } = this.state;
 
     const wrapClass = classnames({
@@ -124,7 +126,7 @@ export default class YamlEditor extends Component {
     });
 
     return (
-      <Fragment>
+      <>
         <div className={wrapClass}>
           <CodeMirror
             modeChange={modeChange}
@@ -145,7 +147,7 @@ export default class YamlEditor extends Component {
             </span>
           </div>
         ) : null}
-      </Fragment>
+      </>
     );
   }
 }
