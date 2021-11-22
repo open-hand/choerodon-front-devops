@@ -325,12 +325,13 @@ export default (
       name: 'parallel',
       type: 'string',
       label: '并发数',
+      step: 1,
       validator: (value, name, record) => {
         if (!record.get('openParallel')) {
           return true;
         }
         // eslint-disable-next-line
-        if ((parseInt(value) < 2) || (parseInt(value) > 50)) {
+            if ((parseInt(value) < 2) || (parseInt(value) > 50)) {
           return '此处仅能填写大于等于2，且小于50的整数';
         }
         return true;
