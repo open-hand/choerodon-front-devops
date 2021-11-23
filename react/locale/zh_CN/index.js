@@ -3221,4 +3221,4 @@ const zhCN = {
   ...app,
 };
 
-export default zhCN;
+export { zhCN };
