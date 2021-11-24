@@ -230,7 +230,6 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
 
         </Select>
         <ButtonGroup
-          disabled={appServiceDs.length === 0}
           name={formatMessage({ id: 'repository.copyUrl' })}
           renderCustomDropDownPanel={(setvisib) => copyMenu}
         />
