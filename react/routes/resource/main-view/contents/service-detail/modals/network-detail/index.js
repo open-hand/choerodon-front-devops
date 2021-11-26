@@ -93,7 +93,7 @@ export default function ({
         </li>
         <li className="detail-item">
           <span className="detail-item-text">
-            {formatMessage({ id: 'createDate' })}
+            {formatMessage({ id: 'boot.createDate' })}
           </span>
           <span>
             {
@@ -117,7 +117,7 @@ export default function ({
         </li>
         <li className="detail-item">
           <span className="detail-item-text">
-            {formatMessage({ id: 'updateDate' })}
+            {formatMessage({ id: 'boot.updateDate' })}
           </span>
           <span>
             {(record

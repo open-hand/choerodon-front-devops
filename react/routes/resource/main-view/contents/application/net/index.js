@@ -303,7 +303,7 @@ const Networking = observer(() => {
         intlPrefix={intlPrefix}
         prefixCls={prefixCls}
       />,
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
     });
   }
 
@@ -312,7 +312,7 @@ const Networking = observer(() => {
       key: editNetWorkKey,
       title: formatMessage({ id: 'network.header.create' }),
       style: { width: 740 },
-      okText: formatMessage({ id: 'edit' }),
+      okText: formatMessage({ id: 'boot.edit' }),
       drawer: true,
       children: <EditNetwork
         envId={parentId}

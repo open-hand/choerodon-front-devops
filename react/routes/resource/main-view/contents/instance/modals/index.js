@@ -106,7 +106,7 @@ const IstModals = injectIntl(observer(() => {
       key: upgradeKey,
       title: formatMessage({ id: `${intlPrefix}.modal.modify` }),
       drawer: true,
-      okText: formatMessage({ id: 'modify' }),
+      okText: formatMessage({ id: 'boot.modify' }),
       style: modalStyle,
       children: <UpgradeModalContent
         store={istStore}

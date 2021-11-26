@@ -32,7 +32,7 @@ export default (formatMessage) => ({
     {
       name: 'lastUpdateDate',
       type: 'string',
-      label: formatMessage({ id: 'updateDate' }),
+      label: formatMessage({ id: 'boot.updateDate' }),
     },
   ],
   queryFields: [

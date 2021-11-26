@@ -142,7 +142,7 @@ function ClusterItem({
       style: {
         width: 380,
       },
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
     });
   }
 

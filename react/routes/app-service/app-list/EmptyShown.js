@@ -16,7 +16,7 @@ export function EmptyLoading({ formatMessage }) {
           type="primary"
           funcType="flat"
         >
-          {formatMessage({ id: 'refresh' })}
+          {formatMessage({ id: 'boot.refresh' })}
         </Button>
       </Header>
       <Breadcrumb />

@@ -140,7 +140,7 @@ const HostsItem: React.FC<any> = observer(({
     const actionData = [
       {
         service: ['choerodon.code.project.deploy.host.ps.edit'],
-        text: formatMessage({ id: 'edit' }),
+        text: formatMessage({ id: 'boot.edit' }),
         action: () => handleCreateDeployHost(id),
       },
     ];

@@ -162,7 +162,7 @@ const ClusterModals = observer(() => {
         width: '740px',
       },
       destroyOnClose: true,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
       onCancel: () => {
         nodesDs.reset();
         formDs.reset();

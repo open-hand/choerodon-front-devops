@@ -63,7 +63,7 @@ const ServiceDetail = observer(() => {
         </div>
         <div>
           <span className="service-detail-load-item-key">
-            {formatMessage({ id: 'updateDate' })}:
+            {formatMessage({ id: 'boot.updateDate' })}:
           </span>
           <span>{lastUpdateDate || '-'}</span>
         </div>

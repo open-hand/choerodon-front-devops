@@ -39,7 +39,7 @@ function GroupItem({
       children: <GroupForm dataSet={groupFormDs} treeDs={treeDs} />,
       drawer: true,
       style: modalStyle,
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
     });
   }
 

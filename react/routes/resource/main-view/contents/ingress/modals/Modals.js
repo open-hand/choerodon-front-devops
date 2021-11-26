@@ -46,7 +46,7 @@ const EnvModals = observer(() => {
         prefixCls={prefixCls}
         ingressStore={ingressStore}
       />,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 

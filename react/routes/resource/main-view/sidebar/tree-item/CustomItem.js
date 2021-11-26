@@ -109,7 +109,7 @@ function CustomItem({
             store={customStore}
             refresh={freshMenu}
           />,
-          okText: formatMessage({ id: 'save' }),
+          okText: formatMessage({ id: 'boot.save' }),
         });
       }
     });
@@ -123,7 +123,7 @@ function CustomItem({
     }
     const actionData = [{
       service: ['choerodon.code.project.deploy.app-deployment.resource.ps.custome-resource.update'],
-      text: formatMessage({ id: 'edit' }),
+      text: formatMessage({ id: 'boot.edit' }),
       action: openModal,
     }, {
       service: ['choerodon.code.project.deploy.app-deployment.resource.ps.custom-resource.delete'],

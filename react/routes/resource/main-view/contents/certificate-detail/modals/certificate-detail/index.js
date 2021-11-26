@@ -19,7 +19,7 @@ export default function ({ intlPrefix, record, prefixCls, formatMessage }) {
       </li>
       <li className="detail-item">
         <span className="detail-item-text">
-          {formatMessage({ id: 'createDate' })}
+          {formatMessage({ id: 'boot.createDate' })}
         </span>
         <span>{
             (record && record.get('creationDate')) || '-' 

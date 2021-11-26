@@ -291,7 +291,7 @@ const ResourceConfigItem:React.FC<Props> = ({
       },
       {
         service: [],
-        text: formatMessage({ id: 'edit' }),
+        text: formatMessage({ id: 'boot.edit' }),
         action: () => {
           openNetWorkFormModal({
             envId: hostOrEnvId,
