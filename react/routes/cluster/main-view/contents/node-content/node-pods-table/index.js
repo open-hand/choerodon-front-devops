@@ -67,7 +67,7 @@ const NodePodsTable = () => {
         queryBar="none"
         className="c7ncd-node-pods-table"
       >
-        <Column header={formatMessage({ id: 'status' })} renderer={renderStatus} />
+        <Column header={formatMessage({ id: 'boot.states' })} renderer={renderStatus} />
         <Column renderer={renderActions} />
         <Column header={formatMessage({ id: 'ciPipeline.createdAt' })} renderer={renderCreationDate} />
       </Table>

@@ -9,43 +9,7 @@ const app = {
 };
 
 const commonField = {
-  // 表格通用列名
-  status: '状态',
-  name: '名称',
-  code: '编码',
-  creator: '创建者',
-  updater: '更新者',
-  updateDate: '更新时间',
-  createDate: '创建时间',
-  description: '描述',
-  number: '编号',
-
-  // 操作
-  active: '启用',
-  stop: '停用',
-  execute: '执行',
-  return: '返回',
-  submit: '确认',
-  create: '创建',
-  add: '添加',
-  edit: '修改',
-  save: '保存',
-  refresh: '刷新',
-  associate: '关联',
-  loadMore: '展开更多',
-  permissions: '权限分配',
-  deploy: '应用部署',
-  deployment: '部署',
-  upgrade: '升级',
-  modify: '变更',
-  iknow: '我知道了',
-  reset: '重置',
-  install: '安装',
-  uninstall: '卸载',
-  copy: '复制',
-
   // 通用描述
-  app: '应用',
   appName: '应用名称',
   appCode: '应用编码',
   environment: '环境',
@@ -858,38 +822,6 @@ const deploy = {
   'c7ncd.deploy.record.detail': '查看记录详情',
   'c7ncd.deploy.hzero.stop.title': '停止执行',
   'c7ncd.deploy.hzero.stop.des': '确定停止该条HZERO应用快速部署吗？',
-};
-
-const repository = {
-  'c7ncd.repository': '仓库配置',
-  'c7ncd.repository.info': '操作存在一定风险，若无实质需求，请使用默认仓库！',
-  'c7ncd.repository.harbor': 'Docker仓库',
-  'c7ncd.repository.harbor.config': 'Docker仓库配置',
-  'c7ncd.repository.harbor.default': '默认Docker仓库',
-  'c7ncd.repository.harbor.custom': '自定义Docker仓库',
-  'c7ncd.repository.chart': 'Helm仓库',
-  'c7ncd.repository.chart.config': 'Helm仓库配置',
-  'c7ncd.repository.chart.default': '默认Helm仓库',
-  'c7ncd.repository.chart.custom': '自定义Helm仓库',
-  'c7ncd.repository.test': '测试连接',
-  'c7ncd.repository.test.success': '连接成功',
-  'c7ncd.repository.test.failed': '连接失败',
-  'c7ncd.repository.public': '公有',
-  'c7ncd.repository.private': '私有',
-  'c7ncd.repository.type': '仓库类型',
-  'c7ncd.repository.project.failed': '由小写字母，数字，\'-\'、\'_\'或\'.\'组成，以字母、数字开始和结束',
-  'c7ncd.repository.tab.info': '组织信息',
-  'c7ncd.repository.tab.ldap': 'LDAP设置',
-  'c7ncd.repository.tab.calendar': '工作日历',
-  'c7ncd.repository.tab.repo': '仓库',
-  'c7ncd.repository.tab.info.project': '项目信息',
-  'c7ncd.repository.tab.application': '应用配置',
-  'c7ncd.repository.prompt.inform.title': '离开此页',
-  'c7ncd.repository.prompt.inform.message': '此页面修改项尚未保存，确定要离开此页面？',
-  'c7ncd.repository.empty.title': 'Docker仓库配置',
-  'c7ncd.repository.empty.des': 'Docker仓库配置功能已迁移至【制品库管理】页面，请点击下方按钮跳转。',
-  'c7ncd.repository.empty.link': '跳转至制品库管理',
-  'c7ncd.repository.name.check.failed': '用户名与密码需配对输入',
 };
 
 const pvManager = {
@@ -3208,7 +3140,6 @@ const zhCN = {
   ...certificate,
   ...cluster,
   ...deploy,
-  ...repository,
   ...codeManagement,
   ...emptyPage,
   ...pvManager,
@@ -3220,5 +3151,8 @@ const zhCN = {
   ...appCenter,
   ...app,
 };
+
+export * from './repository';
+export * from './components';
 
 export { zhCN };

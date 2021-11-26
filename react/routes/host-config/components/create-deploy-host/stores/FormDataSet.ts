@@ -163,7 +163,7 @@ export default ({
       {
         name: 'username',
         type: 'string' as FieldType,
-        label: formatMessage({ id: 'userName' }),
+        label: formatMessage({ id: 'boot.username' }),
         dynamicProps: {
           required: ({ record }: RecordObjectProps) => (record.get('hostIp') && record.get('sshPort')) || record.get('password'),
         },

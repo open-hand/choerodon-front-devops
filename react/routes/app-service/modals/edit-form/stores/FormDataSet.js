@@ -137,7 +137,7 @@ export default (({
         name: 'url', type: 'url', label: formatMessage({ id: 'address' }), dynamicProps: { required: getChartRequired },
       },
       {
-        name: 'userName', type: 'string', label: formatMessage({ id: 'userName' }), validator: checkUserName,
+        name: 'userName', type: 'string', label: formatMessage({ id: 'boot.username' }), validator: checkUserName,
       },
       {
         name: 'password', type: 'string', label: formatMessage({ id: 'password' }), validator: checkPassword,
