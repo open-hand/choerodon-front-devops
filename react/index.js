@@ -23,7 +23,7 @@ const DevelopReports = React.lazy(() => import('./routes/reports/ReportsIndex'))
 const Repository = React.lazy(() => import('./routes/repository'));
 const ProRepository = React.lazy(() => import('./routes/pro-repository'));
 const PVManager = React.lazy(() => import('./routes/pv-manager'));
-const PipelineManage = React.lazy(() => import('./routes/pipeline-manage'));
+const PipelineManage = React.lazy(() => import('./routes/app-pipeline'));
 const HostConfig = React.lazy(() => import('./routes/host-config'));
 const OrgTemplate = React.lazy(() => import('./routes/app-template/OrgIndex'));
 const SiteTemplate = React.lazy(() => import('./routes/app-template/SiteIndex'));
