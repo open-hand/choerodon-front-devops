@@ -49,6 +49,8 @@ function BranchCreate(props) {
   const [isOPERATIONS, setIsOPERATIONS] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
+  const issueOptionsDs =  formDs?.getField('issue')?.options
+
   useEffect(() => {
     setIsOPERATIONS(!some(categories || [], ["code", "N_AGILE"]));
   }, [categories]);
@@ -182,7 +184,7 @@ function BranchCreate(props) {
   const changeIssue = (value) => {
     let type;
     const { typeCode, issueNum } = value || {};
-    if(issueNum=== '我的问题myquestion' || '加载更多') {
+    if(issueNum=== '我的问题myquestion') {
       return
     }
     formDs.current.set("branchName", issueNum);
@@ -332,15 +334,27 @@ function BranchCreate(props) {
   };
 
   const myquestionChange = (bool) => {
-    formDs.setState('myquestionBool',bool)
-    formDs.getField('issue').fetchLookup(true)
+    issueOptionsDs?.setState('myquestionBool',bool)
+    issueOptionsDs?.query()
   };
 
-  const handleClickMore = async (e) => {
-   e.stopPropagation();
-   const pageSize = formDs.current.get('pageSize') + 20;
-   formDs.current.set('pageSize', pageSize);
-   formDs.getField('issue').fetchLookup(true)
+  const issueQuery = useCallback(
+    debounce((value) => {
+      issueOptionsDs?.setQueryParameter('content', value);
+      issueOptionsDs?.query();
+    }, 500),
+    [],
+  );
+
+  const handleIssueSearch = useCallback((e) => {
+    e.persist();
+    issueQuery(e.target.value);
+  }, []);
+
+  const handleIssueBlur = () => {
+    issueOptionsDs?.setQueryParameter('content', '');
+    issueOptionsDs?.setState('myquestionBool', false);
+    issueOptionsDs?.query();
   };
 
   const issueNameOptionRender = ({ record,text }) => {
@@ -348,17 +362,6 @@ function BranchCreate(props) {
     const issueNum = record.get("issueNum");
     const summary = record.get("summary");
     const issueTypeVO = record.get("issueTypeVO");
-    if(summary==='加载更多') {
-      return (
-        <a
-          role="none"
-          style={{ width: '100%', height: '100%', display: 'block',textAlign:'center' }}
-        onClick={handleClickMore}
-        >
-          加载更多
-        </a>
-        )
-    }
     return summary === "我的问题myquestion" ? (
       <div
         role="none"
@@ -542,10 +545,14 @@ function BranchCreate(props) {
               name="issue"
               colSpan={5}
               onChange={changeIssue}
+              onInput={handleIssueSearch}
+              onBlur={handleIssueBlur}
               optionRenderer={issueNameOptionRender}
               renderer={issueNameRender}
               searchable
-              searchMatcher="content"
+              searchMatcher={() => true}
+              pagingOptionContent={<span className="c7ncd-select-load-more-text">加载更多</span>}
+              clearButton={false}
             />,
           ]}
           <Select

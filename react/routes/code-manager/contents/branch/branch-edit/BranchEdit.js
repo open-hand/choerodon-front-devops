@@ -22,6 +22,8 @@ function BranchEdit() {
     },
   } = useSelectStore();
 
+  const issueOptionsDs = selectDs?.current?.getField('issue')?.options;
+
   const [searchValue, setSearchValue] = useState('');
 
   /**
@@ -64,6 +66,25 @@ function BranchEdit() {
       searchData('');
     }
   }, [searchValue]);
+
+  const issueQuery = useCallback(
+    debounce((value) => {
+      issueOptionsDs?.setQueryParameter('content', value);
+      issueOptionsDs?.query();
+    }, 500),
+    [],
+  );
+
+  const handleIssueSearch = useCallback((e) => {
+    e.persist();
+    issueQuery(e.target.value);
+  }, []);
+
+  const handleIssueBlur = () => {
+    issueOptionsDs?.setQueryParameter('content', '');
+    issueOptionsDs?.setState('myquestionBool', false);
+    issueOptionsDs?.query();
+  };
 
   const renderProjectOption = useCallback(({ text, value }) => {
     if (String(value) === String(projectId)) {
@@ -145,15 +166,8 @@ function BranchEdit() {
   };
 
   const myquestionChange = (bool) => {
-    selectDs.setState('myquestionBool', bool);
-    selectDs.getField('issue').fetchLookup(true);
-  };
-
-  const handleClickMore = async (e) => {
-    e.stopPropagation();
-    const pageSize = selectDs.current.get('pageSize') + 20;
-    selectDs.current.set('pageSize', pageSize);
-    selectDs.getField('issue').fetchLookup(true);
+    issueOptionsDs?.setState('myquestionBool', bool);
+    issueOptionsDs?.query();
   };
 
   const issueNameOptionRender = ({ record }) => {
@@ -161,21 +175,6 @@ function BranchEdit() {
     const issueNum = record.get('issueNum');
     const summary = record.get('summary');
     const issueTypeVO = record.get('issueTypeVO');
-    console.log(summary);
-    if (summary === '加载更多') {
-      return (
-        // eslint-disable-next-line jsx-a11y/anchor-is-valid
-        <a
-          role="none"
-          style={{
-            width: '100%', height: '100%', display: 'block', textAlign: 'center',
-          }}
-          onClick={handleClickMore}
-        >
-          加载更多
-        </a>
-      );
-    }
     return summary === '我的问题myquestion' ? (
       <div
         role="none"
@@ -194,7 +193,7 @@ function BranchEdit() {
           position: 'absolute', zIndex: 99999, left: -15, bottom: -3, width: 'calc(100% + 30px)', height: 1, background: '#D9E6F2',
         }}
         />
-        <CheckBox name="base" onChange={myquestionChange}>
+        <CheckBox name="base" checked={issueOptionsDs?.getState('myquestionBool')} onChange={myquestionChange}>
           <span style={{ marginLeft: 4 }}>我的问题</span>
         </CheckBox>
       </div>
@@ -222,6 +221,10 @@ function BranchEdit() {
   const handleIssueFilter = useCallback((record) => {
     const issueId = record.get('issueId');
     const selectedIssueIds = selectDs.map((selectedRecord) => selectedRecord.get('issue')?.issueId) || [];
+    // 只有2条记录并且其中一条是我的问题，一条已经被选中
+    if (issueOptionsDs?.length === 2 && selectedIssueIds.indexOf(issueOptionsDs?.get(1)?.get('issueId')) !== -1 && issueId === '-1') {
+      return false;
+    }
     return selectedIssueIds.indexOf(issueId) === -1;
   });
 
@@ -243,12 +246,16 @@ function BranchEdit() {
           />
           <Select
             name="issue"
+            onInput={handleIssueSearch}
+            onBlur={handleIssueBlur}
             optionRenderer={issueNameOptionRender}
             renderer={issueNameRender}
             searchable
-            searchMatcher="content"
+            searchMatcher={() => true}
             colSpan={5}
             optionsFilter={handleIssueFilter}
+            pagingOptionContent={<span className="c7ncd-select-load-more-text">加载更多</span>}
+            clearButton={false}
           />
           <Button
             icon="delete"
