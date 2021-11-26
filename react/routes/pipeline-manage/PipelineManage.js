@@ -106,7 +106,7 @@ const PipelineManage = observer(() => {
         oldEditMainData={oldEditMainData}
         isEdit
       />,
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
     });
   }
 
@@ -192,7 +192,7 @@ const PipelineManage = observer(() => {
         refresh={handleRefresh}
       />,
       drawer: true,
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
     });
   }
 
@@ -243,7 +243,7 @@ const PipelineManage = observer(() => {
       if (!parentId) {
         buttons.push({
           // permissions: ['choerodon.code.project.develop.ci-pipeline.ps.update'],
-          name: formatMessage({ id: 'edit' }),
+          name: formatMessage({ id: 'boot.edit' }),
           icon: 'edit-o',
           handler: openEditModal,
           // display: edit,

@@ -5,6 +5,7 @@
  * i made my own lucky
  */
 import { DataSet } from 'choerodon-ui/pro';
+import { marketServiceVersionOptionDs } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config/stores/appConfigDataSet';
 import {
   DataSetProps, FieldProps, FieldType, Record,
 } from '@/interface';
@@ -21,12 +22,13 @@ import portConfigDataSet
 import optionDataSet
   from '@/routes/app-center-pro/components/OpenAppCreateModal/components/deploy-group-config/stores/optionsDataSet';
 import { rdupmApiApiConfig } from '@/api/Rdupm';
-import { deployApiConfig } from '@/api';
+import { deployApiConfig, uniqueApiConfig } from '@/api';
 import { appServiceApiConfig } from '@/api/AppService';
 import { appServiceVersionApiConfig } from '@/api/AppServiceVersions';
 import { nexusApiConfig } from '@/api/Nexus';
 import { devopsDeployGroupApiConfig } from '@/api/DevopsDeployGroup';
 import { setReturnData } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config/content';
+import { OPTIONAL } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config/constant';
 
 const checkReserved = async (
   value: string,
@@ -51,6 +53,8 @@ const checkReserved = async (
   }
   return true;
 };
+
+const marketServiceVersionDataSet = new DataSet(marketServiceVersionOptionDs);
 
 const productTypeData = [{
   value: 'docker',
@@ -204,7 +208,6 @@ const mapping: {
   marketAppVersion: {
     name: 'marketAppVersion',
     type: 'string' as FieldType,
-    label: '',
     dynamicProps: {
       label: ({ record }) => {
         if (record.get(mapping.productSource.name) === productSourceData[1].value) {
@@ -229,14 +232,25 @@ const mapping: {
           ...deployApiConfig.deployApplication(paramsData?.type || 'common'),
           transformResponse: (res) => {
             function init(data: any) {
-              const result: any[] = [];
-              data.forEach((item: any) => {
-                item.appVersionVOS.forEach((version: any) => {
-                  result.push({
-                    ...version,
-                    groupName: item.name,
-                  });
-                });
+              let result: any[] = [];
+              data.forEach((i: {
+                name: string,
+                appVersionVOS: {
+                  id: string
+                }[]
+              }) => {
+                const iData = i.appVersionVOS.map((app: {
+                  id: string,
+                }) => ({
+                  ...app,
+                  name: i.name,
+                  // 如果没有分类 则是选配
+                  id: i.name ? app.id : 'optional',
+                }));
+                result = [
+                  ...result,
+                  ...iData,
+                ];
               });
               return result;
             }
@@ -258,6 +272,7 @@ const mapping: {
     label: '市场服务及版本',
     textField: 'marketServiceName',
     valueField: 'id',
+    options: marketServiceVersionDataSet,
     dynamicProps: {
       label: ({ record }) => {
         if (record.get(mapping.productSource.name) === productSourceData[1].value) {
@@ -271,30 +286,6 @@ const mapping: {
       ].includes(record?.get(
         mapping.productSource.name,
       )),
-      lookupAxiosConfig: ({ record }) => {
-        if (record?.get(mapping.marketAppVersion.name)) {
-          return ({
-            ...deployApiConfig.deployVersion(record?.get(mapping.marketAppVersion.name), 'image'),
-            transformResponse: (res: any) => {
-              function init(dt: any) {
-                return dt.map((d: any) => {
-                  const newD = d;
-                  newD.id = newD.marketServiceDeployObjectVO.id;
-                  return d;
-                });
-              }
-              let newRes = res;
-              try {
-                newRes = JSON.parse(res);
-                return init(newRes);
-              } catch (e) {
-                return init(newRes);
-              }
-            },
-          });
-        }
-        return undefined;
-      },
     },
   },
   shareAppService: {
@@ -468,10 +459,15 @@ const mapping: {
             ),
             transformResponse: (res) => {
               function init(data: any) {
-                return data.map((i: string) => ({
-                  name: i,
-                  value: i,
-                }));
+                return data.map((i: any) => {
+                  if (typeof i === 'string') {
+                    return ({
+                      name: i,
+                      value: i,
+                    });
+                  }
+                  return i;
+                });
               }
               let newRes = res;
               try {
@@ -506,10 +502,15 @@ const mapping: {
             ),
             transformResponse: (res) => {
               function init(data: any) {
-                return data.map((i: string) => ({
-                  name: i,
-                  value: i,
-                }));
+                return data.map((i: any) => {
+                  if (typeof i === 'string') {
+                    return ({
+                      name: i,
+                      value: i,
+                    });
+                  }
+                  return i;
+                });
               }
               let newRes = res;
               try {
@@ -700,6 +701,18 @@ const conGroupDataSet = (
         record, name, value, dataSet,
       }: any) => {
         switch (name) {
+          case mapping.artifactId.name: {
+            record.set(mapping.jarVersion.name, undefined);
+            break;
+          }
+          case mapping.groupId.name: {
+            record.set(mapping.artifactId.name, undefined);
+            break;
+          }
+          case mapping.shareAppService.name: {
+            record.set(mapping.shareServiceVersion.name, undefined);
+            break;
+          }
           case mapping.productType.name: {
             if (isPipeline) {
               record.set(mapping.productSource.name, productSourceData[6].value);
@@ -720,8 +733,8 @@ const conGroupDataSet = (
             break;
           }
           case mapping.productSource.name: {
-            record.set(mapping.marketAppVersion.name, '');
-            record.set(mapping.marketServiceVersion.name, '');
+            record.set(mapping.marketAppVersion.name, undefined);
+            record.set(mapping.marketServiceVersion.name, undefined);
             if (value === productSourceData[6].value) {
               record.getField(mapping.relativeMission.name).set('required', true);
             } else {
@@ -745,6 +758,40 @@ const conGroupDataSet = (
               }
             }
             record.set(mapping.imageVersion.name, undefined);
+            break;
+          }
+          case mapping.image.name: {
+            record.set(mapping.imageVersion.name, undefined);
+            break;
+          }
+          case mapping.projectImageRepo.name: {
+            record.set(mapping.image.name, undefined);
+            record.set(mapping.imageVersion.name, undefined);
+            break;
+          }
+          case mapping.marketAppVersion.name: {
+            record.set(mapping.marketServiceVersion.name, undefined);
+            switch (value) {
+              // 如果是选配
+              case OPTIONAL: {
+                marketServiceVersionDataSet.setQueryParameter('type', value);
+                marketServiceVersionDataSet.query();
+                break;
+              }
+              default: {
+                marketServiceVersionDataSet.setQueryParameter('version', value);
+                marketServiceVersionDataSet.query();
+                break;
+              }
+            }
+            break;
+          }
+          case mapping.projectProductRepo.name: {
+            record.set(mapping.groupId.name, undefined);
+            break;
+          }
+          case mapping.nexus.name: {
+            record.set(mapping.projectProductRepo.name, undefined);
             break;
           }
           default: {

@@ -49,7 +49,7 @@ const NetworkContent = observer(() => {
     networkDs.query();
   };
 
-  function getEnvIsNotRunning () {
+  function getEnvIsNotRunning() {
     const envRecord = treeDs.find((record) => record.get('key') === parentId);
     const connect = envRecord.get('connect');
     return !connect;
@@ -320,14 +320,14 @@ const NetworkContent = observer(() => {
     const buttons = [
       {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.update-net'],
-        text: formatMessage({ id: 'edit' }),
+        text: formatMessage({ id: 'boot.edit' }),
         action: openModal,
       },
       {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-net'],
         text: formatMessage({ id: 'delete' }),
         action: () => openDeleteModal({
-          envId: parentId, instanceId: id, instanceName: name, type: 'service', callback: refresh
+          envId: parentId, instanceId: id, instanceName: name, type: 'service', callback: refresh,
         }),
       },
     ];
@@ -335,7 +335,7 @@ const NetworkContent = observer(() => {
     return (<Action data={buttons} />);
   };
 
-  function openModal () {
+  function openModal() {
     Modal.open({
       key: modalKey,
       style: modalStyle,
@@ -348,7 +348,7 @@ const NetworkContent = observer(() => {
         store={networkStore}
         refresh={refresh}
       />,
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
       afterClose: () => networkStore.setSingleData([]),
     });
   }

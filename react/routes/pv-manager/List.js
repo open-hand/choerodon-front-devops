@@ -172,7 +172,7 @@ const AppService = withRouter(observer((props) => {
         prefixCls={prefixCls}
         refresh={refresh}
       />,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 
@@ -189,7 +189,7 @@ const AppService = withRouter(observer((props) => {
         refresh={refresh}
         pvId={record.get('id')}
       />,
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
     });
   }
 

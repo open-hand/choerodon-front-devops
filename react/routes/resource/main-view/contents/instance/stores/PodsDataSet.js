@@ -26,7 +26,7 @@ export default ({ intl, intlPrefix }) => ({
     {
       name: 'creationDate',
       type: 'dateTime',
-      label: intl.formatMessage({ id: 'createDate' }),
+      label: intl.formatMessage({ id: 'boot.createDate' }),
     },
   ],
 });

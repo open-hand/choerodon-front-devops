@@ -77,7 +77,7 @@ export default function ({ record, formatMessage, prefixCls, intlPrefix }) {
       </li>
       <li className="detail-item">
         <span className="detail-item-text">
-          {formatMessage({ id: 'createDate' })}
+          {formatMessage({ id: 'boot.createDate' })}
         </span>
         <span>{(record && record.get('creationDate')) || '-'}</span>
       </li>
@@ -89,7 +89,7 @@ export default function ({ record, formatMessage, prefixCls, intlPrefix }) {
       </li>
       <li className="detail-item">
         <span className="detail-item-text">
-          {formatMessage({ id: 'updateDate' })}
+          {formatMessage({ id: 'boot.updateDate' })}
         </span>
         <span>{(record && record.get('lastUpdateDate')) || '-'}</span>
       </li>

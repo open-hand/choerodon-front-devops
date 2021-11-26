@@ -36,7 +36,7 @@ export default ({
   fields: [
     { name: 'name', label: formatMessage({ id: 'name' }) },
     { name: 'sourceProject', label: formatMessage({ id: `${intlPrefix}.source` }) },
-    { name: 'lastUpdateDate', label: formatMessage({ id: 'updateDate' }) },
+    { name: 'lastUpdateDate', label: formatMessage({ id: 'boot.updateDate' }) },
   ],
   events: {
     select: ({ record }: { record: Record }) => {

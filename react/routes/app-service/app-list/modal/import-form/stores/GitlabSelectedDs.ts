@@ -113,7 +113,7 @@ const GitlabSelectedDs = ({ intlPrefix, formatMessage, projectId, importStore, t
         valueField: 'value',
         options: typeOptionDs,
       },
-      { name: 'lastActivityAt', type: 'string', label: formatMessage({ id: 'updateDate' }) },
+      { name: 'lastActivityAt', type: 'string', label: formatMessage({ id: 'boot.updateDate' }) },
     ],
     events: {
       update: handleUpdate,

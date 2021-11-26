@@ -274,7 +274,7 @@ function Branch(props) {
     ];
     const editAction = ({
       service: ['choerodon.code.project.develop.code-management.ps.branch.update'],
-      text: formatMessage({ id: 'edit' }),
+      text: formatMessage({ id: 'boot.edit' }),
       action: () => openEditIssueModal(record.toData()),
     });
     if (!isOPERATIONS) {

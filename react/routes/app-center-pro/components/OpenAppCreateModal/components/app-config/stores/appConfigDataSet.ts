@@ -143,9 +143,9 @@ const serviceVersionOptionDs = {
   paging: true,
   pageSize: 20,
   transport: {
-    read: ({ data, params }: any) => ({
+    read: ({ data, params }: any) => (data.appServiceId ? ({
       ...appServiceVersionApiConfig.getVersions(data.appServiceId, true, true, params, data.appServiceVersionId),
-    }),
+    }) : undefined),
   },
 };
 
@@ -539,4 +539,6 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
 
 export default appConfigDataSet;
 
-export { mapping, chartSourceData, envDataSet };
+export {
+  mapping, chartSourceData, envDataSet, marketServiceVersionOptionDs,
+};

@@ -54,12 +54,12 @@ export function openPipelineReferenceModal({
 // deletionStore 可以从app-deletion-with-vertification-code组件下的deletionStore
 // 这个模板里头拿，直接new deletionStore它就行
 async function openDelete({
-  envId, instanceName, instanceId, callback, deletionStore, type = 'instance',
+  envId, instanceName, instanceId, callback, deletionStore, type = 'instance', appId,
 }:openDeleteProps) {
-  const hasPipelineReference = await checkPipelineReference({
-    instanceId,
+  const hasPipelineReference = appId ? await checkPipelineReference({
+    instanceId: appId,
     type,
-  });
+  }) : null;
   if (!isEmpty(hasPipelineReference)) {
     openPipelineReferenceModal({
       active: 'delete',

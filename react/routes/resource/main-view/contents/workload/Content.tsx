@@ -148,7 +148,7 @@ const WorkloadContent = observer(() => {
         // @ts-ignore
         urlType={urlTypes[workloadStore.getTabKey] || 'deployments'}
       />,
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
     });
   }, [workloadStore.getTabKey, parentId]);
 
@@ -311,7 +311,7 @@ const WorkloadContent = observer(() => {
     if (connect && !record.get('instanceId')) {
       actionData.push({
         service: [`choerodon.code.project.deploy.app-deployment.resource.ps.workload.create.${workloadStore.getTabKey}`],
-        text: formatMessage({ id: 'edit' }),
+        text: formatMessage({ id: 'boot.edit' }),
         action: () => openEditModal(record),
       }, {
         service: [`choerodon.code.project.deploy.app-deployment.resource.ps.workload.delete.${workloadStore.getTabKey}`],

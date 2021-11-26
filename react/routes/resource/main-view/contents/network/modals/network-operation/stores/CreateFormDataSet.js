@@ -152,7 +152,7 @@ export default ({
       },
       {
         name: 'appDeploy', // 部署组应用
-        type: 'object',
+        type: 'string',
         label: formatMessage({ id: 'network.isChart.deployment' }),
         dynamicProps: {
           required: ({ dataSet, record, name }) => record.get('target') === 'instance' && record.get('isChart') !== 'chart',

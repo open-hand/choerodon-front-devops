@@ -1029,6 +1029,10 @@ export default observer(() => {
         ADDCDTaskUseStore.setValueIdRandom(Math.random());
         setValueIdValues(tempValues);
         if (data) {
+          const item = DeployChartDataSet.current.getField(mapping().deployConfig.name).options.records.find(item => item.get('id') === data.valueId);
+          if (item) {
+            item.set('value', tempValues);
+          }
           DeployChartDataSet.current.set(mapping().deployConfig.name, data.valueId);
           DeployChartDataSet.current.set(mapping().value.name, tempValues);
         }

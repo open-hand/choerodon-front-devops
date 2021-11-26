@@ -63,7 +63,7 @@ const CodeManagerToolBar = injectIntl(inject('AppState')(observer((props) => {
       onClick={refreshApp}
       icon="refresh"
     >
-      {formatMessage({ id: 'refresh' })}
+      {formatMessage({ id: 'boot.refresh' })}
     </Button>,
   ] : (
     <>
@@ -230,6 +230,7 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
 
         </Select>
         <ButtonGroup
+          disabled={appServiceDs.length === 0}
           name={formatMessage({ id: 'repository.copyUrl' })}
           renderCustomDropDownPanel={(setvisib) => copyMenu}
         />

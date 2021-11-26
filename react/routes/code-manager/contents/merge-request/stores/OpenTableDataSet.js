@@ -45,7 +45,7 @@ export default ((projectId, formatMessage, mergedRequestStore, appId, tabKey) =>
       { name: 'iid', type: 'string', label: <Tips title={formatMessage({ id: 'app.code' })} helpText={formatMessage({ id: 'app.code.tip' })} /> },
       { name: 'state', type: 'string', label: formatMessage({ id: 'merge.state' }) },
       { name: 'targetBranch', type: 'string', label: <Tips title={formatMessage({ id: 'app.branch' })} helpText={formatMessage({ id: 'app.branch.tip' })} /> },
-      { name: 'createdAt', type: 'string', label: <Tips title={formatMessage({ id: 'create' })} helpText={formatMessage({ id: 'create.tip' })} /> },
+      { name: 'createdAt', type: 'string', label: <Tips title={formatMessage({ id: 'boot.create' })} helpText={formatMessage({ id: 'create.tip' })} /> },
       { name: 'commits', type: 'string', label: <Tips title={formatMessage({ id: 'merge.commit' })} helpText={formatMessage({ id: 'merge.commit.tip' })} /> },
       { name: 'updatedAt', type: 'string', label: formatMessage({ id: 'merge.upDate' }) },
       { name: 'assignee', type: 'string', label: formatMessage({ id: 'merge.assignee' }) },

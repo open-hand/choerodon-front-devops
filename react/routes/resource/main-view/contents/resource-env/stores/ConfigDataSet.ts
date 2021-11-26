@@ -42,7 +42,7 @@ export default ({ formatMessage, id }:any):any => ({
     {
       name: 'lastUpdateDate',
       type: 'dateTime',
-      label: formatMessage({ id: 'updateDate' }),
+      label: formatMessage({ id: 'boot.updateDate' }),
     },
   ],
   queryFields: [

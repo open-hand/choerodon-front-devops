@@ -32,6 +32,7 @@ export default (({
   function handleCreate({ dataSet, record }:any) {
     const defaultEnvId = (dataSet.records)[0].get('environmentId');
     defaultEnvId && record.set('environmentId', defaultEnvId);
+    record.getField('appServiceId').set('disabled', !record.get('environmentId'));
   }
 
   async function handleUpdate({
@@ -51,6 +52,8 @@ export default (({
         });
         domainRecord.get('certId') && domainRecord.set('certId', null);
         domainRecord.getField('certId').fetchLookup();
+        // 没有环境 应用服务则为禁用
+        record.getField('appServiceId').set('disabled', !value);
         break;
       case 'appServiceId':
         record.get('appServiceVersionId') && record.set('appServiceVersionId', null);
@@ -190,7 +193,7 @@ export default (({
         name: 'appCode', type: 'string', label: formatMessage({ id: `appCode` }), required: true, maxLength: 53,validator: checkCode
       },
       {
-        name: 'appName', type: 'string', label: formatMessage({ id: 'appName' }), required: true, maxLength: 53,validator: checkName
+        name: 'appName', type: 'string', label: formatMessage({ id: 'boot.appName' }), required: true, maxLength: 53,validator: checkName
       },
       {
         name: 'valueId',

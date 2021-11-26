@@ -5,7 +5,7 @@ import { Record } from '@/interface';
 import ContainerGroup from './components/container-group';
 import ContainerDetail from './components/container-detail';
 import { useContainerConfig } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config/stores';
-import { mapping, productTypeData, productSourceData } from './stores/conGroupDataSet';
+import conGroupDataSet, { mapping, productTypeData, productSourceData } from './stores/conGroupDataSet';
 import { mapping as portMapping } from './stores/portConfigDataSet';
 import { setOptionsDs } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/deploy-group-config/content';
 

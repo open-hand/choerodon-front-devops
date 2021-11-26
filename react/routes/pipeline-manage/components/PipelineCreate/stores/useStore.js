@@ -3,6 +3,16 @@ import { axios, Choerodon } from '@choerodon/master';
 
 export default function useStore() {
   return useLocalStore(() => ({
+    funcList: [],
+
+    get getFuncList() {
+      return this.funcList;
+    },
+
+    setFuncList(data) {
+      this.funcList = data;
+    },
+
     defaultImage: '',
 
     axiosGetDefaultImage() {

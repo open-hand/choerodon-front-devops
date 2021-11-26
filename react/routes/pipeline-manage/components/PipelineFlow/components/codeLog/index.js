@@ -1,21 +1,30 @@
 import React, {
-  useCallback, useEffect, useMemo, useState,
+  useCallback, useMemo, useState,
 } from 'react';
 import forEach from 'lodash/forEach';
 import { Terminal } from 'xterm';
 import { fit } from 'xterm/lib/addons/fit/fit';
 import { observer } from 'mobx-react-lite';
-import { axios, Choerodon } from '@choerodon/master';
+import { Choerodon } from '@choerodon/master';
 import { Button } from 'choerodon-ui/pro';
 import { saveAs } from 'file-saver';
+import { useInterval, useMount, useUnmount } from 'ahooks';
 
 import 'xterm/dist/xterm.css';
 import './index.less';
+import { isNil } from 'lodash';
+import { ciJobsApi, pipeLineRecordsApi } from '@/api';
+
+const term = new Terminal({
+  fontSize: 13,
+  fontWeight: 400,
+  fontFamily: 'monospace',
+  disableStdin: true,
+});
 
 export default observer((props) => {
   const {
     gitlabJobId,
-    projectId,
     gitlabProjectId,
     type,
     cdRecordId,
@@ -23,87 +32,142 @@ export default observer((props) => {
     jobRecordId,
     viewId,
     appServiceId,
+    jobName,
   } = props;
+  // 是cd阶段的这些类型
+  const isCd = ['cdHost', 'cdDeploy', 'cdExternalApproval', 'cdDeployment'].includes(type);
+  // 是ci阶段的这些类型
+  const isCi = ['build', 'sonar', 'custom', 'chart'].includes(type);
 
   const prefixCls = useMemo(() => 'c7n-pipelineManage-codeLog', []);
+  const [interval, setInterTime] = useState(isCi ? 5000 : null);
   const [logData, setLogData] = useState();
 
-  const term = new Terminal({
-    fontSize: 13,
-    fontWeight: 400,
-    fontFamily: 'monospace',
-    disableStdin: true,
-  });
+  /**
+   * 处理ci isCi 类型任务的logs
+   * @param {*} ciLogsData
+   * @return {*}
+   */
+  function handleCiLogs(ciLogsData) {
+    const {
+      logs,
+      endFlag,
+    } = ciLogsData || {};
+    if (endFlag) setInterTime(null);
+    if (logData) {
+      const logDataArr = logData.split(/\n/); // 旧数据
+      const newLogsArr = logs.split(/\n/); // 新数据
+      let diffArr = [];
+      // 找出旧数据和新数据不一样的地方，这里对比数组长度
+      // 如果长度相等，相当于前后数据可能就只有最后一行发生了变化，对比最后一行数据长度
+      if (logDataArr.length === newLogsArr.length) {
+        diffArr = [newLogsArr[newLogsArr.length - 1]];
+      } else {
+        diffArr = newLogsArr.slice(logDataArr.length);
+      }
+      if (diffArr.length) {
+        setLogData(logs);
+        forEach(diffArr, (str) => term.writeln(str));
+      }
+      return;
+    }
+    const newRes = logs.split(/\n/);
+    forEach(newRes, (item) => term.writeln(item));
+    setLogData(logs);
+  }
 
   async function loadData() {
+    if (!isCd && !isCi) {
+      return;
+    }
+    const getData = isCd
+      ? pipeLineRecordsApi.getCdPipelineLogs(cdRecordId, stageRecordId, jobRecordId)
+      : ciJobsApi.getCiPipelineLogs(gitlabProjectId, gitlabJobId, appServiceId);
     try {
-      if (['cdHost', 'cdDeploy', 'cdExternalApproval', 'cdDeployment'].includes(type)) {
-        const res = await axios.get(`/devops/v1/projects/${projectId}/pipeline_records/${cdRecordId}/stage_records/${stageRecordId}/job_records/log/${jobRecordId}`);
-        if (res && !res.failed) {
-          const newRes = res.split(/\n/);
-          forEach(newRes, (item) => term.writeln(item));
-          setLogData(res);
-        } else {
-          term.writeln('暂无日志');
+      const res = await getData;
+      if (!res?.failed) {
+        if (isCi) {
+          handleCiLogs(res);
+          return;
         }
+        const newRes = res.split(/\n/);
+        forEach(newRes, (item) => term.writeln(item));
+        setLogData(res);
       } else {
-        const res = await axios.get(`/devops/v1/projects/${projectId}/ci_jobs/gitlab_projects/${gitlabProjectId}/gitlab_jobs/${gitlabJobId}/trace?app_service_id=${appServiceId}`);
-        if (res && !res.failed) {
-          const newRes = res.split(/\n/);
-          forEach(newRes, (item) => term.writeln(item));
-          setLogData(res);
-        } else {
-          term.writeln('暂无日志');
-        }
+        term.writeln('暂无日志');
       }
     } catch (e) {
       Choerodon.handleResponseError(e);
     }
   }
 
-  useEffect(() => {
-    loadData();
-    term.open(document.getElementById('jobLog'));
-    fit(term);
-  }, []);
-
   const handleDownload = useCallback(() => {
     const blob = new Blob([logData], { type: 'text/plain' });
-    const filename = `#${viewId}-构建日志.log`;
+    const filename = `${jobName}-日志.log`;
     saveAs(blob, filename);
   }, [logData]);
 
+  const handleTimer = () => {
+    if (!isNil(interval)) {
+      setInterTime(null);
+    } else {
+      setInterTime(5000);
+    }
+  };
+
+  const goTop = () => {
+    term.scrollToTop();
+  };
+
+  useMount(() => {
+    term.open(document.getElementById('jobLog'));
+    fit(term);
+  });
+
+  useUnmount(() => {
+    term.clear();
+  });
+
+  useInterval(() => {
+    loadData();
+    term.scrollToBottom();
+  }, interval, { immediate: true });
+
   return (
     <>
-      {type === 'build' && (
+      {isCi && (
         <div className={`${prefixCls}-btn`}>
-          <Button
-            icon="refresh"
-            onClick={() => {
-              const joblog = document.getElementById('jobLog');
-              joblog.parentNode.removeChild(joblog);
-              const parent = document.querySelector('.c7n-pro-modal-body');
-              const child = document.createElement('div');
-              child.setAttribute('id', 'jobLog');
-              child.setAttribute('class', `${prefixCls} ${type === 'build' ? `${prefixCls}-hasBtn` : ''}`);
-              parent.appendChild(child);
-              term.clear();
-              loadData();
-              term.open(document.getElementById('jobLog'));
-              fit(term);
-            }}
-          />
           <Button
             icon="get_app-o"
             color="primary"
             onClick={handleDownload}
             className={`${prefixCls}-download`}
           >
-            下载构建日志
+            下载日志
           </Button>
         </div>
       )}
-      <div className={`${prefixCls} ${type === 'build' ? `${prefixCls}-hasBtn` : ''}`} id="jobLog" />
+      <div className={`${prefixCls}-container`}>
+        <div className={`${prefixCls} ${isCi ? `${prefixCls}-hasBtn` : ''}`} id="jobLog" />
+        {isCi && (
+          <div className={`${prefixCls}-btnGorups`}>
+            <div
+              onClick={handleTimer}
+              role="none"
+              className={`${prefixCls}-btnGorups-btn ${prefixCls}-btnGorups-btn-following`}
+            >
+              {isNil(interval) ? 'Start Following' : 'Stop Following'}
+            </div>
+            <div
+              onClick={goTop}
+              role="none"
+              className={`${prefixCls}-btnGorups-btn ${prefixCls}-btnGorups-btn-top`}
+            >
+              Go Top
+            </div>
+          </div>
+        )}
+      </div>
     </>
   );
 });

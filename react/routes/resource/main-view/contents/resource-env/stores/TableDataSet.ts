@@ -8,7 +8,7 @@ export default (formatMessage:any, intlPrefix:string):any => ({
     { name: 'memoryUsed', type: 'string', label: formatMessage({ id: `${intlPrefix}.used.memory` }) },
     { name: 'cpuUsed', type: 'string', label: formatMessage({ id: `${intlPrefix}.used.cpu` }) },
     { name: 'podIp', type: 'string', label: formatMessage({ id: `${intlPrefix}.instance.ip` }) },
-    { name: 'creationDate', type: 'string', label: formatMessage({ id: 'createDate' }) },
+    { name: 'creationDate', type: 'string', label: formatMessage({ id: 'boot.createDate' }) },
   ],
   transport: {
     read: {

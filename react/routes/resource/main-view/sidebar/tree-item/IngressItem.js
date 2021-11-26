@@ -89,7 +89,7 @@ function IngressItem({
             intlPrefix={intlPrefix}
             prefixCls="c7ncd-deployment"
           />,
-          okText: formatMessage({ id: 'save' }),
+          okText: formatMessage({ id: 'boot.save' }),
         });
       }
     });
@@ -106,7 +106,7 @@ function IngressItem({
     }
     const actionData = [{
       service: ['choerodon.code.project.deploy.app-deployment.resource.ps.update.domain'],
-      text: formatMessage({ id: 'edit' }),
+      text: formatMessage({ id: 'boot.edit' }),
       action: openModal,
     }, {
       service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-domain'],

@@ -1,19 +1,28 @@
-import { axios } from '@choerodon/master';
+import { axios, CONSTANTS, cicdPipelineApi } from '@choerodon/master';
 import React, {
   useEffect, useState,
 } from 'react';
 import {
-  Form, TextField, Select, SelectBox,
+  Form, TextField, Select, SelectBox, Button, Modal,
 } from 'choerodon-ui/pro';
 import { message, Icon, Tooltip } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { map } from 'lodash';
 import { usePipelineCreateStore } from './stores';
 import Tips from '../../../../components/new-tips';
+import CustomFunc from './components/custom-function';
 import StageEditBlock from './components/stageEditBlock';
 import './pipelineCreate.less';
 
+const {
+  MODAL_WIDTH: {
+    MIDDLE,
+  },
+} = CONSTANTS;
+
 const { Option } = Select;
+
+const cssPrefix = 'c7ncd-pipelineCreate';
 
 const PipelineCreate = observer(() => {
   const {
@@ -38,6 +47,18 @@ const PipelineCreate = observer(() => {
   } = usePipelineCreateStore();
 
   const [expandIf, setExpandIf] = useState(false);
+
+  /**
+   * 获取预置模板
+   */
+  useEffect(() => {
+    async function init() {
+      const res = await cicdPipelineApi
+        .getTemplate(dataSource ? dataSource?.id : 0, dataSource ? true : undefined);
+      createUseStore.setFuncList(res);
+    }
+    init();
+  }, []);
 
   useEffect(() => {
     if (dataSource) {
@@ -75,6 +96,18 @@ const PipelineCreate = observer(() => {
     init();
   }, [PipelineCreateFormDataSet, createUseStore, dataSource]);
 
+  const handleCustomFunc = () => {
+    Modal.open({
+      key: Modal.key(),
+      title: '自定义函数管理',
+      drawer: true,
+      style: {
+        width: MIDDLE,
+      },
+      children: <CustomFunc useStore={createUseStore} />,
+    });
+  };
+
   const handleCreate = async () => {
     const result = await PipelineCreateFormDataSet.validate();
     if (result) {
@@ -88,6 +121,8 @@ const PipelineCreate = observer(() => {
         devopsCdStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CD'),
         configSettingVOS: editBlockStore.getStepData.map((o) => o.configSettingVOS)[0],
         relatedBranches: branches,
+        devopsCiPipelineFunctionDTOList: createUseStore
+          .getFuncList.filter((item) => item.devopsPipelineId !== 0),
       };
       if (!data.bbcl) {
         delete data.versionName;
@@ -310,6 +345,12 @@ const PipelineCreate = observer(() => {
                 name="versionNameRules"
               />
             ),
+            <div className={`${cssPrefix}__customFunc`} newLine>
+              <p className={`${cssPrefix}__customFunc__title`}>自定义函数</p>
+              <Button onClick={handleCustomFunc} style={{ width: '50%' }}>
+                自定义函数管理
+              </Button>
+            </div>,
           ] : ''
         }
       </Form>

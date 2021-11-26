@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
 import React, { useMemo } from 'react';
+import { useRouteMatch } from 'react-router';
 import { Route, Switch } from 'react-router-dom';
 import { inject } from 'mobx-react';
 import {
-  asyncLocaleProvider, NoMatch, PermissionRoute,
+  asyncLocaleProvider, NoMatch, PermissionRoute, useCurrentLanguage,
 } from '@choerodon/master';
 import { ModalContainer } from 'choerodon-ui/pro';
 
@@ -29,7 +30,9 @@ const SiteTemplate = React.lazy(() => import('./routes/app-template/SiteIndex'))
 const AppCenter = React.lazy(() => import('./routes/app-center-pro'));
 
 // eslint-disable-next-line react/prop-types
-function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
+function DEVOPSIndex() {
+  const match = useRouteMatch();
+  const language = useCurrentLanguage();
   const IntlProviderAsync = useMemo(() => asyncLocaleProvider(language, () => import(`./locale/${language}`)), []);
   return (
     <IntlProviderAsync>

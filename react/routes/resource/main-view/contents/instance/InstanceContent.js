@@ -31,12 +31,12 @@ const InstanceTitle = ({
   name,
   versionName,
   formatMessage,
+  commandStatus,
 }) => {
   const podSize = useMemo(() => ({
     width: 22,
     height: 22,
   }), []);
-  const { prefixCls } = useResourceStore();
   const {
     podColor: {
       RUNNING_COLOR,
@@ -61,18 +61,22 @@ const InstanceTitle = ({
 
   return (
     <>
-      <PodCircle
-        style={podSize}
-        dataSource={[{
-          name: 'running',
-          value: podRunningCount,
-          stroke: RUNNING_COLOR,
-        }, {
-          name: 'unlink',
-          value: podUnlinkCount,
-          stroke: PADDING_COLOR,
-        }]}
-      />
+      {commandStatus === 'operating' ? (
+        <Spin className="c7ncd-deployment-instance-spin" />
+      ) : (
+        <PodCircle
+          style={podSize}
+          dataSource={[{
+            name: 'running',
+            value: podRunningCount,
+            stroke: RUNNING_COLOR,
+          }, {
+            name: 'unlink',
+            value: podUnlinkCount,
+            stroke: PADDING_COLOR,
+          }]}
+        />
+      )}
       <span className="c7ncd-page-title-text">{name}</span>
       <span className="c7ncd-page-title-version">
         (
@@ -118,6 +122,7 @@ const InstanceContent = observer(() => {
       const podCount = record.get('podCount');
       const error = record.get('error');
       const versionName = record.get('effectCommandVersion');
+      const commandStatus = record.get('commandStatus');
       return {
         id,
         status,
@@ -126,6 +131,7 @@ const InstanceContent = observer(() => {
         podCount,
         error,
         versionName,
+        commandStatus,
       };
     }
 
@@ -163,11 +169,13 @@ const InstanceContent = observer(() => {
         podCount,
         error,
         versionName,
+        commandStatus,
       } = current;
       const podUnlinkCount = computeUnlinkPod(podCount, podRunningCount);
       return (
         <InstanceTitle
           status={status}
+          commandStatus={commandStatus}
           name={name}
           podRunningCount={podRunningCount}
           podUnlinkCount={podUnlinkCount}
@@ -186,6 +194,7 @@ const InstanceContent = observer(() => {
       podRunningCount,
       podCount,
     } = resourceStore.getSelectedMenu;
+
     const podUnlinkCount = computeUnlinkPod(podCount, podRunningCount);
 
     return (

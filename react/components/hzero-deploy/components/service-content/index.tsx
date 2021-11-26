@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useMemo, useState,
+  useCallback, useEffect, useMemo, useState,
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
@@ -56,7 +56,9 @@ const ServiceContent = observer(() => {
       return false;
     }
   });
-
+  useEffect(() => {
+  serviceDs.current?.set('envId', formDs.current?.get('envId'));
+  }, [formDs.current?.get('envId')]);
   const menuData = useMemo(() => mainStore.getServiceData, [mainStore.getServiceData]);
 
   const handleSelect = useCallback(({ domEvent, key }) => {
