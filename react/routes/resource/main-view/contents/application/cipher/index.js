@@ -62,7 +62,7 @@ const Cipher = observer(() => {
         appId={id}
         refresh={refresh}
       />,
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
     });
   }
 

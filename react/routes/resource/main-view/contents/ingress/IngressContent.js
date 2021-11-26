@@ -135,7 +135,7 @@ const IngressContent = observer(() => {
     const buttons = [
       {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.update.domain'],
-        text: formatMessage({ id: 'edit' }),
+        text: formatMessage({ id: 'boot.edit' }),
         action: openModal,
       },
       {
@@ -163,7 +163,7 @@ const IngressContent = observer(() => {
         intlPrefix={intlPrefix}
         prefixCls={prefixCls}
       />,
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
     });
   }
 

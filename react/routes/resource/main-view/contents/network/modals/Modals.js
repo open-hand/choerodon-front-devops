@@ -51,7 +51,7 @@ const EnvModals = observer(() => {
         store={networkStore}
         refresh={refresh}
       />,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 

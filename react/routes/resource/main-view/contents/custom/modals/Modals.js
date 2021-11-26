@@ -48,7 +48,7 @@ const CustomModals = observer(() => {
         store={customStore}
         refresh={refresh}
       />,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 

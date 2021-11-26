@@ -51,7 +51,7 @@ export default ({
   }, {
     name: 'age',
     type: 'string' as FieldType,
-    label: formatMessage({ id: 'updateDate' }),
+    label: formatMessage({ id: 'boot.updateDate' }),
   }, {
     name: 'source',
     label: formatMessage(({ id: `${intlPrefix}.workload.source` })),

@@ -89,7 +89,7 @@ function ConfigItem({
             title="cipher"
             refresh={freshMenu}
           />,
-          okText: formatMessage({ id: 'save' }),
+          okText: formatMessage({ id: 'boot.save' }),
         });
       }
     });
@@ -106,7 +106,7 @@ function ConfigItem({
     }
     const actionData = [{
       service: ['choerodon.code.project.deploy.app-deployment.resource.ps.edit-cipher'],
-      text: formatMessage({ id: 'edit' }),
+      text: formatMessage({ id: 'boot.edit' }),
       action: openModal,
     }, {
       service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-cipher'],

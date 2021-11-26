@@ -74,7 +74,7 @@ const AppService = withRouter(observer(() => {
         intlPrefix={intlPrefix}
         prefixCls={prefixCls}
       />,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 

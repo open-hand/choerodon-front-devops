@@ -137,7 +137,7 @@ export default observer((props) => {
         children: <AppTagCreate {...createProps} />,
         drawer: true,
         style: bigModelStyle,
-        okText: formatMessage({ id: 'create' }),
+        okText: formatMessage({ id: 'boot.create' }),
         onCancel: () => {
           appTagCreateDs.reset();
         },
@@ -164,7 +164,7 @@ export default observer((props) => {
       children: <AppTagEdit {...editProps} />,
       drawer: true,
       style: bigModelStyle,
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
     });
   };
 
@@ -193,7 +193,7 @@ export default observer((props) => {
                 <Action data={[
                   {
                     service: ['choerodon.code.project.develop.code-management.ps.tag.update'],
-                    text: formatMessage({ id: 'edit' }),
+                    text: formatMessage({ id: 'boot.edit' }),
                     action: () => { openEdit(release.tagName, release.description !== 'empty' ? release.description : formatMessage({ id: 'apptag.release.empty' })); },
                   },
                   {

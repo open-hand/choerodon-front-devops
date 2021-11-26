@@ -10,7 +10,7 @@ export default ({ formatMessage }) => ({
     { name: 'key', type: 'object', label: formatMessage({ id: 'key' }) },
     { name: 'value', type: 'object' },
     { name: 'commandStatus', type: 'string' },
-    { name: 'lastUpdateDate', type: 'string', label: formatMessage({ id: 'updateDate' }) },
+    { name: 'lastUpdateDate', type: 'string', label: formatMessage({ id: 'boot.updateDate' }) },
   ],
   queryFields: [
     { name: 'name', type: 'string', label: formatMessage({ id: 'name' }) },

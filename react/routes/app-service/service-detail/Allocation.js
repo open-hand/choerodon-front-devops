@@ -95,7 +95,7 @@ const Allocation = withRouter(
       //   />,
       //   drawer: true,
       //   style: modalStyle,
-      //   okText: formatMessage({ id: 'save' }),
+      //   okText: formatMessage({ id: 'boot.save' }),
       // });
     }
 

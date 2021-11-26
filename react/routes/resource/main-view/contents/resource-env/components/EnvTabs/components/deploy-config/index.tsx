@@ -119,7 +119,7 @@ export default function DeployConfig() {
         envId={envId}
         deployConfigId={valueId}
       />,
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
     });
   }
 

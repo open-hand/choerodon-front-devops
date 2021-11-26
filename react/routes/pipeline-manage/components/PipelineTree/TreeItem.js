@@ -1,15 +1,14 @@
 /* eslint-disable */
-import React, { Fragment, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import {Action, axios, Choerodon} from '@choerodon/master';
+import {Action, Choerodon} from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 import {
-  Icon, Modal, Spin, Tooltip, Select, Form
+  Modal, Spin, Tooltip, Select
 } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import forEach from 'lodash/forEach';
 import includes from 'lodash/includes';
-import PipelineCreate from "@/routes/pipeline-manage/components/PipelineCreate";
 import { usePipelineManageStore } from '../../stores';
 import TimePopover from '../../../../components/timePopover';
 import eventStopProp from '../../../../utils/eventStopProp';
@@ -97,7 +96,7 @@ const TreeItem = observer(({ record, search }) => {
         key: stopKey,
         title: formatMessage({ id: `${intlPrefix}.stop.title` }),
         children: formatMessage({ id: `${intlPrefix}.stop.des` }),
-        okText: formatMessage({ id: 'stop' }),
+        okText: formatMessage({ id: 'boot.stop' }),
         onOk: () => changePipelineActive('disable'),
         movable: false,
       });
@@ -286,7 +285,7 @@ const TreeItem = observer(({ record, search }) => {
       },
       {
         service: [`choerodon.code.project.develop.ci-pipeline.ps.${enabled ? 'disable' : 'enable'}`],
-        text: formatMessage({ id: enabled ? 'stop' : 'active' }),
+        text: formatMessage({ id: enabled ? 'boot.stop' : 'boot.active' }),
         action: handleChangeActive,
       },
       {
@@ -320,7 +319,7 @@ const TreeItem = observer(({ record, search }) => {
         </div>
         <div className={`${prefixCls}-sidebar-header`}>
           <span className={`${prefixCls}-sidebar-header-active ${prefixCls}-sidebar-header-active-${enabled}`}>
-            {formatMessage({ id: enabled ? 'active' : 'stop' })}
+            {formatMessage({ id: enabled ? 'boot.active' : 'boot.stop' })}
           </span>
           <StatusTag status={status} size={12} className={`${prefixCls}-sidebar-header-status`} />
           <TimePopover content={latestExecuteDate} style={{ ...timePopoverStyle, marginRight: '0.24rem' }} />

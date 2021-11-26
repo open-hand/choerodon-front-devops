@@ -48,7 +48,7 @@ const ConfigItemChild = (props:any) => {
     },
     {
       service: [],
-      text: formatMessage({ id: 'edit' }),
+      text: formatMessage({ id: 'boot.edit' }),
       action: () => {
         openDomainFormModal({
           envId: hostOrEnvId,

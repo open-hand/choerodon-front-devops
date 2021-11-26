@@ -63,7 +63,7 @@ const CodeManagerToolBar = injectIntl(inject('AppState')(observer((props) => {
       onClick={refreshApp}
       icon="refresh"
     >
-      {formatMessage({ id: 'refresh' })}
+      {formatMessage({ id: 'boot.refresh' })}
     </Button>,
   ] : (
     <>

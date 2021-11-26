@@ -242,7 +242,7 @@ const ListView = withRouter(observer((props) => {
       },
       edit: {
         service: ['choerodon.code.project.develop.app-service.ps.update'],
-        text: formatMessage({ id: 'edit' }),
+        text: formatMessage({ id: 'boot.edit' }),
         action: () => {
           setSelectedAppService(record.toData());
           openEdit(record.get('id'));
@@ -257,7 +257,7 @@ const ListView = withRouter(observer((props) => {
       },
       stop: {
         service: ['choerodon.code.project.develop.app-service.ps.disable'],
-        text: formatMessage({ id: 'stop' }),
+        text: formatMessage({ id: 'boot.stop' }),
         action: () => {
           setSelectedAppService(record.toData());
           openStop(record);
@@ -265,7 +265,7 @@ const ListView = withRouter(observer((props) => {
       },
       run: {
         service: ['choerodon.code.project.develop.app-service.ps.enable'],
-        text: formatMessage({ id: 'active' }),
+        text: formatMessage({ id: 'boot.active' }),
         action: () => {
           setSelectedAppService(record.toData());
           changeActive(true, record);
@@ -315,7 +315,7 @@ const ListView = withRouter(observer((props) => {
         intlPrefix={intlPrefix}
         prefixCls={prefixCls}
       />,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 
@@ -332,7 +332,7 @@ const ListView = withRouter(observer((props) => {
         prefixCls={prefixCls}
         appServiceId={appServiceId}
       />,
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
     });
   }
 
@@ -390,7 +390,7 @@ const ListView = withRouter(observer((props) => {
         title: formatMessage({ id: `${intlPrefix}.stop` }, { name: listDs.current.get('name') }),
         children: <FormattedMessage id={`${intlPrefix}.stop.tips`} />,
         onOk: () => handleChangeActive(active, record),
-        okText: formatMessage({ id: 'stop' }),
+        okText: formatMessage({ id: 'boot.stop' }),
       });
     } else {
       handleChangeActive(active, record);
@@ -445,7 +445,7 @@ const ListView = withRouter(observer((props) => {
           children: childrenContent,
           okCancel: !status,
           onOk: () => (status ? stopModal.close() : handleChangeActive(false, record)),
-          okText: status ? formatMessage({ id: 'iknow' }) : formatMessage({ id: 'stop' }),
+          okText: status ? formatMessage({ id: 'iknow' }) : formatMessage({ id: 'boot.stop' }),
           footer: ((okBtn, cancelBtn) => (
             <>
               {!status && cancelBtn}
