@@ -93,7 +93,7 @@ export default ({
       {
         name: 'username',
         type: 'string' as FieldType,
-        label: formatMessage({ id: 'userName' }),
+        label: formatMessage({ id: 'boot.username' }),
         required: true,
 
       },

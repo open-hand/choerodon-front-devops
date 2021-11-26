@@ -1,5 +1,3 @@
-import { axios } from '@choerodon/master';
-import map from 'lodash/map';
 import getTablePostData from '../../../../utils/getTablePostData';
 
 export default (formatMessage, intlPrefix, projectId, id) => ({
@@ -21,7 +19,7 @@ export default (formatMessage, intlPrefix, projectId, id) => ({
     }),
   },
   fields: [
-    { name: 'realName', type: 'string', label: formatMessage({ id: 'userName' }) },
+    { name: 'realName', type: 'string', label: formatMessage({ id: 'boot.username' }) },
     { name: 'loginName', type: 'string', label: formatMessage({ id: 'loginName' }) },
     { name: 'creationDate', type: 'dateTime', label: formatMessage({ id: 'addTime' }) },
     {
@@ -40,7 +38,7 @@ export default (formatMessage, intlPrefix, projectId, id) => ({
     { name: 'roles', type: 'object', label: formatMessage({ id: 'projectRole' }) },
   ],
   queryFields: [
-    { name: 'realName', type: 'string', label: formatMessage({ id: 'userName' }) },
+    { name: 'realName', type: 'string', label: formatMessage({ id: 'boot.username' }) },
     { name: 'loginName', type: 'string', label: formatMessage({ id: 'loginName' }) },
   ],
 });

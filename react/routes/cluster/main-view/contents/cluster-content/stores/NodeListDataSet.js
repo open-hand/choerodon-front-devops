@@ -24,7 +24,7 @@ export default ({ formatMessage, intlPrefix }) => ({
     {
       name: 'createTime',
       type: 'string',
-      label: formatMessage({ id: 'createDate' }),
+      label: formatMessage({ id: 'boot.createDate' }),
     },
   ],
 });

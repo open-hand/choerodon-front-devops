@@ -51,7 +51,7 @@ const GroupModal = observer((props) => {
       afterClose: () => {
         groupFormDs.current.reset();
       },
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 
@@ -62,7 +62,7 @@ const GroupModal = observer((props) => {
       children: <EnvCreateForm intlPrefix={intlPrefix} refresh={refresh} />,
       drawer: true,
       style: modalStyle,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 

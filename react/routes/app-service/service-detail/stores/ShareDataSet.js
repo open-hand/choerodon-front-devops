@@ -26,13 +26,13 @@ export default ((intlPrefix, formatMessage, projectId, id, organizationId) => ({
     {
       name: 'version', type: 'string', textField: 'version', valueField: 'version', label: formatMessage({ id: `${intlPrefix}.version.specific` }),
     },
-    { name: 'id', type: 'string', label: formatMessage({ id: 'number' }) },
-    { name: 'viewId', type: 'string', label: formatMessage({ id: 'number' }) },
+    { name: 'id', type: 'string', label: formatMessage({ id: 'boot.number' }) },
+    { name: 'viewId', type: 'string', label: formatMessage({ id: 'boot.number' }) },
     { name: 'projectId', type: 'number' },
     { name: 'projectName', type: 'string', label: formatMessage({ id: `${intlPrefix}.share.range` }) },
   ],
   queryFields: [
-    // { name: 'id', type: 'string', label: formatMessage({ id: 'number' }) },
+    // { name: 'id', type: 'string', label: formatMessage({ id: 'boot.number' }) },
     {
       name: 'version', type: 'string', textField: 'version', valueField: 'version', label: formatMessage({ id: `${intlPrefix}.version.specific` }),
     },

@@ -87,7 +87,7 @@ const ConfigMap = observer((props) => {
     const buttons = [
       {
         service: permissions.edit,
-        text: formatMessage({ id: 'edit' }),
+        text: formatMessage({ id: 'boot.edit' }),
         action: openModal,
       },
       {
@@ -116,7 +116,7 @@ const ConfigMap = observer((props) => {
         intlPrefix={intlPrefix}
         refresh
       />,
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
     });
   }
 

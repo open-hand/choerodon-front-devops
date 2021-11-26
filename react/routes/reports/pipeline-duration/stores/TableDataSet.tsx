@@ -26,7 +26,7 @@ export default ({
   fields: [
     {
       name: 'status',
-      label: formatMessage({ id: 'status' }),
+      label: formatMessage({ id: 'boot.states' }),
     },
     {
       name: 'viewId',

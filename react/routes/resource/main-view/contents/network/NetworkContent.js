@@ -320,7 +320,7 @@ const NetworkContent = observer(() => {
     const buttons = [
       {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.update-net'],
-        text: formatMessage({ id: 'edit' }),
+        text: formatMessage({ id: 'boot.edit' }),
         action: openModal,
       },
       {
@@ -348,7 +348,7 @@ const NetworkContent = observer(() => {
         store={networkStore}
         refresh={refresh}
       />,
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
       afterClose: () => networkStore.setSingleData([]),
     });
   }

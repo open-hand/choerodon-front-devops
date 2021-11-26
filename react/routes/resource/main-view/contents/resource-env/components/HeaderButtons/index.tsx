@@ -92,7 +92,7 @@ const REModals = observer(() => {
       />,
       drawer: true,
       style: configModalStyle,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 

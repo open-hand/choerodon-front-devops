@@ -56,7 +56,7 @@ const CustomModals = observer(() => {
         // @ts-ignore
         urlType={urlTypes[workloadStore.getTabKey] || 'deployments'}
       />,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }, [workloadStore.getTabKey, parentId]);
 

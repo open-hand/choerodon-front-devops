@@ -28,7 +28,7 @@ export default (formatMessage, PiplineStore, projectId, searchDS, envIdDS, trigg
     { name: 'triggerType', type: 'string', label: formatMessage({ id: 'pipeline.trigger' }) },
     { name: 'name', type: 'string', label: formatMessage({ id: 'name' }) },
     { name: 'createUserRealName', type: 'string', label: formatMessage({ id: 'creator' }) },
-    { name: 'lastUpdateDate', type: 'string', label: formatMessage({ id: 'updateDate' }) },
+    { name: 'lastUpdateDate', type: 'string', label: formatMessage({ id: 'boot.updateDate' }) },
     { name: 'envName', type: 'string', label: formatMessage({ id: 'pipeline.deploy.env' }) },
   ],
   queryFields: [

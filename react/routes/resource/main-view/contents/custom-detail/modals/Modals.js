@@ -57,7 +57,7 @@ const CustomModals = observer(() => {
     display: true,
     service: permissions,
   }, {
-    name: formatMessage({ id: 'refresh' }),
+    name: formatMessage({ id: 'boot.refresh' }),
     icon: 'refresh',
     handler: refresh,
     display: true,

@@ -104,7 +104,7 @@ const EnvModals = observer(() => {
       children: <EnvCreateForm intlPrefix={currentIntlPrefix} refresh={refresh} />,
       drawer: true,
       style: modalStyle,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 
@@ -118,7 +118,7 @@ const EnvModals = observer(() => {
       afterClose: () => {
         groupFormDs.current.reset();
       },
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 

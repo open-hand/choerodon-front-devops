@@ -85,7 +85,7 @@ export default observer((props) => {
           } else {
             buttonData = [
               {
-                text: formatMessage({ id: 'edit' }),
+                text: formatMessage({ id: 'boot.edit' }),
                 loading: operate === 'upgrade',
                 onClick: () => installMonitor('edit'),
                 disabled: true,
@@ -102,7 +102,7 @@ export default observer((props) => {
         case 'disabled':
           buttonData = [
             {
-              text: formatMessage({ id: 'edit' }),
+              text: formatMessage({ id: 'boot.edit' }),
               onClick: () => installMonitor('edit'),
               disabled,
               loading: false,

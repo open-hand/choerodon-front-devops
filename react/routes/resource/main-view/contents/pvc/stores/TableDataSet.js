@@ -22,7 +22,7 @@ export default ({ formatMessage, intlPrefix, projectId, envId }) => ({
   fields: [
     { name: 'id', type: 'string' },
     { name: 'name', type: 'string', label: formatMessage({ id: `${intlPrefix}.pvc.name` }) },
-    { name: 'status', type: 'string', label: formatMessage({ id: 'status' }) },
+    { name: 'status', type: 'string', label: formatMessage({ id: 'boot.states' }) },
     { name: 'pvName', type: 'string', label: formatMessage({ id: `${intlPrefix}.pvc.pv` }) },
     { name: 'accessModes', type: 'string', label: formatMessage({ id: `${intlPrefix}.pvc.accessModes` }) },
     { name: 'requestResource', type: 'string', label: formatMessage({ id: `${intlPrefix}.pvc.requestResource` }) },
