@@ -374,7 +374,7 @@ function BranchCreate(props) {
         }}
       >
         <div style={{position:'absolute',zIndex:99999,left:-15,bottom:-3,width:'calc(100% + 30px)',height: 1,background: '#D9E6F2'}}></div>
-        <CheckBox name="base" onChange={myquestionChange}><span style={{marginLeft:4}}>
+        <CheckBox name="base" checked={issueOptionsDs?.getState('myquestionBool')} onChange={myquestionChange}><span style={{marginLeft:4}}>
         我的问题
           </span></CheckBox>
       </div>
