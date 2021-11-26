@@ -182,7 +182,7 @@ function BranchCreate(props) {
   const changeIssue = (value) => {
     let type;
     const { typeCode, issueNum } = value || {};
-    if(issueNum=== '我的问题myquestion') {
+    if(issueNum=== '我的问题myquestion' || '加载更多') {
       return
     }
     formDs.current.set("branchName", issueNum);
@@ -336,13 +336,41 @@ function BranchCreate(props) {
     formDs.getField('issue').fetchLookup(true)
   };
 
-  const issueNameOptionRender = ({ record }) => {
+  const handleClickMore = async (e) => {
+   e.stopPropagation();
+   const pageSize = formDs.current.get('pageSize') + 20;
+   formDs.current.set('pageSize', pageSize);
+   formDs.getField('issue').fetchLookup(true)
+  };
+
+  const issueNameOptionRender = ({ record,text }) => {
     const typeCode = record.get("typeCode");
     const issueNum = record.get("issueNum");
     const summary = record.get("summary");
     const issueTypeVO = record.get("issueTypeVO");
+    if(summary==='加载更多') {
+      return (
+        <a
+          role="none"
+          style={{ width: '100%', height: '100%', display: 'block',textAlign:'center' }}
+        onClick={handleClickMore}
+        >
+          加载更多
+        </a>
+        )
+    }
     return summary === "我的问题myquestion" ? (
-      <div onClick={(e)=>{e.stopPropagation();}} style={{paddingLeft:4,borderBottom: '1px solid #D9E6F2',paddingBottom:20}}>
+      <div
+        role="none"
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+        style={{
+          paddingLeft: 4,  paddingBottom: 10, display: 'flex', alignItems: 'center',
+          position: 'relative',
+        }}
+      >
+        <div style={{position:'absolute',zIndex:99999,left:-15,bottom:-3,width:'calc(100% + 30px)',height: 1,background: '#D9E6F2'}}></div>
         <CheckBox name="base" onChange={myquestionChange}><span style={{marginLeft:4}}>
         我的问题
           </span></CheckBox>

@@ -37,6 +37,11 @@ export default ({
     autoCreate: true,
     fields: [
       {
+        name: 'pageSize',
+        type: 'number',
+        defaultValue: 20,
+      },
+      {
         name: 'issue',
         type: 'object',
         textField: 'summary',
@@ -47,7 +52,7 @@ export default ({
           const selectedProjectId = project?.id ?? projectId;
           const userIds = dataSet.getState('myquestionBool') ? [getUserId] : [];
           return {
-            url: CodeManagerApis.loadSummaryData(selectedProjectId),
+            url: CodeManagerApis.loadSummaryData(selectedProjectId, record?.get('pageSize')),
             method: 'post',
             data: {
               onlyActiveSprint: false,
@@ -58,9 +63,19 @@ export default ({
             transformResponse: (res) => {
               try {
                 const newRes = JSONBigint.parse(res);
-                // newRes.content.unshift({
-                //   summary: '我的问题myquestion',
-                // });
+                if (newRes.content.length) {
+                  newRes.content.unshift({
+                    summary: '我的问题myquestion',
+                  });
+                }
+                if (
+                  newRes.number + 1 * newRes.size < newRes.totalElements
+                ) {
+                  newRes.content.push({
+                    id: 'more',
+                    summary: '加载更多',
+                  });
+                }
                 return newRes.content;
               } catch (e) {
                 return res;

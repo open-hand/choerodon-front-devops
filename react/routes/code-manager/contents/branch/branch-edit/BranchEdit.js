@@ -149,19 +149,51 @@ function BranchEdit() {
     selectDs.getField('issue').fetchLookup(true);
   };
 
+  const handleClickMore = async (e) => {
+    e.stopPropagation();
+    const pageSize = selectDs.current.get('pageSize') + 20;
+    selectDs.current.set('pageSize', pageSize);
+    selectDs.getField('issue').fetchLookup(true);
+  };
+
   const issueNameOptionRender = ({ record }) => {
     const typeCode = record.get('typeCode');
     const issueNum = record.get('issueNum');
     const summary = record.get('summary');
     const issueTypeVO = record.get('issueTypeVO');
+    console.log(summary);
+    if (summary === '加载更多') {
+      return (
+        // eslint-disable-next-line jsx-a11y/anchor-is-valid
+        <a
+          role="none"
+          style={{
+            width: '100%', height: '100%', display: 'block', textAlign: 'center',
+          }}
+          onClick={handleClickMore}
+        >
+          加载更多
+        </a>
+      );
+    }
     return summary === '我的问题myquestion' ? (
       <div
         role="none"
         onClick={(e) => {
           e.stopPropagation();
         }}
-        style={{ paddingLeft: 4, borderBottom: '1px solid #D9E6F2', paddingBottom: 20 }}
+        style={{
+          paddingLeft: 4,
+          paddingBottom: 10,
+          display: 'flex',
+          alignItems: 'center',
+          position: 'relative',
+        }}
       >
+        <div style={{
+          position: 'absolute', zIndex: 99999, left: -15, bottom: -3, width: 'calc(100% + 30px)', height: 1, background: '#D9E6F2',
+        }}
+        />
         <CheckBox name="base" onChange={myquestionChange}>
           <span style={{ marginLeft: 4 }}>我的问题</span>
         </CheckBox>
