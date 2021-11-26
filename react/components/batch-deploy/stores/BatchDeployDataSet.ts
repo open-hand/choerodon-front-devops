@@ -193,7 +193,7 @@ export default (({
         name: 'appCode', type: 'string', label: formatMessage({ id: `appCode` }), required: true, maxLength: 53,validator: checkCode
       },
       {
-        name: 'appName', type: 'string', label: formatMessage({ id: 'appName' }), required: true, maxLength: 53,validator: checkName
+        name: 'appName', type: 'string', label: formatMessage({ id: 'boot.appName' }), required: true, maxLength: 53,validator: checkName
       },
       {
         name: 'valueId',

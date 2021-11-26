@@ -18,7 +18,7 @@ export default ({ formatMessage, intlPrefix }: ListProps): DataSetProps => ({
   fields: [
     { name: 'name', label: formatMessage({ id: 'name' }) },
     { name: 'code', label: formatMessage({ id: 'code' }) },
-    { name: 'status', label: formatMessage({ id: 'status' }) },
+    { name: 'status', label: formatMessage({ id: 'boot.states' }) },
     { name: 'pid', label: formatMessage({ id: `${intlPrefix}.process` }) },
     { name: 'ports', label: formatMessage({ id: `${intlPrefix}.port.occupied` }) },
     { name: 'deployer', label: formatMessage({ id: `${intlPrefix}.deployer` }) },
@@ -30,6 +30,6 @@ export default ({ formatMessage, intlPrefix }: ListProps): DataSetProps => ({
       name: 'name',
       label: formatMessage({ id: 'name' }),
     },
-    { name: 'status', label: formatMessage({ id: 'status' }) },
+    { name: 'status', label: formatMessage({ id: 'boot.states' }) },
   ],
 });
