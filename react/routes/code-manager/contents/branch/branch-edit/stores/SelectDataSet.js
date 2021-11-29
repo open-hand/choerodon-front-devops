@@ -2,7 +2,8 @@
 import compact from 'lodash/compact';
 import JSONBigint from 'json-bigint';
 import uniq from 'lodash/uniq';
-import CodeManagerApis from '@/routes/code-manager/apis';
+import { DataSet } from 'choerodon-ui/pro';
+import { issuesApiConfig } from '@choerodon/master';
 
 export default ({
   projectId, formatMessage, appServiceId, objectVersionNumber,
@@ -19,33 +20,45 @@ export default ({
       textField: 'summary',
       valueField: 'issueId',
       label: formatMessage({ id: 'branch.issueName' }),
-      lookupAxiosConfig: ({ dataSet, record, params }) => {
-        const project = record?.get('project');
-        const selectedProjectId = project?.id ?? projectId;
-        const userIds = dataSet.getState('myquestionBool') ? [getUserId] : [];
-        return {
-          url: CodeManagerApis.loadSummaryData(selectedProjectId),
-          method: 'post',
-          data: {
-            onlyActiveSprint: false,
-            self: true,
-            content: params.content,
-            userIds,
+      options: new DataSet({
+        selection: 'single',
+        paging: true,
+        pageSize: 10,
+        autoQuery: true,
+        transport: {
+          read({
+            dataSet, record, params: { page },
+          }) {
+            const project = record?.get('project');
+            const selectedProjectId = project?.id ?? projectId;
+            const userIds = dataSet?.getState('myquestionBool') ? [getUserId] : [];
+            return {
+              url: issuesApiConfig.loadSummaryData(selectedProjectId, page).url,
+              method: 'post',
+              data: {
+                onlyActiveSprint: false,
+                self: true,
+                content: dataSet.getQueryParameter('content'),
+                userIds,
+              },
+              transformResponse: (res) => {
+                try {
+                  const newRes = JSONBigint.parse(res);
+                  if (newRes.content.length > 0 && newRes.number === 0) {
+                    newRes.content.unshift({
+                      issueId: '-1',
+                      summary: '我的问题myquestion',
+                    });
+                  }
+                  return newRes;
+                } catch (e) {
+                  return res;
+                }
+              },
+            };
           },
-          transformResponse: (res) => {
-            try {
-              const newRes = JSONBigint.parse(res);
-              // newRes.content.unshift({
-              //   summary: '我的问题myquestion',
-              //   issueId: '-1',
-              // });
-              return newRes.content;
-            } catch (e) {
-              return res;
-            }
-          },
-        };
-      },
+        },
+      }),
     },
     {
       name: 'project',
