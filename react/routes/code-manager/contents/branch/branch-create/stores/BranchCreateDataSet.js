@@ -1,8 +1,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 import JSONBigint from 'json-bigint';
-import { axios } from '@choerodon/master';
+import { axios, issuesApiConfig } from '@choerodon/master';
 import { DataSet } from 'choerodon-ui/pro';
-import CodeManagerApis from '@/routes/code-manager/apis';
 
 export default ({
   projectId, appServiceId, formatMessage, contentStore, projectOptionsDs,
@@ -61,7 +60,7 @@ export default ({
               const selectedProjectId = project?.id ?? projectId;
               const userIds = dataSet?.getState('myquestionBool') ? [getUserId] : [];
               return {
-                url: CodeManagerApis.loadSummaryData(selectedProjectId, page),
+                url: issuesApiConfig.loadSummaryData(selectedProjectId, page).url,
                 method: 'post',
                 data: {
                   onlyActiveSprint: false,

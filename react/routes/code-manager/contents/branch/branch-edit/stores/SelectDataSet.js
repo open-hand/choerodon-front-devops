@@ -3,7 +3,7 @@ import compact from 'lodash/compact';
 import JSONBigint from 'json-bigint';
 import uniq from 'lodash/uniq';
 import { DataSet } from 'choerodon-ui/pro';
-import CodeManagerApis from '@/routes/code-manager/apis';
+import { issuesApiConfig } from '@choerodon/master';
 
 export default ({
   projectId, formatMessage, appServiceId, objectVersionNumber,
@@ -33,7 +33,7 @@ export default ({
             const selectedProjectId = project?.id ?? projectId;
             const userIds = dataSet?.getState('myquestionBool') ? [getUserId] : [];
             return {
-              url: CodeManagerApis.loadSummaryData(selectedProjectId, page),
+              url: issuesApiConfig.loadSummaryData(selectedProjectId, page).url,
               method: 'post',
               data: {
                 onlyActiveSprint: false,
