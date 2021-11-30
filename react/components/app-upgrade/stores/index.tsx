@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
-import { injectIntl } from 'react-intl';
+import { useFormatMessage } from '@choerodon/master';
 import { DataSet } from 'choerodon-ui/pro';
 import { withRouter } from 'react-router';
 import FormDataSet from './FormDataSet';
@@ -41,12 +41,11 @@ export function useUpgradeStore() {
   return useContext(Store);
 }
 
-export const StoreProvider = withRouter(injectIntl(inject('AppState')(
+export const StoreProvider = withRouter(inject('AppState')(
   observer((props: any) => {
     const {
       AppState: { currentMenuType: { projectId } },
       children,
-      intl: { formatMessage },
       defaultData,
       defaultData: {
         instanceId,
@@ -57,6 +56,8 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       isMiddleware = false,
       isHzero = false,
     } = props;
+
+    const formatMessage = useFormatMessage();
 
     const prefixCls = 'c7ncd-deployment';
     const intlPrefix = 'c7ncd.deployment';
@@ -162,4 +163,4 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       </Store.Provider>
     );
   }),
-)));
+));
