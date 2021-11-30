@@ -7,7 +7,7 @@ import {
   WritableStream,
 } from 'web-streams-polyfill/ponyfill';
 import {
-  Choerodon, Action,
+  Choerodon, Action, useFormatMessage,
 } from '@choerodon/master';
 import copy from 'copy-to-clipboard';
 import StreamSaver from 'streamsaver';
@@ -34,6 +34,8 @@ const DetailItem = (props) => {
     },
     projectId,
   } = usePipelineManageStore();
+
+  const format = useFormatMessage('c7ncd.pipelineManage');
 
   const {
     jobDurationSeconds,
@@ -546,14 +548,14 @@ const DetailItem = (props) => {
       if (!logCheckDisabeldCondition) {
         data.push({
           service: ['choerodon.code.project.develop.ci-pipeline.ps.job.log'],
-          text: '查看日志',
+          text: format({ id: 'ViewLog' }),
           action: renderCheckLogFun,
         });
       }
       if (!getRetryBtnDisabled()) {
         data.push({
           service: ['choerodon.code.project.develop.ci-pipeline.ps.job.retry'],
-          text: '重试',
+          text: format({ id: 'Retry' }),
           action: renderRetryBtnFn,
         });
       }
@@ -567,7 +569,7 @@ const DetailItem = (props) => {
       if (imageScan && jobStatus === 'success') {
         data.push({
           service: ['choerodon.code.project.develop.ci-pipeline.ps.job.imageReport'],
-          text: '查看镜像扫描报告',
+          text: format({ id: 'ScanReport' }),
           action: openMirrorScanningLog,
         });
       }
@@ -582,7 +584,7 @@ const DetailItem = (props) => {
       // }
       downloadImage && data.push({
         service: [],
-        text: '复制镜像下载命令',
+        text: format({ id: 'CopyAddress' }),
         action: handleImageCopy,
       });
     }
@@ -590,7 +592,7 @@ const DetailItem = (props) => {
     if (itemType === 'sonar') {
       data.push({
         service: ['choerodon.code.project.develop.ci-pipeline.ps.job.sonarqube'],
-        text: '查看代码质量报告',
+        text: format({ id: 'QualityReport' }),
         action: openCodequalityModal,
       });
     }

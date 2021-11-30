@@ -1,21 +1,24 @@
 // 需要替换
+// import { useFormatMessage } from '@choerodon/master';
 import getTablePostData from '../../../../../utils/getTablePostData';
 
-export default ({ projectId, formatMessage, appServiceId }) => ({
+export default ({
+  projectId, formatMessage, appServiceId, format,
+}) => ({
   selection: false,
   paging: true,
   queryFields: [
     {
       name: 'branchName',
       type: 'string',
-      label: formatMessage({ id: 'branch.name' }),
+      label: format({ id: 'BranchName' }),
     },
   ],
   fields: [
     {
       name: 'branchName',
       type: 'string',
-      label: formatMessage({ id: 'branch.name' }),
+      label: format({ id: 'BranchName' }),
     },
     {
       name: 'commitContent',

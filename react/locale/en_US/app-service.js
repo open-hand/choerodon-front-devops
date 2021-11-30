@@ -1,0 +1,26 @@
+const appService = {
+  'c7ncd.appService.title': 'Application Service',
+  'c7ncd.appService.searchAppService': 'Search',
+  'c7ncd.appService.permissionManage': 'Authority Management',
+  'c7ncd.appService.importAppService': 'Import',
+  'c7ncd.appService.createAppService': 'Create',
+  'c7ncd.appService.Modify': 'Modify',
+  'c7ncd.appService.Details': 'Details',
+  'c7ncd.appService.ModifyExternal': 'Modify External Repository Configuration',
+  'c7ncd.appService.UpdateAt': 'Update at',
+  'c7ncd.appService.CreateAt': 'Create at',
+  'c7ncd.appService.ServiceVersion': 'Service Version',
+  'c7ncd.appService.SharingSetting': 'Sharing Setting',
+  'c7ncd.appService.Search': 'Search',
+  'c7ncd.appService.SelectAll': 'Select All',
+  'c7ncd.appService.InvertSelection': 'Invert Selection',
+  'c7ncd.appService.Delete': 'Delete',
+  'c7ncd.appService.AddSharingRule': 'Add sharing rule',
+  'c7ncd.appService.tipOne': '1. Services of Built-In Repository will be shared: source Code, Docker image and Chart package',
+  'c7ncd.appService.tipTwo': '2. Services of External Repository will be shared: Docker image and Chart package',
+  'c7ncd.appService.ShareSearch': 'Search',
+  'c7ncd.appService.Scope': 'Scope',
+  'c7ncd.appService.VersionType': 'Version Type',
+};
+
+export { appService };
