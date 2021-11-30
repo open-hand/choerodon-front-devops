@@ -26,8 +26,6 @@ const executeKey = Modal.key();
 const stopKey = Modal.key();
 const auditKey = Modal.key();
 
-const { Option } = Select;
-
 const TreeItem = observer(({ record, search }) => {
   const {
     intlPrefix,
@@ -45,16 +43,6 @@ const TreeItem = observer(({ record, search }) => {
     seletDs,
   } = usePipelineTreeStore();
 
-  const iconType = useMemo(() => ({
-    failed: 'cancel',
-    success: 'check_circle',
-    running: 'timelapse',
-    canceled: 'cancle_b',
-    deleted: 'cancel',
-    pending: 'pause_circle_filled',
-    skipped: 'skipped_b',
-
-  }), []);
   const timePopoverStyle = useMemo(() => ({
     fontSize: '.12rem',
     color: 'rgba(58,52,95,0.65)',
