@@ -265,7 +265,7 @@ const ListView = withRouter(observer((props) => {
       },
       run: {
         service: ['choerodon.code.project.develop.app-service.ps.enable'],
-        text: formatMessage({ id: 'boot.active' }),
+        text: formatMessage({ id: 'boot.enable' }),
         action: () => {
           setSelectedAppService(record.toData());
           changeActive(true, record);

@@ -1,15 +1,14 @@
 import React, {
-  useEffect, FC, Suspense,
+  FC, Suspense,
 } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { useRouteMatch } from 'react-router';
-import {} from '@choerodon/master';
-import {} from 'choerodon-ui/pro';
 import { Loading } from '@choerodon/components';
 
 import './index.less';
 
 const AppHomePage = React.lazy(() => import('./routes/pipeline-manage'));
+const AppPipelineEdit = React.lazy(() => import('./routes/app-pipeline-edit'));
 
 export type AppPipelineProps = {
 
@@ -18,20 +17,16 @@ export type AppPipelineProps = {
 const prefixCls = 'c7ncd-app-pipeline';
 const intlPrefix = 'c7ncd.app.pipeline';
 
-const AppPipeline:FC<AppPipelineProps> = (props) => {
+const AppPipeline:FC<AppPipelineProps> = () => {
   const match = useRouteMatch();
-
-  useEffect(() => {
-
-  }, []);
 
   return (
     <Suspense fallback={<Loading type="c7n" />}>
       <Switch>
         <Route exact path={match.url} component={AppHomePage} />
+        <Route exact path={`${match.url}/edit/:id`} component={AppPipelineEdit} />
       </Switch>
     </Suspense>
-
   );
 };
 

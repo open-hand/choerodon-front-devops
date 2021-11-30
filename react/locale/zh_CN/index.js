@@ -3154,5 +3154,6 @@ const zhCN = {
 
 export * from './repository';
 export * from './components';
+export * from './app-pipeline';
 
 export { zhCN };

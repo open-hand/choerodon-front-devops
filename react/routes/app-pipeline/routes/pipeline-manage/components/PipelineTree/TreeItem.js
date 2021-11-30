@@ -285,7 +285,7 @@ const TreeItem = observer(({ record, search }) => {
       },
       {
         service: [`choerodon.code.project.develop.ci-pipeline.ps.${enabled ? 'disable' : 'enable'}`],
-        text: formatMessage({ id: enabled ? 'boot.stop' : 'boot.active' }),
+        text: formatMessage({ id: enabled ? 'boot.stop' : 'boot.enable' }),
         action: handleChangeActive,
       },
       {
@@ -319,7 +319,7 @@ const TreeItem = observer(({ record, search }) => {
         </div>
         <div className={`${prefixCls}-sidebar-header`}>
           <span className={`${prefixCls}-sidebar-header-active ${prefixCls}-sidebar-header-active-${enabled}`}>
-            {formatMessage({ id: enabled ? 'boot.active' : 'boot.stop' })}
+            {formatMessage({ id: enabled ? 'boot.enable' : 'boot.stop' })}
           </span>
           <StatusTag status={status} size={12} className={`${prefixCls}-sidebar-header-status`} />
           <TimePopover content={latestExecuteDate} style={{ ...timePopoverStyle, marginRight: '0.24rem' }} />
