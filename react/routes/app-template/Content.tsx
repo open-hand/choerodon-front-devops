@@ -27,7 +27,7 @@ const TemplateTable = observer(() => {
     permissionCodes,
     pageType,
     formatCommon,
-    formatClient,
+    format,
   } = useAppTemplateStore();
 
   const refresh = useCallback(() => {
@@ -40,11 +40,11 @@ const TemplateTable = observer(() => {
   const handleCreateAppTemplate = useCallback((record?: Record) => {
     const templateId = record ? record.get('id') : null;
     Modal.open({
-      title: formatClient({ id: `title.${templateId ? 'edit' : 'create'}` }),
+      title: format({ id: `title.${templateId ? 'edit' : 'create'}` }),
       key: Modal.key(),
       children: <AddTemplate refresh={refresh} templateId={templateId} pageType={pageType} />,
       drawer: true,
-      okText: formatClient({ id: templateId ? 'save' : 'create' }),
+      okText: format({ id: templateId ? 'save' : 'create' }),
       style: { width: '3.8rem' },
     });
   }, []);
@@ -65,8 +65,8 @@ const TemplateTable = observer(() => {
     if (enabled) {
       Modal.open({
         key: Modal.key(),
-        title: formatClient({ id: 'enable.title' }, { name: record.get('name') }),
-        children: formatClient({ id: 'enable.des' }),
+        title: format({ id: 'enable.title' }, { name: record.get('name') }),
+        children: format({ id: 'enable.des' }),
         movable: false,
         onOk: () => handleEnabled(true, record),
       });
@@ -96,8 +96,8 @@ const TemplateTable = observer(() => {
       return;
     }
     openOperationModal({
-      title: formatClient({ id: 'permission.title' }),
-      children: formatClient({ id: 'permission.des' }),
+      title: format({ id: 'permission.title' }),
+      children: format({ id: 'permission.des' }),
       onOk: () => handlePermission({ record }),
     });
   }, []);
@@ -119,18 +119,18 @@ const TemplateTable = observer(() => {
       return;
     }
     const modalProps = {
-      title: formatClient({ id: 'delete.title' }, { name: record.get('name') }),
-      children: formatClient({ id: 'delete.des' }),
-      okText: formatClient({ id: 'delete' }),
+      title: format({ id: 'delete.title' }, { name: record.get('name') }),
+      children: format({ id: 'delete.des' }),
+      okText: format({ id: 'delete' }),
     };
     tableDs.delete(record, modalProps);
   }, []);
 
   const openNoPermissionModal = useCallback(() => {
     openOperationModal({
-      title: formatClient({ id: 'permission.no.title' }),
-      children: formatClient({ id: 'permission.no.des' }),
-      okText: formatClient({ id: 'iknow' }),
+      title: format({ id: 'permission.no.title' }),
+      children: format({ id: 'permission.no.des' }),
+      okText: format({ id: 'iknow' }),
       okCancel: false,
     });
   }, []);
@@ -185,7 +185,7 @@ const TemplateTable = observer(() => {
     const status = value === 'S' ? (record.get('enable') ? 'enable' : 'disable') : value;
     return (
       <span className={`${prefixCls}-table-status ${prefixCls}-table-status-${status}`}>
-        {formatClient({ id: `status.${status}` })}
+        {format({ id: `status.${status}` })}
       </span>
     );
   }, []);
@@ -197,7 +197,7 @@ const TemplateTable = observer(() => {
     const hasPermission = record.get('permission');
     const deleteData = ({
       service: permissionCodes.delete,
-      text: '删除',
+      text: formatCommon({ id: 'delete' }),
       action: () => handleDelete({ record }),
     });
     const actionData = [];
@@ -205,7 +205,7 @@ const TemplateTable = observer(() => {
       case 'S':
         actionData.push({
           service: permissionCodes[enabled ? 'disable' : 'enable'],
-          text: enabled ? formatClient({ id: 'status.disable' }) : formatClient({ id: 'status.enable' }),
+          text: enabled ? formatCommon({ id: 'stop' }) : formatCommon({ id: 'enable' }),
           action: () => openEnabledModal({ record }),
         });
         if (!enabled) {
@@ -213,7 +213,7 @@ const TemplateTable = observer(() => {
         } else if (!hasPermission) {
           actionData.push({
             service: permissionCodes.permission,
-            text: '获取GitLab仓库权限',
+            text: format({ id: 'getGitlabPermission' }),
             action: () => openPermissionModal({ record }),
           });
         }
@@ -232,7 +232,7 @@ const TemplateTable = observer(() => {
       <Header>
         <HeaderButtons
           items={([{
-            name: formatClient({ id: 'title.create' }),
+            name: format({ id: 'title.create' }),
             icon: 'playlist_add',
             display: 'true',
             permissions: permissionCodes.create,
