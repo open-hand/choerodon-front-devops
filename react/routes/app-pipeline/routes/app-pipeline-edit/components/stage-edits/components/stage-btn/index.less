@@ -1,0 +1,27 @@
+@prefixCls: ~"c7ncd-pipeline-edit-stagebtn";
+
+.@{prefixCls} {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  &-line {
+    width: 32px;
+    height: 1px;
+    background: var(--primary-color);
+  }
+  > i.icon-add {
+    width: 18px;
+    height: 18px;
+    display: block;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0px 2px 4px 0px rgba(65, 91, 201, 0.12);
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: 0.2s;
+    &:hover {
+      background: var(--primary-background-color);
+    }
+  }
+}

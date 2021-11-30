@@ -3157,5 +3157,6 @@ export * from './components';
 export * from './app-service';
 export * from './code-manager';
 export * from './pipeline-manage';
+export * from './app-pipeline';
 
 export { zhCN };

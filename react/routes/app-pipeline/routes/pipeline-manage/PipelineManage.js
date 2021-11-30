@@ -8,6 +8,7 @@ import {
 } from '@choerodon/master';
 import { Modal } from 'choerodon-ui/pro';
 import { toJS } from 'mobx';
+import { useHistory, useLocation } from 'react-router';
 import PipelineTree from './components/PipelineTree';
 import PipelineFlow from './components/PipelineFlow';
 import DragBar from '@/components/drag-bar';
@@ -55,6 +56,12 @@ const PipelineManage = observer(() => {
   const {
     loadDetailData, getDetailData,
   } = detailStore;
+
+  const history = useHistory();
+  const {
+    pathname,
+    search,
+  } = useLocation();
 
   const handleCreatePipeline = () => {
     Modal.open({
@@ -217,7 +224,6 @@ const PipelineManage = observer(() => {
       status: detailStatus,
       devopsCdPipelineDeatilVO: detailDevopsCdPipelineDeatilVO,
     } = getDetailData;
-    const { edit = false } = editBlockStore.getMainData || {};
     const buttons = [{
       permissions: ['choerodon.code.project.develop.ci-pipeline.ps.create'],
       name: format({ id: 'CreatePipeline' }),
@@ -289,6 +295,15 @@ const PipelineManage = observer(() => {
       icon: 'refresh',
       handler: handleRefresh,
       display: true,
+    });
+    buttons.push({
+      icon: 'settings',
+      handler: () => {
+        history.push({
+          search,
+          pathname: `${pathname}/edit/1234`,
+        });
+      },
     });
     return buttons;
   }

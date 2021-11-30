@@ -206,7 +206,7 @@ const PiplelineTable = withRouter(observer((props) => {
       },
       enable: {
         service: ['choerodon.code.project.deploy.app-deployment.pipeline.ps.enable'],
-        text: formatMessage({ id: 'boot.active' }),
+        text: formatMessage({ id: 'boot.enable' }),
         action: makeStatusActive.bind(this, id),
       },
       remove: {
