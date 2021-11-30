@@ -2,14 +2,30 @@
 
 .@{prefixCls} {
   // width: 252px;
+  position: relative;
+  height: fit-content;
   &-stageType {
     width: 40px;
-    background: #f0f4ff;
-    border-right: 1px solid #d5e0ff;
+    background: #f0f8ff;
+    border-radius: 2px 0px 0px 2px;
+    border: 1px solid #d5edff;
+    font-size: 13px;
+    font-weight: 400;
+    color: #4d90fe;
   }
   &-stageName {
     flex: 1;
     background: #fff;
+    border-style: solid;
+    border-color: rgba(65, 91, 201, 0.24);
+    border-width: 1px 1px 1px 0;
+    border-radius: 0 2px 2px 0;
+  }
+  > main {
+    margin-top: 72px;
+  }
+  > footer {
+    position: relative;
   }
   > header {
     width: 200px;
@@ -17,9 +33,10 @@
     display: flex;
     height: 40px;
     border-radius: 2px;
-    box-shadow: 0px 2px 6px 0px rgba(65, 91, 201, 0.12);
-    border: 1px solid rgba(65, 91, 201, 0.24);
     cursor: pointer;
+    z-index: 2;
+    position: absolute;
+    box-shadow: 0px 2px 6px 0px rgba(65, 91, 201, 0.12);
     > div {
       line-height: 40px;
       text-align: center;

@@ -3,27 +3,37 @@
     {
       "id": "=1EskPgsrEOHq7mcdBZoIWNVzke8JpPMLymxwafFPMCc==",
       "name": "ci",
-      "ciPipelineId": "=TCiHIhTtafGufVkE7QUmr1CI1ijYALJS7Qs5YO36OiA==",
       "sequence": 0,
-      "objectVersionNumber": 2,
       "jobList": [
         {
           "id": "=OGze-sPJievyEi2COa42cirYLTpP-0e5wRNv8Le5IkY==",
           "name": "go",
-          "image": null,
-          "parallel": null,
-          "ciStageId": "=1EskPgsrEOHq7mcdBZoIWNVzke8JpPMLymxwafFPMCc==",
-          "ciPipelineId": "=TCiHIhTtafGufVkE7QUmr1CI1ijYALJS7Qs5YO36OiA==",
           "type": "build",
-          "triggerValue": null,
-          "triggerType": "refs",
-          "metadata": "{'config':[{'name':'Docker构建','type':'docker','sequence':0,'script':'dW5kZWZpbmVk','nexusMavenRepoIds':null,'repos':null,'mavenSettings':null,'mavenDeployRepoSettings':null,'dockerContextDir':'.','dockerFilePath':'Dockerfile','skipDockerTlsVerify':false,'imageScan':false,'securityControl':true,'securityCondition':{'level':null,'symbol':'<=','condition':null},'customDockerTagName':null,'dockerTagName':null,'customChartVersionName':null,'chartVersionName':null,'dockerJobName':null,'dockerJobId':null}]}",
-          "toUpload": false,
-          "toDownload": false,
-          "configJobTypes": [
-            "docker"
-          ],
-          "objectVersionNumber": 1
+          "groupType": "build"
+        },
+        {
+          "id": "=OGze-sPJ4ievyEis2COa42cirYLTpP-0e5wRNv8Le5IkY==",
+          "name": "gogogogogogo",
+          "type": "build",
+          "groupType": "test-build"
+        },
+        {
+          "id": "=OGze-sPJievyEis2CO1a42cirYLTpP-0e5wR2112v8Le5IkY==",
+          "name": "2121",
+          "type": "build",
+          "groupType": "unit-test"
+        },
+        {
+          "id": "=OGze-sPJievyEi1s2CO1a42cirYLTpP-0e5wR2112v8Le5IkY==",
+          "name": "dasdas",
+          "type": "build",
+          "groupType": "code-scann"
+        },
+        {
+          "id": "=dOGze-sPJievyEi1s2CO1a42cirYLTpP-0e5wR2112v8Le5IkY==",
+          "name": "d121s",
+          "type": "build",
+          "groupType": "docker-build"
         }
       ],
       "type": "CI"
@@ -31,25 +41,13 @@
     {
       "id": "=r2veQBBQGkGbkpfAV2ZCpyAogE-wpUfLIa0YJ9OdVNk==",
       "name": "chart",
-      "ciPipelineId": "=TCiHIhTtafGufVkE7QUmr1CI1ijYALJS7Qs5YO36OiA==",
       "sequence": 1,
-      "objectVersionNumber": 2,
       "jobList": [
         {
           "id": "=2-Z1nOt8M0KR3N5f0Mh2Z9rUpiMporpkE9_1PTAIIwk==",
-          "name": "c",
-          "image": null,
-          "parallel": null,
-          "ciStageId": "=r2veQBBQGkGbkpfAV2ZCpyAogE-wpUfLIa0YJ9OdVNk==",
-          "ciPipelineId": "=TCiHIhTtafGufVkE7QUmr1CI1ijYALJS7Qs5YO36OiA==",
+          "name": "motherfucker",
           "type": "chart",
-          "triggerValue": null,
-          "triggerType": "refs",
-          "metadata": null,
-          "toUpload": false,
-          "toDownload": false,
-          "configJobTypes": null,
-          "objectVersionNumber": 1
+          "groupType": "build"
         }
       ],
       "type": "CI"
@@ -59,63 +57,28 @@
     {
       "id": "=7_eLRkxQigJ7B4KsRiljSL6XjHFQ3DT3SjV89i3Whu4==",
       "name": "部署",
-      "pipelineId": "=TCiHIhTtafGufVkE7QUmr1CI1ijYALJS7Qs5YO36OiA==",
       "sequence": 2,
+      "type": "CD",
       "jobList": [
         {
           "id": "=ewA_-pR_L1wgKhPZg5NCpP6uHgbag0ej1gq8QTwAUx4==",
           "name": "test",
-          "stageId": "=7_eLRkxQigJ7B4KsRiljSL6XjHFQ3DT3SjV89i3Whu4==",
-          "pipelineId": "=TCiHIhTtafGufVkE7QUmr1CI1ijYALJS7Qs5YO36OiA==",
           "type": "cdDeploy",
-          "triggerValue": null,
-          "triggerType": "refs",
-          "metadata": "{'envId':'=h6IwM9CGKsCmlU-ibO6cGBrg4POclXqTrOXFxNS1S1Y==','skipCheckPermission':false,'deployType':'create','appName':null,'appCode':null,'appId':null,'valueId':'=pw84vef7nser7DHRIH-CO25Sm5h_4He4WtEZkyeUodE==','appConfig':null,'containerConfig':null}",
-          "envName": "测试环境",
-          "sequence": 0,
-          "deployInfoId": "=Tz2hJ67yHx2mwQI8onuwuf6uHgbag0ej1gq8QTwAUx4==",
-          "iamUserDTOS": null,
-          "cdAuditUserIds": null,
-          "countersigned": null,
-          "projectId": 159349538124681216,
-          "lastUpdateDate": "2021-08-14 20:10:55",
-          "objectVersionNumber": 1,
-          "appId": null,
-          "externalApprovalJobVO": null,
-          "pipelineName": null,
-          "stageName": null,
-          "edit": true
+          "groupType": "build"
         },
         {
-          "id": "=ewA_-pR_L1wgKhPZg5NCpP6uHgbag0ej1gq8QTwAUx4==",
-          "name": "test",
-          "stageId": "=7_eLRkxQigJ7B4KsRiljSL6XjHFQ3DT3SjV89i3Whu4==",
-          "pipelineId": "=TCiHIhTtafGufVkE7QUmr1CI1ijYALJS7Qs5YO36OiA==",
+          "id": "=ewA_-pR_L1wsgKhPZg5NCpP6uHgbag0ej1gq8QTwAUx4==",
+          "name": "helloworld",
           "type": "cdDeploy",
-          "triggerValue": null,
-          "triggerType": "refs",
-          "metadata": "{'envId':'=h6IwM9CGKsCmlU-ibO6cGBrg4POclXqTrOXFxNS1S1Y==','skipCheckPermission':false,'deployType':'create','appName':null,'appCode':null,'appId':null,'valueId':'=pw84vef7nser7DHRIH-CO25Sm5h_4He4WtEZkyeUodE==','appConfig':null,'containerConfig':null}",
-          "envName": "测试环境",
-          "sequence": 0,
-          "deployInfoId": "=Tz2hJ67yHx2mwQI8onuwuf6uHgbag0ej1gq8QTwAUx4==",
-          "iamUserDTOS": null,
-          "cdAuditUserIds": null,
-          "countersigned": null,
-          "projectId": 159349538124681216,
-          "lastUpdateDate": "2021-08-14 20:10:55",
-          "objectVersionNumber": 1,
-          "appId": null,
-          "externalApprovalJobVO": null,
-          "pipelineName": null,
-          "stageName": null,
-          "edit": true
+          "groupType": "build"
         }
-      ],
-      "projectId": 159349538124681216,
-      "objectVersionNumber": 1,
-      "lastUpdateDate": "2021-08-14 20:10:55",
-      "cdAuditUserIds": null,
-      "parallel": null,
+      ]
+    },
+    {
+      "id": "=7_eLRkxQigJ7B4KsRiljSL6XjHFQ3DT3SjV89i3Whu4==",
+      "name": "部署",
+      "sequence": 2,
+      "jobList": [],
       "type": "CD"
     }
   ]

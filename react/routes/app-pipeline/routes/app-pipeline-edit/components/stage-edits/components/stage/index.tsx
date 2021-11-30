@@ -4,11 +4,11 @@ import React, {
 import { observer } from 'mobx-react-lite';
 import { useFormatCommon, useFormatMessage } from '@choerodon/master';
 import map from 'lodash/map';
-import {} from 'choerodon-ui/pro';
 import {} from '@choerodon/components';
 
 import './index.less';
 import JobItem from '../job-item';
+import JobAddBtn from '../job-btn';
 
 export type StageProps = {
   type: 'CI' | 'CD'
@@ -39,6 +39,9 @@ const Stage:FC<StageProps> = (props) => {
       <main>
         {renderJobs()}
       </main>
+      <footer>
+        <JobAddBtn type={jobList.length ? 'circle' : 'normal'} />
+      </footer>
     </div>
   );
 };
