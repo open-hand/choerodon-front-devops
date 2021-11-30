@@ -1,11 +1,13 @@
 @prefixCls: ~"c7ncd-pipeline-jobItem";
 
+@boxShadaw: 0px 2px 6px 0px rgba(65, 91, 201, 0.12);
+
 .@{prefixCls} {
   margin-top: 32px;
   position: relative;
   width: 200px;
   height: 40px;
-  
+
   &-circle {
     width: 4px;
     height: 4px;
@@ -23,9 +25,10 @@
     width: 1px;
     top: -33px;
     left: 20px;
+    z-index: 2;
     .@{prefixCls}-circle {
       left: -1px;
-      bottom: -2px;
+      bottom: -3px;
     }
   }
   &-parallelLines {
@@ -37,7 +40,7 @@
     align-items: center;
     &-left,
     &-right {
-      height: 72px;
+      height: 73px;
       width: 26px;
       border-bottom: 1px solid rgba(171, 188, 207, 1);
     }
@@ -56,6 +59,21 @@
       }
     }
   }
+  &-iconGroups {
+    margin-left: auto;
+    > i.icon {
+      font-size: 17px;
+      transition: 0.2s;
+      border-radius: 50%;
+    }
+    &-delete {
+      opacity: 0;
+      color: var(--primary-color);
+      &:hover {
+        box-shadow: @boxShadaw;
+      }
+    }
+  }
   &-content {
     display: flex;
     align-items: center;
@@ -70,7 +88,13 @@
     z-index: 1;
     position: absolute;
     &:hover {
-      box-shadow: 0px 2px 6px 0px rgba(65, 91, 201, 0.12);
+      border: 1px solid var(--primary-color);
+      box-shadow: @boxShadaw;
+      .@{prefixCls}-iconGroups {
+        &-delete {
+          opacity: 1;
+        }
+      }
     }
   }
   &-icon {
