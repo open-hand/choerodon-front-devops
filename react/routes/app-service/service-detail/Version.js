@@ -3,7 +3,7 @@ import React, {
   useMemo, useState, useEffect, useCallback,
 } from 'react';
 import {
-  TabPage, Content, Breadcrumb, Permission, Action,
+  TabPage, Content, Breadcrumb, Permission, Action, useFormatMessage,
 } from '@choerodon/master';
 import {
   Table, Tooltip, Button, CheckBox, TextField, Pagination,
@@ -33,6 +33,8 @@ const Version = withRouter(observer((props) => {
     intl: { formatMessage },
     AppState,
   } = useServiceDetailStore();
+
+  const format = useFormatMessage('c7ncd.appService');
 
   const [selectedVersionList, setSelectedVersionList] = useState([]);
 
@@ -145,7 +147,7 @@ const Version = withRouter(observer((props) => {
 
   const renderVersionAction = (record) => ([{
     service: ['choerodon.code.project.develop.app-service.ps.version.delete'],
-    text: formatMessage({ id: `${intlPrefix}.version.delete` }),
+    text: format({ id: 'Delete' }),
     action: () => handleDelete(null, record),
   }]);
 
@@ -190,7 +192,7 @@ const Version = withRouter(observer((props) => {
             funcType="flat"
             icon="delete_sweep-o"
           >
-            删除版本
+            { format({ id: 'Delete' }) }
           </Button>
         </Tooltip>
       </Permission>
@@ -241,7 +243,7 @@ const Version = withRouter(observer((props) => {
       {renderVersionButton()}
       <div className="c7ncd-theme4-version">
         <TextField
-          placeholder="搜索服务版本"
+          placeholder={format({ id: 'Search' })}
           style={{
             width: '100%',
           }}
@@ -256,8 +258,8 @@ const Version = withRouter(observer((props) => {
           versionDs.records && versionDs.records.length > 0 ? (
             <>
               <div className="c7ncd-appService-version__buttons">
-                <p role="none" onClick={() => handleSelect(true, versionDs, selectedVersionList)}>全选</p>
-                <p role="none" onClick={() => handleSelect(false, versionDs, selectedVersionList)}>反选</p>
+                <p role="none" onClick={() => handleSelect(true, versionDs, selectedVersionList)}>{ format({ id: 'SelectAll' }) }</p>
+                <p role="none" onClick={() => handleSelect(false, versionDs, selectedVersionList)}>{ format({ id: 'InvertSelection' }) }</p>
               </div>
               {
                 versionDs.records.map((version) => (

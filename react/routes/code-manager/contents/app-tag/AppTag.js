@@ -8,7 +8,7 @@ import {
   Pagination, Icon, Button, Modal,
 } from 'choerodon-ui/pro';
 import { Collapse } from 'choerodon-ui';
-import { Action, Page, Permission } from '@choerodon/master';
+import { Action, Page, Permission, useFormatMessage } from '@choerodon/master';
 import { UserInfo, Loading } from '@choerodon/components';
 import TimePopover from '../../../../components/timePopover';
 import EmptyPage from '../../../../components/empty-page';
@@ -29,6 +29,8 @@ const bigModelStyle = {
   width: 'calc(100vw - 3.52rem)',
 };
 export default observer((props) => {
+  const format = useFormatMessage('c7ncd.codeManger');
+
   const appTagStore = useAppTagStore();
   const {
     formatMessage, handleMapStore, appTagDs, projectId, tagStore, appTagCreateDs,
@@ -41,7 +43,7 @@ export default observer((props) => {
 
   const getSelfToolBarObj = () => {
     return ({
-      name: formatMessage({ id: 'apptag.create' }),
+      name: format({ id: 'CreateTag' }),
       icon: 'playlist_add',
       disabled: !selectAppDs.current.get('appServiceId'),
       display: true,
@@ -193,14 +195,14 @@ export default observer((props) => {
                 <Action data={[
                   {
                     service: ['choerodon.code.project.develop.code-management.ps.tag.update'],
-                    text: formatMessage({ id: 'boot.edit' }),
+                    text: format({ id: 'Modify' }),
                     action: () => { openEdit(release.tagName, release.description !== 'empty' ? release.description : formatMessage({ id: 'apptag.release.empty' })); },
                   },
                   {
                     service: [
                       // 'choerodon.code.project.develop.code-management.ps.tag.delete',
                     ],
-                    text: formatMessage({ id: 'delete' }),
+                    text: format({ id: 'Delete' }),
                     action: () => { openRemove(release.tagName); },
                   },
                 ]}
@@ -259,9 +261,9 @@ export default observer((props) => {
         </>
       ) : (
         <EmptyPage
-          title={formatMessage({ id: 'code-management.tag.empty' })}
-          describe={formatMessage({ id: 'code-management.tag.empty.des' })}
-          btnText={formatMessage({ id: 'apptag.create' })}
+          title={format({ id: 'NoTags' })}
+          describe={format({ id: 'NoTagsDes' })}
+          btnText={format({ id: 'CreateTag' })}
           onClick={openCreate}
           access
         />
@@ -282,8 +284,8 @@ export default observer((props) => {
             <div className="c7ncd-tag-content">
               {tagStore.getIsEmpty ? (
                 <NewEmptyPage
-                  title={formatMessage({ id: 'empty.title.prohibited' })}
-                  describe={formatMessage({ id: 'empty.title.code' })}
+                  title={format({ id: 'NoTags' })}
+                  describe={format({ id: 'NoTagsDes' })}
                   btnText={formatMessage({ id: 'empty.link.code' })}
                   pathname="/rducm/code-lib-management/apply"
                 />

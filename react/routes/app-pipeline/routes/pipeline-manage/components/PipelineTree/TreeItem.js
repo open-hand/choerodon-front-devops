@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import {Action, Choerodon} from '@choerodon/master';
+import {Action, Choerodon,useFormatMessage} from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 import {
   Modal, Spin, Tooltip, Select
@@ -37,6 +37,9 @@ const TreeItem = observer(({ record, search }) => {
     mainStore,
     editBlockStore,
   } = usePipelineManageStore();
+
+  const format = useFormatMessage('c7ncd.pipelineManage');
+
   const {
     treeStore,
     handleRefresh,
@@ -235,7 +238,7 @@ const TreeItem = observer(({ record, search }) => {
         case 'running':
           actionData = [{
             service: ['choerodon.code.project.develop.ci-pipeline.ps.cancel'],
-            text: formatMessage({ id: `${intlPrefix}.execute.cancel` }),
+            text: format({ id: 'CancelExecution' }),
             action: () => changeRecordExecute('cancel'),
           }];
           break;
@@ -243,7 +246,7 @@ const TreeItem = observer(({ record, search }) => {
         case 'canceled':
           actionData = [{
             service: ['choerodon.code.project.develop.ci-pipeline.ps.retry'],
-            text: formatMessage({ id: `${intlPrefix}.execute.retry` }),
+            text: format({ id: 'Retry' }),
             action: () => changeRecordExecute('retry'),
           }];
           break;
@@ -280,17 +283,17 @@ const TreeItem = observer(({ record, search }) => {
     const actionData = [
       {
         service: ['choerodon.code.project.develop.ci-pipeline.ps.execute'],
-        text: formatMessage({ id: `${intlPrefix}.execute` }),
+        text: format({ id: 'Execution' }),
         action: handleExecute,
       },
       {
         service: [`choerodon.code.project.develop.ci-pipeline.ps.${enabled ? 'disable' : 'enable'}`],
-        text: formatMessage({ id: enabled ? 'boot.stop' : 'boot.enable' }),
+        text: format({ id: enabled ? 'Disable' : 'Enable' }),
         action: handleChangeActive,
       },
       {
         service: ['choerodon.code.project.develop.ci-pipeline.ps.create'],
-        text: <NewTips title="复制" helpText="此操作将复制出该流水线中的CI阶段及其任务至目标应用服务" />,
+        text: <NewTips title={format({ id: 'Copy' })} helpText="此操作将复制出该流水线中的CI阶段及其任务至目标应用服务" />,
         action: handleCopy,
       },
       {

@@ -1,11 +1,13 @@
 import React, { Fragment, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
-import { PageWrap, PageTab, Page } from '@choerodon/master';
+import {
+  PageWrap, PageTab, Page, TabCode, useFormatMessage,
+} from '@choerodon/master';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { useTabActiveKey } from '@choerodon/components';
 import map from 'lodash/map';
-import { TabCode } from '@choerodon/master';
+
 import { useCodeManagerStore } from '../stores';
 import EmptyShown, { EmptyLoading } from './empty';
 import CodeQuality from './code-quality';
@@ -27,6 +29,8 @@ const MainView = injectIntl(observer((props) => {
     codeManagerStore,
     AppState,
   } = useCodeManagerStore();
+  const format = useFormatMessage('c7ncd.codeManger');
+
   const { getLoading, getHasApp } = codeManagerStore;
 
   const [activeKey, setActiveKey] = useTabActiveKey(tabCodes[0]);
@@ -55,7 +59,7 @@ const MainView = injectIntl(observer((props) => {
           title={(
             <Tips
               helpText={popoverContent}
-              title={formatMessage({ id: 'code-management.branch' })}
+              title={format({ id: 'Branch' })}
               popoverClassName="branch-popover"
               placement="bottomLeft"
             />
@@ -65,25 +69,25 @@ const MainView = injectIntl(observer((props) => {
           alwaysShow
         />
         <PageTab
-          title={formatMessage({ id: 'code-management.merge-request' })}
+          title={format({ id: 'MergeRequest' })}
           tabKey={tabCodes[1]}
           component={CodeManagerMergeRequest}
           alwaysShow
         />
         <PageTab
-          title={formatMessage({ id: 'code-management.ci-pipeline' })}
+          title={format({ id: 'ContinuousIntegration' })}
           tabKey={tabCodes[2]}
           component={CodeManagerCiPipelineManage}
           alwaysShow
         />
         <PageTab
-          title={formatMessage({ id: 'code-management.app-tag' })}
+          title={format({ id: 'Tag' })}
           tabKey={tabCodes[3]}
           component={CodeManagerAppTag}
           alwaysShow
         />
         <PageTab
-          title={formatMessage({ id: 'code-management.code-quality' })}
+          title={format({ id: 'CodeQuality' })}
           tabKey={tabCodes[4]}
           component={CodeQuality}
           alwaysShow

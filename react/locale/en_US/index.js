@@ -235,4 +235,7 @@ const enUS = {
 export { enUS };
 export * from './components';
 export * from './repository';
+export * from './app-service';
+export * from './code-manager';
+export * from './pipeline-manage';
 export * from './app-pipeline';

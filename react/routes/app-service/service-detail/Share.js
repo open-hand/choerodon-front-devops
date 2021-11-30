@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-bind */
 import React, { useEffect } from 'react';
 import {
-  TabPage, Content, Permission, Breadcrumb, Action,
+  TabPage, Content, Permission, Breadcrumb, Action, useFormatMessage,
 } from '@choerodon/master';
 import {
   Table, Modal, TextField, Pagination, Button as ProButton,
@@ -67,6 +67,8 @@ const Share = withRouter(observer((props) => {
     detailDs,
     AppState,
   } = useServiceDetailStore();
+
+  const format = useFormatMessage('c7ncd.appService');
 
   useEffect(() => {
     refresh();
@@ -167,7 +169,7 @@ const Share = withRouter(observer((props) => {
               onClick={() => openModal('add')}
               disabled={isStop}
             >
-              <FormattedMessage id={`${intlPrefix}.share.rule.add`} />
+              { format({ id: 'AddSharingRule' }) }
             </ProButton>
           </Tooltip>
         </div>
@@ -237,16 +239,16 @@ const Share = withRouter(observer((props) => {
             className="share-alert"
             message={(
               <div>
-                {formatMessage({ id: `${intlPrefix}.share.alert.tips.one` })}
+                {format({ id: 'tipOne' })}
                 <br />
-                {formatMessage({ id: `${intlPrefix}.share.alert.tips.two` })}
+                {format({ id: 'tipTwo' })}
               </div>
 )}
             type="warning"
             showIcon
           />
           <TextField
-            placeholder="搜索共享设置"
+            placeholder={format({ id: 'ShareSearch' })}
             style={{
               width: '100%',
             }}
@@ -267,7 +269,9 @@ const Share = withRouter(observer((props) => {
                           <p>
                             <span className="c7ncd-theme4-version-item-line-viewId">{`#${share.get('viewId')}`}</span>
                             <span className="c7ncd-theme4-version-item-line-around">
-                              (共享范围:
+                              (
+                              {format({ id: 'Scope' })}
+                              :
                               {renderProjectName({ value: share.get('projectName'), record: share })}
                               )
                             </span>
@@ -279,7 +283,8 @@ const Share = withRouter(observer((props) => {
                                   <span
                                     className="c7ncd-theme4-version-item-line-versionText"
                                   >
-                                    共享版本类型:
+                                    {format({ id: 'VersionType' })}
+                                    :
                                   </span>
                                   <span
                                     className="c7ncd-theme4-version-item-line-versionType"

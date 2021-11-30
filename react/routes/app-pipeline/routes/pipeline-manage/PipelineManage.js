@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Page, Header, Breadcrumb, Content, HeaderButtons,
+  Page, Header, Breadcrumb, Content, HeaderButtons, useFormatMessage,
 } from '@choerodon/master';
 import { Modal } from 'choerodon-ui/pro';
 import { toJS } from 'mobx';
@@ -46,6 +46,8 @@ const PipelineManage = observer(() => {
     treeDs,
     projectId,
   } = usePipelineManageStore();
+
+  const format = useFormatMessage('c7ncd.pipelineManage');
 
   const {
     getMainData, loadData,
@@ -224,21 +226,21 @@ const PipelineManage = observer(() => {
     } = getDetailData;
     const buttons = [{
       permissions: ['choerodon.code.project.develop.ci-pipeline.ps.create'],
-      name: formatMessage({ id: `${intlPrefix}.create` }),
+      name: format({ id: 'CreatePipeline' }),
       icon: 'playlist_add',
       handler: handleCreatePipeline,
       display: true,
     }, {
       permissions: ['choerodon.code.project.develop.ci-pipeline.ps.variable.project'],
-      name: formatMessage({ id: `${intlPrefix}.settings.global` }),
+      name: format({ id: 'GlobalCI' }),
       icon: 'settings-o',
       handler: () => openSettingsModal('global'),
       display: true,
     }, {
-      name: '更多操作',
+      name: format({ id: 'MoreActions' }),
       groupBtnItems: [
         {
-          name: formatMessage({ id: `${intlPrefix}.gitlab.runner` }),
+          name: format({ id: 'GitLabRunner' }),
           service: ['choerodon.code.project.develop.ci-pipeline.ps.runner'],
           handler: openRunnerModal,
         },
@@ -249,13 +251,13 @@ const PipelineManage = observer(() => {
       if (!parentId) {
         buttons.push({
           // permissions: ['choerodon.code.project.develop.ci-pipeline.ps.update'],
-          name: formatMessage({ id: 'boot.edit' }),
+          name: format({ id: 'Modify' }),
           icon: 'edit-o',
           handler: openEditModal,
           // display: edit,
         }, {
           permissions: ['choerodon.code.project.develop.ci-pipeline.ps.variable.app'],
-          name: formatMessage({ id: `${intlPrefix}.settings.local` }),
+          name: format({ id: 'CIVariable' }),
           icon: 'settings-o',
           handler: () => openSettingsModal('local'),
           display: true,
@@ -264,19 +266,19 @@ const PipelineManage = observer(() => {
         const newStatus = status || detailStatus;
         const newDevopsCdPipelineDeatilVO = devopsCdPipelineDeatilVO || detailDevopsCdPipelineDeatilVO;
         buttons.push({
-          name: formatMessage({ id: `${intlPrefix}.record.detail` }),
+          name: format({ id: 'RecordDetails' }),
           icon: 'find_in_page-o',
           handler: openRecordDetail,
           display: true,
         }, {
           permissions: ['choerodon.code.project.develop.ci-pipeline.ps.cancel'],
-          name: formatMessage({ id: `${intlPrefix}.execute.cancel` }),
+          name: format({ id: 'CancelExecution' }),
           icon: 'power_settings_new',
           handler: () => changeRecordExecute('cancel'),
           display: newStatus === 'pending' || newStatus === 'running',
         }, {
           permissions: ['choerodon.code.project.develop.ci-pipeline.ps.retry'],
-          name: formatMessage({ id: `${intlPrefix}.execute.retry` }),
+          name: format({ id: 'Retry' }),
           icon: 'refresh',
           handler: () => changeRecordExecute('retry'),
           display: newStatus === 'failed' || newStatus === 'canceled',

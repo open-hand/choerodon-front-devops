@@ -1,7 +1,10 @@
-import React, { createContext, useContext, useMemo, useEffect } from 'react';
+import React, {
+  createContext, useContext, useMemo, useEffect,
+} from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
+import { useFormatMessage } from '@choerodon/master';
 import { DataSet } from 'choerodon-ui/pro';
 import OpenTableDataSet from './OpenTableDataSet';
 import { useCodeManagerStore } from '../../../stores';
@@ -21,12 +24,21 @@ const StoreProvider = injectIntl(inject('AppState')(observer(((props) => {
 
   const mergedRequestStore = useStore();
 
+  const format = useFormatMessage('c7ncd.codeManger');
+
   const { appServiceDs, selectAppDs } = useCodeManagerStore();
   const appId = selectAppDs.current.get('appServiceId');
 
   const tabKey = mergedRequestStore.getTabKey;
 
-  const openTableDS = useMemo(() => new DataSet(OpenTableDataSet(projectId, formatMessage, mergedRequestStore, appId, tabKey)), []);
+  const openTableDS = useMemo(() => new DataSet(OpenTableDataSet(
+    projectId,
+    formatMessage,
+    mergedRequestStore,
+    appId,
+    tabKey,
+    format,
+  )), []);
 
   const value = {
     ...props,

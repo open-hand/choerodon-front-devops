@@ -4,7 +4,7 @@ import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
 import {
-  Header, Choerodon, HeaderButtons, ButtonGroup,
+  Header, Choerodon, HeaderButtons, ButtonGroup, useFormatMessage,
 } from '@choerodon/master';
 import {
   Button, Select, Form, Menu, Dropdown, Icon, UrlField, TextField,
@@ -99,6 +99,7 @@ const CodeManagerToolBar = injectIntl(inject('AppState')(observer((props) => {
 export default CodeManagerToolBar;
 
 export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
+  const format = useFormatMessage('c7ncd.codeManger');
   const codeManagerStore = useCodeManagerStore();
   const { appServiceDs, selectAppDs, projectId } = codeManagerStore;
   const { intl: { formatMessage }, theme4 } = props;
@@ -178,7 +179,7 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
         style={{ maxWidth: '5.5rem' }}
       >
         <Select
-          addonBefore={theme4 ? '应用服务' : undefined}
+          addonBefore={theme4 ? format({ id: 'ApplicationService' }) : undefined}
           colSpan={1}
           className="c7ncd-cm-select"
           label={theme4 ? undefined : formatMessage({ id: 'c7ncd.deployment.app-service' })}
@@ -231,7 +232,7 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
         </Select>
         <ButtonGroup
           disabled={appServiceDs.length === 0}
-          name={formatMessage({ id: 'repository.copyUrl' })}
+          name={format({ id: 'CopyRepository' })}
           renderCustomDropDownPanel={(setvisib) => copyMenu}
         />
       </Form>
