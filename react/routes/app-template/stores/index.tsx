@@ -4,6 +4,7 @@ import React, {
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
+import { useFormatCommon, useFormatMessage } from '@choerodon/master';
 import TableDataSet from './TableDataSet';
 
 interface ContextProps {
@@ -21,6 +22,8 @@ interface ContextProps {
     delete: string[],
   }
   pageType: string,
+  formatCommon:any
+  formatClient:any
 }
 
 const Store = createContext({} as ContextProps);
@@ -36,6 +39,11 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     AppState: { currentMenuType: { organizationId: orgId } },
     pageType,
   } = props;
+
+  const intlPrefix = 'c7ncd.org-template';
+
+  const formatCommon = useFormatCommon();
+  const formatClient = useFormatMessage(intlPrefix);
 
   const organizationId = useMemo(() => (pageType === 'organization' ? orgId : null), [pageType, orgId]);
   const permissionCodes = useMemo(() => (organizationId ? {
@@ -56,16 +64,20 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
 
   const tableDs = useMemo(() => new DataSet((TableDataSet({
     organizationId,
+    formatCommon,
+    formatClient,
   }))), [organizationId]);
 
   const value = {
     ...props,
     prefixCls: 'c7ncd-template',
-    intlPrefix: 'c7ncd.template',
+    intlPrefix,
     formatMessage,
     tableDs,
     organizationId,
     permissionCodes,
+    formatCommon,
+    formatClient,
   };
   return (
     <Store.Provider value={value}>

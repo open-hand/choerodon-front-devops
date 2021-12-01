@@ -26,15 +26,16 @@ export default observer(({
   modal.handleOk(async () => {
     const oldMainData = JSON.parse(JSON.stringify(editBlockStore.getMainData));
     const result = await editBlockStore.loadDetail(projectId, record.get('id'));
+    const appServiceName = seletDs.toData().find((item) => item.appServiceId === ds.current.get('appServiceId').appServiceId)?.appServiceName;
     editBlockStore.setMainData({
       ...result,
       devopsCdStageVOS: [],
       name: undefined,
-      appServiceId: ds.current.get('appServiceId'),
-      appServiceName: seletDs.toData().find((item) => item.appServiceId === ds.current.get('appServiceId')).appServiceName,
+      appServiceId: ds.current.get('appServiceId').appServiceId,
+      appServiceName,
     });
     editBlockStore.setStepData([...result.devopsCiStageVOS]);
-    const appServiceId = ds.current.get('appServiceId');
+    const { appServiceId } = ds.current.get('appServiceId');
     Modal.open({
       key: Modal.key(),
       title: '创建流水线',
@@ -45,7 +46,7 @@ export default observer(({
       children: <PipelineCreate
         appService={{
           id: appServiceId,
-          name: seletDs.toData().find((item) => item.appServiceId === appServiceId).appServiceName,
+          name: appServiceName,
         }}
         oldMainData={oldMainData}
         dataSource={editBlockStore.getMainData}

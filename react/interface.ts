@@ -8,7 +8,7 @@ import { Size } from 'choerodon-ui/lib/_util/enum';
 import Record from 'choerodon-ui/pro/lib/data-set/Record';
 import { DataSetProps } from 'choerodon-ui/pro/lib/data-set/DataSet';
 import {
-  DataSetSelection, FieldType, FieldIgnore, DataSetStatus,
+  DataSetSelection, FieldType, FieldIgnore, DataSetStatus, DataToJSON,
 } from 'choerodon-ui/pro/lib/data-set/enum';
 import {
   TableQueryBarType, SelectionMode, TableColumnTooltip, TableMode,
@@ -42,6 +42,7 @@ interface UpdateEventProps {
 }
 
 export {
+  DataToJSON,
   TableMode,
   ButtonColor,
   FuncType,
