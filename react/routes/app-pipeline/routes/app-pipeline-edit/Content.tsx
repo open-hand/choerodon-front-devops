@@ -39,15 +39,14 @@ const AppPipelineEdit = () => {
 
   const [currentKey, setTabKey] = useState<TabkeyTypes>(TAB_BASIC);
 
-  const [tabsData, setTabsDataState] = useSetState<BasicInfoDataTypes>({
+  const [tabsData, setTabsDataState] = useSetState<BasicInfoDataTypes>({});
 
-  });
-
+  // [当前tab的缓存值，设置当前tab的值， 根据key获取对应tab的缓存数据]
   const savedHandler = useMemo(() => [get(tabsData, currentKey), (data:unknown) => {
     setTabsDataState({
       [currentKey]: data,
     });
-  }] as const, [currentKey]);
+  }, (tabKey:TabkeyTypes) => get(tabsData, tabKey)] as const, [currentKey]);
 
   const contentCls = classNames(`${prefixCls}-content`, {
     [`${prefixCls}-content-bgnone`]: TAB_FLOW_CONFIG === currentKey,

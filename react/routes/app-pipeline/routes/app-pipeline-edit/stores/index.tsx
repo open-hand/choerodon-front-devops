@@ -2,7 +2,6 @@
 import React, { createContext, useContext } from 'react';
 import { inject } from 'mobx-react';
 import { useFormatCommon, useFormatMessage } from '@choerodon/master';
-import useStore from './useStore';
 import { AppPipelineEditStoreContext, ProviderProps } from '../interface';
 
 const Store = createContext({} as AppPipelineEditStoreContext);
@@ -22,11 +21,8 @@ export const StoreProvider = inject('AppState')((props: ProviderProps) => {
   const formatCommon = useFormatCommon();
   const formatAppPipelineEdit = useFormatMessage(intlPrefix);
 
-  const mainStore = useStore();
-
   const value = {
     ...props,
-    mainStore,
     prefixCls,
     intlPrefix,
     formatAppPipelineEdit,
