@@ -3,6 +3,7 @@
 import React, { useMemo, useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { runInAction } from 'mobx';
+import { useFormatMessage } from '@choerodon/master';
 import { Icon, TextField, Tree } from 'choerodon-ui/pro';
 import { Collapse } from 'choerodon-ui';
 import toUpper from 'lodash/toUpper';
@@ -22,6 +23,8 @@ const TreeMenu = observer(() => {
     projectId,
   } = usePipelineManageStore();
 
+  const format = useFormatMessage('c7ncd.pipelineManage');
+
   const bounds = useMemo(() => mainStore.getNavBounds, [mainStore.getNavBounds]);
 
   /**
@@ -31,7 +34,7 @@ const TreeMenu = observer(() => {
    * @param record
    * @param expendedKeys
    */
-  function expandParents (record, expendedKeys) {
+  function expandParents(record, expendedKeys) {
     if (!record.isExpanded) {
       const { children, parent } = record;
 
@@ -114,7 +117,7 @@ const TreeMenu = observer(() => {
     }
   };
 
-  function nodeCover ({ record }) {
+  function nodeCover({ record }) {
     const nodeProps = {
       title: <TreeItem record={record} search={mainStore.getSearchValue} />,
     };
@@ -128,7 +131,7 @@ const TreeMenu = observer(() => {
     <nav style={bounds} className={`${prefixCls}-sidebar`}>
       <TextField
         className={`${prefixCls}-sidebar-search`}
-        placeholder={formatMessage({ id: 'search.placeholder' })}
+        placeholder={format({ id: 'Search' })}
         clearButton
         name="search"
         prefix={<Icon type="search" />}
@@ -150,9 +153,11 @@ const TreeMenu = observer(() => {
           <Tree
             dataSet={treeDs}
             // renderer={nodeRenderer}
+            // eslint-disable-next-line react/jsx-no-bind
             onExpand={handleExpanded}
             className={`${prefixCls}-sidebar-tree`}
             loadData={onLoadData}
+            // eslint-disable-next-line react/jsx-no-bind
             treeNodeRenderer={nodeCover}
             loadedKeys={mainStore.getLoadedKeys}
           />

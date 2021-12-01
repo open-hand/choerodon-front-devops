@@ -5,7 +5,7 @@ import { Table, Button, Tabs } from 'choerodon-ui/pro';
 import { withRouter } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import classNames from 'classnames';
-import { Page, Permission } from '@choerodon/master';
+import { Page, Permission, useFormatMessage } from '@choerodon/master';
 import map from 'lodash/map';
 import { useRequestStore } from './stores';
 import { Loading } from '@choerodon/components';
@@ -25,6 +25,7 @@ const TabPane = Tabs.TabPane;
 const { Column } = Table;
 
 const RequestPanel = withRouter(observer((props) => {
+  const format = useFormatMessage('c7ncd.codeManger');
   const {
     AppState: { currentMenuType: { id: projectId, id } },
     intl: { formatMessage },
@@ -91,7 +92,7 @@ const RequestPanel = withRouter(observer((props) => {
 
   function getSelfToolBarObj() {
     return ({
-      name: formatMessage({ id: 'merge.createMerge' }),
+      name: format({ id: 'CreateMerge' }),
       icon: 'playlist_add',
       display: true,
       disabled: !mergedRequestStore.getUrl,
@@ -234,14 +235,14 @@ const RequestPanel = withRouter(observer((props) => {
           >
             {
               map(tabPaneList, ({ key, count }) => (
-                <Radio.Button value={key}>{`${formatMessage({ id: `merge.tab.${key}` })}(${count})`}</Radio.Button>
+                <Radio.Button value={key}>{`${formatMessage({ id: key })}`}</Radio.Button>
               ))
             }
             {auditCount > 0 && (
               <Radio.Button
                 value="assignee"
               >
-                {`${formatMessage({ id: 'merge.tab.assignee' })}(${auditCount || 0})`}
+                {`${format({ id: 'ToBeApproved' })}(${auditCount || 0})`}
               </Radio.Button>
             )}
           </Radio.Group>

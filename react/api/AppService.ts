@@ -87,14 +87,6 @@ class AppServiceApi extends Api<AppServiceApi> {
     });
   }
 
-  getBrachs(appServiceId:string, res:object) {
-    return this.request({
-      url: `${this.prefix}/${appServiceId}/git/page_branch_by_options`,
-      method: 'post',
-      data: res,
-    });
-  }
-
   listAllAppservices(type:string) {
     return this.request({
       url: `${this.prefix}/list_all_app_services?deploy_only=false&type=${type}&include_external=false`,

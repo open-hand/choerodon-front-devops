@@ -1,0 +1,85 @@
+{
+  "devopsCiStageVOS": [
+    {
+      "id": "=1EskPgsrEOHq7mcdBZoIWNVzke8JpPMLymxwafFPMCc==",
+      "name": "ci",
+      "sequence": 0,
+      "jobList": [
+        {
+          "id": "=OGze-sPJievyEi2COa42cirYLTpP-0e5wRNv8Le5IkY==",
+          "name": "go",
+          "type": "build",
+          "groupType": "build"
+        },
+        {
+          "id": "=OGze-sPJ4ievyEis2COa42cirYLTpP-0e5wRNv8Le5IkY==",
+          "name": "gogogogogogo",
+          "type": "build",
+          "groupType": "test-build"
+        },
+        {
+          "id": "=OGze-sPJievyEis2CO1a42cirYLTpP-0e5wR2112v8Le5IkY==",
+          "name": "2121",
+          "type": "build",
+          "groupType": "unit-test"
+        },
+        {
+          "id": "=OGze-sPJievyEi1s2CO1a42cirYLTpP-0e5wR2112v8Le5IkY==",
+          "name": "dasdas",
+          "type": "build",
+          "groupType": "code-scann"
+        },
+        {
+          "id": "=dOGze-sPJievyEi1s2CO1a42cirYLTpP-0e5wR2112v8Le5IkY==",
+          "name": "d121s",
+          "type": "build",
+          "groupType": "docker-build"
+        }
+      ],
+      "type": "CI"
+    },
+    {
+      "id": "=r2veQBBQGkGbkpfAV2ZCpyAogE-wpUfLIa0YJ9OdVNk==",
+      "name": "chart",
+      "sequence": 1,
+      "jobList": [
+        {
+          "id": "=2-Z1nOt8M0KR3N5f0Mh2Z9rUpiMporpkE9_1PTAIIwk==",
+          "name": "motherfucker",
+          "type": "chart",
+          "groupType": "build"
+        }
+      ],
+      "type": "CI"
+    }
+  ],
+  "devopsCdStageVOS": [
+    {
+      "id": "=7_eLRkxQigJ7B4KsRiljSL6XjHFQ3DT3SjV89i3Whu4==",
+      "name": "部署",
+      "sequence": 2,
+      "type": "CD",
+      "jobList": [
+        {
+          "id": "=ewA_-pR_L1wgKhPZg5NCpP6uHgbag0ej1gq8QTwAUx4==",
+          "name": "test",
+          "type": "cdDeploy",
+          "groupType": "build"
+        },
+        {
+          "id": "=ewA_-pR_L1wsgKhPZg5NCpP6uHgbag0ej1gq8QTwAUx4==",
+          "name": "helloworld",
+          "type": "cdDeploy",
+          "groupType": "build"
+        }
+      ]
+    },
+    {
+      "id": "=7_eLRkxQigJ7B4KsRiljSL6XjHFQ3DT3SjV89i3Whu4==",
+      "name": "部署",
+      "sequence": 2,
+      "jobList": [],
+      "type": "CD"
+    }
+  ]
+}

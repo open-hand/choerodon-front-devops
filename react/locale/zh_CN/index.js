@@ -498,7 +498,7 @@ const appService = {
   'c7ncd.appService.userInfo': '用户名与密码',
   'c7ncd.appService.userName': '用户名',
   'c7ncd.appService.userPassword': '密码',
-  'c7ncd.appService.token': '私有Token',
+  'c7ncd.appService.token1': '私有Token',
   'c7ncd.appService.permission': '权限分配',
   'c7ncd.appService.share': '共享设置',
   'c7ncd.appService.permission.manage': '权限管理',
@@ -3154,5 +3154,9 @@ const zhCN = {
 
 export * from './repository';
 export * from './components';
+export * from './app-service';
+export * from './code-manager';
+export * from './pipeline-manage';
+export * from './app-pipeline';
 
 export { zhCN };
