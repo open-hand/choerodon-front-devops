@@ -5,11 +5,13 @@ import { observer } from 'mobx-react-lite';
 import {
   Button, Form, TextField, TextArea,
 } from 'choerodon-ui/pro';
-import { useBoolean } from 'ahooks';
+import { useBoolean, useMount, useUnmount } from 'ahooks';
+import { isEmpty } from 'lodash';
 import { useCiVariasConfigsStore } from './stores';
 import {
-  ButtonColor, FuncType, Record, ResizeType,
+  ButtonColor, FuncType, ResizeType,
 } from '@/interface';
+import useTabData from '../../hooks/useTabData';
 
 const CiVariasConfigs = () => {
   const {
@@ -21,9 +23,7 @@ const CiVariasConfigs = () => {
 
   const [isReveal, { setFalse, setTrue }] = useBoolean(true);
 
-  useEffect(() => {
-
-  }, []);
+  const [savedData, setSavedData] = useTabData<any[]>();
 
   const renderValue = ({ value }:{value:string}) => {
     if (value) {
@@ -32,17 +32,19 @@ const CiVariasConfigs = () => {
     return null;
   };
 
-  const handleAdd = () => {
-    formDs.create();
-  };
-
-  const handleRemove = (eachRecord:Record) => {
-    formDs.remove(eachRecord);
-  };
-
   const handleReveal = () => {
     isReveal ? setFalse() : setTrue();
   };
+
+  useMount(() => {
+    if (!isEmpty(savedData)) {
+      formDs.loadData(savedData);
+    }
+  });
+
+  useUnmount(() => {
+    setSavedData(formDs.toData());
+  });
 
   const renderForm = () => (
     formDs.map((eachRecord) => (
@@ -60,7 +62,7 @@ const CiVariasConfigs = () => {
           <Button
             funcType={'flat' as FuncType}
             icon="delete"
-            onClick={() => handleRemove(eachRecord)}
+            onClick={() => formDs.remove(eachRecord)}
             style={{
               marginTop: '10px',
             }}
@@ -84,7 +86,7 @@ const CiVariasConfigs = () => {
           funcType={'flat' as FuncType}
           color={'primary' as ButtonColor}
           icon="add"
-          onClick={handleAdd}
+          onClick={() => formDs.create()}
           className={`${prefixCls}-add-btn`}
         >
           添加变量

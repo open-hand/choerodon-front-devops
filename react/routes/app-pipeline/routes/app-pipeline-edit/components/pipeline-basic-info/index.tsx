@@ -16,9 +16,9 @@ import AppServiceDataSet from './stores/AppServiceDataSet';
 import './index.less';
 import BranchDataSet from './stores/BranchDataSet';
 import { TabkeyTypes } from '../../interface';
+import useTabData from '../../hooks/useTabData';
 
 export type PipelineBasicInfoProps = {
-  savedHandler: readonly [BasicInfoDataProps, (data:BasicInfoDataProps)=>any, (tabKey:TabkeyTypes)=>unknown]
 }
 
 type BasicInfoDataProps = {
@@ -34,11 +34,7 @@ const prefixCls = 'c7ncd-pipeline-basic-info' as const;
 const intlPrefix = 'c7ncd.app.pipeline.edit' as const;
 
 const PipelineBasicInfo:FC<PipelineBasicInfoProps> = (props) => {
-  const {
-    savedHandler,
-  } = props;
-
-  const [savedData, setData] = savedHandler;
+  const [savedData, setData] = useTabData<BasicInfoDataProps>();
 
   const formatCommon = useFormatCommon();
   const formatPipelineEdit = useFormatMessage(intlPrefix);
@@ -87,6 +83,7 @@ const PipelineBasicInfo:FC<PipelineBasicInfoProps> = (props) => {
           searchable
           searchMatcher="appServiceName"
           popupCls={`${prefixCls}-project`}
+          addonAfter={<NewTips helpText="此处仅能看到您有开发权限的启用状态的应用服务，并要求该应用服务未有关联的流水线" />}
         />
         <Select
           multiple

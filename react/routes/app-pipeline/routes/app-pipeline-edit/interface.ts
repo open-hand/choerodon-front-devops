@@ -16,6 +16,7 @@ export type AppPipelineEditStoreContext = {
   formatAppPipelineEdit: useFormatMessageRetrunTypes,
     // @ts-expect-error
   formatCommon:useFormatMessageRetrunTypes,
+  currentKey:TabkeyTypes,
 } & ProviderProps;
 
 export type ProviderProps = {
