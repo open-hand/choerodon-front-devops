@@ -14,7 +14,6 @@ import { useResourceStore } from '../../stores';
 import { useMainStore } from '../stores';
 
 import './index.less';
-import './theme4.less';
 
 const { ENV_ITEM } = itemTypeMappings;
 
@@ -24,7 +23,6 @@ const TreeMenu = observer(() => {
     prefixCls,
     resourceStore,
     AppState: { currentMenuType: { projectId, organizationId, name: projectName } },
-    intl: { formatMessage },
   } = useResourceStore();
 
   const { mainStore } = useMainStore();

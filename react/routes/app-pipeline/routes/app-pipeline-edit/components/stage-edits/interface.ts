@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+import { TabkeyTypes } from '../../interface';
 import { StoreProps } from './stores/useStore';
 
 export type StageEditsDataTypes = {
@@ -6,7 +8,7 @@ export type StageEditsDataTypes = {
 }
 
 export type StageEditsIndexProps = {
-  savedHandler: readonly [StageEditsDataTypes, (data:StageEditsDataTypes)=>any]
+  savedHandler: readonly [StageEditsDataTypes, (data:StageEditsDataTypes)=>any, (tabKey:TabkeyTypes)=>unknown]
 };
 
 export type StageEditsStoreContext = {

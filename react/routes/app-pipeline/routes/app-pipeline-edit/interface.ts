@@ -5,7 +5,6 @@ import {
   STAGE_CI,
   TAB_ADVANCE_SETTINGS, TAB_BASIC, TAB_CI_CONFIG, TAB_FLOW_CONFIG,
 } from './stores/CONSTANTS';
-import { StoreProps } from './stores/useStore';
 
 export type AppPipelineEditIndexProps = {
 };
@@ -13,7 +12,6 @@ export type AppPipelineEditIndexProps = {
 export type AppPipelineEditStoreContext = {
   prefixCls: 'c7ncd-app-pipeline-edit'
   intlPrefix: 'c7ncd.app.pipeline.edit'
-  mainStore: StoreProps
   // @ts-expect-error
   formatAppPipelineEdit: useFormatMessageRetrunTypes,
     // @ts-expect-error
