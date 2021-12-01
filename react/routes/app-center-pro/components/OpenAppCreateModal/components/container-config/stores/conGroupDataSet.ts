@@ -7,7 +7,7 @@
 import { DataSet } from 'choerodon-ui/pro';
 import { marketServiceVersionOptionDs } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config/stores/appConfigDataSet';
 import {
-  DataSetProps, FieldProps, FieldType, Record,
+  DataSetProps, FieldProps, FieldType, Record, DataToJSON,
 } from '@/interface';
 import docker from '../images/docker.svg';
 import jar from '../images/jar.svg';
@@ -660,6 +660,7 @@ const conGroupDataSet = (
     });
   }
   return ({
+    dataToJSON: 'all' as DataToJSON,
     autoCreate: true,
     fields: Object.keys(mapping).map((i) => {
       const item = mapping[i];
@@ -735,6 +736,12 @@ const conGroupDataSet = (
           case mapping.productSource.name: {
             record.set(mapping.marketAppVersion.name, undefined);
             record.set(mapping.marketServiceVersion.name, undefined);
+            record.set(mapping.imageVersion.name, undefined);
+            record.set(mapping.projectImageRepo.name, undefined);
+            record.set(mapping.shareAppService.name, undefined);
+            record.set(mapping.repoAddress.name, undefined);
+            record.set(mapping.username.name, undefined);
+            record.set(mapping.password.name, undefined);
             if (value === productSourceData[6].value) {
               record.getField(mapping.relativeMission.name).set('required', true);
             } else {
@@ -757,7 +764,6 @@ const conGroupDataSet = (
                 break;
               }
             }
-            record.set(mapping.imageVersion.name, undefined);
             break;
           }
           case mapping.image.name: {
