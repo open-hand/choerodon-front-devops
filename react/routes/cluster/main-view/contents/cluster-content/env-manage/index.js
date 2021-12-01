@@ -33,7 +33,7 @@ const EnvManageLists = observer(() => {
         projectId={projectId}
         intlPrefix={intlPrefix}
       />,
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
     });
   };
 

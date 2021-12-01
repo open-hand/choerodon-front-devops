@@ -1,0 +1,111 @@
+@prefixCls: ~"c7ncd-pipeline-jobItem";
+
+@boxShadaw: 0px 2px 6px 0px rgba(65, 91, 201, 0.12);
+
+.@{prefixCls} {
+  margin-top: 32px;
+  position: relative;
+  width: 200px;
+  height: 40px;
+
+  &-circle {
+    width: 4px;
+    height: 4px;
+    display: block;
+    background: #fff;
+    border: 1px solid #abbccf;
+    position: absolute;
+    bottom: -1px;
+    border-radius: 50%;
+  }
+  &-serialLines {
+    background: #abbccf;
+    position: absolute;
+    height: 32px;
+    width: 1px;
+    top: -33px;
+    left: 20px;
+    z-index: 2;
+    .@{prefixCls}-circle {
+      left: -1px;
+      bottom: -3px;
+    }
+  }
+  &-parallelLines {
+    position: absolute;
+    bottom: 18px;
+    left: -27px;
+    width: 251px;
+    display: flex;
+    align-items: center;
+    &-left,
+    &-right {
+      height: 73px;
+      width: 26px;
+      border-bottom: 1px solid rgba(171, 188, 207, 1);
+    }
+    &-left {
+      border-left: 1px solid rgba(171, 188, 207, 1);
+      .@{prefixCls}-circle {
+        left: -1px;
+      }
+    }
+    &-right {
+      border-right: 1px solid rgba(171, 188, 207, 1);
+      margin-right: 0;
+      margin-left: auto;
+      .@{prefixCls}-circle {
+        right: -1px;
+      }
+    }
+  }
+  &-iconGroups {
+    margin-left: auto;
+    > i.icon {
+      font-size: 17px;
+      transition: 0.2s;
+      border-radius: 50%;
+    }
+    &-delete {
+      opacity: 0;
+      color: var(--primary-color);
+      &:hover {
+        box-shadow: @boxShadaw;
+      }
+    }
+  }
+  &-content {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    width: 200px;
+    height: 40px;
+    border-radius: 2px;
+    border: 1px solid var(--divider);
+    background: #fff;
+    cursor: pointer;
+    transition: 0.2s;
+    z-index: 1;
+    position: absolute;
+    &:hover {
+      border: 1px solid var(--primary-color);
+      box-shadow: @boxShadaw;
+      .@{prefixCls}-iconGroups {
+        &-delete {
+          opacity: 1;
+        }
+      }
+    }
+  }
+  &-icon {
+    font-size: 18px;
+    display: block;
+    color: var(--help-icon-color);
+  }
+  &-name {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-color);
+    margin-left: 8px;
+  }
+}

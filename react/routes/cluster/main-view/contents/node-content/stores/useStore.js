@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { useLocalStore } from 'mobx-react-lite';
 import { axios, Choerodon } from '@choerodon/master';
 import { handlePromptError } from '../../../../../../utils';
@@ -23,13 +24,14 @@ export default function useStore({ RESOURCE_TAB }) {
 
     async loadGrafanaUrl(projectId, clusterId) {
       try {
-        const res = await axios.get(`/devops/v1/projects/${projectId}/cluster_resource/grafana_url?cluster_id=${clusterId}&type=node`);
+        const res = await axios.get(
+          `/devops/v1/projects/${projectId}/cluster_resource/grafana_url?cluster_id=${clusterId}&type=node`,
+        );
         if (handlePromptError(res)) {
           this.setGrafanaUrl(res);
           return res;
-        } else {
-          this.setGrafanaUrl(null);
         }
+        this.setGrafanaUrl(null);
       } catch (e) {
         Choerodon.handleResponseError(e);
       }

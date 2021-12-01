@@ -32,7 +32,7 @@ export default ({
     }),
   },
   fields: [
-    { name: 'realName', label: formatMessage({ id: 'userName' }) },
+    { name: 'realName', label: formatMessage({ id: 'boot.username' }) },
     { name: 'loginName', label: formatMessage({ id: 'loginName' }) },
     { name: 'roles', label: formatMessage({ id: 'projectRole' }) },
     { name: 'creationDate', label: formatMessage({ id: 'permission_addTime' }) },
@@ -42,7 +42,7 @@ export default ({
     {
       name: 'realName',
       type: 'string' as FieldType,
-      label: formatMessage({ id: 'userName' }),
+      label: formatMessage({ id: 'boot.username' }),
     },
     {
       name: 'loginName',

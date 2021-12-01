@@ -27,6 +27,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       match: { params: { id } },
       children,
     } = props;
+
     const { appServiceStore, intlPrefix } = useAppTopStore();
     const versionDs = useMemo(
       () => new DataSet(VersionDataSet(formatMessage, projectId, id)),

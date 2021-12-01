@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 import React, { useMemo } from 'react';
 import { Route, Switch } from 'react-router';
-import { PermissionRoute } from '@choerodon/master';
-import { NoMatch } from '@choerodon/master';
+import { PermissionRoute, NoMatch } from '@choerodon/master';
+
 import map from 'lodash/map';
 
 import { observer } from 'mobx-react-lite';

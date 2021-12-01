@@ -90,7 +90,7 @@ function NetworkItem({
             store={networkStore}
             refresh={freshMenu}
           />,
-          okText: formatMessage({ id: 'save' }),
+          okText: formatMessage({ id: 'boot.save' }),
           afterClose: () => networkStore.setSingleData([]),
         });
       }
@@ -108,7 +108,7 @@ function NetworkItem({
     }
     const actionData = [{
       service: ['choerodon.code.project.deploy.app-deployment.resource.ps.update-net'],
-      text: formatMessage({ id: 'edit' }),
+      text: formatMessage({ id: 'boot.edit' }),
       action: openModal,
     }, {
       service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-net'],

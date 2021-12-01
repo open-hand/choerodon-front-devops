@@ -201,12 +201,12 @@ const PiplelineTable = withRouter(observer((props) => {
       },
       disabled: {
         service: ['choerodon.code.project.deploy.app-deployment.pipeline.ps.disable'],
-        text: formatMessage({ id: 'stop' }),
+        text: formatMessage({ id: 'boot.stop' }),
         action: openInvalid.bind(this, id, itemName),
       },
       enable: {
         service: ['choerodon.code.project.deploy.app-deployment.pipeline.ps.enable'],
-        text: formatMessage({ id: 'active' }),
+        text: formatMessage({ id: 'boot.enable' }),
         action: makeStatusActive.bind(this, id),
       },
       remove: {

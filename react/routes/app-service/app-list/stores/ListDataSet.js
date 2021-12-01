@@ -26,8 +26,8 @@ export default ((intlPrefix, formatMessage, projectId, dataKey) => ({
     {
       name: 'type', type: 'string', defaultValue: 'normal', label: formatMessage({ id: `${intlPrefix}.type` }),
     },
-    { name: 'active', type: 'boolean', label: formatMessage({ id: 'status' }) },
-    { name: 'creationDate', type: 'string', label: formatMessage({ id: 'createDate' }) },
+    { name: 'active', type: 'boolean', label: formatMessage({ id: 'boot.states' }) },
+    { name: 'creationDate', type: 'string', label: formatMessage({ id: 'boot.createDate' }) },
     { name: 'repoUrl', type: 'string', label: formatMessage({ id: `${intlPrefix}.repoUrl` }) },
   ],
   queryFields: [

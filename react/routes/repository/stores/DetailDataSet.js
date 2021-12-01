@@ -36,7 +36,9 @@ function handleLoad({ dataSet }) {
 }
 
 function getRequestData(data, res) {
-  const { url, userName, password, chartCustom } = data;
+  const {
+    url, userName, password, chartCustom,
+  } = data;
   if (chartCustom === 'custom') {
     if (isEmpty(res.chart)) {
       res.chart = {
@@ -53,16 +55,16 @@ function getRequestData(data, res) {
   }
 }
 
-export default ((intlPrefix, formatMessage, url) => {
+export default ((formatRepository, formatCommon, url) => {
   function checkUserName(value, name, record) {
     if (!value && record.get('password')) {
-      return formatMessage({ id: `${intlPrefix}.name.check.failed` });
+      return formatRepository({ id: 'name.check.failed' });
     }
   }
 
   function checkPassword(value, name, record) {
     if (!value && record.get('userName')) {
-      return formatMessage({ id: `${intlPrefix}.name.check.failed` });
+      return formatRepository({ id: 'name.check.failed' });
     }
   }
 
@@ -80,7 +82,6 @@ export default ((intlPrefix, formatMessage, url) => {
       update: ({ data: [data] }) => {
         const res = pick(data, ['chart']);
         getRequestData(data, res);
-
         return ({
           url,
           method: 'post',
@@ -94,13 +95,17 @@ export default ((intlPrefix, formatMessage, url) => {
       {
         name: 'url',
         type: 'url',
-        label: formatMessage({ id: 'address' }),
+        label: formatCommon({ id: 'address' }),
         dynamicProps: {
           required: ({ record }) => record.get('chartCustom') === 'custom',
         },
       },
-      { name: 'userName', type: 'string', label: formatMessage({ id: 'userName' }), validator: checkUserName },
-      { name: 'password', type: 'string', label: formatMessage({ id: 'password' }), validator: checkPassword },
+      {
+        name: 'userName', type: 'string', label: formatCommon({ id: 'username' }), validator: checkUserName,
+      },
+      {
+        name: 'password', type: 'string', label: formatCommon({ id: 'password' }), validator: checkPassword,
+      },
       { name: 'chartStatus', type: 'string', defaultValue: '' },
     ],
 

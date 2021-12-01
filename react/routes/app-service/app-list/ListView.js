@@ -3,6 +3,7 @@ import React, { useEffect, useState, Fragment, useRef } from 'react';
 import { Table, Modal, TextField, Pagination } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import { FormattedMessage } from 'react-intl';
+import { useFormatMessage } from '@choerodon/master';
 import { withRouter } from 'react-router-dom';
 import {
   Page, Content, Header, Action, Breadcrumb, Choerodon, HeaderButtons
@@ -52,6 +53,8 @@ const ListView = withRouter(observer((props) => {
 
   const ref = useRef();
   const searchRef = useRef();
+
+  const format = useFormatMessage('c7ncd.appService');
 
   const {
     intl: { formatMessage },
@@ -120,7 +123,7 @@ const ListView = withRouter(observer((props) => {
     const { openImport } = props;
 
     return ([{
-      name: formatMessage({ id: `${intlPrefix}.create` }),
+      name: format({ id: 'createAppService' }),
       icon: 'playlist_add',
       permissions: ['choerodon.code.project.develop.app-service.ps.create'],
       display: true,
@@ -128,7 +131,7 @@ const ListView = withRouter(observer((props) => {
       disabled,
       disabledMessage,
     }, {
-      name: formatMessage({ id: `${intlPrefix}.import` }),
+      name: format({ id: 'importAppService' }),
       icon: 'archive-o',
       permissions: ['choerodon.code.project.develop.app-service.ps.import'],
       display: true,
@@ -136,7 +139,7 @@ const ListView = withRouter(observer((props) => {
       disabled,
       disabledMessage,
     }, {
-      name: '权限管理',
+      name: format({ id: 'permissionManage' }),
       icon: 'settings-o',
       display: true,
       permissions: ['choerodon.code.project.develop.app-service.ps.permission.update'],
@@ -235,14 +238,14 @@ const ListView = withRouter(observer((props) => {
     const actionData = {
       detail: {
         service: ['choerodon.code.project.develop.app-service.ps.default'],
-        text: formatMessage({ id: `${intlPrefix}.detail` }),
+        text: format({ id: 'Details' }),
         action: () => {
           ref?.current?.openDetail(record);
         },
       },
       edit: {
         service: ['choerodon.code.project.develop.app-service.ps.update'],
-        text: formatMessage({ id: 'edit' }),
+        text: format({ id: 'Modify' }),
         action: () => {
           setSelectedAppService(record.toData());
           openEdit(record.get('id'));
@@ -250,14 +253,14 @@ const ListView = withRouter(observer((props) => {
       },
       outEdit: {
         service: ['choerodon.code.project.develop.app-service.ps.out.edit'],
-        text: '修改外置仓库配置',
+        text: format({ id: 'ModifyExternal' }),
         action: () => {
           openOutEdit(record);
         },
       },
       stop: {
         service: ['choerodon.code.project.develop.app-service.ps.disable'],
-        text: formatMessage({ id: 'stop' }),
+        text: formatMessage({ id: 'boot.stop' }),
         action: () => {
           setSelectedAppService(record.toData());
           openStop(record);
@@ -265,7 +268,7 @@ const ListView = withRouter(observer((props) => {
       },
       run: {
         service: ['choerodon.code.project.develop.app-service.ps.enable'],
-        text: formatMessage({ id: 'active' }),
+        text: formatMessage({ id: 'boot.enable' }),
         action: () => {
           setSelectedAppService(record.toData());
           changeActive(true, record);
@@ -315,7 +318,7 @@ const ListView = withRouter(observer((props) => {
         intlPrefix={intlPrefix}
         prefixCls={prefixCls}
       />,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 
@@ -332,7 +335,7 @@ const ListView = withRouter(observer((props) => {
         prefixCls={prefixCls}
         appServiceId={appServiceId}
       />,
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
     });
   }
 
@@ -390,7 +393,7 @@ const ListView = withRouter(observer((props) => {
         title: formatMessage({ id: `${intlPrefix}.stop` }, { name: listDs.current.get('name') }),
         children: <FormattedMessage id={`${intlPrefix}.stop.tips`} />,
         onOk: () => handleChangeActive(active, record),
-        okText: formatMessage({ id: 'stop' }),
+        okText: formatMessage({ id: 'boot.stop' }),
       });
     } else {
       handleChangeActive(active, record);
@@ -445,7 +448,7 @@ const ListView = withRouter(observer((props) => {
           children: childrenContent,
           okCancel: !status,
           onOk: () => (status ? stopModal.close() : handleChangeActive(false, record)),
-          okText: status ? formatMessage({ id: 'iknow' }) : formatMessage({ id: 'stop' }),
+          okText: status ? formatMessage({ id: 'iknow' }) : formatMessage({ id: 'boot.stop' }),
           footer: ((okBtn, cancelBtn) => (
             <>
               {!status && cancelBtn}
@@ -465,7 +468,7 @@ const ListView = withRouter(observer((props) => {
 
   function getHeader () {
     return (
-      <Header title={<FormattedMessage id="app.head" />}>
+      <Header title={format({ id: 'title' })}>
         <HeaderButtons
           items={getItemsButton()}
           showClassName={false}
@@ -559,7 +562,7 @@ const ListView = withRouter(observer((props) => {
                       >
                         {!record.get('updateUserImage') && record.get('updateUserName')?.substring(0, 1)?.toUpperCase()}
                       </span>
-                      <span className="c7ncd-appService-item-center-line-gxy">更新于</span>
+                      <span className="c7ncd-appService-item-center-line-gxy">{ format({ id: 'UpdateAt' }) }</span>
                       {
                         record.get('lastUpdateDate') &&
                         <TimePopover content={record.get('lastUpdateDate')} />
@@ -574,7 +577,7 @@ const ListView = withRouter(observer((props) => {
                       >
                         {!record.get('createUserImage') && record.get('createUserName')?.substring(0, 1)?.toUpperCase()}
                       </span>
-                      <span className="c7ncd-appService-item-center-line-gxy">创建于</span>
+                      <span className="c7ncd-appService-item-center-line-gxy">{ format({ id: 'CreateAt' }) }</span>
                       {
                         record.get('creationDate') &&
                         <TimePopover content={record.get('creationDate')} />
@@ -622,6 +625,8 @@ const ListView = withRouter(observer((props) => {
     wait: 500
   })
 
+  console.log(AppState.getCurrentTheme);
+
   return (
     <>
       {getHeader()}
@@ -632,7 +637,7 @@ const ListView = withRouter(observer((props) => {
             <TextField
               ref={searchRef}
               className="theme4-c7n-member-search"
-              placeholder="搜索应用服务"
+              placeholder={format({ id: 'searchAppService' })}
               style={{ marginLeft: 32 }}
               suffix={(
                 <Icon

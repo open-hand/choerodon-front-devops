@@ -47,7 +47,7 @@ const KeyValueModals = observer(() => {
         intlPrefix={intlPrefix}
         refresh={refresh}
       />,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 

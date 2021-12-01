@@ -1,7 +1,16 @@
+/* eslint-disable react/jsx-no-bind */
 import React, { Fragment, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Form, Select, TextField, SelectBox, Button, Icon, Tooltip, Spin, TextArea,
+  Form,
+  Select,
+  TextField,
+  SelectBox,
+  Button,
+  Icon,
+  Tooltip,
+  Spin,
+  TextArea,
 } from 'choerodon-ui/pro';
 import { Choerodon } from '@choerodon/master';
 import map from 'lodash/map';
@@ -34,7 +43,7 @@ export default observer(() => {
 
   function formValidate() {
     return new Promise((resolve) => {
-      pathListDs.forEach(async (pathRecord:any) => {
+      pathListDs.forEach(async (pathRecord: any) => {
         const res = await pathRecord.getField('serviceId').checkValidity();
         if (!res) {
           resolve(false);
@@ -49,8 +58,8 @@ export default observer(() => {
     const serviceIds = map(pathListDs.toData(), 'serviceId');
     saveNetworkIds && saveNetworkIds(serviceIds);
     try {
-      if (!isModify || await formValidate() === true) {
-        if (await formDs.submit() !== false) {
+      if (!isModify || (await formValidate()) === true) {
+        if ((await formDs.submit()) !== false) {
           refresh();
           return true;
         }
@@ -79,7 +88,7 @@ export default observer(() => {
     annotationDs.remove(annotationRecord);
   }
 
-  function renderService({ serviceRecord, text }:any) {
+  function renderService({ serviceRecord, text }: any) {
     const status = serviceRecord.get('status');
     const serviceError = serviceRecord.get('serviceError');
     return (
@@ -96,13 +105,15 @@ export default observer(() => {
     );
   }
 
-  function serviceOptionRender({ record: serviceRecord, text }:any) {
+  function serviceOptionRender({ record: serviceRecord, text }: any) {
     const content = renderService({ serviceRecord, text });
     return content;
   }
 
-  function serviceRender({ text, value }:any) {
-    const serviceRecord = serviceDs.find((eachRecord: { get: (arg0: string) => any; }) => eachRecord.get('id') === value);
+  function serviceRender({ text, value }: any) {
+    const serviceRecord = serviceDs.find(
+      (eachRecord: { get: (arg0: string) => any }) => eachRecord.get('id') === value,
+    );
     if (!serviceRecord) {
       return text;
     }
@@ -122,10 +133,14 @@ export default observer(() => {
         </div>
         <SelectBox name="isNormal" className={`${prefixCls}-domain-form-radio`}>
           <Option value>
-            <span className={`${prefixCls}-domain-form-radio-text`}>{formatMessage({ id: 'domain.protocol.normal' })}</span>
+            <span className={`${prefixCls}-domain-form-radio-text`}>
+              {formatMessage({ id: 'domain.protocol.normal' })}
+            </span>
           </Option>
           <Option value={false}>
-            <span className={`${prefixCls}-domain-form-radio-text`}>{formatMessage({ id: 'domain.protocol.secret' })}</span>
+            <span className={`${prefixCls}-domain-form-radio-text`}>
+              {formatMessage({ id: 'domain.protocol.secret' })}
+            </span>
           </Option>
         </SelectBox>
         <TextField name="domain" autoFocus={isModify} />
@@ -134,9 +149,19 @@ export default observer(() => {
       {map(pathListDs.data, (pathRecord) => (
         <Form record={pathRecord} columns={6} style={{ width: '115%' }} key={pathRecord.id}>
           <TextField name="path" colSpan={2} disabled={!record.get('domain')} />
-          <Select name="serviceId" searchable colSpan={2} optionRenderer={serviceOptionRender} renderer={serviceRender} />
+          <Select
+            name="serviceId"
+            searchable
+            colSpan={2}
+            optionRenderer={serviceOptionRender}
+            renderer={serviceRender}
+          />
           <Select name="servicePort">
-            {map(pathRecord.get('ports'), ({ port }) => <Option value={port} key={port}>{port}</Option>)}
+            {map(pathRecord.get('ports'), ({ port }) => (
+              <Option value={port} key={port}>
+                {port}
+              </Option>
+            ))}
           </Select>
           {pathListDs.length > 1 ? (
             <Button
@@ -145,7 +170,9 @@ export default observer(() => {
               className="c7ncd-form-record-delete-btn"
               onClick={() => handleRemovePath(pathRecord)}
             />
-          ) : <span />}
+          ) : (
+            <span />
+          )}
         </Form>
       ))}
       <Button
@@ -156,9 +183,7 @@ export default observer(() => {
       >
         {formatMessage({ id: 'domain.path.add' })}
       </Button>
-      <div className={`${prefixCls}-domain-form-annotation-title`}>
-        Annotations
-      </div>
+      <div className={`${prefixCls}-domain-form-annotation-title`}>Annotations</div>
       {map(annotationDs.data, (annotationRecord) => (
         <Form
           columns={14}
@@ -182,7 +207,9 @@ export default observer(() => {
               onClick={() => handleRemoveAnnotation(annotationRecord)}
               className="c7ncd-form-record-delete-btn"
             />
-          ) : <span />}
+          ) : (
+            <span />
+          )}
         </Form>
       ))}
       <Button

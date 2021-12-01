@@ -5,6 +5,7 @@ import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
+import { useFormatMessage } from '@choerodon/master';
 import JSONbig from 'json-bigint';
 import { useCodeManagerStore } from '../../../stores';
 import getTablePostData from '../../../../../utils/getTablePostData';
@@ -23,6 +24,8 @@ export const StoreProvider = injectIntl(inject('AppState')(
       selectAppDs,
     } = useCodeManagerStore();
 
+    const format = useFormatMessage('c7ncd.codeManger');
+
     const {
       AppState: { currentMenuType: { id: projectId } },
       intl: { formatMessage },
@@ -33,7 +36,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
 
     const appServiceId = selectAppDs.current && selectAppDs.current.get('appServiceId');
     const tableDs = useMemo(() => new DataSet(TableDataset({
-      projectId, formatMessage, appServiceId,
+      projectId, formatMessage, appServiceId, format,
     })), []);
 
     useEffect(() => {

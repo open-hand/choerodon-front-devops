@@ -25,7 +25,7 @@ export default ({ formatMessage, intlPrefix, projectId, envId }) => ({
     { name: 'k8sKind', type: 'string', label: formatMessage({ id: `${intlPrefix}.resource.type` }) },
     { name: 'commandErrors', type: 'string' },
     { name: 'commandStatus', type: 'string' },
-    { name: 'lastUpdateDate', type: 'string', label: formatMessage({ id: 'updateDate' }) },
+    { name: 'lastUpdateDate', type: 'string', label: formatMessage({ id: 'boot.updateDate' }) },
   ],
   queryFields: [
     { name: 'name', type: 'string', label: formatMessage({ id: 'name' }) },

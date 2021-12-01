@@ -10,7 +10,7 @@ export default function ({ intlPrefix, record, prefixCls, formatMessage }) {
     <ul className={`${prefixCls}-detail-modal`}>
       <li className="detail-item">
         <span className="detail-item-text">
-          {formatMessage({ id: 'createDate' })}
+          {formatMessage({ id: 'boot.createDate' })}
         </span>
         <span>{
             (record 
@@ -28,7 +28,7 @@ export default function ({ intlPrefix, record, prefixCls, formatMessage }) {
       </li>
       <li className="detail-item">
         <span className="detail-item-text">
-          {formatMessage({ id: 'updateDate' })}
+          {formatMessage({ id: 'boot.updateDate' })}
         </span>
         <span>{(record 
             && record.get('lastUpdateDate')) || '-' }</span>

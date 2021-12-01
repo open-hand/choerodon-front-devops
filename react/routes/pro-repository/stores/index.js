@@ -1,8 +1,10 @@
-import React, { createContext, useContext, useEffect, useMemo } from 'react';
+import React, {
+  createContext, useContext, useEffect, useMemo,
+} from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
-import { Choerodon } from '@choerodon/master';
+import { Choerodon, useFormatCommon, useFormatMessage } from '@choerodon/master';
 import DetailDataSet from '../../repository/stores/DetailDataSet';
 import useStore from './useStore';
 
@@ -16,13 +18,17 @@ export const StoreProvider = injectIntl(inject('AppState')(
   (props) => {
     const {
       AppState: { currentMenuType: { id } },
-      intl: { formatMessage },
       children,
     } = props;
     const intlPrefix = 'c7ncd.repository';
+
+    const formatRepository = useFormatMessage(intlPrefix);
+    const formatCommon = useFormatCommon();
+
     const url = useMemo(() => `/devops/v1/projects/${id}/project_config`, [id]);
 
-    const detailDs = useMemo(() => new DataSet(DetailDataSet(intlPrefix, formatMessage, url)), [intlPrefix, formatMessage, url]);
+    // eslint-disable-next-line max-len
+    const detailDs = useMemo(() => new DataSet(DetailDataSet(formatRepository, formatCommon, url)), [url]);
 
     const repositoryStore = useStore();
 
@@ -31,7 +37,9 @@ export const StoreProvider = injectIntl(inject('AppState')(
       prefixCls: 'c7ncd-repository',
       permissions: ['choerodon.code.project.setting.setting-repository.ps.default'],
       intlPrefix,
-      promptMsg: formatMessage({ id: `${intlPrefix}.prompt.inform.title` }) + Choerodon.STRING_DEVIDER + formatMessage({ id: `${intlPrefix}.prompt.inform.message` }),
+      formatRepository,
+      formatCommon,
+      promptMsg: formatRepository({ id: 'prompt.inform.title' }) + Choerodon.STRING_DEVIDER + formatRepository({ id: 'prompt.inform.message' }),
       detailDs,
       repositoryStore,
     };

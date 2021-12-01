@@ -69,7 +69,7 @@ const CustomContent = observer(() => {
     const buttons = [
       {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.custome-resource.update'],
-        text: formatMessage({ id: 'edit' }),
+        text: formatMessage({ id: 'boot.edit' }),
         action: openShow,
       },
       {
@@ -95,7 +95,7 @@ const CustomContent = observer(() => {
         store={customStore}
         refresh={refresh}
       />,
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
     });
   }
 

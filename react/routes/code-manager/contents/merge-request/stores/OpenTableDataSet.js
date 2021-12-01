@@ -1,7 +1,7 @@
 import React from 'react';
 import Tips from '../../../../../components/new-tips';
 
-export default ((projectId, formatMessage, mergedRequestStore, appId, tabKey) => {
+export default ((projectId, formatMessage, mergedRequestStore, appId, tabKey, format) => {
   function changeCount(count) {
     mergedRequestStore.setCount(count);
   }
@@ -23,17 +23,18 @@ export default ((projectId, formatMessage, mergedRequestStore, appId, tabKey) =>
             const data = JSON.parse(response);
             if (data && data.failed) {
               return data;
-            } else {
-              const { closeCount, mergeCount, openCount, totalCount, auditCount, mergeRequestVOPageInfo } = data;
-              changeCount({
-                closeCount,
-                mergeCount,
-                openCount,
-                totalCount,
-                auditCount,
-              });
-              return mergeRequestVOPageInfo;
             }
+            const {
+              closeCount, mergeCount, openCount, totalCount, auditCount, mergeRequestVOPageInfo,
+            } = data;
+            changeCount({
+              closeCount,
+              mergeCount,
+              openCount,
+              totalCount,
+              auditCount,
+            });
+            return mergeRequestVOPageInfo;
           } catch (e) {
             return response;
           }
@@ -42,13 +43,13 @@ export default ((projectId, formatMessage, mergedRequestStore, appId, tabKey) =>
     },
     fields: [
       { name: 'title', type: 'string', label: formatMessage({ id: 'app.name' }) },
-      { name: 'iid', type: 'string', label: <Tips title={formatMessage({ id: 'app.code' })} helpText={formatMessage({ id: 'app.code.tip' })} /> },
+      { name: 'iid', type: 'string', label: <Tips title={format({ id: 'ID' })} helpText={formatMessage({ id: 'app.code.tip' })} /> },
       { name: 'state', type: 'string', label: formatMessage({ id: 'merge.state' }) },
       { name: 'targetBranch', type: 'string', label: <Tips title={formatMessage({ id: 'app.branch' })} helpText={formatMessage({ id: 'app.branch.tip' })} /> },
-      { name: 'createdAt', type: 'string', label: <Tips title={formatMessage({ id: 'create' })} helpText={formatMessage({ id: 'create.tip' })} /> },
-      { name: 'commits', type: 'string', label: <Tips title={formatMessage({ id: 'merge.commit' })} helpText={formatMessage({ id: 'merge.commit.tip' })} /> },
-      { name: 'updatedAt', type: 'string', label: formatMessage({ id: 'merge.upDate' }) },
-      { name: 'assignee', type: 'string', label: formatMessage({ id: 'merge.assignee' }) },
+      { name: 'createdAt', type: 'string', label: <Tips title={formatMessage({ id: 'boot.create' })} helpText={formatMessage({ id: 'create.tip' })} /> },
+      { name: 'commits', type: 'string', label: <Tips title={format({ id: 'Commits' })} helpText={formatMessage({ id: 'merge.commit.tip' })} /> },
+      { name: 'updatedAt', type: 'string', label: format({ id: 'UpdateTime' }) },
+      { name: 'assignee', type: 'string', label: format({ id: 'Assignee' }) },
     ],
   };
 });

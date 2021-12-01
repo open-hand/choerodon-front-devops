@@ -25,34 +25,33 @@ export default observer(() => {
       currentMenuType: { organizationId },
     },
     cRef,
-    // configurationCenterDataSet,
-    // configCompareOptsDS,
+    configurationCenterDataSet,
+    configCompareOptsDS,
   } = useHostOtherProductStore();
 
   // TODO: 其他制品-新建
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
-    //   const configCenterFlag = await configurationCenterDataSet.validate();
-    // && configCenterFlag
+      const configCenterFlag = await configurationCenterDataSet.validate();
       if (
         valueCheckValidate(
           HostOtherProductDataSet.current.get(mapping.value.name),
           HostOtherProductDataSet.current.get(mapping.startCommand.name),
           HostOtherProductDataSet.current.get(mapping.postCommand.name),
-        )
+        ) && configCenterFlag
       ) {
-        // const configData = map(configurationCenterDataSet.toData(), (o:any) => ({
-        //   configId: o.configId,
-        //   mountPath: o.mountPath,
-        //   configGroup: o.configGroup,
-        //   configCode: o.configCode,
-        // }));
+        const configData = map(configurationCenterDataSet.toData(), (o:any) => ({
+          configId: configCompareOptsDS.find((i) => i.get('versionName') === o.versionName)?.get('configId'),
+          mountPath: o.mountPath,
+          configGroup: o.configGroup,
+          configCode: o.configCode,
+        }));
         const flag = await HostOtherProductDataSet.validate();
         if (flag) {
           const data = HostOtherProductDataSet.current.toData();
           const res = {
             ...data,
-            // configSettingVOS: configData,
+            configSettingVOS: configData,
             fileInfoVO: {
               [mapping.fileName.name as string]: data[mapping.fileName.name as string],
               [mapping.uploadUrl.name as string]: data[mapping.uploadUrl.name as string],
@@ -168,8 +167,8 @@ export default observer(() => {
           marginTop: 30,
         }}
         dataSet={HostOtherProductDataSet}
-        // configDataSet={configurationCenterDataSet}
-        // optsDS={configCompareOptsDS}
+        configDataSet={configurationCenterDataSet}
+        optsDS={configCompareOptsDS}
         preName={mapping.value.name as string}
         startName={mapping.startCommand.name as string}
         postName={mapping.postCommand.name as string}

@@ -1,0 +1,71 @@
+@prefixCls: ~"c7ncd-pipeline-stage";
+
+@boxShadaw: 0px 2px 6px 0px rgba(65, 91, 201, 0.12);
+
+.@{prefixCls} {
+  position: relative;
+  height: fit-content;
+  &-btnGroups {
+    position: absolute;
+    right: 11px;
+    top: 0;
+    > i.icon {
+      font-size: 17px;
+      transition: 0.2s;
+      border-radius: 50%;
+    }
+    &-delete {
+      opacity: 0;
+      color: var(--primary-color);
+      &:hover {
+        box-shadow: @boxShadaw;
+      }
+    }
+  }
+  &-stageType {
+    width: 40px;
+    background: #f0f8ff;
+    border-radius: 2px 0px 0px 2px;
+    border: 1px solid #d5edff;
+    font-size: 13px;
+    font-weight: 400;
+    color: #4d90fe;
+  }
+  &-stageName {
+    flex: 1;
+    background: #fff;
+    border-style: solid;
+    border-color: rgba(65, 91, 201, 0.24);
+    border-width: 1px 1px 1px 0;
+    border-radius: 0 2px 2px 0;
+  }
+  > main {
+    margin-top: 72px;
+  }
+  > footer {
+    position: relative;
+  }
+  > header {
+    width: 200px;
+    margin: 0 auto;
+    display: flex;
+    height: 40px;
+    border-radius: 2px;
+    cursor: pointer;
+    z-index: 2;
+    position: absolute;
+    transition: 0.2s;
+    &:hover {
+      box-shadow: @boxShadaw;
+      .@{prefixCls}-btnGroups {
+        &-delete {
+          opacity: 1;
+        }
+      }
+    }
+    > div {
+      line-height: 40px;
+      text-align: center;
+    }
+  }
+}

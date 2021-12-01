@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { Alert, Tabs } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import YamlEditor from '@/components/yamlEditor';
-// import ConfigurationTab from '@/components/configuration-center/ConfigurationTab';
+import ConfigurationTab from '@/components/configuration-center/ConfigurationTab';
 
 const { TabPane } = Tabs;
 
@@ -93,10 +93,10 @@ const Index = observer(({
         message="【前置命令】、【启动命令】、【后置命令】三者之中，必须至少填写一个"
       />
       <Tabs onChange={(value) => setActiveKey(value)} activeKey={activeKey}>
-        {/* <TabPane
+        <TabPane
           tab={(
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              配置中心
+              配置文件
               <Tooltip
                 title="可在此添加配置中心中维护好的配置文件。发布后的配置文件可以及时更新到主机的挂载路径下，并执行配置文件中维护的命令。可以动态的管理配置文件使之生效。"
                 placement="bottom"
@@ -113,12 +113,12 @@ const Index = observer(({
             configurationCenterDataSet={configDataSet}
             configCompareOptsDS={optsDS}
           />
-        </TabPane> */}
+        </TabPane>
         <TabPane tab="前置操作" key="1" />
         <TabPane tab="启动命令" key="2" />
         <TabPane tab="后置操作" key="3" />
       </Tabs>
-      {/* {activeKey !== 'configurationCenter' && ( */}
+      {activeKey !== 'configurationCenter' && (
       <YamlEditor
         readOnly={false}
         value={getValue('value')}
@@ -127,7 +127,7 @@ const Index = observer(({
                         dataSet?.current?.set(getValue('valueChange'), value);
         }}
       />
-      {/* )} */}
+      )}
     </div>
   );
 });

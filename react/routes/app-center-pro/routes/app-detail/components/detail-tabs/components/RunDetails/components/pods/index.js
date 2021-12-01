@@ -24,10 +24,7 @@ export default class Pods extends PureComponent {
    */
   operatePodCount = debounce((count) => {
     const {
-      store,
-      name,
-      refresh,
-      podType,
+      store, name, refresh, podType,
     } = this.props;
 
     const KIND_TYPE = {
@@ -35,7 +32,8 @@ export default class Pods extends PureComponent {
       daemonSetVOS: 'DaemonSet',
       statefulSetVOS: 'StatefulSet',
     };
-    store.operatePodCount(name, count, KIND_TYPE[podType])
+    store
+      .operatePodCount(name, count, KIND_TYPE[podType])
       .then(() => {
         refresh();
       })
@@ -76,9 +74,7 @@ export default class Pods extends PureComponent {
       this.changeTextDisplay();
       this.setState({ btnDisable });
       this.operatePodCount(count);
-      handleChangeCount(
-        assign({}, targetCount, { [`${name}-${podType}`]: count }),
-      );
+      handleChangeCount(assign({}, targetCount, { [`${name}-${podType}`]: count }));
     }
   };
 
@@ -103,9 +99,7 @@ export default class Pods extends PureComponent {
 
     this.setState({ btnDisable });
     this.operatePodCount(count);
-    handleChangeCount(
-      assign({}, targetCount, { [`${name}-${podType}`]: count }),
-    );
+    handleChangeCount(assign({}, targetCount, { [`${name}-${podType}`]: count }));
   };
 
   /**
@@ -113,7 +107,9 @@ export default class Pods extends PureComponent {
    * @readonly
    */
   get renderCircle() {
-    const { count: { sum, correct, correctCount } } = this.props;
+    const {
+      count: { sum, correct, correctCount },
+    } = this.props;
     return (
       <svg width="70" height="70">
         <circle
@@ -157,30 +153,37 @@ export default class Pods extends PureComponent {
 
     // 实际pod数和目标数不同
     // 修改过pod数
-    const show = textDisplay
-      && sum !== currentPodTargetCount
-      && connect;
-    const descIsEnable = instanceStatus === 'stopped' || !connect
-      || currentPodTargetCount <= 1;
+    const show = textDisplay && sum !== currentPodTargetCount && connect;
+    const descIsEnable = instanceStatus === 'stopped' || !connect || currentPodTargetCount <= 1;
 
     const increaseDisabled = !(connect && instanceStatus !== 'stopped');
     return (
       <div className="c7ncd-pod">
         <div className="c7ncd-pod-wrap">
-          <div className="c7ncd-pod-content">
-            {this.renderCircle}
-          </div>
+          <div className="c7ncd-pod-content">{this.renderCircle}</div>
           {podType === 'deploymentVOS' && (
             <div className="c7ncd-pod-content c7ncd-pod-btn-wrap">
-              <div role="none" className={`c7ncd-pod-btn ${increaseDisabled ? 'c7ncd-pod-btn-disabled' : ''}`} onClick={!increaseDisabled ? this.handleIncrease : () => {}}>
+              <div
+                role="none"
+                className={`c7ncd-pod-btn ${increaseDisabled ? 'c7ncd-pod-btn-disabled' : ''}`}
+                onClick={!increaseDisabled ? this.handleIncrease : () => {}}
+              >
                 <Icon type="expand_less" />
               </div>
 
               <Tooltip
-                title={instanceStatus !== 'stopped' && connect && currentPodTargetCount === 1 ? formatMessage({ id: 'c7ncd.deployment.pod.disabled.tops' }) : ''}
+                title={
+                  instanceStatus !== 'stopped' && connect && currentPodTargetCount === 1
+                    ? formatMessage({ id: 'c7ncd.deployment.pod.disabled.tops' })
+                    : ''
+                }
                 placement="bottom"
               >
-                <div role="none" className={`c7ncd-pod-btn ${descIsEnable ? 'c7ncd-pod-btn-disabled' : ''}`} onClick={!descIsEnable ? this.handleDecrease : () => {}}>
+                <div
+                  role="none"
+                  className={`c7ncd-pod-btn ${descIsEnable ? 'c7ncd-pod-btn-disabled' : ''}`}
+                  onClick={!descIsEnable ? this.handleDecrease : () => {}}
+                >
                   <Icon type="expand_more" />
                 </div>
               </Tooltip>
@@ -190,9 +193,7 @@ export default class Pods extends PureComponent {
         {show ? (
           <div className="c7ncd-pod-count">
             <FormattedMessage id="ist.expand.count" />
-            <span className="c7ncd-pod-count-value">
-              {currentPodTargetCount}
-            </span>
+            <span className="c7ncd-pod-count-value">{currentPodTargetCount}</span>
           </div>
         ) : null}
       </div>

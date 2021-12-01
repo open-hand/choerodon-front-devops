@@ -1,5 +1,5 @@
+import { organizationsApiConfig } from '@choerodon/master';
 import { DataSetProps, DataSetSelection } from '@/interface';
-import CodeManagerApis from '@/routes/code-manager/apis';
 
 interface OptionProps {
   organizationId: string,
@@ -14,7 +14,7 @@ export default ({ organizationId, userId, projectId }: OptionProps): DataSetProp
   pageSize: 15,
   transport: {
     read: {
-      url: CodeManagerApis.loadProjectData(organizationId, userId, projectId),
+      url: organizationsApiConfig.loadProjectData(userId, projectId).url,
       method: 'get',
     },
   },

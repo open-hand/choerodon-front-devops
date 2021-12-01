@@ -150,7 +150,7 @@ function DetailItem({
             record={record}
             store={envStore}
           />,
-          okText: formatMessage({ id: 'save' }),
+          okText: formatMessage({ id: 'boot.save' }),
         });
       } else {
         modifyModal.update({

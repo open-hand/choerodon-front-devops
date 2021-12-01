@@ -79,7 +79,7 @@ export default ({
       },
       {
         name: 'appName',
-        label: formatMessage({ id: 'appName' }),
+        label: formatMessage({ id: 'boot.appName' }),
         validator: checkName,
         required: true,
         maxLength: 60,
