@@ -161,8 +161,7 @@ const Index = observer(() => {
           HostAppConfigDataSet.current.get(mapping.startCommand.name),
           HostAppConfigDataSet.current.get(mapping.postCommand.name)
       );
-      const configFlag = await configurationCenterDataSet.validate();
-    // && configFlag
+      const configFlag = await deployConfigDataSet.validate();
       if (flag && configFlag) {
         return await finalFunc();
       }

@@ -10,7 +10,7 @@ import { every } from 'lodash';
 import styles from './index.less';
 
 export const queryConfigCodeOptions = (configCompareOptsDS, configurationCenterDataSet) => {
-  configurationCenterDataSet.forEach(async (o, index) => {
+  configurationCenterDataSet.forEach(async (o) => {
     configCompareOptsDS.setQueryParameter('configGroup', o.get('configGroup'));
     await configCompareOptsDS.query();
     configurationCenterDataSet.getField('versionName').set('options', configCompareOptsDS);
@@ -18,7 +18,7 @@ export const queryConfigCodeOptions = (configCompareOptsDS, configurationCenterD
       const { value: optValue } = configCompareOptsDS.get(0).toData();
       o.set('versionName', optValue);
     } else {
-      configurationCenterDataSet.current.init('configCode', '');
+      o.init('configCode', '');
     }
   });
 };
@@ -33,9 +33,13 @@ const Content = observer((props) => {
     return text;
   };
 
-  const handleGroupChange = () => {
-    configurationCenterDataSet.current?.set('versionName', '');
-    configurationCenterDataSet.current?.set('configCode', '');
+  const handleGroupChange = (value, record) => {
+    if (!value) {
+      record?.set('configGroup', null);
+    }
+    record?.set('versionName', null);
+    record?.set('configCode', null);
+    record.validate('all', true);
   };
 
   // 新建配置文件
@@ -63,28 +67,26 @@ const Content = observer((props) => {
   };
 
   // 联动显示配置版本
-  const queryVersionOptions = async (currentValue) => {
-    configCompareOptsDS.setQueryParameter(
-      'configGroup',
-      configurationCenterDataSet.current?.get('configGroup'),
-    );
+  const queryVersionOptions = async (record) => {
+    configCompareOptsDS.setQueryParameter('configGroup', record?.get('configGroup'));
     await configCompareOptsDS.query();
     configurationCenterDataSet.getField('versionName').set('options', configCompareOptsDS);
     if (configCompareOptsDS.length > 0) {
       const { value: optValue } = configCompareOptsDS.get(0).toData();
-      configurationCenterDataSet.current.set('versionName', optValue);
+      record.set('versionName', optValue);
     } else {
-      configurationCenterDataSet.current.init('configCode', '');
+      record.init('configCode', null);
     }
   };
 
-  const handleChangeCode = async (currentValue) => {
-    if (currentValue) {
-      queryVersionOptions();
+  const handleChangeCode = async (value, record) => {
+    if (value) {
+      queryVersionOptions(record);
     } else {
-      configurationCenterDataSet.current.init('configCode', '');
-      configurationCenterDataSet.current?.set('versionName', '');
+      record?.init('configCode', null);
+      record?.set('versionName', null);
     }
+    record.validate('all', true);
   };
 
   const handleDelete = (record) => {
@@ -96,13 +98,30 @@ const Content = observer((props) => {
       {[
         configurationCenterDataSet.map((record) => (
           <Form record={record} columns={9} key={record.id}>
-            <TextField name="mountPath" label="挂载路径" colSpan={2} />
-            <Select name="configGroup" label="配置分组" onChange={handleGroupChange} colSpan={2} />
+            <TextField
+              name="mountPath"
+              label="挂载路径"
+              colSpan={2}
+              onChange={() => {
+                record.validate('all', true);
+              }}
+            />
+            <Select
+              name="configGroup"
+              label="配置分组"
+              noCache
+              onChange={(value) => {
+                handleGroupChange(value, record);
+              }}
+              colSpan={2}
+            />
             <Select
               name="configCode"
               label="配置文件"
               noCache
-              onChange={handleChangeCode}
+              onChange={(value) => {
+                handleChangeCode(value, record);
+              }}
               optionRenderer={optionRenderer}
               colSpan={2}
             />

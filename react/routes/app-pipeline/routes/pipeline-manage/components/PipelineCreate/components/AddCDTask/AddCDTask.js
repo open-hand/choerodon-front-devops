@@ -461,7 +461,7 @@ export default observer(() => {
   const handleAdd = async () => {
     let deployChartData;
     const result = await ADDCDTaskDataSet.current.validate(true);
-    const configResult = await configurationCenterDataSet.validate();
+    const configResult = await deployConfigUpDateDataSet.validate();
     const configData = deployConfigUpDateDataSet.map((o) => {
       return {
         configId: configCompareOptsDS.find((i) => i.get('versionName') === o.get('versionName'))?.get('configId'),
