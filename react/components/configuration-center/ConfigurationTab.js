@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // @ts-nocheck
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Form, TextField, Button, Tooltip, Select,
 } from 'choerodon-ui/pro';
@@ -10,15 +10,15 @@ import { every } from 'lodash';
 import styles from './index.less';
 
 export const queryConfigCodeOptions = (configCompareOptsDS, configurationCenterDataSet) => {
-  configurationCenterDataSet.forEach(async (o) => {
-    configCompareOptsDS.setQueryParameter('configGroup', o.get('configGroup'));
+  configurationCenterDataSet.forEach(async (record) => {
+    configCompareOptsDS.setQueryParameter('configGroup', record.get('configGroup'));
     await configCompareOptsDS.query();
     configurationCenterDataSet.getField('versionName').set('options', configCompareOptsDS);
     if (configCompareOptsDS.length > 0) {
       const { value: optValue } = configCompareOptsDS.get(0).toData();
-      o.set('versionName', optValue);
+      record.set('versionName', optValue);
     } else {
-      o.init('configCode', '');
+      record.init('configCode', '');
     }
   });
 };
@@ -31,15 +31,6 @@ const Content = observer((props) => {
   const optionRenderer = ({ text, value }) => {
     configNameMap.set(value, text);
     return text;
-  };
-
-  const handleGroupChange = (value, record) => {
-    if (!value) {
-      record?.set('configGroup', null);
-    }
-    record?.set('versionName', null);
-    record?.set('configCode', null);
-    record.validate('all', true);
   };
 
   // 新建配置文件
@@ -66,29 +57,6 @@ const Content = observer((props) => {
     }
   };
 
-  // 联动显示配置版本
-  const queryVersionOptions = async (record) => {
-    configCompareOptsDS.setQueryParameter('configGroup', record?.get('configGroup'));
-    await configCompareOptsDS.query();
-    configurationCenterDataSet.getField('versionName').set('options', configCompareOptsDS);
-    if (configCompareOptsDS.length > 0) {
-      const { value: optValue } = configCompareOptsDS.get(0).toData();
-      record.set('versionName', optValue);
-    } else {
-      record.init('configCode', null);
-    }
-  };
-
-  const handleChangeCode = async (value, record) => {
-    if (value) {
-      queryVersionOptions(record);
-    } else {
-      record?.init('configCode', null);
-      record?.set('versionName', null);
-    }
-    record.validate('all', true);
-  };
-
   const handleDelete = (record) => {
     configurationCenterDataSet.delete(record, false);
   };
@@ -98,30 +66,12 @@ const Content = observer((props) => {
       {[
         configurationCenterDataSet.map((record) => (
           <Form record={record} columns={9} key={record.id}>
-            <TextField
-              name="mountPath"
-              label="挂载路径"
-              colSpan={2}
-              onChange={() => {
-                record.validate('all', true);
-              }}
-            />
-            <Select
-              name="configGroup"
-              label="配置分组"
-              noCache
-              onChange={(value) => {
-                handleGroupChange(value, record);
-              }}
-              colSpan={2}
-            />
+            <TextField name="mountPath" label="挂载路径" colSpan={2} />
+            <Select name="configGroup" label="配置分组" noCache colSpan={2} />
             <Select
               name="configCode"
               label="配置文件"
               noCache
-              onChange={(value) => {
-                handleChangeCode(value, record);
-              }}
               optionRenderer={optionRenderer}
               colSpan={2}
             />
