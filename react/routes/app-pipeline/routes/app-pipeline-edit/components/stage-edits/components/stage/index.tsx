@@ -2,16 +2,19 @@ import React, {
   useEffect, FC,
 } from 'react';
 import { observer } from 'mobx-react-lite';
-import { useFormatCommon, useFormatMessage } from '@choerodon/master';
+import { useFormatCommon } from '@choerodon/master';
 import map from 'lodash/map';
 import {} from '@choerodon/components';
+import { Icon } from 'choerodon-ui/pro';
 
 import './index.less';
+
 import JobItem from '../job-item';
 import JobAddBtn from '../job-btn';
+import { STAGE_TYPES } from '../../../../interface';
 
 export type StageProps = {
-  type: 'CI' | 'CD'
+  type: STAGE_TYPES
   name: string
   jobList: any[]
 } & Record<string, any>
@@ -35,6 +38,9 @@ const Stage:FC<StageProps> = (props) => {
       <header>
         <div className={`${prefixCls}-stageType`}>{stageType}</div>
         <div className={`${prefixCls}-stageName`}>{stageName}</div>
+        <div className={`${prefixCls}-btnGroups`}>
+          <Icon type="delete_black-o" className={`${prefixCls}-btnGroups-delete`} />
+        </div>
       </header>
       <main>
         {renderJobs()}

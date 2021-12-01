@@ -7,12 +7,12 @@ import { Icon, Tooltip } from 'choerodon-ui/pro';
 import { get } from 'lodash';
 // import SerialLines from './components/serial-lines';
 import ParalleLines from '../paralle-lines';
-import { JOB_GROUP_TYPE } from '../../../../stores/CONSTANTS';
+import { JOB_GROUP_TYPES } from '../../../../stores/CONSTANTS';
 
 import './index.less';
 
 export type JobProps = {
-  groupType: keyof typeof JOB_GROUP_TYPE // job的分组类型
+  groupType: keyof typeof JOB_GROUP_TYPES // job的分组类型
   id:string
   name:string
 } & Record<string, any>
@@ -27,7 +27,7 @@ const JobItem:FC<JobProps> = (props) => {
     groupType,
   } = props;
 
-  const currentJobGroupType = JOB_GROUP_TYPE[groupType];
+  const currentJobGroupType = JOB_GROUP_TYPES[groupType];
 
   const formatCommon = useFormatCommon();
   // const formatJob = useFormatMessage(intlPrefix);

@@ -20,6 +20,7 @@ import {
 import { TabkeyTypes } from './interface';
 import PipelineBasicInfo from './components/pipeline-basic-info';
 import StagesEdits from './components/stage-edits';
+import CiVariasConfigs from './components/ci-varias-configs';
 
 const { TabPane } = Tabs;
 
@@ -55,7 +56,7 @@ const AppPipelineEdit = () => {
   const tabsCompoents = {
     [TAB_BASIC]: <PipelineBasicInfo savedHandler={savedHandler} />,
     [TAB_FLOW_CONFIG]: <StagesEdits savedHandler={savedHandler} />,
-    [TAB_CI_CONFIG]: () => <>121</>,
+    [TAB_CI_CONFIG]: <CiVariasConfigs />,
     [TAB_ADVANCE_SETTINGS]: () => <>fgf</>,
   };
 
