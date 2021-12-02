@@ -1,6 +1,9 @@
-import React, { createContext, useContext, useMemo, useEffect } from 'react';
+import React, {
+  createContext, useContext, useMemo, useEffect,
+} from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { inject } from 'mobx-react';
+import { useFormatMessage } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
 import SecretTableDataSet from './SecretTableDataSet';
@@ -14,7 +17,6 @@ export function useKeyValueStore() {
   return useContext(Store);
 }
 
-
 export const StoreProvider = injectIntl(inject('AppState')(
   observer((props) => {
     const { AppState: { currentMenuType: { id } }, children } = props;
@@ -24,7 +26,9 @@ export const StoreProvider = injectIntl(inject('AppState')(
       itemTypes: { CIPHER_GROUP },
     } = useResourceStore();
 
-    const SecretTableDs = useMemo(() => new DataSet(SecretTableDataSet({ formatMessage })), []);
+    const format = useFormatMessage('c7ncd.resource');
+
+    const SecretTableDs = useMemo(() => new DataSet(SecretTableDataSet({ formatMessage, format })), []);
     const formStore = useSecretStore();
 
     useEffect(() => {
@@ -71,5 +75,5 @@ export const StoreProvider = injectIntl(inject('AppState')(
         {children}
       </Store.Provider>
     );
-  })
+  }),
 ));

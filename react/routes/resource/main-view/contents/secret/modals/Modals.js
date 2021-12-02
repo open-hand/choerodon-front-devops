@@ -1,7 +1,13 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
-import { HeaderButtons } from '@choerodon/master';
+import { HeaderButtons, useFormatMessage } from '@choerodon/master';
 import KeyValueModal from '@/components/key-value';
 import { useResourceStore } from '../../../../stores';
 import { useModalStore } from './stores';
@@ -24,6 +30,9 @@ const KeyValueModals = observer(() => {
     formStore,
     SecretTableDs,
   } = useKeyValueStore();
+
+  const format = useFormatMessage('c7ncd.resource');
+
   const {
     permissions,
     AppState: { currentMenuType: { projectId } },
@@ -58,7 +67,7 @@ const KeyValueModals = observer(() => {
 
     return ([{
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.cipher'],
-      name: formatMessage({ id: `${intlPrefix}.create.cipher` }),
+      name: format({ id: 'CreateSecret' }),
       icon: 'playlist_add',
       handler: openModal,
       display: true,

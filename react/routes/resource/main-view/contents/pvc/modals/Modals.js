@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 import React, { Fragment } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
@@ -56,7 +62,7 @@ const PVCModals = observer(() => {
 
     return ([{
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.create-pvc'],
-      name: formatMessage({ id: `${intlPrefix}.create.pvc` }),
+      name: formatMessage({ id: 'c7ncd.resource.CreatePVC' }),
       icon: 'playlist_add',
       handler: openModal,
       display: true,

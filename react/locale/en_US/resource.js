@@ -100,6 +100,22 @@ const resource = {
   'c7ncd.resource.CertificateName': 'Certificate Name',
   'c7ncd.resource.DomainAddresses': 'Domain Addresses',
   'c7ncd.resource.ValidPeriod': 'Valid Period',
+  'c7ncd.resource.ConfigMap': 'ConfigMap',
+  'c7ncd.resource.configMaps': 'ConfigMap',
+  'c7ncd.resource.CreateConfigMap': 'Create ConfigMap',
+  'c7ncd.resource.KeyAndValue': 'Key And Value',
+  'c7ncd.resource.secrets': 'Secret',
+  'c7ncd.resource.CreateSecret': 'Create Secret',
+  'c7ncd.resource.customResources': 'Custom Resource',
+  'c7ncd.resource.CreateCustomResource': 'Create Custom Resource',
+  'c7ncd.resource.ResourceType': 'Resource Type',
+  'c7ncd.resource.pvcs': 'PVC',
+  'c7ncd.resource.CreatePVC': 'Create PVC',
+  'c7ncd.resource.pvcName': 'Name',
+  'c7ncd.resource.BoundPV': 'Bound PV',
+  'c7ncd.resource.PVType': 'PV Type',
+  'c7ncd.resource.AccessMode': 'Access Mode',
+  'c7ncd.resource.Total': 'Total',
 
 };
 export {

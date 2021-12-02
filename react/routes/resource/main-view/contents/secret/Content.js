@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
-import { Action } from '@choerodon/master';
+import { Action, useFormatMessage } from '@choerodon/master';
 import { Modal, Table } from 'choerodon-ui/pro';
 import { keys } from 'lodash';
 import KeyValueModal from '@/components/key-value';
@@ -29,6 +29,9 @@ const ConfigMap = observer((props) => {
     resourceStore: { getSelectedMenu: { parentId } },
     treeDs,
   } = useResourceStore();
+
+  const format = useFormatMessage('c7ncd.resource');
+
   const {
     intl: { formatMessage },
     permissions,
@@ -37,18 +40,18 @@ const ConfigMap = observer((props) => {
   } = useKeyValueStore();
   const { deletionStore: { openDeleteModal } } = useMainStore();
 
-  function refresh () {
+  function refresh() {
     treeDs.query();
     SecretTableDs.query();
   }
 
-  function getEnvIsNotRunning () {
+  function getEnvIsNotRunning() {
     const envRecord = treeDs.find((record) => record.get('key') === parentId);
     const connect = envRecord.get('connect');
     return !connect;
   }
 
-  function renderName ({ value, record }) {
+  function renderName({ value, record }) {
     const commandStatus = record.get('commandStatus');
     const disabled = getEnvIsNotRunning() || commandStatus === 'operating';
     const error = record.get('error');
@@ -65,7 +68,7 @@ const ConfigMap = observer((props) => {
     );
   }
 
-  function renderValue ({ value = [] }) {
+  function renderValue({ value = [] }) {
     const keyArr = keys(value);
     return (
       <MouserOverWrapper width={0.5}>
@@ -74,11 +77,11 @@ const ConfigMap = observer((props) => {
     );
   }
 
-  function renderDate ({ value }) {
+  function renderDate({ value }) {
     return <TimePopover content={value} />;
   }
 
-  function renderAction ({ record }) {
+  function renderAction({ record }) {
     const commandStatus = record.get('commandStatus');
     const disabled = getEnvIsNotRunning() || commandStatus === 'operating';
     if (disabled) {
@@ -96,14 +99,14 @@ const ConfigMap = observer((props) => {
         service: permissions.delete,
         text: formatMessage({ id: 'delete' }),
         action: () => openDeleteModal({
-          envId: parentId, instanceId: id, instanceName: name, type: 'secret', callback: refresh
+          envId: parentId, instanceId: id, instanceName: name, type: 'secret', callback: refresh,
         }),
       },
     ];
     return <Action data={buttons} />;
   }
 
-  function openModal () {
+  function openModal() {
     Modal.open({
       key: modalKey,
       style: modalStyle,
@@ -129,7 +132,7 @@ const ConfigMap = observer((props) => {
         border={false}
         queryBar="bar"
       >
-        <Column name="name" sortable header={formatMessage({ id: `${intlPrefix}.cipher` })} renderer={renderName} />
+        <Column name="name" sortable header={format({ id: 'secrets' })} renderer={renderName} />
         <Column renderer={renderAction} width={60} />
         <Column name="value" renderer={renderValue} header={formatMessage({ id: 'key' })} />
         <Column name="lastUpdateDate" sortable renderer={renderDate} width={105} />

@@ -1,6 +1,13 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
+import { useFormatMessage } from '@choerodon/master';
 import map from 'lodash/map';
 import { Spin } from 'choerodon-ui';
 import { useResourceStore } from '../../../stores';
@@ -13,6 +20,8 @@ import './index.less';
 const Content = observer(() => {
   const { prefixCls, intlPrefix } = useResourceStore();
   const { detailDs } = useConfigDetailStore();
+
+  const format = useFormatMessage('c7ncd.resource');
 
   function getContent() {
     const record = detailDs.current;
@@ -36,7 +45,7 @@ const Content = observer(() => {
         statusKey="commandStatus"
       />
       <div className={`${prefixCls}-detail-content-section-title`}>
-        <FormattedMessage id={`${intlPrefix}.key.value`} />
+        {format({ id: 'KeyAndValue' })}
       </div>
       <Spin spinning={detailDs.status === 'loading'}>
         {getContent()}

@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
@@ -59,7 +65,7 @@ const CustomModals = observer(() => {
 
     return ([{
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.customize-resource'],
-      name: formatMessage({ id: `${intlPrefix}.create.custom` }),
+      name: formatMessage({ id: 'c7ncd.resource.CreateCustomResource' }),
       icon: 'playlist_add',
       handler: openModal,
       display: true,
