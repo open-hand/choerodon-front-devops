@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // @ts-nocheck
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Form, TextField, Button, Tooltip, Select,
 } from 'choerodon-ui/pro';
@@ -10,15 +10,15 @@ import { every } from 'lodash';
 import styles from './index.less';
 
 export const queryConfigCodeOptions = (configCompareOptsDS, configurationCenterDataSet) => {
-  configurationCenterDataSet.forEach(async (o, index) => {
-    configCompareOptsDS.setQueryParameter('configGroup', o.get('configGroup'));
+  configurationCenterDataSet.forEach(async (record) => {
+    configCompareOptsDS.setQueryParameter('configGroup', record.get('configGroup'));
     await configCompareOptsDS.query();
     configurationCenterDataSet.getField('versionName').set('options', configCompareOptsDS);
     if (configCompareOptsDS.length > 0) {
       const { value: optValue } = configCompareOptsDS.get(0).toData();
-      o.set('versionName', optValue);
+      record.set('versionName', optValue);
     } else {
-      configurationCenterDataSet.current.init('configCode', '');
+      record.init('configCode', '');
     }
   });
 };
@@ -31,11 +31,6 @@ const Content = observer((props) => {
   const optionRenderer = ({ text, value }) => {
     configNameMap.set(value, text);
     return text;
-  };
-
-  const handleGroupChange = () => {
-    configurationCenterDataSet.current?.set('versionName', '');
-    configurationCenterDataSet.current?.set('configCode', '');
   };
 
   // 新建配置文件
@@ -62,31 +57,6 @@ const Content = observer((props) => {
     }
   };
 
-  // 联动显示配置版本
-  const queryVersionOptions = async (currentValue) => {
-    configCompareOptsDS.setQueryParameter(
-      'configGroup',
-      configurationCenterDataSet.current?.get('configGroup'),
-    );
-    await configCompareOptsDS.query();
-    configurationCenterDataSet.getField('versionName').set('options', configCompareOptsDS);
-    if (configCompareOptsDS.length > 0) {
-      const { value: optValue } = configCompareOptsDS.get(0).toData();
-      configurationCenterDataSet.current.set('versionName', optValue);
-    } else {
-      configurationCenterDataSet.current.init('configCode', '');
-    }
-  };
-
-  const handleChangeCode = async (currentValue) => {
-    if (currentValue) {
-      queryVersionOptions();
-    } else {
-      configurationCenterDataSet.current.init('configCode', '');
-      configurationCenterDataSet.current?.set('versionName', '');
-    }
-  };
-
   const handleDelete = (record) => {
     configurationCenterDataSet.delete(record, false);
   };
@@ -97,12 +67,11 @@ const Content = observer((props) => {
         configurationCenterDataSet.map((record) => (
           <Form record={record} columns={9} key={record.id}>
             <TextField name="mountPath" label="挂载路径" colSpan={2} />
-            <Select name="configGroup" label="配置分组" onChange={handleGroupChange} colSpan={2} />
+            <Select name="configGroup" label="配置分组" noCache colSpan={2} />
             <Select
               name="configCode"
               label="配置文件"
               noCache
-              onChange={handleChangeCode}
               optionRenderer={optionRenderer}
               colSpan={2}
             />
