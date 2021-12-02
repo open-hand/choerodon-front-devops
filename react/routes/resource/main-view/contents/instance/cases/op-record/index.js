@@ -1,5 +1,9 @@
-import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
+/* eslint-disable */
+import React, {
+  useState, useMemo, useRef, useCallback, useEffect,
+} from 'react';
 import { FormattedMessage } from 'react-intl';
+import { useFormatMessage } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 import { Icon, Tooltip } from 'choerodon-ui';
 import map from 'lodash/map';
@@ -16,7 +20,9 @@ const ICON_TYPE_MAPPING = {
   success: 'check_circle',
 };
 
-const OpCard = ({ index, record, isActive, intlPrefix, prefixCls, formatMessage, onClick, effectCommandId }) => {
+const OpCard = ({
+  index, record, isActive, intlPrefix, prefixCls, formatMessage, onClick, effectCommandId,
+}) => {
   const podKeys = useMemo(() => (['type', 'createTime', 'status', 'loginName', 'realName', 'userImage', 'podEventVO']), []);
   const [
     type,
@@ -80,6 +86,8 @@ const OpRecord = observer(({ handleClick, active }) => {
   } = useInstanceStore();
   const [cardActive, setCardActive] = useState(null);
 
+  const format = useFormatMessage('c7ncd.resource');
+
   useEffect(() => {
     setCardActive(null);
   }, [id, parentId]);
@@ -102,17 +110,19 @@ const OpRecord = observer(({ handleClick, active }) => {
       <div ref={rowRef} className="cases-record-detail">
         {casesDs.map((record, index) => {
           const commandId = record.get('commandId');
-          return <OpCard
-            index={index}
-            key={commandId}
-            isActive={realActive === commandId}
-            formatMessage={formatMessage}
-            record={record}
-            prefixCls={prefixCls}
-            intlPrefix={intlPrefix}
-            onClick={handleRecordClick}
-            effectCommandId={baseDs.current && baseDs.current.get('effectCommandId')}
-          />;
+          return (
+            <OpCard
+              index={index}
+              key={commandId}
+              isActive={realActive === commandId}
+              formatMessage={formatMessage}
+              record={record}
+              prefixCls={prefixCls}
+              intlPrefix={intlPrefix}
+              onClick={handleRecordClick}
+              effectCommandId={baseDs.current && baseDs.current.get('effectCommandId')}
+            />
+          );
         })}
       </div>
     );
@@ -121,7 +131,7 @@ const OpRecord = observer(({ handleClick, active }) => {
   return (
     <div className={`${prefixCls}-cases-record`}>
       <span className="cases-record-title">
-        {formatMessage({ id: `${intlPrefix}.instance.cases.record` })}
+        {format({ id: 'OperationRecord' })}
       </span>
       {renderOperation()}
     </div>

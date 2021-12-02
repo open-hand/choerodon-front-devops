@@ -6,7 +6,7 @@ export default (seletDs) => ({
     defaultValue: 20,
   }, {
     name: 'appServiceId',
-    type: 'string',
+    type: 'object',
     label: '关联应用服务',
     required: true,
     textField: 'appServiceName',

@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
-import { HeaderButtons } from '@choerodon/master';
+import { HeaderButtons, useFormatMessage } from '@choerodon/master';
 import { useResourceStore } from '../../../../stores';
 import { useModalStore } from './stores';
 import { useNetworkDetailStore } from '../stores';
@@ -23,6 +23,9 @@ const ServiceModals = observer(() => {
   const {
     baseInfoDs,
   } = useNetworkDetailStore();
+
+  const format = useFormatMessage('c7ncd.resource');
+
   const {
     permissions,
     AppState: { currentMenuType: { projectId } },
@@ -51,7 +54,7 @@ const ServiceModals = observer(() => {
   }
 
   const buttons = useMemo(() => ([{
-    name: formatMessage({ id: `${intlPrefix}.net.detail` }),
+    name: format({ id: 'ServiceDetails' }),
     icon: 'find_in_page-o',
     handler: openDetail,
     display: true,

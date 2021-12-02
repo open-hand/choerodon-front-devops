@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React, { Fragment, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
+import { useFormatMessage } from "@choerodon/master";
 import { FormattedMessage } from 'react-intl';
 import {
   Tooltip, Icon, Progress, Modal,
@@ -31,6 +32,8 @@ const InstanceEvent = ({
 }) => {
   const [fullScreen, setFullScreen] = useState(false);
   let editorLog;
+
+  const format = useFormatMessage('c7ncd.resource');
 
   /**
    *  全屏查看日志
@@ -141,7 +144,9 @@ const InstanceEvent = ({
         </pre>
         {event && event.split('\n').length > 4 ? (
           <a onClick={handleClick}>
-            <FormattedMessage id={flag ? 'shrink' : 'expand'} />
+            {
+              format({ id: flag ? 'Fold' : 'Unfold' })
+            }
           </a>
         ) : null}
       </div>

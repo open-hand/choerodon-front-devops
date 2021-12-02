@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal } from 'choerodon-ui/pro';
+import { useFormatMessage } from '@choerodon/master';
 import { StoreProvider } from './stores';
 import Content from './Content';
 import { LARGE } from '@/utils/getModalWidth';
@@ -43,7 +44,7 @@ export const openHzeroDeploy = ({
   });
 };
 
-export const getHzeroDeployBtnConfig = ({
+export const GetHzeroDeployBtnConfig = ({
   refresh,
   hasMarket,
   syncStatus,

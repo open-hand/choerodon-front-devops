@@ -3,6 +3,7 @@ import React, {
   createContext, useMemo, useContext, useEffect,
 } from 'react';
 import { inject } from 'mobx-react';
+import { useFormatMessage } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
@@ -36,6 +37,8 @@ export const StoreProvider = injectIntl(inject('AppState')(
       children,
     } = props;
 
+    const format = useFormatMessage('c7ncd.resource');
+
     const { resourceStore: { getSelectedMenu: { id, name } }, intlPrefix, treeDs } = useResourceStore();
 
     const {
@@ -57,7 +60,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
 
     // Permission相关
     const permissionsDs = useMemo(() => new DataSet(PermissionsDataSet({
-      formatMessage, intlPrefix, id, baseInfoDs,
+      formatMessage, intlPrefix, id, baseInfoDs, format,
     })), [id, baseInfoDs]);
 
     const resourceCountDs = useMemo(() => new DataSet(ResourceCountDataSet({ id })), [id]);
@@ -66,11 +69,14 @@ export const StoreProvider = injectIntl(inject('AppState')(
       formatMessage,
       intlPrefix,
       id,
+      format,
     })), [id]);
     const gitopsSyncDs = useMemo(() => new DataSet(GitopsSyncDataSet(id)), [id]);
     const retryDs = useMemo(() => new DataSet(RetryDataSet(id)), [id]);
 
-    const configDs = useMemo(() => new DataSet(ConfigDataSet({ formatMessage, intlPrefix, id })), [id]);
+    const configDs = useMemo(() => new DataSet(ConfigDataSet({
+      formatMessage, intlPrefix, id, format,
+    })), [id]);
 
     const polarisNumDS = useMemo(() => new DataSet(PolarisNumDataSet(id)), [id]);
     const istSummaryDs = useMemo(() => new DataSet(SummaryDataSet(id)), [id]);

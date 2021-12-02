@@ -2,7 +2,7 @@ import { deployValueConfigApi } from '@/api';
 import getTablePostData from '@/utils/getTablePostData';
 
 /* eslint-disable import/no-anonymous-default-export */
-export default ({ formatMessage, id }:any):any => ({
+export default ({ formatMessage, id, format }:any):any => ({
   selection: false,
   autoQuery: false,
   pageSize: 10,
@@ -27,7 +27,7 @@ export default ({ formatMessage, id }:any):any => ({
     {
       name: 'appServiceName',
       type: 'string',
-      label: formatMessage({ id: 'appService' }),
+      label: format({ id: 'AssociatedApplicationService' }),
     },
     {
       name: 'envName',
@@ -42,7 +42,7 @@ export default ({ formatMessage, id }:any):any => ({
     {
       name: 'lastUpdateDate',
       type: 'dateTime',
-      label: formatMessage({ id: 'boot.updateDate' }),
+      label: format({ id: 'UpdateTime' }),
     },
   ],
   queryFields: [
@@ -54,7 +54,7 @@ export default ({ formatMessage, id }:any):any => ({
     {
       name: 'appServiceName',
       type: 'string',
-      label: formatMessage({ id: 'appService' }),
+      label: format({ id: 'AssociatedApplicationService' }),
     },
     {
       name: 'envName',

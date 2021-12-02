@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import {
-  Page, HeaderButtons, Header, Breadcrumb, Content,
+  Page, HeaderButtons, Header, Breadcrumb, Content, useFormatMessage,
 } from '@choerodon/master';
 import { get, has } from '@choerodon/inject';
 import { Loading } from '@choerodon/components';
@@ -12,7 +12,7 @@ import QueryfieldBar from './components/queryfield-bar';
 import { useAppHomePageStore } from './stores';
 import AppCardContent from './components/app-card-content';
 import { openBatchDeploy } from '@/components/batch-deploy';
-import { getHzeroDeployBtnConfig } from '@/components/hzero-deploy';
+import { GetHzeroDeployBtnConfig } from '@/components/hzero-deploy';
 
 const AppHomePage = () => {
   const {
@@ -23,16 +23,18 @@ const AppHomePage = () => {
     hasMarket,
   } = useAppHomePageStore();
 
+  const format = useFormatMessage('c7ncd.applicationCenter');
+
   const renderHeaderBtns = () => {
     const items = [
       {
-        name: '创建应用',
+        name: format({ id: 'CreateApplication' }),
         icon: 'playlist_add',
         handler: () => openAppCreateModal(refresh),
       },
       {
         permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.resource-batch'],
-        name: '批量创建Chart应用',
+        name: format({ id: 'BatchCreateChartApplication' }),
         icon: 'library_add-o',
         handler: () => openBatchDeploy({
           refresh,
@@ -45,11 +47,14 @@ const AppHomePage = () => {
       },
     ];
     if (mainStore.getHzeroSyncStatus) {
-      items.splice(2, 0, getHzeroDeployBtnConfig({
-        refresh,
-        syncStatus: mainStore.getHzeroSyncStatus,
-        hasMarket,
-      }));
+      items.splice(2, 0, {
+        ...GetHzeroDeployBtnConfig({
+          refresh,
+          syncStatus: mainStore.getHzeroSyncStatus,
+          hasMarket,
+        }),
+        name: format({ id: 'CreateHZEROApplication' }),
+      });
     }
     if (has('base-pro:getBaseComponentDeployConfig')) {
       items.splice(2, 0, {

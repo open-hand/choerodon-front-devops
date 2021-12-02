@@ -239,4 +239,7 @@ export * from './app-service';
 export * from './code-manager';
 export * from './pipeline-manage';
 export * from './app-pipeline';
+export * from './deployment-operation';
+export * from './application-center';
+export * from './resource';
 export * from './org-template';

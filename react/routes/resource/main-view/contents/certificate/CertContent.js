@@ -1,7 +1,8 @@
+/* eslint-disable */
 import React, { Fragment, useMemo, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
-import { Action } from '@choerodon/master';
+import { Action, useFormatMessage } from '@choerodon/master';
 import { Tooltip } from 'choerodon-ui';
 import { Table } from 'choerodon-ui/pro';
 import StatusIcon from '../../../../../components/StatusIcon';
@@ -29,6 +30,9 @@ const CertContent = observer(() => {
     intl: { formatMessage },
     AppState: { currentMenuType: { projectId } },
   } = useCertificateStore();
+
+  const format = useFormatMessage('c7ncd.resource');
+
   const {
     deletionStore: { openDeleteModal },
   } = useMainStore();
@@ -60,7 +64,6 @@ const CertContent = observer(() => {
     );
   }
 
-
   function renderValid({ record }) {
     const validFrom = record.get('validFrom');
     const validUntil = record.get('validUntil');
@@ -70,11 +73,15 @@ const CertContent = observer(() => {
     if (!(validFrom && validUntil && commandStatus === 'success')) return content;
 
     content = (
-      <Fragment>
-        <FormattedMessage id="timeFrom" />：{validFrom}
+      <>
+        <FormattedMessage id="timeFrom" />
+        ：
+        {validFrom}
         <br />
-        <FormattedMessage id="timeUntil" />：{validUntil}
-      </Fragment>
+        <FormattedMessage id="timeUntil" />
+        ：
+        {validUntil}
+      </>
     );
     const start = new Date(validFrom.replace(/-/g, '/')).getTime();
     const end = new Date(validUntil.replace(/-/g, '/')).getTime();
@@ -130,7 +137,7 @@ const CertContent = observer(() => {
         <Column name="certName" renderer={renderName} sortable />
         <Column renderer={renderAction} width="0.7rem" />
         <Column name="domains" renderer={renderDomains} />
-        <Column renderer={renderValid} header={formatMessage({ id: 'validDate' })} width="1rem" />
+        <Column renderer={renderValid} header={format({ id: 'ValidPeriod' })} width="1rem" />
       </Table>
     </div>
   );

@@ -13,6 +13,7 @@ import {
   HeaderButtons,
   Action,
   TabCode,
+  useFormatMessage,
 } from '@choerodon/master';
 import {
   Table, Modal, Select, Icon, Tooltip,
@@ -41,7 +42,7 @@ import { openAppCreateModal } from '@/components/open-appCreate';
 import HzeroDeployDetail from './modals/hzero-deploy-detail';
 import { LARGE } from '../../utils/getModalWidth';
 import { deployRecordApi } from '../../api';
-import { getHzeroDeployBtnConfig } from '@/components/hzero-deploy';
+import { GetHzeroDeployBtnConfig } from '@/components/hzero-deploy';
 import ConfigurationModal from '@/components/configuration-center/ConfigurationModal';
 
 import 'codemirror/lib/codemirror.css';
@@ -87,6 +88,8 @@ const Deployment = withRouter(
       hasMarket,
       configurationDetailDataSet,
     } = useDeployStore();
+
+    const format = useFormatMessage('c7ncd-deploymentOperation');
 
     useEffect(() => {
       const {
@@ -512,7 +515,7 @@ const Deployment = withRouter(
             service: [
               'choerodon.code.project.deploy.app-deployment.deployment-operation.ps.hzero.detail',
             ],
-            text: formatMessage({ id: `${intlPrefix}.record.detail` }),
+            text: format({ id: 'ViewRecordDetails' }),
             action: () => openHzeroDeployDetailModal(record),
           },
         ];
@@ -523,7 +526,7 @@ const Deployment = withRouter(
               service: [
                 'choerodon.code.project.deploy.app-deployment.deployment-operation.ps.hzero.retry',
               ],
-              text: formatMessage({ id: `${intlPrefix}.retry` }),
+              text: format({ id: 'Retry' }),
               action: () => handleHzeroRetry(record),
             });
             break;
@@ -570,7 +573,7 @@ const Deployment = withRouter(
     const getHeaderButtons = () => {
       const res = [
         {
-          name: '创建应用',
+          name: format({ id: 'CreateApplication' }),
           icon: 'playlist_add',
           display: true,
           permissions: [
@@ -579,7 +582,7 @@ const Deployment = withRouter(
           handler: () => openAppCreateModal(refresh),
         },
         {
-          name: '批量创建Chart应用',
+          name: format({ id: 'BatchCreateChartApplication' }),
           icon: 'library_add-o',
           display: true,
           permissions: [
@@ -596,13 +599,14 @@ const Deployment = withRouter(
         },
       ];
       if (deployStore.getHzeroSyncStatus) {
-        res.unshift(
-          getHzeroDeployBtnConfig({
+        res.unshift({
+          ...GetHzeroDeployBtnConfig({
             refresh,
             syncStatus: deployStore.getHzeroSyncStatus,
             hasMarket,
           }),
-        );
+          name: format({ id: 'CreateHZEROApplication' }),
+        });
       }
       if (has('base-pro:getBaseComponentDeployConfig')) {
         res.splice(2, 0, {
@@ -630,21 +634,21 @@ const Deployment = withRouter(
               header={(
                 <Tips
                   helpText={formatMessage({ id: `${intlPrefix}.id.tips` })}
-                  title={formatMessage({ id: `${intlPrefix}.number` })}
+                  title={format({ id: 'Number' })}
                 />
               )}
               width={150}
             />
             <Column renderer={renderAction} width={60} />
             <Column
-              header={<Tips helpText="部署方式分为：主机部署与环境部署" title="部署方式&载体" />}
+              header={<Tips helpText="部署方式分为：主机部署与环境部署" title={format({ id: 'DeploymentWayCarrier' })} />}
               name={mapping.deployMethod.value}
               renderer={renderDeployMethod}
             />
             <Column
               name="deployResult"
               renderer={renderDeployStatus}
-              header="执行结果"
+              header={format({ id: 'ExecutionResult' })}
               width={90}
             />
             <Column name="appName" renderer={renderInstance} />
@@ -653,7 +657,7 @@ const Deployment = withRouter(
               name={mapping.deployObject.value}
               renderer={renderDeployObejct}
               header={
-                <Tips helpText="部署对象分为：应用服务、jar包与Docker镜像" title="部署对象" />
+                <Tips helpText="部署对象分为：应用服务、jar包与Docker镜像" title={format({ id: 'DeployedObject' })} />
               }
             />
             <Column name="executeUser" renderer={renderExecutor} />

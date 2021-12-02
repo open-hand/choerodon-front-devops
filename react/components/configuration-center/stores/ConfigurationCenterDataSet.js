@@ -1,6 +1,37 @@
 import { isNil, every, some } from 'lodash';
 import { deployConfigApiConfig } from '@/api/DeployConfig';
 
+async function queryVersionOptions({ configCompareOptsDS, record }) {
+  configCompareOptsDS.setQueryParameter('configGroup', record?.get('configGroup'));
+  await configCompareOptsDS.query();
+  if (configCompareOptsDS.length > 0) {
+    const { value: optValue } = configCompareOptsDS.get(0).toData();
+    record.set('versionName', optValue);
+  } else {
+    record.init('configCode', null);
+  }
+}
+
+function handleUpdate({ record, name, value }, optsDS) {
+  if (name === 'mountPath') {
+    record.validate('all', true);
+  }
+  if (name === 'configGroup') {
+    record?.set('versionName', null);
+    record?.set('configCode', null);
+    record.validate('all', true);
+  }
+  if (name === 'configCode') {
+    if (value) {
+      queryVersionOptions({ configCompareOptsDS: optsDS, record });
+    } else {
+      record?.init('configCode', null);
+      record?.set('versionName', null);
+    }
+    record.validate('all', true);
+  }
+}
+
 const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
   selection: false,
   autoQuery: false,
@@ -108,6 +139,11 @@ const ConfigurationCenterDataSet = ({ projectId, organizationId, optsDS }) => ({
       },
     },
   ],
+  events: {
+    update: ({ record, name, value }) => {
+      handleUpdate({ record, name, value }, optsDS);
+    },
+  },
 });
 
 const ConfigCompareOptsDS = ({ projectId, organizationId }) => ({
@@ -263,6 +299,11 @@ const DeployConfigDataSet = ({ projectId, organizationId, optsDS }) => ({
       },
     },
   ],
+  events: {
+    update: ({ record, name, value }) => {
+      handleUpdate({ record, name, value }, optsDS);
+    },
+  },
 });
 
 export {

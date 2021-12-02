@@ -2,8 +2,8 @@ import React, { useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Choerodon } from '@choerodon/master';
-import { HeaderButtons } from '@choerodon/master';
+import { Choerodon, useFormatMessage, HeaderButtons } from '@choerodon/master';
+
 import { handlePromptError } from '../../../../../../utils';
 import ValueModalContent from './values/Config';
 import UpgradeModalContent from './upgrade';
@@ -32,6 +32,9 @@ const IstModals = injectIntl(observer(() => {
     },
     treeDs,
   } = useResourceStore();
+
+  const format = useFormatMessage('c7ncd.resource');
+
   const {
     baseDs,
     casesDs,
@@ -221,7 +224,7 @@ const IstModals = injectIntl(observer(() => {
     const isOperating = status === 'operating';
 
     const buttons = [!isMiddleware && {
-      name: formatMessage({ id: `${intlPrefix}.modal.values` }),
+      name: format({ id: 'ModifyValues' }),
       icon: 'rate_review1',
       handler: openValueModal,
       display: !isOperating,
@@ -235,7 +238,7 @@ const IstModals = injectIntl(observer(() => {
     },
     {
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.updateChart'],
-      name: '修改应用',
+      name: format({ id: 'ModifyApplication' }),
       icon: 'add_comment-o',
       disabled: btnDisabled,
       display: !isOperating,
@@ -256,7 +259,7 @@ const IstModals = injectIntl(observer(() => {
       },
       disabledMessage: !btnDisabled ? formatMessage({ id: `${intlPrefix}.instance.disable.message${appAvailable ? '.upgrade' : ''}` }) : null,
     }, {
-      name: formatMessage({ id: `${intlPrefix}.modal.redeploy` }),
+      name: format({ id: 'Redeploy' }),
       icon: 'redeploy_line',
       handler: openRedeploy,
       display: !isOperating,

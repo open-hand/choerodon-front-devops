@@ -1,7 +1,8 @@
+/* eslint-disable */
 import React, { Fragment, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
-import { Action } from '@choerodon/master';
+import { Action, useFormatMessage } from '@choerodon/master';
 import { Modal, Table, Icon } from 'choerodon-ui/pro';
 import { Tooltip } from 'choerodon-ui';
 import map from 'lodash/map';
@@ -31,6 +32,9 @@ const IngressContent = observer(() => {
     resourceStore: { getSelectedMenu: { parentId } },
     treeDs,
   } = useResourceStore();
+
+  const format = useFormatMessage('c7ncd.resource');
+
   const {
     ingressDs,
     intl: { formatMessage },
@@ -135,7 +139,7 @@ const IngressContent = observer(() => {
     const buttons = [
       {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.update.domain'],
-        text: formatMessage({ id: 'boot.edit' }),
+        text: format({ id: 'Modify' }),
         action: openModal,
       },
       {
@@ -181,7 +185,7 @@ const IngressContent = observer(() => {
         <Column renderer={renderAction} width={60} />
         <Column name="domain" renderer={renderDomain} />
         <Column name="pathList" renderer={renderPath} />
-        <Column renderer={renderService} header={formatMessage({ id: 'network' })} />
+        <Column renderer={renderService} header={format({ id: 'serviceCount' })} />
       </Table>
     </div>
   );

@@ -1,6 +1,7 @@
 import React, {
   useMemo,
 } from 'react';
+import { useFormatMessage } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
 import isEmpty from 'lodash/isEmpty';
@@ -21,6 +22,9 @@ const collapseDetail = observer(({ loading }:{
     formatMessage,
     intlPrefix,
   } = useResourceStore();
+
+  const format = useFormatMessage('c7ncd.resource');
+
   const {
     istSummaryDs,
   } = useREStore();
@@ -33,7 +37,7 @@ const collapseDetail = observer(({ loading }:{
       <div className={`${prefixCls}-polaris-tabs-header`}>
         <div className={`${prefixCls}-polaris-tabs-header-item`}>
           <span className={`${prefixCls}-polaris-tabs-header-text`}>
-            {formatMessage({ id: 'instance' })}
+            {format({ id: 'ChartApplications' })}
             :
           </span>
           <span>{instanceCode}</span>
@@ -41,7 +45,7 @@ const collapseDetail = observer(({ loading }:{
         </div>
         <div className={`${prefixCls}-polaris-tabs-header-item`}>
           <span className={`${prefixCls}-polaris-tabs-header-text`}>
-            {formatMessage({ id: 'appService' })}
+            {format({ id: 'AssociatedApplicationService' })}
             :
           </span>
           <span>{appServiceName}</span>
