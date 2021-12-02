@@ -20,6 +20,7 @@ import {
 import { TabkeyTypes } from './interface';
 import PipelineBasicInfo from './components/pipeline-basic-info';
 import StagesEdits from './components/stage-edits';
+import CiVariasConfigs from './components/ci-varias-configs';
 
 const { TabPane } = Tabs;
 
@@ -38,15 +39,14 @@ const AppPipelineEdit = () => {
 
   const [currentKey, setTabKey] = useState<TabkeyTypes>(TAB_BASIC);
 
-  const [tabsData, setTabsDataState] = useSetState<BasicInfoDataTypes>({
+  const [tabsData, setTabsDataState] = useSetState<BasicInfoDataTypes>({});
 
-  });
-
+  // [当前tab的缓存值，设置当前tab的值， 根据key获取对应tab的缓存数据]
   const savedHandler = useMemo(() => [get(tabsData, currentKey), (data:unknown) => {
     setTabsDataState({
       [currentKey]: data,
     });
-  }] as const, [currentKey]);
+  }, (tabKey:TabkeyTypes) => get(tabsData, tabKey)] as const, [currentKey]);
 
   const contentCls = classNames(`${prefixCls}-content`, {
     [`${prefixCls}-content-bgnone`]: TAB_FLOW_CONFIG === currentKey,
@@ -55,7 +55,7 @@ const AppPipelineEdit = () => {
   const tabsCompoents = {
     [TAB_BASIC]: <PipelineBasicInfo savedHandler={savedHandler} />,
     [TAB_FLOW_CONFIG]: <StagesEdits savedHandler={savedHandler} />,
-    [TAB_CI_CONFIG]: () => <>121</>,
+    [TAB_CI_CONFIG]: <CiVariasConfigs />,
     [TAB_ADVANCE_SETTINGS]: () => <>fgf</>,
   };
 

@@ -3161,5 +3161,6 @@ export * from './app-pipeline';
 export * from './deployment-operation';
 export * from './application-center';
 export * from './resource';
+export * from './org-template';
 
 export { zhCN };

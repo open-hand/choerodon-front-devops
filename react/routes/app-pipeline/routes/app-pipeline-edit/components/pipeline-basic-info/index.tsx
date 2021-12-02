@@ -15,9 +15,10 @@ import AppServiceDataSet from './stores/AppServiceDataSet';
 
 import './index.less';
 import BranchDataSet from './stores/BranchDataSet';
+import { TabkeyTypes } from '../../interface';
 
 export type PipelineBasicInfoProps = {
-  savedHandler: readonly [BasicInfoDataProps, (data:BasicInfoDataProps)=>any]
+  savedHandler: readonly [BasicInfoDataProps, (data:BasicInfoDataProps)=>any, (tabKey:TabkeyTypes)=>unknown]
 }
 
 type BasicInfoDataProps = {

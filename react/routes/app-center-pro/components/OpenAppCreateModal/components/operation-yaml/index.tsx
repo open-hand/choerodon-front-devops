@@ -96,7 +96,7 @@ const Index = observer(({
         <TabPane
           tab={(
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              配置中心
+              配置文件
               <Tooltip
                 title="可在此添加配置中心中维护好的配置文件。发布后的配置文件可以及时更新到主机的挂载路径下，并执行配置文件中维护的命令。可以动态的管理配置文件使之生效。"
                 placement="bottom"

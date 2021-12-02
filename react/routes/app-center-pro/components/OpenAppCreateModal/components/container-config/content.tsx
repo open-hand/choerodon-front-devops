@@ -120,7 +120,9 @@ const Index = observer(() => {
       })));
       setTimeout(() => {
         ConGroupDataSet.records.forEach((record: any) => {
-          record.getField(mapping.portConfig.name).options.loadData(record.get('ports'));
+          if (record.get('ports')) {
+            record.getField(mapping.portConfig.name).options.loadData(record.get('ports'));
+          }
           setOptionsDs(record.getField(mapping.enVariable.name).options, record.get('envs'));
         });
       }, 1000);
@@ -140,12 +142,16 @@ const Index = observer(() => {
         ...extraData,
         containerConfig: result,
       });
-      const res = await ConGroupDataSet.submit();
-      if (res !== false) {
-        if (refresh) {
-          refresh();
+      try {
+        const res = await ConGroupDataSet.submit();
+        if (res !== false) {
+          if (refresh) {
+            refresh();
+          }
+          return true;
         }
-        return true;
+      } catch (e) {
+        return false;
       }
       return false;
     }

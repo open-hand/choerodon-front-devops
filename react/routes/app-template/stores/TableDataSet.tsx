@@ -1,10 +1,12 @@
-import { DataSetProps } from '@/interface';
 import { DataSet } from 'choerodon-ui/pro';
+import { DataSetProps, FieldType } from '@/interface';
 import getTablePostData from '@/utils/getTablePostData';
 import TemplateApis from '../apis';
 
 interface TableProps {
   organizationId?: number,
+  formatCommon:any
+  formatClient:any
 }
 
 const statusDs = new DataSet({
@@ -68,7 +70,11 @@ const mapping = {
 
 export { mapping };
 
-export default ({ organizationId }: TableProps): DataSetProps => ({
+// eslint-disable-next-line import/no-anonymous-default-export
+export default ({
+  organizationId, formatCommon,
+  formatClient,
+}: TableProps): DataSetProps => ({
   selection: false,
   autoCreate: false,
   autoQuery: true,
@@ -89,16 +95,47 @@ export default ({ organizationId }: TableProps): DataSetProps => ({
     }),
   },
   // @ts-ignore
-  fields: Object.keys(mapping).map((key) => mapping[key]),
-  queryFields: [
-    { name: 'name', label: '名称' },
-    { name: 'code', label: '编码' },
-    { name: 'gitlabUrl', label: '仓库地址' },
+  fields: [
     {
-      name: 'type', label: '来源', options: sourceDs, textField: 'text', valueField: 'value',
+      name: 'name',
+      type: 'string' as FieldType,
+      label: formatClient({ id: 'applicationTemplate' }),
     },
     {
-      name: 'enable', label: '状态', options: statusDs, textField: 'text', valueField: 'value',
+      name: 'code',
+      type: 'string' as FieldType,
+      label: formatClient({ id: 'templateCode' }),
+    },
+    {
+      name: 'gitlabUrl',
+      type: 'string' as FieldType,
+      label: formatClient({ id: 'warehouseAddress' }),
+    },
+    {
+      name: 'type',
+      type: 'string' as FieldType,
+      label: formatClient({ id: 'source' }),
+    },
+    {
+      name: 'creationDate',
+      type: 'string' as FieldType,
+      label: formatCommon({ id: 'creationTime' }),
+    },
+    {
+      name: 'status',
+      type: 'string' as FieldType,
+      label: formatCommon({ id: 'states' }),
+    },
+  ],
+  queryFields: [
+    { name: 'name', label: formatCommon({ id: 'name' }) },
+    { name: 'code', label: formatCommon({ id: 'code' }) },
+    { name: 'gitlabUrl', label: formatClient({ id: 'source' }) },
+    {
+      name: 'type', label: formatClient({ id: 'warehouseAddress' }), options: sourceDs, textField: 'text', valueField: 'value',
+    },
+    {
+      name: 'enable', label: formatCommon({ id: 'states' }), options: statusDs, textField: 'text', valueField: 'value',
     },
   ],
 });

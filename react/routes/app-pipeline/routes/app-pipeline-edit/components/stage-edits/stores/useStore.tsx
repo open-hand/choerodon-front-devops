@@ -3,7 +3,7 @@ import { useLocalStore } from 'mobx-react-lite';
 export default function useStore() {
   return useLocalStore(() => ({
     stagesData: [],
-    setStagesData(value: any) {
+    setStagesData(value:any) {
       this.stagesData = value;
     },
   }));
