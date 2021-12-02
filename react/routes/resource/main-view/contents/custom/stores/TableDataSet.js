@@ -1,6 +1,14 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 import getTablePostData from '../../../../../../utils/getTablePostData';
 
-export default ({ formatMessage, intlPrefix, projectId, envId }) => ({
+export default ({
+  formatMessage, intlPrefix, projectId, envId,
+}) => ({
   autoQuery: true,
   selection: false,
   pageSize: 10,
@@ -22,10 +30,10 @@ export default ({ formatMessage, intlPrefix, projectId, envId }) => ({
   fields: [
     { name: 'id', type: 'string' },
     { name: 'name', type: 'string', label: formatMessage({ id: 'name' }) },
-    { name: 'k8sKind', type: 'string', label: formatMessage({ id: `${intlPrefix}.resource.type` }) },
+    { name: 'k8sKind', type: 'string', label: formatMessage({ id: 'c7ncd.resource.ResourceType' }) },
     { name: 'commandErrors', type: 'string' },
     { name: 'commandStatus', type: 'string' },
-    { name: 'lastUpdateDate', type: 'string', label: formatMessage({ id: 'boot.updateDate' }) },
+    { name: 'lastUpdateDate', type: 'string', label: formatMessage({ id: 'c7ncd.resource.UpdateTime' }) },
   ],
   queryFields: [
     { name: 'name', type: 'string', label: formatMessage({ id: 'name' }) },

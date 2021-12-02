@@ -99,6 +99,22 @@ const resource = {
   'c7ncd.resource.CertificateName': '证书名称',
   'c7ncd.resource.DomainAddresses': '域名地址',
   'c7ncd.resource.ValidPeriod': '有效期',
+  'c7ncd.resource.ConfigMaps': '配置映射（ConfigMap）',
+  'c7ncd.resource.configMaps': '配置映射（ConfigMap）',
+  'c7ncd.resource.CreateConfigMap': '创建配置映射',
+  'c7ncd.resource.KeyAndValue': '键与值',
+  'c7ncd.resource.secrets': '密文（Secret）',
+  'c7ncd.resource.CreateSecret': '创建密文',
+  'c7ncd.resource.customResources': '自定义资源',
+  'c7ncd.resource.CreateCustomResource': '创建自定义资源',
+  'c7ncd.resource.ResourceType': '资源类型',
+  'c7ncd.resource.pvcs': 'PVC',
+  'c7ncd.resource.CreatePVC': '创建PVC',
+  'c7ncd.resource.pvcName': 'PVC名称',
+  'c7ncd.resource.BoundPV': '绑定PV',
+  'c7ncd.resource.PVType': 'PV类型',
+  'c7ncd.resource.AccessMode': '访问模式',
+  'c7ncd.resource.Total': '总量',
 
 };
 export {

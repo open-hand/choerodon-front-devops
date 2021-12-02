@@ -1,6 +1,14 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 import getTablePostData from '../../../../../../utils/getTablePostData';
 
-export default ({ formatMessage, intlPrefix, projectId, envId }) => ({
+export default ({
+  formatMessage, intlPrefix, projectId, envId,
+}) => ({
   autoQuery: true,
   selection: false,
   pageSize: 10,
@@ -21,15 +29,15 @@ export default ({ formatMessage, intlPrefix, projectId, envId }) => ({
   },
   fields: [
     { name: 'id', type: 'string' },
-    { name: 'name', type: 'string', label: formatMessage({ id: `${intlPrefix}.pvc.name` }) },
+    { name: 'name', type: 'string', label: formatMessage({ id: 'c7ncd.resource.pvcName' }) },
     { name: 'status', type: 'string', label: formatMessage({ id: 'boot.states' }) },
-    { name: 'pvName', type: 'string', label: formatMessage({ id: `${intlPrefix}.pvc.pv` }) },
-    { name: 'accessModes', type: 'string', label: formatMessage({ id: `${intlPrefix}.pvc.accessModes` }) },
-    { name: 'requestResource', type: 'string', label: formatMessage({ id: `${intlPrefix}.pvc.requestResource` }) },
-    { name: 'type', type: 'string', label: formatMessage({ id: `${intlPrefix}.pvc.pv.type` }) },
+    { name: 'pvName', type: 'string', label: formatMessage({ id: 'c7ncd.resource.BoundPV' }) },
+    { name: 'accessModes', type: 'string', label: formatMessage({ id: 'c7ncd.resource.AccessMode' }) },
+    { name: 'requestResource', type: 'string', label: formatMessage({ id: 'c7ncd.resource.Total' }) },
+    { name: 'type', type: 'string', label: formatMessage({ id: 'c7ncd.resource.PVType' }) },
   ],
   queryFields: [
-    { name: 'name', type: 'string', label: formatMessage({ id: `${intlPrefix}.pvc.name` }) },
+    { name: 'name', type: 'string', label: formatMessage({ id: 'c7ncd.resource.pvcName' }) },
     { name: 'accessModes', type: 'string', label: formatMessage({ id: `${intlPrefix}.pvc.accessModes` }) },
   ],
 });
