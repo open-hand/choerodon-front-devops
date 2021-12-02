@@ -1,8 +1,9 @@
+/* eslint-disable */
 import React, {
   Fragment, memo, useState, useCallback,
 } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Action } from '@choerodon/master';
+import { Action, useFormatMessage } from '@choerodon/master';
 import { Table } from 'choerodon-ui/pro';
 import { Icon, Popover, Tooltip } from 'choerodon-ui';
 import map from 'lodash/map';
@@ -34,6 +35,9 @@ const PodDetail = memo(() => {
     intl,
     podsDs,
   } = useInstanceStore();
+
+  const format = useFormatMessage('c7ncd.resource');
+
   const [visible, setVisible] = useState(false);
   const [shellVisible, setShellVisible] = useState(false);
 
@@ -156,11 +160,11 @@ const PodDetail = memo(() => {
     if (record.get('containers')?.length && record.get('status') === 'Running') {
       buttons.unshift({
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.pod.log'],
-        text: intl.formatMessage({ id: `${intlPrefix}.instance.log` }),
+        text: format({ id: 'ContainerLog' }),
         action: () => openLog(),
       }, {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.pod.shell'],
-        text: intl.formatMessage({ id: `${intlPrefix}.instance.term` }),
+        text: format({ id: 'RunCommand' }),
         action: () => openShell(),
       });
     }

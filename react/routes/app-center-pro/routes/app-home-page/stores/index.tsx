@@ -5,6 +5,7 @@ import React, {
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
+import { useFormatMessage } from '@choerodon/master';
 import { useHistory, useLocation, useParams } from 'react-router';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
 import EnvOptionsDataSet from '@/routes/app-center-pro/stores/EnvOptionsDataSet';
@@ -52,6 +53,8 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     intlPrefix,
   } = useAppCenterProStore();
 
+  const format = useFormatMessage('c7ncd.applicationCenter');
+
   const location = useLocation();
   const history = useHistory();
   const searchObj = new URLSearchParams(location.search);
@@ -77,7 +80,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   }
 
   const searchDs = useMemo(() => new DataSet(SearchDataSet({
-    envDs, hostDs, ALL_ENV_KEY, formatMessage, replaceCurrentState,
+    envDs, hostDs, ALL_ENV_KEY, formatMessage, replaceCurrentState, format,
   })), []);
 
   const listDs = useMemo(() => new DataSet(ListDataSet({

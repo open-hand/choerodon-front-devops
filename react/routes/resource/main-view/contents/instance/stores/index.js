@@ -1,6 +1,7 @@
 import React, {
   createContext, useMemo, useContext, useEffect,
 } from 'react';
+import { useFormatMessage } from '@choerodon/master';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
@@ -35,6 +36,8 @@ export const StoreProvider = injectIntl(inject('AppState')(
       intlPrefix,
       treeDs,
     } = useResourceStore();
+    const format = useFormatMessage('c7ncd.resource');
+
     const istStore = useStore({ defaultKey: getViewType === 'instance' ? 'cases' : 'details' });
 
     const tabs = useMemo(() => ({
@@ -48,6 +51,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
     const podsDs = useMemo(() => new DataSet(PodsDataset({
       intl,
       intlPrefix,
+      format,
     })), []);
 
     function freshTree() {

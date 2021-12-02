@@ -1,5 +1,8 @@
-import React, { createContext, useContext, useEffect, useMemo } from 'react';
+import React, {
+  createContext, useContext, useEffect, useMemo,
+} from 'react';
 import { DataSet } from 'choerodon-ui/pro';
+import { useFormatMessage } from '@choerodon/master';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
@@ -21,11 +24,14 @@ export const StoreProvider = injectIntl(inject('AppState')(
       resourceStore: { getSelectedMenu: { parentId }, getUpTarget, setUpTarget },
       itemTypes: { INGRESS_GROUP },
     } = useResourceStore();
+    const format = useFormatMessage('c7ncd.resource');
+
     const ingressDs = useMemo(() => new DataSet(TableDataSet({
       formatMessage,
       intlPrefix,
       projectId: id,
       envId: parentId,
+      format,
     })), [id, parentId]);
 
     const value = {
@@ -46,5 +52,5 @@ export const StoreProvider = injectIntl(inject('AppState')(
         {children}
       </Store.Provider>
     );
-  })
+  }),
 ));

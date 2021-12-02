@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import React from 'react';
-import { Action } from '@choerodon/master';
+import { Action, useFormatMessage } from '@choerodon/master';
 import { useHistory, useLocation } from 'react-router';
 
 import { Tooltip } from 'choerodon-ui/pro';
@@ -30,6 +30,8 @@ const AppItem = observer(({
   subfixCls:string
   refresh:(...agrs:any[])=>any
 }) => {
+  const format = useFormatMessage('c7ncd.applicationCenter');
+
   const {
     deleteEnvApp,
   } = useAppCenterProStore();
@@ -106,7 +108,7 @@ const AppItem = observer(({
 
   const stopObj = {
     service: ['choerodon.code.project.deploy.app-deployment.application-center.app-toggle-status'],
-    text: '停用',
+    text: format({ id: 'Disable' }),
     action: () => AppCenterProServices.toggleActive({
       active: 'stop',
       refresh,
@@ -120,7 +122,7 @@ const AppItem = observer(({
 
   const activeObj = {
     service: ['choerodon.code.project.deploy.app-deployment.application-center.app-toggle-status'],
-    text: '启用',
+    text: format({ id: 'Enable' }),
     action: () => AppCenterProServices.toggleActive({
       active: 'start',
       refresh,
@@ -134,7 +136,7 @@ const AppItem = observer(({
 
   const deleteObj = {
     service: ['choerodon.code.project.deploy.app-deployment.application-center.app-delete'],
-    text: '删除',
+    text: format({ id: 'Delete' }),
     action: handleDelete,
   };
 
@@ -269,18 +271,18 @@ const AppItem = observer(({
       </header>
       <main>
         <div>
-          <span>应用编码</span>
+          <span>{format({ id: 'ApplicationNumber' })}</span>
           <Tooltip title={code}>
             <span>{code || '-'}</span>
           </Tooltip>
         </div>
         <div>
-          <span>部署对象</span>
+          <span>{ format({ id: 'DeployedObject' }) }</span>
           <span>{catergory?.name}</span>
         </div>
         {isHost && (
         <div>
-          <span>主机</span>
+          <span>{ format({ id: 'Host' }) }</span>
           <Tooltip title={hostName}>
             <span>{hostName}</span>
           </Tooltip>
@@ -289,7 +291,7 @@ const AppItem = observer(({
         {
           isEnv && (
           <div>
-            <span>环境</span>
+            <span>{ format({ id: 'Environment' }) }</span>
             <Tooltip title={envName}>
               {/* @ts-expect-error */}
               <EnvItem connect={envConnected} active={envActive} name={envName} />

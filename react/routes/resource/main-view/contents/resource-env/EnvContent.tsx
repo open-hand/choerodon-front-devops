@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import { runInAction } from 'mobx';
 import { observer } from 'mobx-react-lite';
+import { useFormatMessage } from '@choerodon/master';
 import { Spin } from 'choerodon-ui';
 import { Loading } from '@choerodon/components';
 import PageTitle from '@/components/page-title';
@@ -18,6 +19,8 @@ import ItemNumberByResource from './components/ItemNumberByResource';
 
 const Content = observer(() => {
   const statusCount = ['runningInstanceCount', 'operatingInstanceCount', 'stoppedInstanceCount', 'failedInstanceCount'];
+
+  const format = useFormatMessage('c7ncd.resource');
 
   const resourceCount: instanceMappingsType[] = [
     'instanceCount',
@@ -49,7 +52,7 @@ const Content = observer(() => {
     if (type === 'status') {
       return statusCount.map((item) => {
         const count = record ? record.get(item) : 0;
-        const name = formatMessage({ id: `${intlPrefix}.status.${item}` });
+        const name = format({ id: item });
         return (
           <ItemNumberByStatus
             key={item}
@@ -63,7 +66,7 @@ const Content = observer(() => {
     }
     return resourceCount.map((item: instanceMappingsType) => {
       const count = record ? record.get(item) : 0;
-      const name = formatMessage({ id: `${intlPrefix}.resource.${item}` });
+      const name = format({ id: item });
       return (
         <ItemNumberByResource
           key={item}
@@ -148,13 +151,13 @@ const Content = observer(() => {
       <Loading display={resourceCountDs.status === 'loading'} type="c7n">
         <div className={`${prefixCls}-re-card-wrap`}>
           <div className={`${prefixCls}-re-card ${prefixCls}-re-card_left`}>
-            <div className={`${prefixCls}-re-card-title`}>{formatMessage({ id: `${intlPrefix}.resource.deploy` })}</div>
+            <div className={`${prefixCls}-re-card-title`}>{format({ id: 'Resources' })}</div>
             <div className={`${prefixCls}-re-grid-left`}>
               {getCounts()}
             </div>
           </div>
           <div className={`${prefixCls}-re-card ${prefixCls}-re-card_right`}>
-            <div className={`${prefixCls}-re-card-title`}>{formatMessage({ id: `${intlPrefix}.instance.status` })}</div>
+            <div className={`${prefixCls}-re-card-title`}>{format({ id: 'ChartApplicationStatus' })}</div>
             <div className={`${prefixCls}-re-grid-right`}>{getCounts('status')}</div>
           </div>
         </div>

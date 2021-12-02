@@ -6,6 +6,7 @@ import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
 import { withRouter } from 'react-router-dom';
+import { useFormatMessage } from '@choerodon/master';
 
 import map from 'lodash/map';
 import ListDataSet from './ListDataSet';
@@ -40,19 +41,21 @@ export const StoreProvider = withRouter(
 
       const hasMarket = useHasMarket();
 
+      const format = useFormatMessage('c7ncd-deploymentOperation');
+
       const deployTypeDs = useMemo(
         () => new DataSet({
           data: [
             {
-              text: formatMessage({ id: `${intlPrefix}.auto` }),
+              text: format({ id: 'Pipeline' }),
               value: 'auto',
             },
             {
-              text: formatMessage({ id: `${intlPrefix}.manual` }),
+              text: format({ id: 'Manual' }),
               value: 'manual',
             },
             {
-              text: formatMessage({ id: `${intlPrefix}.batch` }),
+              text: format({ id: 'Batch' }),
               value: 'batch',
             },
           ],
@@ -65,11 +68,11 @@ export const StoreProvider = withRouter(
         () => new DataSet({
           data: [
             {
-              text: '容器部署',
+              text: format({ id: 'Container' }),
               value: 'env',
             },
             {
-              text: '主机部署',
+              text: format({ id: 'Host' }),
               value: 'host',
             },
           ],
@@ -80,7 +83,7 @@ export const StoreProvider = withRouter(
       const deployResultDs = useMemo(
         () => new DataSet({
           data: map(STATUS, (item) => ({
-            text: formatMessage({ id: `${intlPrefix}.status.${item}` }),
+            text: format({ id: item }),
             value: item,
           })),
           selection: 'single',
@@ -105,6 +108,7 @@ export const StoreProvider = withRouter(
             deployResultDs,
             pipelineOptionsDs,
             deployModeDs,
+            format,
           ),
         ),
         [projectId],

@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-bind */
 import React from 'react';
-import { Action } from '@choerodon/master';
+import { Action, useFormatMessage } from '@choerodon/master';
 import { Table, Tooltip } from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import { TimePopover } from '@choerodon/components';
@@ -21,6 +21,8 @@ const Permissions = () => {
     baseInfoDs,
   } = useREStore();
 
+  const format = useFormatMessage('c7ncd.resource');
+
   function handleDelete() {
     const record = tableDs.current;
     const modalProps = {
@@ -35,7 +37,7 @@ const Permissions = () => {
     const actionData = [
       {
         service: [],
-        text: formatMessage({ id: 'delete' }),
+        text: format({ id: 'Delete' }),
         action: handleDelete,
       },
     ];
