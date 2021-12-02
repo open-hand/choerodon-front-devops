@@ -1,6 +1,8 @@
 import getTablePostData from '../../../../../../utils/getTablePostData';
 
-export default ({ formatMessage, intlPrefix, projectId, envId }) => ({
+export default ({
+  formatMessage, intlPrefix, projectId, envId, format,
+}) => ({
   autoQuery: true,
   selection: false,
   pageSize: 10,
@@ -21,13 +23,13 @@ export default ({ formatMessage, intlPrefix, projectId, envId }) => ({
   },
   fields: [
     { name: 'id', type: 'string' },
-    { name: 'name', type: 'string', label: formatMessage({ id: `${intlPrefix}.application.net.ingress` }) },
+    { name: 'name', type: 'string', label: format({ id: 'IngressName' }) },
     { name: 'error', type: 'string' },
     { name: 'commandStatus', type: 'string' },
     { name: 'domain', type: 'string', label: formatMessage({ id: 'address' }) },
     { name: 'pathList', type: 'object', label: formatMessage({ id: 'path' }) },
   ],
   queryFields: [
-    { name: 'name', type: 'string', label: formatMessage({ id: `${intlPrefix}.application.net.ingress` }) },
+    { name: 'name', type: 'string', label: format({ id: 'IngressName' }) },
   ],
 });

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useFormatMessage } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 import { Icon } from 'choerodon-ui';
 import Radar from '@/components/Radar';
@@ -28,17 +29,17 @@ const checkGroup = [
 const categoryGroup = [
   {
     checkType: 'kubernetesVersion',
-    name: 'Kubernetes版本',
+    name: 'KubernetesVersion',
     icon: 'saga_define',
   },
   {
     checkType: 'instanceCount',
-    name: 'Chart应用数量',
+    name: 'NumberofChartApplications',
     icon: 'instance_outline',
   },
   {
     checkType: 'pods',
-    name: 'Pods数量',
+    name: 'NumberofPods',
     icon: 'toll',
   },
 ];
@@ -46,6 +47,8 @@ const categoryGroup = [
 const numberDetail = observer(({ isLoading }:{
   isLoading: boolean
 }) => {
+  const format = useFormatMessage('c7ncd.resource');
+
   const {
     prefixCls,
     formatMessage,
@@ -73,7 +76,7 @@ const numberDetail = observer(({ isLoading }:{
       <div className={`${prefixCls}-number-category`} key={item?.checkType}>
         <Icon type={item.icon} />
         <div className={`${prefixCls}-number-category-detail`}>
-          <span>{item.name}</span>
+          <span>{format({ id: item.name })}</span>
           <span>{polarisNumDS.current ? (polarisNumDS.current.get(item.checkType) || '-') : '-'}</span>
         </div>
       </div>
@@ -97,7 +100,8 @@ const numberDetail = observer(({ isLoading }:{
       <div className={`${prefixCls}-number-left`}>
         <div className={`${prefixCls}-number-leftTop`}>
           <span className={`${prefixCls}-number-leftTop-lastestDate`}>
-            {formatMessage({ id: 'c7ncd.cluster.polaris.lastedScanDate' })}
+            {format({ id: 'EndTimeofLastScan' })}
+            :
             {polarisNumDS.current ? polarisNumDS.current.get('lastScanDateTime') : '-'}
           </span>
 

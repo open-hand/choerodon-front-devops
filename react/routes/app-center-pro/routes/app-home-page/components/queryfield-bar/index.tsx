@@ -4,6 +4,7 @@ import { observer } from 'mobx-react-lite';
 import {
   Button, Form, Icon, Select, TextField,
 } from 'choerodon-ui/pro';
+import { useFormatMessage } from '@choerodon/master';
 import { CustomTabs } from '@choerodon/components';
 import map from 'lodash/map';
 import { useDebounceFn } from 'ahooks';
@@ -25,6 +26,8 @@ const ContentHeader: React.FC<any> = observer((): any => {
     intlPrefix,
     formatMessage,
   } = useAppHomePageStore();
+
+  const format = useFormatMessage('c7ncd.applicationCenter');
 
   const isEnvTab = searchDs.current?.get('typeKey') === typeTabKeys.ENV_TAB;
 
@@ -79,7 +82,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
           handleFormChange();
         }}
         data={map(typeTabKeys, (value, key) => ({
-          name: formatMessage({ id: `${intlPrefix}.tab.${key}` }),
+          name: format({ id: value }),
           value,
         }))}
         selectedTabValue={searchDs.current?.get('typeKey')}
@@ -99,7 +102,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
           >
             {isEnvTab ? (
               <Select
-                prefix="环境:"
+                prefix={`${format({ id: 'Environment' })}:`}
                 name="env_id"
                 colSpan={3}
                 searchable
@@ -111,7 +114,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
               />
             ) : (
               <Select
-                prefix="主机:"
+                prefix={`${format({ id: 'Host' })}:`}
                 name="host_id"
                 key="host"
                 colSpan={3}
@@ -130,7 +133,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
             labelWidth={1}
           >
             <TextField
-              placeholder="请输入搜索条件"
+              placeholder={format({ id: 'Search' })}
               name="params"
               colSpan={2}
               prefix={
@@ -143,12 +146,12 @@ const ContentHeader: React.FC<any> = observer((): any => {
             <Select
               name="operation_type"
               colSpan={isEnvTab ? 1 : 2}
-              placeholder="操作类型："
+              placeholder={`${format({ id: 'OperationType' })}:`}
               onChange={handleFormChange}
             />
             {isEnvTab && (
             <Select
-              placeholder="应用类型："
+              placeholder={`${format({ id: 'ApplicationType' })}:`}
               name="rdupm_type"
               colSpan={1}
               clearButton

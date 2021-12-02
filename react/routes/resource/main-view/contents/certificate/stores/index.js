@@ -1,6 +1,9 @@
-import React, { createContext, useContext, useEffect, useMemo } from 'react';
+import React, {
+  createContext, useContext, useEffect, useMemo,
+} from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { inject } from 'mobx-react';
+import { useFormatMessage } from '@choerodon/master';
 import { injectIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import TableDataSet from './TableDataSet';
@@ -15,6 +18,9 @@ export function useCertificateStore() {
 export const StoreProvider = injectIntl(inject('AppState')(
   observer((props) => {
     const { AppState: { currentMenuType: { id } }, children } = props;
+
+    const format = useFormatMessage('c7ncd.resource');
+
     const {
       intlPrefix,
       intl: { formatMessage },
@@ -26,6 +32,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       intlPrefix,
       projectId: id,
       envId: parentId,
+      format,
     })), [id, parentId]);
 
     const value = {
@@ -46,5 +53,5 @@ export const StoreProvider = injectIntl(inject('AppState')(
         {children}
       </Store.Provider>
     );
-  })
+  }),
 ));

@@ -5,7 +5,7 @@ import getTablePostData from '@/utils/getTablePostData';
 
 /* eslint-disable import/no-anonymous-default-export */
 export default ({
-  formatMessage, intlPrefix, id, baseInfoDs,
+  formatMessage, intlPrefix, id, baseInfoDs, format,
 }: any): any => ({
   selection: false,
   pageSize: 10,
@@ -29,22 +29,22 @@ export default ({
     {
       name: 'realName',
       type: 'string',
-      label: formatMessage({ id: `${intlPrefix}.environment.permission.user` }),
+      label: format({ id: 'Username' }),
     },
     {
       name: 'loginName',
       type: 'string',
-      label: formatMessage({ id: `${intlPrefix}.environment.permission.name` }),
+      label: format({ id: 'LoginName' }),
     },
     {
       name: 'roles',
       type: 'object',
-      label: formatMessage({ id: `${intlPrefix}.environment.permission.role` }),
+      label: format({ id: 'Projectrole' }),
     },
     {
       name: 'creationDate',
       type: 'dateTime',
-      label: formatMessage({ id: `${intlPrefix}.environment.permission.addTime` }),
+      label: format({ id: 'AddedTime' }),
     },
     {
       name: 'iamUserId', type: 'string', textField: 'realName', valueField: 'iamUserId', label: formatMessage({ id: `${intlPrefix}.project.member` }),
@@ -54,12 +54,12 @@ export default ({
     {
       name: 'realName',
       type: 'string',
-      label: formatMessage({ id: `${intlPrefix}.environment.permission.user` }),
+      label: format({ id: 'Username' }),
     },
     {
       name: 'loginName',
       type: 'string',
-      label: formatMessage({ id: `${intlPrefix}.environment.permission.name` }),
+      label: format({ id: 'LoginName' }),
     },
   ],
 });

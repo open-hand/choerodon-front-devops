@@ -1,8 +1,11 @@
+/* eslint-disable */
 import React, { Fragment, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
-import { Action, Choerodon, axios } from '@choerodon/master';
+import {
+  Action, Choerodon, axios, useFormatMessage,
+} from '@choerodon/master';
 import { Modal } from 'choerodon-ui/pro';
 import isEmpty from 'lodash/isEmpty';
 import eventStopProp from '@/utils/eventStopProp';
@@ -37,6 +40,9 @@ function InstanceItem({
     AppState: { currentMenuType: { projectId } },
   } = useResourceStore();
   const { treeItemStore } = useTreeItemStore();
+
+  const format = useFormatMessage('c7ncd.resource');
+
   const {
     deletionStore,
   } = useMainStore();
@@ -153,17 +159,17 @@ function InstanceItem({
     const actionItems = {
       stop: {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.stop'],
-        text: formatMessage({ id: `${intlPrefix}.instance.action.stop` }),
+        text: format({ id: 'Disable' }),
         action: () => openChangeActive('stop'),
       },
       start: {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.start'],
-        text: formatMessage({ id: `${intlPrefix}.instance.action.start` }),
+        text: format({ id: 'Enable' }),
         action: () => openChangeActive('start'),
       },
       delete: {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete'],
-        text: formatMessage({ id: `${intlPrefix}.instance.action.delete` }),
+        text: format({ id: 'Delete' }),
         action: () => openDelete({
           envId,
           instanceId: istId,

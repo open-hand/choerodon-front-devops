@@ -1,8 +1,9 @@
+/* eslint-disable */
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
-import { Action } from '@choerodon/master';
+import { Action, useFormatMessage } from '@choerodon/master';
 import { Icon } from 'choerodon-ui';
 import { Modal } from 'choerodon-ui/pro';
 import { StatusTag } from '@choerodon/components';
@@ -33,6 +34,8 @@ function NetworkItem({
     networkStore,
     deletionStore: { openDeleteModal },
   } = useMainStore();
+
+  const format = useFormatMessage('c7ncd.resource');
 
   function freshTree() {
     treeDs.query();
@@ -108,7 +111,7 @@ function NetworkItem({
     }
     const actionData = [{
       service: ['choerodon.code.project.deploy.app-deployment.resource.ps.update-net'],
-      text: formatMessage({ id: 'boot.edit' }),
+      text: format({ id: 'Modify' }),
       action: openModal,
     }, {
       service: ['choerodon.code.project.deploy.app-deployment.resource.ps.delete-net'],

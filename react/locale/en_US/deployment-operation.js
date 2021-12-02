@@ -1,0 +1,30 @@
+const deploymentOperation = {
+  'c7ncd-deploymentOperation.BatchCreateChartApplication': 'Batch Create Chart Application',
+  'c7ncd-deploymentOperation.CreateApplication': 'Create Application',
+  'c7ncd-deploymentOperation.CreateHZEROApplication': 'Create HZERO Application',
+  'c7ncd-deploymentOperation.DeploymentType': 'Deployment Type',
+  'c7ncd-deploymentOperation.Pipeline': 'Pipeline',
+  'c7ncd-deploymentOperation.Manual': 'Manual',
+  'c7ncd-deploymentOperation.Batch': 'Batch',
+  'c7ncd-deploymentOperation.DeploymentWay': 'Deployment Way',
+  'c7ncd-deploymentOperation.Container': 'Container',
+  'c7ncd-deploymentOperation.Host': 'Host',
+  'c7ncd-deploymentOperation.DeploymentCarrierName': 'Deployment Carrier Name',
+  'c7ncd-deploymentOperation.ExecutionResult': 'Execution Result',
+  'c7ncd-deploymentOperation.success': 'Succeeded',
+  'c7ncd-deploymentOperation.failed': 'Failed',
+  'c7ncd-deploymentOperation.operating': 'Operating',
+  'c7ncd-deploymentOperation.DeployedObject': 'Deployed Object',
+  'c7ncd-deploymentOperation.Version': 'Version',
+  'c7ncd-deploymentOperation.Number': 'Number',
+  'c7ncd-deploymentOperation.DeploymentWayCarrier': 'Deployment Way & Carrier',
+  'c7ncd-deploymentOperation.GeneratedApplication': 'Generated Application',
+  'c7ncd-deploymentOperation.Source': 'Source',
+  'c7ncd-deploymentOperation.Execute': 'Execute',
+  'c7ncd-deploymentOperation.ViewRecordDetails': 'View Record Details',
+  'c7ncd-deploymentOperation.Retry': 'Retry',
+};
+
+export {
+  deploymentOperation,
+};

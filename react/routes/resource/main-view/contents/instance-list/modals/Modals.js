@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
-import { HeaderButtons } from '@choerodon/master';
+import { HeaderButtons, useFormatMessage } from '@choerodon/master';
 import { useResourceStore } from '../../../../stores';
 import { useIstListStore } from '../stores';
 import { openBatchDeploy } from '@/components/batch-deploy';
@@ -17,6 +17,8 @@ const CustomModals = observer(() => {
     formatMessage,
     itemTypes,
   } = useResourceStore();
+
+  const format = useFormatMessage('c7ncd.resource');
 
   const {
     istListDs,
@@ -69,14 +71,14 @@ const CustomModals = observer(() => {
       {
         permissions: [],
         disabled: configDisabled,
-        name: '创建应用',
+        name: format({ id: 'CreateApplication' }),
         icon: 'playlist_add',
         handler: () => openAppCreateModal(handleCreateCallback, true, envId),
       },
       {
         permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.resource-batch'],
         disabled: configDisabled,
-        name: '批量创建Chart应用',
+        name: format({ id: 'BatchCreateChartApplication' }),
         icon: 'library_add-o',
         handler: () => openBatchDeploy({
           envId,

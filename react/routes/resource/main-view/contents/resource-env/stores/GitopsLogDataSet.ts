@@ -1,7 +1,9 @@
 /* eslint-disable import/no-anonymous-default-export */
 import { environmentApiConfig } from '@/api';
 
-export default ({ formatMessage, intlPrefix, id }:any):any => ({
+export default ({
+  formatMessage, intlPrefix, id, format,
+}:any):any => ({
   selection: false,
   autoQuery: false,
   pageSize: 10,
@@ -12,22 +14,22 @@ export default ({ formatMessage, intlPrefix, id }:any):any => ({
     {
       name: 'error',
       type: 'string',
-      label: formatMessage({ id: `${intlPrefix}.environment.error.info` }),
+      label: format({ id: 'ErrorMessage' }),
     },
     {
       name: 'filePath',
       type: 'string',
-      label: formatMessage({ id: 'file' }),
+      label: format({ id: 'File' }),
     },
     {
       name: 'commit',
       type: 'string',
-      label: formatMessage({ id: 'commit' }),
+      label: format({ id: 'Commit' }),
     },
     {
       name: 'lastUpdateDate',
       type: 'dateTime',
-      label: formatMessage({ id: `${intlPrefix}.environment.error.time` }),
+      label: format({ id: 'WrongTime' }),
     },
   ],
 });
