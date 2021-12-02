@@ -18,17 +18,17 @@ export default withRouter(observer(({
   id,
   prefixCls,
   intlPrefix,
-  formatRepository,
+  formatClient,
   formatCommon,
   isProject,
   history,
   location: { search },
 }) => {
-  async function refresh() {
+  const refresh = async () => {
     await dataSet.query();
-  }
+  };
 
-  async function handleSave() {
+  const handleSave = async () => {
     if (record.get('harborStatus') === 'failed' || record.get('chartStatus') === 'failed') return false;
     const chartTestFailed = record.get('chartCustom') === 'custom' && !record.get('chartStatus') && !await handleTestChart();
     if (!chartTestFailed && await dataSet.submit() !== false) {
@@ -36,7 +36,7 @@ export default withRouter(observer(({
       return true;
     }
     return false;
-  }
+  };
 
   async function handleTestChart() {
     try {
@@ -77,16 +77,16 @@ export default withRouter(observer(({
               type={status === 'success' ? 'check_circle' : 'cancel'}
               className={`${prefixCls}-form-test-${status}`}
             />
-            {formatRepository({ id: `test.${status}` })}
+            {formatClient({ id: `test.${status}` })}
           </span>
         )}
       </div>
     );
   }
 
-  function handleLink() {
+  const handleLink = () => {
     history.push(`/rdupm/product-lib${search}`);
-  }
+  };
 
   return (
     <div className={`${prefixCls}-form-wrap`}>
@@ -98,23 +98,23 @@ export default withRouter(observer(({
       {isProject ? (
         <div>
           <span className={`${prefixCls}-form-config-title`}>
-            {formatRepository({ id: 'harbor.config' })}
+            {formatClient({ id: 'harbor.config' })}
           </span>
           <div className={`${prefixCls}-empty-page`}>
             {/* <div className={`${prefixCls}-empty-page-image`} /> */}
             <div className={`${prefixCls}-empty-page-text`}>
               <div className={`${prefixCls}-empty-page-title`}>
-                {formatRepository({ id: 'empty.title' })}
+                {formatClient({ id: 'empty.title' })}
               </div>
               <div className={`${prefixCls}-empty-page-des`}>
-                {formatRepository({ id: 'empty.des' })}
+                {formatClient({ id: 'empty.des' })}
               </div>
               <Button
                 color="primary"
                 onClick={handleLink}
                 funcType="raised"
               >
-                {formatRepository({ id: 'empty.link' })}
+                {formatClient({ id: 'empty.link' })}
               </Button>
             </div>
           </div>
@@ -122,12 +122,12 @@ export default withRouter(observer(({
       ) : null}
       <div className={`${prefixCls}-form`}>
         <span className={`${prefixCls}-form-config-title`}>
-          {formatRepository({ id: 'chart.config' })}
+          {formatClient({ id: 'chart.config' })}
         </span>
         <Form record={record}>
           <SelectBox name="chartCustom">
-            <Option value="default">{formatRepository({ id: 'chart.default' })}</Option>
-            <Option value="custom">{formatRepository({ id: 'chart.custom' })}</Option>
+            <Option value="default">{formatClient({ id: 'chart.default' })}</Option>
+            <Option value="custom">{formatClient({ id: 'chart.custom' })}</Option>
           </SelectBox>
           {record.get('chartCustom') === 'custom' && ([
             <UrlField name="url" />,
