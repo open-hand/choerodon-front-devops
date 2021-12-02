@@ -9,6 +9,7 @@ import { useResourceStore } from '../../../../../stores';
 import { useREStore } from '../../stores';
 import PermissionPage from './components/permission';
 import { openAppCreateModal } from '@/components/open-appCreate';
+import { openBatchDeploy } from '@/components/batch-deploy';
 
 const envDetailKey = Modal.key();
 const configKey = Modal.key();
@@ -154,6 +155,9 @@ const REModals = observer(() => {
   }
 
   function getButtons() {
+    const notReady = !record;
+    const connect = record && record.get('connect');
+    const configDisabled = !connect || notReady;
     return [
       {
         name: '创建应用',
@@ -174,6 +178,16 @@ const REModals = observer(() => {
         icon: 'settings-o',
         handler: openPermission,
         disabled: !record,
+      },
+      {
+        permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.resource-batch'],
+        disabled: configDisabled,
+        name: '批量创建Chart应用',
+        icon: 'library_add-o',
+        handler: () => openBatchDeploy({
+          envId: id,
+          refresh,
+        }),
       },
       {
         name: '更多操作',

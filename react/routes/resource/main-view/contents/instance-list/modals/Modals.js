@@ -74,16 +74,6 @@ const CustomModals = observer(() => {
         handler: () => openAppCreateModal(handleCreateCallback, true, envId),
       },
       {
-        permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.resource-batch'],
-        disabled: configDisabled,
-        name: '批量创建Chart应用',
-        icon: 'library_add-o',
-        handler: () => openBatchDeploy({
-          envId,
-          refresh,
-        }),
-      },
-      {
         icon: 'refresh',
         handler: refresh,
       },
