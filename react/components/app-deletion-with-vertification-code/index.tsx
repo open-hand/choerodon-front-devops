@@ -56,8 +56,8 @@ export function openPipelineReferenceModal({
 async function openDelete({
   envId, instanceName, instanceId, callback, deletionStore, type = 'instance', appId,
 }:openDeleteProps) {
-  const hasPipelineReference = appId ? await checkPipelineReference({
-    instanceId: appId,
+  const hasPipelineReference = appId || instanceId ? await checkPipelineReference({
+    instanceId: appId || instanceId,
     type,
   }) : null;
   if (!isEmpty(hasPipelineReference)) {

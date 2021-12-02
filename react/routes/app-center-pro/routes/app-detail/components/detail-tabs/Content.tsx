@@ -30,8 +30,6 @@ const DetailsTabs = () => {
     subfixCls,
     tabKeys,
     appDetailTabStore,
-    // configurationDetailDataSet,
-    // instanceId,
   } = useAppDetailTabsStore();
 
   const handleTabChange = (tabKey: string) => {

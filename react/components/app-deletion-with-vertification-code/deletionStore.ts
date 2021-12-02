@@ -43,7 +43,6 @@ function useAppDeletionWithVertificationStore() {
       envId, instanceId, type, callback, instanceName,
     }:Omit<openDeleteProps, 'projectId'> & { type: string}) {
       const newDeleteArr = [...this.deleteArr];
-
       const currentIndex = findIndex(newDeleteArr, (item:any) => instanceId === item.deleteId && type === item.type);
 
       if (currentIndex > -1) {
