@@ -36,6 +36,7 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
       <SubMenu
         key="sub4"
         title="name"
+        className={`${prefixCls}-subMenu`}
       >
         <Item key="9">Option 9</Item>
         <Item key="10">Option 10</Item>

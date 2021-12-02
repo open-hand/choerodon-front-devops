@@ -233,7 +233,7 @@ const mapping: {
           transformResponse: (res) => {
             function init(data: any) {
               let result: any[] = [];
-              data.forEach((i: {
+              data?.forEach((i: {
                 name: string,
                 appVersionVOS: {
                   id: string

@@ -10,13 +10,14 @@ import {
 import { useUnmount, useMount } from 'ahooks';
 import { NewTips } from '@choerodon/components';
 import { isEmpty } from 'lodash';
+
 import PipeBasicInfoDs from './stores/PipelineBasicInfoDataSet';
-import AppServiceDataSet from './stores/AppServiceDataSet';
+import AppServiceDataSet from '@/routes/app-pipeline/stores/AppServiceDataSet';
+import BranchDataSet from '@/routes/app-pipeline/stores/BranchDataSet';
+
+import useTabData from '../../hooks/useTabData';
 
 import './index.less';
-import BranchDataSet from './stores/BranchDataSet';
-import { TabkeyTypes } from '../../interface';
-import useTabData from '../../hooks/useTabData';
 
 export type PipelineBasicInfoProps = {
 }
@@ -44,7 +45,7 @@ const PipelineBasicInfo:FC<PipelineBasicInfoProps> = (props) => {
   ), []);
 
   const appServiceDs = useMemo(() => new DataSet(
-    AppServiceDataSet({ formatPipelineEdit }),
+    AppServiceDataSet(),
   ), []);
 
   const pipelinBasicInfoDs = useMemo(() => new DataSet(

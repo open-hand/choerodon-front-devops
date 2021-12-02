@@ -5,7 +5,6 @@ import { Popover } from 'choerodon-ui';
 import ParalleLines from '../paralle-lines';
 import SerialLines from '../serial-lines';
 import JobTypesPanel from './components/job-types-panel';
-import { Placements } from '@/interface';
 
 const prefixCls = 'c7ncd-pipeline-edit-jobbtn';
 
@@ -41,6 +40,7 @@ const JobAddBtn = (props:JobAddBtnProps) => {
       trigger={['click'] as any}
       content={<JobTypesPanel />}
       placement={'bottom' as any}
+      overlayClassName={`${prefixCls}-popover`}
     >
       {renderContent()}
     </Popover>

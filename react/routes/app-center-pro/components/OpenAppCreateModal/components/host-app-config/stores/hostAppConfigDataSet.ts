@@ -274,7 +274,7 @@ const mapping: {
           transformResponse: (res) => {
             function init(data: any) {
               const result: any[] = [];
-              data.forEach((item: any) => {
+              data?.forEach((item: any) => {
                 item.appVersionVOS.forEach((version: any) => {
                   result.push({
                     ...version,
