@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';

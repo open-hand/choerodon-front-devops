@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useMemo, useState, useCallback } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
