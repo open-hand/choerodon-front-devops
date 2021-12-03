@@ -1,9 +1,7 @@
 import { appServiceApiConfig } from '@choerodon/master';
 import getTablePostData from '@/utils/getTablePostData';
 
-const PipelineBasicInfoDataSet = ({
-  formatPipelineEdit,
-}:any):any => ({
+const PipelineBasicInfoDataSet = ():any => ({
   autoQuery: true,
   selection: 'single',
   pageSize: 20,

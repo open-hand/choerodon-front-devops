@@ -1,7 +1,6 @@
 import React, {
   useEffect, FC,
 } from 'react';
-import { observer } from 'mobx-react-lite';
 import { useFormatCommon } from '@choerodon/master';
 import map from 'lodash/map';
 import {} from '@choerodon/components';
@@ -12,6 +11,7 @@ import './index.less';
 import JobItem from '../job-item';
 import JobAddBtn from '../job-btn';
 import { STAGE_TYPES } from '../../../../interface';
+import useStageModal from '../../hooks/useStageModal';
 
 export type StageProps = {
   type: STAGE_TYPES
@@ -29,13 +29,14 @@ const Stage:FC<StageProps> = (props) => {
   } = props;
 
   const formatCommon = useFormatCommon();
-  // const formatStage = useFormatMessage(intlPrefix);
+
+  const handleModalOpen = useStageModal('edit');
 
   const renderJobs = () => map(jobList, (item, index:number) => <JobItem {...item} />);
 
   return (
     <div className={prefixCls}>
-      <header>
+      <header onClick={handleModalOpen} role="none">
         <div className={`${prefixCls}-stageType`}>{stageType}</div>
         <div className={`${prefixCls}-stageName`}>{stageName}</div>
         <div className={`${prefixCls}-btnGroups`}>

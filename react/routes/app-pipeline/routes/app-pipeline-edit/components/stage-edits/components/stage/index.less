@@ -25,8 +25,6 @@
   &-stageType {
     width: 40px;
     background: #f0f8ff;
-    border-radius: 2px 0px 0px 2px;
-    border: 1px solid #d5edff;
     font-size: 13px;
     font-weight: 400;
     color: #4d90fe;
@@ -34,10 +32,6 @@
   &-stageName {
     flex: 1;
     background: #fff;
-    border-style: solid;
-    border-color: rgba(65, 91, 201, 0.24);
-    border-width: 1px 1px 1px 0;
-    border-radius: 0 2px 2px 0;
   }
   > main {
     margin-top: 72px;
@@ -55,8 +49,12 @@
     z-index: 2;
     position: absolute;
     transition: 0.2s;
+    box-shadow: @boxShadaw;
+    border-style: solid;
+    border-color: rgba(65, 91, 201, 0.24);
+    border-width: 1px;
     &:hover {
-      box-shadow: @boxShadaw;
+      border-color: var(--primary-color);
       .@{prefixCls}-btnGroups {
         &-delete {
           opacity: 1;

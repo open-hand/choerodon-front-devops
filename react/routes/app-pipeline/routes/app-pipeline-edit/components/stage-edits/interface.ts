@@ -8,7 +8,6 @@ export type StageEditsDataTypes = {
 }
 
 export type StageEditsIndexProps = {
-  savedHandler: readonly [StageEditsDataTypes, (data:StageEditsDataTypes)=>any, (tabKey:TabkeyTypes)=>unknown]
 };
 
 export type StageEditsStoreContext = {
