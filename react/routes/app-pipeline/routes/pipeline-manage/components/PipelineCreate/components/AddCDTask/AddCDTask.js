@@ -603,6 +603,7 @@ export default observer(() => {
             }
             extra[addCDTaskDataSetMap.notifyWay] = extra[addCDTaskDataSetMap.notifyWay].join(',');
           }
+          extra.apiTestConfigId = metadata.apiTestConfigId;
         }
       } else if (jobDetail.type === 'cdHost') {
         const metadata = JSONbig.parse(jobDetail.metadata.replace(/'/g, '"'));
@@ -1738,6 +1739,10 @@ export default observer(() => {
             searchMatcher="task_name"
             name={addCDTaskDataSetMap.apiTestMission}
             addonAfter={<Tips helpText="此处仅能从项目下已有的API测试任务中进行选择" />}
+          />,
+          <Select
+            colSpan={3}
+            name="apiTestConfigId"
           />,
           <Select
             colSpan={3}
