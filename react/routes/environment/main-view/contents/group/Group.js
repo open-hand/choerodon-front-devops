@@ -2,11 +2,11 @@ import React, {
   Fragment, useMemo, useEffect, useState,
 } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Action, Choerodon } from '@choerodon/master';
+import { Action, Choerodon, SagaDetails } from '@choerodon/master';
 import {
   Modal, Table, Spin, Icon,
 } from 'choerodon-ui/pro';
-import { SagaDetails } from '@choerodon/master';
+
 import checkPermission from '../../../../../utils/checkPermission';
 import StatusTag from '../../../../../components/status-tag';
 import eventStopProp from '../../../../../utils/eventStopProp';
@@ -316,7 +316,7 @@ const Group = observer(() => {
     if (hasSagaInstanceId) {
       actionData = [{
         service: ['choerodon.code.project.deploy.environment.ps.delete'],
-        text: formatMessage({ id: `${intlPrefix}.modal.detail.delete` }),
+        text: formatMessage({ id: 'c7ncd.environment.Delete' }),
         action: () => openDelete(record),
       }];
     } else {
@@ -324,40 +324,40 @@ const Group = observer(() => {
         case RUNNING:
           actionData = [{
             service: ['choerodon.code.project.deploy.environment.ps.modify'],
-            text: formatMessage({ id: `${intlPrefix}.modal.detail.modify` }),
+            text: formatMessage({ id: 'c7ncd.environment.Modify' }),
             action: openModifyModal.bind(this, record),
           }, {
             service: ['choerodon.code.project.deploy.environment.ps.stop'],
-            text: formatMessage({ id: `${intlPrefix}.modal.detail.stop` }),
+            text: formatMessage({ id: 'c7ncd.environment.Disable' }),
             action: () => openEffectModal(record),
           }];
           break;
         case DISCONNECTED:
           actionData = [{
             service: ['choerodon.code.project.deploy.environment.ps.modify'],
-            text: formatMessage({ id: `${intlPrefix}.modal.detail.modify` }),
+            text: formatMessage({ id: 'c7ncd.environment.Modify' }),
             action: () => openModifyModal(record),
           }, {
             service: ['choerodon.code.project.deploy.environment.ps.delete'],
-            text: formatMessage({ id: `${intlPrefix}.modal.detail.delete` }),
+            text: formatMessage({ id: 'c7ncd.environment.Delete' }),
             action: () => openDelete(record),
           }];
           break;
         case STOPPED:
           actionData = [{
             service: ['choerodon.code.project.deploy.environment.ps.stop'],
-            text: formatMessage({ id: `${intlPrefix}.modal.detail.start` }),
+            text: formatMessage({ id: 'c7ncd.environment.Enable' }),
             action: () => handleEffect(envId, true),
           }, {
             service: ['choerodon.code.project.deploy.environment.ps.delete'],
-            text: formatMessage({ id: `${intlPrefix}.modal.detail.delete` }),
+            text: formatMessage({ id: 'c7ncd.environment.Delete' }),
             action: () => openDelete(record),
           }];
           break;
         case FAILED:
           actionData = [{
             service: ['choerodon.code.project.deploy.environment.ps.delete'],
-            text: formatMessage({ id: `${intlPrefix}.modal.detail.delete` }),
+            text: formatMessage({ id: 'c7ncd.environment.Delete' }),
             action: () => openDelete(record),
           }];
           break;

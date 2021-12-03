@@ -2,8 +2,9 @@
 /* eslint-disable jsx-quotes */
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Action } from '@choerodon/master';
+import { Action, useFormatMessage } from '@choerodon/master';
 import { Table, Modal } from 'choerodon-ui/pro';
+
 import KeyValueModal from '@/components/key-value';
 import MouserOverWrapper from '../../../../../components/MouseOverWrapper/MouserOverWrapper';
 import TimePopover from '../../../../../components/timePopover/TimePopover';
@@ -36,6 +37,8 @@ const ConfigMap = observer((props) => {
     ConfigMapTableDs,
   } = useKeyValueStore();
   const { deletionStore: { openDeleteModal } } = useMainStore();
+
+  const format = useFormatMessage('c7ncd.resource');
 
   function refresh() {
     treeDs.query();
@@ -129,7 +132,7 @@ const ConfigMap = observer((props) => {
         border={false}
         queryBar="bar"
       >
-        <Column name="name" sortable header={formatMessage({ id: `${intlPrefix}.configMap` })} renderer={renderName} />
+        <Column name="name" sortable header={format({ id: 'ConfigMap' })} renderer={renderName} />
         <Column renderer={renderAction} width={60} />
         <Column name="key" renderer={renderKey} />
         <Column name="lastUpdateDate" sortable renderer={renderDate} width={105} />

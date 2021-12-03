@@ -1,4 +1,10 @@
-export default ({ formatMessage }) => ({
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
+export default ({ formatMessage, format }) => ({
   selection: false,
   pageSize: 10,
   fields: [
@@ -8,7 +14,7 @@ export default ({ formatMessage }) => ({
     { name: 'key', type: 'object', label: formatMessage({ id: 'key' }) },
     { name: 'value', type: 'object' },
     { name: 'commandStatus', type: 'string' },
-    { name: 'lastUpdateDate', type: 'string', label: formatMessage({ id: 'boot.updateDate' }) },
+    { name: 'lastUpdateDate', type: 'string', label: format({ id: 'UpdateTime' }) },
   ],
   queryFields: [
     { name: 'name', type: 'string', label: formatMessage({ id: 'name' }) },

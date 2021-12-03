@@ -1,6 +1,8 @@
 import getTablePostData from '../../../../../../utils/getTablePostData';
 
-export default ({ formatMessage, intlPrefix, projectId, envId }) => ({
+export default ({
+  formatMessage, intlPrefix, projectId, envId, format,
+}) => ({
   autoQuery: true,
   selection: false,
   pageSize: 10,
@@ -21,16 +23,16 @@ export default ({ formatMessage, intlPrefix, projectId, envId }) => ({
   },
   fields: [
     { name: 'id', type: 'string' },
-    { name: 'name', type: 'string', label: formatMessage({ id: `${intlPrefix}.application.net.name` }) },
+    { name: 'name', type: 'string', label: format({ id: 'ServiceName' }) },
     { name: 'error', type: 'string' },
     { name: 'status', type: 'string' },
     { name: 'config', type: 'object' },
-    { name: 'type', type: 'string', label: formatMessage({ id: `${intlPrefix}.application.net.configType` }) },
+    { name: 'type', type: 'string', label: format({ id: 'ConfigurationType' }) },
     { name: 'loadBalanceIp', type: 'string' },
     { name: 'target', type: 'object' },
     { name: 'appId', type: 'string' },
   ],
   queryFields: [
-    { name: 'name', type: 'string', label: formatMessage({ id: `${intlPrefix}.application.net.name` }) },
+    { name: 'name', type: 'string', label: format({ id: 'ServiceName' }) },
   ],
 });

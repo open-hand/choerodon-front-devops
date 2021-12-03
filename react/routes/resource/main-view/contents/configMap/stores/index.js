@@ -3,6 +3,7 @@ import React, {
   createContext, useContext, useMemo, useEffect,
 } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
+import { useFormatMessage } from '@choerodon/master';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
@@ -26,7 +27,9 @@ export const StoreProvider = injectIntl(inject('AppState')(
       itemTypes: { MAP_GROUP },
     } = useResourceStore();
 
-    const ConfigMapTableDs = useMemo(() => new DataSet(ConfigMapTableDataSet({ formatMessage })), []);
+    const format = useFormatMessage('c7ncd.resource');
+
+    const ConfigMapTableDs = useMemo(() => new DataSet(ConfigMapTableDataSet({ formatMessage, format })), []);
     const formStore = useConfigMapStore();
 
     useEffect(() => {

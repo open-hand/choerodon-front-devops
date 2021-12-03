@@ -4,6 +4,7 @@ import React, {
 } from 'react';
 import { runInAction } from 'mobx';
 import { observer } from 'mobx-react-lite';
+import { useFormatMessage } from '@choerodon/master';
 import {
   Tabs, Spin,
 } from 'choerodon-ui';
@@ -105,6 +106,8 @@ const InstanceContent = observer(() => {
     baseDs,
   } = useInstanceStore();
   const viewType = resourceStore.getViewType;
+
+  const format = useFormatMessage('c7ncd.resource');
 
   const { getSelectedMenu: { key: selectedKey } } = resourceStore;
 
@@ -209,7 +212,7 @@ const InstanceContent = observer(() => {
     const detailsTab = (
       <TabPane
         key={DETAILS_TAB}
-        tab={formatMessage({ id: `${intlPrefix}.instance.tabs.details` })}
+        tab={format({ id: 'OperationDetails' })}
       >
         <Suspense fallback={<Spin />}>
           <Details />
@@ -219,7 +222,7 @@ const InstanceContent = observer(() => {
     const casesTab = (
       <TabPane
         key={CASES_TAB}
-        tab={formatMessage({ id: `${intlPrefix}.instance.tabs.cases` })}
+        tab={format({ id: 'ApplicationEvent' })}
       >
         <Suspense fallback={<Spin />}>
           <Cases />
@@ -243,7 +246,7 @@ const InstanceContent = observer(() => {
         {chooseTab()}
         <TabPane
           key={PODS_TAB}
-          tab={formatMessage({ id: `${intlPrefix}.instance.tabs.pods` })}
+          tab={format({ id: 'PodDetails' })}
         >
           <Suspense fallback={<Spin />}>
             <PodsDetails />

@@ -1,5 +1,5 @@
 export default ({
-  formatMessage, intlPrefix, projectId, envId,
+  formatMessage, intlPrefix, projectId, envId, format,
 }) => ({
   autoQuery: true,
   selection: false,
@@ -17,13 +17,13 @@ export default ({
   },
   fields: [
     { name: 'id', type: 'string' },
-    { name: 'name', type: 'string', label: formatMessage({ id: `${intlPrefix}.application.name` }) },
-    { name: 'code', type: 'string', label: formatMessage({ id: `${intlPrefix}.application.code` }) },
-    { name: 'commandVersion', type: 'string', label: formatMessage({ id: `${intlPrefix}.chart.version` }) },
-    { name: 'appServiceName', type: 'string', label: formatMessage({ id: `${intlPrefix}.chart.resource` }) },
+    { name: 'name', type: 'string', label: format({ id: 'ApplicationName' }) },
+    { name: 'code', type: 'string', label: format({ id: 'ApplicationNumber' }) },
+    { name: 'commandVersion', type: 'string', label: format({ id: 'ChartVersion' }) },
+    { name: 'appServiceName', type: 'string', label: format({ id: 'ChartSource' }) },
     { name: 'chartSource', type: 'string' },
   ],
   queryFields: [
-    { name: 'name', type: 'string', label: formatMessage({ id: `${intlPrefix}.application.name` }) },
+    { name: 'name', type: 'string', label: format({ id: 'ApplicationName' }) },
   ],
 });

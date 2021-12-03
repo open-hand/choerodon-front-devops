@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
-import { HeaderButtons } from '@choerodon/master';
+import { HeaderButtons, useFormatMessage } from '@choerodon/master';
 import { NewTips } from '@choerodon/components';
 import EnvDetail from '@/components/env-detail';
 import DeployConfigForm from '@/components/deploy-config-form';
@@ -23,6 +23,8 @@ const REModals = observer(() => {
     width: 'calc(100vw - 3.52rem)',
     minWidth: '2rem',
   }), []);
+
+  const format = useFormatMessage('c7ncd.resource');
 
   const {
     intlPrefix,
@@ -156,34 +158,34 @@ const REModals = observer(() => {
   function getButtons() {
     return [
       {
-        name: '创建应用',
+        name: format({ id: 'CreateApplication' }),
         icon: 'playlist_add',
         handler: () => openAppCreateModal(handleCreateCallback, true, id),
       },
       {
         permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.deploy-config'],
         disabled: !record,
-        name: formatMessage({ id: `${intlPrefix}.create.config` }),
+        name: format({ id: 'CreateDeploymentConfiguration' }),
         icon: 'playlist_add',
         handler: openConfigModal,
       },
       // 权限管理
       {
         permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.permission'],
-        name: formatMessage({ id: `${intlPrefix}.modal.permission` }),
+        name: format({ id: 'AuthorityManagement' }),
         icon: 'settings-o',
         handler: openPermission,
         disabled: !record,
       },
       {
-        name: '更多操作',
+        name: format({ id: 'MoreActions' }),
         groupBtnItems: [
           {
-            name: formatMessage({ id: `${intlPrefix}.modal.env-detail` }),
+            name: format({ id: 'EnvironmentalDetails' }),
             handler: openEnvDetail,
           },
           {
-            name: formatMessage({ id: `${intlPrefix}.environment.config-lab` }),
+            name: format({ id: 'ConfigurationLibrary' }),
             handler: linkToConfig,
           },
           {
@@ -192,7 +194,7 @@ const REModals = observer(() => {
             tooltipsConfig: {
               title: !existAutoDeploy && '流水线中没有该环境下的自动部署任务',
             },
-            name: autoDeployStatus || !existAutoDeploy ? '停用自动部署' : '开启自动部署',
+            name: format({ id: autoDeployStatus || !existAutoDeploy ? 'DisableAutomaticDeployment' : 'EnablingAutomaticDeployment' }),
             handler: handleCloseAutoDeployModal,
           },
         ],

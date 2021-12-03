@@ -1,5 +1,7 @@
+/* eslint-disable */
 import React, { lazy, Suspense, useEffect } from 'react';
 import { runInAction } from 'mobx';
+import { useFormatMessage } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 import { Tabs, Spin } from 'choerodon-ui';
 import { NewTips } from '@choerodon/components';
@@ -22,6 +24,8 @@ const EnvContent = observer(() => {
     resourceStore,
     formatMessage,
   } = useResourceStore();
+
+  const format = useFormatMessage('c7ncd.resource');
 
   const {
     baseInfoDs,
@@ -92,7 +96,7 @@ const EnvContent = observer(() => {
       >
         <TabPane
           key={SYNC_TAB}
-          tab={formatMessage({ id: `${intlPrefix}.environment.tabs.sync` })}
+          tab={format({ id: 'GitOpsLog' })}
         >
           <Suspense fallback={<Spin />}>
             <SyncSituation />
@@ -100,7 +104,7 @@ const EnvContent = observer(() => {
         </TabPane>
         <TabPane
           key={CONFIG_TAB}
-          tab={formatMessage({ id: `${intlPrefix}.environment.tabs.config` })}
+          tab={format({ id: 'DeploymentConfiguration' })}
         >
           <Suspense fallback={<Spin />}>
             <Config />
@@ -108,7 +112,7 @@ const EnvContent = observer(() => {
         </TabPane>
         <TabPane
           key={POLARIS_TAB}
-          tab={formatMessage({ id: `${intlPrefix}.environment.tabs.polaris` })}
+          tab={format({ id: 'HealthCheck' })}
         >
           <Suspense fallback={<Spin />}>
             <Polaris />
@@ -120,7 +124,7 @@ const EnvContent = observer(() => {
           tab={(
             <NewTips
               helpText={formatMessage({ id: `${intlPrefix}.permission.tab.tips` })}
-              title={formatMessage({ id: `${intlPrefix}.environment.tabs.assignPermissions` })}
+              title={format({ id: 'AuthorityAssignment' })}
             />
           )}
         >

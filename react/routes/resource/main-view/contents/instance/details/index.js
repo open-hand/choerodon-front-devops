@@ -1,11 +1,14 @@
+/* eslint-disable */
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react';
 import _ from 'lodash';
 import TimeAgo from 'timeago-react';
-import { Choerodon, Permission } from '@choerodon/master';
-import { Tooltip, Button, Icon, Popover, Spin } from 'choerodon-ui';
+import { Choerodon, Permission, C7NFormat } from '@choerodon/master';
+import {
+  Tooltip, Button, Icon, Popover, Spin,
+} from 'choerodon-ui';
 import { formatDate } from '../../../../../../utils';
 import Store from '../stores';
 import Pods from './pods';
@@ -16,10 +19,17 @@ import './index.less';
 const Label = ({ name, value }) => (
   <Tooltip title={`键-${name} 值-${value}`}>
     <div className="c7ncd-deployment-popover-labels">
-      <span>键-{name}</span>
-      <span>值-{value}</span>
+      <span>
+        键-
+        {name}
+      </span>
+      <span>
+        值-
+        {value}
+      </span>
     </div>
-  </Tooltip>);
+  </Tooltip>
+);
 
 Label.propTypes = {
   name: PropTypes.string.isRequired,
@@ -119,46 +129,58 @@ export default class Details extends Component {
     if (!deployments || !deployments.length) return null;
 
     const getDeploy = (item) => {
-      const { name, age, devopsEnvPodVOS, ports, labels } = item;
+      const {
+        name, age, devopsEnvPodVOS, ports, labels,
+      } = item;
       const replica = `${item[available] || 0} available / ${item[current] || 0} current / ${item[desired] || 0} desired`;
       const podCount = computedPodCount(devopsEnvPodVOS);
       let portValues = null;
       let labelValues = null;
       if (ports && ports.length) {
-        portValues = <div className="c7ncd-instance-details-port">
-          <span className="c7ncd-instance-details-value">
-            {_.head(ports)}
-          </span>
-          {ports.length > 1 && <Popover
-            arrowPointAtCenter
-            placement="bottom"
-            getPopupContainer={(triggerNode) => triggerNode.parentNode}
-            content={_.map(_.tail(ports), (port) => <div className="c7ncd-deployment-popover-port" key={port}>{port}</div>)}
-          >
-            <Icon type="expand_more" className="c7ncd-deployment-icon-more" />
-          </Popover>}
-        </div>;
+        portValues = (
+          <div className="c7ncd-instance-details-port">
+            <span className="c7ncd-instance-details-value">
+              {_.head(ports)}
+            </span>
+            {ports.length > 1 && (
+            <Popover
+              arrowPointAtCenter
+              placement="bottom"
+              getPopupContainer={(triggerNode) => triggerNode.parentNode}
+              content={_.map(_.tail(ports), (port) => <div className="c7ncd-deployment-popover-port" key={port}>{port}</div>)}
+            >
+              <Icon type="expand_more" className="c7ncd-deployment-icon-more" />
+            </Popover>
+            )}
+          </div>
+        );
       }
 
       if (!_.isEmpty(labels)) {
         const keys = Object.keys(labels);
         const firstKey = keys[0];
 
-        labelValues = <div className="c7ncd-instance-details-label">
-          <Label name={firstKey} value={labels[firstKey]} />
-          {keys.length > 1 && <Popover
-            arrowPointAtCenter
-            placement="bottom"
-            getPopupContainer={(triggerNode) => triggerNode.parentNode}
-            content={_.map(_.tail(keys), (key) => <Label
-              key={key}
-              name={key}
-              value={labels[key]}
-            />)}
-          >
-            <Icon type="expand_more" className="c7ncd-deployment-icon-more" />
-          </Popover>}
-        </div>;
+        labelValues = (
+          <div className="c7ncd-instance-details-label">
+            <Label name={firstKey} value={labels[firstKey]} />
+            {keys.length > 1 && (
+            <Popover
+              arrowPointAtCenter
+              placement="bottom"
+              getPopupContainer={(triggerNode) => triggerNode.parentNode}
+              content={_.map(_.tail(keys), (key) => (
+                <Label
+                  key={key}
+                  name={key}
+                  value={labels[key]}
+                />
+              ))}
+            >
+              <Icon type="expand_more" className="c7ncd-deployment-icon-more" />
+            </Popover>
+            )}
+          </div>
+        );
       }
 
       return (
@@ -168,7 +190,8 @@ export default class Details extends Component {
             <div className="c7ncd-instance-details-item">
               <div className="c7ncd-instance-details-inline">
                 <span className="c7ncd-instance-details-key">
-                  {podType === 'deploymentVOS' ? 'ReplicaSet' : <FormattedMessage id="status" />}：
+                  {podType === 'deploymentVOS' ? 'ReplicaSet' : <FormattedMessage id="status" />}
+                  ：
                 </span>
                 <Tooltip title={replica}>
                   <span className="c7ncd-instance-details-value">{replica}</span>
@@ -176,7 +199,11 @@ export default class Details extends Component {
               </div>
               <div className="c7ncd-instance-details-inline">
                 <span className="c7ncd-instance-details-key">
-                  <FormattedMessage id="ist.expand.date" />：
+                  <C7NFormat
+                    intlPrefix="c7ncd.resource"
+                    id="UpdateTime"
+                  />
+                  ：
                 </span>
                 <span className="c7ncd-instance-details-value">
                   <Tooltip title={formatDate(age)}>
@@ -187,25 +214,37 @@ export default class Details extends Component {
                   </Tooltip>
                 </span>
               </div>
-              {_.has(item, 'labels') && <div className="c7ncd-instance-details-inline">
+              {_.has(item, 'labels') && (
+              <div className="c7ncd-instance-details-inline">
                 <span className="c7ncd-instance-details-key">
-                  <FormattedMessage id="label" />：
+                  <FormattedMessage id="label" />
+                  ：
                 </span>
                 {labelValues}
-              </div>}
-              {_.has(item, 'ports') && <div className="c7ncd-instance-details-inline">
+              </div>
+              )}
+              {_.has(item, 'ports') && (
+              <div className="c7ncd-instance-details-inline">
                 <span className="c7ncd-instance-details-key">
-                  <FormattedMessage id="c7ncd.deployment.port.number" />：
+                  <C7NFormat
+                    intlPrefix="c7ncd.resource"
+                    id="Port"
+                  />
+                  ：
                 </span>
                 {portValues}
-              </div>}
+              </div>
+              )}
             </div>
             <Button
               className="c7ncd-detail-btn"
               type="primary"
               onClick={isDisabled ? null : () => this.handleClick(podType, instanceId, name)}
             >
-              <FormattedMessage id="detailMore" />
+              <C7NFormat
+                intlPrefix="c7ncd.resource"
+                id="Moredetails"
+              />
             </Button>
           </div>
           <Pods
@@ -269,19 +308,23 @@ export default class Details extends Component {
             );
             break;
           case 'services':
-            text = (<Fragment>
-              <span className="c7ncd-instance-details-value">
-                {_.head(data[key])}
-              </span>
-              {data[key].length > 1 && <Popover
-                arrowPointAtCenter
-                placement="bottom"
-                getPopupContainer={(triggerNode) => triggerNode.parentNode}
-                content={_.map(_.tail(data[key]), (ingress) => <div className="c7ncd-deployment-popover-port" key={ingress}>{ingress}</div>)}
-              >
-                <Icon type="expand_more" className="c7ncd-deployment-icon-more" />
-              </Popover>}
-            </Fragment>);
+            text = (
+              <>
+                <span className="c7ncd-instance-details-value">
+                  {_.head(data[key])}
+                </span>
+                {data[key].length > 1 && (
+                <Popover
+                  arrowPointAtCenter
+                  placement="bottom"
+                  getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                  content={_.map(_.tail(data[key]), (ingress) => <div className="c7ncd-deployment-popover-port" key={ingress}>{ingress}</div>)}
+                >
+                  <Icon type="expand_more" className="c7ncd-deployment-icon-more" />
+                </Popover>
+                )}
+              </>
+            );
             break;
           case 'hosts':
             text = (
@@ -294,10 +337,12 @@ export default class Details extends Component {
             text = data[key];
             break;
         }
+        console.log(key);
         return (
           <li className="c7ncd-instance-details-inline">
             <span className="c7ncd-instance-details-key">
-              <FormattedMessage id={`ist.expand.net.${key}`} />：
+              <FormattedMessage id={`ist.expand.net.${key}`} />
+              ：
             </span>
             <span className="c7ncd-instance-details-value">{text}</span>
           </li>
@@ -351,21 +396,25 @@ export default class Details extends Component {
     const hasContent = _.find(contentList, (item) => item.main && item.main.length);
 
     return (
-      <Fragment>
+      <>
         <Spin spinning={getLoading}>
           <div className="c7ncd-instance-details">
             <div className="c7ncd-instance-details-inner">
-              {!hasContent ? (<div className="c7ncd-instance-details-empty">
-                <FormattedMessage id={`${intlPrefix}.instance.detail.empty`} />
-              </div>) : getContent(contentList)}
+              {!hasContent ? (
+                <div className="c7ncd-instance-details-empty">
+                  <FormattedMessage id={`${intlPrefix}.instance.detail.empty`} />
+                </div>
+              ) : getContent(contentList)}
             </div>
           </div>
         </Spin>
-        {visible && <DetailsSidebar
+        {visible && (
+        <DetailsSidebar
           visible={visible}
           onClose={this.hideSidebar}
-        />}
-      </Fragment>
+        />
+        )}
+      </>
     );
   }
 }
@@ -386,24 +435,32 @@ function computedPodCount(collection) {
 }
 
 function getContent(data) {
-  return _.map(data, ({ main, title }) => (main && main.length ? <div className="c7ncd-instance-details-panel" key={title}>
-    <div className="c7ncd-instance-details-title">
-      <span>{title}</span>
+  return _.map(data, ({ main, title }) => (main && main.length ? (
+    <div className="c7ncd-instance-details-panel" key={title}>
+      <div className="c7ncd-instance-details-title">
+        <span>{title}</span>
+      </div>
+      {main}
     </div>
-    {main}
-  </div> : null));
+  ) : null));
 }
 
 function getName(name) {
-  return <div className="c7ncd-instance-details-block">
-    <span className="c7ncd-instance-details-item-keys">
-      <FormattedMessage id="name" />：
-    </span>
-    <span
-      title={name}
-      className="c7ncd-instance-details-item-values c7ncd-expanded-text_bold"
-    >
-      {name}
-    </span>
-  </div>;
+  return (
+    <div className="c7ncd-instance-details-block">
+      <span className="c7ncd-instance-details-item-keys">
+        <C7NFormat
+          intlPrefix="c7ncd.resource"
+          id="Name"
+        />
+        {/* <FormattedMessage id="name" />： */}
+      </span>
+      <span
+        title={name}
+        className="c7ncd-instance-details-item-values c7ncd-expanded-text_bold"
+      >
+        {name}
+      </span>
+    </div>
+  );
 }

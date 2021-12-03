@@ -1,6 +1,7 @@
+/* eslint-disable */
 import React, { useMemo } from 'react';
+import { useFormatMessage, Permission } from '@choerodon/master';
 import { FormattedMessage } from 'react-intl';
-import { Permission } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 import { Tooltip, Button, Modal } from 'choerodon-ui/pro';
 import { NewTips } from '@choerodon/components';
@@ -15,6 +16,8 @@ const SyncSituation = observer(() => {
     treeDs,
     formatMessage,
   } = useResourceStore();
+
+  const format = useFormatMessage('c7ncd.resource');
 
   const {
     gitopsLogDs,
@@ -94,7 +97,7 @@ const SyncSituation = observer(() => {
         <div className="log-sync-line">
           <div className="log-sync-line-card">
             <div className="log-sync-line-card-title">
-              <FormattedMessage id={`${intlPrefix}.environment.config-lab`} />
+              {format({ id: 'ConfigurationLibrary' })}
             </div>
             <div className="log-sync-line-card-commit">
               <a
@@ -123,7 +126,7 @@ const SyncSituation = observer(() => {
           </div>
           <div className="log-sync-line-card">
             <div className="log-sync-line-card-title">
-              <FormattedMessage id={`${intlPrefix}.environment.resolved`} />
+              {format({ id: 'Resolved' })}
             </div>
             <div className="log-sync-line-card-commit">
               <a
@@ -140,7 +143,7 @@ const SyncSituation = observer(() => {
           </div>
           <div className="log-sync-line-card">
             <div className="log-sync-line-card-title">
-              <FormattedMessage id={`${intlPrefix}.environment.executed`} />
+              {format({ id: 'Executed' })}
             </div>
             <div className="log-sync-line-card-commit">
               <a
@@ -163,7 +166,7 @@ const SyncSituation = observer(() => {
       <div className="log-sync-title">
         <NewTips
           helpText={content}
-          title={formatMessage({ id: `${intlPrefix}.environment.sync` })}
+          title={format({ id: 'CommitSynchronization' })}
           popoverClassName={`${prefixCls}-environment-sync-help`}
           placement="top"
         />

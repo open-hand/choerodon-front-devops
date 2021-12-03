@@ -264,40 +264,40 @@ function DetailItem({
       case RUNNING:
         actionData = [{
           service: ['choerodon.code.project.deploy.environment.ps.modify'],
-          text: formatMessage({ id: `${intlPrefix}.modal.detail.modify` }),
+          text: formatMessage({ id: 'c7ncd.environment.Modify' }),
           action: openModifyModal,
         }, {
           service: ['choerodon.code.project.deploy.environment.ps.stop'],
-          text: formatMessage({ id: `${intlPrefix}.modal.detail.stop` }),
+          text: formatMessage({ id: 'c7ncd.environment.Disable' }),
           action: openEffectModal,
         }];
         break;
       case DISCONNECTED:
         actionData = [{
           service: ['choerodon.code.project.deploy.environment.ps.modify'],
-          text: formatMessage({ id: `${intlPrefix}.modal.detail.modify` }),
+          text: formatMessage({ id: 'c7ncd.environment.Modify' }),
           action: openModifyModal,
         }, {
           service: ['choerodon.code.project.deploy.environment.ps.delete'],
-          text: formatMessage({ id: `${intlPrefix}.modal.detail.delete` }),
+          text: formatMessage({ id: 'c7ncd.environment.Delete' }),
           action: openDelete,
         }];
         break;
       case STOPPED:
         actionData = [{
           service: ['choerodon.code.project.deploy.environment.ps.stop'],
-          text: formatMessage({ id: `${intlPrefix}.modal.detail.start` }),
+          text: formatMessage({ id: 'c7ncd.environment.Enable' }),
           action: () => handleEffect(true),
         }, {
           service: ['choerodon.code.project.deploy.environment.ps.delete'],
-          text: formatMessage({ id: `${intlPrefix}.modal.detail.delete` }),
+          text: formatMessage({ id: 'c7ncd.environment.Delete' }),
           action: openDelete,
         }];
         break;
       case FAILED:
         actionData = [{
           service: ['choerodon.code.project.deploy.environment.ps.delete'],
-          text: formatMessage({ id: `${intlPrefix}.modal.detail.delete` }),
+          text: formatMessage({ id: 'c7ncd.environment.Delete' }),
           action: openDelete,
         }];
         break;

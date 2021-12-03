@@ -2,6 +2,7 @@ import React, {
   createContext, useContext, useEffect, useMemo,
 } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
+import { useFormatMessage } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
 import useStore, { StoreProps } from '@/routes/resource/main-view/contents/workload/stores/useStore';
@@ -43,6 +44,8 @@ export const StoreProvider = injectIntl(observer((props: any) => {
     intlPrefix,
   } = useResourceStore();
 
+  const format = useFormatMessage('c7ncd.resource');
+
   const {
     getSelectedMenu: { parentId },
   } = resourceStore;
@@ -75,7 +78,7 @@ export const StoreProvider = injectIntl(observer((props: any) => {
     selection: 'single' as DataSetSelection,
   }), []);
   const tableDs = useMemo(() => new DataSet(TableDataSet({
-    formatMessage, projectId, intlPrefix, sourceDs,
+    formatMessage, projectId, intlPrefix, sourceDs, format,
   })), [projectId]);
 
   useEffect(() => {

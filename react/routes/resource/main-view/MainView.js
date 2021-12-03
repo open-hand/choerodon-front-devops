@@ -113,6 +113,7 @@ const MainView = observer(() => {
       [PVC_GROUP]: <PVCContent />,
       [WORKLOAD_GROUP]: <WorkloadContent />,
     };
+    console.log(itemType);
     return cmMaps[itemType]
       ? <Suspense fallback={<Loading display type="c7n" />}>{cmMaps[itemType]}</Suspense>
       : (

@@ -1,6 +1,14 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
+/* eslint-disable */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
+import { useFormatMessage } from '@choerodon/master';
 import { useResourceStore } from '../../../stores';
 
 import './index.less';
@@ -14,6 +22,8 @@ function ResourceListTitle({ type }) {
     prefixCls,
   } = useResourceStore();
 
+  const format = useFormatMessage('c7ncd.resource');
+
   function getEnvName() {
     const envRecord = treeDs.find((record) => record.get('key') === parentId);
     if (envRecord) {
@@ -23,8 +33,7 @@ function ResourceListTitle({ type }) {
 
   return (
     <div className={`${prefixCls}-resource-list-title`}>
-      {formatMessage({ id: `${intlPrefix}.env` }, { name: getEnvName() })}
-      {formatMessage({ id: type || 'null' })}
+      {format({ id: type })}
     </div>
   );
 }

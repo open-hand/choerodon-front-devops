@@ -1,6 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import uuidV1 from 'uuid/v1';
-import { axios } from '@choerodon/master';
+import { axios, apiTestApiConfig } from '@choerodon/master';
 import forEach from 'lodash/forEach';
 import JSONbig from 'json-bigint';
 import { DataSet } from 'choerodon-ui/pro';
@@ -102,6 +102,25 @@ export default (
           } catch (e) {
             return newRes;
           }
+        },
+      }),
+    },
+    {
+      name: 'apiTestConfigId',
+      type: 'string',
+      label: '任务配置',
+      textField: 'name',
+      valueField: 'id',
+      dynamicProps: {
+        required: ({ record }) => record.get('type') === addCDTaskDataSetMap.apiTest,
+      },
+      options: new DataSet({
+        autoQuery: true,
+        transport: {
+          read: () => ({
+            ...apiTestApiConfig.getConfigList(),
+            params: undefined,
+          }),
         },
       }),
     },

@@ -20,6 +20,7 @@ export default ((
   deployResultDs,
   pipelineOptions,
   deployModeDs,
+  format,
 ) => ({
   autoQuery: true,
   selection: false,
@@ -39,7 +40,7 @@ export default ((
     },
   },
   fields: [
-    { name: 'deployId', type: 'string', label: formatMessage({ id: `${intlPrefix}.number` }) },
+    { name: 'deployId', type: 'string', label: format({ id: 'Number' }) },
     { name: mapping.deployMethod.value, type: 'string', label: '部署方式&载体' },
     { name: mapping.deployObject.value, type: 'string', label: '部署对象' },
     { name: 'deployType', type: 'string', label: formatMessage({ id: `${intlPrefix}.type` }) },
@@ -49,31 +50,31 @@ export default ((
     { name: 'pipelineTriggerType', type: 'string', label: formatMessage({ id: `${intlPrefix}.pipeline.type` }) },
     { name: 'deployCreatedBy', type: 'string' },
     { name: 'pipelineName', type: 'string', label: formatMessage({ id: `${intlPrefix}.pipeline.name` }) },
-    { name: 'executeUser', label: '执行' },
-    { name: 'appName', type: 'string', label: formatMessage({ id: `${intlPrefix}.instance` }) },
+    { name: 'executeUser', label: format({ id: 'Execute' }) },
+    { name: 'appName', type: 'string', label: format({ id: 'GeneratedApplication' }) },
     { name: 'appServiceName', type: 'string', label: formatMessage({ id: 'appService' }) },
     { name: 'userImage', type: 'string' },
     { name: 'realName', type: 'string' },
-    { name: 'deploySourceVO', label: formatMessage({ id: `${intlPrefix}.source.deploy` }) },
+    { name: 'deploySourceVO', label: format({ id: 'Source' }) },
   ],
   queryFields: [
     {
-      name: 'deploy_type', type: 'string', textField: 'text', valueField: 'value', label: formatMessage({ id: `${intlPrefix}.type` }), options: deployTypeDs,
+      name: 'deploy_type', type: 'string', textField: 'text', valueField: 'value', label: format({ id: 'DeploymentType' }), options: deployTypeDs,
     },
     {
-      name: 'deploy_mode', type: 'string', textField: 'text', valueField: 'value', label: '部署方式', options: deployModeDs,
+      name: 'deploy_mode', type: 'string', textField: 'text', valueField: 'value', label: format({ id: 'DeploymentWay' }), options: deployModeDs,
     },
     {
-      name: 'deploy_payload_name', type: 'string', label: '部署载体名称',
+      name: 'deploy_payload_name', type: 'string', label: format({ id: 'DeploymentCarrierName' }),
     },
     {
-      name: 'deploy_result', type: 'string', textField: 'text', valueField: 'value', label: '执行结果', options: deployResultDs,
+      name: 'deploy_result', type: 'string', textField: 'text', valueField: 'value', label: format({ id: 'ExecutionResult' }), options: deployResultDs,
     },
     {
-      name: 'deploy_object_name', type: 'string', label: '部署对象名称',
+      name: 'deploy_object_name', type: 'string', label: format({ id: 'DeployedObject' }),
     },
     {
-      name: 'deploy_object_version', type: 'string', label: '部署版本',
+      name: 'deploy_object_version', type: 'string', label: format({ id: 'Version' }),
     },
   ],
 }));

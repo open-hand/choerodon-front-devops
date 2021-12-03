@@ -1,6 +1,8 @@
 import getTablePostData from '../../../../../../utils/getTablePostData';
 
-export default ({ formatMessage, intlPrefix, projectId, envId }) => ({
+export default ({
+  formatMessage, intlPrefix, projectId, envId, format,
+}) => ({
   autoQuery: true,
   selection: false,
   pageSize: 10,
@@ -21,14 +23,14 @@ export default ({ formatMessage, intlPrefix, projectId, envId }) => ({
   },
   fields: [
     { name: 'id', type: 'string' },
-    { name: 'certName', type: 'string', label: formatMessage({ id: `${intlPrefix}.certificate.name` }) },
+    { name: 'certName', type: 'string', label: format({ id: 'CertificateName' }) },
     { name: 'error', type: 'string' },
     { name: 'commandStatus', type: 'string' },
-    { name: 'domains', type: 'object', label: formatMessage({ id: `${intlPrefix}.domains` }) },
+    { name: 'domains', type: 'object', label: format({ id: 'DomainAddresses' }) },
     { name: 'validFrom', type: 'string' },
     { name: 'validUntil', type: 'string' },
   ],
   queryFields: [
-    { name: 'certName', type: 'string', label: formatMessage({ id: `${intlPrefix}.certificate.name` }) },
+    { name: 'certName', type: 'string', label: format({ id: 'CertificateName' }) },
   ],
 });
