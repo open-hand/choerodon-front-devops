@@ -1,0 +1,43 @@
+@prefixCls: ~"c7ncd-templates-selector";
+
+.@{prefixCls} {
+  display: flex;
+  border-top: 1px solid var(--divider);
+  flex: 1;
+
+  &-menu {
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    width: 184px;
+    &-item {
+      > img {
+      }
+      > span {
+      }
+    }
+  }
+  &-container {
+    height: 100%;
+    border-left: 1px solid var(--divider);
+    width: 184px;
+    padding: 15px;
+    flex: 1;
+    > section {
+      padding-bottom: 20px;
+    }
+    > section + section {
+      border-top: 1px solid var(--divider);
+      padding-top: 20px;
+    }
+    &-item {
+      padding: 12px;
+      height: fit-content;
+      background: var(--ck-color-list-button-on-background);
+      border-radius: 4px;
+    }
+    &-item + &-item {
+      margin-top: 16px;
+    }
+  }
+}

@@ -1,10 +1,8 @@
 /* eslint-disable max-len */
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, useContext } from 'react';
 import { useFormatCommon, useFormatMessage } from '@choerodon/master';
 import { Loading } from '@choerodon/components';
-import { observer } from 'mobx-react-lite';
-import { useReactive } from 'ahooks';
-import useStore, { StoreProps } from './useStore';
+import useStore from './useStore';
 import { StageEditsStoreContext, ProviderProps } from '../interface';
 import useLoadStageData from '../hooks/useLoadStageData';
 

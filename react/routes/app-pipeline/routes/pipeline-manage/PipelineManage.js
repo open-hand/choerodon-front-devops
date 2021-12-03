@@ -20,6 +20,7 @@ import VariableSettings from './components/variable-settings';
 import AuditModal from './components/audit-modal';
 import GitlabRunner from './components/gitlab-runner';
 import MouserOverWrapper from '@/components/MouseOverWrapper';
+import { usePipelineCreateModal } from './components/pipeline-create-modal';
 
 import './index.less';
 
@@ -62,6 +63,8 @@ const PipelineManage = observer(() => {
     pathname,
     search,
   } = useLocation();
+
+  const handleModalOpen = usePipelineCreateModal();
 
   const handleCreatePipeline = () => {
     Modal.open({
@@ -304,6 +307,9 @@ const PipelineManage = observer(() => {
           pathname: `${pathname}/edit/1234`,
         });
       },
+    }, {
+      icon: 'add',
+      handler: handleModalOpen,
     });
     return buttons;
   }

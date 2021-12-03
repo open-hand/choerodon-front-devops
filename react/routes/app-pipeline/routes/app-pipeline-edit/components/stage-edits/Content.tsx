@@ -2,7 +2,6 @@ import React, {
   useEffect,
 } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Loading } from '@choerodon/components';
 import map from 'lodash/map';
 import { Alert } from 'choerodon-ui';
 import { useStageEditsStore } from './stores';
