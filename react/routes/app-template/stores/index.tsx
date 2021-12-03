@@ -4,7 +4,7 @@ import React, {
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
-import { useFormatCommon, useFormatMessage } from '@choerodon/master';
+import { useFormatMessage, useFormatCommon } from '@choerodon/master';
 import TableDataSet from './TableDataSet';
 
 interface ContextProps {
@@ -22,8 +22,8 @@ interface ContextProps {
     delete: string[],
   }
   pageType: string,
-  formatCommon:any
-  formatClient:any
+  format:(arg0?:object, arg1?:object)=>{};
+  formatCommon:(arg0?:object, arg1?:object)=>{};
 }
 
 const Store = createContext({} as ContextProps);
@@ -39,12 +39,9 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     AppState: { currentMenuType: { organizationId: orgId } },
     pageType,
   } = props;
-
-  const intlPrefix = 'c7ncd.org-template';
-
-  const formatCommon = useFormatCommon();
-  const formatClient = useFormatMessage(intlPrefix);
-
+  const intlPrefix = 'c7ncd.template';
+  const format = useFormatMessage(intlPrefix);
+  const formatCommon = useFormatCommon(intlPrefix);
   const organizationId = useMemo(() => (pageType === 'organization' ? orgId : null), [pageType, orgId]);
   const permissionCodes = useMemo(() => (organizationId ? {
     create: ['choerodon.code.organization.manager.application-template.ps.create'],
@@ -63,9 +60,13 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   }), [organizationId]);
 
   const tableDs = useMemo(() => new DataSet((TableDataSet({
+<<<<<<< HEAD
     organizationId,
     formatCommon,
     formatClient,
+=======
+    organizationId, formatCommon, format,
+>>>>>>> 0764268e5 ([ADD]应用模板多语言)
   }))), [organizationId]);
 
   const value = {
@@ -77,7 +78,11 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     organizationId,
     permissionCodes,
     formatCommon,
+<<<<<<< HEAD
     formatClient,
+=======
+    format,
+>>>>>>> 0764268e5 ([ADD]应用模板多语言)
   };
   return (
     <Store.Provider value={value}>
