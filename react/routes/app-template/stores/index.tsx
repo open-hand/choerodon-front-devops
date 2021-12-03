@@ -60,13 +60,9 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   }), [organizationId]);
 
   const tableDs = useMemo(() => new DataSet((TableDataSet({
-<<<<<<< HEAD
     organizationId,
     formatCommon,
-    formatClient,
-=======
-    organizationId, formatCommon, format,
->>>>>>> 0764268e5 ([ADD]应用模板多语言)
+    format,
   }))), [organizationId]);
 
   const value = {
@@ -78,11 +74,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     organizationId,
     permissionCodes,
     formatCommon,
-<<<<<<< HEAD
-    formatClient,
-=======
     format,
->>>>>>> 0764268e5 ([ADD]应用模板多语言)
   };
   return (
     <Store.Provider value={value}>
