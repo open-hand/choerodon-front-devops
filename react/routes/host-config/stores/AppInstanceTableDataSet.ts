@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 /* eslint-disable import/no-anonymous-default-export */
 import { DataSet, DataSetProps } from '@/interface';
 import { hostApiConfig } from '@/api/Hosts';
@@ -16,7 +22,7 @@ export default ({ formatMessage, intlPrefix }: ListProps): DataSetProps => ({
     read: hostApiConfig.loadHostsAppList(),
   },
   fields: [
-    { name: 'name', label: formatMessage({ id: 'name' }) },
+    { name: 'name', label: formatMessage({ id: 'c7ncd.environment.Name' }) },
     { name: 'code', label: formatMessage({ id: 'code' }) },
     { name: 'status', label: formatMessage({ id: 'boot.states' }) },
     { name: 'pid', label: formatMessage({ id: `${intlPrefix}.process` }) },

@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 import React from 'react';
 import { observer, Observer } from 'mobx-react-lite';
 import {
@@ -43,13 +49,13 @@ const ContentHeader: React.FC<any> = observer((): any => {
             clearButton
             name="search_param"
             colSpan={2}
-            placeholder="请输入搜索条件"
+            placeholder={formatMessage({ id: 'c7ncd.environment.Search' })}
             prefix={<Icon type="search" />}
             onChange={run}
             valueChangeAction={'input' as any}
           />
           <Select
-            placeholder="主机状态:"
+            placeholder={`${formatMessage({ id: 'c7ncd.environment.HostStatus' })}:`}
             name="host_status"
             colSpan={1}
             onChange={handleSearch}

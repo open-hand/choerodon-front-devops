@@ -60,11 +60,11 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   const hostTabKeys = useMemo(() => [
     {
       key: tabKey.DEPLOY_TAB,
-      text: '部署主机',
+      text: formatMessage({ id: 'c7ncd.environment.HostforDeployment' }),
     },
     {
       key: tabKey.TEST_TAB,
-      text: '测试主机',
+      text: formatMessage({ id: 'c7ncd.environment.HostforTest' }),
     },
   ], []);
 

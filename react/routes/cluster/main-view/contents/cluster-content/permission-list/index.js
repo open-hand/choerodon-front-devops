@@ -1,3 +1,10 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
+/* eslint-disable */
 import React from 'react';
 import { Permission, Action } from '@choerodon/master';
 import { Table } from 'choerodon-ui/pro';
@@ -6,14 +13,16 @@ import { useClusterContentStore } from '../stores';
 const { Column } = Table;
 
 export default () => {
-  const { formatMessage,
-    PermissionDs, ClusterDetailDs } = useClusterContentStore();
+  const {
+    formatMessage,
+    PermissionDs, ClusterDetailDs,
+  } = useClusterContentStore();
   const cluster = ClusterDetailDs.current;
   function renderActions({ record }) {
     const actionData = [
       {
         service: ['choerodon.code.project.deploy.cluster.cluster-management.ps.permission-manage'],
-        text: formatMessage({ id: 'delete' }),
+        text: formatMessage({ id: 'c7ncd-clusterManagement.' }),
         action: () => {
           PermissionDs.transport.destroy.params = {
             delete_project_id: record.get('id'),

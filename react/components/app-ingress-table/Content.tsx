@@ -207,14 +207,14 @@ const AppIngress = observer(() => {
       queryBar={'bar' as TableQueryBarType}
       className="c7ncd-tab-table"
     >
-      <Column name="name" renderer={renderName} />
+      <Column header={formatMessage({ id: 'c7ncd.environment.Name' })} name="name" renderer={renderName} />
       <Column renderer={renderAction} width={55} />
-      <Column name="code" width={90} />
-      <Column name="status" renderer={renderStatus} />
-      <Column name="pid" width={80} />
-      <Column name="ports" width={100} renderer={({ value }) => <Tooltip title={value}>{value}</Tooltip>} />
-      <Column name="creator" renderer={renderUser} />
-      <Column name="creationDate" renderer={({ text }) => <TimePopover content={text} />} />
+      <Column header={formatMessage({ id: 'c7ncd.environment.ApplicationCode' })} name="code" width={90} />
+      <Column header={formatMessage({ id: 'c7ncd.environment.Status' })} name="status" renderer={renderStatus} />
+      <Column header={formatMessage({ id: 'c7ncd.environment.ProcessID' })} name="pid" width={80} />
+      <Column header={formatMessage({ id: 'c7ncd.environment.OccupiedPort' })} name="ports" width={100} renderer={({ value }) => <Tooltip title={value}>{value}</Tooltip>} />
+      <Column header={formatMessage({ id: 'c7ncd.environment.Creator' })} name="creator" renderer={renderUser} />
+      <Column header={formatMessage({ id: 'c7ncd.environment.CreationTime' })} name="creationDate" renderer={({ text }) => <TimePopover content={text} />} />
     </Table>
   );
 });

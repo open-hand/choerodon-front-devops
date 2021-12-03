@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 import { axios } from '@choerodon/master';
 import getTablePostData from '../../../utils/getTablePostData';
 
@@ -23,11 +29,11 @@ export default ((intlPrefix, formatMessage, projectId) => ({
     { name: 'id', type: 'string' },
     { name: 'name', type: 'string', label: formatMessage({ id: 'name' }) },
     { name: 'description', type: 'string', label: formatMessage({ id: 'description' }) },
-    { name: 'clusterName', type: 'string', label: formatMessage({ id: `${intlPrefix}.belong.cluster` }) },
-    { name: 'type', type: 'string', label: formatMessage({ id: `${intlPrefix}.type` }) },
-    { name: 'pvcName', type: 'string', label: formatMessage({ id: `${intlPrefix}.pvc` }) },
-    { name: 'accessModes', type: 'string', label: formatMessage({ id: `${intlPrefix}.mode` }) },
-    { name: 'requestResource', type: 'string', label: formatMessage({ id: `${intlPrefix}.storage` }) },
+    { name: 'clusterName', type: 'string', label: formatMessage({ id: 'c7ncd.PVManagement.Cluster' }) },
+    { name: 'type', type: 'string', label: formatMessage({ id: 'c7ncd.PVManagement.Type' }) },
+    { name: 'pvcName', type: 'string', label: formatMessage({ id: 'c7ncd.PVManagement.AssociatedPVC' }) },
+    { name: 'accessModes', type: 'string', label: formatMessage({ id: 'c7ncd.PVManagement.AccessMode' }) },
+    { name: 'requestResource', type: 'string', label: formatMessage({ id: 'c7ncd.PVManagement.Storage' }) },
     { name: 'status', type: 'string' },
   ],
   queryFields: [

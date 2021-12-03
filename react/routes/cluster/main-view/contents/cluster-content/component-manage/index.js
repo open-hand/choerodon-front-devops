@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import { Modal, Spin } from 'choerodon-ui/pro';
 import map from 'lodash/map';
@@ -47,8 +48,8 @@ export default observer((props) => {
         <ComponentCard
           key={type}
           className={index !== length - 1 ? `${prefixCls}-component-wrap-card` : ''}
-          name={formatMessage({ id: `${intlPrefix}.component.${componentType}` })}
-          describe={formatMessage({ id: `${intlPrefix}.component.${componentType}.des` })}
+          name={componentType}
+          describe={formatMessage({ id: `c7ncd-clusterManagement.${componentType}.des` })}
           buttonData={getButtonData(type, status, operate, message)}
           status={status}
           errorMessage={message}

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useCallback, Fragment } from 'react';
 import {
   Page, Content, Header, Permission, Action, Breadcrumb, Choerodon, HeaderButtons,
@@ -106,12 +107,12 @@ const AppService = withRouter(observer((props) => {
     const actionData = {
       permission: {
         service: ['choerodon.code.project.deploy.cluster.pv-management.ps.permission-manage'],
-        text: formatMessage({ id: `${intlPrefix}.permission` }),
+        text: formatMessage({ id: 'c7ncd.PVManagement.AuthorityManagement' }),
         action: openPermission,
       },
       delete: {
         service: ['choerodon.code.project.deploy.cluster.pv-management.ps.delete'],
-        text: formatMessage({ id: 'delete' }),
+        text: formatMessage({ id: 'c7ncd.PVManagement.Delete' }),
         action: handleDelete,
       },
     };
@@ -211,7 +212,7 @@ const AppService = withRouter(observer((props) => {
         <HeaderButtons
           showClassName={false}
           items={([{
-            name: <FormattedMessage id={`${intlPrefix}.create`} />,
+            name: <FormattedMessage id="c7ncd.PVManagement.CreatePV" />,
             icon: 'playlist_add',
             display: true,
             permissions: ['choerodon.code.project.deploy.cluster.pv-management.ps.create'],
