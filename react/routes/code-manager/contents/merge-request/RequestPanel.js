@@ -19,7 +19,6 @@ import EmptyPage from '../../components/empty-page';
 
 import './index.less';
 import '../../../main.less';
-import './theme4.less';
 
 const TabPane = Tabs.TabPane;
 const { Column } = Table;
@@ -209,7 +208,7 @@ const RequestPanel = withRouter(observer((props) => {
         <Column name="createdAt" renderer={renderCreatedAt} />
         <Column name="commits" renderer={renderCommit} />
         <Column name="updatedAt" renderer={renderUpdateDate} width={100} />
-        {(tabPaneKey === 'opened' || tabPaneKey === 'assignee') && (
+        {(['opend','assignee','merged'].includes(tabPaneKey)) && (
           <Column name="assignee" renderer={renderAssignee} />
         )}
       </Table>
