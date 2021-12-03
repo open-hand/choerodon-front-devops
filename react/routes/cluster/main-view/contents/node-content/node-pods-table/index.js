@@ -1,3 +1,10 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
+/* eslint-disable */
 import React, { Fragment, useState } from 'react';
 import { Action } from '@choerodon/master';
 import { Table } from 'choerodon-ui/pro';
@@ -28,10 +35,12 @@ const NodePodsTable = () => {
   const renderStatus = ({ record }) => {
     const status = record.get('status');
     const name = record.get('name');
-    return <Fragment>
-      <StatusTags name={status} colorCode={status} />
-      <span>{name}</span>
-    </Fragment>;
+    return (
+      <>
+        <StatusTags name={status} colorCode={status} />
+        <span>{name}</span>
+      </>
+    );
   };
 
   const renderCreationDate = ({ record }) => {
@@ -52,7 +61,7 @@ const NodePodsTable = () => {
     const actionData = [
       {
         service: [],
-        text: formatMessage({ id: 'node.log' }),
+        text: formatMessage({ id: 'c7ncd-clusterManagement.PodLog' }),
         action: () => openLog(record),
       },
     ];
@@ -60,24 +69,26 @@ const NodePodsTable = () => {
   }
 
   return (
-    <Fragment>
+    <>
       <Table
         dataSet={nodePodsDs}
         border={false}
         queryBar="none"
         className="c7ncd-node-pods-table"
       >
-        <Column header={formatMessage({ id: 'boot.states' })} renderer={renderStatus} />
+        <Column header={formatMessage({ id: 'c7ncd-clusterManagement.Status' })} renderer={renderStatus} />
         <Column renderer={renderActions} />
-        <Column header={formatMessage({ id: 'ciPipeline.createdAt' })} renderer={renderCreationDate} />
+        <Column header={formatMessage({ id: 'c7ncd-clusterManagement.CreationTime' })} renderer={renderCreationDate} />
       </Table>
-      {visible && <LogSiderbar
+      {visible && (
+      <LogSiderbar
         visible={visible}
         onClose={closeLog}
         record={recordData}
         clusterId={parentId}
-      />}
-    </Fragment>
+      />
+      )}
+    </>
   );
 };
 

@@ -1,4 +1,6 @@
-import React, { Fragment, Suspense, useMemo, useState, useEffect } from 'react';
+import React, {
+  Fragment, Suspense, useMemo, useState, useEffect,
+} from 'react';
 import { observer } from 'mobx-react-lite';
 import { Spin, Button, Icon } from 'choerodon-ui';
 import { useClusterMainStore } from '../../../../stores';
@@ -27,22 +29,22 @@ const checkGroup = [
 const categoryGroup = [
   {
     category_type: 'kubernetesVersion',
-    name: 'Kubernetes版本',
+    name: 'c7ncd-clusterManagement.KubernetesVersion',
     icon: 'saga_define',
   },
   {
     category_type: 'pods',
-    name: 'Pods数量',
+    name: 'c7ncd-clusterManagement.NumberofPods',
     icon: 'toll',
   },
   {
     category_type: 'nodes',
-    name: '节点数量',
+    name: 'c7ncd-clusterManagement.NumberofNodes',
     icon: 'instance_outline',
   },
   {
     category_type: 'namespaces',
-    name: '环境数量',
+    name: 'c7ncd-clusterManagement.NumberofEnvironment',
     icon: 'grain',
   },
 ];
@@ -58,7 +60,6 @@ const numberDetail = observer(({ isLoading }) => {
     polarisNumDS,
   } = useClusterContentStore();
 
-
   useEffect(() => {
 
   }, []);
@@ -68,23 +69,28 @@ const numberDetail = observer(({ isLoading }) => {
   }
 
   function renderNumPanel() {
-    return checkGroup.map((item, key) => <div className={`${prefixCls}-number-check`} key={item.checkType}>
-      <Icon type={item.icon} />
-      <span>
-        {!isLoading ? (polarisNumDS.current && (polarisNumDS.current.get(item.checkType) || 0)) : '-'}&nbsp;
-        {item.text}
-      </span>
-    </div>);
+    return checkGroup.map((item, key) => (
+      <div className={`${prefixCls}-number-check`} key={item.checkType}>
+        <Icon type={item.icon} />
+        <span>
+          {!isLoading ? (polarisNumDS.current && (polarisNumDS.current.get(item.checkType) || 0)) : '-'}
+&nbsp;
+          {item.text}
+        </span>
+      </div>
+    ));
   }
 
-  function renderDetailPanel() {
-    return categoryGroup.map((item) => <div className={`${prefixCls}-number-category`} key={item.category_type}>
-      <Icon type={item.icon} />
-      <div className={`${prefixCls}-number-category-detail`}>
-        <span>{item.name}</span>
-        <span>{polarisNumDS.current ? (polarisNumDS.current.get(item.category_type) || '-') : '-'}</span>
+  function renderDetailPanel(inFormatMessage) {
+    return categoryGroup.map((item) => (
+      <div className={`${prefixCls}-number-category`} key={item.category_type}>
+        <Icon type={item.icon} />
+        <div className={`${prefixCls}-number-category-detail`}>
+          <span>{inFormatMessage({ id: item.name })}</span>
+          <span>{polarisNumDS.current ? (polarisNumDS.current.get(item.category_type) || '-') : '-'}</span>
+        </div>
       </div>
-    </div>);
+    ));
   }
 
   function renderRadar() {
@@ -104,7 +110,7 @@ const numberDetail = observer(({ isLoading }) => {
         <div className={`${prefixCls}-number-leftTop`}>
           {/* 最新一次扫描时间 */}
           <span className={`${prefixCls}-number-leftTop-lastestDate`}>
-            {formatMessage({ id: `${intlPrefix}.polaris.lastedScanDate` })}
+            {formatMessage({ id: 'c7ncd-clusterManagement.EndTimeofLastScan' })}
             {polarisNumDS.current ? polarisNumDS.current.get('lastScanDateTime') : '-'}
           </span>
 
@@ -118,7 +124,7 @@ const numberDetail = observer(({ isLoading }) => {
       </div>
       <div className={`${prefixCls}-number-right`}>
         <div className={`${prefixCls}-number-right-list`}>
-          {renderDetailPanel()}
+          {renderDetailPanel(formatMessage)}
         </div>
       </div>
     </div>

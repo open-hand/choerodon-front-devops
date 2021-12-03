@@ -1,8 +1,11 @@
+/* eslint-disable */
 import React, { Fragment, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Permission } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
-import { Tooltip, Button, Icon, Modal } from 'choerodon-ui/pro';
+import {
+  Tooltip, Button, Icon, Modal,
+} from 'choerodon-ui/pro';
 import { useEnvironmentStore } from '../../../../stores';
 import { useDetailStore } from '../stores';
 import { isNotRunning } from '../../../../util';
@@ -23,7 +26,7 @@ const SyncSituation = observer(() => {
   } = useDetailStore();
 
   const content = useMemo(() => (
-    <Fragment>
+    <>
       <p className="log-help-desc">
         <FormattedMessage id={`${intlPrefix}.environment.help`} />
       </p>
@@ -45,7 +48,7 @@ const SyncSituation = observer(() => {
       <p className="log-help-desc">
         <FormattedMessage id={`${intlPrefix}.environment.executed.des`} />
       </p>
-    </Fragment>
+    </>
   ), []);
 
   /**
@@ -92,7 +95,7 @@ const SyncSituation = observer(() => {
         <div className="log-sync-line">
           <div className="log-sync-line-card">
             <div className="log-sync-line-card-title">
-              <FormattedMessage id={`${intlPrefix}.environment.config-lab`} />
+              <FormattedMessage id="c7ncd.environment.ConfigurationLibrary" />
             </div>
             <div className="log-sync-line-card-commit">
               <a
@@ -122,7 +125,7 @@ const SyncSituation = observer(() => {
           </div>
           <div className="log-sync-line-card">
             <div className="log-sync-line-card-title">
-              <FormattedMessage id={`${intlPrefix}.environment.resolved`} />
+              <FormattedMessage id="c7ncd.environment.Resolved" />
             </div>
             <div className="log-sync-line-card-commit">
               <a
@@ -139,7 +142,7 @@ const SyncSituation = observer(() => {
           </div>
           <div className="log-sync-line-card">
             <div className="log-sync-line-card-title">
-              <FormattedMessage id={`${intlPrefix}.environment.executed`} />
+              <FormattedMessage id="c7ncd.environment.Executed" />
             </div>
             <div className="log-sync-line-card-commit">
               <a
@@ -162,7 +165,7 @@ const SyncSituation = observer(() => {
       <div className="log-sync-title">
         <Tips
           helpText={content}
-          title={formatMessage({ id: `${intlPrefix}.environment.sync` })}
+          title={formatMessage({ id: 'c7ncd.environment.CommitSynchronization' })}
           popoverClassName={`${prefixCls}-environment-sync-help`}
           placement="top"
         />

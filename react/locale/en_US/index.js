@@ -243,4 +243,7 @@ export * from './deployment-operation';
 export * from './application-center';
 export * from './resource';
 export * from './environment';
+export * from './cluster-management';
+export * from './cert-management';
+export * from './pv-management';
 export * from './application-template';

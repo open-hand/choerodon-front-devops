@@ -1,4 +1,7 @@
-import React, { Fragment, lazy, Suspense, useEffect } from 'react';
+/* eslint-disable */
+import React, {
+  Fragment, lazy, Suspense, useEffect,
+} from 'react';
 import { runInAction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import pick from 'lodash/pick';
@@ -96,16 +99,18 @@ const EnvContent = observer(() => {
       connect,
       active,
     } = envStore.getSelectedMenu;
-    return <EnvItem
-      isTitle
-      name={name}
-      connect={connect}
-      active={active}
-    />;
+    return (
+      <EnvItem
+        isTitle
+        name={name}
+        connect={connect}
+        active={active}
+      />
+    );
   }
 
   return (
-    <Fragment>
+    <>
       <PageTitle
         content={getTitle()}
         fallback={getFallBack()}
@@ -117,7 +122,7 @@ const EnvContent = observer(() => {
       >
         <TabPane
           key={SYNC_TAB}
-          tab={formatMessage({ id: `${intlPrefix}.environment.tabs.sync` })}
+          tab={formatMessage({ id: 'c7ncd.environment.GitOpsLog' })}
         >
           <Suspense fallback={<Spin />}>
             <SyncSituation />
@@ -125,7 +130,7 @@ const EnvContent = observer(() => {
         </TabPane>
         <TabPane
           key={CONFIG_TAB}
-          tab={formatMessage({ id: `${intlPrefix}.environment.tabs.config` })}
+          tab={formatMessage({ id: 'c7ncd.environment.DeploymentConfiguration' })}
         >
           <Suspense fallback={<Spin />}>
             <Config />
@@ -133,12 +138,12 @@ const EnvContent = observer(() => {
         </TabPane>
         <TabPane
           key={ASSIGN_TAB}
-          tab={
+          tab={(
             <Tips
               helpText={formatMessage({ id: `${intlPrefix}.permission.tab.tips` })}
-              title={formatMessage({ id: `${intlPrefix}.environment.tabs.assignPermissions` })}
+              title={formatMessage({ id: 'c7ncd.environment.AuthorityAssignment' })}
             />
-          }
+          )}
         >
           <Suspense fallback={<Spin />}>
             <Permissions />
@@ -146,7 +151,7 @@ const EnvContent = observer(() => {
         </TabPane>
       </Tabs>
       <Modals />
-    </Fragment>
+    </>
   );
 });
 

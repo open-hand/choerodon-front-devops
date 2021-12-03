@@ -254,25 +254,25 @@ function ClusterItem({
     }
     const Data = [{
       service: ['choerodon.code.project.deploy.cluster.cluster-management.ps.edit'],
-      text: formatMessage({ id: `${intlPrefix}.action.edit` }),
+      text: formatMessage({ id: 'c7ncd-clusterManagement.Modify' }),
       action: editItem,
     }];
     if (status === 'disconnect') {
       Data.unshift({
         service: ['choerodon.code.project.deploy.cluster.cluster-management.ps.active'],
-        text: formatMessage({ id: `${intlPrefix}.activate.header` }),
+        text: formatMessage({ id: 'c7ncd-clusterManagement.Activate' }),
         action: activateItem,
       });
       Data.push({
         service: ['choerodon.code.project.deploy.cluster.cluster-management.ps.delete'],
-        text: formatMessage({ id: `${intlPrefix}.action.delete` }),
+        text: formatMessage({ id: 'c7ncd-clusterManagement.Delete' }),
         action: deleteItem,
       });
     }
     if (status === 'running') {
       Data.push({
         service: ['choerodon.code.project.deploy.cluster.cluster-management.ps.disconnect'],
-        text: '断开连接',
+        text: formatMessage({ id: 'c7ncd-clusterManagement.Disconnect' }),
         action: handleDisConnect,
       });
     }

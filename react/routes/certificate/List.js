@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {
   useState, useEffect, useCallback, Fragment,
 } from 'react';
@@ -57,12 +58,12 @@ const AppService = withRouter(observer((props) => {
     const actionData = [
       {
         service: ['choerodon.code.project.deploy.cluster.cert-management.ps.permission'],
-        text: formatMessage({ id: `${intlPrefix}.permission` }),
+        text: formatMessage({ id: 'c7ncd.CertManagement.AuthorityManagement' }),
         action: openPermission,
       },
       {
         service: ['choerodon.code.project.deploy.cluster.cert-management.ps.delete'],
-        text: formatMessage({ id: 'delete' }),
+        text: formatMessage({ id: 'c7ncd.CertManagement.Delete' }),
         action: handleDelete,
       },
     ];
@@ -125,7 +126,7 @@ const AppService = withRouter(observer((props) => {
         <HeaderButtons
           showClassName={false}
           items={([{
-            name: <FormattedMessage id={`${intlPrefix}.create`} />,
+            name: <FormattedMessage id="c7ncd.CertManagement.CreateCertificate" />,
             icon: 'playlist_add',
             display: true,
             permissions: ['choerodon.code.project.deploy.cluster.cert-management.ps.create'],

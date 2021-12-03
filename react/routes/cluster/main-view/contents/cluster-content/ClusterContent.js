@@ -81,7 +81,7 @@ export default observer((props) => {
       >
         <TabPane
           key={NODE_TAB}
-          tab={formatMessage({ id: `${intlPrefix}.node.list` })}
+          tab={formatMessage({ id: 'c7ncd-clusterManagement.NodeList' })}
         >
           <Suspense fallback={<Spin />}>
             <div className="c7ncd-cluster-node-list">
@@ -91,7 +91,7 @@ export default observer((props) => {
         </TabPane>
         <TabPane
           key={POLARIS_TAB}
-          tab={formatMessage({ id: `${intlPrefix}.polaris` })}
+          tab={formatMessage({ id: 'c7ncd-clusterManagement.HealthCheck' })}
         >
           <Suspense fallback={<Spin />}>
             <Polaris />
@@ -102,7 +102,7 @@ export default observer((props) => {
           tab={(
             <NewTips
               helpText={formatMessage({ id: `${intlPrefix}.permission.tab.tips` })}
-              title={formatMessage({ id: `${intlPrefix}.permission.assign` })}
+              title={formatMessage({ id: 'c7ncd-clusterManagement.PermissionAssignment' })}
             />
           )}
         >
@@ -112,7 +112,7 @@ export default observer((props) => {
         </TabPane>
         <TabPane
           key={COMPONENT_TAB}
-          tab={formatMessage({ id: `${intlPrefix}.component` })}
+          tab={formatMessage({ id: 'c7ncd-clusterManagement.ComponentManagement' })}
         >
           <Suspense fallback={<Spin />}>
             <ComponentManage />
@@ -120,7 +120,7 @@ export default observer((props) => {
         </TabPane>
         <TabPane
           key={MONITOR_TAB}
-          tab={formatMessage({ id: `${intlPrefix}.monitor` })}
+          tab={formatMessage({ id: 'c7ncd-clusterManagement.ClusterMonitor' })}
         >
           <Suspense fallback={<Spin />}>
             <Monitor />

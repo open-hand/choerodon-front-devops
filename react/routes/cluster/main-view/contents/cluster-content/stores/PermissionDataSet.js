@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 import getTablePostData from '../../../../../../utils/getTablePostData';
 
 export default ({
@@ -29,12 +35,12 @@ export default ({
     {
       name: 'name',
       type: 'string',
-      label: formatMessage({ id: 'cluster.project.name' }),
+      label: formatMessage({ id: 'c7ncd-clusterManagement.ProjectName' }),
     },
     {
       name: 'code',
       type: 'string',
-      label: formatMessage({ id: 'cluster.project.code' }),
+      label: formatMessage({ id: 'c7ncd-clusterManagement.ProjectCode' }),
     },
     {
       name: 'projectId',
@@ -47,12 +53,12 @@ export default ({
     {
       name: 'name',
       type: 'string',
-      label: formatMessage({ id: 'cluster.project.name' }),
+      label: formatMessage({ id: 'c7ncd-clusterManagement.ProjectName' }),
     },
     {
       name: 'code',
       type: 'string',
-      label: formatMessage({ id: 'cluster.project.code' }),
+      label: formatMessage({ id: 'c7ncd-clusterManagement.ProjectCode' }),
     },
   ],
 });

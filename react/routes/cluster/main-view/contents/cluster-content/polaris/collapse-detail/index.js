@@ -54,10 +54,10 @@ const collapseDetail = observer(({ loading }) => {
     return (
       <div className={`${prefixCls}-polaris-tabs-header`}>
         <span className={`${prefixCls}-polaris-mgl-10`}>
-          {formatMessage({ id: `${intlPrefix}.polaris.${item}` })}
+          {formatMessage({ id: `c7ncd-clusterManagement.${item}` })}
         </span>
         <span className={`${prefixCls}-polaris-tabs-header-score`}>
-          {formatMessage({ id: `${intlPrefix}.polaris.score` })}
+          {formatMessage({ id: 'c7ncd-clusterManagement.Score' })}
           :
         </span>
         {isLoading ? <Spin spinning className={`${prefixCls}-polaris-tabs-header-spin`} /> : <span className={`${prefixCls}-polaris-tabs-header-number-${checked}`}>{checked ? `${score}%` : '-'}</span>}
@@ -97,7 +97,7 @@ const collapseDetail = observer(({ loading }) => {
         {projectName && (
           <div className={`${prefixCls}-polaris-tabs-header-item`}>
             <span className={`${prefixCls}-polaris-tabs-header-text`}>
-              {formatMessage({ id: `${intlPrefix}.belong.project` })}
+              {formatMessage({ id: 'c7ncd-clusterManagement.Project' })}
               :
             </span>
             <Tooltip title={projectName}>
@@ -213,14 +213,14 @@ const collapseDetail = observer(({ loading }) => {
           onClick={() => setActiveTab('cluster')}
           className={`${prefixCls}-polaris-tabs-btns-btn ${activeTab === 'cluster' ? `${prefixCls}-polaris-tabs-btns-btn-active` : ''}`}
         >
-          {formatMessage({ id: `${intlPrefix}.polaris.cluster` })}
+          {formatMessage({ id: 'c7ncd-clusterManagement.ClusterOverview' })}
         </Button>
         <Button
           {...buttonProps}
           onClick={() => setActiveTab('env')}
           className={`${prefixCls}-polaris-tabs-btns-btn ${activeTab === 'env' ? `${prefixCls}-polaris-tabs-btns-btn-active` : ''}`}
         >
-          {formatMessage({ id: `${intlPrefix}.polaris.env` })}
+          {formatMessage({ id: 'c7ncd-clusterManagement.EnvironmentalDetails' })}
         </Button>
       </div>
       {activeTab === 'cluster' ? (
@@ -233,7 +233,7 @@ const collapseDetail = observer(({ loading }) => {
         </Collapse>
       ) : ([
         <div className={`${prefixCls}-polaris-tabs-collapse-title`}>
-          {formatMessage({ id: `${intlPrefix}.env.internal` })}
+          {formatMessage({ id: 'c7ncd-clusterManagement.ChoerodonPlatformEnvironments' })}
         </div>,
         envDetailDs.current && !isEmpty(envDetailDs.current.get('internal')) ? (
           <Collapse bordered={false} className={`${prefixCls}-polaris-tabs-collapse`}>
@@ -245,7 +245,7 @@ const collapseDetail = observer(({ loading }) => {
           </Collapse>
         ) : <span className={`${prefixCls}-polaris-empty-text`}>{formatMessage({ id: 'empty.title.env' })}</span>,
         <div className={`${prefixCls}-polaris-tabs-collapse-title`}>
-          {formatMessage({ id: `${intlPrefix}.env.external` })}
+          {formatMessage({ id: 'c7ncd-clusterManagement.OtherEnvironments' })}
         </div>,
         envDetailDs.current && !isEmpty(envDetailDs.current.get('external')) ? (
           <Collapse bordered={false} className={`${prefixCls}-polaris-tabs-collapse`}>

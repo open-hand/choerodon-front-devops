@@ -77,13 +77,13 @@ const HostConfig: React.FC<any> = observer((): any => {
       <Header>
         <HeaderButtons
           items={([{
-            name: formatMessage({ id: `${intlPrefix}.add.deploy` }),
+            name: formatMessage({ id: 'c7ncd.environment.CreateDeploymentHost' }),
             icon: 'playlist_add',
             display: true,
             permissions: ['choerodon.code.project.deploy.host.ps.create'],
             handler: () => handleAdd(),
           }, {
-            name: '添加权限',
+            name: formatMessage({ id: 'c7ncd.environment.AddPermissions' }),
             icon: 'settings-o',
             display: !!listDs.length && mainStore.getSelectedHost?.permissionLabel === 'administrator',
             permissions: ['choerodon.code.project.deploy.host.ps.permission'],

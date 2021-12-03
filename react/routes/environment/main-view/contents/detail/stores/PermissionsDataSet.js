@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 export default ({ formatMessage, intlPrefix }) => ({
   selection: false,
   pageSize: 10,
@@ -6,24 +12,26 @@ export default ({ formatMessage, intlPrefix }) => ({
     {
       name: 'realName',
       type: 'string',
-      label: formatMessage({ id: `${intlPrefix}.environment.permission.user` }),
+      label: formatMessage({ id: 'c7ncd.environment.Username' }),
     },
     {
       name: 'loginName',
       type: 'string',
-      label: formatMessage({ id: `${intlPrefix}.environment.permission.name` }),
+      label: formatMessage({ id: 'c7ncd.environment.LoginName' }),
     },
     {
       name: 'roles',
       type: 'object',
-      label: formatMessage({ id: `${intlPrefix}.environment.permission.role` }),
+      label: formatMessage({ id: 'c7ncd.environment.Projectrole' }),
     },
     {
       name: 'creationDate',
       type: 'dateTime',
-      label: formatMessage({ id: `${intlPrefix}.environment.permission.addTime` }),
+      label: formatMessage({ id: 'c7ncd.environment.AddedTime' }),
     },
-    { name: 'iamUserId', type: 'string', textField: 'realName', valueField: 'iamUserId', label: formatMessage({ id: `${intlPrefix}.project.member` }) },
+    {
+      name: 'iamUserId', type: 'string', textField: 'realName', valueField: 'iamUserId', label: formatMessage({ id: `${intlPrefix}.project.member` }),
+    },
   ],
   queryFields: [
     {
