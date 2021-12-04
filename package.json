@@ -58,7 +58,7 @@
     "xterm": "^3.12.0"
   },
   "devDependencies": {
-    "@choerodon/boot": "0.0.0-webpack5",
+    "@choerodon/boot": "1.2.0",
     "@choerodon/master": "1.2.0",
     "@types/json-bigint": "^1.0.1",
     "@types/react": "^16.9.44",
