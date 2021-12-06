@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 const codeManager = {
   'c7ncd.codeManger.title': '代码管理',
   'c7ncd.codeManger.Branch': '分支',
@@ -49,6 +55,7 @@ const codeManager = {
   'c7ncd.codeManger.duplicated_lines_density': '重复率',
   'c7ncd.codeManger.duplicated_blocks': '重复部分',
   'c7ncd.codeManger.new_duplicated_lines_density': '新增代码部分重复率',
+  'c7ncd.codeManger.state': '状态',
 };
 
 export { codeManager };

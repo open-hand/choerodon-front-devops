@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 const appService = {
   'c7ncd.appService.title': '应用服务',
   'c7ncd.appService.searchAppService': '搜索用用服务',
@@ -21,6 +27,8 @@ const appService = {
   'c7ncd.appService.ShareSearch': '搜索共享设置',
   'c7ncd.appService.Scope': '共享范围',
   'c7ncd.appService.VersionType': '共享版本类型',
+  'c7ncd.appService.normal': '普通服务',
+  'c7ncd.appService.cancel': '取消',
 };
 
 export { appService };

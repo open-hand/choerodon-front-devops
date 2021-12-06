@@ -449,6 +449,7 @@ const ListView = withRouter(observer((props) => {
           okCancel: !status,
           onOk: () => (status ? stopModal.close() : handleChangeActive(false, record)),
           okText: status ? formatMessage({ id: 'iknow' }) : formatMessage({ id: 'boot.stop' }),
+          cancelText: formatMessage({ id: 'c7ncd.appService.cancel' }),
           footer: ((okBtn, cancelBtn) => (
             <>
               {!status && cancelBtn}
@@ -524,7 +525,7 @@ const ListView = withRouter(observer((props) => {
                         </Tooltip>
                         }
                         <span className="c7ncd-appService-item-center-line-type">
-                          <FormattedMessage id={`${intlPrefix}.type.${record.get('type')}`} />
+                          <FormattedMessage id={`c7ncd.appService.${record.get('type')}`} />
                         </span>
                       </div>
                       {renderActions({ record })}
