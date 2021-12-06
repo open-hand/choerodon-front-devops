@@ -49,6 +49,7 @@ const codeManager = {
   'c7ncd.codeManger.duplicated_lines_density': 'Repetition Rate',
   'c7ncd.codeManger.duplicated_blocks': 'Repeat Part',
   'c7ncd.codeManger.new_duplicated_lines_density': 'Repetition Rate of New Code',
+  'c7ncd.codeManger.state': 'State',
 };
 
 export { codeManager };

@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 import React from 'react';
 import Tips from '../../../../../components/new-tips';
 
@@ -44,7 +50,7 @@ export default ((projectId, formatMessage, mergedRequestStore, appId, tabKey, fo
     fields: [
       { name: 'title', type: 'string', label: formatMessage({ id: 'app.name' }) },
       { name: 'iid', type: 'string', label: <Tips title={format({ id: 'ID' })} helpText={formatMessage({ id: 'app.code.tip' })} /> },
-      { name: 'state', type: 'string', label: formatMessage({ id: 'merge.state' }) },
+      { name: 'state', type: 'string', label: format({ id: 'state' }) },
       { name: 'targetBranch', type: 'string', label: <Tips title={formatMessage({ id: 'app.branch' })} helpText={formatMessage({ id: 'app.branch.tip' })} /> },
       { name: 'createdAt', type: 'string', label: <Tips title={formatMessage({ id: 'boot.create' })} helpText={formatMessage({ id: 'create.tip' })} /> },
       { name: 'commits', type: 'string', label: <Tips title={format({ id: 'Commits' })} helpText={formatMessage({ id: 'merge.commit.tip' })} /> },

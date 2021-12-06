@@ -21,6 +21,8 @@ const appService = {
   'c7ncd.appService.ShareSearch': 'Search',
   'c7ncd.appService.Scope': 'Scope',
   'c7ncd.appService.VersionType': 'Version Type',
+  'c7ncd.appService.normal': 'Normal Service',
+  'c7ncd.appService.cancel': 'Cancel',
 };
 
 export { appService };

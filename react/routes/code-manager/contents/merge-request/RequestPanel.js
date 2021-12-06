@@ -204,10 +204,10 @@ const RequestPanel = withRouter(observer((props) => {
         <Column name="title" renderer={renderTitle} />
         <Column name="iid" renderer={renderIid} width={80} align="left" />
         <Column name="targetBranch" renderer={renderTargetBranch} />
-        {tabPaneKey === 'all' && <Column name="state" width={90} />}
+        {tabPaneKey === 'all' && <Column name="state" width={100} />}
         <Column name="createdAt" renderer={renderCreatedAt} />
         <Column name="commits" renderer={renderCommit} />
-        <Column name="updatedAt" renderer={renderUpdateDate} width={100} />
+        <Column name="updatedAt" renderer={renderUpdateDate} />
         {(['opend','assignee','merged'].includes(tabPaneKey)) && (
           <Column name="assignee" renderer={renderAssignee} />
         )}
@@ -234,7 +234,7 @@ const RequestPanel = withRouter(observer((props) => {
           >
             {
               map(tabPaneList, ({ key, count }) => (
-                <Radio.Button value={key}>{`${formatMessage({ id: key })}`}</Radio.Button>
+                <Radio.Button value={key}>{`${formatMessage({ id: `c7ncd.codeManger.${key}` })}`}</Radio.Button>
               ))
             }
             {auditCount > 0 && (
