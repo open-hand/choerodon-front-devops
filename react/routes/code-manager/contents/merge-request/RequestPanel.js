@@ -207,10 +207,8 @@ const RequestPanel = withRouter(observer((props) => {
         {tabPaneKey === 'all' && <Column name="state" width={100} />}
         <Column name="createdAt" renderer={renderCreatedAt} />
         <Column name="commits" renderer={renderCommit} />
-        <Column name="updatedAt" renderer={renderUpdateDate} />
-        {(['opend','assignee','merged'].includes(tabPaneKey)) && (
-          <Column name="assignee" renderer={renderAssignee} />
-        )}
+        <Column name="updatedAt" renderer={renderUpdateDate} width={100} />
+        <Column name="assignee" renderer={renderAssignee} />
       </Table>
     );
   }
