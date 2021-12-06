@@ -189,7 +189,7 @@ const ConfigurationDetailDataSet = () => ({
     },
     {
       name: 'configCode',
-      label: '配置编码',
+      label: '配置文件',
       type: 'string',
     },
   ],
