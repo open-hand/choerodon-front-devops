@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 import { CONSTANTS } from '@choerodon/master';
 import React from 'react';
 import { Modal } from 'choerodon-ui/pro';

@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 import React, { createContext, useContext, useMemo } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
@@ -29,7 +35,10 @@ export const StoreProvider = observer((props: any) => {
   } = props;
 
   const ConGroupDataSet = useMemo(
-    () => new DataSet(conGroupDataSet(isPipeline, preJobList)), [isPipeline, preJobList],
+    () => new DataSet(conGroupDataSet(
+      isPipeline,
+      preJobList,
+    )), [isPipeline, preJobList],
   );
 
   const value = {
