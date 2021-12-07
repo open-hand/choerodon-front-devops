@@ -18,7 +18,7 @@ export default withRouter(observer(({
   id,
   prefixCls,
   intlPrefix,
-  formatClient,
+  formatRepository,
   formatCommon,
   isProject,
   history,
@@ -77,7 +77,7 @@ export default withRouter(observer(({
               type={status === 'success' ? 'check_circle' : 'cancel'}
               className={`${prefixCls}-form-test-${status}`}
             />
-            {formatClient({ id: `test.${status}` })}
+            {formatRepository({ id: `test.${status}` })}
           </span>
         )}
       </div>
@@ -98,23 +98,23 @@ export default withRouter(observer(({
       {isProject ? (
         <div>
           <span className={`${prefixCls}-form-config-title`}>
-            {formatClient({ id: 'harbor.config' })}
+            {formatRepository({ id: 'harbor.config' })}
           </span>
           <div className={`${prefixCls}-empty-page`}>
             {/* <div className={`${prefixCls}-empty-page-image`} /> */}
             <div className={`${prefixCls}-empty-page-text`}>
               <div className={`${prefixCls}-empty-page-title`}>
-                {formatClient({ id: 'empty.title' })}
+                {formatRepository({ id: 'empty.title' })}
               </div>
               <div className={`${prefixCls}-empty-page-des`}>
-                {formatClient({ id: 'empty.des' })}
+                {formatRepository({ id: 'empty.des' })}
               </div>
               <Button
                 color="primary"
                 onClick={handleLink}
                 funcType="raised"
               >
-                {formatClient({ id: 'empty.link' })}
+                {formatRepository({ id: 'empty.link' })}
               </Button>
             </div>
           </div>
@@ -122,12 +122,12 @@ export default withRouter(observer(({
       ) : null}
       <div className={`${prefixCls}-form`}>
         <span className={`${prefixCls}-form-config-title`}>
-          {formatClient({ id: 'chart.config' })}
+          {formatRepository({ id: 'chart.config' })}
         </span>
         <Form record={record}>
           <SelectBox name="chartCustom">
-            <Option value="default">{formatClient({ id: 'chart.default' })}</Option>
-            <Option value="custom">{formatClient({ id: 'chart.custom' })}</Option>
+            <Option value="default">{formatRepository({ id: 'chart.default' })}</Option>
+            <Option value="custom">{formatRepository({ id: 'chart.custom' })}</Option>
           </SelectBox>
           {record.get('chartCustom') === 'custom' && ([
             <UrlField name="url" />,

@@ -24,7 +24,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
 
     const intlPrefix = 'c7ncd.repository';
     const formatCommon = useFormatCommon();
-    const formatClient = useFormatMessage(intlPrefix);
+    const formatRepository = useFormatMessage(intlPrefix);
 
     const url = useMemo(() => `/devops/v1/organizations/${organizationId}/organization_config`, [organizationId]);
 
@@ -42,7 +42,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       promptMsg: formatMessage({ id: `${intlPrefix}.prompt.inform.title` }) + Choerodon.STRING_DEVIDER + formatMessage({ id: `${intlPrefix}.prompt.inform.message` }),
       detailDs,
       repositoryStore,
-      formatClient,
+      formatRepository,
       formatCommon,
     };
     return (
