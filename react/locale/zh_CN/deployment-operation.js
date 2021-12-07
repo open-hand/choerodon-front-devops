@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 const deploymentOperation = {
   'c7ncd-deploymentOperation.BatchCreateChartApplication': '批量创建Chart应用',
   'c7ncd-deploymentOperation.CreateApplication': '创建应用',
@@ -23,7 +29,7 @@ const deploymentOperation = {
   'c7ncd-deploymentOperation.Execute': '执行',
   'c7ncd-deploymentOperation.ViewRecordDetails': '查看记录详情',
   'c7ncd-deploymentOperation.Retry': '重试',
-
+  'c7ncd-deploymentOperation.CreateComponentApplication': '创建组件应用',
 };
 
 export {
