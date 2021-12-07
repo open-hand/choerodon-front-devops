@@ -327,7 +327,11 @@ const ResourceConfigItem:React.FC<Props> = ({
           {renderAction()}
         </div>
         <div>
-          <span>
+          <span style={{
+            color: 'var(--text-color)',
+            fontSize: 14,
+          }}
+          >
             {renderTargetType()}
           </span>
           <span>
