@@ -116,6 +116,11 @@ const resource = {
   'c7ncd.resource.PVType': 'PV Type',
   'c7ncd.resource.AccessMode': 'Access Mode',
   'c7ncd.resource.Total': 'Total',
+  'c7ncd.resource.instances': 'Chart Application',
+  'c7ncd.resource.workload': 'WorkLoad',
+  'c7ncd.resource.services': 'Service',
+  'c7ncd.resource.ingresses': 'Ingress',
+  'c7ncd.resource.certifications': 'Certificate',
 
 };
 export {

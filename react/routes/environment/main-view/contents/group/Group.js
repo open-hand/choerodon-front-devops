@@ -382,9 +382,9 @@ const Group = observer(() => {
         border={false}
         queryBar="none"
       >
-        <Column name="name" renderer={renderName} />
+        <Column header={formatMessage({ id: 'c7ncd.environment.Name' })} name="name" renderer={renderName} />
         <Column renderer={renderActions} width={100} />
-        <Column name="description" />
+        <Column header={formatMessage({ id: 'c7ncd.environment.description' })} name="description" />
         <Column name="clusterName" />
       </Table>
       <Modals />

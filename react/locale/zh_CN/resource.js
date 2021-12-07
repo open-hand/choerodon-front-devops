@@ -99,7 +99,7 @@ const resource = {
   'c7ncd.resource.CertificateName': '证书名称',
   'c7ncd.resource.DomainAddresses': '域名地址',
   'c7ncd.resource.ValidPeriod': '有效期',
-  'c7ncd.resource.ConfigMaps': '配置映射（ConfigMap）',
+  'c7ncd.resource.ConfigMap': '配置映射（ConfigMap）',
   'c7ncd.resource.configMaps': '配置映射（ConfigMap）',
   'c7ncd.resource.CreateConfigMap': '创建配置映射',
   'c7ncd.resource.KeyAndValue': '键与值',
@@ -115,6 +115,11 @@ const resource = {
   'c7ncd.resource.PVType': 'PV类型',
   'c7ncd.resource.AccessMode': '访问模式',
   'c7ncd.resource.Total': '总量',
+  'c7ncd.resource.instances': 'Chart应用',
+  'c7ncd.resource.workload': '工作负载',
+  'c7ncd.resource.services': '网络',
+  'c7ncd.resource.ingresses': '域名',
+  'c7ncd.resource.certifications': '证书',
 
 };
 export {

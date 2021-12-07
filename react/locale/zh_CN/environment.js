@@ -51,6 +51,7 @@ const environment = {
   'c7ncd.environment.ProcessID': '进程号',
   'c7ncd.environment.OccupiedPort': '占用端口',
   'c7ncd.environment.CreationTime': '创建时间',
+  'c7ncd.environment.description': '描述',
 
 };
 
