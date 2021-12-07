@@ -8,7 +8,7 @@ interface Props {
     skipCheckPermission: boolean,
     objectVersionNumber: number,
   },
-  refresh(): void,
+  refresh: any,
 }
 
 const PermissionManagementIndex = (props: Props) => (

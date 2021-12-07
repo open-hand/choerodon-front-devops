@@ -25,6 +25,7 @@ const HostConfig: React.FC<any> = observer((): any => {
     intlPrefix,
     formatMessage,
     refresh,
+    permissionTableRefresh,
     listDs,
     mainStore,
   } = useHostConfigStore();
@@ -50,7 +51,10 @@ const HostConfig: React.FC<any> = observer((): any => {
         width: SMALL,
       },
       drawer: true,
-      children: <HostPermission hostData={mainStore.getSelectedHost} refresh={refresh} />,
+      children: <HostPermission
+        hostData={mainStore.getSelectedHost}
+        refresh={permissionTableRefresh}
+      />,
     });
   }, []);
 
