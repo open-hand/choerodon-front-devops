@@ -25,6 +25,7 @@ interface ContextProps {
     text: string,
   }[],
   refresh(): void,
+  permissionTableRefresh: any,
   mainStore: StoreProps,
   showTestTab: boolean,
   tabKey: {
@@ -129,6 +130,13 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     }
   }, [listDs, mainStore.getSelectedHost]);
 
+  const permissionTableRefresh = useCallback(
+    () => {
+      permissionDs.query();
+    },
+    [],
+  );
+
   const value = {
     ...props,
     intlPrefix,
@@ -138,6 +146,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     searchDs,
     hostTabKeys,
     refresh,
+    permissionTableRefresh,
     mainStore,
     projectId,
     showTestTab,
