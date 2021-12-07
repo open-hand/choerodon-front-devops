@@ -23,6 +23,7 @@ const deploymentOperation = {
   'c7ncd-deploymentOperation.Execute': 'Execute',
   'c7ncd-deploymentOperation.ViewRecordDetails': 'View Record Details',
   'c7ncd-deploymentOperation.Retry': 'Retry',
+  'c7ncd-deploymentOperation.CreateComponentApplication': 'Create Component Application',
 };
 
 export {
