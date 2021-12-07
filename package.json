@@ -3,7 +3,7 @@
   "routeName": "devops",
   "description": "",
   "license": "ISC",
-  "version": "1.2.0",
+  "version": "1.2.0-alpha.1",
   "keywords": [],
   "contributors": [
     "choerodon"
