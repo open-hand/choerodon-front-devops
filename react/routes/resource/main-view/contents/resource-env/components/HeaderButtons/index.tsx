@@ -9,6 +9,7 @@ import { useResourceStore } from '../../../../../stores';
 import { useREStore } from '../../stores';
 import PermissionPage from './components/permission';
 import { openAppCreateModal } from '@/components/open-appCreate';
+import { openBatchDeploy } from '@/components/batch-deploy';
 
 const envDetailKey = Modal.key();
 const configKey = Modal.key();
@@ -156,6 +157,9 @@ const REModals = observer(() => {
   }
 
   function getButtons() {
+    const notReady = !record;
+    const connect = record && record.get('connect');
+    const configDisabled = !connect || notReady;
     return [
       {
         name: format({ id: 'CreateApplication' }),
