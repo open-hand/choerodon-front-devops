@@ -293,13 +293,13 @@ const Index = inject('AppState')(observer(({
     dataSource.set(key, value);
   };
 
-  const getEnvVariableRender = () => {
+  const getEnvVariableRender = useCallback(() => {
     if (dataSource) {
       return (
         <Form className="c7ncd-appCenterPro-conDetail__nestForm" columns={2}>
           {
             dataSource
-              ?.getField(mapping.enVariable.name)?.options?.records.map((record: Record) => (
+              ?.getField(mapping.enVariable.name)?.options?.records.filter(record => !record.isRemoved).map((record: Record, rIndex: number) => (
                 <Form record={record}>
                   <div className="c7ncd-appCenterPro-conDetail__form__col">
                     <TextField name="key" />
@@ -315,8 +315,9 @@ const Index = inject('AppState')(observer(({
                             marginLeft: 7,
                             color: '#5365ea',
                           }}
-                          onClick={() => dataSource
-                            ?.getField(mapping.enVariable.name)?.options?.delete([record], false)}
+                          onClick={() => {
+                            dataSource?.getField(mapping.enVariable.name)?.options?.splice(rIndex, 1);
+                          }}
                         />
                       )
                     }
@@ -340,7 +341,8 @@ const Index = inject('AppState')(observer(({
       );
     }
     return '';
-  };
+  }, [dataSource
+    ?.getField(mapping.enVariable.name)?.options.length]);
 
   const getPortConfigRender = () => {
     if (dataSource) {
