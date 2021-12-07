@@ -26,6 +26,8 @@ const TemplateTable = observer(() => {
     organizationId,
     permissionCodes,
     pageType,
+    formatCommon,
+    format,
   } = useAppTemplateStore();
 
   const refresh = useCallback(() => {
@@ -38,11 +40,11 @@ const TemplateTable = observer(() => {
   const handleCreateAppTemplate = useCallback((record?: Record) => {
     const templateId = record ? record.get('id') : null;
     Modal.open({
-      title: formatMessage({ id: `${intlPrefix}.title.${templateId ? 'edit' : 'create'}` }),
+      title: format({ id: `title.${templateId ? 'edit' : 'create'}` }),
       key: Modal.key(),
       children: <AddTemplate refresh={refresh} templateId={templateId} pageType={pageType} />,
       drawer: true,
-      okText: formatMessage({ id: templateId ? 'save' : 'create' }),
+      okText: format({ id: templateId ? 'save' : 'create' }),
       style: { width: '3.8rem' },
     });
   }, []);
@@ -63,8 +65,8 @@ const TemplateTable = observer(() => {
     if (enabled) {
       Modal.open({
         key: Modal.key(),
-        title: formatMessage({ id: `${intlPrefix}.enable.title` }, { name: record.get('name') }),
-        children: formatMessage({ id: `${intlPrefix}.enable.des` }),
+        title: format({ id: 'enable.title' }, { name: record.get('name') }),
+        children: format({ id: 'enable.des' }),
         movable: false,
         onOk: () => handleEnabled(true, record),
       });
@@ -94,8 +96,8 @@ const TemplateTable = observer(() => {
       return;
     }
     openOperationModal({
-      title: formatMessage({ id: `${intlPrefix}.permission.title` }),
-      children: formatMessage({ id: `${intlPrefix}.permission.des` }),
+      title: format({ id: 'permission.title' }),
+      children: format({ id: 'permission.des' }),
       onOk: () => handlePermission({ record }),
     });
   }, []);
@@ -117,18 +119,18 @@ const TemplateTable = observer(() => {
       return;
     }
     const modalProps = {
-      title: formatMessage({ id: `${intlPrefix}.delete.title` }, { name: record.get('name') }),
-      children: formatMessage({ id: `${intlPrefix}.delete.des` }),
-      okText: formatMessage({ id: 'delete' }),
+      title: format({ id: 'delete.title' }, { name: record.get('name') }),
+      children: format({ id: 'delete.des' }),
+      okText: format({ id: 'delete' }),
     };
     tableDs.delete(record, modalProps);
   }, []);
 
   const openNoPermissionModal = useCallback(() => {
     openOperationModal({
-      title: formatMessage({ id: `${intlPrefix}.permission.no.title` }),
-      children: formatMessage({ id: `${intlPrefix}.permission.no.des` }),
-      okText: formatMessage({ id: 'iknow' }),
+      title: format({ id: 'permission.no.title' }),
+      children: format({ id: 'permission.no.des' }),
+      okText: format({ id: 'iknow' }),
       okCancel: false,
     });
   }, []);
@@ -183,7 +185,7 @@ const TemplateTable = observer(() => {
     const status = value === 'S' ? (record.get('enable') ? 'enable' : 'disable') : value;
     return (
       <span className={`${prefixCls}-table-status ${prefixCls}-table-status-${status}`}>
-        {formatMessage({ id: `${intlPrefix}.status.${status}` })}
+        {format({ id: `status.${status}` })}
       </span>
     );
   }, []);
@@ -195,7 +197,7 @@ const TemplateTable = observer(() => {
     const hasPermission = record.get('permission');
     const deleteData = ({
       service: permissionCodes.delete,
-      text: '删除',
+      text: formatCommon({ id: 'delete' }),
       action: () => handleDelete({ record }),
     });
     const actionData = [];
@@ -203,7 +205,7 @@ const TemplateTable = observer(() => {
       case 'S':
         actionData.push({
           service: permissionCodes[enabled ? 'disable' : 'enable'],
-          text: enabled ? '停用' : '启用',
+          text: enabled ? formatCommon({ id: 'stop' }) : formatCommon({ id: 'enable' }),
           action: () => openEnabledModal({ record }),
         });
         if (!enabled) {
@@ -211,7 +213,7 @@ const TemplateTable = observer(() => {
         } else if (!hasPermission) {
           actionData.push({
             service: permissionCodes.permission,
-            text: '获取GitLab仓库权限',
+            text: format({ id: 'getGitlabPermission' }),
             action: () => openPermissionModal({ record }),
           });
         }
@@ -230,7 +232,7 @@ const TemplateTable = observer(() => {
       <Header>
         <HeaderButtons
           items={([{
-            name: formatMessage({ id: `${intlPrefix}.title.create` }),
+            name: format({ id: 'title.create' }),
             icon: 'playlist_add',
             display: 'true',
             permissions: permissionCodes.create,

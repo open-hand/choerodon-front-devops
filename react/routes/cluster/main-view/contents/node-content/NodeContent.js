@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Fragment } from 'react';
 import { observer } from 'mobx-react-lite';
 import ReactEcharts from 'echarts-for-react';
@@ -23,13 +24,15 @@ const NodeContent = observer(() => {
 
   return (
     <div className="c7ncd-node-content">
-      {node ? <Fragment>
-        <div className="c7n-node-title">{formatMessage({ id: `${intlPrefix}.node.assign.overview` })}</div>
-        <div className="c7n-node-pie">
-          {podPies(formatMessage, node.toData())}
-        </div>
-      </Fragment> : null}
-      <div className="c7n-node-title">{formatMessage({ id: 'node.pods' })}</div>
+      {node ? (
+        <>
+          <div className="c7n-node-title">{formatMessage({ id: 'c7ncd-clusterManagement.DistributionOverview' })}</div>
+          <div className="c7n-node-pie">
+            {podPies(formatMessage, node.toData())}
+          </div>
+        </>
+      ) : null}
+      <div className="c7n-node-title">{formatMessage({ id: 'c7ncd-clusterManagement.NodePods' })}</div>
       <NodePodsTable />
     </div>
   );
@@ -58,69 +61,71 @@ function podPies(formatMessage, node) {
     limPercent: node.memoryLimitPercentage,
     total: node.memoryTotal,
   };
-  return (<Fragment>
-    <div className="c7n-node-pie-block">
-      <div className="c7n-node-pie-percent">
-        {cpuData.resPercent}
+  return (
+    <>
+      <div className="c7n-node-pie-block">
+        <div className="c7n-node-pie-percent">
+          {cpuData.resPercent}
+        </div>
+        <ReactEcharts
+          option={getOption(cpuData)}
+          notMerge
+          lazyUpdate
+          style={{ height: '160px', width: '160px' }}
+        />
+        <div className="c7n-node-pie-inside-percent">
+          {cpuData.limPercent}
+        </div>
+        <div className="c7n-node-pie-title">
+          {formatMessage({ id: 'c7ncd-clusterManagement.CPUAllocation' })}
+        </div>
+        {pieDes(formatMessage, cpuData)}
       </div>
-      <ReactEcharts
-        option={getOption(cpuData)}
-        notMerge
-        lazyUpdate
-        style={{ height: '160px', width: '160px' }}
-      />
-      <div className="c7n-node-pie-inside-percent">
-        {cpuData.limPercent}
+      <div className="c7n-node-pie-block">
+        <div className="c7n-node-pie-percent">
+          {memoryData.resPercent}
+        </div>
+        <ReactEcharts
+          option={getOption(memoryPieData)}
+          notMerge
+          lazyUpdate
+          style={{ height: '160px', width: '160px' }}
+        />
+        <div className="c7n-node-pie-inside-percent">
+          {memoryData.limPercent}
+        </div>
+        <div className="c7n-node-pie-title">
+          {formatMessage({ id: 'c7ncd-clusterManagement.MemoryAllocation' })}
+        </div>
+        {pieDes(formatMessage, memoryData)}
       </div>
-      <div className="c7n-node-pie-title">
-        {formatMessage({ id: 'cluster.cpu' })}
+      <div className="c7n-node-pie-block">
+        <div className="c7n-node-pie-percent" />
+        <ReactEcharts
+          option={getPodOption(node)}
+          notMerge
+          lazyUpdate
+          style={{ height: '160px', width: '160px' }}
+        />
+        <div className="c7n-node-pie-pod-percent">
+          {node.podPercentage}
+        </div>
+        <div className="c7n-node-pie-title">
+          {formatMessage({ id: 'c7ncd-clusterManagement.PodsAllocation' })}
+        </div>
+        <div className="c7n-node-pie-info">
+          <span className="c7n-node-pie-info-span rv" />
+          <span>{formatMessage({ id: 'node.allocated' })}</span>
+          <span>{node.podCount}</span>
+        </div>
+        <div className="c7n-node-pie-info">
+          <span className="c7n-node-pie-info-span" />
+          <span>{formatMessage({ id: 'c7ncd-clusterManagement.Total' })}</span>
+          <span>{node.podTotal}</span>
+        </div>
       </div>
-      {pieDes(formatMessage, cpuData)}
-    </div>
-    <div className="c7n-node-pie-block">
-      <div className="c7n-node-pie-percent">
-        {memoryData.resPercent}
-      </div>
-      <ReactEcharts
-        option={getOption(memoryPieData)}
-        notMerge
-        lazyUpdate
-        style={{ height: '160px', width: '160px' }}
-      />
-      <div className="c7n-node-pie-inside-percent">
-        {memoryData.limPercent}
-      </div>
-      <div className="c7n-node-pie-title">
-        {formatMessage({ id: 'cluster.memory' })}
-      </div>
-      {pieDes(formatMessage, memoryData)}
-    </div>
-    <div className="c7n-node-pie-block">
-      <div className="c7n-node-pie-percent" />
-      <ReactEcharts
-        option={getPodOption(node)}
-        notMerge
-        lazyUpdate
-        style={{ height: '160px', width: '160px' }}
-      />
-      <div className="c7n-node-pie-pod-percent">
-        {node.podPercentage}
-      </div>
-      <div className="c7n-node-pie-title">
-        {formatMessage({ id: 'node.pod.allocated' })}
-      </div>
-      <div className="c7n-node-pie-info">
-        <span className="c7n-node-pie-info-span rv" />
-        <span>{formatMessage({ id: 'node.allocated' })}</span>
-        <span>{node.podCount}</span>
-      </div>
-      <div className="c7n-node-pie-info">
-        <span className="c7n-node-pie-info-span" />
-        <span>{formatMessage({ id: 'node.allV' })}</span>
-        <span>{node.podTotal}</span>
-      </div>
-    </div>
-  </Fragment>);
+    </>
+  );
 }
 
 function getOption(data) {
@@ -130,7 +135,8 @@ function getOption(data) {
     hoverAnimation: false,
     label: { show: false },
     data: [
-      { value: data.lmv,
+      {
+        value: data.lmv,
         name: 'limitValue',
         itemStyle: { color: '#57AAF8' },
       },
@@ -142,7 +148,8 @@ function getOption(data) {
     hoverAnimation: false,
     label: { show: false },
     data: [
-      { value: data.lmv,
+      {
+        value: data.lmv,
         name: 'limitValue',
         itemStyle: { color: '#57AAF8' },
       },
@@ -167,7 +174,8 @@ function getOption(data) {
     hoverAnimation: false,
     label: { show: false },
     data: [
-      { value: data.rv,
+      {
+        value: data.rv,
         name: 'limitValue',
         itemStyle: { color: '#00BFA5' },
       },
@@ -187,25 +195,26 @@ function getOption(data) {
   };
 }
 
-
 function pieDes(formatMessage, data) {
-  return <Fragment>
-    <div className="c7n-node-pie-info">
-      <span className="c7n-node-pie-info-span rv" />
-      <span>{formatMessage({ id: 'node.rv' })}</span>
-      <span>{data.rv}</span>
-    </div>
-    <div className="c7n-node-pie-info">
-      <span className="c7n-node-pie-info-span lmv" />
-      <span>{formatMessage({ id: 'node.lmv' })}</span>
-      <span>{data.lmv}</span>
-    </div>
-    <div className="c7n-node-pie-info">
-      <span className="c7n-node-pie-info-span" />
-      <span>{formatMessage({ id: 'node.allV' })}</span>
-      <span>{data.total}</span>
-    </div>
-  </Fragment>;
+  return (
+    <>
+      <div className="c7n-node-pie-info">
+        <span className="c7n-node-pie-info-span rv" />
+        <span>{formatMessage({ id: 'c7ncd-clusterManagement.RequestValue' })}</span>
+        <span>{data.rv}</span>
+      </div>
+      <div className="c7n-node-pie-info">
+        <span className="c7n-node-pie-info-span lmv" />
+        <span>{formatMessage({ id: 'c7ncd-clusterManagement.LimitValue' })}</span>
+        <span>{data.lmv}</span>
+      </div>
+      <div className="c7n-node-pie-info">
+        <span className="c7n-node-pie-info-span" />
+        <span>{formatMessage({ id: 'c7ncd-clusterManagement.Total' })}</span>
+        <span>{data.total}</span>
+      </div>
+    </>
+  );
 }
 
 function getPodOption(node) {

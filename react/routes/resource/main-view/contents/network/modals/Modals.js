@@ -2,7 +2,7 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
-import { HeaderButtons } from '@choerodon/master';
+import { HeaderButtons, useFormatMessage } from '@choerodon/master';
 import { useResourceStore } from '../../../../stores';
 import { useModalStore } from './stores';
 import { SMALL } from '@/utils/getModalWidth';
@@ -23,6 +23,9 @@ const EnvModals = observer(() => {
     resourceStore,
     treeDs,
   } = useResourceStore();
+
+  const format = useFormatMessage('c7ncd.resource');
+
   const {
     networkDs,
   } = useNetworkStore();
@@ -51,7 +54,7 @@ const EnvModals = observer(() => {
         store={networkStore}
         refresh={refresh}
       />,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 
@@ -62,7 +65,7 @@ const EnvModals = observer(() => {
 
     return ([{
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.network'],
-      name: formatMessage({ id: `${intlPrefix}.create.network` }),
+      name: format({ id: 'CreateService' }),
       icon: 'playlist_add',
       handler: openModal,
       display: true,

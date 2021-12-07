@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 export default ({ formatMessage, intlPrefix }) => ({
   selection: false,
   pageSize: 10,
@@ -16,7 +22,7 @@ export default ({ formatMessage, intlPrefix }) => ({
     {
       name: 'appServiceName',
       type: 'string',
-      label: formatMessage({ id: `${intlPrefix}.config.app` }),
+      label: formatMessage({ id: 'c7ncd.environment.ApplicationService' }),
     },
     {
       name: 'envName',
@@ -31,7 +37,7 @@ export default ({ formatMessage, intlPrefix }) => ({
     {
       name: 'lastUpdateDate',
       type: 'dateTime',
-      label: formatMessage({ id: 'updateDate' }),
+      label: formatMessage({ id: 'c7ncd.environment.UpdateTime' }),
     },
   ],
   queryFields: [

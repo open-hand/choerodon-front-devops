@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 import React, {
   useState, useCallback,
 } from 'react';

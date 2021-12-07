@@ -274,7 +274,7 @@ const mapping: {
           transformResponse: (res) => {
             function init(data: any) {
               const result: any[] = [];
-              data.forEach((item: any) => {
+              data?.forEach((item: any) => {
                 item.appVersionVOS.forEach((version: any) => {
                   result.push({
                     ...version,
@@ -387,10 +387,10 @@ const mapping: {
     name: 'fileName',
     type: 'string' as FieldType,
   },
-//   configSettingVOS: {
-//     name: 'configSettingVOS',
-//     type: 'array' as FieldType,
-//   },
+  configSettingVOS: {
+    name: 'configSettingVOS',
+    type: 'array' as FieldType,
+  },
 };
 
 const hostAppConfigDataSet = (modal: any, detail: any): DataSetProps => ({

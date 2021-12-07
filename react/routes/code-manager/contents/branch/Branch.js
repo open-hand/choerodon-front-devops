@@ -5,7 +5,7 @@ import {
 } from 'choerodon-ui/pro';
 import { Popover } from 'choerodon-ui';
 import {
-  Page, Permission, stores, Action,
+  Page, Permission, stores, Action, useFormatMessage,
 } from '@choerodon/master';
 import classNames from 'classnames';
 import map from 'lodash/map';
@@ -56,6 +56,8 @@ function Branch(props) {
 
   const { styles, columnsRender } = props;
 
+  const format = useFormatMessage('c7ncd.codeManger');
+
   const [isOPERATIONS, setIsOPERATIONS] = useState(false);
 
   useEffect(() => {
@@ -75,7 +77,7 @@ function Branch(props) {
       return {};
     } else {
       return ({
-        name: <FormattedMessage id="branch.create" />,
+        name: format({ id: 'CreateBranch' }),
         icon: 'playlist_add',
         display: true,
         permissions: ['choerodon.code.project.develop.code-management.ps.branch.create'],
@@ -261,7 +263,7 @@ function Branch(props) {
         service: [
           'choerodon.code.project.develop.code-management.ps.default',
         ],
-        text: formatMessage({ id: 'branch.request' }),
+        text: format({ id: 'CreateMerge' }),
         action: () => handleMergeRequest(record),
       },
       {
@@ -274,7 +276,7 @@ function Branch(props) {
     ];
     const editAction = ({
       service: ['choerodon.code.project.develop.code-management.ps.branch.update'],
-      text: formatMessage({ id: 'edit' }),
+      text: format({ id: 'Modify' }),
       action: () => openEditIssueModal(record.toData()),
     });
     if (!isOPERATIONS) {

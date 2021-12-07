@@ -191,12 +191,12 @@ const NodeList = () => {
         border={false}
         queryBar="none"
       >
-        <Column width={170} header={formatMessage({ id: `${intlPrefix}.node.ip` })} renderer={renderStatusName} />
+        <Column width={170} header={formatMessage({ id: 'c7ncd-clusterManagement.Node' })} renderer={renderStatusName} />
         <Column width={60} renderer={renderNodeOpts} />
-        <Column name="role" minWidth={80} renderer={renderType} />
-        <Column header={formatMessage({ id: `${intlPrefix}.node.cpu` })} renderer={renderCpu} />
-        <Column header={formatMessage({ id: `${intlPrefix}.node.memory` })} renderer={renderMemory} />
-        <Column name="createTime" width={150} renderer={renderTime} />
+        <Column header={formatMessage({ id: 'c7ncd-clusterManagement.Type' })} name="role" minWidth={80} renderer={renderType} />
+        <Column header={formatMessage({ id: 'c7ncd-clusterManagement.CPUAllocation' })} renderer={renderCpu} />
+        <Column header={formatMessage({ id: 'c7ncd-clusterManagement.MemoryAllocation' })} renderer={renderMemory} />
+        <Column header={formatMessage({ id: 'c7ncd-clusterManagement.CreationTime' })} name="createTime" width={150} renderer={renderTime} />
       </Table>
     </div>
   );

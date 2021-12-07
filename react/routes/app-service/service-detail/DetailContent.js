@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { PageWrap, PageTab, Page } from '@choerodon/master';
+import {
+  PageWrap, PageTab, Page, useFormatMessage,
+} from '@choerodon/master';
 import { Spin } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { CustomTabs } from '@choerodon/components';
@@ -17,6 +19,8 @@ const DetailContent = observer(() => {
     appServiceStore,
     AppState,
   } = useAppTopStore();
+
+  const format = useFormatMessage('c7ncd.appService');
 
   if (AppState.getCurrentTheme === 'theme4') {
     import('./theme4.less');
@@ -37,7 +41,7 @@ const DetailContent = observer(() => {
   const [tabValue, setTabValue] = useState('Version');
 
   const [tabData, setTabData] = useState([{
-    name: formatMessage({ id: `${intlPrefix}.version` }),
+    name: format({ id: 'ServiceVersion' }),
     value: 'Version',
   }]);
 
@@ -51,7 +55,7 @@ const DetailContent = observer(() => {
         newTabData = [
           ...tabData,
           {
-            name: formatMessage({ id: `${intlPrefix}.share` }),
+            name: format({ id: 'SharingSetting' }),
             value: 'Share',
           },
         ];
@@ -60,7 +64,7 @@ const DetailContent = observer(() => {
     }
     if (!flag) {
       setTabData([{
-        name: formatMessage({ id: `${intlPrefix}.version` }),
+        name: format({ id: 'ServiceVersion' }),
         value: 'Version',
       }]);
     }

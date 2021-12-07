@@ -17,17 +17,15 @@ function TimePopover({ datetime, placement }) {
     }
   }
 
-  return <Fragment>
-    {time ? <Tooltip
-      placement={placement}
-      title={formatDate(time)}
-    >
-      <TimeAgo
-        datetime={time}
-        locale={Choerodon.getMessage('zh_CN', 'en')}
-      />
-    </Tooltip> : null}
-  </Fragment>;
+  return (
+    <>
+      {time ? (
+        <Tooltip placement={placement} title={formatDate(time)}>
+          <TimeAgo datetime={time} locale={Choerodon.getMessage('zh_CN', 'en')} />
+        </Tooltip>
+      ) : null}
+    </>
+  );
 }
 
 TimePopover.propTypes = {

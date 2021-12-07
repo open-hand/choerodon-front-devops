@@ -19,6 +19,7 @@ export default observer(() => {
     prefixCls,
     formatMessage,
     intlPrefix,
+    formatClient,
   } = useAddTemplateStore();
 
   const record = useMemo(() => formDs.current, [formDs.current]);
@@ -41,7 +42,7 @@ export default observer(() => {
       return '';
     }
     const createWayValue = record.get(mapping.createWay.name);
-    const urlTips = <Tips helpText={formatMessage({ id: `${intlPrefix}.url.tips` })} />;
+    const urlTips = <Tips helpText={formatClient({ id: 'url.tips' })} />;
     switch (createWayValue) {
       case 'template':
         return [
@@ -50,7 +51,7 @@ export default observer(() => {
             name={mapping.appTemplate.name}
             searchable
             searchMatcher="param"
-            addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.tips` })} />}
+            addonAfter={<Tips helpText={formatClient({ id: 'tips' })} />}
           />,
         ];
         break;

@@ -39,7 +39,7 @@ function GroupItem({
       children: <GroupForm dataSet={groupFormDs} treeDs={treeDs} />,
       drawer: true,
       style: modalStyle,
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
     });
   }
 
@@ -77,11 +77,11 @@ function GroupItem({
 
     const actionData = [{
       service: ['choerodon.code.project.deploy.environment.ps.group-modify'],
-      text: formatMessage({ id: `${intlPrefix}.modal.group.modify` }),
+      text: formatMessage({ id: 'c7ncd.environment.Modify' }),
       action: handleClick,
     }, {
       service: ['choerodon.code.project.deploy.environment.ps.group-delete'],
-      text: formatMessage({ id: `${intlPrefix}.modal.group.delete` }),
+      text: formatMessage({ id: 'c7ncd.environment.Delete' }),
       action: confirmDelete,
     }];
     return (

@@ -1,8 +1,10 @@
-import React, { createContext, useContext, useEffect, useMemo } from 'react';
+import React, {
+  createContext, useContext, useMemo,
+} from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
-import { Choerodon } from '@choerodon/master';
+import { Choerodon, useFormatCommon, useFormatMessage } from '@choerodon/master';
 import DetailDataSet from './DetailDataSet';
 import useStore from './useStore';
 
@@ -19,10 +21,16 @@ export const StoreProvider = injectIntl(inject('AppState')(
       intl: { formatMessage },
       children,
     } = props;
+
     const intlPrefix = 'c7ncd.repository';
+    const formatCommon = useFormatCommon();
+    const formatRepository = useFormatMessage(intlPrefix);
+
     const url = useMemo(() => `/devops/v1/organizations/${organizationId}/organization_config`, [organizationId]);
 
-    const detailDs = useMemo(() => new DataSet(DetailDataSet(intlPrefix, formatMessage, url)), [intlPrefix, formatMessage, url]);
+    const detailDs = useMemo(() => new DataSet(
+      DetailDataSet(intlPrefix, formatMessage, url),
+    ), [intlPrefix, formatMessage, url]);
 
     const repositoryStore = useStore();
 
@@ -34,6 +42,8 @@ export const StoreProvider = injectIntl(inject('AppState')(
       promptMsg: formatMessage({ id: `${intlPrefix}.prompt.inform.title` }) + Choerodon.STRING_DEVIDER + formatMessage({ id: `${intlPrefix}.prompt.inform.message` }),
       detailDs,
       repositoryStore,
+      formatRepository,
+      formatCommon,
     };
     return (
       <Store.Provider value={value}>

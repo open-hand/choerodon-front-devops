@@ -1,10 +1,17 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 import React, { useEffect, useState } from 'react';
 import { Icon } from 'choerodon-ui';
+import { observer } from 'mobx-react-lite';
 
 import './index.less';
 import Tips from '@/components/new-tips';
 
-const Index = ({
+const Index = observer(({
   title,
   content,
   style,
@@ -67,7 +74,7 @@ const Index = ({
       }
     </div>
   );
-};
+});
 
 Index.defaultProps = {
   style: {},

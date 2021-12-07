@@ -1,8 +1,10 @@
-import React, { useEffect, useMemo } from 'react';
+/* eslint-disable react/prop-types */
+import React, { useMemo } from 'react';
+import { useRouteMatch } from 'react-router';
 import { Route, Switch } from 'react-router-dom';
 import { inject } from 'mobx-react';
 import {
-  asyncLocaleProvider, NoMatch, PermissionRoute,
+  asyncLocaleProvider, NoMatch, PermissionRoute, useCurrentLanguage,
 } from '@choerodon/master';
 import { ModalContainer } from 'choerodon-ui/pro';
 
@@ -21,13 +23,16 @@ const DevelopReports = React.lazy(() => import('./routes/reports/ReportsIndex'))
 const Repository = React.lazy(() => import('./routes/repository'));
 const ProRepository = React.lazy(() => import('./routes/pro-repository'));
 const PVManager = React.lazy(() => import('./routes/pv-manager'));
-const PipelineManage = React.lazy(() => import('./routes/pipeline-manage'));
+const PipelineManage = React.lazy(() => import('./routes/app-pipeline'));
 const HostConfig = React.lazy(() => import('./routes/host-config'));
 const OrgTemplate = React.lazy(() => import('./routes/app-template/OrgIndex'));
 const SiteTemplate = React.lazy(() => import('./routes/app-template/SiteIndex'));
 const AppCenter = React.lazy(() => import('./routes/app-center-pro'));
 
-function DEVOPSIndex({ match, AppState: { currentLanguage: language } }) {
+// eslint-disable-next-line react/prop-types
+function DEVOPSIndex() {
+  const match = useRouteMatch();
+  const language = useCurrentLanguage();
   const IntlProviderAsync = useMemo(() => asyncLocaleProvider(language, () => import(`./locale/${language}`)), []);
   return (
     <IntlProviderAsync>

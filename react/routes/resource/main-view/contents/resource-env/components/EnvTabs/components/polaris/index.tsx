@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Button, Spin } from 'choerodon-ui/pro';
-import { Choerodon } from '@choerodon/master';
+import { Choerodon, useFormatMessage } from '@choerodon/master';
 import { Loading } from '@choerodon/components';
 import EmptyPage from '@/components/empty-page';
 import NumberDetail from './number-detail';
@@ -23,6 +23,8 @@ const polaris = observer(() => {
     envStore,
     istSummaryDs,
   } = useREStore();
+
+  const format = useFormatMessage('c7ncd.resource');
 
   const {
     resourceStore: { getSelectedMenu: { id } },
@@ -88,7 +90,7 @@ const polaris = observer(() => {
             onClick={handleScan}
             disabled={isLoading || !envStatus}
           >
-            {formatMessage({ id: 'c7ncd.cluster.polaris.scanning' })}
+            {format({ id: 'Scan' })}
           </Button>
           <NumberDetail isLoading={isLoading} />
           <CollapseDetail loading={isLoading} />

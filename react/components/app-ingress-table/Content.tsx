@@ -11,7 +11,7 @@ import { MIDDLE } from '@/utils/getModalWidth';
 import { TableQueryBarType } from '@/interface';
 import { useAppIngressTableStore } from './stores';
 import HostConfigServices from './services';
-// import ConfigurationModal from '@/components/configuration-center/ConfigurationModal';
+import ConfigurationModal from '@/components/configuration-center/ConfigurationModal';
 
 import './index.less';
 
@@ -24,7 +24,7 @@ const AppIngress = observer(() => {
     appIngressDataset,
     intl: { formatMessage },
     projectId,
-    // configurationDetailDataSet,
+    configurationDetailDataSet,
   } = useAppIngressTableStore();
 
   function refresh() {
@@ -84,18 +84,18 @@ const AppIngress = observer(() => {
     }
   }, [appIngressDataset, refresh]);
 
-  //   const handleOpenConfigurationModal = ({ record: tableRecord }) => {
-  //     const { instanceId } = tableRecord.toData();
-  //     Modal.open({
-  //       key: ConfigurationModalKey,
-  //       title: '配置文件详情',
-  //       style: { width: MIDDLE },
-  //     //   children: <ConfigurationModal type="modal" configurationDetailDataSet={configurationDetailDataSet} id={instanceId} kind="host" />,
-  //       okText: formatMessage({ id: 'close' }),
-  //       okCancel: false,
-  //       drawer: true,
-  //     });
-  //   };
+  const handleOpenConfigurationModal = ({ record: tableRecord }) => {
+    const { instanceId } = tableRecord.toData();
+    Modal.open({
+      key: ConfigurationModalKey,
+      title: '配置文件详情',
+      style: { width: MIDDLE },
+      children: <ConfigurationModal type="modal" configurationDetailDataSet={configurationDetailDataSet} id={instanceId} kind="host" />,
+      okText: formatMessage({ id: 'close' }),
+      okCancel: false,
+      drawer: true,
+    });
+  };
 
   const renderAction = useCallback(({ record: tableRecord }) => {
     const devopsHostCommandDTO = tableRecord.get('devopsHostCommandDTO');
@@ -114,10 +114,10 @@ const AppIngress = observer(() => {
         text: formatMessage({ id: 'delete' }),
         action: () => handleDelete({ record: tableRecord }),
       },
-    //   {
-    //     text: '查看配置文件',
-    //     action: () => handleOpenConfigurationModal({ record: tableRecord }),
-    //   }
+      {
+        text: '查看配置文件',
+        action: () => handleOpenConfigurationModal({ record: tableRecord }),
+      },
     ];
 
     if (!status || (['normal_process', 'java_process'].includes(tableRecord.get('instanceType')))) {
@@ -207,14 +207,14 @@ const AppIngress = observer(() => {
       queryBar={'bar' as TableQueryBarType}
       className="c7ncd-tab-table"
     >
-      <Column name="name" renderer={renderName} />
+      <Column header={formatMessage({ id: 'c7ncd.environment.Name' })} name="name" renderer={renderName} />
       <Column renderer={renderAction} width={55} />
-      <Column name="code" width={90} />
-      <Column name="status" renderer={renderStatus} />
-      <Column name="pid" width={80} />
-      <Column name="ports" width={100} renderer={({ value }) => <Tooltip title={value}>{value}</Tooltip>} />
-      <Column name="creator" renderer={renderUser} />
-      <Column name="creationDate" renderer={({ text }) => <TimePopover content={text} />} />
+      <Column header={formatMessage({ id: 'c7ncd.environment.ApplicationCode' })} name="code" width={90} />
+      <Column header={formatMessage({ id: 'c7ncd.environment.Status' })} name="status" renderer={renderStatus} />
+      <Column header={formatMessage({ id: 'c7ncd.environment.ProcessID' })} name="pid" width={80} />
+      <Column header={formatMessage({ id: 'c7ncd.environment.OccupiedPort' })} name="ports" width={100} renderer={({ value }) => <Tooltip title={value}>{value}</Tooltip>} />
+      <Column header={formatMessage({ id: 'c7ncd.environment.Creator' })} name="creator" renderer={renderUser} />
+      <Column header={formatMessage({ id: 'c7ncd.environment.CreationTime' })} name="creationDate" renderer={({ text }) => <TimePopover content={text} />} />
     </Table>
   );
 });

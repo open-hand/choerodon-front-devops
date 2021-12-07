@@ -5,6 +5,7 @@ import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
 import { v1 as uuidv1 } from 'uuid';
+import { useFormatCommon, useFormatMessage } from '@choerodon/master';
 import FormDataSet from './FormDataSet';
 
 interface ContextProps {
@@ -16,6 +17,8 @@ interface ContextProps {
   modal: any,
   refresh(): void,
   organizationId?: number,
+  formatClient: any,
+  formatCommon: any
 }
 
 const Store = createContext({} as ContextProps);
@@ -32,6 +35,10 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     pageType,
     intl: { formatMessage },
   } = props;
+
+  const intlPrefix = 'c7ncd.org-template';
+  const formatCommon = useFormatCommon();
+  const formatClient = useFormatMessage(intlPrefix);
 
   const organizationId = useMemo(() => (pageType === 'organization' ? orgId : null), [pageType, orgId]);
 
@@ -57,7 +64,9 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     templateId,
     organizationId,
     prefixCls: 'c7ncd-template-form',
-    intlPrefix: 'c7ncd.template',
+    intlPrefix,
+    formatClient,
+    formatCommon,
   };
   return (
     <Store.Provider value={value}>

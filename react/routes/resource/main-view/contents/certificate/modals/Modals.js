@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { Modal } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
-import { HeaderButtons } from '@choerodon/master';
+import { HeaderButtons, useFormatMessage } from '@choerodon/master';
 import { FormattedMessage } from 'react-intl';
 import { useResourceStore } from '../../../../stores';
 import { useModalStore } from './stores';
@@ -23,6 +23,9 @@ const EnvModals = observer(() => {
     certificateDs,
   } = useCertificateStore();
   const { certStore } = useMainStore();
+
+  const format = useFormatMessage('c7ncd.resource');
+
   const {
     permissions,
     AppState: { currentMenuType: { projectId } },
@@ -82,7 +85,7 @@ const EnvModals = observer(() => {
 
     return ([{
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.create-certifications'],
-      name: formatMessage({ id: `${intlPrefix}.create.certificate` }),
+      name: format({ id: 'CreateCertificate' }),
       icon: 'playlist_add',
       handler: openModal,
       display: true,

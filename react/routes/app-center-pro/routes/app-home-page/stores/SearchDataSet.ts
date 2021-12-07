@@ -9,11 +9,12 @@ interface SearchProps {
   hostDs: DataSetInterface,
   ALL_ENV_KEY: string,
   formatMessage:any
-  replaceCurrentState: (fiedls:string, value:any)=>void
+  replaceCurrentState: (fiedls:string, value:any)=>void,
+  format: any,
 }
 
 export default ({
-  envDs, hostDs, ALL_ENV_KEY, formatMessage, replaceCurrentState,
+  envDs, hostDs, ALL_ENV_KEY, formatMessage, replaceCurrentState, format,
 }: SearchProps): any => ({
   autoCreate: true,
   selection: false,
@@ -47,11 +48,11 @@ export default ({
       options: new DataSet({
         data: [
           {
-            name: 'chart包',
+            name: format({ id: 'ChartPackage' }),
             value: 'chart',
           },
           {
-            name: '部署组',
+            name: format({ id: 'Deployment' }),
             value: 'deployment',
           },
         ],
@@ -65,7 +66,7 @@ export default ({
       valueField: 'value',
       options: new DataSet({
         data: map(APP_OPERATION, (value:keyof typeof APP_OPERATION) => ({
-          name: formatMessage({ id: `c7ncd.app.operation.type.${value}` }),
+          name: format({ id: value }),
           value,
         })),
       }),

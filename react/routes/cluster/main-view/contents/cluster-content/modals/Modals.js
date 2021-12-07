@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+/* eslint-disable */
 import React, { useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
@@ -162,7 +162,7 @@ const ClusterModals = observer(() => {
         width: '740px',
       },
       destroyOnClose: true,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
       onCancel: () => {
         nodesDs.reset();
         formDs.reset();
@@ -207,7 +207,7 @@ const ClusterModals = observer(() => {
   function getButtons() {
     const { getCanCreate } = mainStore;
     return [{
-      name: formatMessage({ id: `${intlPrefix}.modal.create` }),
+      name: formatMessage({ id: 'c7ncd-clusterManagement.ConnecttoCluster' }),
       permissions: ['choerodon.code.project.deploy.cluster.cluster-management.ps.create'],
       icon: 'link',
       handler: openCreate,
@@ -219,7 +219,7 @@ const ClusterModals = observer(() => {
       },
       disabledMessage: formatMessage({ id: `${intlPrefix}.modal.create.disabled` }),
     }, {
-      name: formatMessage({ id: `${intlPrefix}.modal.createByHost` }),
+      name: formatMessage({ id: 'c7ncd-clusterManagement.NewCluster' }),
       permissions: ['choerodon.code.project.deploy.cluster.cluster-management.ps.createByHost'],
       icon: 'playlist_add',
       handler: openCreateByHost,
@@ -231,7 +231,7 @@ const ClusterModals = observer(() => {
       },
       disabledMessage: formatMessage({ id: `${intlPrefix}.modal.create.disabled` }),
     }, {
-      name: formatMessage({ id: `${intlPrefix}.modal.permission` }),
+      name: formatMessage({ id: 'c7ncd-clusterManagement.AuthorityManagement' }),
       permissions: ['choerodon.code.project.deploy.cluster.cluster-management.ps.permission-manage'],
       icon: 'settings-o',
       handler: openPermission,

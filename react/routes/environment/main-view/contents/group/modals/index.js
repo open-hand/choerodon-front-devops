@@ -51,7 +51,7 @@ const GroupModal = observer((props) => {
       afterClose: () => {
         groupFormDs.current.reset();
       },
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 
@@ -62,7 +62,7 @@ const GroupModal = observer((props) => {
       children: <EnvCreateForm intlPrefix={intlPrefix} refresh={refresh} />,
       drawer: true,
       style: modalStyle,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 
@@ -75,7 +75,7 @@ const GroupModal = observer((props) => {
     }
     return [{
       permissions: ['choerodon.code.project.deploy.environment.ps.group-add-env'],
-      name: formatMessage({ id: `${intlPrefix}.create` }),
+      name: formatMessage({ id: 'c7ncd.environment.CreateEnvironment' }),
       icon: 'playlist_add',
       handler: openEnvModal,
       display: true,
@@ -83,7 +83,7 @@ const GroupModal = observer((props) => {
       tooltipsConfig,
     }, {
       permissions: ['choerodon.code.project.deploy.environment.ps.group-create'],
-      name: formatMessage({ id: `${intlPrefix}.group.create` }),
+      name: formatMessage({ id: 'c7ncd.environment.CreateGroup' }),
       icon: 'playlist_add',
       handler: openGroupModal,
       display: true,

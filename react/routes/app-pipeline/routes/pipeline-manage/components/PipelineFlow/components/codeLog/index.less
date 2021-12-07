@@ -1,0 +1,57 @@
+.c7n-pipelineManage-codeLog {
+  height: calc(100vh - 1.7rem);
+  &-container {
+    position: relative;
+  }
+  &-btnGorups {
+    position: absolute;
+    right: 10px;
+    height: 100%;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    &-btn {
+      z-index: 99;
+      cursor: pointer;
+      height: 32px;
+      line-height: 32px;
+      padding: 0 12px;
+      color: #41a9fd;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid #565656;
+      text-align: center;
+      &:hover {
+        background: #000;
+      }
+      &-top {
+        margin-top: auto;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .CodeMirror {
+    background: #151515;
+    color: #e0e0e0;
+    height: inherit;
+  }
+  .CodeMirror-gutters {
+    color: #e0e0e0;
+    background: #151515;
+    border: none;
+  }
+
+  &-hasBtn {
+    height: calc(100vh - 2.15rem);
+  }
+
+  &-btn {
+    text-align: right;
+    margin-bottom: 0.12rem;
+  }
+
+  &-download {
+    background: rgba(83, 101, 234, 0.08);
+    border-radius: 5px;
+  }
+}

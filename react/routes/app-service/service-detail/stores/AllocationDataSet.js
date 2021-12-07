@@ -1,8 +1,6 @@
-import { axios } from '@choerodon/master';
-import map from 'lodash/map';
 import getTablePostData from '../../../../utils/getTablePostData';
 
-export default ((formatMessage, intlPrefix, projectId, id) => ({
+export default (formatMessage, intlPrefix, projectId, id) => ({
   autoQuery: false,
   selection: false,
   pageSize: 10,
@@ -21,15 +19,26 @@ export default ((formatMessage, intlPrefix, projectId, id) => ({
     }),
   },
   fields: [
-    { name: 'realName', type: 'string', label: formatMessage({ id: 'userName' }) },
+    { name: 'realName', type: 'string', label: formatMessage({ id: 'boot.username' }) },
     { name: 'loginName', type: 'string', label: formatMessage({ id: 'loginName' }) },
     { name: 'creationDate', type: 'dateTime', label: formatMessage({ id: 'addTime' }) },
-    { name: 'iamUserId', type: 'number', textField: 'realName', valueField: 'iamUserId', label: formatMessage({ id: `${intlPrefix}.user` }) },
-    { name: 'role', type: 'string', defaultValue: 'member', label: formatMessage({ id: 'projectRole' }) },
+    {
+      name: 'iamUserId',
+      type: 'number',
+      textField: 'realName',
+      valueField: 'iamUserId',
+      label: formatMessage({ id: `${intlPrefix}.user` }),
+    },
+    {
+      name: 'role',
+      type: 'string',
+      defaultValue: 'member',
+      label: formatMessage({ id: 'projectRole' }),
+    },
     { name: 'roles', type: 'object', label: formatMessage({ id: 'projectRole' }) },
   ],
   queryFields: [
-    { name: 'realName', type: 'string', label: formatMessage({ id: 'userName' }) },
+    { name: 'realName', type: 'string', label: formatMessage({ id: 'boot.username' }) },
     { name: 'loginName', type: 'string', label: formatMessage({ id: 'loginName' }) },
   ],
-}));
+});

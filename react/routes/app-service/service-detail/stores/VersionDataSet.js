@@ -49,7 +49,7 @@ export default ((formatMessage, projectId, id) => ({
   },
   fields: [
     { name: 'version', type: 'string', label: formatMessage({ id: 'version' }) },
-    { name: 'creationDate', type: 'dateTime', label: formatMessage({ id: 'createDate' }) },
+    { name: 'creationDate', type: 'dateTime', label: formatMessage({ id: 'boot.createDate' }) },
     { name: 'id', type: 'string' },
   ],
   queryFields: [

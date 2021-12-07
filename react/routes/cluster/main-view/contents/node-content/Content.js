@@ -1,4 +1,13 @@
-import React, { Fragment, lazy, Suspense, useMemo } from 'react';
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
+/* eslint-disable */
+import React, {
+  Fragment, lazy, Suspense, useMemo,
+} from 'react';
 import { observer } from 'mobx-react-lite';
 import { Tabs, Spin } from 'choerodon-ui';
 import { useNodeContentStore } from './stores';
@@ -31,7 +40,7 @@ export default observer((props) => {
   }
 
   return (
-    <Fragment>
+    <>
       <h1>{name}</h1>
       <Tabs
         animated={false}
@@ -41,7 +50,7 @@ export default observer((props) => {
       >
         <TabPane
           key={RESOURCE_TAB}
-          tab={formatMessage({ id: `${intlPrefix}.node.resource` })}
+          tab={formatMessage({ id: 'c7ncd-clusterManagement.ResourceAllocation' })}
         >
           <Suspense fallback={<Spin />}>
             <NodeContent />
@@ -49,7 +58,7 @@ export default observer((props) => {
         </TabPane>
         <TabPane
           key={MONITOR_TAB}
-          tab={formatMessage({ id: `${intlPrefix}.node.monitor` })}
+          tab={formatMessage({ id: 'c7ncd-clusterManagement.NodeMonitor' })}
         >
           <Suspense fallback={<Spin />}>
             <Monitor />
@@ -57,5 +66,6 @@ export default observer((props) => {
         </TabPane>
 
       </Tabs>
-    </Fragment>);
+    </>
+  );
 });

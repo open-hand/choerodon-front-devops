@@ -49,6 +49,8 @@ function BranchCreate(props) {
   const [isOPERATIONS, setIsOPERATIONS] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
+  const issueOptionsDs =  formDs?.getField('issue')?.options
+
   useEffect(() => {
     setIsOPERATIONS(!some(categories || [], ["code", "N_AGILE"]));
   }, [categories]);
@@ -332,18 +334,47 @@ function BranchCreate(props) {
   };
 
   const myquestionChange = (bool) => {
-    formDs.setState('myquestionBool',bool)
-    formDs.getField('issue').fetchLookup(true)
+    issueOptionsDs?.setState('myquestionBool',bool)
+    issueOptionsDs?.query()
   };
 
-  const issueNameOptionRender = ({ record }) => {
+  const issueQuery = useCallback(
+    debounce((value) => {
+      issueOptionsDs?.setQueryParameter('content', value);
+      issueOptionsDs?.query();
+    }, 500),
+    [],
+  );
+
+  const handleIssueSearch = useCallback((e) => {
+    e.persist();
+    issueQuery(e.target.value);
+  }, []);
+
+  const handleIssueBlur = () => {
+    issueOptionsDs?.setQueryParameter('content', '');
+    issueOptionsDs?.setState('myquestionBool', false);
+    issueOptionsDs?.query();
+  };
+
+  const issueNameOptionRender = ({ record,text }) => {
     const typeCode = record.get("typeCode");
     const issueNum = record.get("issueNum");
     const summary = record.get("summary");
     const issueTypeVO = record.get("issueTypeVO");
     return summary === "我的问题myquestion" ? (
-      <div onClick={(e)=>{e.stopPropagation();}} style={{paddingLeft:4,borderBottom: '1px solid #D9E6F2',paddingBottom:20}}>
-        <CheckBox name="base" onChange={myquestionChange}><span style={{marginLeft:4}}>
+      <div
+        role="none"
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+        style={{
+          paddingLeft: 4,  paddingBottom: 10, display: 'flex', alignItems: 'center',
+          position: 'relative',
+        }}
+      >
+        <div style={{position:'absolute',zIndex:99999,left:-15,bottom:-3,width:'calc(100% + 30px)',height: 1,background: '#D9E6F2'}}></div>
+        <CheckBox name="base" checked={issueOptionsDs?.getState('myquestionBool')} onChange={myquestionChange}><span style={{marginLeft:4}}>
         我的问题
           </span></CheckBox>
       </div>
@@ -514,10 +545,14 @@ function BranchCreate(props) {
               name="issue"
               colSpan={5}
               onChange={changeIssue}
+              onInput={handleIssueSearch}
+              onBlur={handleIssueBlur}
               optionRenderer={issueNameOptionRender}
               renderer={issueNameRender}
               searchable
-              searchMatcher="content"
+              searchMatcher={() => true}
+              pagingOptionContent={<span className="c7ncd-select-load-more-text">加载更多</span>}
+              clearButton={false}
             />,
           ]}
           <Select

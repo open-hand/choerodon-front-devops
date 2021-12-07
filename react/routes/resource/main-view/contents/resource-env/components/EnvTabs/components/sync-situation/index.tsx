@@ -1,5 +1,7 @@
+/* eslint-disable */
 import React from 'react';
 import { Table } from 'choerodon-ui/pro';
+import { useFormatMessage } from '@choerodon/master';
 import { Tooltip } from 'choerodon-ui';
 import { NewTips, TimePopover } from '@choerodon/components';
 import SyncSituation from './SyncSituation';
@@ -18,6 +20,8 @@ export default function Situation() {
   } = useResourceStore();
 
   const { gitopsLogDs } = useREStore();
+
+  const format = useFormatMessage('c7ncd.resource');
 
   function renderMsg({ value }:any) {
     return (
@@ -64,7 +68,7 @@ export default function Situation() {
       <SyncSituation />
       <div className={`${prefixCls}-environment-sync-table-title`}>
         <NewTips
-          title={formatMessage({ id: `${intlPrefix}.environment.error.logs` })}
+          title={format({ id: 'ErrorLog' })}
           helpText={formatMessage({ id: `${intlPrefix}.environment.error.tips` })}
         />
       </div>

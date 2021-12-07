@@ -1,4 +1,6 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
+import { useFormatMessage } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 import { Icon } from 'choerodon-ui';
 import _ from 'lodash';
@@ -11,6 +13,8 @@ const RadarApp = observer((props) => {
     loading,
     failed,
   } = props;
+
+  const format = useFormatMessage('c7ncd.resource');
 
   useEffect(() => {
     const canvas = document.getElementById('canvas'); // 获取canvas元素
@@ -111,27 +115,26 @@ const RadarApp = observer((props) => {
           <div className="movingCircle" />
         </div>
       );
-    } else if (!failed) {
+    } if (!failed) {
       return (
-        <React.Fragment>
-          <div className="circleText">健康分值</div>
+        <>
+          <div className="circleText">{ format({ id: 'HealthScore' }) }</div>
           <div className="circleNum">
             <span className="currentNum">
               {_.isNull(num) ? '- -' : <span className="numberSpan">0</span>}
             </span>
           </div>
-        </React.Fragment>
-      );
-    } else {
-      return (
-        <React.Fragment>
-          <div className="circleText failedText">扫描失败</div>
-          <div className="circleNum">
-            <Icon type="close" className="numberFailed" />
-          </div>
-        </React.Fragment>
+        </>
       );
     }
+    return (
+      <>
+        <div className="circleText failedText">扫描失败</div>
+        <div className="circleNum">
+          <Icon type="close" className="numberFailed" />
+        </div>
+      </>
+    );
   }
 
   const getContent = () => (

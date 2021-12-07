@@ -5,7 +5,7 @@ import { withRouter, Link } from 'react-router-dom';
 import _ from 'lodash';
 import classNames from 'classnames';
 import { Icon } from 'choerodon-ui/pro';
-import { Page } from '@choerodon/master';
+import { Page, useFormatMessage } from '@choerodon/master';
 import EmptyPage from '../../../../../components/empty-page';
 import { Loading } from '@choerodon/components';
 import Percentage from '../../../../../components/percentage/Percentage';
@@ -22,6 +22,8 @@ export default withRouter(observer((props) => {
   const { formatMessage, handleMapStore, projectId, codeQuality } = codeQualityStore;
   const { appServiceDs, selectAppDs } = useCodeManagerStore();
   const appServiceId = selectAppDs.current.get('appServiceId');
+
+  const format = useFormatMessage('c7ncd.codeManger');
 
   useEffect(() => {
     handleMapStore.setCodeQuality({
@@ -41,8 +43,8 @@ export default withRouter(observer((props) => {
     if (codeQuality.getIsEmpty) {
       return (
         <NewEmptyPage
-          title={formatMessage({ id: 'empty.title.prohibited' })}
-          describe={formatMessage({ id: 'empty.title.code' })}
+          title={format({ id: 'NoData' })}
+          describe={format({ id: 'NoDataDes' })}
           btnText={formatMessage({ id: 'empty.link.code' })}
           pathname="/rducm/code-lib-management/apply"
         />
@@ -67,19 +69,19 @@ export default withRouter(observer((props) => {
       date || status ? (
         <div className="c7n-codeQuality-content">
           <div className="c7n-codeQuality-content-head">
-            <span className="codeQuality-head-title">{formatMessage({ id: 'codeQuality.content.title' })}</span>
+            <span className="codeQuality-head-title">{format({ id: 'QualityGate' })}</span>
             <span className={`codeQuality-head-status codeQuality-head-status-${status}`}>{formatMessage({ id: `codeQuality.status.${status}` })}</span>
-            <span className="codeQuality-head-date">{formatMessage({ id: 'codeQuality.analysis' })}：{date.split('+')[0].replace(/T/g, ' ')}</span>
+            <span className="codeQuality-head-date">{format({ id: 'LastAnalysis' })}：{date.split('+')[0].replace(/T/g, ' ')}</span>
           </div>
           {_.map(quality, (value, objKey) => (
             <div className="c7n-codeQuality-detail" key={objKey}>
-              <div className="codeQuality-detail-title">{formatMessage({ id: `codeQuality.detail.${objKey}` })}</div>
+              <div className="codeQuality-detail-title">{format({ id: objKey })}</div>
               <div className="codeQuality-detail-content">
                 {
                   _.map(value, ({ icon, key, hasReport, isPercent, value: innerValue, rate, url }) => (
                     <div className="detail-content-block" key={key}>
                       <Icon type={icon} />
-                      <span className="detail-content-block-title">{formatMessage({ id: `codeQuality.${key}` })}：</span>
+                      <span className="detail-content-block-title">{format({ id: key })}：</span>
                       {url ? (
                         <a href={url} target="_blank" rel="nofollow me noopener noreferrer">
                           <span className="block-number-link">{innerValue.match(/\d+(\.\d+)?/g)}</span>
@@ -111,8 +113,8 @@ export default withRouter(observer((props) => {
         </div>
       ) : (
         <EmptyPage
-          title={formatMessage({ id: 'codeQuality.empty.title' })}
-          describe={formatMessage({ id: 'codeQuality.empty.content' })}
+          title={format({ id: 'NoData' })}
+          describe={format({ id: 'NoDataDes' })}
           access
         />
       )

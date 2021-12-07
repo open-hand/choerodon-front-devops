@@ -6,10 +6,11 @@ interface TableProps {
   formatMessage(arg0: object): string,
   projectId: number,
   sourceDs: DataSet,
+  format: any,
 }
 
 export default ({
-  intlPrefix, formatMessage, projectId, sourceDs,
+  intlPrefix, formatMessage, projectId, sourceDs, format,
 }: TableProps): DataSetProps => ({
   autoCreate: false,
   autoQuery: false,
@@ -37,7 +38,7 @@ export default ({
   },
   {
     name: 'sourceType',
-    label: '类型',
+    label: format({ id: 'Type' }),
   },
   {
     name: 'pod',
@@ -51,32 +52,32 @@ export default ({
   }, {
     name: 'age',
     type: 'string' as FieldType,
-    label: formatMessage({ id: 'updateDate' }),
+    label: format({ id: 'UpdateTime' }),
   }, {
     name: 'source',
-    label: formatMessage(({ id: `${intlPrefix}.workload.source` })),
+    label: format({ id: 'Source' }),
   }, {
     name: 'schedule',
-    label: formatMessage(({ id: `${intlPrefix}.workload.plan` })),
+    label: format({ id: 'Plan' }),
   }, {
     name: 'active',
-    label: formatMessage(({ id: `${intlPrefix}.workload.active` })),
+    label: format({ id: 'Active' }),
   }, {
     name: 'suspend',
-    label: formatMessage(({ id: `${intlPrefix}.workload.suspend` })),
+    label: format({ id: 'SuspendorNot' }),
   }, {
     name: 'lastScheduleTime',
-    label: formatMessage(({ id: `${intlPrefix}.workload.lastScheduleTime` })),
+    label: format({ id: 'LastScheduledTime' }),
   }, {
     name: 'creationTimestamp',
-    label: formatMessage(({ id: 'createDate' })),
+    label: format({ id: 'CreationTime' }),
   }],
   queryFields: [{
     name: 'name',
     label: formatMessage({ id: 'name' }),
   }, {
     name: 'from_instance',
-    label: formatMessage(({ id: `${intlPrefix}.workload.source` })),
+    label: format({ id: 'Source' }),
     options: sourceDs,
     textField: 'text',
     valueField: 'value',

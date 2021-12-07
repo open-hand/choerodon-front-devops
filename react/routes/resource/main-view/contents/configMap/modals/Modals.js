@@ -1,7 +1,8 @@
+/* eslint-disable */
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
-import { HeaderButtons } from '@choerodon/master';
+import { HeaderButtons, useFormatMessage } from '@choerodon/master';
 import KeyValueModal from '@/components/key-value';
 import { useResourceStore } from '../../../../stores';
 import { useModalStore } from './stores';
@@ -24,6 +25,9 @@ const KeyValueModals = observer(() => {
     formStore,
     ConfigMapTableDs,
   } = useKeyValueStore();
+
+  const format = useFormatMessage('c7ncd.resource');
+
   const {
     permissions,
     AppState: { currentMenuType: { projectId } },
@@ -48,7 +52,7 @@ const KeyValueModals = observer(() => {
         intlPrefix={intlPrefix}
         refresh={refresh}
       />,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 
@@ -59,7 +63,7 @@ const KeyValueModals = observer(() => {
 
     return ([{
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.configmap'],
-      name: formatMessage({ id: `${intlPrefix}.create.configMap` }),
+      name: format({ id: 'CreateConfigMap' }),
       icon: 'playlist_add',
       handler: openModal,
       display: true,

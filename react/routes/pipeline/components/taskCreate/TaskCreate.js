@@ -998,7 +998,7 @@ export default class TaskCreate extends Component {
           onOk={this.handleEditValue}
           onCancel={this.closeEditValue}
           disableOk={configError}
-          okText={formatMessage({ id: 'edit' })}
+          okText={formatMessage({ id: 'boot.edit' })}
         >
           <div className="c7n-config-value-modal-content">
             <YamlEditor

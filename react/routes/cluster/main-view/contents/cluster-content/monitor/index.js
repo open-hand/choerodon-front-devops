@@ -1,3 +1,10 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
+/* eslint-disable */
 import React, { Fragment, Suspense, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Spin } from 'choerodon-ui';
@@ -45,17 +52,16 @@ export default observer((props) => {
           sandbox
         />
       );
-    } else {
-      return (
-        <EmptyPage
-          title={formatMessage({ id: `${intlPrefix}.monitor.install` })}
-          describe={formatMessage({ id: `${intlPrefix}.monitor.empty.des` })}
-          btnText={formatMessage({ id: `${intlPrefix}.monitor.link` })}
-          onClick={LinkToComponent}
-          access
-        />
-      );
     }
+    return (
+      <EmptyPage
+        title={formatMessage({ id: 'c7ncd-clusterManagement.InstallingMonitoringComponents' })}
+        describe={formatMessage({ id: 'c7ncd-clusterManagement.Nomonitoring' })}
+        btnText={formatMessage({ id: 'c7ncd-clusterManagement.SkiptoComponentManagement' })}
+        onClick={LinkToComponent}
+        access
+      />
+    );
   }
 
   return (

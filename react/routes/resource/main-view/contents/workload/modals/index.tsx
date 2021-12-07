@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
-import { HeaderButtons } from '@choerodon/master';
+import { HeaderButtons, useFormatMessage } from '@choerodon/master';
 import { Record } from '@/interface';
 import { useWorkloadStore } from '@/routes/resource/main-view/contents/workload/stores';
 import { LARGE } from '@/utils/getModalWidth';
@@ -27,9 +27,9 @@ const CustomModals = observer(() => {
     urlTypes,
   } = useWorkloadStore();
 
-  const title = useMemo(() => (
-    formatMessage({ id: `${intlPrefix}.workload.create` }, { name: workloadStore.getTabKey })
-  ), [workloadStore.getTabKey]);
+  const format = useFormatMessage('c7ncd.resource');
+
+  const title = useMemo(() => `${format({ id: 'Create' })} ${workloadStore.getTabKey}`, [workloadStore.getTabKey]);
 
   const refresh = useCallback(() => {
     // treeDs.query();
@@ -56,7 +56,7 @@ const CustomModals = observer(() => {
         // @ts-ignore
         urlType={urlTypes[workloadStore.getTabKey] || 'deployments'}
       />,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }, [workloadStore.getTabKey, parentId]);
 

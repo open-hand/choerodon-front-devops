@@ -4,6 +4,7 @@ import React, {
 } from 'react';
 import { runInAction } from 'mobx';
 import { observer } from 'mobx-react-lite';
+import { useFormatMessage } from '@choerodon/master';
 import {
   Tabs, Spin,
 } from 'choerodon-ui';
@@ -31,12 +32,12 @@ const InstanceTitle = ({
   name,
   versionName,
   formatMessage,
+  commandStatus,
 }) => {
   const podSize = useMemo(() => ({
     width: 22,
     height: 22,
   }), []);
-  const { prefixCls } = useResourceStore();
   const {
     podColor: {
       RUNNING_COLOR,
@@ -61,18 +62,22 @@ const InstanceTitle = ({
 
   return (
     <>
-      <PodCircle
-        style={podSize}
-        dataSource={[{
-          name: 'running',
-          value: podRunningCount,
-          stroke: RUNNING_COLOR,
-        }, {
-          name: 'unlink',
-          value: podUnlinkCount,
-          stroke: PADDING_COLOR,
-        }]}
-      />
+      {commandStatus === 'operating' ? (
+        <Spin className="c7ncd-deployment-instance-spin" />
+      ) : (
+        <PodCircle
+          style={podSize}
+          dataSource={[{
+            name: 'running',
+            value: podRunningCount,
+            stroke: RUNNING_COLOR,
+          }, {
+            name: 'unlink',
+            value: podUnlinkCount,
+            stroke: PADDING_COLOR,
+          }]}
+        />
+      )}
       <span className="c7ncd-page-title-text">{name}</span>
       <span className="c7ncd-page-title-version">
         (
@@ -102,6 +107,8 @@ const InstanceContent = observer(() => {
   } = useInstanceStore();
   const viewType = resourceStore.getViewType;
 
+  const format = useFormatMessage('c7ncd.resource');
+
   const { getSelectedMenu: { key: selectedKey } } = resourceStore;
 
   function handleChange(key) {
@@ -118,6 +125,7 @@ const InstanceContent = observer(() => {
       const podCount = record.get('podCount');
       const error = record.get('error');
       const versionName = record.get('effectCommandVersion');
+      const commandStatus = record.get('commandStatus');
       return {
         id,
         status,
@@ -126,6 +134,7 @@ const InstanceContent = observer(() => {
         podCount,
         error,
         versionName,
+        commandStatus,
       };
     }
 
@@ -163,11 +172,13 @@ const InstanceContent = observer(() => {
         podCount,
         error,
         versionName,
+        commandStatus,
       } = current;
       const podUnlinkCount = computeUnlinkPod(podCount, podRunningCount);
       return (
         <InstanceTitle
           status={status}
+          commandStatus={commandStatus}
           name={name}
           podRunningCount={podRunningCount}
           podUnlinkCount={podUnlinkCount}
@@ -186,6 +197,7 @@ const InstanceContent = observer(() => {
       podRunningCount,
       podCount,
     } = resourceStore.getSelectedMenu;
+
     const podUnlinkCount = computeUnlinkPod(podCount, podRunningCount);
 
     return (
@@ -200,7 +212,7 @@ const InstanceContent = observer(() => {
     const detailsTab = (
       <TabPane
         key={DETAILS_TAB}
-        tab={formatMessage({ id: `${intlPrefix}.instance.tabs.details` })}
+        tab={format({ id: 'OperationDetails' })}
       >
         <Suspense fallback={<Spin />}>
           <Details />
@@ -210,7 +222,7 @@ const InstanceContent = observer(() => {
     const casesTab = (
       <TabPane
         key={CASES_TAB}
-        tab={formatMessage({ id: `${intlPrefix}.instance.tabs.cases` })}
+        tab={format({ id: 'ApplicationEvent' })}
       >
         <Suspense fallback={<Spin />}>
           <Cases />
@@ -234,7 +246,7 @@ const InstanceContent = observer(() => {
         {chooseTab()}
         <TabPane
           key={PODS_TAB}
-          tab={formatMessage({ id: `${intlPrefix}.instance.tabs.pods` })}
+          tab={format({ id: 'PodDetails' })}
         >
           <Suspense fallback={<Spin />}>
             <PodsDetails />

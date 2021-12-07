@@ -39,7 +39,7 @@ export const GitopsLogDataSet = ({ formatMessage, intlPrefix }) => ({
     {
       name: 'error',
       type: 'string',
-      label: formatMessage({ id: `${intlPrefix}.environment.error.info` }),
+      label: formatMessage({ id: 'c7ncd.environment.ErrorMessage' }),
     },
     {
       name: 'filePath',
@@ -54,7 +54,7 @@ export const GitopsLogDataSet = ({ formatMessage, intlPrefix }) => ({
     {
       name: 'lastUpdateDate',
       type: 'dateTime',
-      label: formatMessage({ id: `${intlPrefix}.environment.error.time` }),
+      label: formatMessage({ id: 'c7ncd.environment.WrongTime' }),
     },
   ],
 });

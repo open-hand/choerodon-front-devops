@@ -1,0 +1,66 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
+const Index = {
+  'c7ncd-clusterManagement.AuthorityManagement': 'Authority Management',
+  'c7ncd-clusterManagement.NewCluster': 'New Cluster',
+  'c7ncd-clusterManagement.ConnecttoCluster': 'Connect to Cluster',
+  'c7ncd-clusterManagement.Search': 'Search',
+  'c7ncd-clusterManagement.Modify': 'Modify',
+  'c7ncd-clusterManagement.Disconnect': 'Disconnect',
+  'c7ncd-clusterManagement.Activate': 'Activate',
+  'c7ncd-clusterManagement.Delete': 'Delete',
+  'c7ncd-clusterManagement.NodeList': 'Node List',
+  'c7ncd-clusterManagement.Node': 'Node',
+  'c7ncd-clusterManagement.Type': 'Type',
+  'c7ncd-clusterManagement.CPUAllocation': 'CPU Allocation',
+  'c7ncd-clusterManagement.MemoryAllocation': 'Memory Allocation',
+  'c7ncd-clusterManagement.CreationTime': 'Creation Time',
+  'c7ncd-clusterManagement.HealthCheck': 'Health Check',
+  'c7ncd-clusterManagement.Scan': 'Scan',
+  'c7ncd-clusterManagement.EndTimeofLastScan': 'End Time of Last Scan',
+  'c7ncd-clusterManagement.KubernetesVersion': 'Kubernetes Version',
+  'c7ncd-clusterManagement.NumberofPods': 'Number of Pods',
+  'c7ncd-clusterManagement.NumberofNodes': 'Number of Nodes',
+  'c7ncd-clusterManagement.NumberofEnvironment': 'Number of Environment',
+  'c7ncd-clusterManagement.ClusterOverview': 'Cluster Overview',
+  'c7ncd-clusterManagement.healthCheck': 'Health Check',
+  'c7ncd-clusterManagement.Score': 'Score',
+  'c7ncd-clusterManagement.imageCheck': 'Image Check',
+  'c7ncd-clusterManagement.networkCheck': 'Service Configuration',
+  'c7ncd-clusterManagement.resourceCheck': 'Resource Allocation',
+  'c7ncd-clusterManagement.securityCheck': 'Safety',
+  'c7ncd-clusterManagement.EnvironmentalDetails': 'Environmental Details',
+  'c7ncd-clusterManagement.ChoerodonPlatformEnvironments': 'Choerodon Platform Environments',
+  'c7ncd-clusterManagement.Project': 'Project',
+  'c7ncd-clusterManagement.OtherEnvironments': 'Other Environments',
+  'c7ncd-clusterManagement.PermissionAssignment': 'Permission Assignment',
+  'c7ncd-clusterManagement.ProjectName': 'Project Name',
+  'c7ncd-clusterManagement.ProjectCode': 'Project Code',
+  'c7ncd-clusterManagement.ComponentManagement': 'Component Management',
+  'c7ncd-clusterManagement.cert.des': 'CertManager helps cluster environments apply for or upload domain name certificates',
+  'c7ncd-clusterManagement.monitor.des': 'Monitoring component helps monitor resource usage in a cluster. This component includes Prometheus, Grafana, and AlertManager',
+  'c7ncd-clusterManagement.ClusterMonitor': 'Cluster Monitor',
+  'c7ncd-clusterManagement.InstallingMonitoringComponents': 'Installing Monitoring Components',
+  'c7ncd-clusterManagement.Nomonitoring': 'No monitoring component has been installed. If you want to view the monitoring status of the cluster, install it on the component management page',
+  'c7ncd-clusterManagement.SkiptoComponentManagement': 'Skip to Component Management',
+  'c7ncd-clusterManagement.ResourceAllocation': 'Resource Allocation',
+  'c7ncd-clusterManagement.NodeMonitor': 'Node Monitor',
+  'c7ncd-clusterManagement.DistributionOverview': 'Distribution Overview',
+  'c7ncd-clusterManagement.PodsAllocation': 'Pods Allocation',
+  'c7ncd-clusterManagement.RequestValue': 'Request Value',
+  'c7ncd-clusterManagement.LimitValue': 'Limit Value',
+  'c7ncd-clusterManagement.Total': 'Total',
+  'c7ncd-clusterManagement.NodePods': 'Node Pods',
+  'c7ncd-clusterManagement.Status': 'Status',
+  'c7ncd-clusterManagement.PodLog': 'Pod Log',
+  'c7ncd-clusterManagement.InstallingMonitoringComponents': 'Pod Log',
+
+};
+
+export {
+  Index,
+};

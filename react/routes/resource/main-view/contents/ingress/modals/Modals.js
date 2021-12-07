@@ -1,7 +1,8 @@
+/* eslint-disable */
 import React, { Fragment, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Modal } from 'choerodon-ui/pro';
-import { HeaderButtons } from '@choerodon/master';
+import { HeaderButtons, useFormatMessage } from '@choerodon/master';
 import { useResourceStore } from '../../../../stores';
 import { useModalStore } from './stores';
 import { useIngressStore } from '../stores';
@@ -24,6 +25,9 @@ const EnvModals = observer(() => {
   const {
     ingressDs,
   } = useIngressStore();
+
+  const format = useFormatMessage('c7ncd.resource');
+
   const { ingressStore } = useMainStore();
   const { permissions } = useModalStore();
   const { parentId } = resourceStore.getSelectedMenu;
@@ -46,7 +50,7 @@ const EnvModals = observer(() => {
         prefixCls={prefixCls}
         ingressStore={ingressStore}
       />,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 
@@ -57,7 +61,7 @@ const EnvModals = observer(() => {
 
     return ([{
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.domain'],
-      name: formatMessage({ id: `${intlPrefix}.create.ingress` }),
+      name: format({ id: 'CreateIngress' }),
       icon: 'playlist_add',
       handler: openModal,
       display: true,

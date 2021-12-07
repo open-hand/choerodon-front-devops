@@ -1,4 +1,7 @@
-import React, { Fragment, Suspense, useMemo, useState, useEffect } from 'react';
+/* eslint-disable */
+import React, {
+  Fragment, Suspense, useMemo, useState, useEffect,
+} from 'react';
 import { observer } from 'mobx-react-lite';
 import { Button } from 'choerodon-ui/pro';
 import { Choerodon } from '@choerodon/master';
@@ -74,7 +77,6 @@ const polaris = observer((props) => {
     }
   }
 
-
   function getContent() {
     const isLoading = loading || statusLoading;
     const connectStatus = ClusterDetailDs.current && ClusterDetailDs.current.get('connect');
@@ -83,7 +85,7 @@ const polaris = observer((props) => {
     }
     if (contentStore.getHasEnv) {
       return (
-        <Fragment>
+        <>
           <Button
             className={`${prefixCls}-polaris-wrap-btn`}
             color="primary"
@@ -91,21 +93,20 @@ const polaris = observer((props) => {
             onClick={handleScan}
             disabled={isLoading || !connectStatus}
           >
-            {formatMessage({ id: `${intlPrefix}.polaris.scanning` })}
+            {formatMessage({ id: 'c7ncd-clusterManagement.Scan' })}
           </Button>
           <NumberDetail isLoading={isLoading} />
           <CollapseDetail loading={isLoading} />
-        </Fragment>
-      );
-    } else {
-      return (
-        <EmptyPage
-          title={formatMessage({ id: 'empty.title.env' })}
-          describe={formatMessage({ id: `${intlPrefix}.polaris.empty.des` })}
-          access
-        />
+        </>
       );
     }
+    return (
+      <EmptyPage
+        title={formatMessage({ id: 'empty.title.env' })}
+        describe={formatMessage({ id: `${intlPrefix}.polaris.empty.des` })}
+        access
+      />
+    );
   }
 
   useInterval(loadData, delay);

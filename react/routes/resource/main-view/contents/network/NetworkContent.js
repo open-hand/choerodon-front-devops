@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
-import { Action } from '@choerodon/master';
+import { Action, useFormatMessage } from '@choerodon/master';
 import {
   Tooltip,
   Icon,
@@ -35,6 +35,9 @@ const NetworkContent = observer(() => {
     resourceStore: { getSelectedMenu: { parentId } },
     treeDs,
   } = useResourceStore();
+
+  const format = useFormatMessage('c7ncd.resource');
+
   const {
     networkStore,
     deletionStore: { openDeleteModal },
@@ -320,7 +323,7 @@ const NetworkContent = observer(() => {
     const buttons = [
       {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.update-net'],
-        text: formatMessage({ id: 'edit' }),
+        text: format({ id: 'Modify' }),
         action: openModal,
       },
       {
@@ -348,7 +351,7 @@ const NetworkContent = observer(() => {
         store={networkStore}
         refresh={refresh}
       />,
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
       afterClose: () => networkStore.setSingleData([]),
     });
   }
@@ -364,8 +367,8 @@ const NetworkContent = observer(() => {
       >
         <Column name="name" renderer={renderName} sortable />
         <Column renderer={renderAction} width={60} />
-        <Column renderer={renderTargetType} header={formatMessage({ id: `${intlPrefix}.application.net.targetType` })} width="1.2rem" />
-        <Column renderer={renderTarget} header={formatMessage({ id: `${intlPrefix}.application.net.target` })} />
+        <Column renderer={renderTargetType} header={format({ id: 'TargetType' })} width="1.2rem" />
+        <Column renderer={renderTarget} header={format({ id: 'Target' })} />
         <Column name="type" renderer={renderConfigType} width="1.5rem" />
       </Table>
     </div>

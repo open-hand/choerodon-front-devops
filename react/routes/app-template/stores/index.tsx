@@ -4,6 +4,7 @@ import React, {
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
+import { useFormatMessage, useFormatCommon } from '@choerodon/master';
 import TableDataSet from './TableDataSet';
 
 interface ContextProps {
@@ -21,6 +22,8 @@ interface ContextProps {
     delete: string[],
   }
   pageType: string,
+  format:(arg0?:object, arg1?:object)=>{};
+  formatCommon:(arg0?:object, arg1?:object)=>{};
 }
 
 const Store = createContext({} as ContextProps);
@@ -36,7 +39,9 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     AppState: { currentMenuType: { organizationId: orgId } },
     pageType,
   } = props;
-
+  const intlPrefix = 'c7ncd.template';
+  const format = useFormatMessage(intlPrefix);
+  const formatCommon = useFormatCommon(intlPrefix);
   const organizationId = useMemo(() => (pageType === 'organization' ? orgId : null), [pageType, orgId]);
   const permissionCodes = useMemo(() => (organizationId ? {
     create: ['choerodon.code.organization.manager.application-template.ps.create'],
@@ -56,16 +61,20 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
 
   const tableDs = useMemo(() => new DataSet((TableDataSet({
     organizationId,
+    formatCommon,
+    format,
   }))), [organizationId]);
 
   const value = {
     ...props,
     prefixCls: 'c7ncd-template',
-    intlPrefix: 'c7ncd.template',
+    intlPrefix,
     formatMessage,
     tableDs,
     organizationId,
     permissionCodes,
+    formatCommon,
+    format,
   };
   return (
     <Store.Provider value={value}>

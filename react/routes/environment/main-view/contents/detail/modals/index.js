@@ -104,7 +104,7 @@ const EnvModals = observer(() => {
       children: <EnvCreateForm intlPrefix={currentIntlPrefix} refresh={refresh} />,
       drawer: true,
       style: modalStyle,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 
@@ -118,7 +118,7 @@ const EnvModals = observer(() => {
       afterClose: () => {
         groupFormDs.current.reset();
       },
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 
@@ -191,7 +191,7 @@ const EnvModals = observer(() => {
     }
     return [{
       permissions: ['choerodon.code.project.deploy.environment.ps.detail-create-env'],
-      name: formatMessage({ id: `${currentIntlPrefix}.create` }),
+      name: formatMessage({ id: 'c7ncd.environment.CreateEnvironment' }),
       icon: 'playlist_add',
       handler: openEnvModal,
       display: true,
@@ -201,7 +201,7 @@ const EnvModals = observer(() => {
     }, {
       permissions: ['choerodon.code.project.deploy.environment.ps.detail-create-config'],
       disabled,
-      name: formatMessage({ id: `${currentIntlPrefix}.create.config` }),
+      name: formatMessage({ id: 'c7ncd.environment.CreateDeploymentConfiguration' }),
       icon: 'playlist_add',
       handler: openConfigModal,
       display: true,
@@ -209,22 +209,22 @@ const EnvModals = observer(() => {
     }, {
       permissions: ['choerodon.code.project.deploy.environment.ps.permission'],
       disabled,
-      name: formatMessage({ id: `${intlPrefix}.modal.permission` }),
+      name: formatMessage({ id: 'c7ncd.environment.AuthorityManagement' }),
       icon: 'settings-o',
       handler: openPermission,
       display: true,
       group: 1,
     }, {
-      name: formatMessage({ id: `${intlPrefix}.modal.env-detail` }),
+      name: formatMessage({ id: 'c7ncd.environment.EnvironmentDetails' }),
       icon: 'find_in_page-o',
       handler: openEnvDetail,
       display: true,
       group: 2,
     }, {
-      name: '更多操作',
+      name: formatMessage({ id: 'c7ncd.environment.MoreActions' }),
       groupBtnItems: [
         {
-          name: formatMessage({ id: `${currentIntlPrefix}.group.create` }),
+          name: formatMessage({ id: 'c7ncd.environment.CreateGroup' }),
           handler: openGroupModal,
         },
       ],

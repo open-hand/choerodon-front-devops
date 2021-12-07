@@ -116,7 +116,7 @@ const AppModals = observer(() => {
         type={type === MAPPING_TAB ? 'configMap' : 'secret'}
         refresh={() => setTabKey(type)}
       />,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 
@@ -135,7 +135,7 @@ const AppModals = observer(() => {
       key: createNetWorkKey,
       title: formatMessage({ id: 'network.header.create' }),
       style: { width: 740 },
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
       drawer: true,
       children: <CreateNetwork2
         envId={parentId}
@@ -160,7 +160,7 @@ const AppModals = observer(() => {
         prefixCls={prefixCls}
         saveNetworkIds={saveNetworkIds}
       />,
-      okText: formatMessage({ id: 'create' }),
+      okText: formatMessage({ id: 'boot.create' }),
     });
   }
 

@@ -1,3 +1,10 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
+/* eslint-disable */
 import React from 'react';
 import { Table } from 'choerodon-ui/pro';
 import { Tooltip } from 'choerodon-ui';
@@ -63,7 +70,7 @@ export default function Situation() {
       <SyncSituation />
       <div className={`${prefixCls}-environment-sync-table-title`}>
         <Tips
-          title={formatMessage({ id: `${intlPrefix}.environment.error.logs` })}
+          title={formatMessage({ id: 'c7ncd.environment.ErrorLog' })}
           helpText={formatMessage({ id: `${intlPrefix}.environment.error.tips` })}
         />
       </div>

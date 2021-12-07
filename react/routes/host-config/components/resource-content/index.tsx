@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 import React, { useCallback, useMemo } from 'react';
 import map from 'lodash/map';
 import {
@@ -30,17 +36,17 @@ const ResourceContent = observer(() => {
 
   const usageData = useMemo(() => ({
     cpu: {
-      title: formatMessage({ id: `${intlPrefix}.usage.cpu` }),
+      title: formatMessage({ id: 'c7ncd.environment.CPUUsage' }),
       field: 'cpu',
       value: Number(usageRecord?.get('cpu') || 0),
     },
     root: {
-      title: formatMessage({ id: `${intlPrefix}.usage.root` }),
+      title: formatMessage({ id: 'c7ncd.environment.RootPartitionUsage' }),
       field: 'root',
       value: Number(usageRecord?.get('disk') || 0),
     },
     ram: {
-      title: formatMessage({ id: `${intlPrefix}.usage.ram` }),
+      title: formatMessage({ id: 'c7ncd.environment.MemoryUsage' }),
       field: 'root',
       value: Number(usageRecord?.get('mem') || 0),
     },
@@ -49,7 +55,7 @@ const ResourceContent = observer(() => {
   const getContent = useCallback(() => (
     <div className={`${prefixCls}-resource-tab`}>
       <Tabs defaultActiveKey="appInstance">
-        <TabPane tab="应用实例" key="appInstance">
+        <TabPane tab={formatMessage({ id: 'c7ncd.environment.Application' })} key="appInstance">
           {mainStore.getSelectedHost?.hostStatus === 'connected' ? (
             <AppIngressTable appIngressDataset={appInstanceTableDs} />
           ) : (
@@ -58,7 +64,7 @@ const ResourceContent = observer(() => {
         </TabPane>
         {mainStore.getSelectedHost?.permissionLabel === 'administrator' ? (
           <TabPane
-            tab={formatMessage({ id: 'permission_management' })}
+            tab={formatMessage({ id: 'c7ncd.environment.AuthorityManagement' })}
             key="permission"
           >
             <PermissionTable />

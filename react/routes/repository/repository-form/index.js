@@ -1,6 +1,6 @@
-import React, { Fragment, useEffect } from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
+import { C7NFormat } from '@choerodon/master';
 import {
   SelectBox, Select, Form, UrlField, Icon, TextField, Password, Button,
 } from 'choerodon-ui/pro';
@@ -11,24 +11,24 @@ import './index.less';
 
 const { Option } = Select;
 
-export default withRouter(injectIntl(observer(({
+export default withRouter(observer(({
   record,
   dataSet,
   store,
   id,
-  intl: { formatMessage },
   prefixCls,
   intlPrefix,
-  modal,
+  formatRepository,
+  formatCommon,
   isProject,
   history,
   location: { search },
 }) => {
-  async function refresh() {
+  const refresh = async () => {
     await dataSet.query();
-  }
+  };
 
-  async function handleSave() {
+  const handleSave = async () => {
     if (record.get('harborStatus') === 'failed' || record.get('chartStatus') === 'failed') return false;
     const chartTestFailed = record.get('chartCustom') === 'custom' && !record.get('chartStatus') && !await handleTestChart();
     if (!chartTestFailed && await dataSet.submit() !== false) {
@@ -36,7 +36,7 @@ export default withRouter(injectIntl(observer(({
       return true;
     }
     return false;
-  }
+  };
 
   async function handleTestChart() {
     try {
@@ -69,7 +69,7 @@ export default withRouter(injectIntl(observer(({
           funcType="raised"
           className={`${prefixCls}-form-button`}
         >
-          <FormattedMessage id={`${intlPrefix}.test`} />
+          <C7NFormat id={`${intlPrefix}.test`} />
         </Button>
         {status && (
           <span>
@@ -77,44 +77,44 @@ export default withRouter(injectIntl(observer(({
               type={status === 'success' ? 'check_circle' : 'cancel'}
               className={`${prefixCls}-form-test-${status}`}
             />
-            {formatMessage({ id: `${intlPrefix}.test.${status}` })}
+            {formatRepository({ id: `test.${status}` })}
           </span>
         )}
       </div>
     );
   }
 
-  function handleLink() {
+  const handleLink = () => {
     history.push(`/rdupm/product-lib${search}`);
-  }
+  };
 
   return (
     <div className={`${prefixCls}-form-wrap`}>
       {/* TODO 使用Alert组件 */}
       <div className={`${prefixCls}-form-info`}>
         <Icon type="info" className={`${prefixCls}-form-info-icon`} />
-        <FormattedMessage id={`${intlPrefix}.info`} />
+        <C7NFormat id={`${intlPrefix}.info`} />
       </div>
       {isProject ? (
         <div>
           <span className={`${prefixCls}-form-config-title`}>
-            {formatMessage({ id: `${intlPrefix}.harbor.config` })}
+            {formatRepository({ id: 'harbor.config' })}
           </span>
           <div className={`${prefixCls}-empty-page`}>
             {/* <div className={`${prefixCls}-empty-page-image`} /> */}
             <div className={`${prefixCls}-empty-page-text`}>
               <div className={`${prefixCls}-empty-page-title`}>
-                {formatMessage({ id: `${intlPrefix}.empty.title` })}
+                {formatRepository({ id: 'empty.title' })}
               </div>
               <div className={`${prefixCls}-empty-page-des`}>
-                {formatMessage({ id: `${intlPrefix}.empty.des` })}
+                {formatRepository({ id: 'empty.des' })}
               </div>
               <Button
                 color="primary"
                 onClick={handleLink}
                 funcType="raised"
               >
-                {formatMessage({ id: `${intlPrefix}.empty.link` })}
+                {formatRepository({ id: 'empty.link' })}
               </Button>
             </div>
           </div>
@@ -122,12 +122,12 @@ export default withRouter(injectIntl(observer(({
       ) : null}
       <div className={`${prefixCls}-form`}>
         <span className={`${prefixCls}-form-config-title`}>
-          {formatMessage({ id: `${intlPrefix}.chart.config` })}
+          {formatRepository({ id: 'chart.config' })}
         </span>
         <Form record={record}>
           <SelectBox name="chartCustom">
-            <Option value="default">{formatMessage({ id: `${intlPrefix}.chart.default` })}</Option>
-            <Option value="custom">{formatMessage({ id: `${intlPrefix}.chart.custom` })}</Option>
+            <Option value="default">{formatRepository({ id: 'chart.default' })}</Option>
+            <Option value="custom">{formatRepository({ id: 'chart.custom' })}</Option>
           </SelectBox>
           {record.get('chartCustom') === 'custom' && ([
             <UrlField name="url" />,
@@ -142,7 +142,7 @@ export default withRouter(injectIntl(observer(({
           funcType="raised"
           onClick={refresh}
         >
-          <span style={{ color: '#3f51b5' }}>{formatMessage({ id: 'cancel' })}</span>
+          <span style={{ color: '#3f51b5' }}>{formatCommon({ id: 'cancel' })}</span>
         </Button>
         <Button
           color="primary"
@@ -150,9 +150,9 @@ export default withRouter(injectIntl(observer(({
           onClick={handleSave}
           style={{ marginRight: '.12rem' }}
         >
-          {formatMessage({ id: 'save' })}
+          {formatCommon({ id: 'save' })}
         </Button>
       </div>
     </div>
   );
-})));
+}));

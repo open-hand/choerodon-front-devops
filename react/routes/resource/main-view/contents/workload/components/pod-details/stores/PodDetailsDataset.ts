@@ -60,7 +60,7 @@ export default ({
     {
       name: 'creationDate',
       type: 'dateTime',
-      label: formatMessage({ id: 'createDate' }),
+      label: formatMessage({ id: 'boot.createDate' }),
     },
   ],
 });

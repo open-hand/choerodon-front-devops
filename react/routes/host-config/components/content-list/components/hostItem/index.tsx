@@ -140,25 +140,25 @@ const HostsItem: React.FC<any> = observer(({
     const actionData = [
       {
         service: ['choerodon.code.project.deploy.host.ps.edit'],
-        text: formatMessage({ id: 'edit' }),
+        text: formatMessage({ id: 'c7ncd.environment.Modify' }),
         action: () => handleCreateDeployHost(id),
       },
     ];
     if (hostStatus === 'disconnect') {
       actionData.unshift({
         service: ['choerodon.code.project.deploy.host.ps.connect'],
-        text: formatMessage({ id: `${intlPrefix}.connect` }),
+        text: formatMessage({ id: 'c7ncd.environment.Connect' }),
         action: openConnectModal,
       });
       actionData.push({
         service: ['choerodon.code.project.deploy.host.ps.delete'],
-        text: formatMessage({ id: 'delete' }),
+        text: formatMessage({ id: 'c7ncd.environment.' }),
         action: handleDelete,
       });
     } else {
       actionData.unshift({
         service: ['choerodon.code.project.deploy.host.ps.disconnect'],
-        text: '断开连接',
+        text: formatMessage({ id: 'c7ncd.environment.Disconnect' }),
         action: () => handleDisConnect(),
       });
     }
@@ -195,7 +195,7 @@ const HostsItem: React.FC<any> = observer(({
       <main className={`${prefixCls}-content-list-item-main`}>
         <div className={`${prefixCls}-content-list-item-main-item`}>
           <span>
-            创建者
+            {formatMessage({ id: 'c7ncd.environment.Creator' })}
           </span>
           <span>
             <UserInfo
@@ -207,7 +207,7 @@ const HostsItem: React.FC<any> = observer(({
         </div>
         <div className={`${prefixCls}-content-list-item-main-item`}>
           <span>
-            更新时间
+            {formatMessage({ id: 'c7ncd.environment.UpdateTime' })}
           </span>
           <span>
             <TimePopover content={lastUpdateDate} />

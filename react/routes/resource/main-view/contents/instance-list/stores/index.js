@@ -1,6 +1,7 @@
 import React, {
   createContext, useContext, useEffect, useMemo,
 } from 'react';
+import { useFormatMessage } from '@choerodon/master';
 import { DataSet } from 'choerodon-ui/pro';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
@@ -19,6 +20,8 @@ export const StoreProvider = injectIntl(inject('AppState')(
   observer((props) => {
     const { AppState: { currentMenuType: { id } }, children } = props;
 
+    const format = useFormatMessage('c7ncd.resource');
+
     const {
       intlPrefix,
       intl: { formatMessage },
@@ -35,6 +38,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       intlPrefix,
       projectId: id,
       envId: parentId,
+      format,
     })), [id, parentId]);
 
     const value = {

@@ -8,7 +8,7 @@ import {
 } from 'choerodon-ui/pro';
 import { Tabs, Popover } from 'choerodon-ui';
 import { map, isEmpty } from 'lodash';
-import { Action } from '@choerodon/master';
+import { Action, useFormatMessage } from '@choerodon/master';
 import { StatusTag } from '@choerodon/components';
 import ResourceListTitle from '@/routes/resource/main-view/components/resource-list-title';
 import { RecordObjectProps, Record } from '@/interface';
@@ -57,6 +57,8 @@ const WorkloadContent = observer(() => {
     AppState: { currentMenuType: { projectId } },
   } = useResourceStore();
   const { getSelectedMenu: { parentId } } = resourceStore;
+
+  const format = useFormatMessage('c7ncd.resource');
 
   const podCountName = useMemo(() => ({
     [DEPLOYMENT_TAB]: ['available', 'desired'],
@@ -148,7 +150,7 @@ const WorkloadContent = observer(() => {
         // @ts-ignore
         urlType={urlTypes[workloadStore.getTabKey] || 'deployments'}
       />,
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
     });
   }, [workloadStore.getTabKey, parentId]);
 
@@ -304,14 +306,14 @@ const WorkloadContent = observer(() => {
     }
     const actionData = [{
       service: ['choerodon.code.project.deploy.app-deployment.resource.ps.workload.pod'],
-      text: formatMessage({ id: `${intlPrefix}.workload.pod.detail` }),
+      text: format({ id: 'AssociatePodDetails' }),
       action: () => openPodDetailModal(record),
     }];
 
     if (connect && !record.get('instanceId')) {
       actionData.push({
         service: [`choerodon.code.project.deploy.app-deployment.resource.ps.workload.create.${workloadStore.getTabKey}`],
-        text: formatMessage({ id: 'edit' }),
+        text: formatMessage({ id: 'boot.edit' }),
         action: () => openEditModal(record),
       }, {
         service: [`choerodon.code.project.deploy.app-deployment.resource.ps.workload.delete.${workloadStore.getTabKey}`],

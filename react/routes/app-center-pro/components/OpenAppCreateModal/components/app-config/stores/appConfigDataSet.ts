@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
 /* eslint-disable max-len */
+import React, { useMemo } from 'react';
 import { FieldProps } from 'choerodon-ui/pro/lib/data-set/field';
 import { DataSet } from 'choerodon-ui/pro';
 import { middlewareConfigApi } from '@/api/Middleware';
@@ -105,7 +105,7 @@ const marketVersionOptionsDs = {
       transformResponse: (res: any) => {
         function init(data: any) {
           let result: any = [];
-          data.forEach((i: {
+          data?.forEach((i: {
             name: string,
             appVersionVOS: {
               id: string

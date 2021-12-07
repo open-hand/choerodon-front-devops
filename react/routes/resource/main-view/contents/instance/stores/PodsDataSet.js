@@ -1,4 +1,4 @@
-export default ({ intl, intlPrefix }) => ({
+export default ({ intl, intlPrefix, format }) => ({
   selection: false,
   pageSize: 10,
   transport: {},
@@ -6,27 +6,27 @@ export default ({ intl, intlPrefix }) => ({
     {
       name: 'status',
       type: 'string',
-      label: intl.formatMessage({ id: `${intlPrefix}.pod.status` }),
+      label: format({ id: 'PodStatus' }),
     },
     {
       name: 'name',
       type: 'string',
-      label: intl.formatMessage({ id: `${intlPrefix}.instance.pod` }),
+      label: format({ id: 'Pod' }),
     },
     {
       name: 'containers',
       type: 'object',
-      label: intl.formatMessage({ id: 'container' }),
+      label: format({ id: 'Container' }),
     },
     {
       name: 'ip',
       type: 'string',
-      label: intl.formatMessage({ id: `${intlPrefix}.instance.ip` }),
+      label: 'ip',
     },
     {
       name: 'creationDate',
       type: 'dateTime',
-      label: intl.formatMessage({ id: 'createDate' }),
+      label: format({ id: 'CreationTime' }),
     },
   ],
 });

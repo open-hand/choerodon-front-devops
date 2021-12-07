@@ -74,7 +74,7 @@ const HeaderButtons = observer(({ children, theme4 }) => {
         prefixCls={prefixCls}
         appServiceId={appServiceId}
       />,
-      okText: formatMessage({ id: 'save' }),
+      okText: formatMessage({ id: 'boot.save' }),
     });
   };
 
@@ -115,7 +115,7 @@ const HeaderButtons = observer(({ children, theme4 }) => {
           children: childrenContent,
           okCancel: !status,
           onOk: () => (status ? stopModal.close() : handleChangeActive(false)),
-          okText: status ? formatMessage({ id: 'iknow' }) : formatMessage({ id: 'stop' }),
+          okText: status ? formatMessage({ id: 'iknow' }) : formatMessage({ id: 'boot.stop' }),
           footer: ((okBtn, cancelBtn) => (
             <>
               {!status && cancelBtn}
