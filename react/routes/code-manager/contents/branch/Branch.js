@@ -371,7 +371,7 @@ function Branch(props) {
     });
     return (
       <div className={`${prefixCls}-issue`}>
-        <span className={`${prefixCls}-issue-label`}>关联：</span>
+        <span className={`${prefixCls}-issue-label`}>{formatMessage({ id: 'c7ncd.codeManger.Associated' })}：</span>
         {issueContent ? issueContent[0] : null}
         {issueContent?.length > 1 ? (
           <Popover
@@ -495,7 +495,7 @@ function Branch(props) {
                 avatar={record.get('createUserUrl')}
                 showName={false}
               />
-              <span>创建于</span>
+              <span>{formatMessage({ id: 'c7ncd.codeManger.Createat' })}</span>
               <TimePopover content={record.get('creationDate')} />
             </div>
           </div>
