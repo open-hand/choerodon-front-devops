@@ -111,9 +111,6 @@ export default (
       label: '任务配置',
       textField: 'name',
       valueField: 'id',
-      dynamicProps: {
-        required: ({ record }) => record.get('type') === addCDTaskDataSetMap.apiTest,
-      },
       options: new DataSet({
         autoQuery: true,
         transport: {
