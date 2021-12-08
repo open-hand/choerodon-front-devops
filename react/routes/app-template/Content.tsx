@@ -9,7 +9,7 @@ import isEmpty from 'lodash/isEmpty';
 import { useAppTemplateStore } from '@/routes/app-template/stores';
 import TimePopover from '@/components/time-popover';
 import TemplateServices from '@/routes/app-template/services';
-import { Record } from '@/interface';
+import { Record, TableColumnTooltip } from '@/interface';
 import AddTemplate from './components/addTemplate';
 import { mapping } from './stores/TableDataSet';
 
@@ -253,7 +253,7 @@ const TemplateTable = observer(() => {
           <Column name={mapping.temCode.name} />
           <Column name={mapping.repo.name} renderer={renderUrl} />
           <Column name={mapping.source.name} renderer={renderSource} width={100} />
-          <Column name={mapping.createTime.name} renderer={renderDate} width={100} />
+          <Column name={mapping.createTime.name} renderer={renderDate} width={100} tooltip={'overflow' as TableColumnTooltip} />
           <Column name={mapping.status.name} renderer={renderStatus} width={80} />
         </Table>
       </Content>
