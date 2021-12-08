@@ -3166,5 +3166,6 @@ export * from './cluster-management';
 export * from './cert-management';
 export * from './pv-management';
 export * from './application-template';
+export * from './host-config';
 
 export { zhCN };
