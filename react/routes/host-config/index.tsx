@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount, has } from '@choerodon/inject';
 import { useTabActiveKey, CustomTabs } from '@choerodon/components';
-import { Permission } from '@choerodon/master';
+import { Permission, useFormatMessage } from '@choerodon/master';
 import { StoreProvider } from './stores';
 import Content from './Content';
 
@@ -14,6 +14,7 @@ const tabKeys = {
 const testHostCode = 'test-pro:host-config';
 
 const HostConfigIndex = (props: any) => {
+  const format = useFormatMessage('c7ncd.resource');
   const [activeKey, setActiveKey] = useTabActiveKey(tabKeys.DEPLOY_TAB);
   // TODO 添加测试主机相关权限集
   const tabComponent = (
@@ -25,10 +26,10 @@ const HostConfigIndex = (props: any) => {
               e: React.MouseEvent<HTMLDivElement, MouseEvent>, tabName: string, tabKey: string,
             ) => setActiveKey(tabKey)}
             data={[{
-              name: '部署主机',
+              name: format({ id: 'HostforDeployment' }),
               value: tabKeys.DEPLOY_TAB,
             }, {
-              name: '测试主机',
+              name: format({ id: 'HostforTest' }),
               value: tabKeys.TEST_TAB,
             }]}
             selectedTabValue={activeKey}

@@ -37,12 +37,12 @@ export default ({ formatMessage, intlPrefix }) => ({
     {
       name: 'realName',
       type: 'string',
-      label: formatMessage({ id: `${intlPrefix}.environment.permission.user` }),
+      label: formatMessage({ id: 'c7ncd.resource.Username' }),
     },
     {
       name: 'loginName',
       type: 'string',
-      label: formatMessage({ id: `${intlPrefix}.environment.permission.name` }),
+      label: formatMessage({ id: 'c7ncd.resource.LoginName' }),
     },
   ],
 });

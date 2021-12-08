@@ -12,12 +12,12 @@ export default ({ formatMessage, intlPrefix }) => ({
     {
       name: 'name',
       type: 'string',
-      label: formatMessage({ id: 'name' }),
+      label: formatMessage({ id: 'c7ncd.resource.Name' }),
     },
     {
       name: 'description',
       type: 'string',
-      label: formatMessage({ id: 'description' }),
+      label: formatMessage({ id: 'c7ncd.resource.description' }),
     },
     {
       name: 'appServiceName',
@@ -27,12 +27,12 @@ export default ({ formatMessage, intlPrefix }) => ({
     {
       name: 'envName',
       type: 'string',
-      label: formatMessage({ id: 'environment' }),
+      label: formatMessage({ id: 'c7ncd.resource.environment' }),
     },
     {
       name: 'createUserRealName',
       type: 'string',
-      label: formatMessage({ id: 'creator' }),
+      label: formatMessage({ id: 'c7ncd.resource.creator' }),
     },
     {
       name: 'lastUpdateDate',
@@ -44,17 +44,17 @@ export default ({ formatMessage, intlPrefix }) => ({
     {
       name: 'name',
       type: 'string',
-      label: formatMessage({ id: 'name' }),
+      label: formatMessage({ id: 'c7ncd.resource.Name' }),
     },
     {
       name: 'appServiceName',
       type: 'string',
-      label: formatMessage({ id: `${intlPrefix}.config.app` }),
+      label: formatMessage({ id: 'c7ncd.resource.ApplicationService' }),
     },
     {
       name: 'envName',
       type: 'string',
-      label: formatMessage({ id: 'environment' }),
+      label: formatMessage({ id: 'c7ncd.resource.environment' }),
     },
   ],
 });

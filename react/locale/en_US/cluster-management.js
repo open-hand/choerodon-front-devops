@@ -58,6 +58,8 @@ const Index = {
   'c7ncd-clusterManagement.Status': 'Status',
   'c7ncd-clusterManagement.PodLog': 'Pod Log',
   'c7ncd-clusterManagement.InstallingMonitoringComponents': 'Pod Log',
+  'c7ncd-clusterManagement.Environment': 'Environment',
+  'c7ncd-clusterManagement.EnvironmentCode': 'Environment Code',
 
 };
 

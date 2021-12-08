@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useMemo, Fragment } from 'react';
 import { Action, Choerodon } from '@choerodon/master';
 import {
@@ -168,12 +169,12 @@ export default function DeployConfig() {
         dataSet={configDs}
         border={false}
       >
-        <Column name="name" sortable renderer={renderName} />
+        <Column header={formatMessage({ id: 'c7ncd.resource.Name' })} name="name" sortable renderer={renderName} />
         {!disabled && <Column renderer={renderActions} width={70} />}
-        <Column name="description" renderer={renderDescription} />
+        <Column header={formatMessage({ id: 'c7ncd.resource.description' })} name="description" renderer={renderDescription} />
         <Column name="appServiceName" sortable />
         <Column name="envName" sortable />
-        <Column name="createUserRealName" renderer={renderUser} />
+        <Column header={formatMessage({ id: 'c7ncd.resource.creator' })} name="createUserRealName" renderer={renderUser} />
         <Column name="lastUpdateDate" renderer={renderDate} sortable />
       </Table>
     </div>

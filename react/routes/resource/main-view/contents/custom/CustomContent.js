@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Fragment, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
@@ -118,7 +119,7 @@ const CustomContent = observer(() => {
         border={false}
         queryBar="bar"
       >
-        <Column name="name" renderer={renderName} sortable />
+        <Column header={formatMessage({ id: 'c7ncd.resource.Name' })} name="name" renderer={renderName} sortable />
         <Column renderer={renderAction} width={60} />
         <Column name="k8sKind" />
         <Column name="lastUpdateDate" renderer={renderTime} width={105} sortable />

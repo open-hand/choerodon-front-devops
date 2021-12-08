@@ -19,6 +19,8 @@ const PVManagement = {
   'c7ncd.PVManagement.Storage': '存储容量',
   'c7ncd.PVManagement.AuthorityManagement': '权限管理',
   'c7ncd.PVManagement.Delete': '删除',
+  'c7ncd.PVManagement.Name': '名称',
+  'c7ncd.PVManagement.Description': '描述',
 
 };
 

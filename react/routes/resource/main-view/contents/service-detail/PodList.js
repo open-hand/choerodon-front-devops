@@ -122,7 +122,7 @@ const PodList = observer(() => {
               {renderRegistry(containers, index)}
             </li>
           </ul>
-        )) : <span style={{ color: 'rgba(0,0,0,.65)' }}>{formatMessage({ id: 'nodata' })}</span>}
+        )) : <span style={{ color: 'rgba(0,0,0,.65)' }}>{formatMessage({ id: 'c7ncd.resource.nodata' })}</span>}
       </div>
       {visible && <LogSidebar visible={visible} onClose={closeLog} record={data} />}
     </>

@@ -13,6 +13,8 @@ const PVManagement = {
   'c7ncd.PVManagement.Storage': 'Storage',
   'c7ncd.PVManagement.AuthorityManagement': 'Authority Management',
   'c7ncd.PVManagement.Delete': 'Delete',
+  'c7ncd.PVManagement.Name': 'Name',
+  'c7ncd.PVManagement.Description': 'Description',
 };
 
 export {

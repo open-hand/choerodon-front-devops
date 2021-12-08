@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 import React, {
   useMemo,
 } from 'react';
@@ -52,7 +58,7 @@ const CustomModals = observer(() => {
   }
 
   const buttons = useMemo(() => ([{
-    name: formatMessage({ id: `${intlPrefix}.config-map.detail` }),
+    name: formatMessage({ id: 'c7ncd.resource.ConfigMapDetails' }),
     icon: 'find_in_page-o',
     handler: openDetail,
     display: true,

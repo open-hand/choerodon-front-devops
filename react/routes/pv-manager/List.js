@@ -233,9 +233,9 @@ const AppService = withRouter(observer((props) => {
           queryBar="bar"
           className={`${prefixCls}-table`}
         >
-          <Column name="name" renderer={renderName} sortable />
+          <Column header={formatMessage({ id: 'c7ncd.PVManagement.Name' })} name="name" renderer={renderName} sortable />
           <Column renderer={renderActions} width={70} />
-          <Column name="description" sortable />
+          <Column header={formatMessage({ id: 'c7ncd.PVManagement.Description' })} name="description" sortable />
           <Column name="clusterName" renderer={renderCluster} />
           <Column name="type" width={100} />
           <Column name="pvcName" renderer={renderPvcName} />

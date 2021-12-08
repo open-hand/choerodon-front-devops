@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 export default ({ intl, intlPrefix, format }) => ({
   selection: false,
   pageSize: 10,
@@ -21,7 +27,7 @@ export default ({ intl, intlPrefix, format }) => ({
     {
       name: 'ip',
       type: 'string',
-      label: 'ip',
+      label: 'IP',
     },
     {
       name: 'creationDate',

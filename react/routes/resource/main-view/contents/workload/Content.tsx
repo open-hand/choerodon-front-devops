@@ -347,10 +347,10 @@ const WorkloadContent = observer(() => {
           <Table
             dataSet={tableDs}
           >
-            <Column name="name" renderer={renderName} />
+            <Column header={formatMessage({ id: 'c7ncd.resource.Name' })} name="name" renderer={renderName} />
             <Column renderer={renderAction} width={60} />
             <Column name="sourceType" renderer={renderAppType} />
-            <Column name="labels" renderer={renderLabels} />
+            <Column header={formatMessage({ id: 'c7ncd.resource.labels' })} name="labels" renderer={renderLabels} />
             <Column name="schedule" />
             <Column name="suspend" renderer={({ value }: { value: boolean }) => (value ? '是' : '否')} width={80} />
             <Column name="active" renderer={({ value }: { value: number }) => (`${value}个`)} width={70} />
@@ -363,12 +363,12 @@ const WorkloadContent = observer(() => {
             dataSet={tableDs}
             rowHeight="auto"
           >
-            <Column name="name" renderer={renderName} />
+            <Column header={formatMessage({ id: 'c7ncd.resource.Name' })} name="name" renderer={renderName} />
             <Column renderer={renderAction} width={60} />
             <Column name="sourceType" renderer={renderAppType} />
             <Column name="pod" renderer={renderPod} />
-            <Column name="labels" renderer={renderLabels} width={130} />
-            <Column name="ports" renderer={renderPorts} width={100} />
+            <Column header={formatMessage({ id: 'c7ncd.resource.labels' })} name="labels" renderer={renderLabels} width={130} />
+            <Column header={formatMessage({ id: 'c7ncd.resource.port' })} name="ports" renderer={renderPorts} width={100} />
             <Column name="source" renderer={renderResource} width={100} />
             <Column name="age" renderer={renderUpdateDate} width={110} />
           </Table>
