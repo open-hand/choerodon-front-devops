@@ -742,6 +742,7 @@ const conGroupDataSet = (
             record.set(mapping.repoAddress.name, undefined);
             record.set(mapping.username.name, undefined);
             record.set(mapping.password.name, undefined);
+            record.set(mapping.nexus.name, undefined);
             if (value === productSourceData[6].value) {
               record.getField(mapping.relativeMission.name).set('required', true);
             } else {
