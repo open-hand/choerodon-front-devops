@@ -52,6 +52,7 @@ const codeManager = {
   'c7ncd.codeManger.state': 'State',
   'c7ncd.codeManger.Createat': 'Create at',
   'c7ncd.codeManger.Associated': 'Associated',
+  'c7ncd.codeManger.Create': 'Create',
 };
 
 export { codeManager };

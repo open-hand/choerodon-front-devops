@@ -130,7 +130,7 @@ function Branch(props) {
         drawer: true,
         children: <BranchCreate intl={intl} appServiceId={appServiceId} handleRefresh={handleRefresh} />,
         style: branchCreateModalStyle,
-        okText: <FormattedMessage id="create" />,
+        okText: <FormattedMessage id="c7ncd.codeManger.Create" />,
         cancelText: <FormattedMessage id="cancel" />,
       });
     } catch (e) {
