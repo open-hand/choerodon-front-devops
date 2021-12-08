@@ -9,6 +9,7 @@ import {
   Button,
   Modal,
   TextArea,
+  NumberField,
 } from 'choerodon-ui/pro';
 import { NewTips } from '@choerodon/components';
 import { Icon, Spin } from 'choerodon-ui';
@@ -1399,11 +1400,11 @@ export default observer(() => {
             </SelectBox>
           </div>
           {ADDCDTaskDataSet.current.get(addCDTaskDataSetMap.alarm) && [
-            <TextField
+            <NumberField
               name={addCDTaskDataSetMap.threshold}
               newLine
               suffix="%"
-              restrict="0-9|."
+              step={1}
               min={0}
               max={100}
               addonAfter={
