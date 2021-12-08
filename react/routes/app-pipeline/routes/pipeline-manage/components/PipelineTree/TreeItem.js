@@ -74,7 +74,7 @@ const TreeItem = observer(({ record, search }) => {
           prefixCls={prefixCls}
           mainStore={mainStore}
         />,
-        okText: formatMessage({ id: 'execute' }),
+        okText: formatMessage({ id: 'c7ncd.pipelineManage.Execution' }),
         movable: false,
       });
     } catch (e) {
