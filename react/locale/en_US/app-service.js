@@ -22,7 +22,15 @@ const appService = {
   'c7ncd.appService.Scope': 'Scope',
   'c7ncd.appService.VersionType': 'Version Type',
   'c7ncd.appService.normal': 'Normal Service',
+  'c7ncd.appService.test': 'Test Service',
   'c7ncd.appService.cancel': 'Cancel',
+  'c7ncd.appService.Add': 'Add',
+  'c7ncd.appService.Name': 'Name',
+  'c7ncd.appService.Save': 'Save',
+  'c7ncd.appService.failed': 'Failed',
+  'c7ncd.appService.active': 'Enable',
+  'c7ncd.appService.unready': 'Disable',
+  'c7ncd.appService.operating': 'Operating',
 };
 
 export { appService };

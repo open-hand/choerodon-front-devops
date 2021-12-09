@@ -124,7 +124,7 @@ const Share = withRouter(observer((props) => {
       />,
       drawer: true,
       style: modalStyle,
-      okText: formatMessage({ id: isModify ? 'save' : 'add' }),
+      okText: formatMessage({ id: isModify ? 'c7ncd.appService.Save' : 'c7ncd.appService.Add' }),
     });
   }
 
