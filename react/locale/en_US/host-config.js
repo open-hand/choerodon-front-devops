@@ -20,6 +20,8 @@ const HostConfig = {
   'c7ncd.HostConfig.CalibrateStatus': 'Calibrate Status',
   'c7ncd.HostConfig.Modify': 'Modify',
   'c7ncd.HostConfig.Delete': 'Delete',
+  'c7ncd.HostConfig.Save': 'Save',
+  'c7ncd.HostConfig.Create': 'Create',
 };
 
 export {
