@@ -293,7 +293,7 @@ const Index = inject('AppState')(observer(({
     dataSource.set(key, value);
   };
 
-  const getEnvVariableRender = useCallback(() => {
+  const getEnvVariableRender = () => {
     if (dataSource) {
       return (
         <Form className="c7ncd-appCenterPro-conDetail__nestForm" columns={2}>
@@ -341,8 +341,7 @@ const Index = inject('AppState')(observer(({
       );
     }
     return '';
-  }, [dataSource
-    ?.getField(mapping.enVariable.name)?.options.length]);
+  };
 
   const getPortConfigRender = () => {
     if (dataSource) {
