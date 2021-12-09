@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
-import React, { useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { useRouteMatch } from 'react-router';
 import { Route, Switch } from 'react-router-dom';
 import { inject } from 'mobx-react';
 import {
-  asyncLocaleProvider, NoMatch, PermissionRoute, useCurrentLanguage,
+  NoMatch, PermissionRoute, C7NLocaleProvider,
 } from '@choerodon/master';
 import { ModalContainer } from 'choerodon-ui/pro';
 
@@ -29,13 +29,16 @@ const OrgTemplate = React.lazy(() => import('./routes/app-template/OrgIndex'));
 const SiteTemplate = React.lazy(() => import('./routes/app-template/SiteIndex'));
 const AppCenter = React.lazy(() => import('./routes/app-center-pro'));
 
-// eslint-disable-next-line react/prop-types
 function DEVOPSIndex() {
   const match = useRouteMatch();
-  const language = useCurrentLanguage();
-  const IntlProviderAsync = useMemo(() => asyncLocaleProvider(language, () => import(`./locale/${language}`)), []);
+
+  const handleImport = useCallback(
+    (currentLanguage) => import(/* webpackInclude: /\index.(ts|js)$/ */ `./locale/${currentLanguage}`),
+    [],
+  );
+
   return (
-    <IntlProviderAsync>
+    <C7NLocaleProvider importer={handleImport}>
       <div className="c7ncd-root">
         <Switch>
           <PermissionRoute path={`${match.url}/app-service`} service={['choerodon.code.project.develop.app-service.ps.default']} component={AppService} />
@@ -80,7 +83,7 @@ function DEVOPSIndex() {
         </Switch>
         <ModalContainer />
       </div>
-    </IntlProviderAsync>
+    </C7NLocaleProvider>
   );
 }
 
