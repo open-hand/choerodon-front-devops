@@ -139,6 +139,7 @@ const resource = {
   'c7ncd.resource.HostforTest': 'Host for Test',
   'c7ncd.resource.reset': 'Reset',
   'c7ncd.resource.PermissionType': 'Permission Type',
+  'c7ncd.resource.updater': 'Updater',
 
 };
 export {

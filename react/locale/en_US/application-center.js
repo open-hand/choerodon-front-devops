@@ -21,6 +21,7 @@ const applicationCenter = {
   'c7ncd.applicationCenter.ApplicationNumber': 'Application Number',
   'c7ncd.applicationCenter.DeployedObject': 'Deployed Object',
   'c7ncd.applicationCenter.Host': 'Host',
+  'c7ncd.applicationCenter.appName': 'App Name',
 
 };
 

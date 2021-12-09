@@ -105,7 +105,7 @@ export default function ({
         </li>
         <li className="detail-item">
           <span className="detail-item-text">
-            {formatMessage({ id: 'creator' })}
+            {formatMessage({ id: 'c7ncd.resource.creator' })}
           </span>
           <span>
             {
@@ -127,7 +127,7 @@ export default function ({
         </li>
         <li className="detail-item">
           <span className="detail-item-text">
-            {formatMessage({ id: 'updater' })}
+            {formatMessage({ id: 'c7ncd.resource.updater' })}
           </span>
           <span>{updater}</span>
         </li>

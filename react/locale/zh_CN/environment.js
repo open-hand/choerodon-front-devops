@@ -42,7 +42,7 @@ const environment = {
   'c7ncd.environment.Connect': '连接主机',
   'c7ncd.environment.Disconnect': '断开连接',
   'c7ncd.environment.CPUUsage': 'CPU使用率',
-  'c7ncd.environment.RootPartitionUsage': '根分区使用率Root Partition Usage',
+  'c7ncd.environment.RootPartitionUsage': '根分区使用率',
   'c7ncd.environment.MemoryUsage': '内存使用率',
   'c7ncd.environment.Application': '应用实例',
   'c7ncd.environment.Name': '应用名称',

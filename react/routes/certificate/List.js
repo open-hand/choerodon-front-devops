@@ -84,7 +84,7 @@ const AppService = withRouter(observer((props) => {
         store={certStore}
         certId={type === 'edit' ? listDs.current.get('id') : null}
       />,
-      okText: formatMessage({ id: type === 'edit' ? 'save' : 'create' }),
+      okText: formatMessage({ id: type === 'edit' ? 'c7ncd.CertManagement.Save' : 'c7ncd.CertManagement.Create' }),
       afterClose: () => certStore.setCert({}),
     });
   }

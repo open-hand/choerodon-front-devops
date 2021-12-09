@@ -10,6 +10,8 @@ const CertManagement = {
   'c7ncd.CertManagement.DomainNameAddress': 'Domain Name Address',
   'c7ncd.CertManagement.AuthorityManagement': 'Authority Management',
   'c7ncd.CertManagement.Delete': 'Delete',
+  'c7ncd.CertManagement.Create': 'Create',
+  'c7ncd.CertManagement.Save': 'Save',
 };
 
 export {

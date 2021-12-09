@@ -138,6 +138,8 @@ const resource = {
   'c7ncd.resource.HostforTest': '测试主机',
   'c7ncd.resource.reset': '重置',
   'c7ncd.resource.PermissionType': '权限类型',
+  'c7ncd.resource.updater': '更新者',
+  'c7ncd.resource.Resolved': '已解析',
 
 };
 export {

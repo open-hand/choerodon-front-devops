@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 /* eslint-disable import/no-anonymous-default-export */
 import { CONSTANTS } from '@choerodon/master';
 import { Record } from '@/interface';
@@ -79,7 +85,7 @@ export default ({
       },
       {
         name: 'appName',
-        label: formatMessage({ id: 'boot.appName' }),
+        label: formatMessage({ id: 'c7ncd.applicationCenter.appName' }),
         validator: checkName,
         required: true,
         maxLength: 60,

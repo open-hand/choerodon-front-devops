@@ -52,7 +52,7 @@ const EnvModals = observer(() => {
         width: 380,
       },
       drawer: true,
-      okText: <FormattedMessage id="create" />,
+      okText: <FormattedMessage id="c7ncd.resource.Create" />,
       cancelText: <FormattedMessage id="cancel" />,
       children: (
         <FormView

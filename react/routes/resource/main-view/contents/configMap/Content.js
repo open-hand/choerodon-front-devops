@@ -117,7 +117,7 @@ const ConfigMap = observer((props) => {
         envId={parentId}
         store='configMap'
         intlPrefix={intlPrefix}
-        refresh
+        refresh={refresh}
       />,
       okText: formatMessage({ id: 'boot.save' }),
     });

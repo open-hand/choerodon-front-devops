@@ -68,7 +68,7 @@ export default observer((props) => {
         case 'uninstalled':
           buttonData = [
             {
-              text: formatMessage({ id: 'install' }),
+              text: formatMessage({ id: 'c7ncd-clusterManagement.install' }),
               onClick: () => installMonitor(message ? 'edit' : 'create', true),
               disabled,
               loading: false,
@@ -79,7 +79,7 @@ export default observer((props) => {
           if (operate === 'install') {
             buttonData = [
               {
-                text: formatMessage({ id: 'install' }),
+                text: formatMessage({ id: 'c7ncd-clusterManagement.install' }),
                 loading: true,
               },
             ];
@@ -92,7 +92,7 @@ export default observer((props) => {
                 disabled: true,
               },
               {
-                text: formatMessage({ id: 'uninstall' }),
+                text: formatMessage({ id: 'c7ncd-clusterManagement.uninstall' }),
                 loading: operate !== 'upgrade',
                 disabled: true,
               },
@@ -109,7 +109,7 @@ export default observer((props) => {
               loading: false,
             },
             {
-              text: formatMessage({ id: 'uninstall' }),
+              text: formatMessage({ id: 'c7ncd-clusterManagement.uninstall' }),
               onClick: uninstallMonitor,
               disabled,
               loading: false,
@@ -123,7 +123,7 @@ export default observer((props) => {
         case 'uninstalled':
           buttonData = [
             {
-              text: formatMessage({ id: 'install' }),
+              text: formatMessage({ id: 'c7ncd-clusterManagement.install' }),
               onClick: handleInstallCert,
               disabled,
               loading: false,
@@ -134,14 +134,14 @@ export default observer((props) => {
           if (operate === 'install') {
             buttonData = [
               {
-                text: formatMessage({ id: 'install' }),
+                text: formatMessage({ id: 'c7ncd-clusterManagement.install' }),
                 loading: true,
               },
             ];
           } else {
             buttonData = [
               {
-                text: formatMessage({ id: 'uninstall' }),
+                text: formatMessage({ id: 'c7ncd-clusterManagement.uninstall' }),
                 loading: true,
               },
             ];
@@ -151,7 +151,7 @@ export default observer((props) => {
         case 'disabled':
           buttonData = [
             {
-              text: formatMessage({ id: 'uninstall' }),
+              text: formatMessage({ id: 'c7ncd-clusterManagement.uninstall' }),
               onClick: uninstallCert,
               disabled,
               loading: false,
