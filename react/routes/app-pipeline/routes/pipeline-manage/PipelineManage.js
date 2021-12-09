@@ -299,15 +299,15 @@ const PipelineManage = observer(() => {
       handler: handleRefresh,
       display: true,
     });
-    buttons.push({
-      icon: 'settings',
-      handler: () => {
-        history.push({
-          search,
-          pathname: `${pathname}/edit/1234`,
-        });
-      },
-    });
+    // buttons.push({
+    //   icon: 'settings',
+    //   handler: () => {
+    //     history.push({
+    //       search,
+    //       pathname: `${pathname}/edit/1234`,
+    //     });
+    //   },
+    // });
     // ,
     // {
     //   icon: 'add',
