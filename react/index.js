@@ -29,12 +29,11 @@ const OrgTemplate = React.lazy(() => import('./routes/app-template/OrgIndex'));
 const SiteTemplate = React.lazy(() => import('./routes/app-template/SiteIndex'));
 const AppCenter = React.lazy(() => import('./routes/app-center-pro'));
 
-// eslint-disable-next-line react/prop-types
 function DEVOPSIndex() {
   const match = useRouteMatch();
 
   const handleImport = useCallback(
-    (currentLanguage) => import(/* webpackInclude: /\index.(ts|js)$/ */ `../../locale/${currentLanguage}`),
+    (currentLanguage) => import(/* webpackInclude: /\index.(ts|js)$/ */ `./locale/${currentLanguage}`),
     [],
   );
 

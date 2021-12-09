@@ -604,7 +604,6 @@ const mapping: {
   enVariable: {
     name: 'enVariable',
     type: 'object' as FieldType,
-    options: new DataSet(optionDataSet(/[-._a-zA-Z][-._a-zA-Z0-9]*/)),
   },
   fileName: {
     name: 'fileName',
@@ -687,6 +686,10 @@ const conGroupDataSet = (
           }
           break;
         }
+        case 'enVariable': {
+          item.options = new DataSet(optionDataSet(/[-._a-zA-Z][-._a-zA-Z0-9]*/));
+          break;
+        }
         default: {
           break;
         }
@@ -698,6 +701,10 @@ const conGroupDataSet = (
         .updateContainer((data?.dataSet?.queryParameter as any)?.data),
     },
     events: {
+      create: ({ record }: any) => {
+        record.getField(mapping.enVariable.name).set('options', new DataSet(optionDataSet(/[-._a-zA-Z][-._a-zA-Z0-9]*/)));
+        record.getField(mapping.portConfig.name).set('options', new DataSet(portConfigDataSet()));
+      },
       update: ({
         record, name, value, dataSet,
       }: any) => {
