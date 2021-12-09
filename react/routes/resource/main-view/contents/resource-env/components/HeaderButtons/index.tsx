@@ -182,6 +182,16 @@ const REModals = observer(() => {
         disabled: !record,
       },
       {
+        permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.resource-batch'],
+        disabled: configDisabled,
+        name: format({ id: 'BatchCreateChartApplication' }),
+        icon: 'library_add-o',
+        handler: () => openBatchDeploy({
+          envId: id,
+          refresh,
+        }),
+      },
+      {
         name: format({ id: 'MoreActions' }),
         groupBtnItems: [
           {
