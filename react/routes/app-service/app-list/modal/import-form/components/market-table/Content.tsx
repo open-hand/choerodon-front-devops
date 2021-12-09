@@ -254,7 +254,7 @@ const MarketSourceTable = observer(() => {
           // header={renderCheckBoxHeader}
           width={45}
         />
-        <Column name="name" />
+        <Column header={formatMessage({ id: 'c7ncd.appService.Name' })} name="name" />
         <Column name="sourceProject" />
         <Column name="lastUpdateDate" width={170} />
       </Table>

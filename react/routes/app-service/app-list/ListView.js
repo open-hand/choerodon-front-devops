@@ -227,7 +227,7 @@ const ListView = withRouter(observer((props) => {
             style={{
               marginRight: '7px'
             }}
-            name={colorCode === 'unready' ? '停用' : formatMessage({ id: colorCode })}
+            name={formatMessage({ id: `c7ncd.appService.${colorCode}` })}
           />
         </div>
       </Tooltip>

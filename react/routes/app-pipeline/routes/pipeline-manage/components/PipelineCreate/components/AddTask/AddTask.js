@@ -1345,7 +1345,7 @@ const AddTask = observer(() => {
                         <Icon
                           type="help"
                           className="c7ncd-select-tips-icon"
-                          style={{ position: 'absolute', top: '27px', right: '385px' }}
+                          style={{ position: 'absolute', top: '27px', left: '422px' }}
                         />
                       </Tooltip>
                     </div>,

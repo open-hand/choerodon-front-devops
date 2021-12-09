@@ -14,7 +14,11 @@ const mapping = {
       if (keyList.filter((i) => i === value).length >= 2) {
         return '变量名不能重复';
       }
-      return true;
+      const patter = /^[0-9a-zA-Z_]{1,}$/;
+      if (patter.test(value)) {
+        return true;
+      }
+      return '变量名必须为字母、数字或下划线';
     },
     dynamicProps: {
       required: ({ record }) => record.get('value'),
