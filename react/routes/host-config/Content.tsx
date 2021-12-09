@@ -39,7 +39,7 @@ const HostConfig: React.FC<any> = observer((): any => {
       },
       drawer: true,
       children: <CreateHost refresh={refresh} hostId={hostId} />,
-      okText: formatMessage({ id: hostId ? 'save' : 'create' }),
+      okText: formatMessage({ id: hostId ? 'c7ncd.HostConfig.Save' : 'c7ncd.HostConfig.Create' }),
     });
   };
 

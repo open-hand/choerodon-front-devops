@@ -20,6 +20,8 @@ const HostConfig = {
   'c7ncd.HostConfig.CalibrateStatus': '校准状态',
   'c7ncd.HostConfig.Modify': '修改',
   'c7ncd.HostConfig.Delete': '删除',
+  'c7ncd.HostConfig.Save': '保存',
+  'c7ncd.HostConfig.Create': '创建',
 
 };
 

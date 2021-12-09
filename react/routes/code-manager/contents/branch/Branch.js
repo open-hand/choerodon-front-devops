@@ -201,7 +201,7 @@ function Branch(props) {
         initIssues={initIssues}
       />,
       style: branchCreateModalStyle,
-      okText: <FormattedMessage id="save" />,
+      okText: <FormattedMessage id="c7ncd.codeManger.Save" />,
       cancelText: <FormattedMessage id="cancel" />,
     });
   }

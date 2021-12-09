@@ -77,11 +77,11 @@ function GroupItem({
 
     const actionData = [{
       service: ['choerodon.code.project.deploy.environment.ps.group-modify'],
-      text: formatMessage({ id: 'c7ncd.environment.Modify' }),
+      text: formatMessage({ id: 'c7ncd.environment.ModifyGroup' }),
       action: handleClick,
     }, {
       service: ['choerodon.code.project.deploy.environment.ps.group-delete'],
-      text: formatMessage({ id: 'c7ncd.environment.Delete' }),
+      text: formatMessage({ id: 'c7ncd.environment.DeleteGroup' }),
       action: confirmDelete,
     }];
     return (

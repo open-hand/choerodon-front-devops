@@ -52,6 +52,8 @@ const environment = {
   'c7ncd.environment.OccupiedPort': '占用端口',
   'c7ncd.environment.CreationTime': '创建时间',
   'c7ncd.environment.description': '描述',
+  'c7ncd.environment.ModifyGroup': '修改分组',
+  'c7ncd.environment.DeleteGroup': '删除分组',
 
 };
 
