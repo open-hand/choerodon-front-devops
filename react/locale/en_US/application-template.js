@@ -3,6 +3,8 @@ const applicationTemplate = {
   'c7ncd.template.applicationTemplate': 'Application Template',
   'c7ncd.template.templateCode': 'Template Code',
   'c7ncd.template.createTime': 'Creation Time',
+  'c7ncd.template.delete': 'Delete',
+  'c7ncd.template.create': 'Create',
   'c7ncd.template.status': 'Status',
   'c7ncd.template.predefined': 'predefined',
   'c7ncd.template.custom': 'custom',
