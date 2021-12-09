@@ -3,7 +3,7 @@ import {
   Modal, Icon, Button, Tooltip,
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
-import { OverflowWrap } from '@choerodon/master';
+import { OverflowWrap } from '@choerodon/components';
 import { LARGE } from '@/utils/getModalWidth';
 import { usePipelineStageEditStore } from '../../stores';
 import AddTask from '../../../AddTask';
