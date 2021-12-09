@@ -43,7 +43,7 @@ import HzeroDeployDetail from './modals/hzero-deploy-detail';
 import { LARGE } from '../../utils/getModalWidth';
 import { deployRecordApi } from '../../api';
 import { GetHzeroDeployBtnConfig } from '@/components/hzero-deploy';
-import ConfigurationModal from '@/components/configuration-center/ConfigurationModal';
+// import ConfigurationModal from '@/components/configuration-center/ConfigurationModal';
 
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/base16-dark.css';
@@ -55,7 +55,7 @@ const commandModalKey = Modal.key();
 const hzeroDeployModalKey = Modal.key();
 const hzeroDeployDetailModalKey = Modal.key();
 const hzeroStopModalKey = Modal.key();
-const ConfigurationModalKey = Modal.key();
+// const ConfigurationModalKey = Modal.key();
 const modalStyle2 = {
   width: 'calc(100vw - 3.52rem)',
 };
@@ -86,7 +86,7 @@ const Deployment = withRouter(
       listDs,
       deployStore,
       hasMarket,
-      configurationDetailDataSet,
+    //   configurationDetailDataSet,
     } = useDeployStore();
 
     const format = useFormatMessage('c7ncd-deploymentOperation');
@@ -431,24 +431,24 @@ const Deployment = withRouter(
       });
     }, []);
 
-    const openConfigurationModal = (deployId) => {
-      Modal.open({
-        key: ConfigurationModalKey,
-        title: '配置文件详情',
-        style: { width: MIDDLE },
-        children: (
-          <ConfigurationModal
-            type="modal"
-            kind="deploy"
-            id={deployId}
-            configurationDetailDataSet={configurationDetailDataSet}
-          />
-        ),
-        okText: formatMessage({ id: 'close' }),
-        okCancel: false,
-        drawer: true,
-      });
-    };
+    // const openConfigurationModal = (deployId) => {
+    //   Modal.open({
+    //     key: ConfigurationModalKey,
+    //     title: '配置文件详情',
+    //     style: { width: MIDDLE },
+    //     children: (
+    //       <ConfigurationModal
+    //         type="modal"
+    //         kind="deploy"
+    //         id={deployId}
+    //         configurationDetailDataSet={configurationDetailDataSet}
+    //       />
+    //     ),
+    //     okText: formatMessage({ id: 'close' }),
+    //     okCancel: false,
+    //     drawer: true,
+    //   });
+    // };
 
     const handleHzeroRetry = useCallback(async (record) => {
       try {
@@ -555,18 +555,18 @@ const Deployment = withRouter(
           />
         );
       }
-      if (record.get('deployMode') === 'host' && record.get('deployType') !== 'baseComponent') {
-        return (
-          <Action
-            data={[
-              {
-                text: '查看配置文件',
-                action: () => openConfigurationModal(record.get('id')),
-              },
-            ]}
-          />
-        );
-      }
+      //   if (record.get('deployMode') === 'host' && record.get('deployType') !== 'baseComponent') {
+      //     return (
+      //       <Action
+      //         data={[
+      //           {
+      //             text: '查看配置文件',
+      //             action: () => openConfigurationModal(record.get('id')),
+      //           },
+      //         ]}
+      //       />
+      //     );
+      //   }
       return null;
     }, []);
 

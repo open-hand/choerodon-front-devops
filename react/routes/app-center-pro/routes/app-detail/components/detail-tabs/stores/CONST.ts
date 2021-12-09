@@ -38,10 +38,10 @@ const hostKeys = [
     key: HOST_RUNNING_DETAILS,
     name: '运行详情',
   },
-  {
-    key: PROFILE_DETAILS,
-    name: '配置文件详情',
-  },
+  //   {
+  //     key: PROFILE_DETAILS,
+  //     name: '配置文件详情',
+  //   },
 ];
 
 export {
