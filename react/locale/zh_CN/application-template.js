@@ -5,6 +5,7 @@ const applicationTemplate = {
   'c7ncd.template.createTime': '创建时间',
   'c7ncd.template.delete': '确定',
   'c7ncd.template.create': '确定',
+  'c7ncd.template.iknow': '确定',
   'c7ncd.template.resource': '来源',
   'c7ncd.template.status': '状态',
   'c7ncd.template.predefined': '预定义',
