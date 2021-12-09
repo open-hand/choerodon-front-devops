@@ -27,9 +27,9 @@ import { getAppCategories } from '@/routes/app-center-pro/utils';
 import {
   CHART_CATERGORY, DEPLOY_CATERGORY, HOST_CATERGORY, MIDDLWARE_CATERGORY, OTHER_CATERGORY,
 } from '@/routes/app-center-pro/stores/CONST';
-import {
-  ConfigurationDetailDataSet,
-} from '@/components/configuration-center/stores/ConfigurationCenterDataSet';
+// import {
+//   ConfigurationDetailDataSet,
+// } from '@/components/configuration-center/stores/ConfigurationCenterDataSet';
 
 interface ContextProps {
   subfixCls: string,
@@ -43,7 +43,7 @@ interface ContextProps {
   podDetailsDs: DataSet,
   runDetailsStore: DetailsStoreProps,
   resourceConfigDs: DataSet,
-  configurationDetailDataSet:DataSet,
+//   configurationDetailDataSet:DataSet,
   podDetialsQuery:(...args:any[]) => any;
   projectId: string,
   instanceId?:any,
@@ -114,14 +114,14 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
   // 运行详情
   const runDetailsStore = runningDetailsStore({ projectId, appCenterId, envId: hostOrEnvId });
 
-  // 配置中心详情
-  const configurationDetailDataSet = useMemo(
-    () => new DataSet(
-      // @ts-ignore
-      ConfigurationDetailDataSet({ projectId }),
-    ),
-    [],
-  );
+  //   // 配置中心详情
+  //   const configurationDetailDataSet = useMemo(
+  //     () => new DataSet(
+  //       // @ts-ignore
+  //       ConfigurationDetailDataSet({ projectId }),
+  //     ),
+  //     [],
+  //   );
 
   const appDetailTabStore = useStore({ defaultKey: tabKeys[0] });
 
@@ -171,7 +171,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     projectId,
     podDetailsDs,
     loadData,
-    configurationDetailDataSet,
+    // configurationDetailDataSet,
     instanceId: appDs.current?.get('instanceId'),
   };
   return (

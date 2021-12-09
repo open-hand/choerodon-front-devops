@@ -117,7 +117,7 @@ export default function useStore(mainStore) {
             this.dataSource[index].jobList = [data];
           }
         }
-        this.dataSource[index].configSettingVOS = data.configSettingVOS;
+        // this.dataSource[index].configSettingVOS = data.configSettingVOS;
       });
     },
     editJob(sequence, key, data) {
@@ -125,7 +125,7 @@ export default function useStore(mainStore) {
         if (item.sequence === sequence) {
           this.dataSource[index].jobList[key] = { ...data };
         }
-        this.dataSource[index].configSettingVOS = data.configSettingVOS;
+        // this.dataSource[index].configSettingVOS = data.configSettingVOS;
       });
     },
     editJobLists(sequence, type, jobList) {

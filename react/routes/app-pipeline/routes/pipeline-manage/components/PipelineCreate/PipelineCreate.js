@@ -119,7 +119,7 @@ const PipelineCreate = observer(() => {
         image: origin.selectImage === '1' ? origin.image : null,
         devopsCiStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CI'),
         devopsCdStageVOS: editBlockStore.getStepData.filter((s) => s.type === 'CD'),
-        configSettingVOS: editBlockStore.getStepData.map((o) => o.configSettingVOS)[0],
+        // configSettingVOS: editBlockStore.getStepData.map((o) => o.configSettingVOS)[0],
         relatedBranches: branches,
         devopsCiPipelineFunctionDTOList: createUseStore
           .getFuncList.filter((item) => item.devopsPipelineId !== 0),
