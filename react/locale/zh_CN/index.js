@@ -513,7 +513,6 @@ const appService = {
   'c7ncd.appService.helm': 'Helm仓库配置',
   'c7ncd.appService.helm.default': '默认Helm仓库',
   'c7ncd.appService.helm.custom': '自定义Helm仓库',
-  'c7ncd.appService.test': '测试连接',
   'c7ncd.appService.version.specific': '特定版本',
   'c7ncd.appService.version.type': '版本类型',
   'c7ncd.appService.share.range': '共享范围',
