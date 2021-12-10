@@ -160,7 +160,7 @@ const EditItem = (props) => {
       {...dragProvided.dragHandleProps}
       style={getItemStyle(snapshotinner.isDragging, dragProvided.draggableProps.style)}
     >
-      <OverflowWrap className={`${prefixCls}-header`}>
+      <OverflowWrap className={`${prefixCls}-header`} width="192">
         【
         {Object.prototype.hasOwnProperty.bind(jobType, type) && jobType[type]}
         】
