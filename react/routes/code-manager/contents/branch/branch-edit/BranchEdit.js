@@ -170,6 +170,11 @@ function BranchEdit() {
     issueOptionsDs?.query();
   };
 
+  const changeProject = (value) => {
+    selectDs?.current?.getField('issue')?.options?.setState('projectid', value.id);
+    selectDs?.current?.getField('issue')?.options?.query();
+  };
+
   const issueNameOptionRender = ({ record }) => {
     const typeCode = record.get('typeCode');
     const issueNum = record.get('issueNum');
@@ -240,6 +245,7 @@ function BranchEdit() {
             optionRenderer={renderProjectOption}
             renderer={renderProject}
             onBlur={handleBlur}
+            onChange={changeProject}
             clearButton={false}
             pagingOptionContent={<span className="c7ncd-select-load-more-text">加载更多</span>}
             colSpan={5}
