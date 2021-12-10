@@ -98,7 +98,7 @@ const Deployment = withRouter(
       const urlQuery = new URLSearchParams(search);
       if (urlQuery.get('mode') || urlQuery.get('deployType')) {
         has('base-pro:getBaseComponentDeployConfig')
-          && get('base-pro:getBaseComponentDeployConfig')(refresh, true)(
+          && get('base-pro:getBaseComponentDeployConfig')(refresh, format, true)(
             urlQuery.get('mode'),
             urlQuery.get('deployType'),
           );
@@ -610,7 +610,7 @@ const Deployment = withRouter(
       }
       if (has('base-pro:getBaseComponentDeployConfig')) {
         res.splice(2, 0, {
-          ...get('base-pro:getBaseComponentDeployConfig')(refresh, false),
+          ...get('base-pro:getBaseComponentDeployConfig')(refresh, format, false),
         });
       }
 

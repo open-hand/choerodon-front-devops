@@ -24,6 +24,7 @@ const AppHomePage = () => {
   } = useAppHomePageStore();
 
   const format = useFormatMessage('c7ncd.applicationCenter');
+  const forma2 = useFormatMessage('c7ncd-deploymentOperation');
 
   const renderHeaderBtns = () => {
     const items = [
@@ -58,7 +59,7 @@ const AppHomePage = () => {
     }
     if (has('base-pro:getBaseComponentDeployConfig')) {
       items.splice(2, 0, {
-        ...get('base-pro:getBaseComponentDeployConfig')(refresh, false),
+        ...get('base-pro:getBaseComponentDeployConfig')(refresh, forma2, false),
       });
     }
     return <HeaderButtons items={items} />;
