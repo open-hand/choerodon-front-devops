@@ -93,7 +93,7 @@ export default ({
     }, {
       name: 'description',
       required: true,
-      label: formatMessage({ id: 'description' }),
+      label: formatMessage({ id: 'c7ncd.environment.description' }),
       maxLength: 200,
     }, {
       name: 'appServiceId',

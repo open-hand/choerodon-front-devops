@@ -238,12 +238,14 @@ export default class Details extends Component {
             </div>
             <Button
               className="c7ncd-detail-btn"
+              style={{
+                textTransform: 'inherit',
+              }}
               type="primary"
               onClick={isDisabled ? null : () => this.handleClick(podType, instanceId, name)}
             >
               <C7NFormat
-                intlPrefix="c7ncd.resource"
-                id="Moredetails"
+                id="c7ncd.resource.Moredetails"
               />
             </Button>
           </div>

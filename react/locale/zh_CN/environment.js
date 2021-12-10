@@ -42,7 +42,7 @@ const environment = {
   'c7ncd.environment.Connect': '连接主机',
   'c7ncd.environment.Disconnect': '断开连接',
   'c7ncd.environment.CPUUsage': 'CPU使用率',
-  'c7ncd.environment.RootPartitionUsage': '根分区使用率Root Partition Usage',
+  'c7ncd.environment.RootPartitionUsage': '根分区使用率',
   'c7ncd.environment.MemoryUsage': '内存使用率',
   'c7ncd.environment.Application': '应用实例',
   'c7ncd.environment.Name': '应用名称',
@@ -51,6 +51,9 @@ const environment = {
   'c7ncd.environment.ProcessID': '进程号',
   'c7ncd.environment.OccupiedPort': '占用端口',
   'c7ncd.environment.CreationTime': '创建时间',
+  'c7ncd.environment.description': '描述',
+  'c7ncd.environment.ModifyGroup': '修改分组',
+  'c7ncd.environment.DeleteGroup': '删除分组',
 
 };
 

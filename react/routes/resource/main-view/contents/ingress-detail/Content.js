@@ -40,7 +40,7 @@ const Content = observer(() => {
           <tbody>
             <td className="td-width-30">
               <span className="detail-section-li-text">
-                {formatMessage({ id: 'path' })}
+                {formatMessage({ id: 'c7ncd.resource.path' })}
                 :&nbsp;
               </span>
               <span>{path}</span>
@@ -61,7 +61,7 @@ const Content = observer(() => {
             </td>
             <td className="td-width-20">
               <span className="detail-section-li-text">
-                {formatMessage({ id: 'port' })}
+                {formatMessage({ id: 'c7ncd.resource.port' })}
                 :&nbsp;
               </span>
               <span>{servicePort}</span>
@@ -120,7 +120,7 @@ const Content = observer(() => {
         </div>
         <div>
           <div className={`${prefixCls}-detail-content-section-title`}>
-            <FormattedMessage id="annotation" />
+            <FormattedMessage id="c7ncd.resource.Annotations" />
             <span className={`${prefixCls}-detail-content-section-title-hover`}>(Annotations)</span>
           </div>
           <ul className={`${prefixCls}-detail-section-ul`}>

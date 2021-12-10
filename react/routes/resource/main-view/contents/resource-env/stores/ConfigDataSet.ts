@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 import { deployValueConfigApi } from '@/api';
 import getTablePostData from '@/utils/getTablePostData';
 
@@ -32,7 +38,7 @@ export default ({ formatMessage, id, format }:any):any => ({
     {
       name: 'envName',
       type: 'string',
-      label: formatMessage({ id: 'environment' }),
+      label: formatMessage({ id: 'c7ncd.resource.environment' }),
     },
     {
       name: 'createUserRealName',
@@ -49,7 +55,7 @@ export default ({ formatMessage, id, format }:any):any => ({
     {
       name: 'name',
       type: 'string',
-      label: formatMessage({ id: 'name' }),
+      label: formatMessage({ id: 'c7ncd.resource.Name' }),
     },
     {
       name: 'appServiceName',
@@ -59,7 +65,7 @@ export default ({ formatMessage, id, format }:any):any => ({
     {
       name: 'envName',
       type: 'string',
-      label: formatMessage({ id: 'environment' }),
+      label: formatMessage({ id: 'c7ncd.resource.environment' }),
     },
   ],
 });

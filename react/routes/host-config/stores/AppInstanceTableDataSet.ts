@@ -34,7 +34,7 @@ export default ({ formatMessage, intlPrefix }: ListProps): DataSetProps => ({
   queryFields: [
     {
       name: 'name',
-      label: formatMessage({ id: 'name' }),
+      label: formatMessage({ id: 'c7ncd.resource.Name' }),
     },
     { name: 'status', label: formatMessage({ id: 'boot.states' }) },
   ],

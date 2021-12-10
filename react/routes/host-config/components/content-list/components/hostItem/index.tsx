@@ -140,7 +140,7 @@ const HostsItem: React.FC<any> = observer(({
     const actionData = [
       {
         service: ['choerodon.code.project.deploy.host.ps.edit'],
-        text: formatMessage({ id: 'c7ncd.environment.Modify' }),
+        text: formatMessage({ id: 'c7ncd.HostConfig.Modify' }),
         action: () => handleCreateDeployHost(id),
       },
     ];
@@ -152,7 +152,7 @@ const HostsItem: React.FC<any> = observer(({
       });
       actionData.push({
         service: ['choerodon.code.project.deploy.host.ps.delete'],
-        text: formatMessage({ id: 'c7ncd.environment.' }),
+        text: formatMessage({ id: 'c7ncd.resource.Delete' }),
         action: handleDelete,
       });
     } else {

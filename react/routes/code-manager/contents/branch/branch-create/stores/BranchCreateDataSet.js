@@ -56,8 +56,7 @@ export default ({
             read({
               dataSet, record, params: { page },
             }) {
-              const project = record?.get('project');
-              const selectedProjectId = project?.id ?? projectId;
+              const selectedProjectId = dataSet?.getState('projectid') || projectId;
               const userIds = dataSet?.getState('myquestionBool') ? [getUserId] : [];
               return {
                 url: issuesApiConfig.loadSummaryData(selectedProjectId, page).url,

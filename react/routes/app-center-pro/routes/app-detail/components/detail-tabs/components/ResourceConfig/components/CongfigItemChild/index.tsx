@@ -69,7 +69,11 @@ const ConfigItemChild = (props:any) => {
         maxWidth: '107px',
       }}
       >
-        <span>
+        <span style={{
+          color: 'var(--text-color)',
+          fontSize: 13,
+        }}
+        >
           <StatusIcon
             name={name}
             status={status}
@@ -89,7 +93,11 @@ const ConfigItemChild = (props:any) => {
         {!disabled && <Action data={buttons} />}
       </div>
       <div>
-        <span>
+        <span style={{
+          color: 'var(--text-color)',
+          fontSize: 13,
+        }}
+        >
           <MouserOverWrapper text={domain} width={0.2} style={{ display: 'block' }}>
             {domain}
           </MouserOverWrapper>
@@ -102,6 +110,8 @@ const ConfigItemChild = (props:any) => {
         <span style={{
           display: 'flex',
           alignItems: 'center',
+          color: 'var(--text-color)',
+          fontSize: 13,
         }}
         >
           <MouserOverWrapper text={pathList[0] ? pathList[0].path : ''} width={0.2}>

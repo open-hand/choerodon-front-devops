@@ -27,21 +27,21 @@ const ServiceDetail = observer(() => {
       <ul className="service-detail-port-list" key={port}>
         <li className="service-detail-port-item">
           <span className="service-detail-port-item-text">{port}</span>
-          {formatMessage({ id: 'port' })}
+          {formatMessage({ id: 'c7ncd.resource.port' })}
         </li>
         <li className="service-detail-port-item service-detail-arrow-item">
           <span className="service-detail-port-item-arrow">→</span>
         </li>
         <li className="service-detail-port-item">
           <span className="service-detail-port-item-text">{protocol}</span>
-          {formatMessage({ id: 'protocol' })}
+          {formatMessage({ id: 'c7ncd.resource.protocol' })}
         </li>
         <li className="service-detail-port-item service-detail-arrow-item">
           <span className="service-detail-port-item-arrow">→</span>
         </li>
         <li className="service-detail-port-item">
           <span className="service-detail-port-item-text">{targetPort}</span>
-          {formatMessage({ id: `${intlPrefix}.target.port` })}
+          {formatMessage({ id: 'c7ncd.resource.target' })}
         </li>
       </ul>
     );
@@ -55,7 +55,7 @@ const ServiceDetail = observer(() => {
         <li className="service-detail-load-item">
           <span className="service-detail-load-item-code">{code}</span>
           <span className="service-detail-load-item-key">
-            {formatMessage({ id: 'deployment' })}
+            {formatMessage({ id: 'c7ncd.resource.deployment' })}
           </span>
         </li>
         <li className="service-detail-load-item">
@@ -122,7 +122,7 @@ const ServiceDetail = observer(() => {
     return (
       <div>
         <div className={`${prefixCls}-detail-content-section-title`}>
-          {formatMessage({ id: 'port' })}
+          {formatMessage({ id: 'c7ncd.resource.port' })}
         </div>
         <div className="detail-content-section-detail">
           {ports && ports.length ? map(ports, getPort) : formatMessage({ id: 'nodata' })}

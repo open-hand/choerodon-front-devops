@@ -220,10 +220,10 @@ const FormView = observer(() => {
       try {
         const res = await store.postKV(postData);
         if (handlePromptError(res)) {
-          refresh();
+          refresh && refresh();
           return true;
         }
-        return false;
+        return true;
       } catch (error) {
         Choerodon.handleResponseError(error);
         return false;

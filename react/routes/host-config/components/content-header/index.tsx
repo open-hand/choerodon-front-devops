@@ -69,7 +69,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
           className={`${prefixCls}-content-search-btn`}
           disabled={listDs.status === 'loading'}
         >
-          {formatMessage({ id: 'reset' })}
+          {formatMessage({ id: 'c7ncd.resource.reset' })}
         </Button>
       </div>
     </div>

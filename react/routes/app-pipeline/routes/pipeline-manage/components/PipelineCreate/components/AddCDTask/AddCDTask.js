@@ -9,6 +9,7 @@ import {
   Button,
   Modal,
   TextArea,
+  NumberField,
 } from 'choerodon-ui/pro';
 import { NewTips } from '@choerodon/components';
 import { Icon, Spin } from 'choerodon-ui';
@@ -38,16 +39,12 @@ import { useAddCDTaskStore } from './stores';
 import YamlEditor from '@/components/yamlEditor';
 import Tips from '@/components/new-tips';
 import './index.less';
-import {
-  mapping as deployChartMapping,
-} from './stores/deployChartDataSet';
-import {
-  mapping as deployGroupMapping,
-} from './stores/deployGroupDataSet';
+import { mapping as deployChartMapping } from './stores/deployChartDataSet';
+import { mapping as deployGroupMapping } from './stores/deployGroupDataSet';
 import { productTypeData } from './stores/addCDTaskDataSetMap';
 import OperationYaml from '@/routes/app-center-pro/components/OpenAppCreateModal/components/operation-yaml';
 import { valueCheckValidate } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-app-config/content';
-import { queryConfigCodeOptions } from '@/components/configuration-center/ConfigurationTab';
+// import { queryConfigCodeOptions } from '@/components/configuration-center/ConfigurationTab';
 
 let currentSize = 10;
 
@@ -102,9 +99,9 @@ export default observer(() => {
     DeployGroupDataSet,
     trueAppServiceId,
     HostJarDataSet,
-    configurationCenterDataSet,
-    configCompareOptsDS,
-    deployConfigUpDateDataSet,
+    // configurationCenterDataSet,
+    // configCompareOptsDS,
+    // deployConfigUpDateDataSet,
     HotJarOptionsDataSet,
   } = useAddCDTaskStore();
 
@@ -112,7 +109,7 @@ export default observer(() => {
 
   const [oldValue, setOldValue] = useState('');
   const [deployWay, setDeployWay] = useState('');
-  const [isQueryDeployConfig, setIsQueryDeployConfig] = useState(true);
+//   const [isQueryDeployConfig, setIsQueryDeployConfig] = useState(true);
   const [deployGroupDetail, setDeployGroupDetail] = useState(undefined);
   const [branchsList, setBranchsList] = useState([]);
   const [valueIdValues, setValueIdValues] = useState('');
@@ -139,37 +136,37 @@ export default observer(() => {
   const [isProjectOwner, setIsProjectOwner] = useState(false);
   const [pipelineCallbackAddress, setPipelineCallbackAddress] = useState(undefined);
   const [preJobList, setPreJobList] = useState([]);
-  const [configDataSet, setConfigDataSet] = useState(configurationCenterDataSet);
+  //   const [configDataSet, setConfigDataSet] = useState(configurationCenterDataSet);
 
-  useEffect(() => {
-    setDeployWay(ADDCDTaskDataSet.current.get(fieldMap.deployWay.name));
-    if (deployWay === 'update' && isQueryDeployConfig) {
-      handleInitDeployConfig(HostJarDataSet.current?.get('appName'));
-    } else {
-      deployConfigUpDateDataSet.removeAll();
-    }
-  }, [ADDCDTaskDataSet.current, deployWay, HostJarDataSet.current, HotJarOptionsDataSet.current]);
+  //   useEffect(() => {
+  //     setDeployWay(ADDCDTaskDataSet.current.get(fieldMap.deployWay.name));
+  //     if (deployWay === 'update' && isQueryDeployConfig) {
+  //       handleInitDeployConfig(HostJarDataSet.current?.get('appName'));
+  //     } else {
+  //       deployConfigUpDateDataSet.removeAll();
+  //     }
+  //   }, [ADDCDTaskDataSet.current, deployWay, HostJarDataSet.current, HotJarOptionsDataSet.current]);
 
-  const handleInitDeployConfig = (value) => {
-    const id = HotJarOptionsDataSet.find((i) => i.get('name') === value)?.get('instanceId');
-    if (!isNil(id)) {
-      getDetailData(id);
-    }
-  };
+  //   const handleInitDeployConfig = (value) => {
+  //     const id = HotJarOptionsDataSet.find((i) => i.get('name') === value)?.get('instanceId');
+  //     if (!isNil(id)) {
+  //       getDetailData(id);
+  //     }
+  //   };
 
-  const getDetailData = async (id) => {
-    configurationCenterDataSet.setQueryParameter('value', id);
-    configurationCenterDataSet.setQueryParameter('key', 'instance_id');
-    await configurationCenterDataSet.query();
-    setIsQueryDeployConfig(false);
-    deployConfigUpDateDataSet.removeAll();
-    configurationCenterDataSet.toData().forEach((item) => {
-      deployConfigUpDateDataSet.create({ ...item });
-    });
-    queryConfigCodeOptions(configCompareOptsDS, deployConfigUpDateDataSet);
-    setConfigDataSet(deployConfigUpDateDataSet);
-  };
-  
+  //   const getDetailData = async (id) => {
+  //     configurationCenterDataSet.setQueryParameter('value', id);
+  //     configurationCenterDataSet.setQueryParameter('key', 'instance_id');
+  //     await configurationCenterDataSet.query();
+  //     setIsQueryDeployConfig(false);
+  //     deployConfigUpDateDataSet.removeAll();
+  //     configurationCenterDataSet.toData().forEach((item) => {
+  //       deployConfigUpDateDataSet.create({ ...item });
+  //     });
+  //     queryConfigCodeOptions(configCompareOptsDS, deployConfigUpDateDataSet);
+  //     setConfigDataSet(deployConfigUpDateDataSet);
+  //   };
+
   useEffect(() => {
     ADDCDTaskUseStore.setValueIdRandom(Math.random());
     axios.get(`/iam/choerodon/v1/projects/${projectId}/check_admin_permission`).then((res) => {
@@ -455,22 +452,24 @@ export default observer(() => {
     ds.appServiceId = PipelineCreateFormDataSet?.current?.get('appServiceId') || trueAppServiceId;
     return JSON.stringify(ds).replace(/"/g, "'");
   }
-  
 
   // TODO: 流水线CD -校验
   const handleAdd = async () => {
     let deployChartData;
     const result = await ADDCDTaskDataSet.current.validate(true);
-    const configResult = await deployConfigUpDateDataSet.validate();
-    const configData = deployConfigUpDateDataSet.map((o) => {
-      return {
-        configId: configCompareOptsDS.find((i) => i.get('versionName') === o.get('versionName'))?.get('configId'),
-        mountPath: o.get('mountPath'),
-        configGroup: o.get('configGroup'),
-        configCode: o.get('configCode'),
-      };
-    });
-    if (result && configResult) {
+    // const configResult = await deployConfigUpDateDataSet.validate();
+    // const configData = deployConfigUpDateDataSet.map((o) => {
+    //   return {
+    //     configId: configCompareOptsDS.find((i) => i.get('versionName') === o.get('versionName'))?.get('configId'),
+    //     mountPath: o.get('mountPath'),
+    //     configGroup: o.get('configGroup'),
+    //     configCode: o.get('configCode'),
+    //   };
+    // });
+    if (
+      result
+      //  && configResult
+    ) {
       let submitData = {};
       const ds = JSON.parse(JSON.stringify(ADDCDTaskDataSet.toData()[0]));
       if (ds.type === 'cdHost') {
@@ -482,7 +481,7 @@ export default observer(() => {
         );
         if (flag && hostjarValidate) {
           submitData = HostJarDataSet.current.toData();
-          submitData.configSettingVOS = configData;
+          //   submitData.configSettingVOS = configData;
         } else {
           return false;
         }
@@ -558,7 +557,7 @@ export default observer(() => {
         cdAuditUserIds,
         triggerValue:
           typeof ds.triggerValue === 'object' ? ds.triggerValue?.join(',') : ds.triggerValue,
-        configSettingVOS: configData,
+        // configSettingVOS: configData,
       };
       if (ds.type !== 'cdAudit') {
         data.metadata = getMetadata(ds, deployChartData, {
@@ -1027,7 +1026,7 @@ export default observer(() => {
         ADDCDTaskUseStore.setValueIdRandom(Math.random());
         setValueIdValues(tempValues);
         if (data) {
-          const item = DeployChartDataSet.current.getField(mapping().deployConfig.name).options.records.find(item => item.get('id') === data.valueId);
+          const item = DeployChartDataSet.current.getField(mapping().deployConfig.name).options.records.find((item) => item.get('id') === data.valueId);
           if (item) {
             item.set('value', tempValues);
           }
@@ -1170,11 +1169,8 @@ export default observer(() => {
             colSpan={6}
             newLine
             dataSet={ADDCDTaskDataSet}
-            // configDataSet={
-            //     !isEmpty(HotJarOptionsDataSet.toData()) ? deployConfigUpDateDataSet : configurationCenterDataSet
-            // }
-            configDataSet={configDataSet}
-            optsDS={configCompareOptsDS}
+            // configDataSet={configDataSet}
+            // optsDS={configCompareOptsDS}
             preName={fieldMap.preCommand.name}
             startName={fieldMap.runCommand.name}
             postName={fieldMap.postCommand.name}
@@ -1253,10 +1249,10 @@ export default observer(() => {
                 'disabled',
                 value === deployWayData[1].value,
               );
-              if (isQueryDeployConfig && value === 'update' && value !== oldValue) {
-                setOldValue(value);
-                handleInitDeployConfig(HostJarDataSet.current.get('appName'));
-              }
+            //   if (isQueryDeployConfig && value === 'update' && value !== oldValue) {
+            //     setOldValue(value);
+            //     handleInitDeployConfig(HostJarDataSet.current.get('appName'));
+            //   }
             }}
           />
           <SelectBox name={fieldMap.productType.name} />
@@ -1399,11 +1395,11 @@ export default observer(() => {
             </SelectBox>
           </div>
           {ADDCDTaskDataSet.current.get(addCDTaskDataSetMap.alarm) && [
-            <TextField
+            <NumberField
               name={addCDTaskDataSetMap.threshold}
               newLine
               suffix="%"
-              restrict="0-9|."
+              step={1}
               min={0}
               max={100}
               addonAfter={
@@ -1740,10 +1736,7 @@ export default observer(() => {
             name={addCDTaskDataSetMap.apiTestMission}
             addonAfter={<Tips helpText="此处仅能从项目下已有的API测试任务中进行选择" />}
           />,
-          <Select
-            colSpan={3}
-            name="apiTestConfigId"
-          />,
+          <Select colSpan={3} name="apiTestConfigId" />,
           <Select
             colSpan={3}
             name={addCDTaskDataSetMap.relativeMission}

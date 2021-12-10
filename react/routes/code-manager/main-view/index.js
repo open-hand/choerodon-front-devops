@@ -100,7 +100,7 @@ const MainView = injectIntl(observer((props) => {
       <div
         className={classNames({
           'c7n-code-managerment-tab-list': true,
-          'c7ncd-theme4-management': AppState.getCurrentTheme === 'theme4',
+          'c7ncd-theme4-management': true,
         })}
       >
         {getContent()}

@@ -79,7 +79,7 @@ const collapseDetail = observer(({ loading }) => {
         {envName && (
           <div className={`${prefixCls}-polaris-tabs-header-item`}>
             <span className={`${prefixCls}-polaris-tabs-header-text`}>
-              {formatMessage({ id: 'environment' })}
+              {formatMessage({ id: 'c7ncd-clusterManagement.Environment' })}
               :
             </span>
             <span>{envName}</span>
@@ -88,7 +88,7 @@ const collapseDetail = observer(({ loading }) => {
         )}
         <div className={`${prefixCls}-polaris-tabs-header-item${!projectName ? '-external' : ''}`}>
           <span className={`${prefixCls}-polaris-tabs-header-text`}>
-            {formatMessage({ id: 'envCode' })}
+            {formatMessage({ id: 'c7ncd-clusterManagement.EnvironmentCode' })}
             :
           </span>
           <span>{namespace}</span>

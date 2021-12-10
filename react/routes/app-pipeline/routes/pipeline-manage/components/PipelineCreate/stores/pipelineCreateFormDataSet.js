@@ -122,7 +122,7 @@ export default (
       options: BranchOptionsDs,
       textField: 'branchName',
       valueField: 'branchName',
-      required: true,
+      required: !isEdit,
       label: '关联分支',
     }, {
       name: 'image',

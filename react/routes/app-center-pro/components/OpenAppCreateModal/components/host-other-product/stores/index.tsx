@@ -2,10 +2,10 @@ import React, { createContext, useContext, useMemo } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { inject } from 'mobx-react';
 import hostOtherProductDataSet from './hostOtherProductDataSet';
-import {
-  ConfigurationCenterDataSet,
-  ConfigCompareOptsDS,
-} from '@/components/configuration-center/stores/ConfigurationCenterDataSet';
+// import {
+//   ConfigurationCenterDataSet,
+//   ConfigCompareOptsDS,
+// } from '@/components/configuration-center/stores/ConfigurationCenterDataSet';
 
 interface ContextType {
   children: any;
@@ -13,8 +13,8 @@ interface ContextType {
   HostOtherProductDataSet: any;
   style: object;
   AppState: any;
-  configurationCenterDataSet: DataSet;
-  configCompareOptsDS: DataSet;
+//   configurationCenterDataSet: DataSet;
+//   configCompareOptsDS: DataSet;
 }
 
 const Store = createContext({} as ContextType);
@@ -33,24 +33,24 @@ export const StoreProvider = inject('AppState')((props: any) => {
 
   const HostOtherProductDataSet = useMemo(() => new DataSet(hostOtherProductDataSet()), []);
 
-  const configCompareOptsDS = useMemo(
-    () => new DataSet(ConfigCompareOptsDS({ projectId, organizationId })),
-    [],
-  );
+  //   const configCompareOptsDS = useMemo(
+  //     () => new DataSet(ConfigCompareOptsDS({ projectId, organizationId })),
+  //     [],
+  //   );
 
-  const configurationCenterDataSet = useMemo(
-    () => new DataSet(
-      // @ts-ignore
-      ConfigurationCenterDataSet({ projectId, organizationId, optsDS: configCompareOptsDS }),
-    ),
-    [],
-  );
+  //   const configurationCenterDataSet = useMemo(
+  //     () => new DataSet(
+  //       // @ts-ignore
+  //       ConfigurationCenterDataSet({ projectId, organizationId, optsDS: configCompareOptsDS }),
+  //     ),
+  //     [],
+  //   );
 
   const value = {
     ...props,
     HostOtherProductDataSet,
-    configurationCenterDataSet,
-    configCompareOptsDS,
+    // configurationCenterDataSet,
+    // configCompareOptsDS,
   };
 
   return <Store.Provider value={value}>{children}</Store.Provider>;

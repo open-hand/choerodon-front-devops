@@ -38,6 +38,6 @@ export default ({
   ],
   queryFields: [
     { name: 'name', type: 'string', label: formatMessage({ id: 'c7ncd.resource.pvcName' }) },
-    { name: 'accessModes', type: 'string', label: formatMessage({ id: `${intlPrefix}.pvc.accessModes` }) },
+    { name: 'accessModes', type: 'string', label: formatMessage({ id: 'c7ncd.resource.AccessMode' }) },
   ],
 });

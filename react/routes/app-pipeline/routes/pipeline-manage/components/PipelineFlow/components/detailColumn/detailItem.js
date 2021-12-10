@@ -44,7 +44,6 @@ const DetailItem = (props) => {
     finishedDate,
     itemType,
     gitlabJobId,
-    devopsJobId,
     jobName,
     handleRefresh,
     cdAuto, // cd阶段job独有的
@@ -57,14 +56,12 @@ const DetailItem = (props) => {
     location: { search },
     countersigned,
     chartVersion,
-    cdHostDeployConfigVO,
     sonarScannerType,
     codeCoverage,
     apiTestTaskRecordVO, // api测试任务独有的
     externalApprovalJobVO,
     viewId,
     downloadMavenJarVO,
-    downloadNpm,
     downloadImage,
     gitlabPipelineId,
     imageScan, // 是否显示镜像的扫描报告btn
@@ -543,6 +540,9 @@ const DetailItem = (props) => {
   }
 
   const renderFooterBtns = () => {
+    if (jobStatus === 'created') {
+      return null;
+    }
     const data = [];
     if (!['cdAudit', 'cdApiTest'].includes(itemType)) {
       if (!logCheckDisabeldCondition) {
@@ -596,7 +596,7 @@ const DetailItem = (props) => {
         action: openCodequalityModal,
       });
     }
-    if (itemType === 'cdApiTest' && jobStatus === 'created') {
+    if (itemType === 'cdApiTest' && ['success', 'failed'].includes(jobStatus)) {
       data.push({
         text: '查看详情',
         service: [],

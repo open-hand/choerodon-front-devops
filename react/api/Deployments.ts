@@ -1,4 +1,3 @@
-import { map } from 'lodash';
 import Api from './Api';
 
 class DeploymentsApi extends Api<DeploymentsApi> {

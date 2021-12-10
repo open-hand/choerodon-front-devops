@@ -117,7 +117,7 @@ const ConfigMap = observer((props) => {
         envId={parentId}
         store='configMap'
         intlPrefix={intlPrefix}
-        refresh
+        refresh={refresh}
       />,
       okText: formatMessage({ id: 'boot.save' }),
     });
@@ -134,7 +134,7 @@ const ConfigMap = observer((props) => {
       >
         <Column name="name" sortable header={format({ id: 'ConfigMap' })} renderer={renderName} />
         <Column renderer={renderAction} width={60} />
-        <Column name="key" renderer={renderKey} />
+        <Column header={formatMessage({ id: 'c7ncd.resource.key' })} name="key" renderer={renderKey} />
         <Column name="lastUpdateDate" sortable renderer={renderDate} width={105} />
       </Table>
     </div>

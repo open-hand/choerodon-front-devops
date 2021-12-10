@@ -8,11 +8,11 @@ import addCDTaskDataSet from './addCDTaskDataSet';
 import deployGroupDataSet from './deployGroupDataSet';
 import { hostJarDataSet, hotJarOptionsDataSet } from './hostJarDataSet';
 import useStore from './useStore';
-import {
-  ConfigurationCenterDataSet,
-  ConfigCompareOptsDS,
-  DeployConfigDataSet,
-} from '@/components/configuration-center/stores/ConfigurationCenterDataSet';
+// import {
+//   ConfigurationCenterDataSet,
+//   ConfigCompareOptsDS,
+//   DeployConfigDataSet,
+// } from '@/components/configuration-center/stores/ConfigurationCenterDataSet';
 
 const Store = createContext();
 
@@ -56,28 +56,28 @@ export const StoreProvider = injectIntl(
       ADDCDTaskDataSet?.current?.get('envId'),
     ]);
     const HostJarDataSet = useMemo(() => new DataSet(hostJarDataSet(ADDCDTaskDataSet)), []);
-    const configCompareOptsDS = useMemo(
-      () => new DataSet(ConfigCompareOptsDS({ projectId, organizationId })),
-      [],
-    );
+    // const configCompareOptsDS = useMemo(
+    //   () => new DataSet(ConfigCompareOptsDS({ projectId, organizationId })),
+    //   [],
+    // );
 
-    // 配置中心详情
-    const configurationCenterDataSet = useMemo(
-      () => new DataSet(
-        // @ts-ignore
-        ConfigurationCenterDataSet({ projectId, organizationId, optsDS: configCompareOptsDS }),
-      ),
-      [],
-    );
+    // // 配置中心详情
+    // const configurationCenterDataSet = useMemo(
+    //   () => new DataSet(
+    //     // @ts-ignore
+    //     ConfigurationCenterDataSet({ projectId, organizationId, optsDS: configCompareOptsDS }),
+    //   ),
+    //   [],
+    // );
 
-    // 更新应用
-    const deployConfigUpDateDataSet = useMemo(
-      () => new DataSet(
-        // @ts-ignore
-        DeployConfigDataSet({ projectId, organizationId, optsDS: configCompareOptsDS }),
-      ),
-      [],
-    );
+    // // 更新应用
+    // const deployConfigUpDateDataSet = useMemo(
+    //   () => new DataSet(
+    //     // @ts-ignore
+    //     DeployConfigDataSet({ projectId, organizationId, optsDS: configCompareOptsDS }),
+    //   ),
+    //   [],
+    // );
 
     const HotJarOptionsDataSet = useMemo(() => new DataSet(hotJarOptionsDataSet()), []);
 
@@ -88,9 +88,9 @@ export const StoreProvider = injectIntl(
       DeployChartDataSet,
       DeployGroupDataSet,
       HostJarDataSet,
-      configurationCenterDataSet,
-      configCompareOptsDS,
-      deployConfigUpDateDataSet,
+      //   configurationCenterDataSet,
+      //   configCompareOptsDS,
+      //   deployConfigUpDateDataSet,
       HotJarOptionsDataSet,
     };
 

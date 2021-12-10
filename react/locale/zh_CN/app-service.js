@@ -28,7 +28,16 @@ const appService = {
   'c7ncd.appService.Scope': '共享范围',
   'c7ncd.appService.VersionType': '共享版本类型',
   'c7ncd.appService.normal': '普通服务',
+  'c7ncd.appService.test': '测试服务',
   'c7ncd.appService.cancel': '取消',
+  'c7ncd.appService.Add': '添加',
+  'c7ncd.appService.Name': '名称',
+  'c7ncd.appService.Save': '保存',
+  'c7ncd.appService.failed': '失败',
+  'c7ncd.appService.active': '启用',
+  'c7ncd.appService.unready': '停用',
+  'c7ncd.appService.operating': '处理中',
+
 };
 
 export { appService };

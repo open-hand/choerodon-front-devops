@@ -19,6 +19,7 @@ const PermissionTable = () => {
     formatMessage,
     mainStore,
     refresh: allRefresh,
+    permissionTableRefresh,
     projectId,
     prefixCls,
   } = useHostConfigStore();
@@ -31,10 +32,6 @@ const PermissionTable = () => {
     permissionDs.query();
   }, [mainStore.getSelectedHost?.id]);
 
-  const refresh = useCallback(() => {
-    permissionDs.query();
-  }, []);
-
   const handleDelete = useCallback(async (record: Record) => {
     const modalProps = {
       title: formatMessage({ id: 'permission_delete' }),
@@ -43,7 +40,7 @@ const PermissionTable = () => {
     };
     const res = await permissionDs.delete(record, modalProps);
     if (!res.list[0].refreshAll) {
-      refresh();
+      permissionTableRefresh();
     } else {
       allRefresh();
     }
@@ -60,7 +57,7 @@ const PermissionTable = () => {
       okText: '保存',
       children: <PermissionEditContent
         record={record}
-        refresh={refresh}
+        refresh={permissionTableRefresh}
         mainStore={mainStore}
         projectId={projectId}
       />,

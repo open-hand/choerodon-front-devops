@@ -20,7 +20,7 @@ const Repository = withRouter(observer((props) => {
     detailDs,
     repositoryStore,
     promptMsg,
-    formatClient,
+    formatRepository,
     formatCommon,
   } = useRepositoryStore();
 
@@ -44,7 +44,7 @@ const Repository = withRouter(observer((props) => {
             intlPrefix={intlPrefix}
             prefixCls={prefixCls}
             refresh={refresh}
-            formatClient={formatClient}
+            formatRepository={formatRepository}
             formatCommon={formatCommon}
           />
         ) : <Spin />}

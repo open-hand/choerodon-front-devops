@@ -227,7 +227,7 @@ const ListView = withRouter(observer((props) => {
             style={{
               marginRight: '7px'
             }}
-            name={colorCode === 'unready' ? '停用' : formatMessage({ id: colorCode })}
+            name={formatMessage({ id: `c7ncd.appService.${colorCode}` })}
           />
         </div>
       </Tooltip>
@@ -478,11 +478,6 @@ const ListView = withRouter(observer((props) => {
     );
   }
 
-  const handleChangeListPage = (page, pageSize) => {
-    listDs.pageSize = pageSize;
-    listDs.query(page);
-  }
-
   const renderTheme4Dom = () => {
     return (
       <div className="c7ncd-theme4-appService">
@@ -590,10 +585,7 @@ const ListView = withRouter(observer((props) => {
             }
           </Loading>
           <Pagination
-            total={listDs.totalCount}
-            pageSize={listDs.pageSize}
-            page={listDs.currentPage}
-            onChange={handleChangeListPage}
+            dataSet={listDs}
             style={{
               marginTop: '17px',
               float: 'right',

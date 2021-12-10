@@ -56,6 +56,11 @@ const codeManager = {
   'c7ncd.codeManger.duplicated_blocks': '重复部分',
   'c7ncd.codeManger.new_duplicated_lines_density': '新增代码部分重复率',
   'c7ncd.codeManger.state': '状态',
+  'c7ncd.codeManger.Createat': '创建于',
+  'c7ncd.codeManger.Associated': '关联',
+  'c7ncd.codeManger.Create': '创建',
+  'c7ncd.codeManger.Save': '保存',
+
 };
 
 export { codeManager };

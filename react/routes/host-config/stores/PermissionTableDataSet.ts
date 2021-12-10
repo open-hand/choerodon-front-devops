@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 /* eslint-disable import/no-anonymous-default-export */
 import { DataSetProps, FieldType, DataSet } from '@/interface';
 import HostConfigApi from '@/routes/host-config/apis/DeployApis';
@@ -33,10 +39,10 @@ export default ({
   },
   fields: [
     { name: 'realName', label: formatMessage({ id: 'boot.username' }) },
-    { name: 'loginName', label: formatMessage({ id: 'loginName' }) },
-    { name: 'roles', label: formatMessage({ id: 'projectRole' }) },
-    { name: 'creationDate', label: formatMessage({ id: 'permission_addTime' }) },
-    { name: 'permissionLabel', label: formatMessage({ id: 'permission_type' }) },
+    { name: 'loginName', label: formatMessage({ id: 'c7ncd.resource.LoginName' }) },
+    { name: 'roles', label: formatMessage({ id: 'c7ncd.resource.Projectrole' }) },
+    { name: 'creationDate', label: formatMessage({ id: 'c7ncd.resource.AddedTime' }) },
+    { name: 'permissionLabel', label: formatMessage({ id: 'c7ncd.resource.PermissionType' }) },
   ],
   queryFields: [
     {
@@ -47,12 +53,12 @@ export default ({
     {
       name: 'loginName',
       type: 'string' as FieldType,
-      label: formatMessage({ id: 'loginName' }),
+      label: formatMessage({ id: 'c7ncd.resource.LoginName' }),
     },
     {
       name: 'permissionLabel',
       type: 'string' as FieldType,
-      label: '权限类型',
+      label: formatMessage({ id: 'c7ncd.resource.PermissionType' }),
       textField: 'text',
       valueField: 'value',
       options: new DataSet({

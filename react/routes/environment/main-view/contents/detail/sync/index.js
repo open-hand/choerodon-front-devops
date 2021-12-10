@@ -83,8 +83,8 @@ export default function Situation() {
         queryBar="none"
       >
         <Column name="error" renderer={renderMsg} />
-        <Column name="filePath" renderer={renderFileLink} />
-        <Column name="commit" renderer={renderCommit} />
+        <Column header={formatMessage({ id: 'c7ncd.resource.File' })} name="filePath" renderer={renderFileLink} />
+        <Column header={formatMessage({ id: 'c7ncd.resource.Commit' })} name="commit" renderer={renderCommit} />
         <Column name="lastUpdateDate" sortable renderer={renderTime} width={105} />
       </Table>
     </div>

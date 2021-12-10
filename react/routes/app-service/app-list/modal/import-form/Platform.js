@@ -55,7 +55,7 @@ const Platform = injectIntl(observer(({ checkData, disabled }) => {
         importRecord={importRecord}
       />,
       style: modalStyle1,
-      okText: formatMessage({ id: 'add' }),
+      okText: formatMessage({ id: 'c7ncd.appService.Add' }),
       afterClose: () => {
         importTableDs.removeAll();
         if (selectedDs.length) {
@@ -75,7 +75,7 @@ const Platform = injectIntl(observer(({ checkData, disabled }) => {
       title: formatMessage({ id: `${intlPrefix}.add` }),
       children: <MarketSourceTable selectedDs={marketSelectedDs} checkData={checkData} />,
       style: modalStyle1,
-      okText: formatMessage({ id: 'add' }),
+      okText: formatMessage({ id: 'c7ncd.appService.Add' }),
     });
   }
 
@@ -85,7 +85,7 @@ const Platform = injectIntl(observer(({ checkData, disabled }) => {
       drawer: true,
       title: formatMessage({ id: `${intlPrefix}.add` }),
       children: <GitlabSourceTable selectedDs={gitlabSelectedDs} importRecord={importRecord} />,
-      okText: formatMessage({ id: 'add' }),
+      okText: formatMessage({ id: 'c7ncd.appService.Add' }),
       afterClose: () => {
         importTableDs.removeAll();
         if (gitlabSelectedDs.length) {

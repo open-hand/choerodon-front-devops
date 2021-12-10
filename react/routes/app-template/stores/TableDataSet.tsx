@@ -63,10 +63,10 @@ const TableDataSet = ({ organizationId, formatCommon, format }: TableProps): Dat
   const sourceDs = new DataSet({
     data: [{
       value: 'P',
-      text: formatCommon({ id: 'predefined' }),
+      text: format({ id: 'predefined' }),
     }, {
       value: 'C',
-      text: formatCommon({ id: 'custom' }),
+      text: format({ id: 'custom' }),
     }],
   });
 

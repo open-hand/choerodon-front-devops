@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 const pipelineManage = {
   'c7ncd.pipelineManage.CIVariable': 'Pipeline CI Variable Configuration',
   'c7ncd.pipelineManage.Modify': 'Modify',
@@ -8,7 +14,7 @@ const pipelineManage = {
   'c7ncd.pipelineManage.Execution': 'Execution',
   'c7ncd.pipelineManage.Disable': 'Disable',
   'c7ncd.pipelineManage.Enable': 'Enable',
-  'c7ncd.pipelineManage.Copy': 'Enable',
+  'c7ncd.pipelineManage.Copy': 'Copy',
   'c7ncd.pipelineManage.Retry': 'Retry',
   'c7ncd.pipelineManage.RecordDetails': 'Pipeline Record Details',
   'c7ncd.pipelineManage.CancelExecution': 'Cancel Execution',

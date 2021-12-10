@@ -232,7 +232,7 @@ const RequestPanel = withRouter(observer((props) => {
           >
             {
               map(tabPaneList, ({ key, count }) => (
-                <Radio.Button value={key}>{`${formatMessage({ id: `c7ncd.codeManger.${key}` })}`}</Radio.Button>
+                <Radio.Button value={key}>{`${formatMessage({ id: `c7ncd.codeManger.${key}` })}(${count})`}</Radio.Button>
               ))
             }
             {auditCount > 0 && (

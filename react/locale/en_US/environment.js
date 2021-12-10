@@ -51,6 +51,9 @@ const environment = {
   'c7ncd.environment.ProcessID': 'Process ID',
   'c7ncd.environment.OccupiedPort': 'Occupied Port',
   'c7ncd.environment.CreationTime': 'Creation Time',
+  'c7ncd.environment.description': 'Description',
+  'c7ncd.environment.ModifyGroup': 'Modify Group',
+  'c7ncd.environment.DeleteGroup': 'Delete Group',
 
 };
 

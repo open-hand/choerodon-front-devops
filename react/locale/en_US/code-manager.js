@@ -50,6 +50,10 @@ const codeManager = {
   'c7ncd.codeManger.duplicated_blocks': 'Repeat Part',
   'c7ncd.codeManger.new_duplicated_lines_density': 'Repetition Rate of New Code',
   'c7ncd.codeManger.state': 'State',
+  'c7ncd.codeManger.Createat': 'Create at',
+  'c7ncd.codeManger.Associated': 'Associated',
+  'c7ncd.codeManger.Create': 'Create',
+  'c7ncd.codeManger.Save': 'Save',
 };
 
 export { codeManager };

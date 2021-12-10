@@ -522,6 +522,11 @@ function BranchCreate(props) {
     return renderProjectOption({ text, value: currentValue });
   }, []);
 
+  const changeProject = useCallback((value) => {
+    issueOptionsDs?.setState('projectid', value.id);
+    issueOptionsDs?.query();
+  }, []);
+
   return (
     <div className="sidebar-content c7n-createBranch">
       <div style={{ width: "75%" }}>
@@ -534,6 +539,7 @@ function BranchCreate(props) {
               searchMatcher={() => true}
               onInput={handleProjectSearch}
               optionRenderer={renderProjectOption}
+              onChange={changeProject}
               renderer={renderProject}
               onBlur={handleProjectBlur}
               clearButton={false}

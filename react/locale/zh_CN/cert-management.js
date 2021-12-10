@@ -10,6 +10,8 @@ const CertManagement = {
   'c7ncd.CertManagement.DomainNameAddress': '域名地址',
   'c7ncd.CertManagement.AuthorityManagement': '权限管理',
   'c7ncd.CertManagement.Delete': '删除',
+  'c7ncd.CertManagement.Create': '创建',
+  'c7ncd.CertManagement.Save': '保存',
 
 };
 

@@ -3,6 +3,7 @@ import {
   Modal, Icon, Button, Tooltip,
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
+import { OverflowWrap } from '@choerodon/components';
 import { LARGE } from '@/utils/getModalWidth';
 import { usePipelineStageEditStore } from '../../stores';
 import AddTask from '../../../AddTask';
@@ -159,12 +160,12 @@ const EditItem = (props) => {
       {...dragProvided.dragHandleProps}
       style={getItemStyle(snapshotinner.isDragging, dragProvided.draggableProps.style)}
     >
-      <div className={`${prefixCls}-header`}>
+      <OverflowWrap className={`${prefixCls}-header`} width="192">
         【
         {Object.prototype.hasOwnProperty.bind(jobType, type) && jobType[type]}
         】
         {name}
-      </div>
+      </OverflowWrap>
       <div className={`${prefixCls}-btnGroup`}>{renderOptsBtn()}</div>
     </div>
   );

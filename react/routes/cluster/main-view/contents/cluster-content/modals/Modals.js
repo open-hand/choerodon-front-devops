@@ -126,7 +126,7 @@ const ClusterModals = observer(() => {
       style: {
         width: '740px',
       },
-      okText: formatMessage({ id: 'add' }),
+      okText: formatMessage({ id: 'c7ncd-clusterManagement.add' }),
       onCancel: () => {
         addNodesDs.reset();
       },

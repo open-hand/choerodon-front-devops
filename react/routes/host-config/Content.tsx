@@ -25,6 +25,7 @@ const HostConfig: React.FC<any> = observer((): any => {
     intlPrefix,
     formatMessage,
     refresh,
+    permissionTableRefresh,
     listDs,
     mainStore,
   } = useHostConfigStore();
@@ -38,7 +39,7 @@ const HostConfig: React.FC<any> = observer((): any => {
       },
       drawer: true,
       children: <CreateHost refresh={refresh} hostId={hostId} />,
-      okText: formatMessage({ id: hostId ? 'save' : 'create' }),
+      okText: formatMessage({ id: hostId ? 'c7ncd.HostConfig.Save' : 'c7ncd.HostConfig.Create' }),
     });
   };
 
@@ -50,7 +51,10 @@ const HostConfig: React.FC<any> = observer((): any => {
         width: SMALL,
       },
       drawer: true,
-      children: <HostPermission hostData={mainStore.getSelectedHost} refresh={refresh} />,
+      children: <HostPermission
+        hostData={mainStore.getSelectedHost}
+        refresh={permissionTableRefresh}
+      />,
     });
   }, []);
 
