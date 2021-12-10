@@ -540,6 +540,9 @@ const DetailItem = (props) => {
   }
 
   const renderFooterBtns = () => {
+    if (jobStatus === 'created') {
+      return null;
+    }
     const data = [];
     if (!['cdAudit', 'cdApiTest'].includes(itemType)) {
       if (!logCheckDisabeldCondition) {
