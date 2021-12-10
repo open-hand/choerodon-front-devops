@@ -73,6 +73,7 @@ export default (
       type: 'string',
       label: '任务名称',
       required: true,
+      maxLength: 30,
     },
     {
       name: 'glyyfw',
