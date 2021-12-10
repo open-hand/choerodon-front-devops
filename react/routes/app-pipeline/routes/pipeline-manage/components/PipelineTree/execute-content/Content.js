@@ -7,6 +7,7 @@ import {
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import { map, some, debounce } from 'lodash';
+import { NewTips } from '@choerodon/components';
 import { axios, Choerodon } from '@choerodon/master';
 import { useExecuteContentStore } from './stores';
 import { mapping } from './stores/variableDataSet';
@@ -269,7 +270,16 @@ export default observer(() => {
           </OptGroup>
         </Select>
       </Form>
-      <p className={`${cssPrefix}__title`}>变量配置</p>
+      <p className={`${cssPrefix}__title`}>
+        变量配置
+        <NewTips
+          style={{
+            position: 'relative',
+            bottom: 2,
+          }}
+          helpText="此处配置的变量仅用于当前的执行，且生效的优先级为：运行时变量配置>流水线变量配置>全局变量配置"
+         />
+      </p>
       {
         VariableDataSet.records.map((vRecord, index) => (
           <Form record={vRecord} columns={14}>
