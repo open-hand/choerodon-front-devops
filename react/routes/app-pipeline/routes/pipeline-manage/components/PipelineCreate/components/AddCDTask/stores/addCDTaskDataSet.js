@@ -91,18 +91,27 @@ export default (
       dynamicProps: {
         required: ({ record }) => record.get('type') === addCDTaskDataSetMap.apiTest,
       },
-      lookupAxiosConfig: ({ params }) => ({
-        method: 'get',
-        url: `/test/v1/projects/${projectId}/api_test/tasks/paging?random=${random}`,
-        transformResponse: (res) => {
-          let newRes = res;
-          try {
-            newRes = JSON.parse(res);
-            useStore.setApiTestArray(newRes.content);
-            return newRes;
-          } catch (e) {
-            return newRes;
-          }
+      options: new DataSet({
+        autoQuery: true,
+        paging: true,
+        transport: {
+          read: ({ data }) => {
+            const { id } = data;
+            return ({
+              method: 'get',
+              url: `/test/v1/projects/${projectId}/api_test/tasks/paging?random=${random}&id=${id}`,
+              transformResponse: (res) => {
+                let newRes = res;
+                try {
+                  newRes = JSON.parse(res);
+                  useStore.setApiTestArray(newRes.content);
+                  return newRes;
+                } catch (e) {
+                  return newRes;
+                }
+              },
+            });
+          },
         },
       }),
     },
