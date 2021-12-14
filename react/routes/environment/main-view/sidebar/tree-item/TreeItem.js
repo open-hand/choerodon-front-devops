@@ -17,22 +17,26 @@ const TreeItem = observer(({ record, search }) => {
   function getItem() {
     const itemName = record.get('name') || '';
     const type = record.get('itemType');
+    console.log(itemName, type);
 
     if (type === GROUP_ITEM) {
-      return <GroupItem
-        record={record}
-        search={search}
-        intlPrefix={intlPrefix}
-      />;
-    } else if (type === DETAIL_ITEM) {
-      return <DetailItem
-        record={record}
-        search={search}
-        intlPrefix={intlPrefix}
-      />;
-    } else {
-      return itemName;
+      return (
+        <GroupItem
+          record={record}
+          search={search}
+          intlPrefix={intlPrefix}
+        />
+      );
+    } if (type === DETAIL_ITEM) {
+      return (
+        <DetailItem
+          record={record}
+          search={search}
+          intlPrefix={intlPrefix}
+        />
+      );
     }
+    return itemName;
   }
 
   return getItem();

@@ -165,7 +165,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
           className={`${newPrefixCls}-btn`}
           disabled={listDs.status === 'loading'}
         >
-          {formatMessage({ id: 'reset' })}
+          {formatMessage({ id: 'c7ncd.applicationCenter.reset' })}
         </Button>
       </div>
     </div>

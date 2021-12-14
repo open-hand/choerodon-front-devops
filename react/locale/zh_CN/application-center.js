@@ -22,6 +22,7 @@ const applicationCenter = {
   'c7ncd.applicationCenter.DeployedObject': '部署对象',
   'c7ncd.applicationCenter.Host': '主机',
   'c7ncd.applicationCenter.appName': '应用名称',
+  'c7ncd.applicationCenter.reset': '重置',
 };
 
 export {

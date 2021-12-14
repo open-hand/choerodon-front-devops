@@ -343,7 +343,7 @@ export default class Details extends Component {
         return (
           <li className="c7ncd-instance-details-inline">
             <span className="c7ncd-instance-details-key">
-              <FormattedMessage id={`ist.expand.net.${key}`} />
+              <FormattedMessage id={`c7ncd.resource.${key}`} />
               ：
             </span>
             <span className="c7ncd-instance-details-value">{text}</span>

@@ -1,5 +1,6 @@
 import React, { Fragment, memo } from 'react';
 import PropTypes from 'prop-types';
+import { useFormatMessage } from '@choerodon/master';
 import toUpper from 'lodash/toUpper';
 import classnames from 'classnames';
 
@@ -8,10 +9,14 @@ import './index.less';
 const TreeItemName = memo(({
   name, search, disabled, headSpace,
 }) => {
-  const index = toUpper(name).indexOf(toUpper(search));
-  const beforeStr = name?.substr(0, index);
-  const currentStr = name?.substr(index, search.length);
-  const afterStr = name?.substr(index + search.length);
+  const format = useFormatMessage('c7ncd.environment');
+
+  const newName = name === 'c7ncd.env.group.default' ? format({ id: 'default' }) : name;
+
+  const index = toUpper(newName).indexOf(toUpper(search));
+  const beforeStr = newName?.substr(0, index);
+  const currentStr = newName?.substr(index, search.length);
+  const afterStr = newName?.substr(index + search.length);
 
   const textClass = classnames({
     'c7ncd-treemenu-text': true,
@@ -31,7 +36,7 @@ const TreeItemName = memo(({
           {decribe[afterStr] ? ` (${decribe[afterStr]})` : ''}
 
         </>
-      ) : name}
+      ) : newName}
       {disabled && <i className="c7ncd-treemenu-disabled" />}
     </span>
   );

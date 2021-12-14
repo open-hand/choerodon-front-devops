@@ -22,6 +22,7 @@ const applicationCenter = {
   'c7ncd.applicationCenter.DeployedObject': 'Deployed Object',
   'c7ncd.applicationCenter.Host': 'Host',
   'c7ncd.applicationCenter.appName': 'App Name',
+  'c7ncd.applicationCenter.reset': 'Reset',
 
 };
 
