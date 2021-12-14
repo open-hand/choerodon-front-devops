@@ -40,7 +40,7 @@ export default observer((props) => {
   const isCi = ['build', 'sonar', 'custom', 'chart'].includes(type);
 
   const prefixCls = useMemo(() => 'c7n-pipelineManage-codeLog', []);
-  const [interval, setInterTime] = useState(isCi ? 5000 : null);
+  const [interval, setInterTime] = useState(isCi || isCd ? 5000 : null);
   const [logData, setLogData] = useState();
 
   /**
