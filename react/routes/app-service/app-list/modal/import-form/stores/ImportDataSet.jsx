@@ -113,6 +113,7 @@ export default ({
           if (record.get('code')) {
             record.set('code', null);
           }
+          record.set('type', 'normal');
           break;
         case 'gitlab':
           if (record.get('repositoryUrl') || !record.getField('repositoryUrl').isValid()) {
@@ -124,6 +125,7 @@ export default ({
           if (record.get('code')) {
             record.set('code', null);
           }
+          record.set('type', 'normal');
           break;
         default:
           break;
