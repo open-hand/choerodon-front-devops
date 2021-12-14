@@ -33,6 +33,7 @@ const resource = {
   'c7ncd.resource.DeploymentConfiguration': '部署配置',
   'c7ncd.resource.AssociatedApplicationService': '关联应用服务',
   'c7ncd.resource.UpdateTime': '更新时间',
+  'c7ncd.resource.age': '更新时间',
   'c7ncd.resource.HealthCheck': '健康检查',
   'c7ncd.resource.Scan': '扫描',
   'c7ncd.resource.EndTimeofLastScan': '上次扫描结束时间',
@@ -75,6 +76,7 @@ const resource = {
   'c7ncd.resource.Create': '创建',
   'c7ncd.resource.Source': '来源',
   'c7ncd.resource.Type': '类型',
+  'c7ncd.resource.type': '类型',
   'c7ncd.resource.AssociatePodDetails': '关联pod详情',
   'c7ncd.resource.Plan': '计划',
   'c7ncd.resource.SuspendorNot': '是否挂起',
@@ -140,6 +142,14 @@ const resource = {
   'c7ncd.resource.PermissionType': '权限类型',
   'c7ncd.resource.updater': '更新者',
   'c7ncd.resource.Resolved': '已解析',
+  'c7ncd.resource.externalIp': 'ExternalIP',
+  'c7ncd.resource.clusterIp': 'ClusterIP',
+  'c7ncd.resource.active': '生效',
+  'c7ncd.resource.create.application': '部署应用',
+  'c7ncd.resource.stop.application': '暂停应用',
+  'c7ncd.resource.restart.application': '重启应用',
+  'c7ncd.resource.delete.application': '删除应用',
+  'c7ncd.resource.update.application': '更新应用',
 
 };
 export {

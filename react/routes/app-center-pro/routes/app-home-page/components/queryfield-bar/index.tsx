@@ -92,7 +92,10 @@ const ContentHeader: React.FC<any> = observer((): any => {
         className={`${newPrefixCls}-form-wrap`}
         role="none"
       >
-        <div style={{ marginLeft: 'auto', width: '100%', display: 'flex' }}>
+        <div style={{
+          marginLeft: 'auto', width: '100%', display: 'flex', alignItems: 'center',
+        }}
+        >
           <Form
             dataSet={searchDs}
             columns={3}
@@ -165,7 +168,7 @@ const ContentHeader: React.FC<any> = observer((): any => {
           className={`${newPrefixCls}-btn`}
           disabled={listDs.status === 'loading'}
         >
-          {formatMessage({ id: 'reset' })}
+          {formatMessage({ id: 'c7ncd.applicationCenter.reset' })}
         </Button>
       </div>
     </div>

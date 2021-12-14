@@ -121,7 +121,7 @@ const Deployment = withRouter(
       (status) => (
         <StatusTag
           colorCode={status || ''}
-          name={status ? formatMessage({ id: `${intlPrefix}.status.${status}` }) : 'unKnow'}
+          name={status ? formatMessage({ id: `c7ncd-deploymentOperation.${status}` }) : 'unKnow'}
           style={statusTagsStyle}
         />
       ),
@@ -227,12 +227,22 @@ const Deployment = withRouter(
       const deployStatus = record.get('deployStatus');
       const type = record.get('deployType');
       const viewId = record.get('viewId');
+      const typeMap = {
+        auto: '流水线',
+        manual: '手动部署',
+        batch: '批量部署',
+        baseComponent: '基础组建',
+        hzero: 'Hzero部署',
+      };
+
       return (
         <>
           <span
             className={`${prefixCls}-content-table-mark ${prefixCls}-content-table-mark-${type}`}
           >
-            {formatMessage({ id: `${intlPrefix}.type.${type}` })}
+            {
+              typeMap[type]
+            }
           </span>
           <span className={`${prefixCls}-content-table-number`}>
             #
@@ -380,12 +390,30 @@ const Deployment = withRouter(
       if (!type) {
         return null;
       }
+      const sourceMap = {
+        platformPreset: '平台预置',
+        unknown: '未知来源',
+        currentProject: '项目制品库',
+        normal: '本项目',
+        market: '市场',
+        share: '共享',
+        hzero: 'hzero应用',
+        upload: '上传',
+        pipeline: '流水线',
+        custom: '自定义来源',
+        middleware: '中间件',
+        deployment: '部署组',
+      };
+
       const hasMarketInfo = type === 'market' && marketServiceName;
       return (
         <>
           <div className={`${prefixCls}-content-source-wrap`}>
             <span className={`${prefixCls}-content-source`}>
-              {formatMessage({ id: `${intlPrefix}.source.deploy.${type}` })}
+              {
+                sourceMap[type]
+              }
+              {/* {formatMessage({ id: `${intlPrefix}.source.deploy.${type}` })} */}
             </span>
             {type === 'share' && (
               <Tooltip title={projectName} placement="top">
