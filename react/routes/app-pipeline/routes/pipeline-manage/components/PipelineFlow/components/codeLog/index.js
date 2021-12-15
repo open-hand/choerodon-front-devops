@@ -96,8 +96,10 @@ export default observer((props) => {
       } else {
         term.writeln('暂无日志');
       }
+      setInterTime(null);
     } catch (e) {
       Choerodon.handleResponseError(e);
+      setInterTime(null);
     }
   }
 
