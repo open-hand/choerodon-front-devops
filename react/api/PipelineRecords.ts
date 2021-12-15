@@ -7,7 +7,7 @@ class PipeLineRecords extends Api<PipeLineRecords> {
 
   getCdPipelineLogs(cdRecordId:string, stageRecordId:string, jobRecordId:string) {
     return this.request({
-      url: `${this.prefix}/runner_guide/${cdRecordId}/stage_records/${stageRecordId}/job_records/log/${jobRecordId}`,
+      url: `${this.prefix}/${cdRecordId}/stage_records/${stageRecordId}/job_records/log/${jobRecordId}`,
       method: 'get',
     });
   }
