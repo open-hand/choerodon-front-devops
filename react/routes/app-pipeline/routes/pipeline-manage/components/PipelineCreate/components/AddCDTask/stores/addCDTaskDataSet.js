@@ -760,13 +760,13 @@ export default (
           if (record.get('type') === typeData[0].value) {
             initValueIdDataSet(
               valueIdDataSet,
-              PipelineCreateFormDataSet.current.get('appServiceId'),
+              PipelineCreateFormDataSet?.current?.get('appServiceId') || trueAppServiceId,
               value,
               useStore.getValueIdRandom,
             );
             initValueIdDataSet(
               appNameChartDataSet,
-              PipelineCreateFormDataSet.current.get('appServiceId'),
+              PipelineCreateFormDataSet?.current?.get('appServiceId') || trueAppServiceId,
               value,
             );
           }
