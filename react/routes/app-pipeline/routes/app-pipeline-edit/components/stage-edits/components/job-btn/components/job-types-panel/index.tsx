@@ -4,6 +4,8 @@ import React, {
 import { observer } from 'mobx-react-lite';
 import { useFormatCommon } from '@choerodon/master';
 import { Menu, Icon } from 'choerodon-ui';
+import { handleBuildModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals';
+import { BUILD } from '@/routes/app-pipeline/CONSTANTS';
 import {} from 'choerodon-ui/pro';
 import {} from '@choerodon/components';
 
@@ -27,8 +29,12 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
 
   const formatCommon = useFormatCommon();
 
-  const handleClick = () => {
-
+  const handleClick = (data: any) => {
+    const { keyPath } = data;
+    // 构建类型
+    if (keyPath.includes(BUILD)) {
+      handleBuildModal();
+    }
   };
 
   return (
@@ -42,6 +48,12 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
         <Item key="10">Option 10</Item>
         <Item key="11">Option 11</Item>
         <Item key="12">Option 12</Item>
+      </SubMenu>
+      <SubMenu
+        key={BUILD}
+        title="构建"
+      >
+        <Item key="maven">Maven构建</Item>
       </SubMenu>
     </Menu>
   );

@@ -311,6 +311,10 @@ const PipelineManage = observer(() => {
       icon: 'add',
       handler: handleModalOpen,
     });
+<<<<<<< react/routes/app-pipeline/routes/pipeline-manage/PipelineManage.js
+=======
+
+>>>>>>> react/routes/app-pipeline/routes/pipeline-manage/PipelineManage.js
     return buttons;
   }
 
