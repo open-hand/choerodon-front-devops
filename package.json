@@ -59,7 +59,7 @@
   },
   "devDependencies": {
     "@choerodon/boot": "1.2.0-alpha.1",
-    "@choerodon/master": "1.2.0-alpha.1",
+    "@choerodon/master": "1.2.0-alpha.2",
     "@types/json-bigint": "^1.0.1",
     "@types/react": "^16.9.44",
     "@types/react-router": "^5.1.8",
