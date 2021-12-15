@@ -32,6 +32,7 @@ const PipelineBasicInfoDataSet = ({
         name: 'pipelineName',
         type: 'string',
         required: true,
+        maxLength: 30,
       },
       {
         label: '关联应用服务',
