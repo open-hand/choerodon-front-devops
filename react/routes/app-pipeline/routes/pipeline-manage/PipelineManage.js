@@ -299,20 +299,19 @@ const PipelineManage = observer(() => {
       handler: handleRefresh,
       display: true,
     });
-    // buttons.push({
-    //   icon: 'settings',
-    //   handler: () => {
-    //     history.push({
-    //       search,
-    //       pathname: `${pathname}/edit/1234`,
-    //     });
-    //   },
-    // });
-    // ,
-    // {
-    //   icon: 'add',
-    //   handler: handleModalOpen,
-    // }
+    buttons.push({
+      icon: 'settings',
+      handler: () => {
+        history.push({
+          search,
+          pathname: `${pathname}/edit/1234`,
+        });
+      },
+    }, {
+      icon: 'add',
+      handler: handleModalOpen,
+    });
+
     return buttons;
   }
 
