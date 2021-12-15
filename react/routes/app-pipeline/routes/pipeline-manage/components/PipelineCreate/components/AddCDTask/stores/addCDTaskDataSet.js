@@ -99,7 +99,7 @@ export default (
             const { id } = data;
             return ({
               method: 'get',
-              url: `/test/v1/projects/${projectId}/api_test/tasks/paging?random=${random}&id=${id}`,
+              url: `/test/v1/projects/${projectId}/api_test/tasks/paging?random=${random}&id=${id}&execute_online=true`,
               transformResponse: (res) => {
                 let newRes = res;
                 try {
