@@ -603,6 +603,8 @@ export default observer(() => {
             extra[addCDTaskDataSetMap.notifyWay] = extra[addCDTaskDataSetMap.notifyWay].join(',');
           }
           extra.apiTestConfigId = metadata.apiTestConfigId;
+          ADDCDTaskDataSet.getField(addCDTaskDataSetMap.apiTestMission).options.setQueryParameter('id', metadata.apiTestTaskId);
+          ADDCDTaskDataSet.getField(addCDTaskDataSetMap.apiTestMission).options.query();
         }
       } else if (jobDetail.type === 'cdHost') {
         const metadata = JSONbig.parse(jobDetail.metadata.replace(/'/g, '"'));
@@ -1765,6 +1767,9 @@ export default observer(() => {
           <Select
             colSpan={3}
             name="envId"
+            onChange={() => {
+              DeployChartDataSet.current.set(deployChartMapping().appName.name, undefined)
+            }}
             optionRenderer={optionRenderer}
             // renderer={renderer}
             onOption={({ record }) => ({
