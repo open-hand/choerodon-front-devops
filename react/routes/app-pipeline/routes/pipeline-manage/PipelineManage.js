@@ -102,7 +102,7 @@ const PipelineManage = observer(() => {
     }
   };
 
-  function openEditModal() {
+  function openEditModal () {
     const oldEditMainData = toJS(editBlockStore.getMainData);
     Modal.open({
       key: Modal.key(),
@@ -122,7 +122,7 @@ const PipelineManage = observer(() => {
     });
   }
 
-  function openRecordDetail() {
+  function openRecordDetail () {
     const { devopsPipelineRecordRelId } = getSelectedMenu;
     const { devopsPipelineRecordRelId: detailDevopsPipelineRecordRelId, viewId } = getDetailData;
     const newDevopsPipelineRecordRelId = devopsPipelineRecordRelId || detailDevopsPipelineRecordRelId;
@@ -150,7 +150,7 @@ const PipelineManage = observer(() => {
     });
   }
 
-  async function changeRecordExecute(type) {
+  async function changeRecordExecute (type) {
     const { gitlabProjectId, gitlabPipelineId, devopsPipelineRecordRelId } = getSelectedMenu;
     const {
       gitlabProjectId: detailGitlabProjectId,
@@ -169,7 +169,7 @@ const PipelineManage = observer(() => {
     }
   }
 
-  function openAuditModal() {
+  function openAuditModal () {
     const { devopsCdPipelineDeatilVO } = getSelectedMenu;
     const {
       cdRecordId,
@@ -190,7 +190,7 @@ const PipelineManage = observer(() => {
     });
   }
 
-  function openSettingsModal(type) {
+  function openSettingsModal (type) {
     const { appServiceId, appServiceName } = getSelectedMenu;
     Modal.open({
       key: settingsKey,
@@ -208,7 +208,7 @@ const PipelineManage = observer(() => {
     });
   }
 
-  function openRunnerModal() {
+  function openRunnerModal () {
     Modal.open({
       key: runnerKey,
       style: settingsModalStyle,
@@ -221,7 +221,7 @@ const PipelineManage = observer(() => {
     });
   }
 
-  function getHeaderButtons() {
+  function getHeaderButtons () {
     const { parentId, status, devopsCdPipelineDeatilVO } = getSelectedMenu;
     const {
       status: detailStatus,
@@ -299,20 +299,18 @@ const PipelineManage = observer(() => {
       handler: handleRefresh,
       display: true,
     });
-    // buttons.push({
-    //   icon: 'settings',
-    //   handler: () => {
-    //     history.push({
-    //       search,
-    //       pathname: `${pathname}/edit/1234`,
-    //     });
-    //   },
-    // });
-    // ,
-    // {
-    //   icon: 'add',
-    //   handler: handleModalOpen,
-    // }
+    buttons.push({
+      icon: 'settings',
+      handler: () => {
+        history.push({
+          search,
+          pathname: `${pathname}/edit/1234`,
+        });
+      },
+    }, {
+      icon: 'add',
+      handler: handleModalOpen,
+    });
     return buttons;
   }
 
