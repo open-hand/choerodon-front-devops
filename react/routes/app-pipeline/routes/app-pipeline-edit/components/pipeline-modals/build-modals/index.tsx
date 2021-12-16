@@ -1,14 +1,15 @@
 import React from 'react';
 import { Modal } from 'choerodon-ui/pro';
 import { CONSTANTS } from '@choerodon/master';
+import { observer } from 'mobx-react-lite';
 import { StoreProvider } from './stores';
 import Content from './content';
 
-const Index = (props: any) => (
+const Index = observer((props: any) => (
   <StoreProvider {...props}>
     <Content />
   </StoreProvider>
-);
+));
 
 const handleBuildModal = () => {
   Modal.open({

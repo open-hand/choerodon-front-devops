@@ -1,5 +1,6 @@
 // pro btn 的颜色和类型的枚举
 import { ButtonColor, FuncType } from 'choerodon-ui/pro/lib/button/enum';
+import { ButtonProps } from 'choerodon-ui/pro/lib/button/Button';
 // Form label labellayout的枚举类型
 import { LabelLayoutType, LabelAlignType } from 'choerodon-ui/pro/lib/form/Form';
 // 大小枚举
@@ -42,6 +43,7 @@ interface UpdateEventProps {
 }
 
 export {
+  ButtonProps,
   DataToJSON,
   TableMode,
   ButtonColor,
