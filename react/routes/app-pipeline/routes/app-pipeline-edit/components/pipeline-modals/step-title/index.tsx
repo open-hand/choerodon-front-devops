@@ -1,11 +1,13 @@
 import React from 'react';
+import { Button } from 'choerodon-ui/pro';
+import classnames from 'classnames';
+import { ButtonProps } from '@/interface';
 
 import './index.less';
-import { Button } from 'choerodon-ui/pro';
 
 const prefix = 'c7ncd-stepTitle';
 
-interface buttonsProps {
+interface buttonsProps extends ButtonProps{
     text: string,
     icon: string,
 }
@@ -13,10 +15,12 @@ interface buttonsProps {
 const Index = (props: {
     title: string,
     buttons?: buttonsProps[]
+    className?: any,
 }) => {
   const {
     title,
     buttons,
+    className,
   } = props;
 
   const renderButtons = (
@@ -25,26 +29,37 @@ const Index = (props: {
     const {
       text,
       icon,
+      ...rest
     } = item;
     return (
-      <Button>
+      <Button
+        icon={icon}
+        {...rest}
+      >
         {text}
       </Button>
     );
   });
 
   return (
-    <div className={prefix}>
+    <div className={classnames({
+      [prefix]: true,
+      [className]: Boolean(className),
+    })}
+    >
       <p className={`${prefix}__title`}>{ title }</p>
-      {
-            renderButtons(buttons)
+      <div>
+        {
+          renderButtons(buttons)
         }
+      </div>
     </div>
   );
 };
 
 Index.defaultProps = {
   buttons: [],
+  className: undefined,
 };
 
 export default Index;
