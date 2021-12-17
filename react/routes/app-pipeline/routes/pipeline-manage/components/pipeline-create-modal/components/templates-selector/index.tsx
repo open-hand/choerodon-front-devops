@@ -12,10 +12,10 @@ import { observer } from 'mobx-react-lite';
 import classNames from 'classnames';
 import PipelineTemplatesDataSet from '../../stores/PipelineTemplatesDataSet';
 import TemplatePreview from '../template-preview';
-import { DEFAULT_TMP } from '../../stores/CONSTANTS';
+import { DEFAULT_TMP, DEFAULT_TMP_ID } from '../../stores/CONSTANTS';
 
 export type TemplatesSelectorProps = {
-
+  handleSelectTmpCallback:(tempData:any)=>void
 }
 
 type MenuItemTypes= {
@@ -28,6 +28,9 @@ const prefixCls = 'c7ncd-templates-selector';
 
 const TemplatesSelector:FC<TemplatesSelectorProps> = (props) => {
   const formatCommon = useFormatCommon();
+  const {
+    handleSelectTmpCallback,
+  } = props;
 
   const [selectedMenuId, setSelectedMenuId] = useState<string | number>('');
   const [selectedTmpId, setSelectedTmpId] = useState<string|number>('');
@@ -44,7 +47,23 @@ const TemplatesSelector:FC<TemplatesSelectorProps> = (props) => {
       const { id } = ciTemplateCategoryDTOList[0];
       setSelectedMenuId(id);
     }
+    setSelectedTmpId(DEFAULT_TMP_ID);
   }, [ciTemplateCategoryDTOList]);
+
+  /**
+   * 选中当前的menu之后会自动滚动到右侧对应的section单元
+   *
+   * @param {(string|number)} selected
+   */
+  const handleMenuSelect = (selected:string|number) => {
+    const doms = document.querySelectorAll('section[data-categoryKey]');
+    doms.forEach((dom:any) => {
+      if (String(dom.dataset?.categorykey) === String(selected)) {
+        dom.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
+      }
+    });
+    setSelectedMenuId(selected);
+  };
 
   /**
    * 渲染菜单
@@ -61,7 +80,7 @@ const TemplatesSelector:FC<TemplatesSelectorProps> = (props) => {
       <div
         className={cls}
         key={id}
-        onClick={() => setSelectedMenuId(id)}
+        onClick={() => handleMenuSelect(id)}
         role="none"
       >
         <div className={`${prefixCls}-menu-item-image-container`}>
@@ -78,6 +97,7 @@ const TemplatesSelector:FC<TemplatesSelectorProps> = (props) => {
   const handleSelectTmp = (tmpData:any) => {
     const { id } = tmpData || {};
     setSelectedTmpId(id);
+    handleSelectTmpCallback(id);
   };
 
   /** @type {Object} 根据后台数据筛选出分类数组 */

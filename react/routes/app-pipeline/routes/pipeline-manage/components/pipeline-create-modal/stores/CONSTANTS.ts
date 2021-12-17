@@ -1,15 +1,15 @@
-const DEFAULT_TMP_ID = 0;
+export const DEFAULT_TMP_ID = 0;
 
-const DEFAULT_STAGE_TMP = {
-  id: '=7eYjQcsxANwFRM3iacWdzw===',
+const getDefaultStageTmp = (id:number) => ({
+  id: `0${id}`,
   name: '',
   sequence: null,
   ciTemplateJobVOList: [{
-    id: '=dsadsadsadsa===',
+    id: '0',
     image: null,
     name: '',
   }],
-};
+});
 
 const DEFAULT_TMP = {
   id: DEFAULT_TMP_ID,
@@ -21,7 +21,7 @@ const DEFAULT_TMP = {
   sourceId: 0,
   sourceType: 'site',
   versionName: null,
-  ciTemplateStageVOList: new Array(4).fill(DEFAULT_STAGE_TMP),
+  ciTemplateStageVOList: new Array(4).fill(0).map((_data, index) => getDefaultStageTmp(index)),
 } as const;
 
 export {
