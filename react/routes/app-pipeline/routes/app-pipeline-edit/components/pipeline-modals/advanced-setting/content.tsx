@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Form, Select, SelectBox, NumberField,
@@ -18,6 +18,8 @@ const Index = observer(() => {
     className,
   } = useAdvancedSettingStore();
 
+  const [visible, setVisible] = useState(true);
+
   return (
     <div className={classnames({
       [prefix]: true,
@@ -29,17 +31,27 @@ const Index = observer(() => {
         buttons={[{
           text: '隐藏高级设置',
           icon: 'visibility_off-o',
+          onClick: () => {
+            setVisible(false);
+          },
         }, {
           text: '显示高级设置',
           icon: 'tune',
+          onClick: () => {
+            setVisible(true);
+          },
         }]}
       />
-      <Form columns={2} className={`${prefix}__form`} dataSet={AdvancedDataSet}>
-        <Select colSpan={2} name={mapping.ciRunnerImage.name} />
-        <SelectBox colSpan={2} name={mapping.shareFolderSetting.name} />
-        <SelectBox name={mapping.whetherConcurrent.name} />
-        <NumberField name={mapping.concurrentCount.name} />
-      </Form>
+      {
+        visible && (
+          <Form columns={2} className={`${prefix}__form`} dataSet={AdvancedDataSet}>
+            <Select colSpan={2} name={mapping.ciRunnerImage.name} />
+            <SelectBox colSpan={2} name={mapping.shareFolderSetting.name} />
+            <SelectBox name={mapping.whetherConcurrent.name} />
+            <NumberField name={mapping.concurrentCount.name} />
+          </Form>
+        )
+      }
     </div>
   );
 });

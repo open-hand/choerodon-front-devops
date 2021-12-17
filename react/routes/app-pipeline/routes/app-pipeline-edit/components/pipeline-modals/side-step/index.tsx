@@ -53,7 +53,7 @@ const Index = observer(({
       const offsetTop = document.querySelector(item.el)?.offsetTop;
       if (offsetTop - scrollTop <= 89 && offsetTop - scrollTop > 0) {
         if (!ref.current[index].focus) {
-          handleClickItem(item);
+          handleClickItem(item, false);
         }
       }
     });
@@ -63,23 +63,25 @@ const Index = observer(({
     listen = document.querySelector(scrollContext)?.addEventListener('scroll', scrollListener);
   };
 
-  const handleClickItem = (item: any) => {
-    if (item.type) {
-      switch (item.type) {
-        case 'scrollTop': {
-          document.querySelector(item.el).scrollTo({
-            top: 0,
-          });
-          break;
+  const handleClickItem = (item: any, needScroll = true) => {
+    if (needScroll) {
+      if (item.type) {
+        switch (item.type) {
+          case 'scrollTop': {
+            document.querySelector(item.el).scrollTo({
+              top: 0,
+            });
+            break;
+          }
+          default: {
+            break;
+          }
         }
-        default: {
-          break;
-        }
+      } else {
+        document.querySelector(item.el)?.scrollIntoView({
+          block: 'start',
+        });
       }
-    } else {
-      document.querySelector(item.el)?.scrollIntoView({
-        block: 'start',
-      });
     }
     const newList = ref.current.map((d: any, index: number) => {
       const newItem = d;
