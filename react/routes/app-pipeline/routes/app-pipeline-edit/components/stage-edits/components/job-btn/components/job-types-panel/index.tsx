@@ -7,11 +7,8 @@ import { Loading } from '@choerodon/components';
 import { useFormatCommon } from '@choerodon/master';
 import { Menu, Icon } from 'choerodon-ui';
 import { handleBuildModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals';
-<<<<<<< HEAD
 import { handleCustomModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/custom-modal';
 import { BUILD, CUSTOM } from '@/routes/app-pipeline/CONSTANTS';
-=======
->>>>>>> [ADD] add
 import {} from 'choerodon-ui/pro';
 
 import './index.less';
@@ -38,7 +35,9 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
     return templateJobsApi.getJobByGroupId(subMenuId);
   };
 
-  const { data: childrenMenus, isLoading, isFetching } = useQuery(['sub-menu-child', currentSelectedSubMenuId], getSubMenuChild);
+  const { data: childrenMenus, isLoading, isFetching } = useQuery(['sub-menu-child', currentSelectedSubMenuId], getSubMenuChild, {
+    enabled: !!currentSelectedSubMenuId,
+  });
 
   const formatCommon = useFormatCommon();
 
@@ -56,30 +55,33 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
     if (isLoading || isFetching) {
       return <Loading type="c7n" style={{ height: '50px' }} />;
     }
-    if (!childrenMenus.length) {
+    if (!childrenMenus?.length) {
       return (
         <div className={`${prefixCls}-subMenu-empty`}>
           {formatCommon({ id: 'nodata' })}
         </div>
       );
     }
-    return childrenMenus?.map(({
-      id, name,
-    }:any) => (
-      <Item key={id}>
-        {name}
-      </Item>
-    ));
+    return childrenMenus?.map((item:any) => {
+      const {
+        id, name,
+      } = item;
+      return (
+        <Item key={JSON.stringify(item)}>
+          {name}
+        </Item>
+      );
+    });
   };
 
   const renderSubMenus = () => panels?.map((item) => {
     const { id, name, type } = item;
     return (
       <SubMenu
-        key={id}
+        key={JSON.stringify(item)}
         title={name}
-        onTitleClick={({ key }:any) => {
-          setSubMenuId(key);
+        onTitleClick={() => {
+          setSubMenuId(id);
         }}
         className={`${prefixCls}-subMenu`}
       >
