@@ -5,7 +5,8 @@ import { observer } from 'mobx-react-lite';
 import { useFormatCommon } from '@choerodon/master';
 import { Menu, Icon } from 'choerodon-ui';
 import { handleBuildModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals';
-import { BUILD } from '@/routes/app-pipeline/CONSTANTS';
+import { handleCustomModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/custom-modal';
+import { BUILD, CUSTOM } from '@/routes/app-pipeline/CONSTANTS';
 import {} from 'choerodon-ui/pro';
 import {} from '@choerodon/components';
 
@@ -34,6 +35,8 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
     // 构建类型
     if (keyPath.includes(BUILD)) {
       handleBuildModal();
+    } else {
+      handleCustomModal();
     }
   };
 
@@ -55,6 +58,11 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
       >
         <Item key="maven">Maven构建</Item>
       </SubMenu>
+      <Menu.Item key={CUSTOM}>
+        <span>
+          自定义
+        </span>
+      </Menu.Item>
     </Menu>
   );
 };

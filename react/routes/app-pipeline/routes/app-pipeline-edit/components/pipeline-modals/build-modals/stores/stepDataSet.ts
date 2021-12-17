@@ -174,6 +174,10 @@ const Index = () => ({
     name: 'SonarQube代码检查',
     type: 'SonarQube',
     expand: true,
+  }, {
+    name: '上传Chart至猪齿鱼',
+    type: 'upload_chart_choerodon',
+    expand: true,
   }],
 });
 
