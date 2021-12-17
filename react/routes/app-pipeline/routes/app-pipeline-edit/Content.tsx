@@ -18,6 +18,7 @@ import { TabkeyTypes } from './interface';
 import PipelineBasicInfo from './components/pipeline-basic-info';
 import StagesEdits from './components/stage-edits';
 import CiVariasConfigs from './components/ci-varias-configs';
+import PipelineAdvancedConfig from './components/pipeline-advanced-config';
 
 const { TabPane } = Tabs;
 
@@ -40,7 +41,7 @@ const AppPipelineEdit = () => {
     [TAB_BASIC]: <PipelineBasicInfo />,
     [TAB_FLOW_CONFIG]: <StagesEdits />,
     [TAB_CI_CONFIG]: <CiVariasConfigs />,
-    [TAB_ADVANCE_SETTINGS]: () => <>fgf</>,
+    [TAB_ADVANCE_SETTINGS]: <PipelineAdvancedConfig />,
   };
 
   const handleTabChange = (value:TabkeyTypes) => setTabKey(value);
