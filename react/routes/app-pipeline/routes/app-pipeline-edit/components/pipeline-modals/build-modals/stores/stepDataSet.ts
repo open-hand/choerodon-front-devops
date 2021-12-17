@@ -143,44 +143,49 @@ const mapping: {
   },
 };
 
+const transformLoadData = (data: any) => data.map((d: any) => ({
+  ...d,
+  [mapping.expand.name]: true,
+}));
+
 const Index = () => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((key) => mapping[key]),
-  data: [{
-    name: 'Maven构建',
-    type: 'maven',
-    expand: true,
-  }, {
-    name: 'NPM构建',
-    type: 'npm',
-    expand: true,
-  }, {
-    name: 'Docker构建',
-    type: 'docker',
-    expand: true,
-  }, {
-    name: '上传Jar包至制品库',
-    type: 'upload_jar',
-    expand: true,
-  }, {
-    name: 'Go构建',
-    type: 'go',
-    expand: true,
-  }, {
-    name: 'Maven发布',
-    type: 'maven_publish',
-    expand: true,
-  }, {
-    name: 'SonarQube代码检查',
-    type: 'SonarQube',
-    expand: true,
-  }, {
-    name: '上传Chart至猪齿鱼',
-    type: 'upload_chart_choerodon',
-    expand: true,
-  }],
+  // data: [{
+  //   name: 'Maven构建',
+  //   type: 'maven',
+  //   expand: true,
+  // }, {
+  //   name: 'NPM构建',
+  //   type: 'npm',
+  //   expand: true,
+  // }, {
+  //   name: 'Docker构建',
+  //   type: 'docker',
+  //   expand: true,
+  // }, {
+  //   name: '上传Jar包至制品库',
+  //   type: 'upload_jar',
+  //   expand: true,
+  // }, {
+  //   name: 'Go构建',
+  //   type: 'go',
+  //   expand: true,
+  // }, {
+  //   name: 'Maven发布',
+  //   type: 'maven_publish',
+  //   expand: true,
+  // }, {
+  //   name: 'SonarQube代码检查',
+  //   type: 'SonarQube',
+  //   expand: true,
+  // }, {
+  //   name: '上传Chart至猪齿鱼',
+  //   type: 'upload_chart_choerodon',
+  //   expand: true,
+  // }],
 });
 
 export default Index;
 
-export { mapping };
+export { mapping, transformLoadData };

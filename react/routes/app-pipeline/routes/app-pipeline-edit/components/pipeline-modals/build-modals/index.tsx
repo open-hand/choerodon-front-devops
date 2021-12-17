@@ -11,11 +11,11 @@ const Index = observer((props: any) => (
   </StoreProvider>
 ));
 
-const handleBuildModal = () => {
+const handleBuildModal = (data?: any) => {
   Modal.open({
     title: '添加【构建】阶段',
     drawer: true,
-    children: <Index />,
+    children: <Index data={data} />,
     style: {
       width: CONSTANTS.MODAL_WIDTH.MAX,
     },
