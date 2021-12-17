@@ -1,11 +1,21 @@
 import React, { useRef } from 'react';
-import { Form, TextField, Select } from 'choerodon-ui/pro';
+import {
+  Form, TextField, Select, SelectBox,
+} from 'choerodon-ui/pro';
 import { Icon } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { YamlEditor } from '@choerodon/components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Record } from '@/interface';
-import { BUILD_MAVEN, BUILD_NPM, BUILD_DOCKER } from '@/routes/app-pipeline/CONSTANTS';
+import {
+  BUILD_MAVEN,
+  BUILD_NPM,
+  BUILD_DOCKER,
+  BUILD_UPLOADJAR,
+  BUILD_GO,
+  BUILD_MAVEN_PUBLISH,
+  BUILD_SONARQUBE,
+} from '@/routes/app-pipeline/CONSTANTS';
 import { mapping as StepMapping } from './stores/stepDataSet';
 import { mapping } from './stores/buildDataSet';
 import CloseModal from '../close-modal';
@@ -67,6 +77,72 @@ const Index = observer(() => {
               name={StepMapping.dockerFilePath.name}
             />
             <TextField name={StepMapping.imageContext.name} />
+            <SelectBox name={StepMapping.TLS.name} />
+            <SelectBox name={StepMapping.imageSafeScan.name} />
+          </Form>
+        );
+        break;
+      }
+      case BUILD_UPLOADJAR: {
+        result = (
+          <Form record={itemRecord} columns={2}>
+            <TextField name={StepMapping.stepName.name} />
+            <Select name={StepMapping.targetProductsLibrary.name} />
+            <YamlEditor
+              newLine
+              colSpan={2}
+              readOnly={false}
+              modeChange={false}
+            />
+          </Form>
+        );
+        break;
+      }
+      case BUILD_GO: {
+        result = (
+          <Form record={itemRecord} columns={2}>
+            <TextField name={StepMapping.stepName.name} />
+            <YamlEditor
+              newLine
+              colSpan={2}
+              readOnly={false}
+              modeChange={false}
+            />
+          </Form>
+        );
+        break;
+      }
+      case BUILD_MAVEN_PUBLISH: {
+        result = (
+          <Form record={itemRecord} columns={2}>
+            <TextField name={StepMapping.stepName.name} />
+            <Select name={StepMapping.targetProductsLibrary.name} />
+            <YamlEditor
+              newLine
+              colSpan={2}
+              readOnly={false}
+              modeChange={false}
+            />
+          </Form>
+        );
+        break;
+      }
+      case BUILD_SONARQUBE: {
+        result = (
+          <Form record={itemRecord} columns={2}>
+            <TextField name={StepMapping.stepName.name} />
+            <Select name={StepMapping.examType.name} />
+            <SelectBox name={StepMapping.whetherMavenSingleMeasure.name} />
+            <SelectBox
+              name={StepMapping.sonarqubeConfigWay.name}
+              newLine
+            />
+            <SelectBox
+              name={StepMapping.sonarqubeAccountConfig.name}
+            />
+            <TextField name={StepMapping.username.name} />
+            <TextField name={StepMapping.password.name} />
+            <TextField name={StepMapping.address.name} />
           </Form>
         );
         break;
@@ -76,6 +152,12 @@ const Index = observer(() => {
       }
     }
     return result;
+  };
+
+  const handleExpand = (value: boolean) => {
+    stepData.forEach((record: Record) => {
+      record.set(StepMapping.expand.name, value);
+    });
   };
 
   const renderStepItem = (record: any, index: number) => (
@@ -123,7 +205,7 @@ const Index = observer(() => {
           <div
             ref={provided.innerRef}
             style={{
-              background: snapshot.isDraggingOver ? 'blue' : 'white',
+              // background: snapshot.isDraggingOver ? 'blue' : 'white',
             }}
             {...provided.droppableProps}
           >
@@ -168,9 +250,11 @@ const Index = observer(() => {
           buttons={[{
             text: '全部收起',
             icon: 'vertical_align_bottom',
+            onClick: () => handleExpand(false),
           }, {
             text: '展开',
             icon: 'vertical_align_top',
+            onClick: () => handleExpand(true),
           }, {
             text: '添加步骤',
             icon: 'add',
