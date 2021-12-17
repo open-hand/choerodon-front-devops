@@ -47,6 +47,7 @@ const PipelineBasicInfoDataSet = ({
         label: '关联分支',
         name: 'branch',
         type: 'object',
+        maxLength: 5,
         required: true,
         textField: 'branchName',
         valueField: 'branchName',

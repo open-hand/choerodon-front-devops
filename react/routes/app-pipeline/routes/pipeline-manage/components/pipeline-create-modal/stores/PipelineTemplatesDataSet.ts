@@ -1,5 +1,4 @@
-import { pipelinTemplateApiConfig } from '@choerodon/master';
-import { DEFAULT_TMP } from './CONSTANTS';
+import { pipelinTemplateApiConfig } from '@/api/pipeline-template';
 
 const PipeineTemplatesDs = () => ({
   autoQuery: true,

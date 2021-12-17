@@ -1,5 +1,4 @@
 import React, {
-  useState,
   useMemo,
   useCallback,
 } from 'react';
@@ -13,7 +12,7 @@ import map from 'lodash/map';
 import classNames from 'classnames';
 import { useAppPipelineEditStore } from './stores';
 import {
-  TAB_ADVANCE_SETTINGS, TAB_BASIC, TAB_CI_CONFIG, TAB_FLOW_CONFIG, tabsGroup,
+  TAB_ADVANCE_SETTINGS, TAB_BASIC, TAB_CI_CONFIG, TAB_FLOW_CONFIG,
 } from './stores/CONSTANTS';
 import { TabkeyTypes } from './interface';
 import PipelineBasicInfo from './components/pipeline-basic-info';

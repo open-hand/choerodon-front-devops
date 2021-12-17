@@ -50,7 +50,7 @@ const TemplatePreview:FC<TemplatePreviewProps> = (props) => {
   });
 
   const handleClick = () => {
-    handleSelect?.(props);
+    handleSelect?.({ ...props });
   };
 
   return (

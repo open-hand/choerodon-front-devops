@@ -1,22 +1,18 @@
-import React, {
-  useEffect,
-} from 'react';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
 import { Alert } from 'choerodon-ui';
 import { useStageEditsStore } from './stores';
-import {} from '@choerodon/master';
 import Stage from './components/stage';
 import StageAddBtn from './components/stage-btn';
+import useTabData from '../../hooks/useTabData';
 
 const StageEdits = () => {
   const {
-    mainStore,
     prefixCls,
-    formatStageEdits,
-    formatCommon,
-    sourceData,
   } = useStageEditsStore();
+
+  const [sourceData] = useTabData<any[]>();
 
   const renderStages = () => {
     const groups = map(sourceData, (stage:any, index:number) => (

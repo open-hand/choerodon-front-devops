@@ -14,11 +14,9 @@ function useTabData<T>() {
 
   const setTabsDataStateRef = useRef(setTabsDataState);
 
-  useEffect(() => {
-    setTabsDataStateRef.current = setTabsDataState;
-  }, [setTabsDataState]);
+  setTabsDataStateRef.current = setTabsDataState;
 
-  const getCurrentTabData = useMemo(() => get(tabsData, currentKey) as T, [currentKey]);
+  const getCurrentTabData = useMemo(() => get(tabsData, currentKey) as T, [tabsData, currentKey]);
 
   const hendleSetTabData = useCallback(
     (data:T) => {

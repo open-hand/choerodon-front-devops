@@ -24,7 +24,7 @@ const AppPipeline:FC<AppPipelineProps> = () => {
     <Suspense fallback={<Loading type="c7n" />}>
       <Switch>
         <Route exact path={match.url} component={AppHomePage} />
-        <Route exact path={`${match.url}/edit/:id`} component={AppPipelineEdit} />
+        <Route exact path={`${match.url}/edit/:type/:id`} component={AppPipelineEdit} />
       </Switch>
     </Suspense>
   );
