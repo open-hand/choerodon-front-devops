@@ -15,6 +15,7 @@ import {
   BUILD_GO,
   BUILD_MAVEN_PUBLISH,
   BUILD_SONARQUBE,
+  BUILD_UPLOAD_CHART_CHOERODON,
 } from '@/routes/app-pipeline/CONSTANTS';
 import { mapping as StepMapping } from './stores/stepDataSet';
 import { mapping } from './stores/buildDataSet';
@@ -143,6 +144,14 @@ const Index = observer(() => {
             <TextField name={StepMapping.username.name} />
             <TextField name={StepMapping.password.name} />
             <TextField name={StepMapping.address.name} />
+          </Form>
+        );
+        break;
+      }
+      case BUILD_UPLOAD_CHART_CHOERODON: {
+        result = (
+          <Form record={itemRecord} columns={2}>
+            <TextField name={StepMapping.stepName.name} />
           </Form>
         );
         break;

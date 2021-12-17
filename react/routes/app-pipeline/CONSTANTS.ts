@@ -7,6 +7,9 @@ const BUILD_UPLOADJAR = 'upload_jar';
 const BUILD_GO = 'go';
 const BUILD_MAVEN_PUBLISH = 'maven_publish';
 const BUILD_SONARQUBE = 'SonarQube';
+const BUILD_UPLOAD_CHART_CHOERODON = 'upload_chart_choerodon';
+
+const CUSTOM = 'custom';
 
 export {
   BUILD,
@@ -17,4 +20,6 @@ export {
   BUILD_GO,
   BUILD_MAVEN_PUBLISH,
   BUILD_SONARQUBE,
+  BUILD_UPLOAD_CHART_CHOERODON,
+  CUSTOM,
 };
