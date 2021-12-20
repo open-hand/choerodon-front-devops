@@ -30,6 +30,7 @@ const AppPipelineEdit = () => {
     currentKey,
     setTabKey,
     type,
+    tabsData,
   } = useAppPipelineEditStore();
 
   const { params } = useRouteMatch<{id:string}>();
@@ -47,9 +48,13 @@ const AppPipelineEdit = () => {
 
   const handleTabChange = (value:TabkeyTypes) => setTabKey(value);
 
+  const handleSubmit = () => {
+    console.log(tabsData);
+  };
+
   const headerItems = useMemo(() => ([
     {
-      handler: () => {},
+      handler: handleSubmit,
       name: formatCommon({ id: 'save' }),
       icon: 'check',
     },
@@ -58,7 +63,7 @@ const AppPipelineEdit = () => {
       name: formatCommon({ id: 'cancel' }),
       icon: 'close',
     },
-  ]), []);
+  ]), [handleSubmit]);
 
   const renderTabHeader = useCallback(() => (
     <Tabs

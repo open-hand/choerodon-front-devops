@@ -13,43 +13,64 @@ import JobAddBtn from '../job-btn';
 import { STAGE_TYPES } from '../../../../interface';
 import useStageModal from '../../hooks/useStageModal';
 import { STAGE_CI } from '../../../../stores/CONSTANTS';
+import { useStageEditsStore } from '../../stores';
+import useStageEdit from '../../hooks/useStageEdit';
 
 export type StageProps = {
   type: STAGE_TYPES
   name: string
   jobList: any[]
+  stageIndex:number
 } & Record<string, any>
 
 const prefixCls = 'c7ncd-pipeline-stage';
 
 const Stage:FC<StageProps> = (props) => {
   const {
-    type: stageType = STAGE_CI,
-    name: stageName,
+    type = STAGE_CI,
+    name,
     jobList = [],
+    stageIndex,
   } = props;
+
+  const {
+    editStage,
+    deleteStage,
+  } = useStageEdit();
 
   const formatCommon = useFormatCommon();
 
   const initData = {
-    stageType,
-    stageName,
+    type,
+    name,
+  };
+
+  const handleOk = (stageData:any) => {
+    editStage(stageIndex, stageData);
+  };
+
+  const handleDelete = (e:any) => {
+    e?.stopPropagation();
+    deleteStage(stageIndex);
   };
 
   const handleModalOpen = useStageModal<{
-    stageType: STAGE_TYPES
-    stageName: string
-  }>('edit', { initialValue: initData });
+    type: STAGE_TYPES
+    name: string
+  }>('edit', { initialValue: initData, onOk: handleOk });
 
-  const renderJobs = () => map(jobList, (item, index:number) => <JobItem {...item} />);
+  const renderJobs = () => map(jobList, (item, index:number) => {
+    const linesType = type === STAGE_CI ? 'paralle' : 'serial';
+    return <JobItem {...item} key={item?.id} linesType={linesType} />;
+  });
 
   return (
     <div className={prefixCls}>
       <header onClick={handleModalOpen} role="none">
-        <div className={`${prefixCls}-stageType`}>{stageType}</div>
-        <div className={`${prefixCls}-stageName`}>{stageName}</div>
+        <div className={`${prefixCls}-stageType`}>{type}</div>
+        <div className={`${prefixCls}-stageName`}>{name}</div>
         <div className={`${prefixCls}-btnGroups`}>
-          <Icon type="delete_black-o" className={`${prefixCls}-btnGroups-delete`} />
+          <Icon onClick={handleDelete} type="delete_black-o" className={`${prefixCls}-btnGroups-delete`} />
         </div>
       </header>
       <main>

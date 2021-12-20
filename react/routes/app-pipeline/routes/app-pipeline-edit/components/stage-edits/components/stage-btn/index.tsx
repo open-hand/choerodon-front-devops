@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './index.less';
 import { Icon } from 'choerodon-ui/pro';
 import useStageModal from '../../hooks/useStageModal';
 import { STAGE_TYPES } from '../../../../interface';
-import { useStageEditsStore } from '../../stores';
+import useStageEdit from '../../hooks/useStageEdit';
 
 const prefixCls = 'c7ncd-pipeline-edit-stagebtn';
 
@@ -16,17 +16,15 @@ interface StageBtnProps {
 
 const StageAddBtn = (props:StageBtnProps) => {
   const {
-    mainStore: {
-      addStage,
-    },
-  } = useStageEditsStore();
-
-  const {
     showPreLine,
     stageIndex,
     showNextLine,
     addStageType,
   } = props;
+
+  const {
+    addStage,
+  } = useStageEdit();
 
   const handleOk = (stageData:any) => {
     addStage(stageIndex, stageData);
