@@ -1,5 +1,4 @@
 import React, {
-  useState,
   useMemo,
   useCallback,
 } from 'react';
@@ -13,12 +12,13 @@ import map from 'lodash/map';
 import classNames from 'classnames';
 import { useAppPipelineEditStore } from './stores';
 import {
-  TAB_ADVANCE_SETTINGS, TAB_BASIC, TAB_CI_CONFIG, TAB_FLOW_CONFIG, tabsGroup,
+  TAB_ADVANCE_SETTINGS, TAB_BASIC, TAB_CI_CONFIG, TAB_FLOW_CONFIG,
 } from './stores/CONSTANTS';
 import { TabkeyTypes } from './interface';
 import PipelineBasicInfo from './components/pipeline-basic-info';
 import StagesEdits from './components/stage-edits';
 import CiVariasConfigs from './components/ci-varias-configs';
+import PipelineAdvancedConfig from './components/pipeline-advanced-config';
 
 const { TabPane } = Tabs;
 
@@ -29,6 +29,7 @@ const AppPipelineEdit = () => {
     formatCommon,
     currentKey,
     setTabKey,
+    type,
   } = useAppPipelineEditStore();
 
   const { params } = useRouteMatch<{id:string}>();
@@ -41,7 +42,7 @@ const AppPipelineEdit = () => {
     [TAB_BASIC]: <PipelineBasicInfo />,
     [TAB_FLOW_CONFIG]: <StagesEdits />,
     [TAB_CI_CONFIG]: <CiVariasConfigs />,
-    [TAB_ADVANCE_SETTINGS]: () => <>fgf</>,
+    [TAB_ADVANCE_SETTINGS]: <PipelineAdvancedConfig />,
   };
 
   const handleTabChange = (value:TabkeyTypes) => setTabKey(value);
@@ -73,13 +74,20 @@ const AppPipelineEdit = () => {
     </Tabs>
   ), [currentKey]);
 
+  const renderTitle = () => {
+    if (type === 'create') {
+      return '创建流水线';
+    }
+    return `编辑流水线${params?.id}`;
+  };
+
   return (
     <Page className={prefixCls}>
       <Header>
         <HeaderButtons items={headerItems} />
       </Header>
       <Breadcrumb
-        title={`编辑流水线${params?.id}`}
+        title={renderTitle()}
         extraNode={renderTabHeader()}
       />
       <Content className={contentCls}>

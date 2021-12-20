@@ -12,9 +12,11 @@ import { JOB_GROUP_TYPES } from '../../../../stores/CONSTANTS';
 import './index.less';
 
 export type JobProps = {
-  groupType: keyof typeof JOB_GROUP_TYPES // job的分组类型
   id:string
   name:string
+  ciTemplateJobGroupDTO: {
+    type: keyof typeof JOB_GROUP_TYPES // job的分组类型
+  }
 } & Record<string, any>
 
 const prefixCls = 'c7ncd-pipeline-jobItem';
@@ -24,7 +26,9 @@ const JobItem:FC<JobProps> = (props) => {
     id: jobId,
     name,
     type: jobType,
-    groupType,
+    ciTemplateJobGroupDTO: {
+      type: groupType,
+    },
   } = props;
 
   const currentJobGroupType = JOB_GROUP_TYPES[groupType];

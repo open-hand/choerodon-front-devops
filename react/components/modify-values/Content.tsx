@@ -49,14 +49,6 @@ const ValueModalContent = observer(() => {
       environmentId: envId,
     };
 
-    if (isMarket || isMiddleware) {
-      data.marketAppServiceId = appServiceId;
-      data.marketDeployObjectId = appServiceVersionId;
-    } else {
-      data.appServiceId = appServiceId;
-      data.appServiceVersionId = appServiceVersionId;
-    }
-
     try {
       const res = await upgrade(data);
       if (res && res.failed) {

@@ -1,5 +1,4 @@
 /* eslint-disable max-len */
-import { TabkeyTypes } from '../../interface';
 import { StoreProps } from './stores/useStore';
 
 export type StageEditsDataTypes = {

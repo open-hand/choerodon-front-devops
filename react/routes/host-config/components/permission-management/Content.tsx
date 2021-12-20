@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import {
   Select, Form, Button,
 } from 'choerodon-ui/pro';
-import { UserInfo, CustomSelect, NewTips as Tips } from '@choerodon/components';
+import { UserInfo, CustomSelect, NewTips } from '@choerodon/components';
 import { useHostPermissionStore } from '@/routes/host-config/components/permission-management/stores';
 import { Record, FuncType } from '@/interface';
 import './index.less';
@@ -104,10 +104,9 @@ const HostPermission = () => {
           </div>
         )}
       />
-      <p style={{ color: '#898BAC' }}>
+      <p style={{ color: '#898BAC', marginTop: 28, marginBottom: 16 }}>
         权限分配
-        {' '}
-        <Tips helpText="对项目下【项目所有者】以外的成员进行权限分配。" />
+        <NewTips style={{ position: 'relative', top: -1, left: 5 }} helpText="对项目下【项目所有者】以外的成员进行权限分配。" />
       </p>
       {([
         selectDs.map((record: Record) => (

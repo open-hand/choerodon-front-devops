@@ -12,6 +12,7 @@ import JobItem from '../job-item';
 import JobAddBtn from '../job-btn';
 import { STAGE_TYPES } from '../../../../interface';
 import useStageModal from '../../hooks/useStageModal';
+import { STAGE_CI } from '../../../../stores/CONSTANTS';
 
 export type StageProps = {
   type: STAGE_TYPES
@@ -23,14 +24,22 @@ const prefixCls = 'c7ncd-pipeline-stage';
 
 const Stage:FC<StageProps> = (props) => {
   const {
-    type: stageType,
+    type: stageType = STAGE_CI,
     name: stageName,
     jobList = [],
   } = props;
 
   const formatCommon = useFormatCommon();
 
-  const handleModalOpen = useStageModal('edit');
+  const initData = {
+    stageType,
+    stageName,
+  };
+
+  const handleModalOpen = useStageModal<{
+    stageType: STAGE_TYPES
+    stageName: string
+  }>('edit', { initialValue: initData });
 
   const renderJobs = () => map(jobList, (item, index:number) => <JobItem {...item} />);
 

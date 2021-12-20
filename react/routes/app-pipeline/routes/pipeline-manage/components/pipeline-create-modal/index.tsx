@@ -1,12 +1,15 @@
 import React, {
-  FC, useMemo,
+  FC, useMemo, useState,
 } from 'react';
 import { useFormatCommon, useFormatMessage, CONSTANTS } from '@choerodon/master';
 import {
   useModal, TextField, Form, Select,
 } from 'choerodon-ui/pro';
+import { modalChildrenProps } from 'choerodon-ui/pro/lib/modal/interface';
 import { observer } from 'mobx-react-lite';
 import { NewTips } from '@choerodon/components';
+import { useSessionStorageState } from 'ahooks';
+import { useHistory, useLocation } from 'react-router';
 import PipeBasicInfoDs from './stores/PipelineBasicInfoDataSet';
 import AppServiceDataSet from '@/routes/app-pipeline/stores/AppServiceDataSet';
 import BranchDataSet from '@/routes/app-pipeline/stores/BranchDataSet';
@@ -14,15 +17,18 @@ import BranchDataSet from '@/routes/app-pipeline/stores/BranchDataSet';
 import './index.less';
 import { DataSet } from '@/interface';
 import TemplatesSelector from './components/templates-selector';
+import { PIPELINE_CREATE_LOCALSTORAGE_IDENTIFY } from '@/routes/app-pipeline/stores/CONSTANTS';
 
 export type PipelineCreateModalProps = {
-
+  modal?:modalChildrenProps
 }
 
 const prefixCls = 'c7ncd-pipeline-create-modal';
 const intlPrefix = 'c7ncd.pipeline.create.modal';
 
-const PipelineCreateModal:FC<PipelineCreateModalProps> = observer(() => {
+const PipelineCreateModal:FC<PipelineCreateModalProps> = observer((props) => {
+  const { modal } = props;
+
   const branchDs = useMemo(() => new DataSet(
     BranchDataSet(),
   ), []);
@@ -39,6 +45,18 @@ const PipelineCreateModal:FC<PipelineCreateModalProps> = observer(() => {
 
   const formatCommon = useFormatCommon();
   const formatPipelineCreateModal = useFormatMessage(intlPrefix);
+  const history = useHistory();
+  const {
+    pathname,
+    search,
+  } = useLocation();
+
+  const [, setPipelineCreateData] = useSessionStorageState(PIPELINE_CREATE_LOCALSTORAGE_IDENTIFY);
+
+  const [
+    submitTmpId,
+    setSubmitTmpId,
+  ] = useState<any>(null);
 
   const getBranchTips = useMemo(() => (
     <NewTips helpText={(
@@ -78,10 +96,46 @@ const PipelineCreateModal:FC<PipelineCreateModalProps> = observer(() => {
     </Form>
   );
 
+  /**
+   * 提交创建零时数据存储再session中
+   */
+  const hanldeSubmit = async () => {
+    try {
+      const isValid = await pipelinBasicInfoDs.validate();
+      if (isValid) {
+        const sumitData:any = {
+          basicInfo: pipelinBasicInfoDs.current?.toData() || {},
+          templateId: submitTmpId,
+        };
+        setPipelineCreateData(sumitData);
+        modal?.close();
+        history.push({
+          pathname: `${pathname}/edit/create/${submitTmpId}`,
+          search,
+        });
+        return true;
+      }
+      return false;
+    } catch (error) {
+      throw Error(error);
+    }
+  };
+
+  /**
+   *
+   * 选中模板的回调函数，主要是为了获取数据
+   * @param {*} templateData
+   */
+  const handleSelectTmpCallback = (templateData:any) => {
+    setSubmitTmpId(templateData);
+  };
+
+  modal?.handleOk(hanldeSubmit);
+
   return (
     <div className={prefixCls}>
       {renderForm()}
-      <TemplatesSelector />
+      <TemplatesSelector handleSelectTmpCallback={handleSelectTmpCallback} />
     </div>
   );
 });

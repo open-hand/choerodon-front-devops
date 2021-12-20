@@ -1,0 +1,60 @@
+.c7ncd-buildModal-content {
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  &__main {
+    flex: 1;
+    padding-left: 20px;
+    height: calc(100%);
+    overflow-y: auto;
+    overflow-x: hidden;
+    &__divided {
+      height: 1px;
+      width: calc(100% + 40px);
+      background: var(--divider);
+      margin: 0 0 0 -20px;
+    }
+  }
+  &__stepItem {
+    display: flex;
+    align-items: flex-start;
+    border-top: 1px solid var(--divider);
+    padding-top: 10px;
+    margin-top: 15px;
+    &__side {
+      i {
+        font-size: 20px;
+        color: #abbccf;
+      }
+    }
+    &__main {
+      flex: 1;
+      &__first {
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        &__left {
+          display: flex;
+          align-items: center;
+        }
+        &__remove {
+          font-size: 18px;
+          color: #abbccf;
+        }
+      }
+      &__expand {
+        font-size: 20px;
+        color: var(--primary-color);
+        display: inline-block;
+        cursor: pointer;
+      }
+      &__name {
+        margin: 0 0 0 5px;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-color);
+      }
+    }
+  }
+}

@@ -53,6 +53,31 @@ const JOB_GROUP_TYPES = {
   [JOB_GROUP_UNIT_TEST.code]: JOB_GROUP_UNIT_TEST,
 } as const;
 
+// 空白得分组
+const DEFAULT_STAGES_DATA = {
+  devopsCiPipelineVariableDTOList: [],
+  devopsCiStageVOS: [
+    {
+      name: '代码扫描', sequence: 1, id: 1, type: 'CI',
+    },
+    {
+      name: '构建', sequence: 2, id: 2, type: 'CI',
+    },
+    {
+      name: '发布', sequence: 3, id: 3, type: 'CI',
+    },
+    {
+      name: '部署', sequence: 4, id: 4, type: 'CI',
+    },
+  ],
+  hasRecords: false,
+  name: '默认模板',
+} as const;
+
+export {
+  DEFAULT_STAGES_DATA,
+};
+
 export {
   TAB_BASIC,
   TAB_FLOW_CONFIG,

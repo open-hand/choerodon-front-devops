@@ -1,0 +1,35 @@
+.c7ncd-sideStep {
+  height: calc(100% + 40px);
+  width: 92px;
+  border-right: 1px solid var(--divider);
+  margin-top: -20px;
+  padding-top: 20px;
+  p {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  &__item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+    cursor: pointer;
+    &__line {
+      width: 2px;
+      height: 12px;
+      margin-right: 10px;
+    }
+    &__text {
+      font-size: 13px;
+      font-weight: 400;
+    }
+  }
+  &__item--focus {
+    p:first-child {
+      background: var(--primary-color);
+    }
+    p:nth-child(2) {
+      color: var(--primary-color);
+      font-weight: 500;
+    }
+  }
+}
