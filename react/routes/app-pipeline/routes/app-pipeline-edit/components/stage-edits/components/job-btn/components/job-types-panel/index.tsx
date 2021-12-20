@@ -14,6 +14,8 @@ import {} from 'choerodon-ui/pro';
 import './index.less';
 import useGetJobPanel from '../../../../hooks/useGetJobPanel';
 import { templateJobsApi } from '@/api/template-jobs';
+import useTabData from '@/routes/app-pipeline/routes/app-pipeline-edit/hooks/useTabData';
+import { TAB_BASIC } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
 
 export type JobTypesPanelProps = {
 
@@ -29,6 +31,7 @@ const prefixCls = 'c7ncd-job-types-panel';
 const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
   const panels = useGetJobPanel();
   const [currentSelectedSubMenuId, setSubMenuId] = useState('');
+  const [,, getTabData] = useTabData();
 
   const getSubMenuChild = ({ queryKey }:any) => {
     const [_key, subMenuId] = queryKey;
@@ -75,8 +78,12 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
       const {
         id, name,
       } = item;
+      const concatItem = {
+        ...item,
+        ...getTabData(TAB_BASIC),
+      };
       return (
-        <Item key={JSON.stringify(item)}>
+        <Item key={JSON.stringify(concatItem)}>
           {name}
         </Item>
       );

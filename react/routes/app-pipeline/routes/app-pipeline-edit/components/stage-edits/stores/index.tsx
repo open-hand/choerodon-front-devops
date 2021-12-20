@@ -1,9 +1,11 @@
 /* eslint-disable max-len */
 import React, { createContext, useContext } from 'react';
 import { useFormatCommon, useFormatMessage } from '@choerodon/master';
+import { useReactive } from 'ahooks';
 import useStore from './useStore';
 import { StageEditsStoreContext, ProviderProps } from '../interface';
 import useLoadJobPanel from '../hooks/useLoadJobPanel';
+import useTabData from '../../../hooks/useTabData';
 
 const Store = createContext({} as StageEditsStoreContext);
 
@@ -21,11 +23,10 @@ export const StoreProvider = (props: ProviderProps) => {
 
   const formatCommon = useFormatCommon();
   const formatPipelinEdit = useFormatMessage(intlPrefix);
-
-  const mainStore = useStore();
-
   // 加载job下拉面板数据
   useLoadJobPanel();
+
+  const mainStore = useStore();
 
   const value = {
     ...props,

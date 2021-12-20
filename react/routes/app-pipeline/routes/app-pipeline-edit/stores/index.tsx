@@ -72,6 +72,7 @@ export const StoreProvider = inject('AppState')((props: ProviderProps) => {
     setTabKey,
     tabsData,
     setTabsDataState,
+    type,
   };
   return (
     <Store.Provider value={value}>
