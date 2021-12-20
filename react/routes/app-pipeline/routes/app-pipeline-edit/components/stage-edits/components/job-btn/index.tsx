@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Icon } from 'choerodon-ui/pro';
 import './index.less';
 import { Popover } from 'choerodon-ui';
@@ -9,15 +9,22 @@ import JobTypesPanel from './components/job-types-panel';
 const prefixCls = 'c7ncd-pipeline-edit-jobbtn';
 
 interface JobAddBtnProps {
-  type?:'circle' | 'normal'
-  stageType?: 'paralle' | 'serial'
+  type:'circle' | 'normal'
+  linesType: 'paralle' | 'serial'
+  handleJobAddCallback: (jobData:any)=>void
 }
 
 const JobAddBtn = (props:JobAddBtnProps) => {
   const {
     type,
-    stageType,
+    linesType,
+    handleJobAddCallback,
   } = props;
+
+  const linesMap = {
+    paralle: <ParalleLines />,
+    serial: <SerialLines />,
+  } as const;
 
   const renderContent = () => {
     if (type === 'circle') {
@@ -25,8 +32,7 @@ const JobAddBtn = (props:JobAddBtnProps) => {
     }
     return (
       <div className={`${prefixCls}-normal`}>
-        <SerialLines />
-        {/* <ParalleLines /> */}
+        {linesMap[linesType]}
         <div className={`${prefixCls}-normal-content`}>
           <Icon type="add" />
           <span>添加任务</span>
@@ -38,18 +44,13 @@ const JobAddBtn = (props:JobAddBtnProps) => {
   return (
     <Popover
       trigger={['click'] as any}
-      content={<JobTypesPanel />}
+      content={<JobTypesPanel handleJobAddCallback={handleJobAddCallback} />}
       placement={'bottom' as any}
       overlayClassName={`${prefixCls}-popover`}
     >
       {renderContent()}
     </Popover>
   );
-};
-
-JobAddBtn.defaultProps = {
-  type: 'circle',
-  stageType: 'paralle',
 };
 
 export default JobAddBtn;

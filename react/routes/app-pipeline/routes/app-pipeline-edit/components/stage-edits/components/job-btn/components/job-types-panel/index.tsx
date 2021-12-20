@@ -18,7 +18,7 @@ import useTabData from '@/routes/app-pipeline/routes/app-pipeline-edit/hooks/use
 import { TAB_BASIC } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
 
 export type JobTypesPanelProps = {
-
+  handleJobAddCallback:(jobData:any)=>void
 }
 
 const {
@@ -29,6 +29,9 @@ const {
 const prefixCls = 'c7ncd-job-types-panel';
 
 const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
+  const {
+    handleJobAddCallback,
+  } = props;
   const panels = useGetJobPanel();
   const [currentSelectedSubMenuId, setSubMenuId] = useState('');
   const [,, getTabData] = useTabData();
@@ -47,6 +50,10 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
   const handleClick = (data: any) => {
     const { keyPath } = data;
     const stepData = JSON.parse(keyPath[0]);
+
+    // 添加job的回调函数
+    // handleJobAddCallback
+
     // switch (stepData.type) {
     //   case MAVEN_BUILD: {
     //     handleBuildModal(stepData);
