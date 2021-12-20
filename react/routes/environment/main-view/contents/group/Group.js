@@ -376,7 +376,7 @@ const Group = observer(() => {
 
   return (
     <>
-      <h2>{name}</h2>
+      <h2>{name === 'c7ncd.env.group.default' ? formatMessage({ id: 'c7ncd.environment.default' }) : name}</h2>
       <Table
         dataSet={groupDs}
         border={false}

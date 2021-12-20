@@ -54,6 +54,7 @@ const environment = {
   'c7ncd.environment.description': '描述',
   'c7ncd.environment.ModifyGroup': '修改分组',
   'c7ncd.environment.DeleteGroup': '删除分组',
+  'c7ncd.environment.default': '未分组',
 
 };
 

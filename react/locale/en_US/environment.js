@@ -54,6 +54,7 @@ const environment = {
   'c7ncd.environment.description': 'Description',
   'c7ncd.environment.ModifyGroup': 'Modify Group',
   'c7ncd.environment.DeleteGroup': 'Delete Group',
+  'c7ncd.environment.default': 'Default',
 
 };
 

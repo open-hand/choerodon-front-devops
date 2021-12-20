@@ -107,11 +107,25 @@ export default ({
             record.getField('githubTemplate').fetchLookup();
             record.get('githubTemplate') && record.set('repositoryUrl', record.get('githubTemplate'));
           }
+          if (record.get('name')) {
+            record.set('name', null);
+          }
+          if (record.get('code')) {
+            record.set('code', null);
+          }
+          record.set('type', 'normal');
           break;
         case 'gitlab':
           if (record.get('repositoryUrl') || !record.getField('repositoryUrl').isValid()) {
             record.set('repositoryUrl', null);
           }
+          if (record.get('name')) {
+            record.set('name', null);
+          }
+          if (record.get('code')) {
+            record.set('code', null);
+          }
+          record.set('type', 'normal');
           break;
         default:
           break;

@@ -153,6 +153,8 @@ const CreateForm = injectIntl(observer((props) => {
 
   const handleTest = async (val) => {
     let res;
+    setIsShow(true);
+    setTestStatus('loading');
     try {
       res = await appServiceApi.testConnection({
         repositoryUrl: record.get('repositoryUrl'),
@@ -161,8 +163,9 @@ const CreateForm = injectIntl(observer((props) => {
         username: record.get('authType') === 'username_password' ? record.get('username') : null,
         password: record.get('authType') === 'username_password' ? record.get('password') : null,
       });
-      setTestStatus(res ? 'success' : 'failed');
-      setIsShow(true);
+      setTimeout(() => {
+        setTestStatus(res ? 'success' : 'failed');
+      }, 0);
     } catch (e) {
       Choerodon.handleResponseError(e);
     }

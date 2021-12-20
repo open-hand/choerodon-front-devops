@@ -34,6 +34,7 @@ const resource = {
   'c7ncd.resource.DeploymentConfiguration': 'Deployment Configuration',
   'c7ncd.resource.AssociatedApplicationService': 'Associated Application Service',
   'c7ncd.resource.UpdateTime': 'Update Time',
+  'c7ncd.resource.age': 'Update Time',
   'c7ncd.resource.HealthCheck': 'Health Check',
   'c7ncd.resource.Scan': 'Scan',
   'c7ncd.resource.EndTimeofLastScan': 'End Time of Last Scan',
@@ -76,6 +77,7 @@ const resource = {
   'c7ncd.resource.Create': 'Create',
   'c7ncd.resource.Source': 'Source',
   'c7ncd.resource.Type': 'Type',
+  'c7ncd.resource.type': 'Type',
   'c7ncd.resource.AssociatePodDetails': 'Associate Pod Details',
   'c7ncd.resource.Plan': 'Plan',
   'c7ncd.resource.SuspendorNot': 'Suspend or Not',
@@ -140,6 +142,14 @@ const resource = {
   'c7ncd.resource.reset': 'Reset',
   'c7ncd.resource.PermissionType': 'Permission Type',
   'c7ncd.resource.updater': 'Updater',
+  'c7ncd.resource.externalIp': 'ExternalIP',
+  'c7ncd.resource.clusterIp': 'ClusterIP',
+  'c7ncd.resource.active': 'Active',
+  'c7ncd.resource.create.application': 'Create Application',
+  'c7ncd.resource.stop.application': 'Stop Application',
+  'c7ncd.resource.restart.application': 'Restart Application',
+  'c7ncd.resource.delete.application': 'Delete Application',
+  'c7ncd.resource.update.application': 'Update Application',
 
 };
 export {
