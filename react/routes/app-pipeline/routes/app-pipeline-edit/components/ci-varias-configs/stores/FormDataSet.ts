@@ -1,36 +1,15 @@
 /* eslint-disable consistent-return */
 
-import isEmpty from 'lodash/isEmpty';
 import { DataSet, Record } from '@/interface';
-
-function handleLoad({ dataSet }:{dataSet:DataSet}) {
-  if (!dataSet.length) {
-    dataSet.loadData([{ key: null, value: null }]);
-  }
-}
-
-function handleUpdate({
-  value, name, record, dataSet,
-}:any) {
-  if (name === 'key' && value) {
-    dataSet.forEach((eachRecord:Record) => {
-      if (record.id !== eachRecord.id) {
-        eachRecord.getField('key')?.checkValidity();
-      }
-    });
-  }
-}
-
-function handleRemove({ dataSet }:{dataSet:DataSet}) {
-  dataSet.forEach((record) => {
-    record.getField('key')?.checkValidity();
-  });
-}
 
 const CiConfigDs = ({
   formatAppPipeline,
+  setSavedData,
 }:any):any => {
-  // const urlParams = appServiceId ? `app_service_id=${appServiceId}&level=app` : 'level=project';
+  function handleDataChangeCallback({ dataSet }:any) {
+    setSavedData(dataSet.toData());
+  }
+
   function checkKey(value:string, _name:string, record:Record) {
     const p = /^([_A-Za-z0-9])+$/;
     if (!value && !record.get('value')) {
@@ -50,18 +29,33 @@ const CiConfigDs = ({
     }
   }
 
+  function handleUpdate({
+    value, name, record, dataSet,
+  }:any) {
+    if (name === 'key' && value) {
+      dataSet.forEach((eachRecord:Record) => {
+        if (record.id !== eachRecord.id) {
+          eachRecord.getField('key')?.checkValidity();
+        }
+      });
+    }
+
+    handleDataChangeCallback({ dataSet });
+  }
+
+  function handleRemove({ dataSet }:{dataSet:DataSet}) {
+    dataSet.forEach((record) => {
+      record.getField('key')?.checkValidity();
+    });
+
+    handleDataChangeCallback({ dataSet });
+  }
+
   return ({
     autoCreate: true,
-    // autoQuery: true,
     selection: false,
     paging: false,
     dataKey: null,
-    transport: {
-      // read: {
-      //   url: `devops/v1/projects/${projectId}/ci_variable/values?${urlParams}`,
-      //   method: 'get',
-      // },
-    },
     fields: [
       {
         name: 'key', type: 'string', label: formatAppPipeline({ id: 'key' }), validator: checkKey,
@@ -69,7 +63,6 @@ const CiConfigDs = ({
       { name: 'value', type: 'string', label: formatAppPipeline({ id: 'value' }) },
     ],
     events: {
-      load: handleLoad,
       update: handleUpdate,
       remove: handleRemove,
     },

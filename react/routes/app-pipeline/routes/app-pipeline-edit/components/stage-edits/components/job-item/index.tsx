@@ -15,10 +15,12 @@ import SerialLines from '../serial-lines';
 export type JobProps = {
   id:string
   name:string
+  jobIndex:number
   ciTemplateJobGroupDTO: {
     type: keyof typeof JOB_GROUP_TYPES // job的分组类型
   }
   linesType: 'paralle' | 'serial'
+  handleJobDeleteCallback: (jobIndex:number)=>void
 } & Record<string, any>
 
 const prefixCls = 'c7ncd-pipeline-jobItem';
@@ -32,6 +34,8 @@ const JobItem:FC<JobProps> = (props) => {
       type: groupType,
     },
     linesType,
+    handleJobDeleteCallback,
+    jobIndex,
   } = props;
 
   const currentJobGroupType = JOB_GROUP_TYPES[groupType];
@@ -44,6 +48,11 @@ const JobItem:FC<JobProps> = (props) => {
     serial: <SerialLines />,
   };
 
+  const handleJobDelete = (e:any) => {
+    e?.stopPropagation();
+    handleJobDeleteCallback(jobIndex);
+  };
+
   return (
     <div className={prefixCls}>
       {linesMap[linesType]}
@@ -53,7 +62,11 @@ const JobItem:FC<JobProps> = (props) => {
         </Tooltip>
         <span className={`${prefixCls}-name`}>{name}</span>
         <div className={`${prefixCls}-iconGroups`}>
-          <Icon type="delete_black-o" className={`${prefixCls}-iconGroups-delete`} />
+          <Icon
+            onClick={handleJobDelete}
+            type="delete_black-o"
+            className={`${prefixCls}-iconGroups-delete`}
+          />
         </div>
       </div>
     </div>

@@ -1,9 +1,9 @@
+/* eslint-disable max-len */
 import React, {
-  useEffect, FC,
+  FC,
 } from 'react';
 import { useFormatCommon } from '@choerodon/master';
 import map from 'lodash/map';
-import {} from '@choerodon/components';
 import { Icon } from 'choerodon-ui/pro';
 
 import './index.less';
@@ -13,7 +13,6 @@ import JobAddBtn from '../job-btn';
 import { STAGE_TYPES } from '../../../../interface';
 import useStageModal from '../../hooks/useStageModal';
 import { STAGE_CI } from '../../../../stores/CONSTANTS';
-import { useStageEditsStore } from '../../stores';
 import useStageEdit from '../../hooks/useStageEdit';
 
 export type StageProps = {
@@ -36,32 +35,73 @@ const Stage:FC<StageProps> = (props) => {
   const {
     editStage,
     deleteStage,
+
+    deleteJob,
+    addJob,
   } = useStageEdit();
 
   const formatCommon = useFormatCommon();
 
-  const initData = {
-    type,
-    name,
-  };
+  const linesType = type === STAGE_CI ? 'paralle' : 'serial';
 
-  const handleOk = (stageData:any) => {
+  /**
+   * 编辑阶段的回调
+   * @param {*} stageData
+   */
+  const handleStageEditOk = (stageData:any) => {
     editStage(stageIndex, stageData);
   };
 
-  const handleDelete = (e:any) => {
+  /**
+   * 删除阶段的回调
+   * @param {*} e
+   */
+  const handleDeleteStage = (e:any) => {
     e?.stopPropagation();
     deleteStage(stageIndex);
   };
 
+  /** @type {*} 打开阶段编辑弹窗 */
   const handleModalOpen = useStageModal<{
     type: STAGE_TYPES
     name: string
-  }>('edit', { initialValue: initData, onOk: handleOk });
+  }>('edit', {
+    initialValue: {
+      type,
+      name,
+    },
+    onOk: handleStageEditOk,
+  });
+
+  /**
+   * 新增job的回调
+   * @param {number} jobIndex
+   * @param {*} jobData
+   */
+  const handleJobAddCallback = (jobData:any) => {
+    const jobIndex = jobList.length;
+    addJob(stageIndex, jobIndex, jobData);
+  };
+
+  /**
+   * 删除job的回调
+   * @param {number} jobIndex
+   * @param {*} jobData
+   */
+  const handleJobDeleteCallback = (jobIndex:number) => {
+    deleteJob(stageIndex, jobIndex);
+  };
 
   const renderJobs = () => map(jobList, (item, index:number) => {
-    const linesType = type === STAGE_CI ? 'paralle' : 'serial';
-    return <JobItem {...item} key={item?.id} linesType={linesType} />;
+    const options = {
+      handleJobDeleteCallback,
+    };
+    const data = {
+      ...item,
+      jobIndex: index, // job的index
+      linesType,
+    };
+    return <JobItem {...data} {...options} key={item?.id} />;
   });
 
   return (
@@ -70,14 +110,14 @@ const Stage:FC<StageProps> = (props) => {
         <div className={`${prefixCls}-stageType`}>{type}</div>
         <div className={`${prefixCls}-stageName`}>{name}</div>
         <div className={`${prefixCls}-btnGroups`}>
-          <Icon onClick={handleDelete} type="delete_black-o" className={`${prefixCls}-btnGroups-delete`} />
+          <Icon onClick={handleDeleteStage} type="delete_black-o" className={`${prefixCls}-btnGroups-delete`} />
         </div>
       </header>
       <main>
         {renderJobs()}
       </main>
       <footer>
-        <JobAddBtn type={jobList.length ? 'circle' : 'normal'} />
+        <JobAddBtn handleJobAddCallback={handleJobAddCallback} linesType={linesType} type={jobList.length ? 'circle' : 'normal'} />
       </footer>
     </div>
   );
