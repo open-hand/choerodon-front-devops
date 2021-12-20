@@ -41,7 +41,20 @@ function StageModal<T>(props:{
 
   const stageDs = useMemo(() => new DataSet(addStageDataSet()), []);
 
-  modal?.handleOk(() => onOk(stageDs.current?.toData() || {}));
+  const handleOk = async () => {
+    try {
+      const isValid = await stageDs.validate();
+      if (isValid) {
+        onOk(stageDs.current?.toData() || {});
+        return true;
+      }
+      return false;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  modal?.handleOk(handleOk);
 
   useEffect(() => {
     if (!isEmpty(initialValue)) {
@@ -50,7 +63,7 @@ function StageModal<T>(props:{
   }, []);
 
   const renderOpts = () => map([STAGE_CI, STAGE_CD], (value: STAGE_TYPES) => {
-    const disabeld = value ? initialValue?.type !== value : true;
+    const disabeld = initialValue?.type ? initialValue?.type !== value : false;
     return <Option disabled={disabeld} value={value}>{value}</Option>;
   });
 
@@ -70,14 +83,17 @@ function useStageModal<T>(type: StageModalTypes = 'create', options?: StageModal
   const formatPipelineEdit = useFormatAppPipelineEdit();
   const formatCommon = useFormatCommon();
 
+  const isEdit = type === 'edit';
+
   const handleModalOpen = () => {
     Modal.open({
-      title: type === 'create' ? '添加阶段' : '编辑阶段',
+      title: !isEdit ? '添加阶段' : '编辑阶段',
       children: <StageModal<T> options={options} type={type} />,
       style: {
         width: CONSTANTS.MODAL_WIDTH.MIN,
       },
       drawer: true,
+      okText: formatCommon({ id: isEdit ? 'modify' : 'create' }),
     });
   };
 
