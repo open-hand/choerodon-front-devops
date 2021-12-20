@@ -4,7 +4,6 @@ import React, {
 } from 'react';
 import { useFormatCommon } from '@choerodon/master';
 import { DataSet } from 'choerodon-ui/pro';
-import map from 'lodash/map';
 
 import './index.less';
 import { Loading } from '@choerodon/components';
@@ -12,7 +11,7 @@ import { observer } from 'mobx-react-lite';
 import classNames from 'classnames';
 import PipelineTemplatesDataSet from '../../stores/PipelineTemplatesDataSet';
 import TemplatePreview from '../template-preview';
-import { DEFAULT_TMP, DEFAULT_TMP_ID } from '../../stores/CONSTANTS';
+import { DEFAULT_TMP_ID, DEFAULT_TMP } from '@/routes/app-pipeline/stores/CONSTANTS';
 
 export type TemplatesSelectorProps = {
   handleSelectTmpCallback:(tempData:any)=>void
@@ -47,7 +46,7 @@ const TemplatesSelector:FC<TemplatesSelectorProps> = (props) => {
       const { id } = ciTemplateCategoryDTOList[0];
       setSelectedMenuId(id);
     }
-    setSelectedTmpId(DEFAULT_TMP_ID);
+    handleSelectTmp({ id: DEFAULT_TMP_ID });
   }, [ciTemplateCategoryDTOList]);
 
   /**
@@ -102,12 +101,12 @@ const TemplatesSelector:FC<TemplatesSelectorProps> = (props) => {
 
   /** @type {Object} 根据后台数据筛选出分类数组 */
   const getSectionGroup = useMemo(() => {
-    const sectionGroup:Record<string, any[]> = {};
+    const sectionGroup:Map<string, any[]> = new Map();
     const tmpLists = [DEFAULT_TMP, ...(pipelineTemplateVOList || []).slice()];
     tmpLists?.forEach((item:{ciTemplateCategoryId:string}) => {
       const { ciTemplateCategoryId } = item;
-      if (!(ciTemplateCategoryId in sectionGroup)) sectionGroup[ciTemplateCategoryId] = [];
-      sectionGroup[ciTemplateCategoryId].push(item);
+      if (!(ciTemplateCategoryId in sectionGroup)) sectionGroup.set(ciTemplateCategoryId, []);
+      sectionGroup.get(ciTemplateCategoryId)?.push(item);
     });
     return sectionGroup;
   }, [pipelineTemplateVOList]);
@@ -115,11 +114,18 @@ const TemplatesSelector:FC<TemplatesSelectorProps> = (props) => {
   /**
    * 渲染模板分组
    */
-  const renderSection = () => map(getSectionGroup, (array:any[], key:string) => (
-    <section key={key} data-categoryKey={key}>
-      {renderContainerItems(array)}
-    </section>
-  ));
+  const renderSection = () => {
+    const sections = [];
+    for (const [key, value] of getSectionGroup) {
+      const section = (
+        <section key={key} data-categoryKey={key}>
+          {renderContainerItems(value)}
+        </section>
+      );
+      sections.push(section);
+    }
+    return sections;
+  };
 
   /**
    *  遍历模板

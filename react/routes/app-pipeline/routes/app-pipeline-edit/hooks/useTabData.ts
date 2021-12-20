@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import {
   useMemo, useCallback, useRef, useEffect,
 } from 'react';
@@ -16,7 +17,7 @@ function useTabData<T>() {
 
   setTabsDataStateRef.current = setTabsDataState;
 
-  const getCurrentTabData = useMemo(() => get(tabsData, currentKey) as T, [tabsData, currentKey]);
+  const getCurrentTabData = useMemo(() => tabsData?.[currentKey] as T, [currentKey, tabsData]);
 
   const hendleSetTabData = useCallback(
     (data:T) => {

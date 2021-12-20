@@ -17,6 +17,7 @@ export type AppPipelineEditStoreContext = {
     // @ts-expect-error
   formatCommon:useFormatMessageRetrunTypes,
   currentKey:TabkeyTypes,
+  type?:'create' | 'edit'
 } & ProviderProps;
 
 export type ProviderProps = {

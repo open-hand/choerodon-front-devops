@@ -31,7 +31,15 @@ const Stage:FC<StageProps> = (props) => {
 
   const formatCommon = useFormatCommon();
 
-  const handleModalOpen = useStageModal('edit');
+  const initData = {
+    stageType,
+    stageName,
+  };
+
+  const handleModalOpen = useStageModal<{
+    stageType: STAGE_TYPES
+    stageName: string
+  }>('edit', { initialValue: initData });
 
   const renderJobs = () => map(jobList, (item, index:number) => <JobItem {...item} />);
 

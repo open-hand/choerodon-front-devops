@@ -29,6 +29,7 @@ const AppPipelineEdit = () => {
     formatCommon,
     currentKey,
     setTabKey,
+    type,
   } = useAppPipelineEditStore();
 
   const { params } = useRouteMatch<{id:string}>();
@@ -73,13 +74,20 @@ const AppPipelineEdit = () => {
     </Tabs>
   ), [currentKey]);
 
+  const renderTitle = () => {
+    if (type === 'create') {
+      return '创建流水线';
+    }
+    return `编辑流水线${params?.id}`;
+  };
+
   return (
     <Page className={prefixCls}>
       <Header>
         <HeaderButtons items={headerItems} />
       </Header>
       <Breadcrumb
-        title={`编辑流水线${params?.id}`}
+        title={renderTitle()}
         extraNode={renderTabHeader()}
       />
       <Content className={contentCls}>
