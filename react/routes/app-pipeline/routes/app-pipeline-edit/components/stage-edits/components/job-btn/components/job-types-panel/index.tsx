@@ -8,7 +8,7 @@ import { useFormatCommon } from '@choerodon/master';
 import { Menu, Icon } from 'choerodon-ui';
 import { handleBuildModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals';
 import { handleCustomModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/custom-modal';
-import { BUILD, CUSTOM } from '@/routes/app-pipeline/CONSTANTS';
+import { BUILD, CUSTOM, MAVEN_BUILD } from '@/routes/app-pipeline/CONSTANTS';
 import {} from 'choerodon-ui/pro';
 
 import './index.less';
@@ -50,19 +50,15 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
   const handleClick = (data: any) => {
     const { keyPath } = data;
     const stepData = JSON.parse(keyPath[0]);
-
-    // 添加job的回调函数
-    // handleJobAddCallback
-
-    // switch (stepData.type) {
-    //   case MAVEN_BUILD: {
-    //     handleBuildModal(stepData);
-    //     break;
-    //   }
-    //   default: {
-    //     break;
-    //   }
-    // }
+    switch (stepData.type) {
+      case MAVEN_BUILD: {
+        handleBuildModal(stepData);
+        break;
+      }
+      default: {
+        break;
+      }
+    }
   };
 
   const renderChildrenMenu = ({ parentId }:{

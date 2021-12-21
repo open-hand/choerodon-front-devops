@@ -1,8 +1,12 @@
 const MAVEN_BUILD = 'normal';
 
+const STEPVO: any = {
+  docker_build: 'devopsCiDockerBuildConfigDTO',
+};
+
 // 构建类型
 const BUILD = 'build';
-const BUILD_MAVEN = 'maven';
+const BUILD_MAVEN = 'maven_build';
 const BUILD_NPM = 'npm';
 const BUILD_DOCKER = 'docker_build';
 const BUILD_UPLOADJAR = 'upload_jar';
@@ -25,4 +29,5 @@ export {
   BUILD_SONARQUBE,
   BUILD_UPLOAD_CHART_CHOERODON,
   CUSTOM,
+  STEPVO,
 };

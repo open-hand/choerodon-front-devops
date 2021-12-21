@@ -1,4 +1,5 @@
 import { DataSet } from 'choerodon-ui/pro';
+import { STEPVO } from '@/routes/app-pipeline/CONSTANTS';
 
 const mapping: {
   [key: string]: any
@@ -17,12 +18,13 @@ const mapping: {
     type: 'string',
   },
   stepName: {
-    name: 'stepName',
+    name: 'name',
     type: 'string',
     label: '步骤名称',
+    required: true,
   },
   projectRelyRepo: {
-    name: 'projectRelyRepo',
+    name: 'nexusMavenRepoIds',
     type: 'string',
     label: '项目依赖仓库',
   },
@@ -30,11 +32,13 @@ const mapping: {
     name: 'dockerFilePath',
     type: 'string',
     label: 'Dockerfile文件路径',
+    required: true,
   },
   imageContext: {
-    name: 'imageContext',
+    name: 'dockerContextDir',
     type: 'string',
     label: '镜像构建上下文',
+    required: true,
   },
   targetProductsLibrary: {
     name: 'targetProductsLibrary',
@@ -42,11 +46,12 @@ const mapping: {
     label: '目标制品库',
   },
   TLS: {
-    name: 'TLS',
+    name: 'skipDockerTlsVerify',
     type: 'boolean',
     label: '是否启用TLS校验',
     textField: 'text',
     valueField: 'value',
+    defaultValue: false,
     options: new DataSet({
       data: [{
         text: '是',
@@ -58,11 +63,12 @@ const mapping: {
     }),
   },
   imageSafeScan: {
-    name: 'imageSafeScan',
+    name: 'imageScan',
     type: 'boolean',
     label: '是否启用镜像安全扫描',
     textField: 'text',
     valueField: 'value',
+    defaultValue: false,
     options: new DataSet({
       data: [{
         text: '是',
@@ -146,6 +152,7 @@ const mapping: {
 const transformLoadData = (data: any) => data.map((d: any) => ({
   ...d,
   [mapping.expand.name]: true,
+  ...d[STEPVO[d.type]],
 }));
 
 const Index = () => ({

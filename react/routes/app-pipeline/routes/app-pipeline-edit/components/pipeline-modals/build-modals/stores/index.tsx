@@ -7,8 +7,6 @@ import buildDataSet, { mapping }
   from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/stores/buildDataSet';
 import stepDataSet, { transformLoadData }
   from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/stores/stepDataSet';
-import advancedDataSet
-  from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/advanced-setting/stores/advancedDataSet';
 
 interface buildModalProps {
   modal: any,
@@ -30,17 +28,25 @@ export const StoreProvider = observer((props: any) => {
     data,
   } = props;
 
-  const BuildDataSet = useMemo(() => new DataSet(buildDataSet()), []);
+  const {
+    appService: {
+      appServiceId,
+    },
+  } = data;
+
+  const BuildDataSet = useMemo(() => new DataSet(buildDataSet(appServiceId)), [appServiceId]);
   const StepDataSet = useMemo(() => new DataSet(stepDataSet()), []);
 
   useEffect(() => {
     if (data) {
-      console.log(data);
       const buildData: any = {};
       Object.keys(mapping).forEach((item: any) => {
         buildData[mapping[item].name] = data[mapping[item].name];
       });
-      BuildDataSet.loadData([buildData]);
+      BuildDataSet.loadData([{
+        ...buildData,
+        [mapping.appService.name]: data?.appService?.appServiceName,
+      }]);
       StepDataSet.loadData(transformLoadData(data?.devopsCiStepVOList));
     }
   }, []);

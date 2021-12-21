@@ -1,4 +1,13 @@
 import { DataSet } from 'choerodon-ui/pro';
+import { DevopsAlienApiConfig } from '@choerodon/master';
+
+function checkImage(value: any, name: any, record: any) {
+  const pa = /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}(\/.+)*:.+$/;
+  if (value && pa.test(value)) {
+    return true;
+  }
+  return '请输入格式正确的image镜像';
+}
 
 const mapping: {
   [key: string]: any
@@ -7,9 +16,25 @@ const mapping: {
     name: 'ciRunnerImage',
     type: 'string',
     label: 'CI任务Runner镜像',
+    required: true,
+    validator: checkImage,
+    textField: 'text',
+    valueField: 'value',
+    options: new DataSet({
+      autoQuery: true,
+      transport: {
+        read: () => ({
+          ...DevopsAlienApiConfig.getDefaultImage(),
+          transformResponse: (res) => [{
+            text: res,
+            value: res,
+          }],
+        }),
+      },
+    }),
   },
   shareFolderSetting: {
-    name: 'shareFolderSetting',
+    name: 'share',
     type: 'string',
     label: '共享目录设置',
     textField: 'text',
@@ -18,19 +43,20 @@ const mapping: {
     options: new DataSet({
       data: [{
         text: '上传共享目录choerodon-ci-cache',
-        value: '1',
+        value: 'toUpload',
       }, {
         text: '下载共享目录choerodon-ci-cache',
-        value: '2',
+        value: 'toDownload',
       }],
     }),
   },
   whetherConcurrent: {
-    name: 'whetherConcurrent',
+    name: 'openParallel',
     type: 'boolean',
     label: '是否开启此任务的并发',
     textField: 'text',
     valueField: 'value',
+    defaultValue: false,
     options: new DataSet({
       data: [{
         text: '是',
@@ -42,7 +68,7 @@ const mapping: {
     }),
   },
   concurrentCount: {
-    name: 'concurrentCount',
+    name: 'parallel',
     type: 'number',
     label: '并发数',
   },
@@ -55,4 +81,4 @@ const Index = () => ({
 
 export default Index;
 
-export { mapping };
+export { mapping, checkImage };
