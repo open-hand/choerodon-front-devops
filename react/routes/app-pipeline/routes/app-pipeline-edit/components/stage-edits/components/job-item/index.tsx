@@ -16,6 +16,7 @@ export type JobProps = {
   id:string
   name:string
   jobIndex:number
+  showLines:boolean
   ciTemplateJobGroupDTO: {
     type: keyof typeof JOB_GROUP_TYPES // job的分组类型
   }
@@ -36,6 +37,7 @@ const JobItem:FC<JobProps> = (props) => {
     linesType,
     handleJobDeleteCallback,
     jobIndex,
+    showLines = true,
   } = props;
 
   const currentJobGroupType = JOB_GROUP_TYPES[groupType];
@@ -43,7 +45,7 @@ const JobItem:FC<JobProps> = (props) => {
   const formatCommon = useFormatCommon();
   // const formatJob = useFormatMessage(intlPrefix);
 
-  const linesMap = {
+  const linesMap:Record<string, any> = {
     paralle: <ParalleLines />,
     serial: <SerialLines />,
   };
@@ -55,7 +57,7 @@ const JobItem:FC<JobProps> = (props) => {
 
   return (
     <div className={prefixCls}>
-      {linesMap[linesType]}
+      {showLines && linesMap[linesType]}
       <div className={`${prefixCls}-content`}>
         <Tooltip title={get(currentJobGroupType, 'name')}>
           <Icon className={`${`${prefixCls}`}-icon`} type={get(currentJobGroupType, 'icon')} />
