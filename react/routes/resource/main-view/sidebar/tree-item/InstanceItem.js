@@ -24,7 +24,7 @@ const stopKey2 = Modal.key();
 
 function InstanceItem({
   record,
-  name,
+  name,//应用中心对应的name
   podColor: {
     RUNNING_COLOR,
     PADDING_COLOR,
