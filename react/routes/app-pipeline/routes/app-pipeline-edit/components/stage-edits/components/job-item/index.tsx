@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 import { useFormatCommon } from '@choerodon/master';
 import { Icon, Tooltip } from 'choerodon-ui/pro';
 import { get } from 'lodash';
-// import SerialLines from './components/serial-lines';
+import { OverflowWrap } from '@choerodon/components';
 import ParalleLines from '../paralle-lines';
 import { JOB_GROUP_TYPES } from '../../../../stores/CONSTANTS';
 
@@ -62,7 +62,10 @@ const JobItem:FC<JobProps> = (props) => {
         <Tooltip title={get(currentJobGroupType, 'name')}>
           <Icon className={`${`${prefixCls}`}-icon`} type={get(currentJobGroupType, 'icon')} />
         </Tooltip>
-        <span className={`${prefixCls}-name`}>{name}</span>
+
+        <OverflowWrap className={`${prefixCls}-name`} width={120}>
+          {name}
+        </OverflowWrap>
         <div className={`${prefixCls}-iconGroups`}>
           <Icon
             onClick={handleJobDelete}

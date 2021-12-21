@@ -2,16 +2,17 @@
 import React, {
   CSSProperties,
   FC,
+  useCallback,
   useEffect,
   useMemo,
 } from 'react';
 import { useFormatCommon } from '@choerodon/master';
 import map from 'lodash/map';
-import { Icon } from 'choerodon-ui/pro';
+import { Icon, Tooltip } from 'choerodon-ui/pro';
 
 import './index.less';
 
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { Droppable, Draggable } from 'react-beautiful-dnd';
 import JobItem from '../job-item';
 import JobAddBtn from '../job-btn';
 import { STAGE_TYPES } from '../../../../interface';
@@ -99,32 +100,41 @@ const Stage:FC<StageProps> = (props) => {
     deleteJob(stageIndex, jobIndex);
   };
 
-  const renderJobs = () => map(jobList, (item, index:number) => {
-    const options = {
-      handleJobDeleteCallback,
-    };
-    const data = {
-      ...item,
-      jobIndex: index, // job的index
-      linesType,
-      showLines: !isDragging,
-    };
-    return <JobItem {...data} {...options} key={item?.id} />;
-  });
+  const renderJobs = useCallback(
+    () => map(jobList, (item, index:number) => {
+      const options = {
+        handleJobDeleteCallback,
+      };
+      const data = {
+        ...item,
+        jobIndex: index, // job的index
+        linesType,
+        showLines: !isDragging,
+      };
+      return <JobItem {...data} {...options} key={item?.id} />;
+    }),
+    [isDragging, jobList],
+  );
 
-  const getItemStyle = (_isDragging:boolean, draggableStyle:CSSProperties, extra:CSSProperties) => ({
-    userSelect: 'none',
-    ...draggableStyle,
-    ...extra,
-    cursor: 'unset',
-  });
+  const getItemStyle = useCallback(
+    (_isDragging:boolean, draggableStyle:CSSProperties, extra:CSSProperties) => ({
+      userSelect: 'none',
+      ...draggableStyle,
+      ...extra,
+      cursor: 'unset',
+    }),
+    [],
+  );
 
-  const getStageStyle = (isDraggingOver:boolean) => ({
-    border: isDragging ? '1px dotted #5266d4' : 'none',
-    borderRadius: isDragging ? '3px' : '0',
-    background: isDragging ? 'rgba(82, 102, 212, 0.1)' : 'none',
-    minWidth: 200,
-  });
+  const getStageStyle = useCallback(
+    (isDraggingOver:boolean) => ({
+      border: isDragging ? '1px dotted #5266d4' : 'none',
+      borderRadius: isDragging ? '3px' : '0',
+      background: isDragging ? 'rgba(82, 102, 212, 0.1)' : 'none',
+      minWidth: 200,
+    }),
+    [isDragging],
+  );
 
   const getTransfromStylesByFromToId = useMemo(() => {
     const [fromId, toId] = fromToId?.split('-').map(Number);
@@ -172,7 +182,9 @@ const Stage:FC<StageProps> = (props) => {
               >
                 <header onClick={handleModalOpen} role="none">
                   <div className={`${prefixCls}-stageType`}>{type}</div>
-                  <div className={`${prefixCls}-stageName`}>{name}</div>
+                  <Tooltip title={name}>
+                    <span className={`${prefixCls}-stageName`}>{name}</span>
+                  </Tooltip>
                   <div className={`${prefixCls}-btnGroups`}>
                     <Icon onClick={handleDeleteStage} type="delete_black-o" className={`${prefixCls}-btnGroups-delete`} />
                   </div>
@@ -192,4 +204,4 @@ const Stage:FC<StageProps> = (props) => {
   );
 };
 
-export default Stage;
+export default React.memo(Stage);

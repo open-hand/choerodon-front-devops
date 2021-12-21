@@ -3,8 +3,8 @@ import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
 import { Alert } from 'choerodon-ui';
 import { DragDropContext } from 'react-beautiful-dnd';
-import { throttle } from 'lodash';
 import { useBoolean } from 'ahooks';
+import { throttle } from 'lodash';
 import { useStageEditsStore } from './stores';
 import Stage from './components/stage';
 import StageAddBtn from './components/stage-btn';
@@ -38,15 +38,12 @@ const StageEdits = () => {
     [],
   );
 
-  const handleDragOver = useCallback(
-    (pos: { destination: any; source:any }) => {
-      const { destination, source } = pos;
-      window.requestAnimationFrame(() => {
-        destination?.droppableId && setFromToId(`${source.index}-${destination?.index}`);
-      });
-    },
-    [],
-  );
+  const handleDragOver = throttle((pos: { destination: any; source:any }) => {
+    const { destination, source } = pos;
+    window.requestIdleCallback(() => {
+      destination?.droppableId && setFromToId(`${source.index}-${destination?.index}`);
+    });
+  }, 100, { immediate: true });
 
   /** @type {*} 获取下一个stage应该添加的数据类型 */
   const getAddStageType = useCallback(
