@@ -84,6 +84,7 @@ const PipelineBasicInfo:FC<PipelineBasicInfoProps> = (props) => {
           searchable
           searchMatcher="appServiceName"
           popupCls={`${prefixCls}-project`}
+          disabled
           addonAfter={<NewTips helpText="此处仅能看到您有开发权限的启用状态的应用服务，并要求该应用服务未有关联的流水线" />}
         />
         <Select
