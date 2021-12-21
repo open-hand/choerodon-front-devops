@@ -3,8 +3,8 @@ import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
 import { Alert } from 'choerodon-ui';
 import { DragDropContext } from 'react-beautiful-dnd';
-import { throttle } from 'lodash';
 import { useBoolean } from 'ahooks';
+import { throttle } from 'lodash';
 import { useStageEditsStore } from './stores';
 import Stage from './components/stage';
 import StageAddBtn from './components/stage-btn';
@@ -31,22 +31,21 @@ const StageEdits = () => {
       if (!destination) {
         return;
       }
-      orderStage(source?.index, destination?.index);
-      setFromToId('');
-      setFalse();
-    },
-    [],
-  );
-
-  const handleDragOver = useCallback(
-    (pos: { destination: any; source:any }) => {
-      const { destination, source } = pos;
       window.requestAnimationFrame(() => {
-        destination?.droppableId && setFromToId(`${source.index}-${destination?.index}`);
+        orderStage(source?.index, destination?.index);
+        setFromToId('');
+        setFalse();
       });
     },
     [],
   );
+
+  const handleDragOver = throttle((pos: { destination: any; source:any }) => {
+    const { destination, source } = pos;
+    window.requestIdleCallback(() => {
+      destination?.droppableId && setFromToId(`${source.index}-${destination?.index}`);
+    });
+  }, 100, { immediate: true });
 
   /** @type {*} 获取下一个stage应该添加的数据类型 */
   const getAddStageType = useCallback(
@@ -55,10 +54,7 @@ const StageEdits = () => {
       const nextStageType = getSourceData?.[index + 1]?.type;
       // 当前stageType为ci类型，则存在两种情况，一种是下一个是CI，那么新增就是CI，否则就是CD
       if (currentStageType === STAGE_CI) {
-        if (!nextStageType) addStageType = '';
-        if (nextStageType === STAGE_CI) {
-          addStageType = STAGE_CI;
-        }
+        addStageType = !nextStageType ? '' : STAGE_CI;
       } else {
         addStageType = STAGE_CD;
       }
@@ -120,7 +116,7 @@ const StageEdits = () => {
 
   return (
     <div className={prefixCls}>
-      <Alert showIcon type="warning" message="此页面定义了CI阶段或其中的任务后，GitLab仓库中的.gitlab-ci.yml文件也会同步修改。" />
+      <Alert closable showIcon type="warning" message="此页面定义了CI阶段或其中的任务后，GitLab仓库中的.gitlab-ci.yml文件也会同步修改。" />
       <div className={`${prefixCls}-container`}>
         <DragDropContext
           onDragStart={() => window.requestAnimationFrame(setTrue)}
