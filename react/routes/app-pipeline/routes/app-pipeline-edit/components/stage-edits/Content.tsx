@@ -31,9 +31,11 @@ const StageEdits = () => {
       if (!destination) {
         return;
       }
-      orderStage(source?.index, destination?.index);
-      setFromToId('');
-      setFalse();
+      window.requestAnimationFrame(() => {
+        orderStage(source?.index, destination?.index);
+        setFromToId('');
+        setFalse();
+      });
     },
     [],
   );
@@ -52,10 +54,7 @@ const StageEdits = () => {
       const nextStageType = getSourceData?.[index + 1]?.type;
       // 当前stageType为ci类型，则存在两种情况，一种是下一个是CI，那么新增就是CI，否则就是CD
       if (currentStageType === STAGE_CI) {
-        if (!nextStageType) addStageType = '';
-        if (nextStageType === STAGE_CI) {
-          addStageType = STAGE_CI;
-        }
+        addStageType = !nextStageType ? '' : STAGE_CI;
       } else {
         addStageType = STAGE_CD;
       }
@@ -117,7 +116,7 @@ const StageEdits = () => {
 
   return (
     <div className={prefixCls}>
-      <Alert showIcon type="warning" message="此页面定义了CI阶段或其中的任务后，GitLab仓库中的.gitlab-ci.yml文件也会同步修改。" />
+      <Alert closable showIcon type="warning" message="此页面定义了CI阶段或其中的任务后，GitLab仓库中的.gitlab-ci.yml文件也会同步修改。" />
       <div className={`${prefixCls}-container`}>
         <DragDropContext
           onDragStart={() => window.requestAnimationFrame(setTrue)}
