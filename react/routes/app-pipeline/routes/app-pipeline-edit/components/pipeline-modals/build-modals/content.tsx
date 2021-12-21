@@ -18,7 +18,7 @@ import {
   BUILD_UPLOAD_CHART_CHOERODON,
 } from '@/routes/app-pipeline/CONSTANTS';
 import { mapping as StepMapping } from './stores/stepDataSet';
-import { mapping } from './stores/buildDataSet';
+import { mapping, triggerTypeOptionsData } from './stores/buildDataSet';
 import CloseModal from '../close-modal';
 import { useBuildModalStore } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/stores';
 import AdvancedSetting from '../advanced-setting';
@@ -228,6 +228,13 @@ const Index = observer(() => {
     </DragDropContext>
   );
 
+  const renderTriggerValue = (ds: any) => {
+    if (ds.current?.get(mapping.triggerType.name) === triggerTypeOptionsData[1].value) {
+      return <TextField name={mapping.triggerValue.name} colSpan={4} />;
+    }
+    return <Select name={mapping.triggerValue.name} colSpan={4} />;
+  };
+
   return (
     <div className={prefix}>
       <CloseModal modal={modal} />
@@ -250,7 +257,8 @@ const Index = observer(() => {
           <TextField name={mapping.name.name} colSpan={3} />
           <Select name={mapping.appService.name} colSpan={3} />
           <Select name={mapping.triggerType.name} colSpan={2} />
-          <Select name={mapping.triggerValue.name} colSpan={4} />
+          { renderTriggerValue(BuildDataSet) }
+          {/* <Select name={mapping.triggerValue.name} colSpan={4} /> */}
         </Form>
         <div className={`${prefix}__main__divided`} />
         <StepTitle

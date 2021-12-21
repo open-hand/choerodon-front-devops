@@ -7,8 +7,9 @@ import { inject } from 'mobx-react';
 import { useFormatCommon, useFormatMessage } from '@choerodon/master';
 import { useSetState, useSessionStorageState } from 'ahooks';
 import { Loading } from '@choerodon/components';
+import { initCustomFunc } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-advanced-config/stores';
 import { AppPipelineEditStoreContext, ProviderProps, TabkeyTypes } from '../interface';
-import { TAB_BASIC, TAB_FLOW_CONFIG } from './CONSTANTS';
+import { TAB_BASIC, TAB_FLOW_CONFIG, TAB_ADVANCE_SETTINGS } from './CONSTANTS';
 import { PIPELINE_CREATE_LOCALSTORAGE_IDENTIFY } from '@/routes/app-pipeline/stores/CONSTANTS';
 import useLoadStageData from '../hooks/useLoadStageData';
 
@@ -50,6 +51,18 @@ export const StoreProvider = inject('AppState')((props: ProviderProps) => {
     setTabsDataState({
       [TAB_BASIC]: localData?.basicInfo || {},
     });
+  }, []);
+
+  useEffect(() => {
+    async function initAdvancedSetting() {
+      const res = await initCustomFunc();
+      setTabsDataState({
+        [TAB_ADVANCE_SETTINGS]: {
+          devopsCiPipelineFunctionDTOList: res,
+        },
+      });
+    }
+    initAdvancedSetting();
   }, []);
 
   const prefixCls = 'c7ncd-app-pipeline-edit' as const;
