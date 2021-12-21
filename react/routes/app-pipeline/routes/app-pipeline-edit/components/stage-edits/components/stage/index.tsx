@@ -3,7 +3,6 @@ import React, {
   CSSProperties,
   FC,
   useCallback,
-  useEffect,
   useMemo,
 } from 'react';
 import { useFormatCommon } from '@choerodon/master';
@@ -157,49 +156,59 @@ const Stage:FC<StageProps> = (props) => {
     return styles;
   }, [fromToId, stageIndex]);
 
+  const renderDraggerContainer = useCallback(
+    (draggableProvided:any, draggableSnapshot:any) => (
+      <div
+        className={prefixCls}
+        ref={draggableProvided.innerRef}
+        {...draggableProvided.draggableProps}
+        {...draggableProvided.dragHandleProps}
+        style={
+            getItemStyle(
+              draggableSnapshot.isDragging,
+              draggableProvided.draggableProps.style,
+              getTransfromStylesByFromToId,
+            )
+          }
+      >
+        <header onClick={handleModalOpen} role="none">
+          <div className={`${prefixCls}-stageType`}>{type}</div>
+          <Tooltip title={name}>
+            <span className={`${prefixCls}-stageName`}>{name}</span>
+          </Tooltip>
+          <div className={`${prefixCls}-btnGroups`}>
+            <Icon onClick={handleDeleteStage} type="delete_black-o" className={`${prefixCls}-btnGroups-delete`} />
+          </div>
+        </header>
+        <main>
+          {renderJobs()}
+        </main>
+        <footer>
+          <JobAddBtn handleJobAddCallback={handleJobAddCallback} linesType={linesType} type={jobList.length ? 'circle' : 'normal'} />
+        </footer>
+      </div>
+    ),
+    [getItemStyle, getTransfromStylesByFromToId, renderJobs],
+  );
+
+  const renderDraggable = useCallback(
+    (provided:any, snapshot:any) => (
+      <div
+        ref={provided.innerRef}
+        style={getStageStyle(snapshot.isDraggingOver)}
+        {...provided.droppableProps}
+      >
+        <Draggable draggableId={`draggable-${stageIndex}`} index={stageIndex}>
+          {renderDraggerContainer}
+        </Draggable>
+      </div>
+    ),
+    [getStageStyle, renderDraggerContainer],
+  );
+
   return (
     <Droppable droppableId={`stageDroppable-${stageIndex}`}>
-      {(provided:any, snapshot:any) => (
-        <div
-          ref={provided.innerRef}
-          style={getStageStyle(snapshot.isDraggingOver)}
-          {...provided.droppableProps}
-        >
-          <Draggable draggableId={`draggable-${stageIndex}`} index={stageIndex}>
-            {(draggableProvided:any, draggableSnapshot:any) => (
-              <div
-                className={prefixCls}
-                ref={draggableProvided.innerRef}
-                {...draggableProvided.draggableProps}
-                {...draggableProvided.dragHandleProps}
-                style={
-                    getItemStyle(
-                      draggableSnapshot.isDragging,
-                      draggableProvided.draggableProps.style,
-                      getTransfromStylesByFromToId,
-                    )
-                  }
-              >
-                <header onClick={handleModalOpen} role="none">
-                  <div className={`${prefixCls}-stageType`}>{type}</div>
-                  <Tooltip title={name}>
-                    <span className={`${prefixCls}-stageName`}>{name}</span>
-                  </Tooltip>
-                  <div className={`${prefixCls}-btnGroups`}>
-                    <Icon onClick={handleDeleteStage} type="delete_black-o" className={`${prefixCls}-btnGroups-delete`} />
-                  </div>
-                </header>
-                <main>
-                  {renderJobs()}
-                </main>
-                <footer>
-                  <JobAddBtn handleJobAddCallback={handleJobAddCallback} linesType={linesType} type={jobList.length ? 'circle' : 'normal'} />
-                </footer>
-              </div>
-            )}
-          </Draggable>
-        </div>
-      )}
+      {renderDraggable}
     </Droppable>
   );
 };
