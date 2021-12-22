@@ -27,7 +27,7 @@ const DEFAULT_TMP = {
   sourceId: 0,
   sourceType: 'site',
   versionName: null,
-  ciTemplateStageVOList: new Array(4).fill(0).map((_data, index) => getDefaultStageTmp(index)),
+  ciTemplateStageVOList: new Array(3).fill(0).map((_data, index) => getDefaultStageTmp(index)),
 } as const;
 
 export {
