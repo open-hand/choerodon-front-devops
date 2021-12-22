@@ -5,6 +5,9 @@ import {
   Button, Form, Select, SelectBox, TextField,
 } from 'choerodon-ui/pro';
 import {
+  YamlEditor,
+} from '@choerodon/components';
+import {
   mapping as StepMapping,
   settingConfigOptionsData,
 } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/stores/stepDataSet';
@@ -53,6 +56,7 @@ const Index = observer(({
                       record.getField(StepMapping.customRepoConfig.name).options
                         .filter((optionsRecord: any) => optionsRecord
                           .get(repoConfigMapping.type.name) === typeData[0].value)
+                        .filter((optionsRecord: any) => optionsRecord.status !== 'delete')
                         .map((optionsRecord: any) => (
                           <Form columns={2} record={optionsRecord}>
                             <TextField name={repoConfigMapping.repoName.name} />
@@ -82,6 +86,7 @@ const Index = observer(({
                       record.getField(StepMapping.customRepoConfig.name).options
                         .filter((optionsRecord: any) => optionsRecord
                           .get(repoConfigMapping.type.name) === typeData[1].value)
+                        .filter((optionsRecord: any) => optionsRecord.status !== 'delete')
                         .map((optionsRecord: any) => (
                           <Form columns={2} record={optionsRecord}>
                             <TextField name={repoConfigMapping.repoName.name} />
@@ -112,7 +117,15 @@ const Index = observer(({
                       添加私有依赖仓库
                     </Button>
                   </>
-                ) : ''
+                ) : (
+                  <YamlEditor
+                    modeChange={false}
+                    readOnly={false}
+                    value={record.get(StepMapping.advancedXml.name)}
+                    onValueChange={(value: string) => record
+                      .set(record.get(StepMapping.advancedXml.name), value)}
+                  />
+                )
             }
           </div>
         )

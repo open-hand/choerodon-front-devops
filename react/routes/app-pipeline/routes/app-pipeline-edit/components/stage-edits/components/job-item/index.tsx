@@ -69,6 +69,7 @@ const JobItem:FC<JobProps> = (props) => {
 
   const handleOpenEditJobModal = () => {
     // 保存数据的时候掉用handleEditJobData 方法
+    console.log('123');
   };
 
   return (

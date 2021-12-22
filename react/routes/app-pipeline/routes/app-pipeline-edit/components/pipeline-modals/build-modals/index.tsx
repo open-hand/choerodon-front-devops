@@ -12,6 +12,7 @@ const Index = observer((props: any) => (
 ));
 
 const handleBuildModal = (data: any, handleJobAddCallback: any) => {
+  console.log(data);
   Modal.open({
     title: '添加【构建】阶段',
     drawer: true,

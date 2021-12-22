@@ -13,6 +13,7 @@ import { TAB_FLOW_CONFIG, TAB_ADVANCE_SETTINGS } from './CONSTANTS';
 import useLoadStageData from '../hooks/useLoadStageData';
 import useLoadBasicInfo from '../hooks/useLoadBasicInfo';
 import useLoadCiVariasLists from '../hooks/useLoadCiVariasLists';
+import useLoadAdvancedSetting from '../hooks/useLoadAdvancedSetting';
 
 const Store = createContext({} as AppPipelineEditStoreContext);
 
@@ -41,17 +42,7 @@ export const StoreProvider = inject('AppState')((props: ProviderProps) => {
 
   useLoadCiVariasLists({ type, id, setTabsDataState });
 
-  useEffect(() => {
-    async function initAdvancedSetting() {
-      const res = await initCustomFunc();
-      setTabsDataState({
-        [TAB_ADVANCE_SETTINGS]: {
-          devopsCiPipelineFunctionDTOList: res,
-        },
-      });
-    }
-    initAdvancedSetting();
-  }, []);
+  const { isLoading: isAdvancedLoading } = useLoadAdvancedSetting({ type, id, setTabsDataState });
 
   const prefixCls = 'c7ncd-app-pipeline-edit' as const;
   const intlPrefix = 'c7ncd.app.pipeline.edit' as const;

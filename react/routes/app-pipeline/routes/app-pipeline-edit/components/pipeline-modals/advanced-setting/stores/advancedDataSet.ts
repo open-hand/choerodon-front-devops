@@ -9,11 +9,19 @@ function checkImage(value: any, name: any, record: any) {
   return '请输入格式正确的image镜像';
 }
 
+const shareOptionsData = [{
+  text: '上传共享目录choerodon-ci-cache',
+  value: 'toUpload',
+}, {
+  text: '下载共享目录choerodon-ci-cache',
+  value: 'toDownload',
+}];
+
 const mapping: {
   [key: string]: any
 } = {
   ciRunnerImage: {
-    name: 'ciRunnerImage',
+    name: 'image',
     type: 'string',
     label: 'CI任务Runner镜像',
     required: true,
@@ -41,13 +49,7 @@ const mapping: {
     valueField: 'value',
     multiple: true,
     options: new DataSet({
-      data: [{
-        text: '上传共享目录choerodon-ci-cache',
-        value: 'toUpload',
-      }, {
-        text: '下载共享目录choerodon-ci-cache',
-        value: 'toDownload',
-      }],
+      data: shareOptionsData,
     }),
   },
   whetherConcurrent: {
@@ -81,9 +83,12 @@ const transformSubmitData = (ds: any) => {
   const record = ds?.current;
   return ({
     [mapping.ciRunnerImage.name]: record?.get(mapping.ciRunnerImage.name),
-    [mapping.shareFolderSetting.name]: record?.get(mapping.shareFolderSetting.name),
     [mapping.whetherConcurrent.name]: record?.get(mapping.whetherConcurrent.name),
     [mapping.concurrentCount.name]: record?.get(mapping.concurrentCount.name),
+    [shareOptionsData[0].value]: record
+      ?.get(mapping.shareFolderSetting.name).includes(shareOptionsData[0].value),
+    [shareOptionsData[1].value]: record
+      ?.get(mapping.shareFolderSetting.name).includes(shareOptionsData[1].value),
   });
 };
 
