@@ -4,7 +4,8 @@ import React, {
 import { observer } from 'mobx-react-lite';
 import { useFormatCommon } from '@choerodon/master';
 import { Icon, Tooltip } from 'choerodon-ui/pro';
-import { get } from 'lodash';
+import { omit, get } from 'lodash';
+
 import { OverflowWrap } from '@choerodon/components';
 import ParalleLines from '../paralle-lines';
 import { JOB_GROUP_TYPES } from '../../../../stores/CONSTANTS';
@@ -69,7 +70,7 @@ const JobItem:FC<JobProps> = (props) => {
 
   const handleOpenEditJobModal = () => {
     // 保存数据的时候掉用handleEditJobData 方法
-    console.log('123');
+    const modifyData = omit(props, ['linesType', 'showLines', 'handleJobDeleteCallback', 'handleJobEditCallback']);
   };
 
   return (
