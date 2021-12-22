@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import {
-  useMemo, useCallback, useRef, useEffect,
+  useMemo, useCallback, useRef,
 } from 'react';
 import get from 'lodash/get';
 import { TabkeyTypes } from '../interface';

@@ -104,8 +104,7 @@ const PipelineCreateModal:FC<PipelineCreateModalProps> = observer((props) => {
       const isValid = await pipelinBasicInfoDs.validate();
       if (isValid) {
         const sumitData:any = {
-          basicInfo: pipelinBasicInfoDs.current?.toData() || {},
-          templateId: submitTmpId,
+          ...pipelinBasicInfoDs.current?.toData(),
         };
         setPipelineCreateData(sumitData);
         modal?.close();
