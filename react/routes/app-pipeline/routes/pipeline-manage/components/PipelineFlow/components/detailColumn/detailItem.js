@@ -562,7 +562,7 @@ const DetailItem = (props) => {
     }
     if (itemType === 'build') {
       downloadMavenJarVO && data.push({
-        service: [''],
+        service: [],
         text: 'jar包下载',
         action: handleJarDownload,
       });
