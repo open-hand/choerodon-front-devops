@@ -37,9 +37,9 @@ export const StoreProvider = inject('AppState')((props: ProviderProps) => {
 
   const { isLoading } = useLoadStageData({ type, id, setTabsDataState });
 
-  const { isLoading: isBasicInfoLoading } = useLoadBasicInfo({ type, id, setTabsDataState });
+  useLoadBasicInfo({ type, id, setTabsDataState });
 
-  const { isLoading: isCiVariasLoading } = useLoadCiVariasLists({ type, id, setTabsDataState });
+  useLoadCiVariasLists({ type, id, setTabsDataState });
 
   useEffect(() => {
     async function initAdvancedSetting() {
