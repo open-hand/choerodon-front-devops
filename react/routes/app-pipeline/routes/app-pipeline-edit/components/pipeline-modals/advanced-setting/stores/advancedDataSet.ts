@@ -21,7 +21,7 @@ const mapping: {
     textField: 'text',
     valueField: 'value',
     options: new DataSet({
-      autoQuery: true,
+      autoQuery: false,
       transport: {
         read: () => ({
           ...DevopsAlienApiConfig.getDefaultImage(),
@@ -71,14 +71,33 @@ const mapping: {
     name: 'parallel',
     type: 'number',
     label: '并发数',
+    dynamicProps: {
+      required: ({ record }: any) => record.get(mapping.whetherConcurrent.name),
+    },
   },
+};
+
+const transformSubmitData = (ds: any) => {
+  const record = ds?.current;
+  return ({
+    [mapping.ciRunnerImage.name]: record?.get(mapping.ciRunnerImage.name),
+    [mapping.shareFolderSetting.name]: record?.get(mapping.shareFolderSetting.name),
+    [mapping.whetherConcurrent.name]: record?.get(mapping.whetherConcurrent.name),
+    [mapping.concurrentCount.name]: record?.get(mapping.concurrentCount.name),
+  });
 };
 
 const Index = () => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((key) => mapping[key]),
+  events: {
+    create: async ({ dataSet, record }: any) => {
+      const res = await record.getField(mapping.ciRunnerImage.name).options.query();
+      record.set(mapping.ciRunnerImage.name, res[0].value);
+    },
+  },
 });
 
 export default Index;
 
-export { mapping, checkImage };
+export { mapping, checkImage, transformSubmitData };

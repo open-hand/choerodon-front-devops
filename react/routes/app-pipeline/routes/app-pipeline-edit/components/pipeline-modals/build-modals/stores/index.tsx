@@ -13,7 +13,9 @@ interface buildModalProps {
   BuildDataSet: any
   StepDataSet: any,
   // 构建数据
-  data?: any,
+  data: any,
+  // 设置流水线数据回调
+  handleJobAddCallback: any
 }
 
 const Store = createContext({} as buildModalProps);

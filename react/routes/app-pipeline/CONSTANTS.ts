@@ -1,19 +1,20 @@
 const MAVEN_BUILD = 'normal';
 
-const STEPVO: any = {
-  docker_build: 'devopsCiDockerBuildConfigDTO',
-};
-
 // 构建类型
 const BUILD = 'build';
 const BUILD_MAVEN = 'maven_build';
-const BUILD_NPM = 'npm';
+const BUILD_NPM = 'npm_build';
 const BUILD_DOCKER = 'docker_build';
 const BUILD_UPLOADJAR = 'upload_jar';
-const BUILD_GO = 'go';
+const BUILD_GO = 'go_build';
 const BUILD_MAVEN_PUBLISH = 'maven_publish';
-const BUILD_SONARQUBE = 'SonarQube';
-const BUILD_UPLOAD_CHART_CHOERODON = 'upload_chart_choerodon';
+const BUILD_SONARQUBE = 'sonar';
+const BUILD_UPLOAD_CHART_CHOERODON = 'upload_chart';
+
+const STEPVO: any = {
+  [BUILD_DOCKER]: 'dockerBuildConfig',
+  [BUILD_MAVEN]: 'mavenBuildConfig',
+};
 
 const CUSTOM = 'custom';
 
