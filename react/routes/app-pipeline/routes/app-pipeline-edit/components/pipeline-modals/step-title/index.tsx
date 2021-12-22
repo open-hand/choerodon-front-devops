@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'choerodon-ui/pro';
+import { Button, Dropdown } from 'choerodon-ui/pro';
 import classnames from 'classnames';
 import { ButtonProps } from '@/interface';
 
@@ -8,8 +8,10 @@ import './index.less';
 const prefix = 'c7ncd-stepTitle';
 
 interface buttonsProps extends ButtonProps{
-    text: string,
-    icon: string,
+    text?: string,
+    icon?: string,
+    custom?: boolean,
+    dom?: any,
 }
 
 const Index = (props: {
@@ -29,9 +31,11 @@ const Index = (props: {
     const {
       text,
       icon,
+      custom,
+      dom,
       ...rest
     } = item;
-    return (
+    return custom ? dom : (
       <Button
         icon={icon}
         {...rest}

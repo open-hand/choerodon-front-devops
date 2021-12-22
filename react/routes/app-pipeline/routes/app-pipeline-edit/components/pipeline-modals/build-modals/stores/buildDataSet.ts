@@ -1,6 +1,15 @@
 import { DataSet } from 'choerodon-ui/pro';
 import { appServiceApiConfig } from '@choerodon/master';
 
+const transformSubmitData = (ds: any) => {
+  const record = ds?.current;
+  return ({
+    [mapping.name.name]: record?.get(mapping.name.name),
+    [mapping.triggerType.name]: record?.get(mapping.triggerType.name),
+    [mapping.triggerValue.name]: record?.get(mapping.triggerValue.name),
+  });
+};
+
 const triggerTypeOptionsData = [{
   text: '分支类型匹配',
   value: 'refs',
@@ -79,4 +88,4 @@ const Index = (appServiceId: any): any => ({
 });
 
 export default Index;
-export { mapping, triggerTypeOptionsData };
+export { mapping, triggerTypeOptionsData, transformSubmitData };

@@ -18,7 +18,7 @@ import useTabData from '@/routes/app-pipeline/routes/app-pipeline-edit/hooks/use
 import { TAB_BASIC } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
 
 export type JobTypesPanelProps = {
-  handleJobAddCallback:(jobData:any)=>void
+  handleJobAddCallback:(jobData: any)=>void
 }
 
 const {
@@ -52,7 +52,7 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
     const stepData = JSON.parse(keyPath[0]);
     switch (stepData.type) {
       case MAVEN_BUILD: {
-        handleBuildModal(stepData);
+        handleBuildModal(stepData, handleJobAddCallback);
         break;
       }
       default: {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useImperativeHandle } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Form, Select, SelectBox, NumberField,
@@ -16,9 +16,14 @@ const Index = observer(() => {
   const {
     AdvancedDataSet,
     className,
+    cRef,
   } = useAdvancedSettingStore();
 
   const [visible, setVisible] = useState(true);
+
+  useImperativeHandle(cRef, () => ({
+    getDataSet: () => AdvancedDataSet,
+  }));
 
   return (
     <div className={classnames({
@@ -48,7 +53,11 @@ const Index = observer(() => {
             <Select colSpan={2} name={mapping.ciRunnerImage.name} />
             <SelectBox colSpan={2} name={mapping.shareFolderSetting.name} />
             <SelectBox name={mapping.whetherConcurrent.name} />
-            <NumberField name={mapping.concurrentCount.name} />
+            {
+              AdvancedDataSet?.current?.get(mapping.whetherConcurrent.name) && (
+                <NumberField name={mapping.concurrentCount.name} />
+              )
+            }
           </Form>
         )
       }

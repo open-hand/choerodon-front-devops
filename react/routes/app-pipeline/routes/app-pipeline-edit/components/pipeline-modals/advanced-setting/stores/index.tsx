@@ -7,6 +7,7 @@ import advancedDataSet
 interface advancedSettingProps {
   AdvancedDataSet: any,
   className?: string,
+  cRef?: any,
 }
 
 const Store = createContext({} as advancedSettingProps);

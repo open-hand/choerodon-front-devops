@@ -1,5 +1,16 @@
 import { DataSet } from 'choerodon-ui/pro';
-import { STEPVO } from '@/routes/app-pipeline/CONSTANTS';
+import { RdupmAlienApiConfig } from '@choerodon/master';
+import { STEPVO, BUILD_DOCKER, BUILD_UPLOADJAR } from '@/routes/app-pipeline/CONSTANTS';
+import customRepoConfigDataSet
+  from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/stores/customRepoConfigDataSet';
+
+const settingConfigOptionsData = [{
+  text: '自定义仓库配置',
+  value: 'custom',
+}, {
+  text: '粘贴XML内容',
+  value: 'xml',
+}];
 
 const mapping: {
   [key: string]: any
@@ -8,6 +19,27 @@ const mapping: {
     name: 'expand',
     type: 'boolean',
     defaultValue: true,
+  },
+  advancedExpand: {
+    name: 'advancedExpand',
+    type: 'boolean',
+    defaultValue: false,
+  },
+  settingConfig: {
+    name: 'settingConfig',
+    type: 'string',
+    label: 'Setting配置',
+    textField: 'text',
+    valueField: 'value',
+    required: true,
+    defaultValue: 'custom',
+    options: new DataSet({
+      data: settingConfigOptionsData,
+    }),
+  },
+  script: {
+    name: 'script',
+    type: 'string',
   },
   name: {
     name: 'name',
@@ -27,23 +59,55 @@ const mapping: {
     name: 'nexusMavenRepoIds',
     type: 'string',
     label: '项目依赖仓库',
+    textField: 'name',
+    valueField: 'repositoryId',
+    options: new DataSet({
+      paging: true,
+      autoQuery: true,
+      transport: {
+        read: () => ({
+          ...RdupmAlienApiConfig.getnexusMavenRepoIds(),
+        }),
+      },
+    }),
   },
   dockerFilePath: {
     name: 'dockerFilePath',
     type: 'string',
     label: 'Dockerfile文件路径',
-    required: true,
+    dynamicProps: {
+      required: ({ record }: any) => record.get(mapping.type.name) === BUILD_DOCKER,
+    },
   },
   imageContext: {
     name: 'dockerContextDir',
     type: 'string',
     label: '镜像构建上下文',
-    required: true,
+    dynamicProps: {
+      required: ({ record }: any) => record.get(mapping.type.name) === BUILD_DOCKER,
+    },
   },
   targetProductsLibrary: {
     name: 'targetProductsLibrary',
     type: 'string',
     label: '目标制品库',
+    textField: 'name',
+    valueField: 'repositoryId',
+    dynamicProps: {
+      required: ({ record }: any) => {
+        console.log(record.get(mapping.type.name));
+        return record.get(mapping.type.name) === BUILD_UPLOADJAR;
+      },
+    },
+    options: new DataSet({
+      paging: true,
+      autoQuery: true,
+      transport: {
+        read: () => ({
+          ...RdupmAlienApiConfig.getnexusMavenRepoIds('hosted'),
+        }),
+      },
+    }),
   },
   TLS: {
     name: 'skipDockerTlsVerify',
@@ -147,52 +211,41 @@ const mapping: {
     type: 'string',
     label: 'SonarQube地址',
   },
+  customRepoConfig: {
+    name: 'customRepoConfig',
+    type: 'object',
+    options: new DataSet(customRepoConfigDataSet()),
+  },
 };
 
-const transformLoadData = (data: any) => data.map((d: any) => ({
+const transformLoadDataItem = (d: any) => ({
   ...d,
   [mapping.expand.name]: true,
+  [mapping.settingConfig.name]: settingConfigOptionsData[0].value,
+  [mapping.advancedExpand.name]: false,
   ...d[STEPVO[d.type]],
+});
+
+const transformLoadData = (data: any) => data && data.map((d: any) => transformLoadDataItem(d));
+
+const transformSubmitData = (ds: any) => ds.records.filter((i: any) => i.status !== 'delete').map((record: any) => ({
+  [mapping.name.name]: record?.get(mapping.name.name),
+  [mapping.projectRelyRepo.name]: record?.get(mapping.projectRelyRepo.name),
+  [mapping.type.name]: record?.get(mapping.type.name),
+  [mapping.script.name]: record?.get(mapping.script.name),
 }));
 
 const Index = () => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((key) => mapping[key]),
-  // data: [{
-  //   name: 'Maven构建',
-  //   type: 'maven',
-  //   expand: true,
-  // }, {
-  //   name: 'NPM构建',
-  //   type: 'npm',
-  //   expand: true,
-  // }, {
-  //   name: 'Docker构建',
-  //   type: 'docker',
-  //   expand: true,
-  // }, {
-  //   name: '上传Jar包至制品库',
-  //   type: 'upload_jar',
-  //   expand: true,
-  // }, {
-  //   name: 'Go构建',
-  //   type: 'go',
-  //   expand: true,
-  // }, {
-  //   name: 'Maven发布',
-  //   type: 'maven_publish',
-  //   expand: true,
-  // }, {
-  //   name: 'SonarQube代码检查',
-  //   type: 'SonarQube',
-  //   expand: true,
-  // }, {
-  //   name: '上传Chart至猪齿鱼',
-  //   type: 'upload_chart_choerodon',
-  //   expand: true,
-  // }],
 });
 
 export default Index;
 
-export { mapping, transformLoadData };
+export {
+  mapping,
+  transformLoadData,
+  transformSubmitData,
+  transformLoadDataItem,
+  settingConfigOptionsData,
+};

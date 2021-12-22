@@ -1,11 +1,17 @@
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import {
-  Form, TextField, Select, SelectBox,
+  Form,
+  TextField,
+  Select,
+  SelectBox,
+  Button,
 } from 'choerodon-ui/pro';
+import { templateStepsApi } from '@choerodon/master';
 import { Icon } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { YamlEditor } from '@choerodon/components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import _ from 'lodash';
 import { Record } from '@/interface';
 import {
   BUILD_MAVEN,
@@ -17,13 +23,17 @@ import {
   BUILD_SONARQUBE,
   BUILD_UPLOAD_CHART_CHOERODON,
 } from '@/routes/app-pipeline/CONSTANTS';
-import { mapping as StepMapping } from './stores/stepDataSet';
-import { mapping, triggerTypeOptionsData } from './stores/buildDataSet';
+import { mapping as StepMapping, transformSubmitData as stepDataSetTransformSubmitData, settingConfigOptionsData } from './stores/stepDataSet';
+import { mapping, triggerTypeOptionsData, transformSubmitData } from './stores/buildDataSet';
+import { mapping as repoConfigMapping, typeData } from './stores/customRepoConfigDataSet';
+import { transformSubmitData as advancedTransformSubmitData } from '../advanced-setting/stores/advancedDataSet';
 import CloseModal from '../close-modal';
 import { useBuildModalStore } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/stores';
 import AdvancedSetting from '../advanced-setting';
 import StepTitle from '../step-title';
 import SideStep, { typeProps } from '../side-step';
+import AddStep from './components/add-step';
+import MavenBuildAdvancedSetting from './components/mavenBuild-advancedSetting';
 
 import './index.less';
 
@@ -34,9 +44,41 @@ const Index = observer(() => {
     modal,
     BuildDataSet,
     StepDataSet,
+    handleJobAddCallback,
+    data: {
+      type,
+    },
   } = useBuildModalStore();
 
+  const advancedRef = useRef<any>();
+
   const stepData = StepDataSet.data;
+
+  const handleOk = async () => {
+    const res = await BuildDataSet.current.validate(true);
+    let stepRes = true;
+    for (let i = 0; i < StepDataSet.records.filter((j: any) => j.status !== 'delete').length; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      const itemResult = await StepDataSet.records[i].validate(true);
+      if (!itemResult) {
+        stepRes = false;
+        break;
+      }
+    }
+    const advancedRes = await advancedRef?.current?.getDataSet()?.current?.validate(true);
+    if (res && stepRes && advancedRes) {
+      handleJobAddCallback({
+        ...transformSubmitData(BuildDataSet),
+        devopsCiStepVOList: stepDataSetTransformSubmitData(StepDataSet),
+        ...advancedTransformSubmitData(advancedRef?.current?.getDataSet()),
+        ciTemplateJobGroupDTO: {
+          type,
+        },
+      });
+      return true;
+    }
+    return false;
+  };
 
   const renderStepItemForm = (itemRecord: Record) => {
     let result: any = '';
@@ -46,10 +88,20 @@ const Index = observer(() => {
           <Form record={itemRecord} columns={2}>
             <TextField name={StepMapping.stepName.name} />
             <Select name={StepMapping.projectRelyRepo.name} />
+            {/* @ts-ignore */}
+            <div colSpan={2}>
+              <MavenBuildAdvancedSetting
+                prefix={prefix}
+                record={itemRecord}
+              />
+            </div>
             <YamlEditor
+              newLine
               colSpan={2}
               readOnly={false}
               modeChange={false}
+              value={itemRecord.get(StepMapping.script.name)}
+              onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
             />
           </Form>
         );
@@ -90,6 +142,8 @@ const Index = observer(() => {
             <TextField name={StepMapping.stepName.name} />
             <Select name={StepMapping.targetProductsLibrary.name} />
             <YamlEditor
+              value={itemRecord.get(StepMapping.script.name)}
+              onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
               newLine
               colSpan={2}
               readOnly={false}
@@ -196,7 +250,13 @@ const Index = observer(() => {
                 />
                 <p className={`${prefix}__stepItem__main__name`}>{ record.get(StepMapping.name.name) }</p>
               </div>
-              <Icon className={`${prefix}__stepItem__main__first__remove`} type="remove_circle_outline" />
+              <Icon
+                className={`${prefix}__stepItem__main__first__remove`}
+                type="remove_circle_outline"
+                onClick={() => {
+                  StepDataSet.delete([record], false);
+                }}
+              />
             </div>
             {record.get(StepMapping.expand.name) && renderStepItemForm(record)}
           </div>
@@ -235,9 +295,14 @@ const Index = observer(() => {
     return <Select name={mapping.triggerValue.name} colSpan={4} />;
   };
 
+  const handleAddStep = async () => {
+    const res = await templateStepsApi.getTemplateSteps(1);
+    console.log(res);
+  };
+
   return (
     <div className={prefix}>
-      <CloseModal modal={modal} />
+      <CloseModal preCheck={handleOk} modal={modal} />
       <SideStep
         scrollContext=".c7ncd-buildModal-content__main"
         data={[{
@@ -273,13 +338,17 @@ const Index = observer(() => {
             icon: 'vertical_align_top',
             onClick: () => handleExpand(true),
           }, {
-            text: '添加步骤',
-            icon: 'add',
+            custom: true,
+            dom: <AddStep ds={StepDataSet} />,
+            // text: '添加步骤',
+            // onClick: handleAddStep,
+            // overlay: addStepMenu,
           }]}
         />
         {renderSteps(stepData)}
         <div className={`${prefix}__main__divided`} />
         <AdvancedSetting
+          cRef={advancedRef}
           className={`${prefix}__main__advanced`}
         />
       </div>
