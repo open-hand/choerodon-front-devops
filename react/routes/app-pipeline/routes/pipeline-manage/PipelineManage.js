@@ -228,11 +228,11 @@ const PipelineManage = observer(() => {
       devopsCdPipelineDeatilVO: detailDevopsCdPipelineDeatilVO,
     } = getDetailData;
     const buttons = [{
-      permissions: ['choerodon.code.project.develop.ci-pipeline.ps.create'],
+      // 'choerodon.code.project.develop.ci-pipeline.ps.create'
+      permissions: [],
       name: format({ id: 'CreatePipeline' }),
       icon: 'playlist_add',
-      handler: handleCreatePipeline,
-      display: true,
+      handler: handleModalOpen,
     }, {
       permissions: ['choerodon.code.project.develop.ci-pipeline.ps.variable.project'],
       name: format({ id: 'GlobalCI' }),
@@ -298,18 +298,6 @@ const PipelineManage = observer(() => {
       icon: 'refresh',
       handler: handleRefresh,
       display: true,
-    });
-    buttons.push({
-      icon: 'settings',
-      handler: () => {
-        history.push({
-          search,
-          pathname: `${pathname}/edit/1234`,
-        });
-      },
-    }, {
-      icon: 'add',
-      handler: handleModalOpen,
     });
     return buttons;
   }

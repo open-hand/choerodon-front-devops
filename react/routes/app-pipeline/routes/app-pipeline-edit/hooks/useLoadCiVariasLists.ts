@@ -38,7 +38,7 @@ function useLoadVariasLists(configs:PipelineApiConfigs, options?:LoadStageDataPr
 
   return useQuery<unknown, unknown, Record<string, any>>(['app-pipeline-ci-varias', id],
     getVariasLists,
-    { ...options, onSuccess: handleSuccess });
+    { ...options, onSuccess: handleSuccess, retry: 0 });
 }
 
 export default useLoadVariasLists;

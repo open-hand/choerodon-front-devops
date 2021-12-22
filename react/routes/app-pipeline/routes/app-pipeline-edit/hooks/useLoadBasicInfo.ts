@@ -21,7 +21,7 @@ function useLoadBasicInfo(configs:PipelineApiConfigs, options?:LoadStageDataProp
 
   const [localData, setLocalData] = useSessionStorageState<any>(PIPELINE_CREATE_LOCALSTORAGE_IDENTIFY);
 
-  useUnmount(() => setLocalData(null));
+  // useUnmount(() => setLocalData(null));
 
   const handleSuccess = (basicInfo:Record<string, any>) => {
     setTabsDataState({

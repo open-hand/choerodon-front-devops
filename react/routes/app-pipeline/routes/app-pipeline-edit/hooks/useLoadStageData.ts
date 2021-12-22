@@ -28,7 +28,7 @@ function useLoadStageData(configs:PipelineApiConfigs, options?:LoadStageDataProp
   const getTemplatesById = () => (id && id !== DEFAULT_TMP_ID ? pipelinTemplateApi.getTemplateDataById(id) : Promise.resolve(DEFAULT_STAGES_DATA));
 
   return useQuery<unknown, unknown, Record<string, any>>(['app-pipeline-edit', id],
-    getTemplatesById, { ...options, onSuccess: handleSuccess });
+    getTemplatesById, { ...options, onSuccess: handleSuccess, retry: 0 });
 }
 
 export default useLoadStageData;
