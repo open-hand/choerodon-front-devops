@@ -5,13 +5,13 @@ import React, {
 import { useRouteMatch } from 'react-router';
 import { inject } from 'mobx-react';
 import { useFormatCommon, useFormatMessage } from '@choerodon/master';
-import { useSetState, useSessionStorageState } from 'ahooks';
+import { useSetState } from 'ahooks';
 import { Loading } from '@choerodon/components';
 import { initCustomFunc } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-advanced-config/stores';
 import { AppPipelineEditStoreContext, ProviderProps, TabkeyTypes } from '../interface';
-import { TAB_BASIC, TAB_FLOW_CONFIG, TAB_ADVANCE_SETTINGS } from './CONSTANTS';
-import { PIPELINE_CREATE_LOCALSTORAGE_IDENTIFY } from '@/routes/app-pipeline/stores/CONSTANTS';
+import { TAB_FLOW_CONFIG, TAB_ADVANCE_SETTINGS } from './CONSTANTS';
 import useLoadStageData from '../hooks/useLoadStageData';
+import useLoadBasicInfo from '../hooks/useLoadBasicInfo';
 
 const Store = createContext({} as AppPipelineEditStoreContext);
 
@@ -34,24 +34,9 @@ export const StoreProvider = inject('AppState')((props: ProviderProps) => {
 
   const [tabsData, setTabsDataState] = useSetState<Partial<Record<TabkeyTypes, unknown>>>({});
 
-  const [localData] = useSessionStorageState<any>(PIPELINE_CREATE_LOCALSTORAGE_IDENTIFY);
+  const { isLoading } = useLoadStageData({ type, id, setTabsDataState });
 
-  // 这个是编辑的时候才会触发这个load去加载数据
-  const { data: stageObject = {}, isLoading, isSuccess } = useLoadStageData({ type, id });
-
-  useEffect(() => {
-    if (isSuccess) {
-      setTabsDataState({
-        [TAB_FLOW_CONFIG]: stageObject?.devopsCiStageVOS || [],
-      });
-    }
-  }, [stageObject, isSuccess]);
-
-  useEffect(() => {
-    setTabsDataState({
-      [TAB_BASIC]: localData?.basicInfo || {},
-    });
-  }, []);
+  const { isLoading: isBasicInfoLoading } = useLoadBasicInfo({ type, id, setTabsDataState });
 
   useEffect(() => {
     async function initAdvancedSetting() {

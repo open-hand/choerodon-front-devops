@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
-import { Alert } from 'choerodon-ui';
+import { Alert, message } from 'choerodon-ui';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { useBoolean } from 'ahooks';
 import { throttle } from 'lodash';
@@ -29,6 +29,14 @@ const StageEdits = () => {
     (pos: { destination: any; source:any }) => {
       const { destination, source } = pos;
       if (!destination) {
+        return;
+      }
+      const sourceType = getSourceData[source.index]?.type;
+      const destType = getSourceData[destination.index]?.type;
+      if (sourceType !== destType) {
+        message.info('阶段顺序必须满足CI阶段在CD阶段之前！');
+        setFromToId('');
+        setFalse();
         return;
       }
       window.requestAnimationFrame(() => {
@@ -119,7 +127,7 @@ const StageEdits = () => {
       <Alert closable showIcon type="warning" message="此页面定义了CI阶段或其中的任务后，GitLab仓库中的.gitlab-ci.yml文件也会同步修改。" />
       <div className={`${prefixCls}-container`}>
         <DragDropContext
-          onDragStart={() => window.requestAnimationFrame(setTrue)}
+          onDragStart={() => window.requestIdleCallback(setTrue)}
           onDragEnd={handleDragEnd}
           onDragUpdate={handleDragOver}
         >

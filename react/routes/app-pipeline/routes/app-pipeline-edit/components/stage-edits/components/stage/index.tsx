@@ -118,8 +118,8 @@ const Stage:FC<StageProps> = (props) => {
       const data = {
         ...item,
         jobIndex: index, // job的index
-        linesType,
-        showLines: !isDragging,
+        linesType, // job线条的类型
+        showLines: !isDragging, // 是否展示线条
       };
       return <JobItem {...data} {...options} key={item?.id} />;
     }),
