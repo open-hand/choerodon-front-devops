@@ -5,6 +5,7 @@ import {
   Select,
   SelectBox,
   Button,
+  NumberField,
 } from 'choerodon-ui/pro';
 import { templateStepsApi } from '@choerodon/master';
 import { Icon } from 'choerodon-ui';
@@ -39,6 +40,47 @@ import './index.less';
 
 const prefix = 'c7ncd-buildModal-content';
 
+const DockerDom = observer(({
+  record,
+}: any) => (
+  <>
+    <Form record={record} columns={2}>
+      <TextField name={StepMapping.stepName.name} />
+      <TextField
+        newLine
+        name={StepMapping.dockerFilePath.name}
+      />
+      <TextField name={StepMapping.imageContext.name} />
+      <SelectBox name={StepMapping.TLS.name} />
+      <SelectBox name={StepMapping.imageSafeScan.name} />
+      {
+        record.get(StepMapping.imageSafeScan.name) && (
+          <SelectBox name={StepMapping.imagePublishGuard.name} />
+        )
+      }
+    </Form>
+    {
+      record.get(StepMapping.imageSafeScan.name)
+      && record.get(StepMapping.imagePublishGuard.name) && (
+        <>
+          <p>门禁限制</p>
+          <Form columns={3} record={record}>
+            <Select name={StepMapping.bugLevel.name} />
+            <Select name={StepMapping.symbol.name} />
+            <NumberField name={StepMapping.condition.name} />
+          </Form>
+        </>
+      )
+    }
+  </>
+));
+
+const SonarDom = observer(() => (
+  <div>
+    123
+  </div>
+));
+
 const Index = observer(() => {
   const {
     modal,
@@ -67,14 +109,16 @@ const Index = observer(() => {
     }
     const advancedRes = await advancedRef?.current?.getDataSet()?.current?.validate(true);
     if (res && stepRes && advancedRes) {
-      handleJobAddCallback({
+      const result = {
         ...transformSubmitData(BuildDataSet),
         devopsCiStepVOList: stepDataSetTransformSubmitData(StepDataSet),
         ...advancedTransformSubmitData(advancedRef?.current?.getDataSet()),
         ciTemplateJobGroupDTO: {
           type,
         },
-      });
+      };
+      console.log(result);
+      handleJobAddCallback(result);
       return true;
     }
     return false;
@@ -112,28 +156,20 @@ const Index = observer(() => {
           <Form record={itemRecord} columns={2}>
             <TextField name={StepMapping.stepName.name} />
             <YamlEditor
+              value={itemRecord.get(StepMapping.script.name)}
+              onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
               newLine
               colSpan={2}
               readOnly={false}
               modeChange={false}
+              showError={false}
             />
           </Form>
         );
         break;
       }
       case BUILD_DOCKER: {
-        result = (
-          <Form record={itemRecord} columns={2}>
-            <TextField name={StepMapping.stepName.name} />
-            <TextField
-              newLine
-              name={StepMapping.dockerFilePath.name}
-            />
-            <TextField name={StepMapping.imageContext.name} />
-            <SelectBox name={StepMapping.TLS.name} />
-            <SelectBox name={StepMapping.imageSafeScan.name} />
-          </Form>
-        );
+        result = <DockerDom record={itemRecord} />;
         break;
       }
       case BUILD_UPLOADJAR: {
@@ -158,6 +194,9 @@ const Index = observer(() => {
           <Form record={itemRecord} columns={2}>
             <TextField name={StepMapping.stepName.name} />
             <YamlEditor
+              showError={false}
+              value={itemRecord.get(StepMapping.script.name)}
+              onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
               newLine
               colSpan={2}
               readOnly={false}
@@ -172,7 +211,18 @@ const Index = observer(() => {
           <Form record={itemRecord} columns={2}>
             <TextField name={StepMapping.stepName.name} />
             <Select name={StepMapping.targetProductsLibrary.name} />
+            <Select colSpan={2} name={StepMapping.projectRelyRepo.name} />
+            {/* @ts-ignore */}
+            <div colSpan={2}>
+              <MavenBuildAdvancedSetting
+                prefix={prefix}
+                record={itemRecord}
+              />
+            </div>
             <YamlEditor
+              showError={false}
+              value={itemRecord.get(StepMapping.script.name)}
+              onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
               newLine
               colSpan={2}
               readOnly={false}

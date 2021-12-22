@@ -14,6 +14,7 @@ const BUILD_UPLOAD_CHART_CHOERODON = 'upload_chart';
 const STEPVO: any = {
   [BUILD_DOCKER]: 'dockerBuildConfig',
   [BUILD_MAVEN]: 'mavenBuildConfig',
+  [BUILD_MAVEN_PUBLISH]: 'mavenPublishConfig',
 };
 
 const CUSTOM = 'custom';

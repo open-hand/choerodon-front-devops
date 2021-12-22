@@ -57,6 +57,7 @@ const mapping: {
     name: 'triggerValue',
     type: 'string',
     label: '触发分支',
+    multiple: true,
     textField: 'branchName',
     valueField: 'branchName',
   },
