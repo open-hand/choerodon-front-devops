@@ -64,10 +64,7 @@ const DEFAULT_STAGES_DATA = {
       name: '构建', sequence: 2, id: 2, type: 'CI',
     },
     {
-      name: '发布', sequence: 3, id: 3, type: 'CI',
-    },
-    {
-      name: '部署', sequence: 4, id: 4, type: 'CI',
+      name: '部署', sequence: 3, id: 3, type: 'CI',
     },
   ],
   hasRecords: false,

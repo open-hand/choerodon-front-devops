@@ -11,6 +11,7 @@ import { JOB_GROUP_TYPES } from '../../../../stores/CONSTANTS';
 
 import './index.less';
 import SerialLines from '../serial-lines';
+import useStageEdit from '../../hooks/useStageEdit';
 
 export type JobProps = {
   id:string
@@ -22,6 +23,7 @@ export type JobProps = {
   }
   linesType: 'paralle' | 'serial'
   handleJobDeleteCallback: (jobIndex:number)=>void
+  handleJobEditCallback:(jobIndex:number, jobData:Record<string, any>)=>void
 } & Record<string, any>
 
 const prefixCls = 'c7ncd-pipeline-jobItem';
@@ -35,9 +37,11 @@ const JobItem:FC<JobProps> = (props) => {
       type: groupType,
     },
     linesType,
-    handleJobDeleteCallback,
     jobIndex,
     showLines = true,
+
+    handleJobDeleteCallback,
+    handleJobEditCallback,
   } = props;
 
   const currentJobGroupType = JOB_GROUP_TYPES[groupType];
@@ -55,10 +59,22 @@ const JobItem:FC<JobProps> = (props) => {
     handleJobDeleteCallback(jobIndex);
   };
 
+  /**
+   * 编辑job的数据
+   * @param {Record<string, any>} jobData
+   */
+  const handleEditJobData = (jobData:Record<string, any>) => {
+    handleJobEditCallback(jobIndex, jobData);
+  };
+
+  const handleOpenEditJobModal = () => {
+    // 保存数据的时候掉用handleEditJobData 方法
+  };
+
   return (
     <div className={prefixCls}>
       {showLines && linesMap[linesType]}
-      <div className={`${prefixCls}-content`}>
+      <div className={`${prefixCls}-content`} role="none" onClick={handleOpenEditJobModal}>
         <Tooltip title={get(currentJobGroupType, 'name')}>
           <Icon className={`${`${prefixCls}`}-icon`} type={get(currentJobGroupType, 'icon')} />
         </Tooltip>

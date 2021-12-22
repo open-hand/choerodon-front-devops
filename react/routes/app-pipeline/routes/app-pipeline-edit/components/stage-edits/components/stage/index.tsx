@@ -45,6 +45,7 @@ const Stage:FC<StageProps> = (props) => {
 
     deleteJob,
     addJob,
+    editJob,
   } = useStageEdit();
 
   const formatCommon = useFormatCommon();
@@ -99,10 +100,20 @@ const Stage:FC<StageProps> = (props) => {
     deleteJob(stageIndex, jobIndex);
   };
 
+  /**
+   * 编辑job的回调函数
+   * @param {number} jobIndex
+   * @param {Record<string, any>} jobData
+   */
+  const handleJobEditCallback = (jobIndex:number, jobData:Record<string, any>) => {
+    editJob(stageIndex, jobIndex, jobData);
+  };
+
   const renderJobs = useCallback(
     () => map(jobList, (item, index:number) => {
       const options = {
         handleJobDeleteCallback,
+        handleJobEditCallback,
       };
       const data = {
         ...item,
