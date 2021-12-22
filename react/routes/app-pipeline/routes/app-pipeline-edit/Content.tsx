@@ -6,7 +6,6 @@ import { observer } from 'mobx-react-lite';
 import {
   Page, Content, Header, HeaderButtons, Breadcrumb,
 } from '@choerodon/master';
-import { useRouteMatch } from 'react-router';
 import { Tabs } from 'choerodon-ui';
 import map from 'lodash/map';
 import classNames from 'classnames';
@@ -32,8 +31,6 @@ const AppPipelineEdit = () => {
     type,
     tabsData,
   } = useAppPipelineEditStore();
-
-  const { params } = useRouteMatch<{id:string}>();
 
   const contentCls = classNames(`${prefixCls}-content`, {
     [`${prefixCls}-content-bgnone`]: TAB_FLOW_CONFIG === currentKey,
@@ -83,7 +80,7 @@ const AppPipelineEdit = () => {
     if (type === 'create') {
       return '创建流水线';
     }
-    return `编辑流水线${params?.id}`;
+    return '编辑流水线';
   };
 
   return (

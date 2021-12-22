@@ -1,11 +1,9 @@
 /* eslint-disable max-len */
 import React, { createContext, useContext } from 'react';
 import { useFormatCommon, useFormatMessage } from '@choerodon/master';
-import { useReactive } from 'ahooks';
 import useStore from './useStore';
 import { StageEditsStoreContext, ProviderProps } from '../interface';
 import useLoadJobPanel from '../hooks/useLoadJobPanel';
-import useTabData from '../../../hooks/useTabData';
 
 const Store = createContext({} as StageEditsStoreContext);
 

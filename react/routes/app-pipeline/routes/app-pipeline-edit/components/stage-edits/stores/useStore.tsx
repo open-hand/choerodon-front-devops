@@ -98,7 +98,14 @@ export default function useStore() {
       this.handleEditCallback();
     },
 
-    edit(stageIndex:number, jobIndex:number, jobData:any) {
+    /**
+     * 编辑job
+     * @param {number} stageIndex
+     * @param {number} jobIndex
+     * @param {*} jobData
+     * @return {*}
+     */
+    editJob(stageIndex:number, jobIndex:number, jobData:any) {
       if (!this.sourceData[stageIndex]?.jobList) {
         return;
       }
