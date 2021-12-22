@@ -12,6 +12,7 @@ import { AppPipelineEditStoreContext, ProviderProps, TabkeyTypes } from '../inte
 import { TAB_FLOW_CONFIG, TAB_ADVANCE_SETTINGS } from './CONSTANTS';
 import useLoadStageData from '../hooks/useLoadStageData';
 import useLoadBasicInfo from '../hooks/useLoadBasicInfo';
+import useLoadCiVariasLists from '../hooks/useLoadCiVariasLists';
 
 const Store = createContext({} as AppPipelineEditStoreContext);
 
@@ -37,6 +38,8 @@ export const StoreProvider = inject('AppState')((props: ProviderProps) => {
   const { isLoading } = useLoadStageData({ type, id, setTabsDataState });
 
   const { isLoading: isBasicInfoLoading } = useLoadBasicInfo({ type, id, setTabsDataState });
+
+  const { isLoading: isCiVariasLoading } = useLoadCiVariasLists({ type, id, setTabsDataState });
 
   useEffect(() => {
     async function initAdvancedSetting() {
