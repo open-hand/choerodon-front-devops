@@ -21,7 +21,7 @@ const Index = observer(() => {
   return (
     <>
       <Form dataSet={PipelineAdvancedConfigDataSet} columns={2}>
-        <Select colSpan={2} name={mapping.CIRunnerImage.name} />
+        <Select combo colSpan={2} name={mapping.CIRunnerImage.name} />
         <SelectBox colSpan={1} name={mapping.versionStrategy.name} />
         <TextField colSpan={1} name={mapping.nameRules.name} />
       </Form>

@@ -1,6 +1,7 @@
 import { useQuery, UseQueryOptions, QueryKey } from 'react-query';
 import { TAB_ADVANCE_SETTINGS } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
 import { initCustomFunc } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-advanced-config/stores';
+import { transformLoadData } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-advanced-config/stores/pipelineAdvancedConfigDataSet';
 
 function useAdvancedSetting(configs: any, options?: any) {
   const {
@@ -12,6 +13,7 @@ function useAdvancedSetting(configs: any, options?: any) {
   const handleSuccess = (data:Record<string, any>) => {
     setTabsDataState({
       [TAB_ADVANCE_SETTINGS]: {
+        ...transformLoadData(),
         devopsCiPipelineFunctionDTOList: data || [],
       },
     });

@@ -7,7 +7,7 @@ import './index.less';
 const prefix = 'c7ncd-sideStep';
 
 // eslint-disable-next-line no-shadow
-declare enum typeProps {
+enum typeProps {
   scrollTop= 'scrollTop',
 }
 

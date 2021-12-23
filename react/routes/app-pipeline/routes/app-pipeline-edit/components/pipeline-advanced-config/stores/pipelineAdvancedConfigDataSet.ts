@@ -1,5 +1,6 @@
 import { DataSet } from 'choerodon-ui/pro';
 import { DevopsAlienApiConfig } from '@choerodon/master';
+import { TAB_ADVANCE_SETTINGS } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
 
 import { checkImage } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/advanced-setting/stores/advancedDataSet';
 
@@ -51,23 +52,31 @@ const mapping: any = {
   },
 };
 
-const transformLoadData = (queryData: any) => ({
-  [mapping.CIRunnerImage.name]: queryData[0].value,
-  [mapping.versionStrategy.name]: false,
-  [mapping.nameRules.name]: '${C7N_COMMIT_TIME}-${C7N_BRANCH}',
+const transformLoadData = (queryData?: any, data?: any) => ({
+  [mapping.CIRunnerImage.name]: data?.[mapping.CIRunnerImage.name] || (queryData ? queryData[0].value : ''),
+  [mapping.versionStrategy.name]: data?.[mapping.versionStrategy.name] || false,
+  [mapping.nameRules.name]: data?.[mapping.nameRules.name] || '${C7N_COMMIT_TIME}-${C7N_BRANCH}',
 });
 
-const Index = () => ({
+const Index = (data: any, setTabsDataState: any) => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((key) => mapping[key]),
   events: {
     create: async ({ dataSet, record }: any) => {
       const res = await record.getField(mapping.CIRunnerImage.name).options.query();
-      dataSet.loadData([transformLoadData(res)]);
+      dataSet.loadData([transformLoadData(res, data)]);
+    },
+    update: ({ name, value }: any) => {
+      setTabsDataState({
+        [TAB_ADVANCE_SETTINGS]: {
+          ...data,
+          [name]: value,
+        },
+      });
     },
   },
 });
 
 export default Index;
 
-export { mapping };
+export { mapping, transformLoadData };
