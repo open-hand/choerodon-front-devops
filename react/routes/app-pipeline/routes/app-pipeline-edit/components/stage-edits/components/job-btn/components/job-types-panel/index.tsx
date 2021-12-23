@@ -8,7 +8,9 @@ import { useFormatCommon } from '@choerodon/master';
 import { Menu, Icon } from 'choerodon-ui';
 import { handleBuildModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals';
 import { handleCustomModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/custom-modal';
-import { BUILD, CUSTOM, MAVEN_BUILD } from '@/routes/app-pipeline/CONSTANTS';
+import {
+  BUILD, CUSTOM, MAVEN_BUILD, CUSTOM_BUILD,
+} from '@/routes/app-pipeline/CONSTANTS';
 import {} from 'choerodon-ui/pro';
 
 import './index.less';
@@ -25,6 +27,21 @@ const {
   SubMenu,
   Item,
 } = Menu;
+
+const handlePipelineModal = (data: any, callback: any) => {
+  switch (data.type) {
+    case MAVEN_BUILD: {
+      handleBuildModal(data, callback);
+      break;
+    }
+    case CUSTOM_BUILD: {
+      handleCustomModal(data, callback);
+    }
+    default: {
+      break;
+    }
+  }
+};
 
 const prefixCls = 'c7ncd-job-types-panel';
 
@@ -50,15 +67,7 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
   const handleClick = (data: any) => {
     const { keyPath } = data;
     const stepData = JSON.parse(keyPath[0]);
-    switch (stepData.type) {
-      case MAVEN_BUILD: {
-        handleBuildModal(stepData, handleJobAddCallback);
-        break;
-      }
-      default: {
-        break;
-      }
-    }
+    handlePipelineModal(stepData, handleJobAddCallback);
   };
 
   const renderChildrenMenu = ({ parentId }:{
@@ -117,3 +126,5 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
 };
 
 export default JobTypesPanel;
+
+export { handlePipelineModal };

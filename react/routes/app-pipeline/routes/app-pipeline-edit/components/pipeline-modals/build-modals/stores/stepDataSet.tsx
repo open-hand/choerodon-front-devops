@@ -2,7 +2,7 @@ import React from 'react';
 import { DataSet, Modal } from 'choerodon-ui/pro';
 import { RdupmAlienApiConfig } from '@choerodon/master';
 import {
-  STEPVO, BUILD_DOCKER, BUILD_UPLOADJAR, BUILD_MAVEN, BUILD_MAVEN_PUBLISH,
+  STEPVO, BUILD_DOCKER, BUILD_UPLOADJAR, BUILD_MAVEN, BUILD_MAVEN_PUBLISH, BUILD_SONARQUBE,
 } from '@/routes/app-pipeline/CONSTANTS';
 import customRepoConfigDataSet
   from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/stores/customRepoConfigDataSet';
@@ -13,6 +13,30 @@ const settingConfigOptionsData = [{
 }, {
   text: '粘贴XML内容',
   value: 'xml',
+}];
+
+const sonarConfigData = [{
+  text: '默认配置',
+  value: 'default',
+}, {
+  text: '自定义配置',
+  value: 'custom',
+}];
+
+const scanTypeData = [{
+  text: 'SonarScanner',
+  value: 'SonarScanner',
+}, {
+  text: 'SonarMaven',
+  value: 'SonarMaven',
+}];
+
+const accountConfigData = [{
+  text: '用户名与密码',
+  value: 'username',
+}, {
+  text: 'Token',
+  value: 'token',
 }];
 
 const mapping: {
@@ -90,6 +114,11 @@ const mapping: {
     dynamicProps: {
       required: ({ record }: any) => record.get(mapping.type.name) === BUILD_DOCKER,
     },
+  },
+  token: {
+    name: 'token',
+    type: 'string',
+    label: 'Token',
   },
   targetProductsLibrary: {
     name: 'nexusRepoId',
@@ -213,17 +242,16 @@ const mapping: {
     textField: 'text',
     valueField: 'value',
     options: new DataSet({
-      data: [{
-        text: 'SonarScanner',
-        value: 'SonarScanner',
-      }, {
-        text: 'SonarMaven',
-        value: 'SonarMaven',
-      }],
+      data: scanTypeData,
     }),
   },
+  scanPath: {
+    name: 'sources',
+    type: 'string',
+    label: '扫描路径',
+  },
   whetherMavenSingleMeasure: {
-    name: 'whetherMavenSingleMeasure',
+    name: 'skipTests',
     type: 'boolean',
     label: '是否执行Maven单测',
     textField: 'text',
@@ -231,10 +259,10 @@ const mapping: {
     options: new DataSet({
       data: [{
         text: '是',
-        value: true,
+        value: false,
       }, {
         text: '否',
-        value: false,
+        value: true,
       }],
     }),
   },
@@ -245,29 +273,17 @@ const mapping: {
     textField: 'text',
     valueField: 'value',
     options: new DataSet({
-      data: [{
-        text: '默认配置',
-        value: 'default',
-      }, {
-        text: '自定义配置',
-        value: 'custom',
-      }],
+      data: sonarConfigData,
     }),
   },
   sonarqubeAccountConfig: {
-    name: 'sonarqubeAccountConfig',
+    name: 'authType',
     type: 'string',
     label: 'SonarQube账号配置',
     textField: 'text',
     valueField: 'value',
     options: new DataSet({
-      data: [{
-        text: '用户名与密码',
-        value: '1',
-      }, {
-        text: 'Token',
-        value: '2',
-      }],
+      data: accountConfigData,
     }),
   },
   username: {
@@ -281,7 +297,7 @@ const mapping: {
     label: '密码',
   },
   address: {
-    name: 'address',
+    name: 'sonarUrl',
     type: 'string',
     label: 'SonarQube地址',
   },
@@ -301,6 +317,9 @@ const transformLoadDataItem = (d: any) => ({
   [mapping.expand.name]: true,
   [mapping.settingConfig.name]: settingConfigOptionsData[0].value,
   [mapping.advancedExpand.name]: false,
+  [mapping.sonarqubeConfigWay.name]: sonarConfigData[0].value,
+  [mapping.sonarqubeAccountConfig.name]: accountConfigData[0].value,
+  [mapping.whetherMavenSingleMeasure.name]: false,
   ...d[STEPVO[d.type]],
 });
 
@@ -339,6 +358,27 @@ const getInsideDtoData = (record: any) => {
       });
       break;
     }
+    case BUILD_SONARQUBE: {
+      return ({
+        [mapping.examType.name]: record.get(mapping.examType.name),
+        [mapping.scanPath.name]: record.get(mapping.scanPath.name),
+        [mapping.whetherMavenSingleMeasure.name]: record
+          .get(mapping.whetherMavenSingleMeasure.name),
+        [mapping.sonarqubeConfigWay.name]: record.get(mapping.sonarqubeConfigWay.name),
+        [mapping.sonarqubeAccountConfig.name]: record.get(mapping.sonarqubeAccountConfig.name),
+        [mapping.username.name]: record.get(mapping.username.name),
+        [mapping.password.name]: record.get(mapping.password.name),
+        [mapping.address.name]: record.get(mapping.address.name),
+        [mapping.token.name]: record.get(mapping.token.name),
+      });
+      break;
+    }
+    case BUILD_UPLOADJAR: {
+      return ({
+        [mapping.targetProductsLibrary.name]: record.get(mapping.targetProductsLibrary.name),
+      });
+      break;
+    }
     default: {
       return undefined;
       break;
@@ -350,7 +390,9 @@ const transformSubmitData = (ds: any) => ds.records.filter((i: any) => i.status 
   [mapping.name.name]: record?.get(mapping.name.name),
   [mapping.type.name]: record?.get(mapping.type.name),
   [mapping.script.name]: record?.get(mapping.script.name),
-  [STEPVO?.[record?.get(mapping.type.name)]]: getInsideDtoData(record),
+  ...STEPVO?.[record?.get(mapping.type.name)] ? {
+    [STEPVO?.[record?.get(mapping.type.name)]]: getInsideDtoData(record),
+  } : {},
 }));
 
 const Index = () => ({
@@ -400,4 +442,7 @@ export {
   transformSubmitData,
   transformLoadDataItem,
   settingConfigOptionsData,
+  scanTypeData,
+  sonarConfigData,
+  accountConfigData,
 };

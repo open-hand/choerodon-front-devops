@@ -7,6 +7,7 @@ import { Icon, Tooltip } from 'choerodon-ui/pro';
 import { omit, get } from 'lodash';
 
 import { OverflowWrap } from '@choerodon/components';
+import { handlePipelineModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/stage-edits/components/job-btn/components/job-types-panel';
 import ParalleLines from '../paralle-lines';
 import { JOB_GROUP_TYPES } from '../../../../stores/CONSTANTS';
 
@@ -71,6 +72,7 @@ const JobItem:FC<JobProps> = (props) => {
   const handleOpenEditJobModal = () => {
     // 保存数据的时候掉用handleEditJobData 方法
     const modifyData = omit(props, ['linesType', 'showLines', 'handleJobDeleteCallback', 'handleJobEditCallback']);
+    handlePipelineModal(modifyData, handleEditJobData);
   };
 
   return (

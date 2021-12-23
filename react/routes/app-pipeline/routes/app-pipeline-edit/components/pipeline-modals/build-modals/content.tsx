@@ -24,7 +24,14 @@ import {
   BUILD_SONARQUBE,
   BUILD_UPLOAD_CHART_CHOERODON,
 } from '@/routes/app-pipeline/CONSTANTS';
-import { mapping as StepMapping, transformSubmitData as stepDataSetTransformSubmitData, settingConfigOptionsData } from './stores/stepDataSet';
+import {
+  mapping as StepMapping,
+  transformSubmitData as stepDataSetTransformSubmitData,
+  settingConfigOptionsData,
+  scanTypeData,
+  sonarConfigData,
+  accountConfigData,
+} from './stores/stepDataSet';
 import { mapping, triggerTypeOptionsData, transformSubmitData } from './stores/buildDataSet';
 import { mapping as repoConfigMapping, typeData } from './stores/customRepoConfigDataSet';
 import { transformSubmitData as advancedTransformSubmitData } from '../advanced-setting/stores/advancedDataSet';
@@ -75,10 +82,49 @@ const DockerDom = observer(({
   </>
 ));
 
-const SonarDom = observer(() => (
-  <div>
-    123
-  </div>
+const SonarDom = observer(({
+  record,
+}: any) => (
+  <Form record={record} columns={2}>
+    <TextField name={StepMapping.stepName.name} />
+    <Select name={StepMapping.examType.name} />
+    {
+      (function () {
+        if (record.get(StepMapping.examType.name) === scanTypeData[0].value) {
+          return <TextField name={StepMapping.scanPath.name} />;
+        }
+        if (record.get(StepMapping.examType.name) === scanTypeData[1].value) {
+          return <SelectBox name={StepMapping.whetherMavenSingleMeasure.name} />;
+        }
+        return '';
+      }())
+    }
+    <SelectBox
+      name={StepMapping.sonarqubeConfigWay.name}
+      newLine
+    />
+    {
+      record.get(StepMapping.sonarqubeConfigWay.name) === sonarConfigData[1].value && (
+        <>
+          <SelectBox
+            name={StepMapping.sonarqubeAccountConfig.name}
+          />
+          {
+            record.get(StepMapping.sonarqubeAccountConfig.name) === accountConfigData[0].value ? (
+              <>
+                <TextField name={StepMapping.username.name} />
+                <TextField name={StepMapping.password.name} />
+              </>
+            ) : (
+              <TextField name={StepMapping.token.name} />
+            )
+          }
+          <TextField name={StepMapping.address.name} />
+        </>
+      )
+    }
+
+  </Form>
 ));
 
 const Index = observer(() => {
@@ -101,7 +147,7 @@ const Index = observer(() => {
     let stepRes = true;
     for (let i = 0; i < StepDataSet.records.filter((j: any) => j.status !== 'delete').length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
-      const itemResult = await StepDataSet.records[i].validate(true);
+      const itemResult = await StepDataSet.records.filter((j: any) => j.status !== 'delete')[i].validate(true);
       if (!itemResult) {
         stepRes = false;
         break;
@@ -233,23 +279,7 @@ const Index = observer(() => {
         break;
       }
       case BUILD_SONARQUBE: {
-        result = (
-          <Form record={itemRecord} columns={2}>
-            <TextField name={StepMapping.stepName.name} />
-            <Select name={StepMapping.examType.name} />
-            <SelectBox name={StepMapping.whetherMavenSingleMeasure.name} />
-            <SelectBox
-              name={StepMapping.sonarqubeConfigWay.name}
-              newLine
-            />
-            <SelectBox
-              name={StepMapping.sonarqubeAccountConfig.name}
-            />
-            <TextField name={StepMapping.username.name} />
-            <TextField name={StepMapping.password.name} />
-            <TextField name={StepMapping.address.name} />
-          </Form>
-        );
+        result = <SonarDom record={itemRecord} />;
         break;
       }
       case BUILD_UPLOAD_CHART_CHOERODON: {
