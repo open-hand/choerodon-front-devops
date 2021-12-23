@@ -1,19 +1,19 @@
 /* eslint-disable max-len */
 import React, {
-  createContext, useContext, useEffect, useState,
+  createContext, useContext, useState,
 } from 'react';
 import { useRouteMatch } from 'react-router';
 import { inject } from 'mobx-react';
 import { useFormatCommon, useFormatMessage } from '@choerodon/master';
 import { useSetState } from 'ahooks';
 import { Loading } from '@choerodon/components';
-import { initCustomFunc } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-advanced-config/stores';
-import { AppPipelineEditStoreContext, ProviderProps, TabkeyTypes } from '../interface';
-import { TAB_FLOW_CONFIG, TAB_ADVANCE_SETTINGS } from './CONSTANTS';
+import { AppPipelineEditStoreContext, ProviderProps } from '../interface';
+import { TAB_FLOW_CONFIG } from './CONSTANTS';
 import useLoadStageData from '../hooks/useLoadStageData';
 import useLoadBasicInfo from '../hooks/useLoadBasicInfo';
 import useLoadCiVariasLists from '../hooks/useLoadCiVariasLists';
 import useLoadAdvancedSetting from '../hooks/useLoadAdvancedSetting';
+import { TabkeyTypes } from '@/routes/app-pipeline/interface';
 
 const Store = createContext({} as AppPipelineEditStoreContext);
 

@@ -1,5 +1,5 @@
 import { useQuery, UseQueryOptions, QueryKey } from 'react-query';
-import { TAB_ADVANCE_SETTINGS, TAB_BASIC } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
+import { TAB_ADVANCE_SETTINGS } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
 import { initCustomFunc } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-advanced-config/stores';
 
 function useAdvancedSetting(configs: any, options?: any) {

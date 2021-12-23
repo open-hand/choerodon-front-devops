@@ -1,6 +1,7 @@
 import React, {
   useMemo,
   useCallback,
+  cloneElement,
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
@@ -9,15 +10,18 @@ import {
 import { Tabs } from 'choerodon-ui';
 import map from 'lodash/map';
 import classNames from 'classnames';
+import { isEmpty } from 'lodash';
 import { useAppPipelineEditStore } from './stores';
 import {
   TAB_ADVANCE_SETTINGS, TAB_BASIC, TAB_CI_CONFIG, TAB_FLOW_CONFIG,
 } from './stores/CONSTANTS';
-import { TabkeyTypes } from './interface';
 import PipelineBasicInfo from './components/pipeline-basic-info';
 import StagesEdits from './components/stage-edits';
 import CiVariasConfigs from './components/ci-varias-configs';
 import PipelineAdvancedConfig from './components/pipeline-advanced-config';
+import { TabkeyTypes } from '../../interface';
+import useTabData from './hooks/useTabData';
+import usePipelineContext from '../../hooks/usePipelineContext';
 
 const { TabPane } = Tabs;
 
@@ -32,12 +36,28 @@ const AppPipelineEdit = () => {
     tabsData,
   } = useAppPipelineEditStore();
 
+  const {
+    basicInfo,
+  } = usePipelineContext();
+
   const contentCls = classNames(`${prefixCls}-content`, {
     [`${prefixCls}-content-bgnone`]: TAB_FLOW_CONFIG === currentKey,
   });
 
-  const tabsCompoents = {
-    [TAB_BASIC]: <PipelineBasicInfo />,
+  const getBasicInfo = () => {
+    const tempObj:Record<string, JSX.Element> = {
+    };
+    if (basicInfo && !isEmpty(basicInfo)) {
+      const { key, Component } = basicInfo;
+      tempObj[key] = cloneElement(Component, { useTabData });
+    } else {
+      tempObj[TAB_BASIC] = <PipelineBasicInfo />;
+    }
+    return tempObj;
+  };
+
+  const tabsCompoents:Record<string, JSX.Element> = {
+    ...getBasicInfo(),
     [TAB_FLOW_CONFIG]: <StagesEdits />,
     [TAB_CI_CONFIG]: <CiVariasConfigs />,
     [TAB_ADVANCE_SETTINGS]: <PipelineAdvancedConfig />,

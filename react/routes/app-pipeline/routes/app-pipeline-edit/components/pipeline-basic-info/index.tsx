@@ -34,7 +34,7 @@ type BasicInfoDataProps = {
 const prefixCls = 'c7ncd-pipeline-basic-info' as const;
 const intlPrefix = 'c7ncd.app.pipeline.edit' as const;
 
-const PipelineBasicInfo:FC<PipelineBasicInfoProps> = (props) => {
+const PipelineBasicInfo:FC<PipelineBasicInfoProps> = () => {
   const [savedData, setData] = useTabData<BasicInfoDataProps>();
 
   const formatCommon = useFormatCommon();
