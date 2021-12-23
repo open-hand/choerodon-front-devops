@@ -50,8 +50,8 @@ const AppPipelineEdit = () => {
     const tempObj:Record<string, JSX.Element> = {
     };
     if (basicInfo && !isEmpty(basicInfo)) {
-      const { key, Component } = basicInfo;
-      tempObj[key] = cloneElement(Component, { useTabData });
+      const { Component } = basicInfo;
+      tempObj[TAB_BASIC] = cloneElement(Component, { useTabData });
     } else {
       tempObj[TAB_BASIC] = <PipelineBasicInfo />;
     }
