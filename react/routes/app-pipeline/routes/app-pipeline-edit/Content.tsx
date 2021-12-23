@@ -38,6 +38,7 @@ const AppPipelineEdit = () => {
 
   const {
     basicInfo,
+    level,
     onSave,
     onCreate,
   } = usePipelineContext();
@@ -105,10 +106,16 @@ const AppPipelineEdit = () => {
   ), [currentKey]);
 
   const renderTitle = () => {
-    if (type === 'create') {
-      return '创建流水线';
+    let title = '';
+    if (level === 'project') {
+      if (type === 'create') {
+        title = '创建流水线';
+      }
+      title = '编辑流水线';
+    } else {
+      title = '创建流水线模板';
     }
-    return '编辑流水线';
+    return title;
   };
 
   return (

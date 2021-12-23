@@ -43,13 +43,13 @@ export const StoreProvider = inject('AppState')((props: ProviderProps) => {
 
   const [tabsData, setTabsDataState] = useSetState<Partial<Record<TabkeyTypes, unknown>>>({});
 
-  const { isLoading: isStagesLoading } = useLoadStageData({ type, id, setTabsDataState });
+  const { isFetching: isStagesLoading } = useLoadStageData({ type, id, setTabsDataState });
 
-  const { isLoading: isBasicLoading } = useLoadBasicInfo({ type, id, setTabsDataState });
+  const { isFetching: isBasicLoading } = useLoadBasicInfo({ type, id, setTabsDataState });
 
-  const { isLoading: isCiVariasLoading } = useLoadCiVariasLists({ type, id, setTabsDataState });
+  const { isFetching: isCiVariasLoading } = useLoadCiVariasLists({ type, id, setTabsDataState });
 
-  const { isLoading: isAdvancedLoading } = useLoadAdvancedSetting({ type, id, setTabsDataState });
+  const { isFetching: isAdvancedLoading } = useLoadAdvancedSetting({ type, id, setTabsDataState });
 
   const loadingMap = {
     [TAB_BASIC]: isBasicLoading,

@@ -63,6 +63,7 @@
   }
   &-iconGroups {
     margin-left: auto;
+    display: flex;
     > i.icon {
       font-size: 17px;
       transition: 0.2s;
@@ -70,6 +71,7 @@
     }
     &-delete {
       opacity: 0;
+      display: none;
       color: var(--primary-color);
       &:hover {
         box-shadow: @boxShadaw;
@@ -95,8 +97,16 @@
       .@{prefixCls}-iconGroups {
         &-delete {
           opacity: 1;
+          display: block;
+        }
+        &-notComplete {
+          display: none;
+          opacity: 0;
         }
       }
+    }
+    &-notComplete {
+      border-color: #f76776;
     }
   }
   &-icon {
