@@ -4,6 +4,7 @@ import { DEFAULT_TMP_ID } from '@/routes/app-pipeline/stores/CONSTANTS';
 import { TAB_CI_CONFIG } from '../stores/CONSTANTS';
 import { ciTemplatesVariablesApi } from '@/api/ci-templates-variables';
 import { pipelineVariablesApi } from '@/api/pipeline-variables';
+import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
 
 type LoadStageDataProps = Omit<UseQueryOptions<unknown, unknown, Record<string, any>, QueryKey>, 'queryKey' | 'queryFn'>
 
@@ -20,6 +21,12 @@ function useLoadVariasLists(configs:PipelineApiConfigs, options?:LoadStageDataPr
     setTabsDataState,
   } = configs;
 
+  const {
+    tabApis = {},
+  } = usePipelineContext();
+
+  const { create: CreatePromise, modify: ModifyPromise } = tabApis?.[TAB_CI_CONFIG] || { create: '', modify: '' };
+
   const handleSuccess = (basicInfo:any[]) => {
     setTabsDataState({
       [TAB_CI_CONFIG]: basicInfo || [],
@@ -31,9 +38,9 @@ function useLoadVariasLists(configs:PipelineApiConfigs, options?:LoadStageDataPr
       if (id === DEFAULT_TMP_ID) {
         return Promise.resolve([]);
       }
-      return ciTemplatesVariablesApi.getCiVariasListsWhileCreate(id);
+      return CreatePromise || ciTemplatesVariablesApi.getCiVariasListsWhileCreate(id);
     }
-    return pipelineVariablesApi.getCiVariasListsWhileModify(id);
+    return ModifyPromise || pipelineVariablesApi.getCiVariasListsWhileModify(id);
   };
 
   return useQuery<unknown, unknown, Record<string, any>>(['app-pipeline-ci-varias', id],

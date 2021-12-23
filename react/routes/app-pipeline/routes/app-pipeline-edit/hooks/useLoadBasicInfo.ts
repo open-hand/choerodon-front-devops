@@ -1,8 +1,9 @@
 /* eslint-disable max-len */
 import { useQuery, UseQueryOptions, QueryKey } from 'react-query';
-import { useSessionStorageState, useUnmount } from 'ahooks';
+import { useSessionStorageState } from 'ahooks';
 import { PIPELINE_CREATE_LOCALSTORAGE_IDENTIFY } from '@/routes/app-pipeline/stores/CONSTANTS';
 import { TAB_BASIC } from '../stores/CONSTANTS';
+import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
 
 type LoadStageDataProps = Omit<UseQueryOptions<unknown, unknown, Record<string, any>, QueryKey>, 'queryKey' | 'queryFn'>
 
@@ -21,19 +22,25 @@ function useLoadBasicInfo(configs:PipelineApiConfigs, options?:LoadStageDataProp
 
   const [localData, setLocalData] = useSessionStorageState<any>(PIPELINE_CREATE_LOCALSTORAGE_IDENTIFY);
 
-  // useUnmount(() => setLocalData(null));
+  const {
+    tabApis = {},
+    basicInfo,
+  } = usePipelineContext();
 
-  const handleSuccess = (basicInfo:Record<string, any>) => {
+  const { key } = basicInfo || {};
+  const { create: CreatePromise, modify: ModifyPromise } = key ? tabApis?.[key] : { create: '', modify: '' };
+
+  const handleSuccess = (basicInfoData:Record<string, any>) => {
     setTabsDataState({
-      [TAB_BASIC]: basicInfo || {},
+      [key || TAB_BASIC]: basicInfoData || {},
     });
   };
 
   const getBasicInfo = () => {
     if (type === 'create') {
-      return Promise.resolve(localData);
+      return CreatePromise || Promise.resolve(localData);
     }
-    return Promise.resolve({});
+    return ModifyPromise || Promise.resolve({});
   };
 
   return useQuery<unknown, unknown, Record<string, any>>(['app-pipeline-basic-info', id],

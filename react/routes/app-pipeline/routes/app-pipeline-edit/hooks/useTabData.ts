@@ -3,8 +3,8 @@ import {
   useMemo, useCallback, useRef,
 } from 'react';
 import get from 'lodash/get';
-import { TabkeyTypes } from '../interface';
 import { useAppPipelineEditStore } from '../stores';
+import { TabkeyTypes } from '@/routes/app-pipeline/interface';
 
 function useTabData<T>() {
   const {
