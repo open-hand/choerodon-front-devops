@@ -1,4 +1,5 @@
 const MAVEN_BUILD = 'normal';
+const CUSTOM_BUILD = 'custom';
 
 // 构建类型
 const BUILD = 'build';
@@ -15,6 +16,8 @@ const STEPVO: any = {
   [BUILD_DOCKER]: 'dockerBuildConfig',
   [BUILD_MAVEN]: 'mavenBuildConfig',
   [BUILD_MAVEN_PUBLISH]: 'mavenPublishConfig',
+  [BUILD_SONARQUBE]: 'sonarConfig',
+  [BUILD_UPLOADJAR]: 'mavenPublishConfig',
 };
 
 const CUSTOM = 'custom';
@@ -32,4 +35,5 @@ export {
   BUILD_UPLOAD_CHART_CHOERODON,
   CUSTOM,
   STEPVO,
+  CUSTOM_BUILD,
 };
