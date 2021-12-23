@@ -111,12 +111,13 @@ const transformLoadData = (data: any, imageRes: any) => ({
   [mapping.concurrentCount.name]: data?.[mapping.concurrentCount.name],
 });
 
-const Index = (data?: any) => ({
+const Index = (data?: any, outSideAdvancedData?: any) => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((key) => mapping[key]),
   events: {
     create: async ({ dataSet, record }: any) => {
       const res = await record.getField(mapping.ciRunnerImage.name).options.query();
+      console.log(outSideAdvancedData);
       dataSet.loadData([transformLoadData(data, res)]);
     },
   },

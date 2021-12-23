@@ -17,7 +17,7 @@ import './index.less';
 import useGetJobPanel from '../../../../hooks/useGetJobPanel';
 import { templateJobsApi } from '@/api/template-jobs';
 import useTabData from '@/routes/app-pipeline/routes/app-pipeline-edit/hooks/useTabData';
-import { TAB_BASIC } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
+import { TAB_BASIC, TAB_ADVANCE_SETTINGS } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
 
 export type JobTypesPanelProps = {
   handleJobAddCallback:(jobData: any)=>void
@@ -28,10 +28,10 @@ const {
   Item,
 } = Menu;
 
-const handlePipelineModal = (data: any, callback: any) => {
+const handlePipelineModal = (data: any, callback: any, advancedData?: any) => {
   switch (data.type) {
     case MAVEN_BUILD: {
-      handleBuildModal(data, callback);
+      handleBuildModal(data, callback, advancedData);
       break;
     }
     case CUSTOM_BUILD: {
@@ -67,7 +67,7 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
   const handleClick = (data: any) => {
     const { keyPath } = data;
     const stepData = JSON.parse(keyPath[0]);
-    handlePipelineModal(stepData, handleJobAddCallback);
+    handlePipelineModal(stepData, handleJobAddCallback, getTabData(TAB_ADVANCE_SETTINGS));
   };
 
   const renderChildrenMenu = ({ parentId }:{

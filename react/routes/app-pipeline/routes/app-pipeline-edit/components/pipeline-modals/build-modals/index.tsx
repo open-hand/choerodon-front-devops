@@ -11,12 +11,17 @@ const Index = observer((props: any) => (
   </StoreProvider>
 ));
 
-const handleBuildModal = (data: any, handleJobAddCallback: any) => {
-  console.log(data);
+const handleBuildModal = (data: any, handleJobAddCallback: any, advancedData?: any) => {
   Modal.open({
     title: '添加【构建】阶段',
     drawer: true,
-    children: <Index data={data} handleJobAddCallback={handleJobAddCallback} />,
+    children: (
+      <Index
+        data={data}
+        handleJobAddCallback={handleJobAddCallback}
+        advancedData={advancedData}
+      />
+    ),
     style: {
       width: CONSTANTS.MODAL_WIDTH.MAX,
     },

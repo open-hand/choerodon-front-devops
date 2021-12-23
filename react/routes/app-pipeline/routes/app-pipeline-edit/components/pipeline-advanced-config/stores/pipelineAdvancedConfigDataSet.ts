@@ -13,18 +13,18 @@ const mapping: any = {
     validator: checkImage,
     textField: 'text',
     valueField: 'value',
-    options: new DataSet({
-      autoQuery: false,
-      transport: {
-        read: () => ({
-          ...DevopsAlienApiConfig.getDefaultImage(),
-          transformResponse: (res) => [{
-            text: res,
-            value: res,
-          }],
-        }),
-      },
-    }),
+    // options: new DataSet({
+    //   autoQuery: false,
+    //   transport: {
+    //     read: () => ({
+    //       ...DevopsAlienApiConfig.getDefaultImage(),
+    //       transformResponse: (res) => [{
+    //         text: res,
+    //         value: res,
+    //       }],
+    //     }),
+    //   },
+    // }),
   },
   versionStrategy: {
     name: 'versionStrategy',
@@ -63,8 +63,7 @@ const Index = (data: any, setTabsDataState: any) => ({
   fields: Object.keys(mapping).map((key) => mapping[key]),
   events: {
     create: async ({ dataSet, record }: any) => {
-      const res = await record.getField(mapping.CIRunnerImage.name).options.query();
-      dataSet.loadData([transformLoadData(res, data)]);
+      dataSet.loadData([transformLoadData(undefined, data)]);
     },
     update: ({ name, value }: any) => {
       setTabsDataState({

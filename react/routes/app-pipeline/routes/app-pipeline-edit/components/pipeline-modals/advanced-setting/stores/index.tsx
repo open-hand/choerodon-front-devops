@@ -6,7 +6,7 @@ import { observer } from 'mobx-react-lite';
 import { useAppPipelineEditStore } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores';
 import advancedDataSet
   from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/advanced-setting/stores/advancedDataSet';
-import useTabData from '@/routes/app-pipeline/routes/app-pipeline-edit/hooks/useTabData';
+import { useBuildModalStore } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/stores';
 import { TAB_ADVANCE_SETTINGS } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
 
 interface advancedSettingProps {
@@ -28,11 +28,13 @@ export const StoreProvider = observer((props: any) => {
     data,
   } = props;
 
-  const [,, getTabData] = useTabData();
+  const {
+    advancedData: outSideAdvancedData,
+  } = useBuildModalStore();
 
-  console.log(getTabData(TAB_ADVANCE_SETTINGS));
-
-  const AdvancedDataSet = useMemo(() => new DataSet(advancedDataSet(data)), [data]);
+  const AdvancedDataSet = useMemo(() => new DataSet(
+    advancedDataSet(data, outSideAdvancedData),
+  ), [data]);
 
   const value = {
     ...props,
