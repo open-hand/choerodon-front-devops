@@ -38,6 +38,8 @@ const AppPipelineEdit = () => {
 
   const {
     basicInfo,
+    onSave,
+    onCreate,
   } = usePipelineContext();
 
   const contentCls = classNames(`${prefixCls}-content`, {
@@ -66,6 +68,12 @@ const AppPipelineEdit = () => {
   const handleTabChange = (value:TabkeyTypes) => setTabKey(value);
 
   const handleSubmit = () => {
+    if (type === 'create') {
+      onSave?.(tabsData);
+    } else {
+      onCreate?.(tabsData);
+    }
+
     console.log(tabsData);
   };
 

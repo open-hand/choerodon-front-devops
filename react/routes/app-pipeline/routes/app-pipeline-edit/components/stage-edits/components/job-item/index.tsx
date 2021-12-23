@@ -14,6 +14,8 @@ import { JOB_GROUP_TYPES } from '../../../../stores/CONSTANTS';
 import './index.less';
 import SerialLines from '../serial-lines';
 import useStageEdit from '../../hooks/useStageEdit';
+import useTabData from '../../../../hooks/useTabData';
+import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
 
 export type JobProps = {
   id:string
@@ -46,6 +48,9 @@ const JobItem:FC<JobProps> = (props) => {
     handleJobEditCallback,
   } = props;
 
+  const [_data, _setData, getTabDataByKey] = useTabData();
+  const { level } = usePipelineContext();
+
   const currentJobGroupType = JOB_GROUP_TYPES[groupType];
 
   const formatCommon = useFormatCommon();
@@ -71,7 +76,8 @@ const JobItem:FC<JobProps> = (props) => {
 
   const handleOpenEditJobModal = () => {
     // 保存数据的时候掉用handleEditJobData 方法
-    const modifyData = omit(props, ['linesType', 'showLines', 'handleJobDeleteCallback', 'handleJobEditCallback']);
+    const basicInfoTabAppServiceData = level === 'project' ? getTabDataByKey('basicInfo')?.appService : {};
+    const modifyData = omit({ ...props, appService: basicInfoTabAppServiceData }, ['linesType', 'showLines', 'handleJobDeleteCallback', 'handleJobEditCallback']);
     handlePipelineModal(modifyData, handleEditJobData);
   };
 
