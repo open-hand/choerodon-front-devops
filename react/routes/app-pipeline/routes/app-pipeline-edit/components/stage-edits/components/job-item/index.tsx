@@ -8,8 +8,8 @@ import { omit, get } from 'lodash';
 
 import { OverflowWrap } from '@choerodon/components';
 import { handlePipelineModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/stage-edits/components/job-btn/components/job-types-panel';
+import { TAB_ADVANCE_SETTINGS, JOB_GROUP_TYPES } from '../../../../stores/CONSTANTS';
 import ParalleLines from '../paralle-lines';
-import { JOB_GROUP_TYPES } from '../../../../stores/CONSTANTS';
 
 import './index.less';
 import SerialLines from '../serial-lines';
@@ -78,7 +78,7 @@ const JobItem:FC<JobProps> = (props) => {
     // 保存数据的时候掉用handleEditJobData 方法
     const basicInfoTabAppServiceData = level === 'project' ? getTabDataByKey('basicInfo')?.appService : {};
     const modifyData = omit({ ...props, appService: basicInfoTabAppServiceData }, ['linesType', 'showLines', 'handleJobDeleteCallback', 'handleJobEditCallback']);
-    handlePipelineModal(modifyData, handleEditJobData);
+    handlePipelineModal(modifyData, handleEditJobData, getTabDataByKey(TAB_ADVANCE_SETTINGS));
   };
 
   return (
