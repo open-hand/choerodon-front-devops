@@ -20,6 +20,7 @@
     "lint-staged": "lint-staged",
     "lint-staged:es": "eslint",
     "compile": "choerodon-front-boot compile",
+    "watch": "compiler compile --watch",
     "clean-install": "rm -rf node_modules && rm -fr package-lock.json && npm i --registry https://nexus.choerodon.com.cn/repository/choerodon-npm && chmod -R u+x node_modules"
   },
   "resolutions": {
@@ -60,6 +61,7 @@
   "devDependencies": {
     "@choerodon/boot": "1.2.0",
     "@choerodon/master": "1.2.0",
+    "@choerodon/compiler": "^0.0.2",
     "@types/json-bigint": "^1.0.1",
     "@types/react": "^16.9.44",
     "@types/react-router": "^5.1.8",

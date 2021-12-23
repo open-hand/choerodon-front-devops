@@ -11,10 +11,8 @@ export type AppPipelineEditIndexProps = {
 export type AppPipelineEditStoreContext = {
   prefixCls: 'c7ncd-app-pipeline-edit'
   intlPrefix: 'c7ncd.app.pipeline.edit'
-  // @ts-expect-error
-  formatAppPipelineEdit: useFormatMessageRetrunTypes,
-    // @ts-expect-error
-  formatCommon:useFormatMessageRetrunTypes,
+  formatAppPipelineEdit: any,
+  formatCommon:any,
   currentKey:TabkeyTypes,
   type?:'create' | 'edit'
 } & ProviderProps;
