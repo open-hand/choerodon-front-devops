@@ -21,6 +21,7 @@ const handleCustomModal = (data: any, handleJobAddCallback: any) => {
     },
     key: Modal.key(),
     footer: null,
+    maskClosable: false,
   });
 };
 

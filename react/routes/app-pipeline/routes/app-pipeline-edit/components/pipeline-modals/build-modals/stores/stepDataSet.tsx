@@ -321,6 +321,7 @@ const transformLoadDataItem = (d: any) => ({
   [mapping.sonarqubeAccountConfig.name]: accountConfigData[0].value,
   [mapping.whetherMavenSingleMeasure.name]: false,
   ...d[STEPVO[d.type]],
+  [mapping.customRepoConfig.name]: d[STEPVO[d.type]]?.repos,
 });
 
 const transformLoadData = (data: any) => data && data.map((d: any) => transformLoadDataItem(d));
@@ -331,6 +332,7 @@ const getInsideDtoData = (record: any) => {
     case BUILD_MAVEN: {
       return ({
         [mapping.projectRelyRepo.name]: record.get(mapping.projectRelyRepo.name),
+        [mapping.settingConfig.name]: record.get(mapping.settingConfig.name),
         repos: record.getField(mapping.customRepoConfig.name).options.toData(),
         [mapping.advancedXml.name]: record?.get(mapping.advancedXml.name),
       });
@@ -353,6 +355,7 @@ const getInsideDtoData = (record: any) => {
       return ({
         [mapping.targetProductsLibrary.name]: record.get(mapping.targetProductsLibrary.name),
         [mapping.projectRelyRepo.name]: record.get(mapping.projectRelyRepo.name),
+        [mapping.settingConfig.name]: record.get(mapping.settingConfig.name),
         repos: record.getField(mapping.customRepoConfig.name).options.toData(),
         [mapping.advancedXml.name]: record?.get(mapping.advancedXml.name),
       });

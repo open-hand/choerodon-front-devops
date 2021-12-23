@@ -122,8 +122,9 @@ const Index = observer(({
                     modeChange={false}
                     readOnly={false}
                     value={record.get(StepMapping.advancedXml.name)}
-                    onValueChange={(value: string) => record
-                      .set(record.get(StepMapping.advancedXml.name), value)}
+                    onValueChange={(value: string) => {
+                      record.set(StepMapping.advancedXml.name, value);
+                    }}
                   />
                 )
             }
