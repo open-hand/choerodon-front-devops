@@ -133,8 +133,11 @@ const Index = observer(() => {
     BuildDataSet,
     StepDataSet,
     handleJobAddCallback,
+    data,
     data: {
       type,
+      // TODO 待删
+      appService,
     },
   } = useBuildModalStore();
 
@@ -154,20 +157,20 @@ const Index = observer(() => {
       }
     }
     const advancedRes = await advancedRef?.current?.getDataSet()?.current?.validate(true);
-    if (res && stepRes && advancedRes) {
-      const result = {
-        ...transformSubmitData(BuildDataSet),
-        devopsCiStepVOList: stepDataSetTransformSubmitData(StepDataSet),
-        ...advancedTransformSubmitData(advancedRef?.current?.getDataSet()),
-        ciTemplateJobGroupDTO: {
-          type,
-        },
-      };
-      console.log(result);
-      handleJobAddCallback(result);
-      return true;
-    }
-    return false;
+    const result = {
+      ...transformSubmitData(BuildDataSet),
+      devopsCiStepVOList: stepDataSetTransformSubmitData(StepDataSet),
+      ...advancedTransformSubmitData(advancedRef?.current?.getDataSet()),
+      ciTemplateJobGroupDTO: {
+        type,
+      },
+      type,
+      // TODO 待删
+      appService,
+      completed: res && stepRes && advancedRes,
+    };
+    handleJobAddCallback(result);
+    return true;
   };
 
   const renderStepItemForm = (itemRecord: Record) => {
@@ -347,7 +350,7 @@ const Index = observer(() => {
 
   const renderSteps = (ds: any) => (
     <DragDropContext
-      onDragEnd={(data: any) => console.log(data)}
+      onDragEnd={(d: any) => console.log(d)}
     >
       <Droppable droppableId="context">
         {(provided: any, snapshot: any) => (
@@ -428,6 +431,7 @@ const Index = observer(() => {
         {renderSteps(stepData)}
         <div className={`${prefix}__main__divided`} />
         <AdvancedSetting
+          data={data}
           cRef={advancedRef}
           className={`${prefix}__main__advanced`}
         />

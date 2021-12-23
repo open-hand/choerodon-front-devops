@@ -20,6 +20,7 @@ const handleBuildModal = (data: any, handleJobAddCallback: any) => {
     style: {
       width: CONSTANTS.MODAL_WIDTH.MAX,
     },
+    maskClosable: false,
     key: Modal.key(),
     footer: null,
   });

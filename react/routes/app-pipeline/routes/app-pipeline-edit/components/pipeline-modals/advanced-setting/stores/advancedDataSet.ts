@@ -92,13 +92,29 @@ const transformSubmitData = (ds: any) => {
   });
 };
 
-const Index = () => ({
+const transformLoadData = (data: any, imageRes: any) => ({
+  [mapping.ciRunnerImage.name]: data?.[mapping.ciRunnerImage.name] || imageRes[0].value,
+  [mapping.shareFolderSetting.name]: (function () {
+    const result = [];
+    if (data?.[shareOptionsData[0].value]) {
+      result.push(shareOptionsData[0].value);
+    }
+    if (data?.[shareOptionsData[1].value]) {
+      result.push(shareOptionsData[1].value);
+    }
+    return result;
+  }()),
+  [mapping.whetherConcurrent.name]: data?.[mapping.whetherConcurrent.name] || false,
+  [mapping.concurrentCount.name]: data?.[mapping.concurrentCount.name],
+});
+
+const Index = (data?: any) => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((key) => mapping[key]),
   events: {
     create: async ({ dataSet, record }: any) => {
       const res = await record.getField(mapping.ciRunnerImage.name).options.query();
-      record.set(mapping.ciRunnerImage.name, res[0].value);
+      dataSet.loadData([transformLoadData(data, res)]);
     },
   },
 });

@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useMemo } from 'react';
+import React, {
+  createContext, useContext, useMemo, useEffect,
+} from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import advancedDataSet
@@ -8,6 +10,7 @@ interface advancedSettingProps {
   AdvancedDataSet: any,
   className?: string,
   cRef?: any,
+  data: any,
 }
 
 const Store = createContext({} as advancedSettingProps);
@@ -19,9 +22,10 @@ export function useAdvancedSettingStore() {
 export const StoreProvider = observer((props: any) => {
   const {
     children,
+    data,
   } = props;
 
-  const AdvancedDataSet = useMemo(() => new DataSet(advancedDataSet()), []);
+  const AdvancedDataSet = useMemo(() => new DataSet(advancedDataSet(data)), [data]);
 
   const value = {
     ...props,
