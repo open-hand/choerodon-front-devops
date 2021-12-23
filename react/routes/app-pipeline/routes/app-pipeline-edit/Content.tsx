@@ -80,7 +80,7 @@ const AppPipelineEdit = () => {
   const headerItems = useMemo(() => ([
     {
       handler: handleSubmit,
-      name: formatCommon({ id: 'save' }),
+      name: formatCommon({ id: type }),
       icon: 'check',
     },
     {

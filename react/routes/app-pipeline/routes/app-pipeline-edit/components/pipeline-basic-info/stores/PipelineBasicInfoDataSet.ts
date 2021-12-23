@@ -5,6 +5,7 @@ const PipelineBasicInfoDataSet = ({
   appServiceDs,
   branchDs,
   setData,
+  type,
 }:any):any => {
   // 更新branch的值, branch依据appService的变化而变化
   // reset true: 清空值
@@ -59,7 +60,7 @@ const PipelineBasicInfoDataSet = ({
         required: true,
         options: appServiceDs,
       },
-      {
+      type === 'create' && {
         label: '关联分支',
         name: 'branch',
         type: 'object',
@@ -68,7 +69,7 @@ const PipelineBasicInfoDataSet = ({
         textField: 'branchName',
         valueField: 'branchName',
       },
-    ],
+    ].filter(Boolean),
   };
 };
 

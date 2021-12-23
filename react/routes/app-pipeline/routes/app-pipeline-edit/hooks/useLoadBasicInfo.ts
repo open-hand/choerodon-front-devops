@@ -40,7 +40,7 @@ function useLoadBasicInfo(configs:PipelineApiConfigs, options?:LoadStageDataProp
     if (type === 'create') {
       return CreatePromise || Promise.resolve(localData);
     }
-    return ModifyPromise || Promise.resolve({});
+    return ModifyPromise || Promise.resolve(localData);
   };
 
   return useQuery<unknown, unknown, Record<string, any>>(['app-pipeline-basic-info', id],
