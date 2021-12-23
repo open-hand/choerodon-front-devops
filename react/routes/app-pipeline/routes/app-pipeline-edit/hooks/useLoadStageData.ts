@@ -3,6 +3,7 @@ import { pipelinTemplateApi } from '@/api/pipeline-template';
 import { DEFAULT_TMP_ID } from '@/routes/app-pipeline/stores/CONSTANTS';
 import { DEFAULT_STAGES_DATA, TAB_FLOW_CONFIG } from '../stores/CONSTANTS';
 import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
+import { ciCdPipelineApi } from '@/api/cicd-pipelines';
 
 type LoadStageDataProps = Omit<UseQueryOptions<unknown, unknown, Record<string, any>, QueryKey>, 'queryKey' | 'queryFn'>
 
@@ -38,7 +39,7 @@ function useLoadStageData(configs:PipelineApiConfigs, options?:LoadStageDataProp
       }
       return CreatePromise || pipelinTemplateApi.getTemplateDataById(id);
     }
-    return ModifyPromise || pipelinTemplateApi.getTemplateDataById(id);
+    return ModifyPromise || ciCdPipelineApi.getTemplatesWhileEdits(id);
   };
 
   return useQuery<unknown, unknown, Record<string, any>>(['app-pipeline-edit', id],

@@ -11,6 +11,7 @@ import { useUnmount, useMount } from 'ahooks';
 import { NewTips } from '@choerodon/components';
 import { isEmpty } from 'lodash';
 
+import { useRouteMatch } from 'react-router';
 import PipeBasicInfoDs from './stores/PipelineBasicInfoDataSet';
 import AppServiceDataSet from '@/routes/app-pipeline/stores/AppServiceDataSet';
 import BranchDataSet from '@/routes/app-pipeline/stores/BranchDataSet';
@@ -37,6 +38,12 @@ const intlPrefix = 'c7ncd.app.pipeline.edit' as const;
 const PipelineBasicInfo:FC<PipelineBasicInfoProps> = () => {
   const [savedData, setData] = useTabData<BasicInfoDataProps>();
 
+  const {
+    params: {
+      type = 'create',
+    },
+  } = useRouteMatch<any>();
+
   const formatCommon = useFormatCommon();
   const formatPipelineEdit = useFormatMessage(intlPrefix);
 
@@ -50,7 +57,7 @@ const PipelineBasicInfo:FC<PipelineBasicInfoProps> = () => {
 
   const pipelinBasicInfoDs = useMemo(() => new DataSet(
     PipeBasicInfoDs({
-      formatPipelineEdit, appServiceDs, branchDs, setData,
+      formatPipelineEdit, appServiceDs, branchDs, setData, type,
     }),
   ), [appServiceDs, branchDs]);
 
@@ -87,6 +94,7 @@ const PipelineBasicInfo:FC<PipelineBasicInfoProps> = () => {
           disabled
           addonAfter={<NewTips helpText="此处仅能看到您有开发权限的启用状态的应用服务，并要求该应用服务未有关联的流水线" />}
         />
+        {type === 'create' && (
         <Select
           multiple
           name="branch"
@@ -95,6 +103,7 @@ const PipelineBasicInfo:FC<PipelineBasicInfoProps> = () => {
           searchMatcher="params"
           disabled={!pipelinBasicInfoDs.current?.get('appService')}
         />
+        )}
       </Form>
     </div>
   );

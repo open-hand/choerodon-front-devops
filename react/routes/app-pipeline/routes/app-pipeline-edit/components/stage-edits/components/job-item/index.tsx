@@ -37,9 +37,7 @@ const JobItem:FC<JobProps> = (props) => {
     id: jobId,
     name,
     type: jobType,
-    ciTemplateJobGroupDTO: {
-      type: groupType,
-    },
+    ciTemplateJobGroupDTO,
     linesType,
     jobIndex,
     showLines = true,
@@ -47,6 +45,8 @@ const JobItem:FC<JobProps> = (props) => {
     handleJobDeleteCallback,
     handleJobEditCallback,
   } = props;
+
+  const { type: groupType } = ciTemplateJobGroupDTO || {};
 
   const [_data, _setData, getTabDataByKey] = useTabData();
   const { level } = usePipelineContext();

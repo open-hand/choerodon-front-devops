@@ -8,12 +8,15 @@ import { useFormatCommon, useFormatMessage } from '@choerodon/master';
 import { useSetState } from 'ahooks';
 import { Loading } from '@choerodon/components';
 import { AppPipelineEditStoreContext, ProviderProps } from '../interface';
-import { TAB_FLOW_CONFIG } from './CONSTANTS';
+import {
+  TAB_ADVANCE_SETTINGS, TAB_BASIC, TAB_CI_CONFIG, TAB_FLOW_CONFIG,
+} from './CONSTANTS';
 import useLoadStageData from '../hooks/useLoadStageData';
 import useLoadBasicInfo from '../hooks/useLoadBasicInfo';
 import useLoadCiVariasLists from '../hooks/useLoadCiVariasLists';
 import useLoadAdvancedSetting from '../hooks/useLoadAdvancedSetting';
 import { TabkeyTypes } from '@/routes/app-pipeline/interface';
+import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
 
 const Store = createContext({} as AppPipelineEditStoreContext);
 
@@ -27,22 +30,33 @@ export const StoreProvider = inject('AppState')((props: ProviderProps) => {
   } = props;
 
   const {
+    defaultTabKey,
+  } = usePipelineContext();
+
+  const {
     params: {
       id, type = 'create',
     },
   } = useRouteMatch<any>();
 
-  const [currentKey, setTabKey] = useState<TabkeyTypes>(TAB_FLOW_CONFIG);
+  const [currentKey, setTabKey] = useState<TabkeyTypes>(defaultTabKey || TAB_FLOW_CONFIG);
 
   const [tabsData, setTabsDataState] = useSetState<Partial<Record<TabkeyTypes, unknown>>>({});
 
-  const { isLoading } = useLoadStageData({ type, id, setTabsDataState });
+  const { isLoading: isStagesLoading } = useLoadStageData({ type, id, setTabsDataState });
 
-  useLoadBasicInfo({ type, id, setTabsDataState });
+  const { isLoading: isBasicLoading } = useLoadBasicInfo({ type, id, setTabsDataState });
 
-  useLoadCiVariasLists({ type, id, setTabsDataState });
+  const { isLoading: isCiVariasLoading } = useLoadCiVariasLists({ type, id, setTabsDataState });
 
   const { isLoading: isAdvancedLoading } = useLoadAdvancedSetting({ type, id, setTabsDataState });
+
+  const loadingMap = {
+    [TAB_BASIC]: isBasicLoading,
+    [TAB_FLOW_CONFIG]: isStagesLoading,
+    [TAB_CI_CONFIG]: isCiVariasLoading,
+    [TAB_ADVANCE_SETTINGS]: isAdvancedLoading,
+  };
 
   const prefixCls = 'c7ncd-app-pipeline-edit' as const;
   const intlPrefix = 'c7ncd.app.pipeline.edit' as const;
@@ -50,7 +64,7 @@ export const StoreProvider = inject('AppState')((props: ProviderProps) => {
   const formatCommon = useFormatCommon();
   const formatAppPipelineEdit = useFormatMessage(intlPrefix);
 
-  if (isLoading) {
+  if (loadingMap[currentKey]) {
     return <Loading type="c7n" />;
   }
 

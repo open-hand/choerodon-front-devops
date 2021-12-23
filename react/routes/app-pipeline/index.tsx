@@ -12,6 +12,7 @@ const AppHomePage = React.lazy(() => import('./routes/pipeline-manage'));
 const AppPipelineEdit = React.lazy(() => import('./routes/app-pipeline-edit'));
 
 export type AppPipelineProps = {
+  defaultTabKey?:TabkeyTypes,
   // 项目 平台 组织层
   level?: 'project' | 'site' | 'orgnization',
   // 创建的时候的回调

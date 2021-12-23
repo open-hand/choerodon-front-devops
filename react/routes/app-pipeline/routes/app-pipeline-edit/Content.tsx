@@ -50,8 +50,8 @@ const AppPipelineEdit = () => {
     const tempObj:Record<string, JSX.Element> = {
     };
     if (basicInfo && !isEmpty(basicInfo)) {
-      const { key, Component } = basicInfo;
-      tempObj[key] = cloneElement(Component, { useTabData });
+      const { Component } = basicInfo;
+      tempObj[TAB_BASIC] = cloneElement(Component, { useTabData });
     } else {
       tempObj[TAB_BASIC] = <PipelineBasicInfo />;
     }
@@ -80,7 +80,7 @@ const AppPipelineEdit = () => {
   const headerItems = useMemo(() => ([
     {
       handler: handleSubmit,
-      name: formatCommon({ id: 'save' }),
+      name: formatCommon({ id: type }),
       icon: 'check',
     },
     {

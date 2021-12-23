@@ -7,7 +7,7 @@ import {
   Page, Header, Breadcrumb, Content, HeaderButtons, useFormatMessage,
 } from '@choerodon/master';
 import { Modal } from 'choerodon-ui/pro';
-import { toJS } from 'mobx';
+import { useSessionStorageState } from 'ahooks';
 import { useHistory, useLocation } from 'react-router';
 import PipelineTree from './components/PipelineTree';
 import PipelineFlow from './components/PipelineFlow';
@@ -21,6 +21,7 @@ import AuditModal from './components/audit-modal';
 import GitlabRunner from './components/gitlab-runner';
 import MouserOverWrapper from '@/components/MouseOverWrapper';
 import { usePipelineCreateModal } from './components/pipeline-create-modal';
+import { PIPELINE_CREATE_LOCALSTORAGE_IDENTIFY } from '@/routes/app-pipeline/stores/CONSTANTS';
 
 import './index.less';
 
@@ -49,6 +50,7 @@ const PipelineManage = observer(() => {
   } = usePipelineManageStore();
 
   const format = useFormatMessage('c7ncd.pipelineManage');
+  const [, setPipelineCreateData] = useSessionStorageState(PIPELINE_CREATE_LOCALSTORAGE_IDENTIFY);
 
   const {
     getMainData, loadData,
@@ -102,23 +104,20 @@ const PipelineManage = observer(() => {
     }
   };
 
-  function openEditModal() {
-    const oldEditMainData = toJS(editBlockStore.getMainData);
-    Modal.open({
-      key: Modal.key(),
-      title: '修改流水线',
-      style: {
-        width: 'calc(100vw - 3.52rem)',
+  function handleModify() {
+    const {
+      id, appServiceCode, appServiceId, appServiceName, name,
+    } = getMainData || {};
+    setPipelineCreateData({
+      pipelineId: id,
+      pipelineName: name,
+      appService: {
+        appServiceCode, appServiceId, appServiceName,
       },
-      drawer: true,
-      children: <PipelineCreate
-        dataSource={editBlockStore.getMainData}
-        refreshTree={handleRefresh}
-        editBlockStore={editBlockStore}
-        oldEditMainData={oldEditMainData}
-        isEdit
-      />,
-      okText: formatMessage({ id: 'boot.save' }),
+    });
+    history.push({
+      search,
+      pathname: `${pathname}/edit/edit/${id}`,
     });
   }
 
@@ -256,7 +255,7 @@ const PipelineManage = observer(() => {
           // permissions: ['choerodon.code.project.develop.ci-pipeline.ps.update'],
           name: format({ id: 'Modify' }),
           icon: 'edit-o',
-          handler: openEditModal,
+          handler: handleModify,
           // display: edit,
         }, {
           permissions: ['choerodon.code.project.develop.ci-pipeline.ps.variable.app'],
