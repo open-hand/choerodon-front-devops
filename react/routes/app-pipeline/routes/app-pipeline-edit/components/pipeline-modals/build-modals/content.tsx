@@ -375,7 +375,7 @@ const Index = observer(() => {
     if (ds.current?.get(mapping.triggerType.name) === triggerTypeOptionsData[1].value) {
       return <TextField name={mapping.triggerValue.name} colSpan={4} />;
     }
-    return <Select name={mapping.triggerValue.name} colSpan={4} />;
+    return <Select combo name={mapping.triggerValue.name} colSpan={4} />;
   };
 
   const handleAddStep = async () => {

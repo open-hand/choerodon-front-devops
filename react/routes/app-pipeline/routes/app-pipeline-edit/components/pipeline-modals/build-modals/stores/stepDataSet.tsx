@@ -429,7 +429,12 @@ const Index = () => ({
               record.set(mapping.advancedXml.name, '');
               record.Field(mapping.customRepoConfig.name).options.loadData([]);
             } else {
-              record.set(mapping.settingConfig.name);
+              record.set(
+                mapping.settingConfig.name,
+                value === settingConfigOptionsData[0].value
+                  ? settingConfigOptionsData[1].value
+                  : settingConfigOptionsData[0].value,
+              );
             }
           });
           break;

@@ -73,6 +73,9 @@ const mapping: {
     name: 'parallel',
     type: 'number',
     label: '并发数',
+    step: 1,
+    min: 2,
+    max: 50,
     dynamicProps: {
       required: ({ record }: any) => record.get(mapping.whetherConcurrent.name),
     },

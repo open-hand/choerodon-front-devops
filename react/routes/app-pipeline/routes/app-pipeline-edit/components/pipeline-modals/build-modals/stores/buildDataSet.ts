@@ -1,5 +1,5 @@
 import { DataSet } from 'choerodon-ui/pro';
-import { appServiceApiConfig } from '@choerodon/master';
+import { appServiceApi } from '@choerodon/master';
 
 const transformSubmitData = (ds: any) => {
   const record = ds?.current;
@@ -9,6 +9,8 @@ const transformSubmitData = (ds: any) => {
     [mapping.triggerValue.name]: record?.get(mapping.triggerValue.name),
   });
 };
+
+let triggerValueAxiosData: any = [];
 
 const triggerTypeOptionsData = [{
   text: '分支类型匹配',
@@ -22,6 +24,26 @@ const triggerTypeOptionsData = [{
 }, {
   text: '精确排除',
   value: 'exact_exclude',
+}];
+
+const originTriggerValueData = [{
+  value: 'master',
+  text: 'master',
+}, {
+  value: 'feature',
+  text: 'feature',
+}, {
+  value: 'bugfix',
+  text: 'bugfix',
+}, {
+  value: 'hotfix',
+  text: 'hotfix',
+}, {
+  value: 'release',
+  text: 'release',
+}, {
+  value: 'tag',
+  text: 'tag',
 }];
 
 const mapping: {
@@ -58,8 +80,11 @@ const mapping: {
     type: 'string',
     label: '触发分支',
     multiple: true,
-    textField: 'branchName',
-    valueField: 'branchName',
+    textField: 'text',
+    valueField: 'value',
+    options: new DataSet({
+      data: originTriggerValueData,
+    }),
   },
 };
 
@@ -69,15 +94,15 @@ const Index = (appServiceId: any): any => ({
     const item = mapping[key];
     switch (key) {
       case 'triggerValue': {
-        item.options = new DataSet({
-          paging: true,
-          autoQuery: true,
-          transport: {
-            read: () => ({
-              ...appServiceApiConfig.getBrachs(appServiceId),
-            }),
-          },
-        });
+        // item.options = new DataSet({
+        //   paging: true,
+        //   autoQuery: true,
+        //   transport: {
+        //     read: () => ({
+        //       ...appServiceApiConfig.getBrachs(appServiceId),
+        //     }),
+        //   },
+        // });
         break;
       }
       default: {
@@ -86,6 +111,31 @@ const Index = (appServiceId: any): any => ({
     }
     return item;
   }),
+  events: {
+    create: async () => {
+      const res = await appServiceApi.getBrachs(appServiceId);
+      triggerValueAxiosData = res.content.map((i: any) => ({
+        text: i?.branchName,
+        value: i?.branchName,
+      }));
+    },
+    update: ({ name, value, record }: any) => {
+      switch (name) {
+        case mapping.triggerType.name: {
+          if (value === triggerTypeOptionsData[0].value) {
+            record.getField(mapping.triggerValue.name).options.loadData(originTriggerValueData);
+          } else if (value !== triggerTypeOptionsData[1].value) {
+            // eslint-disable-next-line no-param-reassign
+            record.getField(mapping.triggerValue.name).options.loadData(triggerValueAxiosData);
+          }
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    },
+  },
 });
 
 export default Index;
