@@ -29,6 +29,8 @@ const StageEdits = () => {
     (pos: { destination: any; source:any }) => {
       const { destination, source } = pos;
       if (!destination) {
+        setFromToId('');
+        setFalse();
         return;
       }
       const sourceType = getSourceData[source.index]?.type;
