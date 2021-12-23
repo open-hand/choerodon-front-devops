@@ -11,7 +11,9 @@ function useAdvancedSetting(configs: any, options?: any) {
 
   const handleSuccess = (data:Record<string, any>) => {
     setTabsDataState({
-      [TAB_ADVANCE_SETTINGS]: data || {},
+      [TAB_ADVANCE_SETTINGS]: {
+        devopsCiPipelineFunctionDTOList: data || [],
+      },
     });
   };
 

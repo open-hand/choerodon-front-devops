@@ -429,7 +429,12 @@ const Index = observer(() => {
           }]}
         />
         {renderSteps(stepData)}
-        <div className={`${prefix}__main__divided`} />
+        <div
+          style={{
+            marginTop: stepData.length > 0 ? 0 : 20,
+          }}
+          className={`${prefix}__main__divided`}
+        />
         <AdvancedSetting
           data={data}
           cRef={advancedRef}
