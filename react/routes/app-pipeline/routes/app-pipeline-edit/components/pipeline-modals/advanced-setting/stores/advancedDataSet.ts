@@ -1,5 +1,6 @@
 import { DataSet } from 'choerodon-ui/pro';
 import { DevopsAlienApiConfig } from '@choerodon/master';
+import { mapping as outsideAdvancedMapping } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-advanced-config/stores/pipelineAdvancedConfigDataSet';
 
 function checkImage(value: any, name: any, record: any) {
   const pa = /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}(\/.+)*:.+$/;
@@ -117,8 +118,23 @@ const Index = (data?: any, outSideAdvancedData?: any) => ({
   events: {
     create: async ({ dataSet, record }: any) => {
       const res = await record.getField(mapping.ciRunnerImage.name).options.query();
-      console.log(outSideAdvancedData);
-      dataSet.loadData([transformLoadData(data, res)]);
+      const {
+        [outsideAdvancedMapping.CIRunnerImage.name]: outsideImage,
+      } = outSideAdvancedData;
+      if (outsideImage !== res[0].value) {
+        record.getField(mapping.ciRunnerImage.name).options.loadData([
+          ...res,
+          {
+            text: outsideImage,
+            value: outsideImage,
+          },
+        ]);
+        dataSet.loadData([transformLoadData(data, [{
+          value: outsideImage,
+        }])]);
+      } else {
+        dataSet.loadData([transformLoadData(data, res)]);
+      }
     },
   },
 });
