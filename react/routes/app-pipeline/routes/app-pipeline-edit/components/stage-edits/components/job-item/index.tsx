@@ -1,19 +1,18 @@
 import React, {
-  useEffect, FC,
+  FC,
 } from 'react';
-import { observer } from 'mobx-react-lite';
 import { useFormatCommon } from '@choerodon/master';
 import { Icon, Tooltip } from 'choerodon-ui/pro';
 import { omit, get } from 'lodash';
 
-import { OverflowWrap } from '@choerodon/components';
+import { OverflowWrap, InfoIcon } from '@choerodon/components';
+import classNames from 'classnames';
 import { handlePipelineModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/stage-edits/components/job-btn/components/job-types-panel';
 import { TAB_ADVANCE_SETTINGS, JOB_GROUP_TYPES } from '../../../../stores/CONSTANTS';
 import ParalleLines from '../paralle-lines';
 
 import './index.less';
 import SerialLines from '../serial-lines';
-import useStageEdit from '../../hooks/useStageEdit';
 import useTabData from '../../../../hooks/useTabData';
 import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
 
@@ -37,6 +36,7 @@ const JobItem:FC<JobProps> = (props) => {
     id: jobId,
     name,
     type: jobType,
+    completed,
     ciTemplateJobGroupDTO,
     linesType,
     jobIndex,
@@ -81,10 +81,14 @@ const JobItem:FC<JobProps> = (props) => {
     handlePipelineModal(modifyData, handleEditJobData, getTabDataByKey(TAB_ADVANCE_SETTINGS));
   };
 
+  const jobContentCls = classNames(`${prefixCls}-content`, {
+    [`${prefixCls}-content-notComplete`]: completed,
+  });
+
   return (
     <div className={prefixCls}>
       {showLines && linesMap[linesType]}
-      <div className={`${prefixCls}-content`} role="none" onClick={handleOpenEditJobModal}>
+      <div className={jobContentCls} role="none" onClick={handleOpenEditJobModal}>
         <Tooltip title={get(currentJobGroupType, 'name')}>
           <Icon className={`${`${prefixCls}`}-icon`} type={get(currentJobGroupType, 'icon')} />
         </Tooltip>
@@ -93,6 +97,11 @@ const JobItem:FC<JobProps> = (props) => {
           {name}
         </OverflowWrap>
         <div className={`${prefixCls}-iconGroups`}>
+          {completed && (
+          <InfoIcon
+            className={`${prefixCls}-iconGroups-notComplete`}
+          />
+          )}
           <Icon
             onClick={handleJobDelete}
             type="delete_black-o"
