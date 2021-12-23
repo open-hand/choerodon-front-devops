@@ -22,13 +22,15 @@ const Index = observer(({
   useStore: any
   modal?: any,
 }) => {
+  console.log(useStore.getFuncList);
+
   const [funcList, setFuncList] = useState<{
     edit: boolean,
     name: string,
     script: string,
     focus?: boolean,
     devopsPipelineId?: any,
-  }[]>(JSON.parse(JSON.stringify(useStore.getFuncList)));
+  }[]>(useStore.getFuncList);
 
   const handleOk = () => {
     let flag = '';

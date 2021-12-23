@@ -13,7 +13,7 @@ const mapping: any = {
     textField: 'text',
     valueField: 'value',
     options: new DataSet({
-      autoQuery: true,
+      autoQuery: false,
       transport: {
         read: () => ({
           ...DevopsAlienApiConfig.getDefaultImage(),
@@ -51,9 +51,21 @@ const mapping: any = {
   },
 };
 
+const transformLoadData = (queryData: any) => ({
+  [mapping.CIRunnerImage.name]: queryData[0].value,
+  [mapping.versionStrategy.name]: false,
+  [mapping.nameRules.name]: '${C7N_COMMIT_TIME}-${C7N_BRANCH}',
+});
+
 const Index = () => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((key) => mapping[key]),
+  events: {
+    create: async ({ dataSet, record }: any) => {
+      const res = await record.getField(mapping.CIRunnerImage.name).options.query();
+      dataSet.loadData([transformLoadData(res)]);
+    },
+  },
 });
 
 export default Index;

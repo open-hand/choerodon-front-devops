@@ -428,6 +428,8 @@ const Index = () => ({
             if (button === 'ok') {
               record.set(mapping.advancedXml.name, '');
               record.Field(mapping.customRepoConfig.name).options.loadData([]);
+            } else {
+              record.set(mapping.settingConfig.name);
             }
           });
           break;
