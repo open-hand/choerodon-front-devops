@@ -38,5 +38,5 @@ export function handleTabDataTransform(tabsData:Record<TabkeyTypes, any>) {
     finalData.devopsCdStageVOS = devopsCdStageVOS;
   }
 
-  console.log(tabsData);
+  return finalData;
 }
