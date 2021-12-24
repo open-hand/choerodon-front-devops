@@ -7,10 +7,11 @@ import { observer } from 'mobx-react-lite';
 import {
   Page, Content, Header, HeaderButtons, Breadcrumb,
 } from '@choerodon/master';
-import { Tabs } from 'choerodon-ui';
+import { Tabs, message } from 'choerodon-ui';
 import map from 'lodash/map';
 import classNames from 'classnames';
 import { isEmpty } from 'lodash';
+import { useRouteMatch } from 'react-router';
 import { useAppPipelineEditStore } from './stores';
 import {
   TAB_ADVANCE_SETTINGS, TAB_BASIC, TAB_CI_CONFIG, TAB_FLOW_CONFIG,
@@ -22,6 +23,9 @@ import PipelineAdvancedConfig from './components/pipeline-advanced-config';
 import { TabkeyTypes } from '../../interface';
 import useTabData from './hooks/useTabData';
 import usePipelineContext from '../../hooks/usePipelineContext';
+import { handleTabDataValidate } from './services/handleTabsDataValidate';
+import { handleTabDataTransform } from './services/handleTabDataTransform';
+import { ciCdPipelineApi } from '@/api/cicd-pipelines';
 
 const { TabPane } = Tabs;
 
@@ -42,6 +46,12 @@ const AppPipelineEdit = () => {
     onSave,
     onCreate,
   } = usePipelineContext();
+
+  const {
+    params: {
+      id,
+    },
+  } = useRouteMatch<any>();
 
   const contentCls = classNames(`${prefixCls}-content`, {
     [`${prefixCls}-content-bgnone`]: TAB_FLOW_CONFIG === currentKey,
@@ -68,14 +78,57 @@ const AppPipelineEdit = () => {
 
   const handleTabChange = (value:TabkeyTypes) => setTabKey(value);
 
-  const handleSubmit = () => {
-    if (type === 'create') {
-      onSave?.(tabsData);
+  /**
+   * 项目层的处理提交的事件
+   */
+  const handleSumitWhileProjectCreate = () => {
+    const { isValidated, key, reason } = handleTabDataValidate(tabsData);
+    if (isValidated) {
+      const finalData = handleTabDataTransform(tabsData);
+      try {
+        const res = ciCdPipelineApi.handlePipelineCreate(finalData);
+      } catch (error) {
+        throw new Error(error);
+      }
     } else {
-      onCreate?.(tabsData);
+      key && setTabKey(key);
+      reason && message.info(reason);
     }
+  };
 
+  const handleSumitWhileProjectEdit = () => {
+    const { isValidated, key, reason } = handleTabDataValidate(tabsData);
+    if (isValidated) {
+      const finalData = handleTabDataTransform(tabsData);
+      try {
+        const res = ciCdPipelineApi.handlePipelineModify(id, finalData);
+      } catch (error) {
+        throw new Error(error);
+      }
+    } else {
+      key && setTabKey(key);
+      reason && message.info(reason);
+    }
+  };
+
+  const submitMapWhileCreate = {
+    project: handleSumitWhileProjectCreate,
+    site: onCreate,
+    orgnization: onCreate,
+  };
+
+  const submitMapWhileEdit = {
+    project: handleSumitWhileProjectEdit,
+    site: onSave,
+    orgnization: onSave,
+  };
+
+  const handleSubmit = () => {
     console.log(tabsData);
+    if (type === 'create') {
+      return level && submitMapWhileCreate[level]?.(tabsData);
+    }
+    return level && submitMapWhileEdit[level]?.(tabsData);
   };
 
   const headerItems = useMemo(() => ([

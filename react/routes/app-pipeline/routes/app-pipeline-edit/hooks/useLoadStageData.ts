@@ -28,8 +28,14 @@ function useLoadStageData(configs:PipelineApiConfigs, options?:LoadStageDataProp
   const { create: createPromise, modify: modifyPromise } = tabApis?.[TAB_FLOW_CONFIG] || { create: '', modify: '' };
 
   const handleSuccess = (stageObject:Record<string, any>) => {
+    let stageLists = [];
+    if (level === 'project') {
+      stageLists = stageObject?.devopsCiStageVOS || [];
+    } else {
+      stageLists = stageObject?.templateStageVOS || [];
+    }
     setTabsDataState({
-      [TAB_FLOW_CONFIG]: stageObject?.devopsCiStageVOS || [],
+      [TAB_FLOW_CONFIG]: stageLists,
     });
   };
 

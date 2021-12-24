@@ -55,7 +55,6 @@ const JOB_GROUP_TYPES = {
 
 // 空白得分组
 const DEFAULT_STAGES_DATA = {
-  devopsCiPipelineVariableDTOList: [],
   devopsCiStageVOS: [
     {
       name: '代码扫描', sequence: 1, id: 1, type: 'CI',

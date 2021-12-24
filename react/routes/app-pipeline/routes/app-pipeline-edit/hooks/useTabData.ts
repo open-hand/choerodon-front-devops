@@ -29,7 +29,7 @@ function useTabData<T>() {
 
   const getTabData = useCallback((tabKey:TabkeyTypes) => get(tabsData, tabKey), [tabsData]);
 
-  return [getCurrentTabData, hendleSetTabData, getTabData] as const;
+  return [getCurrentTabData, hendleSetTabData, getTabData, tabsData] as const;
 }
 
 export default useTabData;
