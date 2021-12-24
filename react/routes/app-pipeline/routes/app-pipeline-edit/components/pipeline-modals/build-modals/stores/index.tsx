@@ -31,11 +31,8 @@ export const StoreProvider = observer((props: any) => {
     data,
   } = props;
 
-  const {
-    appService: {
-      appServiceId,
-    },
-  } = data;
+  const appServiceId = data?.appService?.appServiceId;
+  const appServiceName = data?.appService?.appServiceName;
 
   const BuildDataSet = useMemo(() => new DataSet(buildDataSet(appServiceId)), [appServiceId]);
   const StepDataSet = useMemo(() => new DataSet(stepDataSet()), []);
@@ -48,7 +45,7 @@ export const StoreProvider = observer((props: any) => {
       });
       BuildDataSet.loadData([{
         ...buildData,
-        [mapping.appService.name]: data?.appService?.appServiceName,
+        [mapping.appService.name]: appServiceName,
       }]);
       StepDataSet.loadData(transformLoadData(data?.devopsCiStepVOList));
     }

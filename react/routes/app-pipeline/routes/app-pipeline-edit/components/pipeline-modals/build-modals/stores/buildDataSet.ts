@@ -113,11 +113,13 @@ const Index = (appServiceId: any): any => ({
   }),
   events: {
     create: async () => {
-      const res = await appServiceApi.getBrachs(appServiceId);
-      triggerValueAxiosData = res.content.map((i: any) => ({
-        text: i?.branchName,
-        value: i?.branchName,
-      }));
+      if (appServiceId) {
+        const res = await appServiceApi.getBrachs(appServiceId);
+        triggerValueAxiosData = res.content.map((i: any) => ({
+          text: i?.branchName,
+          value: i?.branchName,
+        }));
+      }
     },
     update: ({ name, value, record }: any) => {
       switch (name) {
