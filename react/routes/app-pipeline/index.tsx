@@ -25,13 +25,17 @@ export type AppPipelineProps = {
     'create': Promise<any> | ''
     'modify':Promise<any> | ''
   }>
-  basicInfo?: {
+  basicInfo?: { // 第一个tab页的配置项
     Component:React.ReactElement
     key: string
   }
+  jobGroupsApi?: Promise<any> // 阶段的下拉列表
+  jobPanelApiCallback?: (jobGroupId:string|number) => Promise<any> // 根据阶段的下拉列表的某一项获取子下拉列表
 };
 
-export const Stores = createContext<AppPipelineProps>({});
+export const Stores = createContext<AppPipelineProps>({
+  level: 'project',
+});
 
 const prefixCls = 'c7ncd-app-pipeline';
 const intlPrefix = 'c7ncd.app.pipeline';
@@ -40,11 +44,12 @@ const AppPipeline: FC<AppPipelineProps> = (props) => {
   const match = useRouteMatch();
   const {
     HomePage,
+    level = 'project',
     ...rest
   } = props;
 
   return (
-    <Stores.Provider value={rest}>
+    <Stores.Provider value={{ ...rest, level }}>
       <Suspense fallback={<Loading type="c7n" />}>
         <Switch>
           <Route

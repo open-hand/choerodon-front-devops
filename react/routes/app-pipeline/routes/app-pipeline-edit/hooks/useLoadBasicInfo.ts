@@ -24,6 +24,7 @@ function useLoadBasicInfo(configs:PipelineApiConfigs, options?:LoadStageDataProp
 
   const {
     tabApis = {},
+    level,
   } = usePipelineContext();
 
   const { create: CreatePromise, modify: ModifyPromise } = tabApis?.[TAB_BASIC] || { create: '', modify: '' };
@@ -35,10 +36,14 @@ function useLoadBasicInfo(configs:PipelineApiConfigs, options?:LoadStageDataProp
   };
 
   const getBasicInfo = () => {
-    if (type === 'create') {
-      return CreatePromise || Promise.resolve(localData);
+    if (level === 'project') {
+      if (type === 'create') {
+        return Promise.resolve(localData);
+      }
+      return Promise.resolve(localData);
     }
-    return ModifyPromise || Promise.resolve(localData);
+    if (type === 'create') return CreatePromise;
+    return ModifyPromise;
   };
 
   return useQuery<unknown, unknown, Record<string, any>>(['app-pipeline-basic-info', id],
