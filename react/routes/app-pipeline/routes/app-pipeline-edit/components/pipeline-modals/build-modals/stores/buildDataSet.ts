@@ -6,9 +6,16 @@ const transformSubmitData = (ds: any) => {
   return ({
     [mapping.name.name]: record?.get(mapping.name.name),
     [mapping.triggerType.name]: record?.get(mapping.triggerType.name),
-    [mapping.triggerValue.name]: record?.get(mapping.triggerValue.name),
+    [mapping.triggerValue.name]: record?.get(mapping.triggerValue.name)?.join(','),
   });
 };
+
+const transformLoadData = (data: any, appServiceName: any) => ({
+  [mapping.name.name]: data?.[mapping.name.name],
+  [mapping.appService.name]: appServiceName,
+  [mapping.triggerType.name]: data?.[mapping.triggerType.name],
+  [mapping.triggerValue.name]: data?.[mapping.triggerValue.name]?.split(','),
+});
 
 let triggerValueAxiosData: any = [];
 
@@ -141,4 +148,6 @@ const Index = (appServiceId: any): any => ({
 });
 
 export default Index;
-export { mapping, triggerTypeOptionsData, transformSubmitData };
+export {
+  mapping, triggerTypeOptionsData, transformSubmitData, transformLoadData,
+};
