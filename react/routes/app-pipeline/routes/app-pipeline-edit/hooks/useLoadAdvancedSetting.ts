@@ -31,7 +31,8 @@ function useAdvancedSetting(configs: any, options?: any) {
       const res = await initCustomFunc();
       return res;
     }
-    return Promise.resolve({});
+    const res = await initCustomFunc(id);
+    return res;
   };
 
   return useQuery<unknown, unknown, Record<string, any>>(['app-pipeline-advancedSetting', id],
