@@ -16,7 +16,10 @@ interface buildModalProps {
   data: any,
   // 设置流水线数据回调
   handleJobAddCallback: any
+  // 外层高级设置数据
   advancedData: any,
+  // 层级
+  level: any,
 }
 
 const Store = createContext({} as buildModalProps);
