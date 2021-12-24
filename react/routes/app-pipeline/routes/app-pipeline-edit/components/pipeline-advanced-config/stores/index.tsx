@@ -16,8 +16,8 @@ export function usePipelineAdvancedStore() {
   return useContext(Store);
 }
 
-export function initCustomFunc() {
-  return cicdPipelineApi.getTemplate(0, undefined);
+export function initCustomFunc(id?: any) {
+  return cicdPipelineApi.getTemplate(id || 0, true);
 }
 
 export const StoreProvider = observer((props: any) => {
