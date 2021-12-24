@@ -22,8 +22,8 @@ export type AppPipelineProps = {
   // 主页面
   HomePage?: React.LazyExoticComponent<(props: unknown) => JSX.Element>
   tabApis?:Record<TabkeyTypes|string, {
-    'create': Promise<any> | ''
-    'modify':Promise<any> | ''
+    'create': (id:string|number)=>Promise<any> | ''
+    'modify':(id:string|number) => Promise<any> | ''
   }>
   basicInfo?: { // 第一个tab页的配置项
     Component:React.ReactElement

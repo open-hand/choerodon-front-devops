@@ -8,7 +8,7 @@ import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
 type LoadStageDataProps = Omit<UseQueryOptions<unknown, unknown, Record<string, any>, QueryKey>, 'queryKey' | 'queryFn'>
 
 type PipelineApiConfigs = {
-  id?:string | number
+  id:string | number
   type?: 'create' | 'modify'
   setTabsDataState:(...args:any[])=>void
 }
@@ -27,7 +27,7 @@ function useLoadBasicInfo(configs:PipelineApiConfigs, options?:LoadStageDataProp
     level,
   } = usePipelineContext();
 
-  const { create: CreatePromise, modify: ModifyPromise } = tabApis?.[TAB_BASIC] || { create: '', modify: '' };
+  const { create: createPromise, modify: modifyPromise } = tabApis?.[TAB_BASIC] || { create: '', modify: '' };
 
   const handleSuccess = (basicInfoData:Record<string, any>) => {
     setTabsDataState({
@@ -42,8 +42,8 @@ function useLoadBasicInfo(configs:PipelineApiConfigs, options?:LoadStageDataProp
       }
       return Promise.resolve(localData);
     }
-    if (type === 'create') return CreatePromise;
-    return ModifyPromise;
+    if (type === 'create') return createPromise(id);
+    return modifyPromise(id);
   };
 
   return useQuery<unknown, unknown, Record<string, any>>(['app-pipeline-basic-info', id],

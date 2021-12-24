@@ -26,7 +26,7 @@ function useLoadVariasLists(configs:PipelineApiConfigs, options?:LoadStageDataPr
     level,
   } = usePipelineContext();
 
-  const { create: CreatePromise, modify: ModifyPromise } = tabApis?.[TAB_CI_CONFIG] || { create: '', modify: '' };
+  const { create: createPromise, modify: modifyPromise } = tabApis?.[TAB_CI_CONFIG] || { create: '', modify: '' };
 
   const handleSuccess = (basicInfo:any[]) => {
     setTabsDataState({
@@ -44,8 +44,8 @@ function useLoadVariasLists(configs:PipelineApiConfigs, options?:LoadStageDataPr
       }
       return pipelineVariablesApi.getCiVariasListsWhileModify(id);
     }
-    if (type === 'create') return CreatePromise;
-    return ModifyPromise;
+    if (type === 'create') return createPromise(id);
+    return modifyPromise(id);
   };
 
   return useQuery<unknown, unknown, Record<string, any>>(['app-pipeline-ci-varias', id],
