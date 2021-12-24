@@ -78,7 +78,12 @@ const JobItem:FC<JobProps> = (props) => {
     // 保存数据的时候掉用handleEditJobData 方法
     const basicInfoTabAppServiceData = level === 'project' ? getTabDataByKey('basicInfo')?.appService : {};
     const modifyData = omit({ ...props, appService: basicInfoTabAppServiceData }, ['linesType', 'showLines', 'handleJobDeleteCallback', 'handleJobEditCallback']);
-    handlePipelineModal(modifyData, handleEditJobData, getTabDataByKey(TAB_ADVANCE_SETTINGS));
+    handlePipelineModal(
+      modifyData,
+      handleEditJobData,
+      getTabDataByKey(TAB_ADVANCE_SETTINGS),
+      level,
+    );
   };
 
   const jobContentCls = classNames(`${prefixCls}-content`, {
