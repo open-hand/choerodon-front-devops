@@ -25,7 +25,7 @@ function useLoadStageData(configs:PipelineApiConfigs, options?:LoadStageDataProp
     level,
   } = usePipelineContext();
 
-  const { create: CreatePromise, modify: ModifyPromise } = tabApis?.[TAB_FLOW_CONFIG] || { create: '', modify: '' };
+  const { create: createPromise, modify: modifyPromise } = tabApis?.[TAB_FLOW_CONFIG] || { create: '', modify: '' };
 
   const handleSuccess = (stageObject:Record<string, any>) => {
     setTabsDataState({
@@ -43,8 +43,8 @@ function useLoadStageData(configs:PipelineApiConfigs, options?:LoadStageDataProp
       }
       return ciCdPipelineApi.getTemplatesWhileEdits(id);
     }
-    if (type === 'create') return CreatePromise;
-    return ModifyPromise;
+    if (type === 'create') return createPromise(id);
+    return modifyPromise(id);
   };
 
   return useQuery<unknown, unknown, Record<string, any>>(['app-pipeline-edit', id],
