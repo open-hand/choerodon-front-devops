@@ -1,15 +1,14 @@
 import React, {
-  useEffect, FC, useState,
+  FC, useState,
 } from 'react';
-import { observer } from 'mobx-react-lite';
 import { useQuery } from 'react-query';
 import { Loading } from '@choerodon/components';
 import { useFormatCommon } from '@choerodon/master';
-import { Menu, Icon } from 'choerodon-ui';
+import { Menu } from 'choerodon-ui';
 import { handleBuildModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals';
 import { handleCustomModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/custom-modal';
 import {
-  BUILD, CUSTOM, MAVEN_BUILD, CUSTOM_BUILD,
+  MAVEN_BUILD, CUSTOM_BUILD,
 } from '@/routes/app-pipeline/CONSTANTS';
 import {} from 'choerodon-ui/pro';
 
@@ -18,6 +17,7 @@ import useGetJobPanel from '../../../../hooks/useGetJobPanel';
 import { templateJobsApi } from '@/api/template-jobs';
 import useTabData from '@/routes/app-pipeline/routes/app-pipeline-edit/hooks/useTabData';
 import { TAB_BASIC, TAB_ADVANCE_SETTINGS } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
+import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
 
 export type JobTypesPanelProps = {
   handleJobAddCallback:(jobData: any)=>void
@@ -51,11 +51,19 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
   } = props;
   const panels = useGetJobPanel();
   const [currentSelectedSubMenuId, setSubMenuId] = useState('');
-  const [,, getTabData] = useTabData();
+  const [_data, _setdata, getTabData] = useTabData();
+
+  const {
+    level,
+    jobPanelApiCallback,
+  } = usePipelineContext();
 
   const getSubMenuChild = ({ queryKey }:any) => {
     const [_key, subMenuId] = queryKey;
-    return templateJobsApi.getJobByGroupId(subMenuId);
+    if (level === 'project') {
+      return templateJobsApi.getJobByGroupId(subMenuId);
+    }
+    return jobPanelApiCallback?.(subMenuId);
   };
 
   const { data: childrenMenus, isLoading, isFetching } = useQuery(['sub-menu-child', currentSelectedSubMenuId], getSubMenuChild, {

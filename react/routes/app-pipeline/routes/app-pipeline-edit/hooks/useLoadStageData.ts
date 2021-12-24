@@ -22,6 +22,7 @@ function useLoadStageData(configs:PipelineApiConfigs, options?:LoadStageDataProp
 
   const {
     tabApis = {},
+    level,
   } = usePipelineContext();
 
   const { create: CreatePromise, modify: ModifyPromise } = tabApis?.[TAB_FLOW_CONFIG] || { create: '', modify: '' };
@@ -33,13 +34,17 @@ function useLoadStageData(configs:PipelineApiConfigs, options?:LoadStageDataProp
   };
 
   const getStageData = () => {
-    if (type === 'create') {
-      if (id === DEFAULT_TMP_ID) {
-        return Promise.resolve(DEFAULT_STAGES_DATA);
+    if (level === 'project') {
+      if (type === 'create') {
+        if (id === DEFAULT_TMP_ID) {
+          return Promise.resolve(DEFAULT_STAGES_DATA);
+        }
+        return pipelinTemplateApi.getTemplateDataById(id);
       }
-      return CreatePromise || pipelinTemplateApi.getTemplateDataById(id);
+      return ciCdPipelineApi.getTemplatesWhileEdits(id);
     }
-    return ModifyPromise || ciCdPipelineApi.getTemplatesWhileEdits(id);
+    if (type === 'create') return CreatePromise;
+    return ModifyPromise;
   };
 
   return useQuery<unknown, unknown, Record<string, any>>(['app-pipeline-edit', id],

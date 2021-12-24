@@ -23,6 +23,7 @@ function useLoadVariasLists(configs:PipelineApiConfigs, options?:LoadStageDataPr
 
   const {
     tabApis = {},
+    level,
   } = usePipelineContext();
 
   const { create: CreatePromise, modify: ModifyPromise } = tabApis?.[TAB_CI_CONFIG] || { create: '', modify: '' };
@@ -34,13 +35,17 @@ function useLoadVariasLists(configs:PipelineApiConfigs, options?:LoadStageDataPr
   };
 
   const getVariasLists = () => {
-    if (type === 'create') {
-      if (id === DEFAULT_TMP_ID) {
-        return Promise.resolve([]);
+    if (level === 'project') {
+      if (type === 'create') {
+        if (id === DEFAULT_TMP_ID) {
+          return Promise.resolve([]);
+        }
+        return ciTemplatesVariablesApi.getCiVariasListsWhileCreate(id);
       }
-      return CreatePromise || ciTemplatesVariablesApi.getCiVariasListsWhileCreate(id);
+      return pipelineVariablesApi.getCiVariasListsWhileModify(id);
     }
-    return ModifyPromise || pipelineVariablesApi.getCiVariasListsWhileModify(id);
+    if (type === 'create') return CreatePromise;
+    return ModifyPromise;
   };
 
   return useQuery<unknown, unknown, Record<string, any>>(['app-pipeline-ci-varias', id],
