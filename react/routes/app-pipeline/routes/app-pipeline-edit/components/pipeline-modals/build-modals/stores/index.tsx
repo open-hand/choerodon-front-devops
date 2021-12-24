@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
-import buildDataSet, { mapping }
+import buildDataSet, { mapping, transformLoadData as buildTransformLoadData }
   from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/stores/buildDataSet';
 import stepDataSet, { transformLoadData }
   from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/stores/stepDataSet';
@@ -43,13 +43,8 @@ export const StoreProvider = observer((props: any) => {
   useEffect(() => {
     if (data) {
       const buildData: any = {};
-      Object.keys(mapping).forEach((item: any) => {
-        buildData[mapping[item].name] = data[mapping[item].name];
-      });
-      BuildDataSet.loadData([{
-        ...buildData,
-        [mapping.appService.name]: appServiceName,
-      }]);
+
+      BuildDataSet.loadData([buildTransformLoadData(data, appServiceName)]);
       StepDataSet.loadData(transformLoadData(data?.devopsCiStepVOList));
     }
   }, []);
