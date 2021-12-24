@@ -96,6 +96,10 @@ const AppPipelineEdit = () => {
     }
   };
 
+
+  /**
+   * 项目层的编辑
+   */
   const handleSumitWhileProjectEdit = () => {
     const { isValidated, key, reason } = handleTabDataValidate(tabsData);
     if (isValidated) {
