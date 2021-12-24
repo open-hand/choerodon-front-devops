@@ -141,6 +141,8 @@ const Index = observer(() => {
     },
   } = useBuildModalStore();
 
+  console.log(data);
+
   const advancedRef = useRef<any>();
 
   const stepData = StepDataSet.data;
@@ -149,9 +151,15 @@ const Index = observer(() => {
     const res = await BuildDataSet.current.validate(true);
     let stepRes = true;
     for (let i = 0; i < StepDataSet.records.filter((j: any) => j.status !== 'delete').length; i += 1) {
+      const item = StepDataSet.records.filter((j: any) => j.status !== 'delete')[i];
       // eslint-disable-next-line no-await-in-loop
-      const itemResult = await StepDataSet.records.filter((j: any) => j.status !== 'delete')[i].validate(true);
-      if (!itemResult) {
+      const itemResult = await item.validate(true);
+      let configFlag = true;
+      if ([BUILD_MAVEN, BUILD_MAVEN_PUBLISH].includes(item?.get(StepMapping.type.name))) {
+        // eslint-disable-next-line no-await-in-loop
+        configFlag = await item.getField(StepMapping.customRepoConfig.name).options.validate();
+      }
+      if (!itemResult || !configFlag) {
         stepRes = false;
         break;
       }

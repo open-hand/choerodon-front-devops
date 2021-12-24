@@ -1,6 +1,7 @@
 import React from 'react';
 import { DataSet, Modal } from 'choerodon-ui/pro';
 import { RdupmAlienApiConfig } from '@choerodon/master';
+import _ from 'lodash';
 import {
   STEPVO, BUILD_DOCKER, BUILD_UPLOADJAR, BUILD_MAVEN, BUILD_MAVEN_PUBLISH, BUILD_SONARQUBE,
 } from '@/routes/app-pipeline/CONSTANTS';
@@ -437,6 +438,21 @@ const Index = () => ({
               );
             }
           });
+          break;
+        }
+        case mapping.dockerFilePath.name: {
+          let res;
+          const arrValue = value.split('');
+          const lastIndex = _.findLastIndex(arrValue, (o: any) => o === '/');
+          if (lastIndex !== -1) {
+            res = arrValue.slice(0, lastIndex).join('');
+          } else {
+            res = '.';
+          }
+          record.set(mapping.imageContext.name, res);
+          break;
+        }
+        default: {
           break;
         }
       }
