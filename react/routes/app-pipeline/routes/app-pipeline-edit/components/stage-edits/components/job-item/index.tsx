@@ -87,7 +87,7 @@ const JobItem:FC<JobProps> = (props) => {
   };
 
   const jobContentCls = classNames(`${prefixCls}-content`, {
-    [`${prefixCls}-content-notComplete`]: completed,
+    [`${prefixCls}-content-notComplete`]: !completed,
   });
 
   return (
@@ -102,7 +102,7 @@ const JobItem:FC<JobProps> = (props) => {
           {name}
         </OverflowWrap>
         <div className={`${prefixCls}-iconGroups`}>
-          {completed && (
+          {!completed && (
           <InfoIcon
             className={`${prefixCls}-iconGroups-notComplete`}
           />

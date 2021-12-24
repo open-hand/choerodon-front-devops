@@ -13,12 +13,12 @@ const validateMap:Partial<Record<TabkeyTypes, (data:any)=>{ reason:string |'', i
 };
 
 function handleValideStage(stagesData:Array<{jobList:{completed:boolean}[]} & Record<string, any>>):{ reason:string |'', isValidated:boolean } {
-  const isNotCompleted = stagesData.some(({ jobList }) => {
-    if (!jobList?.length) return true;
-    return jobList.some(({ completed }) => completed);
+  const isCompleted = stagesData.every(({ jobList }) => {
+    if (!jobList?.length) return false;
+    return jobList.every(({ completed }) => completed);
   });
-  if (isNotCompleted) {
-    return { isValidated: !isNotCompleted, reason: '存在空阶段或是未填写必填项的job' };
+  if (!isCompleted) {
+    return { isValidated: false, reason: '存在空阶段或是未填写必填项的job' };
   }
   return { isValidated: true, reason: '' };
 }

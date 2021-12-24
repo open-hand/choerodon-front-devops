@@ -11,7 +11,7 @@ import { Tabs, message } from 'choerodon-ui';
 import map from 'lodash/map';
 import classNames from 'classnames';
 import { isEmpty } from 'lodash';
-import { useRouteMatch } from 'react-router';
+import { useRouteMatch, useHistory } from 'react-router';
 import { useAppPipelineEditStore } from './stores';
 import {
   TAB_ADVANCE_SETTINGS, TAB_BASIC, TAB_CI_CONFIG, TAB_FLOW_CONFIG,
@@ -53,6 +53,8 @@ const AppPipelineEdit = () => {
     },
   } = useRouteMatch<any>();
 
+  const history = useHistory();
+
   const contentCls = classNames(`${prefixCls}-content`, {
     [`${prefixCls}-content-bgnone`]: TAB_FLOW_CONFIG === currentKey,
   });
@@ -87,6 +89,10 @@ const AppPipelineEdit = () => {
       const finalData = handleTabDataTransform(tabsData);
       try {
         const res = ciCdPipelineApi.handlePipelineCreate(finalData);
+        if (res && res.failed) {
+          return;
+        }
+        history.go(-1);
       } catch (error) {
         throw new Error(error);
       }
@@ -96,12 +102,19 @@ const AppPipelineEdit = () => {
     }
   };
 
+  /**
+   * 项目层的编辑
+   */
   const handleSumitWhileProjectEdit = () => {
     const { isValidated, key, reason } = handleTabDataValidate(tabsData);
     if (isValidated) {
       const finalData = handleTabDataTransform(tabsData);
       try {
         const res = ciCdPipelineApi.handlePipelineModify(id, finalData);
+        if (res && res.failed) {
+          return;
+        }
+        history.go(-1);
       } catch (error) {
         throw new Error(error);
       }
@@ -163,8 +176,9 @@ const AppPipelineEdit = () => {
     if (level === 'project') {
       if (type === 'create') {
         title = '创建流水线';
+      } else {
+        title = '编辑流水线';
       }
-      title = '编辑流水线';
     } else {
       title = '创建流水线模板';
     }
