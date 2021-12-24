@@ -13,6 +13,7 @@ const mapping: any = {
     name: 'repoName',
     type: 'string',
     label: '仓库名称',
+    required: true,
   },
   repoType: {
     name: 'repoType',
@@ -21,6 +22,7 @@ const mapping: any = {
     textField: 'text',
     valueField: 'value',
     multiple: true,
+    required: true,
     options: new DataSet({
       data: [{
         text: 'snapshot仓库',
@@ -35,16 +37,23 @@ const mapping: any = {
     name: 'repoAddress',
     type: 'string',
     label: '仓库地址',
+    required: true,
   },
   username: {
     name: 'username',
     type: 'string',
     label: '用户名',
+    dynamicProps: {
+      required: ({ record }: any) => record.get(mapping.type.name) === typeData[1].value,
+    },
   },
   password: {
     name: 'password',
     type: 'string',
     label: '密码',
+    dynamicProps: {
+      required: ({ record }: any) => record.get(mapping.type.name) === typeData[1].value,
+    },
   },
   type: {
     name: 'type',
