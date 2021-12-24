@@ -9,7 +9,9 @@
   &-btnGroups {
     position: absolute;
     right: 11px;
-    top: 0;
+    top: 10px;
+    display: flex;
+    align-items: center;
     > i.icon {
       font-size: 17px;
       transition: 0.2s;
@@ -18,9 +20,14 @@
     &-delete {
       opacity: 0;
       color: var(--primary-color);
+      display: none;
       &:hover {
         box-shadow: @boxShadaw;
       }
+    }
+    &-notComplete {
+      display: block;
+      opacity: 1;
     }
   }
   &-stageType {
@@ -42,7 +49,7 @@
   > footer {
     position: relative;
   }
-  > header {
+  &-header {
     width: 200px;
     margin: 0 auto;
     display: flex;
@@ -55,11 +62,20 @@
     border-style: solid;
     border-color: rgba(65, 91, 201, 0.24);
     border-width: 1px;
+    &-notComplete {
+      border-color: #f76776;
+    }
+    
     &:hover {
       border-color: var(--primary-color);
       .@{prefixCls}-btnGroups {
         &-delete {
           opacity: 1;
+          display: block;
+        }
+        &-notComplete {
+          display: none;
+          opacity: 0;
         }
       }
     }

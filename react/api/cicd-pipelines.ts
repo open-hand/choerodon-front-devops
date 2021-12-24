@@ -6,6 +6,35 @@ class CiCdPipelineApi extends Api<CiCdPipelineApi> {
   }
 
   /**
+   * 创建流水线
+   * @param {*} data
+   * @return {*}
+   * @memberof CiCdPipelineApi
+   */
+  handlePipelineCreate(data:any) {
+    return this.request({
+      url: `${this.prefix}`,
+      data,
+      method: 'post',
+    });
+  }
+
+  /**
+   * 修改流水线
+   * @param {string} pipelineId
+   * @param {*} data
+   * @return {*}
+   * @memberof CiCdPipelineApi
+   */
+  handlePipelineModify(pipelineId:string, data:any) {
+    return this.request({
+      url: `${this.prefix}/${pipelineId}`,
+      data,
+      method: 'put',
+    });
+  }
+
+  /**
    *
    * @param {string} pipelineId
    * @return {*}

@@ -12,6 +12,8 @@ import { Icon, Tooltip } from 'choerodon-ui/pro';
 import './index.less';
 
 import { Droppable, Draggable } from 'react-beautiful-dnd';
+import classnames from 'classnames';
+import { InfoIcon } from '@choerodon/components';
 import JobItem from '../job-item';
 import JobAddBtn from '../job-btn';
 import { STAGE_TYPES } from '../../../../interface';
@@ -168,37 +170,43 @@ const Stage:FC<StageProps> = (props) => {
   }, [fromToId, stageIndex]);
 
   const renderDraggerContainer = useCallback(
-    (draggableProvided:any, draggableSnapshot:any) => (
-      <div
-        className={prefixCls}
-        ref={draggableProvided.innerRef}
-        {...draggableProvided.draggableProps}
-        {...draggableProvided.dragHandleProps}
-        style={
-            getItemStyle(
-              draggableSnapshot.isDragging,
-              draggableProvided.draggableProps.style,
-              getTransfromStylesByFromToId,
-            )
-          }
-      >
-        <header onClick={handleModalOpen} role="none">
-          <div className={`${prefixCls}-stageType`}>{type}</div>
-          <Tooltip title={name}>
-            <span className={`${prefixCls}-stageName`}>{name}</span>
-          </Tooltip>
-          <div className={`${prefixCls}-btnGroups`}>
-            <Icon onClick={handleDeleteStage} type="delete_black-o" className={`${prefixCls}-btnGroups-delete`} />
-          </div>
-        </header>
-        <main>
-          {renderJobs()}
-        </main>
-        <footer>
-          <JobAddBtn handleJobAddCallback={handleJobAddCallback} linesType={linesType} type={jobList.length ? 'circle' : 'normal'} />
-        </footer>
-      </div>
-    ),
+    (draggableProvided:any, draggableSnapshot:any) => {
+      const headerCls = classnames(`${prefixCls}-header`, {
+        [`${prefixCls}-header-notComplete`]: !jobList?.length,
+      });
+      return (
+        <div
+          className={prefixCls}
+          ref={draggableProvided.innerRef}
+          {...draggableProvided.draggableProps}
+          {...draggableProvided.dragHandleProps}
+          style={
+              getItemStyle(
+                draggableSnapshot.isDragging,
+                draggableProvided.draggableProps.style,
+                getTransfromStylesByFromToId,
+              )
+            }
+        >
+          <header className={headerCls} onClick={handleModalOpen} role="none">
+            <div className={`${prefixCls}-stageType`}>{type}</div>
+            <Tooltip title={name}>
+              <span className={`${prefixCls}-stageName`}>{name}</span>
+            </Tooltip>
+            <div className={`${prefixCls}-btnGroups`}>
+              {!jobList?.length && <InfoIcon className={`${prefixCls}-btnGroups-notComplete`} />}
+              <Icon onClick={handleDeleteStage} type="delete_black-o" className={`${prefixCls}-btnGroups-delete`} />
+            </div>
+          </header>
+          <main>
+            {renderJobs()}
+          </main>
+          <footer>
+            <JobAddBtn handleJobAddCallback={handleJobAddCallback} linesType={linesType} type={jobList.length ? 'circle' : 'normal'} />
+          </footer>
+        </div>
+      );
+    },
     [getItemStyle, getTransfromStylesByFromToId, renderJobs],
   );
 
