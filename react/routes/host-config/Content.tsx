@@ -101,8 +101,8 @@ const HostConfig: React.FC<any> = observer((): any => {
         />
       </Header>
       <Breadcrumb />
+      <ContentHeader />
       <Content className={`${prefixCls}-content`}>
-        <ContentHeader />
         {getContent}
       </Content>
     </Page>
