@@ -1,6 +1,6 @@
 import { DataSet } from 'choerodon-ui/pro';
-import { appServiceApi } from '@choerodon/master';
-import { TASK_TEMPLATE } from '@/routes/app-pipeline/CONSTANTS';
+import { appServiceApi, ciTemplateJobGroupApiConfig } from '@choerodon/master';
+import { CUSTOM_BUILD, MAVEN_BUILD, TASK_TEMPLATE } from '@/routes/app-pipeline/CONSTANTS';
 
 const transformSubmitData = (ds: any) => {
   const record = ds?.current;
@@ -10,6 +10,7 @@ const transformSubmitData = (ds: any) => {
     [mapping.triggerValue.name]: record?.get(mapping.triggerValue.name)?.join(','),
     [mapping.groupId.name]: record?.get(mapping.groupId.name),
     [mapping.type.name]: record?.get(mapping.type.name),
+    [mapping.script.name]: record?.get(mapping.script.name),
   });
 };
 
@@ -20,6 +21,7 @@ const transformLoadData = (data: any, appServiceName: any) => ({
   [mapping.appService.name]: appServiceName,
   [mapping.triggerType.name]: data?.[mapping.triggerType.name],
   [mapping.triggerValue.name]: data?.[mapping.triggerValue.name]?.split(','),
+  [mapping.script.name]: data?.[mapping.script.name],
 });
 
 let triggerValueAxiosData: any = [];
@@ -71,6 +73,8 @@ const mapping: {
     name: 'groupId',
     type: 'string',
     label: '所属任务分组',
+    textField: 'name',
+    valueField: 'id',
   },
   type: {
     name: 'type',
@@ -81,10 +85,10 @@ const mapping: {
     options: new DataSet({
       data: [{
         text: '普通创建',
-        value: 'normal',
+        value: MAVEN_BUILD,
       }, {
         text: '自定义脚本',
-        value: 'custom',
+        value: CUSTOM_BUILD,
       }],
     }),
   },
@@ -118,6 +122,10 @@ const mapping: {
       data: originTriggerValueData,
     }),
   },
+  script: {
+    name: 'script',
+    type: 'string',
+  },
 };
 
 const Index = (appServiceId: any, data: any): any => ({
@@ -137,8 +145,21 @@ const Index = (appServiceId: any, data: any): any => ({
         // });
         break;
       }
+      case 'groupId': {
+        item.options = new DataSet({
+          autoQuery: true,
+          paging: false,
+          transport: {
+            read: () => ({
+              ...ciTemplateJobGroupApiConfig.getList(),
+            }),
+          },
+        });
+        break;
+      }
       case 'name': {
         item.label = data?.template === TASK_TEMPLATE ? '任务模板名称' : '任务名称';
+        break;
       }
       default: {
         break;
