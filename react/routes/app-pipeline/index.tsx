@@ -1,5 +1,5 @@
 import React, {
-  createContext, FC, Suspense,
+  createContext, FC, Suspense, useMemo,
 } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { PermissionRoute } from '@choerodon/master';
@@ -57,6 +57,13 @@ const AppPipeline: FC<AppPipelineProps> = (props) => {
     editPagePermissions = [],
   } = permissions;
 
+  const getPermissions = useMemo(() => {
+    if (level === 'project') {
+      return ['choerodon.code.project.develop.ci-pipeline.edit'];
+    }
+    return editPagePermissions;
+  }, []);
+
   return (
     <Stores.Provider value={{ ...rest, level }}>
       <Suspense fallback={<Loading type="c7n" />}>
@@ -68,7 +75,7 @@ const AppPipeline: FC<AppPipelineProps> = (props) => {
           />
           <PermissionRoute
             exact
-            service={editPagePermissions}
+            service={getPermissions}
             path={`${match.url}/edit/:type/:id`}
             component={AppPipelineEdit}
           />

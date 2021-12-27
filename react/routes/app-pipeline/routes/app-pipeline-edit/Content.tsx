@@ -143,6 +143,7 @@ const AppPipelineEdit = () => {
     return level && submitMapWhileEdit[level]?.(tabsData);
   };
 
+  /** @type {*} 头部按钮 */
   const headerItems = useMemo(() => ([
     {
       handler: handleSubmit,
@@ -172,6 +173,10 @@ const AppPipelineEdit = () => {
     </Tabs>
   ), [currentKey]);
 
+  /**
+   * 根据当前的层级和编辑修改情况渲染title
+   * @return {string}
+   */
   const renderTitle = () => {
     let title = '';
     if (level === 'project') {
