@@ -29,6 +29,7 @@ import {
   settingConfigOptionsData,
   sonarConfigData,
   accountConfigData,
+  scanTypeData,
 } from './stores/stepDataSet';
 import { mapping, triggerTypeOptionsData, transformSubmitData } from './stores/buildDataSet';
 import { mapping as repoConfigMapping, typeData } from './stores/customRepoConfigDataSet';
@@ -195,6 +196,7 @@ const Index = observer(() => {
             <YamlEditor
               newLine
               colSpan={2}
+              showError={false}
               readOnly={false}
               modeChange={false}
               value={itemRecord.get(StepMapping.script.name)}
@@ -237,6 +239,7 @@ const Index = observer(() => {
               colSpan={2}
               readOnly={false}
               modeChange={false}
+              showError={false}
             />
           </Form>
         );
