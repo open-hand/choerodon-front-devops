@@ -59,7 +59,7 @@ const AppPipeline: FC<AppPipelineProps> = (props) => {
 
   const getPermissions = useMemo(() => {
     if (level === 'project') {
-      return ['choerodon.code.project.develop.ci-pipeline.edit'];
+      return ['choerodon.code.project.develop.ci-pipeline.ps.edit'];
     }
     return editPagePermissions;
   }, []);
