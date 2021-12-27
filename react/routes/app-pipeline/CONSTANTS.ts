@@ -1,6 +1,10 @@
 const MAVEN_BUILD = 'normal';
 const CUSTOM_BUILD = 'custom';
 
+const PIPELINE_TEMPLATE = 'pipeline';
+const TASK_TEMPLATE = 'task';
+const STEP_TEMPLATE = 'step';
+
 // 构建类型
 const BUILD = 'build';
 const BUILD_MAVEN = 'maven_build';
@@ -36,4 +40,7 @@ export {
   CUSTOM,
   STEPVO,
   CUSTOM_BUILD,
+  PIPELINE_TEMPLATE,
+  TASK_TEMPLATE,
+  STEP_TEMPLATE,
 };

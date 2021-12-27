@@ -28,7 +28,12 @@ const {
   Item,
 } = Menu;
 
-const handlePipelineModal = (data: any, callback: any, advancedData?: any, level?: any) => {
+const handlePipelineModal = ({
+  data,
+  callback,
+  advancedData,
+  level,
+}: any) => {
   switch (data.type) {
     case MAVEN_BUILD: {
       handleBuildModal(data, callback, advancedData, level);
@@ -75,7 +80,12 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
   const handleClick = (data: any) => {
     const { keyPath } = data;
     const stepData = JSON.parse(keyPath[0]);
-    handlePipelineModal(stepData, handleJobAddCallback, getTabData(TAB_ADVANCE_SETTINGS), level);
+    handlePipelineModal({
+      data: stepData,
+      callback: handleJobAddCallback,
+      advancedData: getTabData(TAB_ADVANCE_SETTINGS),
+      level,
+    });
   };
 
   const renderChildrenMenu = ({ parentId }:{
