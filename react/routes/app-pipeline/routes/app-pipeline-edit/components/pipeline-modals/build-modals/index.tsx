@@ -19,8 +19,9 @@ const handleBuildModal = (
   advancedData?: any,
   level?: any,
 ) => {
+  const { template } = data;
+
   function getTitle() {
-    const { template } = data;
     if (template && template === TASK_TEMPLATE) {
       return '创建任务模板';
     }
@@ -43,7 +44,7 @@ const handleBuildModal = (
     },
     maskClosable: false,
     key: Modal.key(),
-    footer: level && level === 'project' ? null : (okbtn: any, cancelbtn: any) => (
+    footer: !template ? null : (okbtn: any, cancelbtn: any) => (
       <>
         {cancelbtn}
         {okbtn}
