@@ -34,16 +34,17 @@ const handlePipelineModal = ({
   advancedData,
   level,
 }: any) => {
-  switch (data.type) {
-    case MAVEN_BUILD: {
-      handleBuildModal(data, callback, advancedData, level);
+  switch (level) {
+    case 'project': {
+      if (data?.type === MAVEN_BUILD) {
+        handleBuildModal(data, callback, advancedData, level);
+      } else {
+        handleCustomModal(data, callback);
+      }
       break;
-    }
-    case CUSTOM_BUILD: {
-      handleCustomModal(data, callback);
     }
     default: {
-      break;
+      handleBuildModal(data, callback, advancedData, level);
     }
   }
 };
