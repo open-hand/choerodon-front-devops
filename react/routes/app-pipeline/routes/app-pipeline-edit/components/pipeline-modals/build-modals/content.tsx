@@ -23,7 +23,7 @@ import {
   BUILD_SONARQUBE,
   BUILD_UPLOAD_CHART_CHOERODON,
   TASK_TEMPLATE,
-  STEP_TEMPLATE,
+  STEP_TEMPLATE, MAVEN_BUILD, CUSTOM_BUILD,
 } from '@/routes/app-pipeline/CONSTANTS';
 import {
   mapping as StepMapping,
@@ -178,6 +178,79 @@ const Index = observer(() => {
             { renderTriggerValue(BuildDataSet) }
           </>
         );
+      }
+    }
+  };
+
+  const renderMain = () => {
+    switch (BuildDataSet?.current?.get(mapping.type.name)) {
+      case MAVEN_BUILD: {
+        return (
+          <>
+            <StepTitle
+              className={`${prefix}__main__step`}
+              title="步骤配置"
+              buttons={[{
+                text: '全部收起',
+                icon: 'vertical_align_bottom',
+                onClick: () => handleExpand(false),
+              }, {
+                text: '展开',
+                icon: 'vertical_align_top',
+                onClick: () => handleExpand(true),
+              }, {
+                custom: true,
+                dom: <AddStep ds={StepDataSet} />,
+              // text: '添加步骤',
+              // onClick: handleAddStep,
+              // overlay: addStepMenu,
+              }]}
+            />
+            {renderSteps(stepData)}
+            <div
+              style={{
+                marginTop: stepData.length > 0 ? 0 : 20,
+              }}
+              className={`${prefix}__main__divided`}
+            />
+            <AdvancedSetting
+              data={data}
+              cRef={advancedRef}
+              className={`${prefix}__main__advanced`}
+            />
+          </>
+        );
+        break;
+      }
+      case CUSTOM_BUILD: {
+        return (
+          <>
+            <StepTitle
+              className={`${prefix}__main__step`}
+              title="自定义脚本"
+            />
+            <div
+              style={{
+                marginTop: 16,
+              }}
+            >
+              <YamlEditor
+                showError={false}
+                readOnly={false}
+                modeChange={false}
+                value={BuildDataSet?.current?.get(mapping.script.name)}
+                onValueChange={(value: string) => BuildDataSet
+                  ?.current?.set(mapping.script.name, value)}
+              />
+            </div>
+          </>
+
+        );
+        break;
+      }
+      default: {
+        return '';
+        break;
       }
     }
   };
@@ -445,12 +518,15 @@ const Index = observer(() => {
           text: '基础配置',
           el: '.c7ncd-buildModal-content__main',
           type: 'scrollTop' as typeProps,
+          display: true,
         }, {
-          text: '步骤配置',
+          text: BuildDataSet?.current?.get(mapping.type.name) === MAVEN_BUILD ? '步骤配置' : '自定义脚本',
           el: '.c7ncd-buildModal-content__main__step',
+          display: true,
         }, {
           text: '高级设置',
           el: '.c7ncd-buildModal-content__main__advanced',
+          display: BuildDataSet?.current?.get(mapping.type.name) === MAVEN_BUILD,
         }]}
       />
       <div className={`${prefix}__main`}>
@@ -460,37 +536,9 @@ const Index = observer(() => {
           }
         </Form>
         <div className={`${prefix}__main__divided`} />
-        <StepTitle
-          className={`${prefix}__main__step`}
-          title="步骤配置"
-          buttons={[{
-            text: '全部收起',
-            icon: 'vertical_align_bottom',
-            onClick: () => handleExpand(false),
-          }, {
-            text: '展开',
-            icon: 'vertical_align_top',
-            onClick: () => handleExpand(true),
-          }, {
-            custom: true,
-            dom: <AddStep ds={StepDataSet} />,
-            // text: '添加步骤',
-            // onClick: handleAddStep,
-            // overlay: addStepMenu,
-          }]}
-        />
-        {renderSteps(stepData)}
-        <div
-          style={{
-            marginTop: stepData.length > 0 ? 0 : 20,
-          }}
-          className={`${prefix}__main__divided`}
-        />
-        <AdvancedSetting
-          data={data}
-          cRef={advancedRef}
-          className={`${prefix}__main__advanced`}
-        />
+        {
+          renderMain()
+        }
       </div>
     </div>
   );
