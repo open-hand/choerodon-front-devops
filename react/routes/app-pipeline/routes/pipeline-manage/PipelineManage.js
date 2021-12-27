@@ -13,7 +13,6 @@ import { OverflowWrap } from '@choerodon/components';
 import PipelineTree from './components/PipelineTree';
 import PipelineFlow from './components/PipelineFlow';
 import DragBar from '@/components/drag-bar';
-import PipelineCreate from './components/PipelineCreate';
 import RecordDetail from './components/record-detail';
 import EmptyPage from '@/components/empty-page';
 import { usePipelineManageStore } from './stores';
@@ -67,24 +66,6 @@ const PipelineManage = observer(() => {
   } = useLocation();
 
   const handleModalOpen = usePipelineCreateModal();
-
-  const handleCreatePipeline = () => {
-    Modal.open({
-      key: Modal.key(),
-      title: '创建流水线',
-      style: {
-        width: 'calc(100vw - 3.52rem)',
-      },
-      drawer: true,
-      children: <PipelineCreate
-        mathRandom={Math.random()}
-        refreshTree={handleRefresh}
-        editBlockStore={editBlockStore}
-        mainStore={mainStore}
-      />,
-      okText: '创建',
-    });
-  };
 
   const rootRef = useRef(null);
 
@@ -228,8 +209,7 @@ const PipelineManage = observer(() => {
       devopsCdPipelineDeatilVO: detailDevopsCdPipelineDeatilVO,
     } = getDetailData;
     const buttons = [{
-      // 'choerodon.code.project.develop.ci-pipeline.ps.create'
-      permissions: [],
+      permissions: ['choerodon.code.project.develop.ci-pipeline.ps.createPro'],
       name: format({ id: 'CreatePipeline' }),
       icon: 'playlist_add',
       handler: handleModalOpen,
@@ -253,7 +233,7 @@ const PipelineManage = observer(() => {
     if (treeDs.length && treeDs.status === 'ready') {
       if (!parentId) {
         buttons.push({
-          // permissions: ['choerodon.code.project.develop.ci-pipeline.ps.update'],
+          permissions: ['choerodon.code.project.develop.ci-pipeline.ps.update'],
           name: format({ id: 'Modify' }),
           icon: 'edit-o',
           handler: handleModify,
@@ -312,7 +292,7 @@ const PipelineManage = observer(() => {
                 title={formatMessage({ id: 'empty.title.pipeline' })}
                 describe={formatMessage({ id: 'empty.tips.pipeline.owner' })}
                 btnText={formatMessage({ id: `${intlPrefix}.create` })}
-                onClick={handleCreatePipeline}
+                onClick={handleModalOpen}
                 access
               />
             </Suspense>
