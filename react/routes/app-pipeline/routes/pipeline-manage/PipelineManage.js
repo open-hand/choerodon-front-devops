@@ -9,6 +9,7 @@ import {
 import { Modal } from 'choerodon-ui/pro';
 import { useSessionStorageState } from 'ahooks';
 import { useHistory, useLocation } from 'react-router';
+import { OverflowWrap } from '@choerodon/components';
 import PipelineTree from './components/PipelineTree';
 import PipelineFlow from './components/PipelineFlow';
 import DragBar from '@/components/drag-bar';
@@ -19,7 +20,6 @@ import { usePipelineManageStore } from './stores';
 import VariableSettings from './components/variable-settings';
 import AuditModal from './components/audit-modal';
 import GitlabRunner from './components/gitlab-runner';
-import MouserOverWrapper from '@/components/MouseOverWrapper';
 import { usePipelineCreateModal } from './components/pipeline-create-modal';
 import { PIPELINE_CREATE_LOCALSTORAGE_IDENTIFY } from '@/routes/app-pipeline/stores/CONSTANTS';
 
@@ -131,9 +131,9 @@ const PipelineManage = observer(() => {
       title: (
         <span className={`${prefixCls}-detail-modal-title`}>
           流水线记录“
-          <MouserOverWrapper width="100px" text={`#${viewId}`}>
-            <span>{`#${viewId}`}</span>
-          </MouserOverWrapper>
+          <OverflowWrap width="100px">
+            {`#${viewId}`}
+          </OverflowWrap>
           ”的详情
         </span>
       ),
@@ -256,13 +256,11 @@ const PipelineManage = observer(() => {
           name: format({ id: 'Modify' }),
           icon: 'edit-o',
           handler: handleModify,
-          // display: edit,
         }, {
           permissions: ['choerodon.code.project.develop.ci-pipeline.ps.variable.app'],
           name: format({ id: 'CIVariable' }),
           icon: 'settings-o',
           handler: () => openSettingsModal('local'),
-          display: true,
         });
       } else {
         const newStatus = status || detailStatus;
@@ -271,7 +269,6 @@ const PipelineManage = observer(() => {
           name: format({ id: 'RecordDetails' }),
           icon: 'find_in_page-o',
           handler: openRecordDetail,
-          display: true,
         }, {
           permissions: ['choerodon.code.project.develop.ci-pipeline.ps.cancel'],
           name: format({ id: 'CancelExecution' }),
@@ -296,7 +293,6 @@ const PipelineManage = observer(() => {
     buttons.push({
       icon: 'refresh',
       handler: handleRefresh,
-      display: true,
     });
     return buttons;
   }
