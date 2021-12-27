@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import {
   Form,
   TextField,
@@ -148,8 +148,10 @@ const Index = observer(() => {
 
   const stepData = StepDataSet.data;
 
+  const disabled = useMemo(() => level !== 'project' && !template, []);
+
   const renderCloseModal = () => {
-    if (level && level === 'project') {
+    if (!template) {
       return (
         <CloseModal preCheck={handleOk} modal={modal} />
       );
@@ -200,7 +202,7 @@ const Index = observer(() => {
                 onClick: () => handleExpand(true),
               }, {
                 custom: true,
-                dom: <AddStep ds={StepDataSet} />,
+                dom: disabled ? '' : <AddStep ds={StepDataSet} />,
               // text: '添加步骤',
               // onClick: handleAddStep,
               // overlay: addStepMenu,
@@ -302,7 +304,7 @@ const Index = observer(() => {
     switch (itemRecord.get(StepMapping.type.name)) {
       case BUILD_MAVEN: {
         result = (
-          <Form record={itemRecord} columns={2}>
+          <Form disabled={disabled} record={itemRecord} columns={2}>
             <TextField name={StepMapping.stepName.name} />
             <Select name={StepMapping.projectRelyRepo.name} />
             {/* @ts-ignore */}
@@ -327,7 +329,7 @@ const Index = observer(() => {
       }
       case BUILD_NPM: {
         result = (
-          <Form record={itemRecord} columns={2}>
+          <Form disabled={disabled} record={itemRecord} columns={2}>
             <TextField name={StepMapping.stepName.name} />
             <YamlEditor
               value={itemRecord.get(StepMapping.script.name)}
@@ -348,7 +350,7 @@ const Index = observer(() => {
       }
       case BUILD_UPLOADJAR: {
         result = (
-          <Form record={itemRecord} columns={2}>
+          <Form disabled={disabled} record={itemRecord} columns={2}>
             <TextField name={StepMapping.stepName.name} />
             <Select name={StepMapping.targetProductsLibrary.name} />
             <YamlEditor
@@ -366,7 +368,7 @@ const Index = observer(() => {
       }
       case BUILD_GO: {
         result = (
-          <Form record={itemRecord} columns={2}>
+          <Form disabled={disabled} record={itemRecord} columns={2}>
             <TextField name={StepMapping.stepName.name} />
             <YamlEditor
               showError={false}
@@ -383,7 +385,7 @@ const Index = observer(() => {
       }
       case BUILD_MAVEN_PUBLISH: {
         result = (
-          <Form record={itemRecord} columns={2}>
+          <Form disabled={disabled} record={itemRecord} columns={2}>
             <TextField name={StepMapping.stepName.name} />
             <Select name={StepMapping.targetProductsLibrary.name} />
             <Select colSpan={2} name={StepMapping.projectRelyRepo.name} />
@@ -413,7 +415,7 @@ const Index = observer(() => {
       }
       case BUILD_UPLOAD_CHART_CHOERODON: {
         result = (
-          <Form record={itemRecord} columns={2}>
+          <Form disabled={disabled} record={itemRecord} columns={2}>
             <TextField name={StepMapping.stepName.name} />
           </Form>
         );
@@ -530,7 +532,12 @@ const Index = observer(() => {
         }]}
       />
       <div className={`${prefix}__main`}>
-        <Form className={`${prefix}__main__public`} dataSet={BuildDataSet} columns={6}>
+        <Form
+          disabled={disabled}
+          className={`${prefix}__main__public`}
+          dataSet={BuildDataSet}
+          columns={6}
+        >
           {
             renderBuild(BuildDataSet, template)
           }

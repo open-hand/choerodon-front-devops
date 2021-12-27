@@ -90,15 +90,6 @@ const mapping: {
     multiple: true,
     textField: 'name',
     valueField: 'repositoryId',
-    options: new DataSet({
-      paging: true,
-      autoQuery: true,
-      transport: {
-        read: () => ({
-          ...RdupmAlienApiConfig.getnexusMavenRepoIds(),
-        }),
-      },
-    }),
   },
   dockerFilePath: {
     name: 'dockerFilePath',
@@ -133,15 +124,6 @@ const mapping: {
         return record.get(mapping.type.name) === BUILD_UPLOADJAR;
       },
     },
-    options: new DataSet({
-      paging: true,
-      autoQuery: true,
-      transport: {
-        read: () => ({
-          ...RdupmAlienApiConfig.getnexusMavenRepoIds('hosted'),
-        }),
-      },
-    }),
   },
   TLS: {
     name: 'skipDockerTlsVerify',
@@ -401,7 +383,39 @@ const transformSubmitData = (ds: any) => ds.records.filter((i: any) => i.status 
 
 const Index = () => ({
   autoCreate: true,
-  fields: Object.keys(mapping).map((key) => mapping[key]),
+  fields: Object.keys(mapping).map((key) => {
+    const item = mapping[key];
+    switch (key) {
+      case 'projectRelyRepo': {
+        item.options = new DataSet({
+          paging: true,
+          autoQuery: true,
+          transport: {
+            read: () => ({
+              ...RdupmAlienApiConfig.getnexusMavenRepoIds(),
+            }),
+          },
+        });
+        break;
+      }
+      case 'targetProductsLibrary': {
+        item.options = new DataSet({
+          paging: true,
+          autoQuery: true,
+          transport: {
+            read: () => ({
+              ...RdupmAlienApiConfig.getnexusMavenRepoIds('hosted'),
+            }),
+          },
+        });
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+    return item;
+  }),
   events: {
     update: ({ name, value, record }: any) => {
       switch (name) {
