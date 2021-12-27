@@ -106,11 +106,12 @@ const PipelineManage = observer(() => {
 
   function handleModify() {
     const {
-      id, appServiceCode, appServiceId, appServiceName, name,
+      id, appServiceCode, appServiceId, appServiceName, name, objectVersionNumber,
     } = getMainData || {};
     setPipelineCreateData({
       pipelineId: id,
       pipelineName: name,
+      objectVersionNumber,
       appService: {
         appServiceCode, appServiceId, appServiceName,
       },

@@ -11,13 +11,19 @@ export function handleTabDataTransform(tabsData:Record<TabkeyTypes, any>) {
     advancedSettings = {},
   } = tabsData;
 
-  const { appService = {}, branch = [], pipelineName: name } = basicInfo;
+  const {
+    appService = {}, branch = [], pipelineName: name, objectVersionNumber,
+  } = basicInfo;
 
   const finalData = {
     ...appService,
     ...advancedSettings,
     name,
   };
+
+  if (objectVersionNumber) {
+    finalData.objectVersionNumber = objectVersionNumber;
+  }
 
   if (branch && branch.length) {
     finalData.relatedBranches = map(branch, (item) => item?.branchName);
