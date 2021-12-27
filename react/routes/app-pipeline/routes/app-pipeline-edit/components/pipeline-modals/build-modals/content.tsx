@@ -238,7 +238,7 @@ const Index = observer(() => {
             >
               <YamlEditor
                 showError={false}
-                readOnly={false}
+                readOnly={disabled}
                 modeChange={false}
                 value={BuildDataSet?.current?.get(mapping.script.name)}
                 onValueChange={(value: string) => BuildDataSet
@@ -318,7 +318,7 @@ const Index = observer(() => {
               newLine
               colSpan={2}
               showError={false}
-              readOnly={false}
+              readOnly={disabled}
               modeChange={false}
               value={itemRecord.get(StepMapping.script.name)}
               onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
@@ -336,7 +336,7 @@ const Index = observer(() => {
               onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
               newLine
               colSpan={2}
-              readOnly={false}
+              readOnly={disabled}
               modeChange={false}
               showError={false}
             />
@@ -358,7 +358,7 @@ const Index = observer(() => {
               onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
               newLine
               colSpan={2}
-              readOnly={false}
+              readOnly={disabled}
               modeChange={false}
               showError={false}
             />
@@ -376,7 +376,7 @@ const Index = observer(() => {
               onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
               newLine
               colSpan={2}
-              readOnly={false}
+              readOnly={disabled}
               modeChange={false}
             />
           </Form>
@@ -402,7 +402,7 @@ const Index = observer(() => {
               onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
               newLine
               colSpan={2}
-              readOnly={false}
+              readOnly={disabled}
               modeChange={false}
             />
           </Form>
@@ -461,13 +461,17 @@ const Index = observer(() => {
                 />
                 <p className={`${prefix}__stepItem__main__name`}>{ record.get(StepMapping.name.name) }</p>
               </div>
-              <Icon
-                className={`${prefix}__stepItem__main__first__remove`}
-                type="remove_circle_outline"
-                onClick={() => {
-                  StepDataSet.delete([record], false);
-                }}
-              />
+              {
+                !disabled && (
+                  <Icon
+                    className={`${prefix}__stepItem__main__first__remove`}
+                    type="remove_circle_outline"
+                    onClick={() => {
+                      StepDataSet.delete([record], false);
+                    }}
+                  />
+                )
+              }
             </div>
             {record.get(StepMapping.expand.name) && renderStepItemForm(record)}
           </div>

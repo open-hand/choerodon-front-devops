@@ -22,8 +22,6 @@ const Index = observer(({
   useStore: any
   modal?: any,
 }) => {
-  console.log(useStore.getFuncList);
-
   const [funcList, setFuncList] = useState<{
     edit: boolean,
     name: string,
@@ -61,8 +59,8 @@ const Index = observer(({
   }
 
   const { run } = useDebounceFn((v) => {
-    const index = funcList.findIndex((item: any) => item.focus);
-    setFuncList(funcList.map((item: any, iIndex: number) => ({
+    const index = funcList?.findIndex((item: any) => item.focus);
+    setFuncList(funcList?.map((item: any, iIndex: number) => ({
       ...item,
       script: iIndex === index ? v : item.script,
     })));
@@ -89,7 +87,7 @@ const Index = observer(({
         edit: false,
       };
     } else {
-      funcList.splice(index, 1);
+      funcList?.splice(index, 1);
     }
     setFuncList(_.clone(funcList));
   };
@@ -121,7 +119,7 @@ const Index = observer(({
     });
   };
 
-  const renderFuncList = useMemo(() => funcList.map((item: any, index: number) => (
+  const renderFuncList = useMemo(() => funcList?.map((item: any, index: number) => (
     <div
       role="none"
       className={classNames({
@@ -192,7 +190,7 @@ const Index = observer(({
         </Button>
       </div>
       <div className={`${cssPrefix}__content`}>
-        {funcList.some((item: any) => item.focus) && (
+        {funcList?.some((item: any) => item.focus) && (
           <YamlEditor
             style={{
               height: '100%',
