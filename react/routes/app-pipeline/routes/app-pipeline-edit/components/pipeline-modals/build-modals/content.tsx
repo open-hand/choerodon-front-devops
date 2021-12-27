@@ -1,10 +1,9 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef } from 'react';
 import {
   Form,
   TextField,
   Select,
   SelectBox,
-  Button,
   NumberField,
 } from 'choerodon-ui/pro';
 import { templateStepsApi } from '@choerodon/master';
@@ -28,7 +27,6 @@ import {
   mapping as StepMapping,
   transformSubmitData as stepDataSetTransformSubmitData,
   settingConfigOptionsData,
-  scanTypeData,
   sonarConfigData,
   accountConfigData,
 } from './stores/stepDataSet';
@@ -140,8 +138,6 @@ const Index = observer(() => {
       appService,
     },
   } = useBuildModalStore();
-
-  console.log(data);
 
   const advancedRef = useRef<any>();
 

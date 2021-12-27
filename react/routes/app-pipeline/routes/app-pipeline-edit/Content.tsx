@@ -83,12 +83,12 @@ const AppPipelineEdit = () => {
   /**
    * 项目层的处理提交的事件
    */
-  const handleSumitWhileProjectCreate = () => {
+  const handleSumitWhileProjectCreate = async () => {
     const { isValidated, key, reason } = handleTabDataValidate(tabsData);
     if (isValidated) {
       const finalData = handleTabDataTransform(tabsData);
       try {
-        const res = ciCdPipelineApi.handlePipelineCreate(finalData);
+        const res = await ciCdPipelineApi.handlePipelineCreate(finalData);
         if (res && res.failed) {
           return;
         }
@@ -105,12 +105,12 @@ const AppPipelineEdit = () => {
   /**
    * 项目层的编辑
    */
-  const handleSumitWhileProjectEdit = () => {
+  const handleSumitWhileProjectEdit = async () => {
     const { isValidated, key, reason } = handleTabDataValidate(tabsData);
     if (isValidated) {
       const finalData = handleTabDataTransform(tabsData);
       try {
-        const res = ciCdPipelineApi.handlePipelineModify(id, finalData);
+        const res = await ciCdPipelineApi.handlePipelineModify(id, finalData);
         if (res && res.failed) {
           return;
         }
@@ -137,7 +137,6 @@ const AppPipelineEdit = () => {
   };
 
   const handleSubmit = () => {
-    console.log(tabsData);
     if (type === 'create') {
       return level && submitMapWhileCreate[level]?.(tabsData);
     }

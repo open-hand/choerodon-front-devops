@@ -2,6 +2,7 @@ import React, {
   createContext, FC, Suspense,
 } from 'react';
 import { Switch, Route } from 'react-router-dom';
+import { PermissionRoute } from '@choerodon/master';
 import { useRouteMatch } from 'react-router';
 import { Loading } from '@choerodon/components';
 
@@ -12,6 +13,9 @@ const AppHomePage = React.lazy(() => import('./routes/pipeline-manage'));
 const AppPipelineEdit = React.lazy(() => import('./routes/app-pipeline-edit'));
 
 export type AppPipelineProps = {
+  permissions?:{
+    editPagePermissions?: string[],
+  }
   defaultTabKey?:TabkeyTypes,
   // 项目 平台 组织层
   level?: 'project' | 'site' | 'orgnization',
@@ -45,8 +49,13 @@ const AppPipeline: FC<AppPipelineProps> = (props) => {
   const {
     HomePage,
     level = 'project',
+    permissions = {},
     ...rest
   } = props;
+
+  const {
+    editPagePermissions = [],
+  } = permissions;
 
   return (
     <Stores.Provider value={{ ...rest, level }}>
@@ -57,8 +66,9 @@ const AppPipeline: FC<AppPipelineProps> = (props) => {
             path={match.url}
             component={HomePage || AppHomePage}
           />
-          <Route
+          <PermissionRoute
             exact
+            service={editPagePermissions}
             path={`${match.url}/edit/:type/:id`}
             component={AppPipelineEdit}
           />
