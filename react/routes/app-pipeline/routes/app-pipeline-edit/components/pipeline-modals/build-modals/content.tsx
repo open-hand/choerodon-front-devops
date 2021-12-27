@@ -22,6 +22,8 @@ import {
   BUILD_MAVEN_PUBLISH,
   BUILD_SONARQUBE,
   BUILD_UPLOAD_CHART_CHOERODON,
+  TASK_TEMPLATE,
+  STEP_TEMPLATE,
 } from '@/routes/app-pipeline/CONSTANTS';
 import {
   mapping as StepMapping,
@@ -137,14 +139,50 @@ const Index = observer(() => {
       type,
       // TODO 待删
       appService,
+      template,
     },
+    level,
   } = useBuildModalStore();
 
   const advancedRef = useRef<any>();
 
   const stepData = StepDataSet.data;
 
-  const handleOk = async () => {
+  const renderCloseModal = () => {
+    if (level && level === 'project') {
+      return (
+        <CloseModal preCheck={handleOk} modal={modal} />
+      );
+    }
+    return '';
+  };
+
+  const renderBuild = (ds: any, temp: string) => {
+    switch (temp) {
+      case TASK_TEMPLATE: {
+        return (
+          <>
+            <TextField colSpan={2} name={mapping.name.name} />
+            <Select colSpan={2} name={mapping.groupId.name} />
+            <SelectBox colSpan={2} name={mapping.type.name} />
+          </>
+        );
+        break;
+      }
+      default: {
+        return (
+          <>
+            <TextField name={mapping.name.name} colSpan={3} />
+            <Select name={mapping.appService.name} colSpan={3} />
+            <Select name={mapping.triggerType.name} colSpan={2} />
+            { renderTriggerValue(BuildDataSet) }
+          </>
+        );
+      }
+    }
+  };
+
+  const handleOk = async (canWait?: boolean) => {
     const res = await BuildDataSet.current.validate(true);
     let stepRes = true;
     for (let i = 0; i < StepDataSet.records.filter((j: any) => j.status !== 'delete').length; i += 1) {
@@ -174,9 +212,17 @@ const Index = observer(() => {
       appService,
       completed: res && stepRes && advancedRes,
     };
+    if (canWait) {
+      const flag = await handleJobAddCallback(result);
+      return flag;
+    }
     handleJobAddCallback(result);
     return true;
   };
+
+  if (modal) {
+    modal.handleOk(() => handleOk(true));
+  }
 
   const renderStepItemForm = (itemRecord: Record) => {
     let result: any = '';
@@ -392,7 +438,7 @@ const Index = observer(() => {
 
   return (
     <div className={prefix}>
-      <CloseModal preCheck={handleOk} modal={modal} />
+      {renderCloseModal()}
       <SideStep
         scrollContext=".c7ncd-buildModal-content__main"
         data={[{
@@ -409,11 +455,9 @@ const Index = observer(() => {
       />
       <div className={`${prefix}__main`}>
         <Form className={`${prefix}__main__public`} dataSet={BuildDataSet} columns={6}>
-          <TextField name={mapping.name.name} colSpan={3} />
-          <Select name={mapping.appService.name} colSpan={3} />
-          <Select name={mapping.triggerType.name} colSpan={2} />
-          { renderTriggerValue(BuildDataSet) }
-          {/* <Select name={mapping.triggerValue.name} colSpan={4} /> */}
+          {
+            renderBuild(BuildDataSet, template)
+          }
         </Form>
         <div className={`${prefix}__main__divided`} />
         <StepTitle

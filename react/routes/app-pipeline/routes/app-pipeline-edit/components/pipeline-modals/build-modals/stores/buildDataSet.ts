@@ -1,5 +1,6 @@
 import { DataSet } from 'choerodon-ui/pro';
 import { appServiceApi } from '@choerodon/master';
+import { TASK_TEMPLATE } from '@/routes/app-pipeline/CONSTANTS';
 
 const transformSubmitData = (ds: any) => {
   const record = ds?.current;
@@ -7,11 +8,15 @@ const transformSubmitData = (ds: any) => {
     [mapping.name.name]: record?.get(mapping.name.name),
     [mapping.triggerType.name]: record?.get(mapping.triggerType.name),
     [mapping.triggerValue.name]: record?.get(mapping.triggerValue.name)?.join(','),
+    [mapping.groupId.name]: record?.get(mapping.groupId.name),
+    [mapping.type.name]: record?.get(mapping.type.name),
   });
 };
 
 const transformLoadData = (data: any, appServiceName: any) => ({
   [mapping.name.name]: data?.[mapping.name.name],
+  [mapping.type.name]: data?.[mapping.type.name],
+  [mapping.groupId.name]: data?.[mapping.groupId.name],
   [mapping.appService.name]: appServiceName,
   [mapping.triggerType.name]: data?.[mapping.triggerType.name],
   [mapping.triggerValue.name]: data?.[mapping.triggerValue.name]?.split(','),
@@ -59,9 +64,29 @@ const mapping: {
   name: {
     name: 'name',
     type: 'string',
-    label: '任务名称',
     required: true,
     maxLength: 30,
+  },
+  groupId: {
+    name: 'groupId',
+    type: 'string',
+    label: '所属任务分组',
+  },
+  type: {
+    name: 'type',
+    type: 'string',
+    label: '模板维护方式',
+    textField: 'text',
+    valueField: 'value',
+    options: new DataSet({
+      data: [{
+        text: '普通创建',
+        value: 'normal',
+      }, {
+        text: '自定义脚本',
+        value: 'custom',
+      }],
+    }),
   },
   appService: {
     name: 'appServiceName',
@@ -95,7 +120,7 @@ const mapping: {
   },
 };
 
-const Index = (appServiceId: any): any => ({
+const Index = (appServiceId: any, data: any): any => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((key) => {
     const item = mapping[key];
@@ -111,6 +136,9 @@ const Index = (appServiceId: any): any => ({
         //   },
         // });
         break;
+      }
+      case 'name': {
+        item.label = data?.template === TASK_TEMPLATE ? '任务模板名称' : '任务名称';
       }
       default: {
         break;

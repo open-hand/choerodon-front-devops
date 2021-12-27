@@ -34,7 +34,12 @@ const handleBuildModal = (
     },
     maskClosable: false,
     key: Modal.key(),
-    footer: null,
+    footer: level && level === 'project' ? null : (okbtn: any, cancelbtn: any) => (
+      <>
+        {cancelbtn}
+        {okbtn}
+      </>
+    ),
   });
 };
 
