@@ -150,7 +150,9 @@ const AppPipelineEdit = () => {
       icon: 'check',
     },
     {
-      handler: () => {},
+      handler: () => {
+        history.go(-1);
+      },
       name: formatCommon({ id: 'cancel' }),
       icon: 'close',
     },
