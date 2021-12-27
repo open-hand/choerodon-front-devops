@@ -12,15 +12,15 @@ const CiConfigDs = ({
 
   function checkKey(value:string, _name:string, record:Record) {
     const p = /^([_A-Za-z0-9])+$/;
-    if (!value && !record.get('value')) {
+    if (!value && !record.get('variableValue')) {
       return;
     }
-    if (!value && record.get('value')) {
+    if (!value && record.get('variableValue')) {
       return formatAppPipeline({ id: 'check.empty' });
     }
     if (p.test(value)) {
       const { dataSet } = record;
-      const repeatRecord = dataSet.find((eachRecord) => eachRecord.id !== record.id && eachRecord.get('key') === value);
+      const repeatRecord = dataSet.find((eachRecord) => eachRecord.id !== record.id && eachRecord.get('variableKey') === value);
       if (repeatRecord) {
         return formatAppPipeline({ id: 'check.exist' });
       }
@@ -32,10 +32,10 @@ const CiConfigDs = ({
   function handleUpdate({
     value, name, record, dataSet,
   }:any) {
-    if (name === 'key' && value) {
+    if (name === 'variableKey' && value) {
       dataSet.forEach((eachRecord:Record) => {
         if (record.id !== eachRecord.id) {
-          eachRecord.getField('key')?.checkValidity();
+          eachRecord.getField('variableKey')?.checkValidity();
         }
       });
     }
@@ -45,7 +45,7 @@ const CiConfigDs = ({
 
   function handleRemove({ dataSet }:{dataSet:DataSet}) {
     dataSet.forEach((record) => {
-      record.getField('key')?.checkValidity();
+      record.getField('variableKey')?.checkValidity();
     });
 
     handleDataChangeCallback({ dataSet });
@@ -58,9 +58,9 @@ const CiConfigDs = ({
     dataKey: null,
     fields: [
       {
-        name: 'key', type: 'string', label: formatAppPipeline({ id: 'key' }), validator: checkKey,
+        name: 'variableKey', type: 'string', label: formatAppPipeline({ id: 'key' }), validator: checkKey,
       },
-      { name: 'value', type: 'string', label: formatAppPipeline({ id: 'value' }) },
+      { name: 'variableValue', type: 'string', label: formatAppPipeline({ id: 'value' }) },
     ],
     events: {
       update: handleUpdate,

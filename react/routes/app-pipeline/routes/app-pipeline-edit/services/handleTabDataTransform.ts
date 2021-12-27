@@ -30,7 +30,7 @@ export function handleTabDataTransform(tabsData:Record<TabkeyTypes, any>) {
   }
 
   if (ciConfigs && ciConfigs.length) {
-    finalData.devopsCiPipelineVariableDTOList = map(ciConfigs, (item: { value: any; key: any; }) => ({ variableValue: item?.value, variableKey: item?.key }));
+    finalData.devopsCiPipelineVariableDTOList = ciConfigs;
   }
 
   if (flowConfiguration && flowConfiguration.length) {
