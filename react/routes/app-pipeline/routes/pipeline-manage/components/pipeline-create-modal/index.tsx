@@ -79,7 +79,7 @@ const PipelineCreateModal:FC<PipelineCreateModalProps> = observer((props) => {
       <Select
         name="appService"
         searchable
-        searchMatcher="appServiceName"
+        searchMatcher="name"
         popupCls={`${prefixCls}-project`}
         colSpan={1}
         addonAfter={<NewTips helpText="此处仅能看到您有开发权限的启用状态的应用服务，并要求该应用服务未有关联的流水线" />}
