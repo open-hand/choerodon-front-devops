@@ -38,7 +38,7 @@ const StageAddBtn = (props:StageBtnProps) => {
   const openStageModal = useStageModal('create', {
     onOk: handleOk,
     initialValue: {
-      type: level === 'create' ? addStageType : 'CI',
+      type: level === 'project' ? addStageType : 'CI',
     },
   });
 
