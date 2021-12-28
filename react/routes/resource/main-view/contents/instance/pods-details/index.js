@@ -158,11 +158,14 @@ const PodDetail = memo(() => {
       },
     ];
     if (record.get('containers')?.length && record.get('status') === 'Running') {
+      if(record.get('CrashLoopBackOff')){
+        buttons.unshift({
+          service: ['choerodon.code.project.deploy.app-deployment.resource.ps.pod.log'],
+          text: format({ id: 'ContainerLog' }),
+          action: () => openLog(),
+        })
+      }
       buttons.unshift({
-        service: ['choerodon.code.project.deploy.app-deployment.resource.ps.pod.log'],
-        text: format({ id: 'ContainerLog' }),
-        action: () => openLog(),
-      }, {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.pod.shell'],
         text: format({ id: 'RunCommand' }),
         action: () => openShell(),
