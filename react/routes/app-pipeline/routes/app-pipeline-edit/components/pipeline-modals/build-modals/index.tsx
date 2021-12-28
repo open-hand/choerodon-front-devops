@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
 import { StoreProvider } from './stores';
 import Content from './content';
-import { TASK_TEMPLATE } from '@/routes/app-pipeline/CONSTANTS';
+import { STEP_TEMPLATE, TASK_TEMPLATE } from '@/routes/app-pipeline/CONSTANTS';
 
 const Index = observer((props: any) => (
   <StoreProvider {...props}>
@@ -20,10 +20,11 @@ const handleBuildModal = (
   level?: any,
 ) => {
   const { template } = data;
-
   function getTitle() {
     if (template && template === TASK_TEMPLATE) {
       return '创建任务模板';
+    } if (template && template === STEP_TEMPLATE) {
+      return '创建步骤模板';
     }
     return '添加【构建】阶段';
   }

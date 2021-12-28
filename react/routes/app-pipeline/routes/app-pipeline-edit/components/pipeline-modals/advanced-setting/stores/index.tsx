@@ -14,6 +14,7 @@ interface advancedSettingProps {
   className?: string,
   cRef?: any,
   data: any,
+  disabled?: boolean,
 }
 
 const Store = createContext({} as advancedSettingProps);

@@ -50,9 +50,10 @@ const prefix = 'c7ncd-buildModal-content';
 
 const DockerDom = observer(({
   record,
+  disabled,
 }: any) => (
   <>
-    <Form record={record} columns={2}>
+    <Form disabled={disabled} record={record} columns={2}>
       <TextField name={StepMapping.stepName.name} />
       <TextField
         newLine
@@ -72,7 +73,7 @@ const DockerDom = observer(({
       && record.get(StepMapping.imagePublishGuard.name) && (
         <>
           <p>门禁限制</p>
-          <Form columns={3} record={record}>
+          <Form disabled={disabled} columns={3} record={record}>
             <Select name={StepMapping.bugLevel.name} />
             <Select name={StepMapping.symbol.name} />
             <NumberField name={StepMapping.condition.name} />
@@ -85,8 +86,9 @@ const DockerDom = observer(({
 
 const SonarDom = observer(({
   record,
+  disabled,
 }: any) => (
-  <Form record={record} columns={2}>
+  <Form disabled={disabled} record={record} columns={2}>
     <TextField name={StepMapping.stepName.name} />
     <Select name={StepMapping.examType.name} />
     {
@@ -171,6 +173,15 @@ const Index = observer(() => {
         );
         break;
       }
+      case STEP_TEMPLATE: {
+        return (
+          <>
+            <TextField colSpan={3} name={mapping.name.name} />
+            <Select colSpan={3} name={mapping.categoryId.name} />
+          </>
+        );
+        break;
+      }
       default: {
         return (
           <>
@@ -216,6 +227,7 @@ const Index = observer(() => {
               className={`${prefix}__main__divided`}
             />
             <AdvancedSetting
+              disabled={disabled}
               data={data}
               cRef={advancedRef}
               className={`${prefix}__main__advanced`}
@@ -304,7 +316,7 @@ const Index = observer(() => {
     switch (itemRecord.get(StepMapping.type.name)) {
       case BUILD_MAVEN: {
         result = (
-          <Form disabled={disabled} record={itemRecord} columns={2}>
+          <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={2}>
             <TextField name={StepMapping.stepName.name} />
             <Select name={StepMapping.projectRelyRepo.name} />
             {/* @ts-ignore */}
@@ -318,7 +330,7 @@ const Index = observer(() => {
               newLine
               colSpan={2}
               showError={false}
-              readOnly={disabled}
+              readOnly={disabled || template === TASK_TEMPLATE}
               modeChange={false}
               value={itemRecord.get(StepMapping.script.name)}
               onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
@@ -329,14 +341,14 @@ const Index = observer(() => {
       }
       case BUILD_NPM: {
         result = (
-          <Form disabled={disabled} record={itemRecord} columns={2}>
+          <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={2}>
             <TextField name={StepMapping.stepName.name} />
             <YamlEditor
               value={itemRecord.get(StepMapping.script.name)}
               onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
               newLine
               colSpan={2}
-              readOnly={disabled}
+              readOnly={disabled || template === TASK_TEMPLATE}
               modeChange={false}
               showError={false}
             />
@@ -345,12 +357,17 @@ const Index = observer(() => {
         break;
       }
       case BUILD_DOCKER: {
-        result = <DockerDom record={itemRecord} />;
+        result = (
+          <DockerDom
+            disabled={disabled || template === TASK_TEMPLATE}
+            record={itemRecord}
+          />
+        );
         break;
       }
       case BUILD_UPLOADJAR: {
         result = (
-          <Form disabled={disabled} record={itemRecord} columns={2}>
+          <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={2}>
             <TextField name={StepMapping.stepName.name} />
             <Select name={StepMapping.targetProductsLibrary.name} />
             <YamlEditor
@@ -358,7 +375,7 @@ const Index = observer(() => {
               onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
               newLine
               colSpan={2}
-              readOnly={disabled}
+              readOnly={disabled || template === TASK_TEMPLATE}
               modeChange={false}
               showError={false}
             />
@@ -368,7 +385,7 @@ const Index = observer(() => {
       }
       case BUILD_GO: {
         result = (
-          <Form disabled={disabled} record={itemRecord} columns={2}>
+          <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={2}>
             <TextField name={StepMapping.stepName.name} />
             <YamlEditor
               showError={false}
@@ -376,7 +393,7 @@ const Index = observer(() => {
               onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
               newLine
               colSpan={2}
-              readOnly={disabled}
+              readOnly={disabled || template === TASK_TEMPLATE}
               modeChange={false}
             />
           </Form>
@@ -385,7 +402,7 @@ const Index = observer(() => {
       }
       case BUILD_MAVEN_PUBLISH: {
         result = (
-          <Form disabled={disabled} record={itemRecord} columns={2}>
+          <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={2}>
             <TextField name={StepMapping.stepName.name} />
             <Select name={StepMapping.targetProductsLibrary.name} />
             <Select colSpan={2} name={StepMapping.projectRelyRepo.name} />
@@ -402,7 +419,7 @@ const Index = observer(() => {
               onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
               newLine
               colSpan={2}
-              readOnly={disabled}
+              readOnly={disabled || template === TASK_TEMPLATE}
               modeChange={false}
             />
           </Form>
@@ -410,12 +427,12 @@ const Index = observer(() => {
         break;
       }
       case BUILD_SONARQUBE: {
-        result = <SonarDom record={itemRecord} />;
+        result = <SonarDom disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} />;
         break;
       }
       case BUILD_UPLOAD_CHART_CHOERODON: {
         result = (
-          <Form disabled={disabled} record={itemRecord} columns={2}>
+          <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={2}>
             <TextField name={StepMapping.stepName.name} />
           </Form>
         );

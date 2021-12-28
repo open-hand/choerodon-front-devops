@@ -17,6 +17,7 @@ const Index = observer(() => {
     AdvancedDataSet,
     className,
     cRef,
+    disabled,
   } = useAdvancedSettingStore();
 
   const [visible, setVisible] = useState(true);
@@ -49,7 +50,7 @@ const Index = observer(() => {
       />
       {
         visible && (
-          <Form columns={2} className={`${prefix}__form`} dataSet={AdvancedDataSet}>
+          <Form disabled={disabled} columns={2} className={`${prefix}__form`} dataSet={AdvancedDataSet}>
             <Select colSpan={2} name={mapping.ciRunnerImage.name} />
             <SelectBox colSpan={2} name={mapping.shareFolderSetting.name} />
             <SelectBox name={mapping.whetherConcurrent.name} />

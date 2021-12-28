@@ -1,6 +1,28 @@
 import { DataSet } from 'choerodon-ui/pro';
-import { appServiceApi, ciTemplateJobGroupApiConfig } from '@choerodon/master';
-import { CUSTOM_BUILD, MAVEN_BUILD, TASK_TEMPLATE } from '@/routes/app-pipeline/CONSTANTS';
+import {
+  appServiceApi,
+  ciTemplateJobGroupApiConfig,
+  ciTemplateStepCategoryApiConfig,
+  ciTemplateJobApi,
+} from '@choerodon/master';
+import {
+  CUSTOM_BUILD, MAVEN_BUILD, STEP_TEMPLATE, TASK_TEMPLATE,
+} from '@/routes/app-pipeline/CONSTANTS';
+
+const handleValidatorName = async (v: any, t: any, l: any) => {
+  let res = true;
+  if (l === 'project') {
+    return true;
+  }
+  if (l === 'organization') {
+    if (t === TASK_TEMPLATE) {
+      res = await ciTemplateJobApi.checkName(v);
+    } else if (t === STEP_TEMPLATE) {
+      res = await ciTemplateJobApi.checkStepName(v);
+    }
+  }
+  return res;
+};
 
 const transformSubmitData = (ds: any) => {
   const record = ds?.current;
@@ -67,12 +89,18 @@ const mapping: {
     name: 'name',
     type: 'string',
     required: true,
-    maxLength: 30,
   },
   groupId: {
     name: 'groupId',
     type: 'string',
     label: '所属任务分组',
+    textField: 'name',
+    valueField: 'id',
+  },
+  categoryId: {
+    name: 'categoryId',
+    type: 'string',
+    label: '所属步骤分类',
     textField: 'name',
     valueField: 'id',
   },
@@ -96,14 +124,12 @@ const mapping: {
     name: 'appServiceName',
     type: 'string',
     label: '关联应用服务',
-    required: true,
     disabled: true,
   },
   triggerType: {
     name: 'triggerType',
     type: 'string',
     label: '匹配类型',
-    required: true,
     textField: 'text',
     valueField: 'value',
     defaultValue: 'refs',
@@ -128,73 +154,101 @@ const mapping: {
   },
 };
 
-const Index = (appServiceId: any, data: any): any => ({
-  autoCreate: true,
-  fields: Object.keys(mapping).map((key) => {
-    const item = mapping[key];
-    switch (key) {
-      case 'triggerValue': {
-        // item.options = new DataSet({
-        //   paging: true,
-        //   autoQuery: true,
-        //   transport: {
-        //     read: () => ({
-        //       ...appServiceApiConfig.getBrachs(appServiceId),
-        //     }),
-        //   },
-        // });
-        break;
-      }
-      case 'groupId': {
-        item.options = new DataSet({
-          autoQuery: true,
-          paging: false,
-          transport: {
-            read: () => ({
-              ...ciTemplateJobGroupApiConfig.getList(),
-            }),
-          },
-        });
-        break;
-      }
-      case 'name': {
-        item.label = data?.template === TASK_TEMPLATE ? '任务模板名称' : '任务名称';
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-    return item;
-  }),
-  events: {
-    create: async () => {
-      if (appServiceId) {
-        const res = await appServiceApi.getBrachs(appServiceId);
-        triggerValueAxiosData = res.content.map((i: any) => ({
-          text: i?.branchName,
-          value: i?.branchName,
-        }));
-      }
-    },
-    update: ({ name, value, record }: any) => {
-      switch (name) {
-        case mapping.triggerType.name: {
-          if (value === triggerTypeOptionsData[0].value) {
-            record.getField(mapping.triggerValue.name).options.loadData(originTriggerValueData);
-          } else if (value !== triggerTypeOptionsData[1].value) {
-            // eslint-disable-next-line no-param-reassign
-            record.getField(mapping.triggerValue.name).options.loadData(triggerValueAxiosData);
-          }
+const Index = (appServiceId: any, data: any, level: any): any => {
+  const {
+    template,
+  } = data;
+  return ({
+    autoCreate: true,
+    fields: Object.keys(mapping).map((key) => {
+      const item = mapping[key];
+      switch (key) {
+        case 'triggerValue': {
+          // item.options = new DataSet({
+          //   paging: true,
+          //   autoQuery: true,
+          //   transport: {
+          //     read: () => ({
+          //       ...appServiceApiConfig.getBrachs(appServiceId),
+          //     }),
+          //   },
+          // });
+          break;
+        }
+        case 'appService': {
+          item.required = level === 'project';
+          break;
+        }
+        case 'triggerType': {
+          item.required = level === 'project';
+          break;
+        }
+        case 'groupId': {
+          item.required = template === TASK_TEMPLATE;
+          item.options = new DataSet({
+            autoQuery: true,
+            paging: false,
+            transport: {
+              read: () => ({
+                ...ciTemplateJobGroupApiConfig.getList(),
+              }),
+            },
+          });
+          break;
+        }
+        case 'categoryId': {
+          item.required = template === STEP_TEMPLATE;
+          item.options = new DataSet({
+            autoQuery: true,
+            transport: {
+              read: () => ({
+                ...ciTemplateStepCategoryApiConfig.getSteps(),
+              }),
+            },
+          });
+          break;
+        }
+        case 'name': {
+          item.label = data?.template === TASK_TEMPLATE ? '任务模板名称' : '任务名称';
+          item.maxLength = !data?.template ? 30 : 60;
+          item.validator = async (value: string) => handleValidatorName(value, template, level);
           break;
         }
         default: {
           break;
         }
       }
+      return item;
+    }),
+    events: {
+      create: async () => {
+        if (appServiceId) {
+          const res = await appServiceApi.getBrachs(appServiceId);
+          triggerValueAxiosData = res.content.map((i: any) => ({
+            text: i?.branchName,
+            value: i?.branchName,
+          }));
+        }
+      },
+      update: ({ name, value, record }: any) => {
+        switch (name) {
+          case mapping.triggerType.name: {
+            if (value === triggerTypeOptionsData[0].value) {
+              record.getField(mapping.triggerValue.name).options.loadData(originTriggerValueData);
+            } else if (value !== triggerTypeOptionsData[1].value) {
+              // eslint-disable-next-line no-param-reassign
+              record.getField(mapping.triggerValue.name).options.loadData(triggerValueAxiosData);
+            }
+            break;
+          }
+          default: {
+            break;
+          }
+        }
+      },
     },
-  },
-});
+  });
+};
 
 export default Index;
 export {

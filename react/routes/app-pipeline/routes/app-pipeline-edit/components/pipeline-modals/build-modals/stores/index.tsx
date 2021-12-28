@@ -32,12 +32,15 @@ export const StoreProvider = observer((props: any) => {
   const {
     children,
     data,
+    level,
   } = props;
 
   const appServiceId = data?.appService?.appServiceId;
   const appServiceName = data?.appService?.appServiceName;
 
-  const BuildDataSet = useMemo(() => new DataSet(buildDataSet(appServiceId, data)), [appServiceId]);
+  const BuildDataSet = useMemo(() => new DataSet(
+    buildDataSet(appServiceId, data, level),
+  ), [appServiceId]);
   const StepDataSet = useMemo(() => new DataSet(stepDataSet()), []);
 
   useEffect(() => {
