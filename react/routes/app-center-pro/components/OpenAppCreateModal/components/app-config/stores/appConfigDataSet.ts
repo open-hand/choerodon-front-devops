@@ -329,7 +329,6 @@ const mapping: {
     label: '市场应用及版本',
     textField: 'versionNumber',
     valueField: 'versionId',
-    options: new DataSet(marketVersionOptionsDs),
     dynamicProps: {
       required: ({ record }) => ![chartSourceData[0].value, chartSourceData[1].value]
         .includes(record.get(mapping.chartSource.name)),
@@ -450,6 +449,7 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
       }
       case 'marketVersion': {
         item.disabled = Boolean(detail);
+        item.options = new DataSet(marketVersionOptionsDs);
         break;
       }
       case 'marketServiceVersion': {

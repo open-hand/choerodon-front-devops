@@ -112,8 +112,8 @@ const mapping: {
     valueField: 'configId',
     dynamicProps: {
       required: ({ record }) => record?.get(
-          mapping.jarSource.name,
-        ) === productSourceData[0].value,
+        mapping.jarSource.name,
+      ) === productSourceData[0].value,
     },
     lookupAxiosConfig: () => nexusApiConfig.getServerList(),
   },
@@ -125,8 +125,8 @@ const mapping: {
     valueField: 'repositoryId',
     dynamicProps: {
       required: ({ record }) => record?.get(
-          mapping.jarSource.name,
-        ) === productSourceData[0].value,
+        mapping.jarSource.name,
+      ) === productSourceData[0].value,
       lookupAxiosConfig: ({ record }) => {
         if (record?.get(mapping.nexus.name)) {
           return rdupmApiApiConfig.getMavenList(record?.get(mapping.nexus.name));
@@ -143,8 +143,8 @@ const mapping: {
     valueField: 'value',
     dynamicProps: {
       required: ({ record }) => record?.get(
-          mapping.jarSource.name,
-        ) === productSourceData[0].value,
+        mapping.jarSource.name,
+      ) === productSourceData[0].value,
       lookupAxiosConfig: ({ record }) => {
         if (record?.get(mapping.projectProductRepo.name)) {
           return ({
@@ -186,8 +186,8 @@ const mapping: {
     valueField: 'value',
     dynamicProps: {
       required: ({ record }) => record?.get(
-          mapping.jarSource.name,
-        ) === productSourceData[0].value,
+        mapping.jarSource.name,
+      ) === productSourceData[0].value,
       lookupAxiosConfig: ({ record }) => {
         if (record?.get(mapping.projectProductRepo.name)) {
           return ({
@@ -229,8 +229,8 @@ const mapping: {
     valueField: 'version',
     dynamicProps: {
       required: ({ record }) => record?.get(
-          mapping.jarSource.name,
-        ) === productSourceData[0].value,
+        mapping.jarSource.name,
+      ) === productSourceData[0].value,
       lookupAxiosConfig: ({ record }) => {
         if (
           record?.get(mapping.projectProductRepo.name)
@@ -265,36 +265,6 @@ const mapping: {
     },
     textField: 'versionNumber',
     valueField: 'id',
-    options: new DataSet({
-      autoQuery: true,
-      fields: [{ name: 'groupName', type: 'string' as FieldType, group: 0 }],
-      transport: {
-        read: ({ data: paramsData }) => ({
-          ...deployApiConfig.deployApplication(paramsData?.type || 'common'),
-          transformResponse: (res) => {
-            function init(data: any) {
-              const result: any[] = [];
-              data?.forEach((item: any) => {
-                item.appVersionVOS.forEach((version: any) => {
-                  result.push({
-                    ...version,
-                    groupName: item.name,
-                  });
-                });
-              });
-              return result;
-            }
-            let newRes = res;
-            try {
-              newRes = JSON.parse(newRes);
-              return init(newRes);
-            } catch (e) {
-              return init(newRes);
-            }
-          },
-        }),
-      },
-    }),
   },
   marketServiceVersion: {
     name: 'marketServiceVersion',
@@ -403,6 +373,38 @@ const hostAppConfigDataSet = (modal: any, detail: any): DataSetProps => ({
           item.required = true;
         }
         break;
+      }
+      case 'marketAppVersion': {
+        item.options = new DataSet({
+          autoQuery: true,
+          fields: [{ name: 'groupName', type: 'string' as FieldType, group: 0 }],
+          transport: {
+            read: ({ data: paramsData }) => ({
+              ...deployApiConfig.deployApplication(paramsData?.type || 'common'),
+              transformResponse: (res) => {
+                function init(data: any) {
+                  const result: any[] = [];
+                  data?.forEach((j: any) => {
+                    j.appVersionVOS.forEach((version: any) => {
+                      result.push({
+                        ...version,
+                        groupName: j.name,
+                      });
+                    });
+                  });
+                  return result;
+                }
+                let newRes = res;
+                try {
+                  newRes = JSON.parse(newRes);
+                  return init(newRes);
+                } catch (e) {
+                  return init(newRes);
+                }
+              },
+            }),
+          },
+        });
       }
       default: {
         break;

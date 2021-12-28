@@ -31,6 +31,7 @@ export const StoreProvider = inject('AppState')((props: ProviderProps) => {
 
   const {
     defaultTabKey,
+    level,
   } = usePipelineContext();
 
   const {
@@ -49,7 +50,9 @@ export const StoreProvider = inject('AppState')((props: ProviderProps) => {
 
   const { isFetching: isCiVariasLoading } = useLoadCiVariasLists({ type, id, setTabsDataState });
 
-  const { isFetching: isAdvancedLoading } = useLoadAdvancedSetting({ type, id, setTabsDataState });
+  const { isFetching: isAdvancedLoading } = useLoadAdvancedSetting({
+    type, id, setTabsDataState, level,
+  });
 
   const loadingMap = {
     [TAB_BASIC]: isBasicLoading,

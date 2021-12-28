@@ -1,8 +1,13 @@
 import React, { FC } from 'react';
 import { Menu } from 'choerodon-ui';
+import { Modal } from 'choerodon-ui/pro';
 import useTabData from '@/routes/app-pipeline/routes/app-pipeline-edit/hooks/useTabData';
 import { TAB_BASIC } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
+import jobTypes from '@/routes/app-pipeline/routes/pipeline-manage/stores/jobsTypeMappings';
 import './index.less';
+import { LARGE } from '@/utils/getModalWidth';
+import AddCDTask
+  from '@/routes/app-pipeline/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask';
 
 export type JobTypesPanelProps = {
   handleJobAddCallback:(jobData: any)=>void
@@ -25,6 +30,28 @@ const JobCdPanel:FC<JobTypesPanelProps> = (props) => {
   const handleMenuSelect = (data:any) => {
     const { keyPath } = data;
     const basicData = getTabData(TAB_BASIC);
+    Modal.open({
+      key: Modal.key(),
+      title: (
+        <p>
+          添加
+          {/* @ts-ignore */}
+          {jobTypes[keyPath[0]]}
+        </p>
+      ),
+      style: {
+        width: LARGE,
+      },
+      children: (
+        <AddCDTask
+          random={Math.random()}
+          handleOk={handleJobAddCallback}
+          taskType={keyPath[0]}
+        />
+      ),
+      drawer: true,
+      okText: '添加',
+    });
   };
 
   return (

@@ -12,6 +12,7 @@ function useAdvancedSetting(configs: any, options?: any) {
     type = 'create',
     id,
     setTabsDataState,
+    level,
   } = configs;
 
   const handleSuccess = async (data:Record<string, any>) => {
@@ -27,12 +28,15 @@ function useAdvancedSetting(configs: any, options?: any) {
   };
 
   const getData = async () => {
-    if (type === 'create') {
-      const res = await initCustomFunc();
+    if (level === 'project') {
+      if (type === 'create') {
+        const res = await initCustomFunc();
+        return res;
+      }
+      const res = await initCustomFunc(id);
       return res;
     }
-    const res = await initCustomFunc(id);
-    return res;
+    return [];
   };
 
   return useQuery<unknown, unknown, Record<string, any>>(['app-pipeline-advancedSetting', id],

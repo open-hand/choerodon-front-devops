@@ -259,36 +259,6 @@ const mapping: {
     },
     textField: 'name',
     valueField: 'id',
-    options: new DataSet({
-      autoQuery: true,
-      fields: [{ name: 'groupName', type: 'string' as FieldType, group: 0 }],
-      transport: {
-        read: () => ({
-          ...appServiceApiConfig.getAppService(true, 'normal', 'share_service'),
-          transformResponse: (res) => {
-            function init(data: any) {
-              const result: any[] = [];
-              data?.forEach((item: any) => {
-                item.appServiceList?.forEach((version: any) => {
-                  result.push({
-                    ...version,
-                    groupName: item.name,
-                  });
-                });
-              });
-              return result;
-            }
-            let newRes = res;
-            try {
-              newRes = JSON.parse(newRes);
-              return init(newRes);
-            } catch (e) {
-              return init(newRes);
-            }
-          },
-        }),
-      },
-    }),
   },
   shareServiceVersion: {
     name: 'appServiceVersionId',
@@ -678,6 +648,38 @@ const conGroupDataSet = (
                         ...result,
                         ...iData,
                       ];
+                    });
+                    return result;
+                  }
+                  let newRes = res;
+                  try {
+                    newRes = JSON.parse(newRes);
+                    return init(newRes);
+                  } catch (e) {
+                    return init(newRes);
+                  }
+                },
+              }),
+            },
+          });
+        }
+        case 'shareAppService': {
+          item.options = new DataSet({
+            autoQuery: true,
+            fields: [{ name: 'groupName', type: 'string' as FieldType, group: 0 }],
+            transport: {
+              read: () => ({
+                ...appServiceApiConfig.getAppService(true, 'normal', 'share_service'),
+                transformResponse: (res) => {
+                  function init(data: any) {
+                    const result: any[] = [];
+                    data?.forEach((j: any) => {
+                      j.appServiceList?.forEach((version: any) => {
+                        result.push({
+                          ...version,
+                          groupName: j.name,
+                        });
+                      });
                     });
                     return result;
                   }
