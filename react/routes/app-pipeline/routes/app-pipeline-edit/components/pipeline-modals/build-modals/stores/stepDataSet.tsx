@@ -118,12 +118,6 @@ const mapping: {
     label: '目标制品库',
     textField: 'name',
     valueField: 'repositoryId',
-    dynamicProps: {
-      required: ({ record }: any) => {
-        console.log(record.get(mapping.type.name));
-        return record.get(mapping.type.name) === BUILD_UPLOADJAR;
-      },
-    },
   },
   TLS: {
     name: 'skipDockerTlsVerify',
@@ -381,33 +375,40 @@ const transformSubmitData = (ds: any) => ds.records.filter((i: any) => i.status 
   } : {},
 }));
 
-const Index = () => ({
+const Index = (level: any) => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((key) => {
     const item = mapping[key];
     switch (key) {
       case 'projectRelyRepo': {
-        item.options = new DataSet({
-          paging: true,
-          autoQuery: true,
-          transport: {
-            read: () => ({
-              ...RdupmAlienApiConfig.getnexusMavenRepoIds(),
-            }),
-          },
-        });
+        if (level === 'project') {
+          item.options = new DataSet({
+            paging: true,
+            autoQuery: true,
+            transport: {
+              read: () => ({
+                ...RdupmAlienApiConfig.getnexusMavenRepoIds(),
+              }),
+            },
+          });
+        }
         break;
       }
       case 'targetProductsLibrary': {
-        item.options = new DataSet({
-          paging: true,
-          autoQuery: true,
-          transport: {
-            read: () => ({
-              ...RdupmAlienApiConfig.getnexusMavenRepoIds('hosted'),
-            }),
-          },
-        });
+        if (level === 'project') {
+          item.options = new DataSet({
+            paging: true,
+            autoQuery: true,
+            transport: {
+              read: () => ({
+                ...RdupmAlienApiConfig.getnexusMavenRepoIds('hosted'),
+              }),
+            },
+          });
+        }
+        item.dynamicProps = {
+          required: ({ record }: any) => (record.get(mapping.type.name) === BUILD_UPLOADJAR) && level === 'project',
+        };
         break;
       }
       default: {
