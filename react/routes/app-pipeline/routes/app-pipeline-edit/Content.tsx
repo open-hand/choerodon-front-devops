@@ -26,6 +26,7 @@ import usePipelineContext from '../../hooks/usePipelineContext';
 import { handleTabDataValidate } from './services/handleTabsDataValidate';
 import { handleTabDataTransform } from './services/handleTabDataTransform';
 import { ciCdPipelineApi } from '@/api/cicd-pipelines';
+import { stepDataTitleList } from '@/routes/app-center-pro/components/OpenAppCreateModal/constant';
 
 const { TabPane } = Tabs;
 
@@ -180,13 +181,9 @@ const AppPipelineEdit = () => {
   const renderTitle = () => {
     let title = '';
     if (level === 'project') {
-      if (type === 'create') {
-        title = '创建流水线';
-      } else {
-        title = '编辑流水线';
-      }
+      title = type === 'create' ? '创建流水线' : '编辑流水线';
     } else {
-      title = '创建流水线模板';
+      title = type === 'create' ? '创建流水线模板' : '编辑流水线模板';
     }
     return title;
   };
