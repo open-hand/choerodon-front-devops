@@ -105,7 +105,7 @@ const TemplatesSelector:FC<TemplatesSelectorProps> = (props) => {
     const tmpLists = [DEFAULT_TMP, ...(pipelineTemplateVOList || []).slice()];
     tmpLists?.forEach((item:{ciTemplateCategoryId:string}) => {
       const { ciTemplateCategoryId } = item;
-      if (!(ciTemplateCategoryId in sectionGroup)) sectionGroup.set(ciTemplateCategoryId, []);
+      if (!sectionGroup.get(ciTemplateCategoryId)) sectionGroup.set(ciTemplateCategoryId, []);
       sectionGroup.get(ciTemplateCategoryId)?.push(item);
     });
     return sectionGroup;
