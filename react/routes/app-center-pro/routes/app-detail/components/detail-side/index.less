@@ -4,7 +4,8 @@
   width: 278px;
   border-radius: 4px;
   background: #fff;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: scroll;
   &::-webkit-scrollbar {
     width: 0;
   }
@@ -25,6 +26,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width: 70%;
   }
   > main {
     padding: 24px;
