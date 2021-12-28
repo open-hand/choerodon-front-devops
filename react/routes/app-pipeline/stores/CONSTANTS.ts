@@ -33,3 +33,57 @@ const DEFAULT_TMP = {
 export {
   DEFAULT_TMP,
 };
+
+// job类型
+// 构建
+const JOB_GROUP_BUILD = {
+  name: '构建',
+  code: 'build',
+  icon: 'build-o',
+} as const;
+
+// 测试构建
+const JOB_GROUP_TEST_BUILD = {
+  name: '测试构建',
+  code: 'test-build',
+  icon: 'test',
+} as const;
+
+// 单元测试
+const JOB_GROUP_UNIT_TEST = {
+  name: '单元测试',
+  code: 'unit-test',
+  icon: 'test_execution',
+} as const;
+
+// 代码扫描
+const JOB_GROUP_CODE_SCANN = {
+  name: '代码扫描',
+  code: 'code-scann',
+  icon: 'playlist_add_check',
+} as const;
+
+// 镜像构建
+const JOB_GROUP_DOCKER_BUILD = {
+  name: '镜像构建',
+  code: 'docker-build',
+  icon: 'build_circle-o',
+} as const;
+
+const JOB_GROUP_TYPES = {
+  [JOB_GROUP_BUILD.code]: JOB_GROUP_BUILD,
+  [JOB_GROUP_CODE_SCANN.code]: JOB_GROUP_CODE_SCANN,
+  [JOB_GROUP_DOCKER_BUILD.code]: JOB_GROUP_DOCKER_BUILD,
+  [JOB_GROUP_TEST_BUILD.code]: JOB_GROUP_TEST_BUILD,
+  [JOB_GROUP_UNIT_TEST.code]: JOB_GROUP_UNIT_TEST,
+} as const;
+
+export {
+  // job分组类型
+  JOB_GROUP_BUILD,
+  JOB_GROUP_TEST_BUILD,
+  JOB_GROUP_UNIT_TEST,
+  JOB_GROUP_CODE_SCANN,
+  JOB_GROUP_DOCKER_BUILD,
+  JOB_GROUP_TYPES,
+};

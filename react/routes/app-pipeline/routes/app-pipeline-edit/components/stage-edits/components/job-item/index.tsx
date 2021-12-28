@@ -8,7 +8,8 @@ import { omit, get } from 'lodash';
 import { OverflowWrap, InfoIcon } from '@choerodon/components';
 import classNames from 'classnames';
 import { handlePipelineModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/stage-edits/components/job-btn/components/job-types-panel';
-import { TAB_ADVANCE_SETTINGS, JOB_GROUP_TYPES } from '../../../../stores/CONSTANTS';
+import { TAB_ADVANCE_SETTINGS } from '../../../../stores/CONSTANTS';
+import { JOB_GROUP_TYPES } from '@/routes/app-pipeline/stores/CONSTANTS';
 import ParalleLines from '../paralle-lines';
 
 import './index.less';
@@ -21,9 +22,7 @@ export type JobProps = {
   name:string
   jobIndex:number
   showLines:boolean
-  ciTemplateJobGroupDTO: {
-    type: keyof typeof JOB_GROUP_TYPES // job的分组类型
-  }
+  groupType: keyof typeof JOB_GROUP_TYPES // job的分组类型
   linesType: 'paralle' | 'serial'
   handleJobDeleteCallback: (jobIndex:number)=>void
   handleJobEditCallback:(jobIndex:number, jobData:Record<string, any>)=>void
@@ -37,7 +36,7 @@ const JobItem:FC<JobProps> = (props) => {
     name,
     type: jobType,
     completed,
-    ciTemplateJobGroupDTO,
+    groupType,
     linesType,
     jobIndex,
     showLines = true,
@@ -46,12 +45,10 @@ const JobItem:FC<JobProps> = (props) => {
     handleJobEditCallback,
   } = props;
 
-  const { type: groupType } = ciTemplateJobGroupDTO || {};
-
   const [_data, _setData, getTabDataByKey] = useTabData();
   const { level } = usePipelineContext();
 
-  const currentJobGroupType = JOB_GROUP_TYPES[groupType];
+  const currentJobGroupType = JOB_GROUP_TYPES?.[groupType];
 
   const formatCommon = useFormatCommon();
   // const formatJob = useFormatMessage(intlPrefix);

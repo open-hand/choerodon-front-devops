@@ -4,6 +4,7 @@ import { Icon } from 'choerodon-ui/pro';
 import useStageModal from '../../hooks/useStageModal';
 import { STAGE_TYPES } from '../../../../interface';
 import useStageEdit from '../../hooks/useStageEdit';
+import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
 
 const prefixCls = 'c7ncd-pipeline-edit-stagebtn';
 
@@ -23,6 +24,10 @@ const StageAddBtn = (props:StageBtnProps) => {
   } = props;
 
   const {
+    level,
+  } = usePipelineContext();
+
+  const {
     addStage,
   } = useStageEdit();
 
@@ -33,7 +38,7 @@ const StageAddBtn = (props:StageBtnProps) => {
   const openStageModal = useStageModal('create', {
     onOk: handleOk,
     initialValue: {
-      type: addStageType,
+      type: level === 'create' ? addStageType : 'CI',
     },
   });
 
