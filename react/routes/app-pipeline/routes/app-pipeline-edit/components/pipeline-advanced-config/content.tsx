@@ -37,8 +37,8 @@ const Index = observer(() => {
           getFuncList: tabsData?.[TAB_ADVANCE_SETTINGS]?.devopsCiPipelineFunctionDTOList,
           setFuncList: (list: any) => {
             setTabsDataState({
-              ...tabsData?.[TAB_ADVANCE_SETTINGS],
               [TAB_ADVANCE_SETTINGS]: {
+                ...tabsData?.[TAB_ADVANCE_SETTINGS],
                 devopsCiPipelineFunctionDTOList: list,
               },
             });

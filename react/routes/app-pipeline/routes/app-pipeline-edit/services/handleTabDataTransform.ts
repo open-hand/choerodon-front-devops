@@ -3,6 +3,13 @@ import map from 'lodash/map';
 import { TabkeyTypes } from '@/routes/app-pipeline/interface';
 import { STAGE_CD, STAGE_CI } from '../stores/CONSTANTS';
 
+function transformAdvancedSetting(data: any) {
+  return ({
+    ...data,
+    devopsCiPipelineFunctionDTOList: data?.devopsCiPipelineFunctionDTOList.filter((i: any) => i?.devopsPipelineId !== 0),
+  });
+}
+
 export function handleTabDataTransform(tabsData:Record<TabkeyTypes, any>) {
   const {
     basicInfo = {},
@@ -17,7 +24,7 @@ export function handleTabDataTransform(tabsData:Record<TabkeyTypes, any>) {
 
   const finalData = {
     ...appService,
-    ...advancedSettings,
+    ...transformAdvancedSetting(advancedSettings),
     name,
   };
 
