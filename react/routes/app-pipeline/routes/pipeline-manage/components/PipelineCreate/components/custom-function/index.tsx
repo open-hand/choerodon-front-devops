@@ -22,13 +22,7 @@ const Index = observer(({
   useStore: any
   modal?: any,
 }) => {
-  const [funcList, setFuncList] = useState<{
-    edit: boolean,
-    name: string,
-    script: string,
-    focus?: boolean,
-    devopsPipelineId?: any,
-  }[]>(useStore.getFuncList);
+  const funcList = useStore.getFuncList;
 
   const handleOk = () => {
     let flag = '';
@@ -60,7 +54,7 @@ const Index = observer(({
 
   const { run } = useDebounceFn((v) => {
     const index = funcList?.findIndex((item: any) => item.focus);
-    setFuncList(funcList?.map((item: any, iIndex: number) => ({
+    useStore.setFuncList(funcList?.map((item: any, iIndex: number) => ({
       ...item,
       script: iIndex === index ? v : item.script,
     })));
@@ -69,7 +63,7 @@ const Index = observer(({
   });
 
   const handleAddFunc = () => {
-    setFuncList([
+    useStore.setFuncList([
       ...funcList,
       {
         edit: true,
@@ -81,15 +75,17 @@ const Index = observer(({
 
   const handleChangeText = (v: string, index: number) => {
     if (v) {
+      const res = validatorName(v);
       funcList[index] = {
         ...funcList[index],
         name: v,
-        edit: false,
+        edit: String(res) !== 'true',
       };
+      useStore.setFuncList(_.clone(funcList));
     } else {
       funcList?.splice(index, 1);
+      useStore.setFuncList(_.clone(funcList));
     }
-    setFuncList(_.clone(funcList));
   };
 
   const handleEditItem = (index: number) => {
@@ -97,11 +93,11 @@ const Index = observer(({
       ...funcList[index],
       edit: true,
     };
-    setFuncList(_.clone(funcList));
+    useStore.setFuncList(_.clone(funcList));
   };
 
   const handleFocusItem = (index: number) => {
-    setFuncList(funcList.map((item: any, iIndex: number) => ({
+    useStore.setFuncList(funcList.map((item: any, iIndex: number) => ({
       ...item,
       focus: iIndex === index,
     })));
@@ -114,9 +110,17 @@ const Index = observer(({
       okText: '删除',
       onOk: () => {
         funcList.splice(index, 1);
-        setFuncList(funcList);
+        useStore.setFuncList(funcList);
       },
     });
+  };
+
+  const validatorName = (value: string) => {
+    const flag = funcList.some((i: any) => i.name === value);
+    if (flag) {
+      return '函数名称不可重复';
+    }
+    return true;
   };
 
   const renderFuncList = useMemo(() => funcList?.map((item: any, index: number) => (
@@ -139,6 +143,7 @@ const Index = observer(({
             maxLength={60}
             onChange={(v: string) => console.log(v)}
             onBlur={(e) => handleChangeText(e.target.value, index)}
+            validator={validatorName}
           />
         ) : (
           <Tooltip title={item.name}>

@@ -9,8 +9,16 @@ const validateMap:Partial<Record<TabkeyTypes, (data:any)=>{ reason:string |'', i
   [TAB_BASIC]: () => ({ isValidated: true, reason: '' }),
   [TAB_FLOW_CONFIG]: handleValideStage,
   [TAB_CI_CONFIG]: () => ({ isValidated: true, reason: '' }),
-  [TAB_ADVANCE_SETTINGS]: () => ({ isValidated: true, reason: '' }),
+  [TAB_ADVANCE_SETTINGS]: handleValidAdvanced,
 };
+
+function handleValidAdvanced(data: any) {
+  const flag = data?.devopsCiPipelineFunctionDTOList?.some((i: any) => i.edit);
+  return {
+    isValidated: !flag,
+    reason: flag ? '自定义函数存在校验失败' : '',
+  };
+}
 
 function handleValideStage(stagesData:Array<{jobList:{completed:boolean}[]} & Record<string, any>>):{ reason:string |'', isValidated:boolean } {
   const isCompleted = stagesData.every(({ jobList }) => {
