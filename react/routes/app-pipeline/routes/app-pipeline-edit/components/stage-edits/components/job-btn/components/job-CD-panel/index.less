@@ -1,0 +1,19 @@
+@prefixCls: ~"c7ncd-job-cd-panel";
+
+.@{prefixCls} {
+  &-subMenu {
+    cursor: pointer;
+    &-empty {
+      text-align: center;
+      height: 50px;
+      line-height: 50px;
+      color: var(--text-color);
+    }
+    .c7n-menu-item,
+    .c7n-menu-submenu-title {
+      height: 32px !important;
+      min-width: 150px !important;
+      line-height: 32px !important;
+    }
+  }
+}
