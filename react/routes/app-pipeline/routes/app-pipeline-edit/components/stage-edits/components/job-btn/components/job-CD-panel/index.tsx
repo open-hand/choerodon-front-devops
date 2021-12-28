@@ -30,6 +30,12 @@ const JobCdPanel:FC<JobTypesPanelProps> = (props) => {
   const handleMenuSelect = (data:any) => {
     const { keyPath } = data;
     const basicData = getTabData(TAB_BASIC);
+    const {
+      appService: {
+        appServiceId,
+        appServiceName,
+      },
+    } = basicData;
     Modal.open({
       key: Modal.key(),
       title: (
@@ -44,6 +50,8 @@ const JobCdPanel:FC<JobTypesPanelProps> = (props) => {
       },
       children: (
         <AddCDTask
+          appServiceName={appServiceName}
+          appServiceId={appServiceId}
           random={Math.random()}
           handleOk={handleJobAddCallback}
           taskType={keyPath[0]}

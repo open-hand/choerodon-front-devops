@@ -31,6 +31,7 @@ export const StoreProvider = injectIntl(
       AppState: {
         menuType: { projectId, organizationId },
       },
+      appServiceId,
       appServiceCode,
       trueAppServiceId,
     } = props;
@@ -47,6 +48,7 @@ export const StoreProvider = injectIntl(
           random,
           deployConfigDataSet,
           trueAppServiceId,
+          appServiceId,
         ),
       ),
       [ADDCDTaskUseStore, random],
