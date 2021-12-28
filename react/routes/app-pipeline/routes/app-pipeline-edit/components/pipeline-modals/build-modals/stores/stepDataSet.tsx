@@ -120,7 +120,7 @@ const mapping: {
     valueField: 'repositoryId',
   },
   TLS: {
-    name: 'skipDockerTlsVerify',
+    name: 'enableDockerTlsVerify',
     type: 'boolean',
     label: '是否启用TLS校验',
     textField: 'text',
