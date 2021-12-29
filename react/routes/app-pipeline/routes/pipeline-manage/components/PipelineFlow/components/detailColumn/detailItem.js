@@ -552,9 +552,9 @@ const DetailItem = (props) => {
           type, reportUrl,
         } = item;
         const unitType = {
-          maven_unit_test: 'Maven单元测试',
-          node_js_unit_test: 'Node.js单元测试',
-          go_unit_test: 'Go单元测试',
+          maven_unit_test: '下载Maven单测报告',
+          node_js_unit_test: '下载Node.js单测报告',
+          go_unit_test: '下载Go单测报告',
         };
         const handleDownload = () => {
           saveAs(reportUrl);
