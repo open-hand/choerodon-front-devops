@@ -287,9 +287,13 @@ const mapping: {
     name: 'settings',
     type: 'string',
   },
+  sequence: {
+    name: 'sequence',
+    type: 'number',
+  },
 };
 
-const transformLoadDataItem = (d: any) => ({
+const transformLoadDataItem = (d: any, index: number) => ({
   ...d,
   [mapping.expand.name]: true,
   [mapping.settingConfig.name]: settingConfigOptionsData[0].value,
@@ -297,22 +301,26 @@ const transformLoadDataItem = (d: any) => ({
   [mapping.sonarqubeConfigWay.name]: sonarConfigData[0].value,
   [mapping.sonarqubeAccountConfig.name]: accountConfigData[0].value,
   [mapping.whetherMavenSingleMeasure.name]: false,
+  [mapping.sequence.name]: index,
   ...d[STEPVO[d.type]],
   [mapping.customRepoConfig.name]: d[STEPVO[d.type]]?.repos,
 });
 
-const transformLoadData = (data: any) => data && data.map((d: any) => transformLoadDataItem(d));
+const transformLoadData = (data: any) => data
+  && data.map((d: any, index: number) => transformLoadDataItem(d, index));
 
 const getInsideDtoData = (record: any) => {
   const type = record.get(mapping.type.name);
   switch (type) {
     case BUILD_MAVEN: {
-      return ({
-        [mapping.projectRelyRepo.name]: record.get(mapping.projectRelyRepo.name),
+      const result = {
+        [mapping.projectRelyRepo.name]:
+          JSON.parse(JSON.stringify(record.get(mapping.projectRelyRepo.name))),
         [mapping.settingConfig.name]: record.get(mapping.settingConfig.name),
         repos: record.getField(mapping.customRepoConfig.name).options.toData(),
         [mapping.advancedXml.name]: record?.get(mapping.advancedXml.name),
-      });
+      };
+      return result;
       break;
     }
     case BUILD_DOCKER: {
@@ -331,7 +339,8 @@ const getInsideDtoData = (record: any) => {
     case BUILD_MAVEN_PUBLISH: {
       return ({
         [mapping.targetProductsLibrary.name]: record.get(mapping.targetProductsLibrary.name),
-        [mapping.projectRelyRepo.name]: record.get(mapping.projectRelyRepo.name),
+        [mapping.projectRelyRepo.name]:
+          JSON.parse(JSON.stringify(record.get(mapping.projectRelyRepo.name))),
         [mapping.settingConfig.name]: record.get(mapping.settingConfig.name),
         repos: record.getField(mapping.customRepoConfig.name).options.toData(),
         [mapping.advancedXml.name]: record?.get(mapping.advancedXml.name),
@@ -370,6 +379,7 @@ const transformSubmitData = (ds: any) => ds.records.filter((i: any) => i.status 
   [mapping.name.name]: record?.get(mapping.name.name),
   [mapping.type.name]: record?.get(mapping.type.name),
   [mapping.script.name]: record?.get(mapping.script.name),
+  [mapping.sequence.name]: record?.get(mapping.sequence.name),
   ...STEPVO?.[record?.get(mapping.type.name)] ? {
     [STEPVO?.[record?.get(mapping.type.name)]]: getInsideDtoData(record),
   } : {},

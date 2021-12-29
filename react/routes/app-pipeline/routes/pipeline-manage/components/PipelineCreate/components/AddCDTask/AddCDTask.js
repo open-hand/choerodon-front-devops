@@ -81,6 +81,7 @@ export default observer(() => {
   const {
     ADDCDTaskDataSet,
     appServiceId,
+    appServiceName,
     AppState,
     AppState: {
       currentMenuType: { projectId },
@@ -177,7 +178,7 @@ export default observer(() => {
     ADDCDTaskDataSet.current.set('type', taskType);
     const newData = {
       type: taskType,
-      glyyfw: appServiceId,
+      glyyfw: appServiceName,
       triggerType: 'refs',
       deployType: 'create',
       authType: 'accountPassword',
@@ -691,7 +692,7 @@ export default observer(() => {
     }
     ADDCDTaskDataSet.current.set(
       'glyyfw',
-      appServiceId,
+        appServiceName,
     );
     handleClickMore();
   }, [ADDCDTaskDataSet,appServiceId, jobDetail]);

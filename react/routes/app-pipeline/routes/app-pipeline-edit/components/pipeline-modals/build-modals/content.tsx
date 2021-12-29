@@ -213,7 +213,7 @@ const Index = observer(() => {
                 onClick: () => handleExpand(true),
               }, {
                 custom: true,
-                dom: disabled ? '' : <AddStep ds={StepDataSet} />,
+                dom: disabled ? '' : <AddStep level={level} ds={StepDataSet} />,
               // text: '添加步骤',
               // onClick: handleAddStep,
               // overlay: addStepMenu,
