@@ -11,6 +11,7 @@ class AppServiceVersionsApi extends Api<AppServiceVersionsApi> {
     doPage: boolean,
     othersParams: object = {},
     appServiceVersionId?: any,
+    requestBody?: any,
   ) {
     return this.request({
       method: 'post',
@@ -22,6 +23,7 @@ class AppServiceVersionsApi extends Api<AppServiceVersionsApi> {
         do_page: doPage,
         ...othersParams,
       },
+      data: requestBody,
     });
   }
 

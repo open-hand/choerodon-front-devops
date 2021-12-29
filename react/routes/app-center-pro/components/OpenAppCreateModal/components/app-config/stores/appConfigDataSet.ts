@@ -144,7 +144,13 @@ const serviceVersionOptionDs = {
   pageSize: 20,
   transport: {
     read: ({ data, params }: any) => (data.appServiceId ? ({
-      ...appServiceVersionApiConfig.getVersions(data.appServiceId, true, true, params, data.appServiceVersionId),
+      ...appServiceVersionApiConfig.getVersions(data.appServiceId, true, true, {
+        ...params,
+      }, data.appServiceVersionId, {
+        searchParam: {
+          version: data?.key,
+        },
+      }),
     }) : undefined),
   },
 };
