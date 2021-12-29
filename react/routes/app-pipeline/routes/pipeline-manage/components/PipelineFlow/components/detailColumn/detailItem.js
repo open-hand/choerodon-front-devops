@@ -487,7 +487,6 @@ const DetailItem = (props) => {
             ? writer.close()
             : writer.write(res.value).then(pump)));
         pump();
-        // message.success('下载成功');
         return true;
       }).catch((error) => {
         throw new Error(error);
