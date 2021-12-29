@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React from 'react';
 import { Tooltip } from 'choerodon-ui';
-import { Modal, message } from 'choerodon-ui/pro';
+import { Modal, message, Icon } from 'choerodon-ui/pro';
 import {
   WritableStream,
 } from 'web-streams-polyfill/ponyfill';
@@ -23,6 +23,7 @@ import CodeLog from '../codeLog';
 import { usePipelineManageStore } from '../../../../stores';
 import MirrorScanning from '../MirrorScanningLog';
 import jobTypesMappings from '../../../../stores/jobsTypeMappings';
+import { JOB_GROUP_TYPES } from '@/routes/app-pipeline/stores/CONSTANTS';
 
 const DetailItem = (props) => {
   const {
@@ -43,6 +44,7 @@ const DetailItem = (props) => {
     startedDate,
     finishedDate,
     itemType,
+    groupType,
     gitlabJobId,
     jobName,
     handleRefresh,
@@ -615,21 +617,34 @@ const DetailItem = (props) => {
     );
   };
 
+  const renderJobPrefix = () => {
+    if (itemType.indexOf('cd') !== -1) {
+      return `【${jobTypesMappings[itemType]}】`;
+    }
+    const currentJobGroupType = JOB_GROUP_TYPES?.[groupType];
+
+    return (
+      <Tooltip title={get(currentJobGroupType, 'name')}>
+        <Icon className="c7n-piplineManage-detail-column-item-icon" type={get(currentJobGroupType, 'icon')} />
+      </Tooltip>
+    );
+  };
+
   return (
     <div className="c7n-piplineManage-detail-column-item">
       <header>
         <StatusDot
           size={13}
           status={jobStatus}
-          style={{ lineHeight: '22px' }}
+          style={{ lineHeight: '22px', marginRight: '4px' }}
         />
         <div className="c7n-piplineManage-detail-column-item-sub">
-          <Tooltip title={jobName}>
-            <span>
-              {itemType && `【${jobTypesMappings[itemType]}】`}
+          <div className="c7n-piplineManage-detail-column-item-title">
+            {renderJobPrefix()}
+            <Tooltip title={jobName}>
               {jobName}
-            </span>
-          </Tooltip>
+            </Tooltip>
+          </div>
           {startedDate && finishedDate && (
             <Tooltip title={`${startedDate}-${finishedDate}`}>
               <span>

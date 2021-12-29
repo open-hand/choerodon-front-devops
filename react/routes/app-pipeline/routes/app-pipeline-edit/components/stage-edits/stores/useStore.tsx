@@ -70,6 +70,18 @@ export default function useStore() {
     },
 
     /**
+     * 阶段排序
+     * @param {number} from
+     * @param {number} to
+     */
+    orderStage(from:number, to:number) {
+      this.sourceData.splice(to, 0, this.sourceData.splice(from, 1)[0]);
+
+      this.handleStageSequenceSort();
+      this.handleEditCallback();
+    },
+
+    /**
      * 添加job
      * @param {number} stageIndex
      * @param {number} jobIndex
@@ -86,7 +98,14 @@ export default function useStore() {
       this.handleEditCallback();
     },
 
-    edit(stageIndex:number, jobIndex:number, jobData:any) {
+    /**
+     * 编辑job
+     * @param {number} stageIndex
+     * @param {number} jobIndex
+     * @param {*} jobData
+     * @return {*}
+     */
+    editJob(stageIndex:number, jobIndex:number, jobData:any) {
       if (!this.sourceData[stageIndex]?.jobList) {
         return;
       }

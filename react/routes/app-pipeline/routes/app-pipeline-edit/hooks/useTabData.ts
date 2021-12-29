@@ -1,10 +1,10 @@
 /* eslint-disable max-len */
 import {
-  useMemo, useCallback, useRef, useEffect,
+  useMemo, useCallback, useRef,
 } from 'react';
 import get from 'lodash/get';
-import { TabkeyTypes } from '../interface';
 import { useAppPipelineEditStore } from '../stores';
+import { TabkeyTypes } from '@/routes/app-pipeline/interface';
 
 function useTabData<T>() {
   const {
@@ -29,7 +29,7 @@ function useTabData<T>() {
 
   const getTabData = useCallback((tabKey:TabkeyTypes) => get(tabsData, tabKey), [tabsData]);
 
-  return [getCurrentTabData, hendleSetTabData, getTabData] as const;
+  return [getCurrentTabData, hendleSetTabData, getTabData, tabsData] as const;
 }
 
 export default useTabData;

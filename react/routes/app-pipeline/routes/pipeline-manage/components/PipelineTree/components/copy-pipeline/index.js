@@ -1,14 +1,21 @@
 import React, { useEffect, useMemo } from 'react';
 import { debounce } from 'lodash';
-import { Form, Modal, Select } from 'choerodon-ui/pro';
+import { useSessionStorageState } from 'ahooks';
+import { Form, Select } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
-import PipelineCreate from '../../../PipelineCreate';
+import { useHistory, useLocation } from 'react-router';
+import { PIPELINE_CREATE_LOCALSTORAGE_IDENTIFY } from '@/routes/app-pipeline/stores/CONSTANTS';
 
 export default observer(({
-  ds, modal, projectId, editBlockStore, record, handleRefresh, seletDs,
+  copyPipelineDataSet, modal, record, seletDs,
 }) => {
+  const [, setSesstionData] = useSessionStorageState(PIPELINE_CREATE_LOCALSTORAGE_IDENTIFY);
+
+  const history = useHistory();
+  const { pathname, search } = useLocation();
+
   useEffect(() => {
-    ds.reset();
+    copyPipelineDataSet.reset();
     seletDs.query();
     return function () {
       seletDs.reset();
@@ -18,45 +25,22 @@ export default observer(({
   useEffect(() => {
     modal.update({
       okProps: {
-        disabled: !ds.current.get('appServiceId'),
+        disabled: !copyPipelineDataSet.current.get('appServiceId'),
       },
     });
-  }, [ds.current.get('appServiceId')]);
+  }, [copyPipelineDataSet.current.get('appServiceId')]);
 
-  modal.handleOk(async () => {
-    const oldMainData = JSON.parse(JSON.stringify(editBlockStore.getMainData));
-    const result = await editBlockStore.loadDetail(projectId, record.get('id'));
-    const appServiceName = seletDs.toData().find((item) => item.appServiceId === ds.current.get('appServiceId').appServiceId)?.appServiceName;
-    editBlockStore.setMainData({
-      ...result,
-      devopsCdStageVOS: [],
-      name: undefined,
-      appServiceId: ds.current.get('appServiceId').appServiceId,
-      appServiceName,
+  function handlePipelineCopy() {
+    setSesstionData({
+      appService: copyPipelineDataSet.current.get('appServiceId'),
     });
-    editBlockStore.setStepData([...result.devopsCiStageVOS]);
-    const { appServiceId } = ds.current.get('appServiceId');
-    Modal.open({
-      key: Modal.key(),
-      title: '创建流水线',
-      style: {
-        width: 'calc(100vw - 3.52rem)',
-      },
-      drawer: true,
-      children: <PipelineCreate
-        appService={{
-          id: appServiceId,
-          name: appServiceName,
-        }}
-        oldMainData={oldMainData}
-        dataSource={editBlockStore.getMainData}
-        refreshTree={handleRefresh}
-        editBlockStore={editBlockStore}
-      />,
-      okText: '创建',
+    history.push({
+      pathname: `${pathname}/edit/copy/${record.get('id')}`,
+      search: `${search}&searchTabKey=basicInfo`,
     });
-    return true;
-  });
+  }
+
+  modal.handleOk(handlePipelineCopy);
 
   const renderer = ({ text }) => text;
 
@@ -103,7 +87,7 @@ export default observer(({
       <p>
         请为新的流水线选择关联应用服务
       </p>
-      <Form dataSet={ds}>
+      <Form dataSet={copyPipelineDataSet}>
         <Select
           name="appServiceId"
           searchable

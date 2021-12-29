@@ -1,13 +1,19 @@
 /* eslint-disable max-len */
 import React, {
+  CSSProperties,
   FC,
+  useCallback,
+  useMemo,
 } from 'react';
 import { useFormatCommon } from '@choerodon/master';
 import map from 'lodash/map';
-import { Icon } from 'choerodon-ui/pro';
+import { Icon, Tooltip } from 'choerodon-ui/pro';
 
 import './index.less';
 
+import { Droppable, Draggable } from 'react-beautiful-dnd';
+import classnames from 'classnames';
+import { InfoIcon } from '@choerodon/components';
 import JobItem from '../job-item';
 import JobAddBtn from '../job-btn';
 import { STAGE_TYPES } from '../../../../interface';
@@ -30,6 +36,9 @@ const Stage:FC<StageProps> = (props) => {
     name,
     jobList = [],
     stageIndex,
+
+    fromToId,
+    isDragging,
   } = props;
 
   const {
@@ -38,6 +47,7 @@ const Stage:FC<StageProps> = (props) => {
 
     deleteJob,
     addJob,
+    editJob,
   } = useStageEdit();
 
   const formatCommon = useFormatCommon();
@@ -92,35 +102,134 @@ const Stage:FC<StageProps> = (props) => {
     deleteJob(stageIndex, jobIndex);
   };
 
-  const renderJobs = () => map(jobList, (item, index:number) => {
-    const options = {
-      handleJobDeleteCallback,
-    };
-    const data = {
-      ...item,
-      jobIndex: index, // job的index
-      linesType,
-    };
-    return <JobItem {...data} {...options} key={item?.id} />;
-  });
+  /**
+   * 编辑job的回调函数
+   * @param {number} jobIndex
+   * @param {Record<string, any>} jobData
+   */
+  const handleJobEditCallback = (jobIndex:number, jobData:Record<string, any>) => {
+    editJob(stageIndex, jobIndex, jobData);
+  };
+
+  const renderJobs = useCallback(
+    () => map(jobList, (item, index:number) => {
+      const options = {
+        handleJobDeleteCallback,
+        handleJobEditCallback,
+      };
+      const data = {
+        ...item,
+        jobIndex: index, // job的index
+        linesType, // job线条的类型
+        showLines: !isDragging, // 是否展示线条
+      };
+      return <JobItem {...data} {...options} key={item?.id} />;
+    }),
+    [isDragging, jobList],
+  );
+
+  const getItemStyle = useCallback(
+    (_isDragging:boolean, draggableStyle:CSSProperties, extra:CSSProperties) => ({
+      userSelect: 'none',
+      ...draggableStyle,
+      ...extra,
+      cursor: 'unset',
+    }),
+    [],
+  );
+
+  const getStageStyle = useCallback(
+    (isDraggingOver:boolean) => ({
+      border: isDragging ? '1px dotted #5266d4' : 'none',
+      borderRadius: isDragging ? '3px' : '0',
+      background: isDragging ? 'rgba(82, 102, 212, 0.1)' : 'none',
+      minWidth: 200,
+    }),
+    [isDragging],
+  );
+
+  const getTransfromStylesByFromToId = useMemo(() => {
+    const [fromId, toId] = fromToId?.split('-').map(Number);
+    let styles = {};
+    if (String(stageIndex) !== String(fromId)) {
+      styles = { transform: 'translate(0,0)' };
+      const mul = toId - fromId;
+      if (mul > 0) {
+        if (stageIndex <= toId && stageIndex >= fromId) {
+          styles = {
+            transform: 'translate(-282px, 0)',
+          };
+        }
+      } else if (stageIndex >= toId && stageIndex <= fromId) {
+        styles = {
+          transform: 'translate(282px, 0)',
+        };
+      }
+    }
+    return styles;
+  }, [fromToId, stageIndex]);
+
+  const renderDraggerContainer = useCallback(
+    (draggableProvided:any, draggableSnapshot:any) => {
+      const headerCls = classnames(`${prefixCls}-header`, {
+        [`${prefixCls}-header-notComplete`]: !jobList?.length,
+      });
+      return (
+        <div
+          className={prefixCls}
+          ref={draggableProvided.innerRef}
+          {...draggableProvided.draggableProps}
+          {...draggableProvided.dragHandleProps}
+          style={
+              getItemStyle(
+                draggableSnapshot.isDragging,
+                draggableProvided.draggableProps.style,
+                getTransfromStylesByFromToId,
+              )
+            }
+        >
+          <header className={headerCls} onClick={handleModalOpen} role="none">
+            <div className={`${prefixCls}-stageType`}>{type}</div>
+            <Tooltip title={name}>
+              <span className={`${prefixCls}-stageName`}>{name}</span>
+            </Tooltip>
+            <div className={`${prefixCls}-btnGroups`}>
+              {!jobList?.length && <InfoIcon className={`${prefixCls}-btnGroups-notComplete`} />}
+              <Icon onClick={handleDeleteStage} type="delete_black-o" className={`${prefixCls}-btnGroups-delete`} />
+            </div>
+          </header>
+          <main>
+            {renderJobs()}
+          </main>
+          <footer>
+            <JobAddBtn handleJobAddCallback={handleJobAddCallback} linesType={linesType} type={jobList.length ? 'circle' : 'normal'} />
+          </footer>
+        </div>
+      );
+    },
+    [getItemStyle, getTransfromStylesByFromToId, renderJobs],
+  );
+
+  const renderDraggable = useCallback(
+    (provided:any, snapshot:any) => (
+      <div
+        ref={provided.innerRef}
+        style={getStageStyle(snapshot.isDraggingOver)}
+        {...provided.droppableProps}
+      >
+        <Draggable draggableId={`draggable-${stageIndex}`} index={stageIndex}>
+          {renderDraggerContainer}
+        </Draggable>
+      </div>
+    ),
+    [getStageStyle, renderDraggerContainer],
+  );
 
   return (
-    <div className={prefixCls}>
-      <header onClick={handleModalOpen} role="none">
-        <div className={`${prefixCls}-stageType`}>{type}</div>
-        <div className={`${prefixCls}-stageName`}>{name}</div>
-        <div className={`${prefixCls}-btnGroups`}>
-          <Icon onClick={handleDeleteStage} type="delete_black-o" className={`${prefixCls}-btnGroups-delete`} />
-        </div>
-      </header>
-      <main>
-        {renderJobs()}
-      </main>
-      <footer>
-        <JobAddBtn handleJobAddCallback={handleJobAddCallback} linesType={linesType} type={jobList.length ? 'circle' : 'normal'} />
-      </footer>
-    </div>
+    <Droppable droppableId={`stageDroppable-${stageIndex}`}>
+      {renderDraggable}
+    </Droppable>
   );
 };
 
-export default Stage;
+export default React.memo(Stage);

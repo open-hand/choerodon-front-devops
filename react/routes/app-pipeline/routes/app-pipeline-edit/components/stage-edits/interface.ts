@@ -13,10 +13,8 @@ export type StageEditsStoreContext = {
   prefixCls: 'c7ncd-stage-edits'
   intlPrefix: 'c7ncd.app.pipeline.edit'
   mainStore: StoreProps
-  // @ts-expect-error
-  formatPipelinEdit: IntlFormatters['formatMessage'],
-  // @ts-expect-error
-  formatCommon: IntlFormatters['formatMessage'],
+  formatPipelinEdit: any,
+  formatCommon: any,
 } & ProviderProps;
 
 export type ProviderProps = {

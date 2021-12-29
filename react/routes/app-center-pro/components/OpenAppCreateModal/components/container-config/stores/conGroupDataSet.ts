@@ -224,47 +224,6 @@ const mapping: {
     },
     textField: 'versionNumber',
     valueField: 'id',
-    options: new DataSet({
-      autoQuery: true,
-      fields: [{ name: 'groupName', type: 'string' as FieldType, group: 0 }],
-      transport: {
-        read: ({ data: paramsData }) => ({
-          ...deployApiConfig.deployApplication(paramsData?.type || 'common'),
-          transformResponse: (res) => {
-            function init(data: any) {
-              let result: any[] = [];
-              data?.forEach((i: {
-                name: string,
-                appVersionVOS: {
-                  id: string
-                }[]
-              }) => {
-                const iData = i.appVersionVOS.map((app: {
-                  id: string,
-                }) => ({
-                  ...app,
-                  name: i.name,
-                  // 如果没有分类 则是选配
-                  id: i.name ? app.id : 'optional',
-                }));
-                result = [
-                  ...result,
-                  ...iData,
-                ];
-              });
-              return result;
-            }
-            let newRes = res;
-            try {
-              newRes = JSON.parse(newRes);
-              return init(newRes);
-            } catch (e) {
-              return init(newRes);
-            }
-          },
-        }),
-      },
-    }),
   },
   marketServiceVersion: {
     name: 'marketServiceVersion',
@@ -300,36 +259,6 @@ const mapping: {
     },
     textField: 'name',
     valueField: 'id',
-    options: new DataSet({
-      autoQuery: true,
-      fields: [{ name: 'groupName', type: 'string' as FieldType, group: 0 }],
-      transport: {
-        read: () => ({
-          ...appServiceApiConfig.getAppService(true, 'normal', 'share_service'),
-          transformResponse: (res) => {
-            function init(data: any) {
-              const result: any[] = [];
-              data?.forEach((item: any) => {
-                item.appServiceList?.forEach((version: any) => {
-                  result.push({
-                    ...version,
-                    groupName: item.name,
-                  });
-                });
-              });
-              return result;
-            }
-            let newRes = res;
-            try {
-              newRes = JSON.parse(newRes);
-              return init(newRes);
-            } catch (e) {
-              return init(newRes);
-            }
-          },
-        }),
-      },
-    }),
   },
   shareServiceVersion: {
     name: 'appServiceVersionId',
@@ -689,6 +618,82 @@ const conGroupDataSet = (
         case 'enVariable': {
           item.options = new DataSet(optionDataSet(/[-._a-zA-Z][-._a-zA-Z0-9]*/));
           break;
+        }
+        case 'marketAppVersion': {
+          item.options = new DataSet({
+            autoQuery: true,
+            fields: [{ name: 'groupName', type: 'string' as FieldType, group: 0 }],
+            transport: {
+              read: ({ data: paramsData }) => ({
+                ...deployApiConfig.deployApplication(paramsData?.type || 'common'),
+                transformResponse: (res) => {
+                  function init(data: any) {
+                    let result: any[] = [];
+                    // eslint-disable-next-line no-shadow
+                    data?.forEach((i: {
+                      name: string,
+                      appVersionVOS: {
+                        id: string
+                      }[]
+                    }) => {
+                      const iData = i.appVersionVOS.map((app: {
+                        id: string,
+                      }) => ({
+                        ...app,
+                        name: i.name,
+                        // 如果没有分类 则是选配
+                        id: i.name ? app.id : 'optional',
+                      }));
+                      result = [
+                        ...result,
+                        ...iData,
+                      ];
+                    });
+                    return result;
+                  }
+                  let newRes = res;
+                  try {
+                    newRes = JSON.parse(newRes);
+                    return init(newRes);
+                  } catch (e) {
+                    return init(newRes);
+                  }
+                },
+              }),
+            },
+          });
+        }
+        case 'shareAppService': {
+          item.options = new DataSet({
+            autoQuery: true,
+            fields: [{ name: 'groupName', type: 'string' as FieldType, group: 0 }],
+            transport: {
+              read: () => ({
+                ...appServiceApiConfig.getAppService(true, 'normal', 'share_service'),
+                transformResponse: (res) => {
+                  function init(data: any) {
+                    const result: any[] = [];
+                    data?.forEach((j: any) => {
+                      j.appServiceList?.forEach((version: any) => {
+                        result.push({
+                          ...version,
+                          groupName: j.name,
+                        });
+                      });
+                    });
+                    return result;
+                  }
+                  let newRes = res;
+                  try {
+                    newRes = JSON.parse(newRes);
+                    return init(newRes);
+                  } catch (e) {
+                    return init(newRes);
+                  }
+                },
+              }),
+            },
+          });
         }
         default: {
           break;
