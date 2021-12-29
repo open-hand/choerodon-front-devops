@@ -1,16 +1,24 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { templateStepsApi } from '@choerodon/master';
+import { templateStepsApi, ciTemplateStepApi } from '@choerodon/master';
 import { Dropdown, Menu, Button } from 'choerodon-ui/pro';
 import { transformLoadDataItem } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/stores/stepDataSet';
 
 const Index = ({
   ds,
+  level,
 }: any) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     async function init() {
-      const res = await templateStepsApi.getTemplateSteps(1);
+      let res;
+      if (level === 'project') {
+        res = await templateStepsApi.getTemplateSteps(1);
+      } else if (level === 'organization') {
+        res = await ciTemplateStepApi.getOrgSteps();
+      } else {
+        res = await ciTemplateStepApi.getSiteSteps();
+      }
       setData(res);
     }
     init();
@@ -18,8 +26,7 @@ const Index = ({
 
   const handleMenuClick = (e: any) => {
     const { key } = e;
-    console.log(transformLoadDataItem(JSON.parse(key)));
-    ds.create(transformLoadDataItem(JSON.parse(key)));
+    ds.create(transformLoadDataItem(JSON.parse(key), ds?.records.length));
   };
 
   const renderMenuItem = (d: any) => {

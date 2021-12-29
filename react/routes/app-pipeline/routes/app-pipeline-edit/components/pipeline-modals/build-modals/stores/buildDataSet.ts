@@ -4,6 +4,7 @@ import {
   ciTemplateJobGroupApiConfig,
   ciTemplateStepCategoryApiConfig,
   ciTemplateJobApi,
+  ciTemplateStepApi,
 } from '@choerodon/master';
 import {
   CUSTOM_BUILD, MAVEN_BUILD, STEP_TEMPLATE, TASK_TEMPLATE,
@@ -20,6 +21,10 @@ const handleValidatorName = async (v: any, t: any, l: any) => {
     } else if (t === STEP_TEMPLATE) {
       res = await ciTemplateJobApi.checkStepName(v);
     }
+  } else if (t === TASK_TEMPLATE) {
+    res = await ciTemplateJobApi.checkJobName(v);
+  } else if (t === STEP_TEMPLATE) {
+    res = await ciTemplateStepApi.checkStepName(v);
   }
   return res;
 };
@@ -31,6 +36,7 @@ const transformSubmitData = (ds: any) => {
     [mapping.triggerType.name]: record?.get(mapping.triggerType.name),
     [mapping.triggerValue.name]: record?.get(mapping.triggerValue.name)?.join(','),
     [mapping.groupId.name]: record?.get(mapping.groupId.name),
+    [mapping.categoryId.name]: record?.get(mapping.categoryId.name),
     [mapping.type.name]: record?.get(mapping.type.name),
     [mapping.script.name]: record?.get(mapping.script.name),
   });
@@ -40,6 +46,7 @@ const transformLoadData = (data: any, appServiceName: any) => ({
   [mapping.name.name]: data?.[mapping.name.name],
   [mapping.type.name]: data?.[mapping.type.name],
   [mapping.groupId.name]: data?.[mapping.groupId.name],
+  [mapping.categoryId.name]: data?.[mapping.categoryId.name],
   [mapping.appService.name]: appServiceName,
   [mapping.triggerType.name]: data?.[mapping.triggerType.name],
   [mapping.triggerValue.name]: data?.[mapping.triggerValue.name]?.split(','),
