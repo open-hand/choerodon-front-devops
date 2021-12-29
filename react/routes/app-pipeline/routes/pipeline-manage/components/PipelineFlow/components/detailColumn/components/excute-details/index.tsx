@@ -48,8 +48,6 @@ const ExcuteDetails:FC<ExcuteDetailsProps> = (props) => {
     jobStatus,
   } = props;
 
-  console.log(pipelineJarInfo, pipelineChartInfo, pipelineImageInfo);
-
   const formatCommon = useFormatCommon();
   const formatExcuteDetails = useFormatMessage(intlPrefix);
 
