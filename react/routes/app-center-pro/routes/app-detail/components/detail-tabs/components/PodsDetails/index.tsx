@@ -154,18 +154,18 @@ const PodDetail = observer(() => {
       },
     ];
     if (record.get('containers')?.length) {
-      if (['CrashLoopBackOff', 'Running'].includes(record.get('status'))) {
-        buttons.unshift({
-          service: ['choerodon.code.project.deploy.app-deployment.resource.ps.pod.log'],
-          text: formatMessage({ id: 'c7ncd.resource.ContainerLog' }),
-          action: () => openLog(),
-        });
-      }
       if (record.get('status') === 'Running') {
         buttons.unshift({
           service: ['choerodon.code.project.deploy.app-deployment.resource.ps.pod.shell'],
           text: formatMessage({ id: 'c7ncd.resource.RunCommand' }),
           action: () => openShell(),
+        });
+      }
+      if (['CrashLoopBackOff', 'Running'].includes(record.get('status'))) {
+        buttons.unshift({
+          service: ['choerodon.code.project.deploy.app-deployment.resource.ps.pod.log'],
+          text: formatMessage({ id: 'c7ncd.resource.ContainerLog' }),
+          action: () => openLog(),
         });
       }
     }
