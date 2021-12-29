@@ -5,6 +5,7 @@ import {
   ciTemplateStepCategoryApiConfig,
   ciTemplateJobApi,
   ciTemplateStepApi,
+
 } from '@choerodon/master';
 import {
   CUSTOM_BUILD, MAVEN_BUILD, STEP_TEMPLATE, TASK_TEMPLATE,
@@ -19,7 +20,7 @@ const handleValidatorName = async (v: any, t: any, l: any) => {
     if (t === TASK_TEMPLATE) {
       res = await ciTemplateJobApi.checkName(v);
     } else if (t === STEP_TEMPLATE) {
-      res = await ciTemplateJobApi.checkStepName(v);
+      res = await ciTemplateStepApi.checkOrgStepName(v);
     }
   } else if (t === TASK_TEMPLATE) {
     res = await ciTemplateJobApi.checkJobName(v);
