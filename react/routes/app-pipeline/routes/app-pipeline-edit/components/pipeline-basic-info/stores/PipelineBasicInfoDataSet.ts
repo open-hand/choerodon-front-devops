@@ -60,7 +60,7 @@ const PipelineBasicInfoDataSet = ({
         required: true,
         options: appServiceDs,
       },
-      type === 'create' && {
+      ['create', 'copy'].includes(type) && {
         label: '关联分支',
         name: 'branch',
         type: 'object',

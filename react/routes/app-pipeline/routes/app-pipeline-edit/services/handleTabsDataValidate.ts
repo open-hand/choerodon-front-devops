@@ -1,12 +1,13 @@
 /* eslint-disable max-len */
 import every from 'lodash/every';
+import { isEmpty } from 'lodash';
 import { TabkeyTypes } from '@/routes/app-pipeline/interface';
 import {
   TAB_ADVANCE_SETTINGS, TAB_BASIC, TAB_CI_CONFIG, TAB_FLOW_CONFIG,
 } from '../stores/CONSTANTS';
 
-const validateMap:Partial<Record<TabkeyTypes, (data:any)=>{ reason:string |'', isValidated:boolean }>> = {
-  [TAB_BASIC]: () => ({ isValidated: true, reason: '' }),
+const validateMap:Partial<Record<TabkeyTypes, (data:any, type:'create'|'edit'|'copy')=>{ reason:string |'', isValidated:boolean }>> = {
+  [TAB_BASIC]: handleValidBasicInfo,
   [TAB_FLOW_CONFIG]: handleValideStage,
   [TAB_CI_CONFIG]: () => ({ isValidated: true, reason: '' }),
   [TAB_ADVANCE_SETTINGS]: handleValidAdvanced,
@@ -20,7 +21,33 @@ function handleValidAdvanced(data: any) {
   };
 }
 
-function handleValideStage(stagesData:Array<{jobList:{completed:boolean}[]} & Record<string, any>>):{ reason:string |'', isValidated:boolean } {
+function handleValidBasicInfo(data:any, type:'create'|'edit'|'copy') {
+  const { pipelineName, appService, branch } = data;
+  if (!pipelineName) {
+    return {
+      isValidated: false,
+      reason: '请输入流水线名称',
+    };
+  }
+  if (!appService) {
+    return {
+      isValidated: false,
+      reason: '请输入流水线名称',
+    };
+  }
+  if (['create', 'copy'].includes(type) && (!branch || isEmpty(branch))) {
+    return {
+      isValidated: false,
+      reason: '请选择一个分支',
+    };
+  }
+  return {
+    isValidated: true,
+    reason: '',
+  };
+}
+
+function handleValideStage(stagesData:Array<{jobList:{completed:boolean}[]} & Record<string, any>>, type:'create'|'edit'|'copy'):{ reason:string |'', isValidated:boolean } {
   const isCompleted = stagesData.every(({ jobList }) => {
     if (!jobList?.length) return false;
     return jobList.every(({ completed }) => completed);
@@ -31,7 +58,7 @@ function handleValideStage(stagesData:Array<{jobList:{completed:boolean}[]} & Re
   return { isValidated: true, reason: '' };
 }
 
-export function handleTabDataValidate(tabsData:Partial<Record<TabkeyTypes, unknown>>) {
+export function handleTabDataValidate(tabsData:Partial<Record<TabkeyTypes, unknown>>, type:'create'|'edit'|'copy') {
   let validatedObj:{key?:TabkeyTypes, reason?:string, isValidated:boolean } = {
     isValidated: true,
   };
@@ -40,7 +67,7 @@ export function handleTabDataValidate(tabsData:Partial<Record<TabkeyTypes, unkno
       validatedObj = { key, reason: `Tab which key is ${key} has no data`, isValidated: false };
       return false;
     }
-    const { reason, isValidated } = validateMap[key]?.(data) || { reason: '' };
+    const { reason, isValidated } = validateMap[key]?.(data, type) || { reason: '' };
     if (!isValidated) {
       validatedObj = { key, reason, isValidated: false };
       return false;

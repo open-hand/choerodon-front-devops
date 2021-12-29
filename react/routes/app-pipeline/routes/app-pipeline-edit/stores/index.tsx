@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import { useRouteMatch } from 'react-router';
 import { inject } from 'mobx-react';
-import { useFormatCommon, useFormatMessage } from '@choerodon/master';
+import { useFormatCommon, useFormatMessage, useQueryString } from '@choerodon/master';
 import { useSetState } from 'ahooks';
 import { Loading } from '@choerodon/components';
 import { AppPipelineEditStoreContext, ProviderProps } from '../interface';
@@ -34,13 +34,15 @@ export const StoreProvider = inject('AppState')((props: ProviderProps) => {
     level,
   } = usePipelineContext();
 
+  const { searchTabKey } = useQueryString();
+
   const {
     params: {
       id, type = 'create',
     },
   } = useRouteMatch<any>();
 
-  const [currentKey, setTabKey] = useState<TabkeyTypes>(defaultTabKey || TAB_FLOW_CONFIG);
+  const [currentKey, setTabKey] = useState<TabkeyTypes>(searchTabKey || defaultTabKey || TAB_FLOW_CONFIG);
 
   const [tabsData, setTabsDataState] = useSetState<Partial<Record<TabkeyTypes, unknown>>>({});
 

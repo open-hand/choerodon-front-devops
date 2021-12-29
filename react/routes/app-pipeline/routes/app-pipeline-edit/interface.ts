@@ -14,7 +14,8 @@ export type AppPipelineEditStoreContext = {
   formatAppPipelineEdit: any,
   formatCommon:any,
   currentKey:TabkeyTypes,
-  type?:'create' | 'edit'
+  type?:'create' | 'edit' | 'copy'
+  level?:'orgnization' | 'site' | 'project'
 } & ProviderProps;
 
 export type ProviderProps = {

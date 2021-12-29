@@ -107,7 +107,7 @@ const TreeItem = observer(({ record, search }) => {
     Modal.open({
       key: Modal.key(),
       title: '复制流水线',
-      children: <CopyPipeline ds={CopyPipelineDataSet} seletDs={seletDs} projectId={projectId} editBlockStore={editBlockStore} record={record} handleRefresh={handleRefresh} />,
+      children: <CopyPipeline copyPipelineDataSet={CopyPipelineDataSet} seletDs={seletDs} record={record} />,
     })
   }
 
