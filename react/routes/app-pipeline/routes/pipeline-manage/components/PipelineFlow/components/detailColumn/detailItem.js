@@ -634,7 +634,7 @@ const DetailItem = (props) => {
   return (
     <div
       className={detailItemCls}
-      onClick={openExcuteDetailModal.bind(null, {
+      onClick={isDetailItemClickable ? openExcuteDetailModal.bind(null, {
         jobName,
         jobId: jobRecordId,
         devopsCiUnitTestReportInfoList,
@@ -648,7 +648,7 @@ const DetailItem = (props) => {
         handleJarDownload,
         openMirrorScanningLog,
         handleImageCopy,
-      })}
+      }) : () => {}}
     >
       <header>
         <StatusDot
