@@ -15,7 +15,10 @@ const Index = observer(() => {
 
   const handleOk = async () => new Promise((resolve) => {
     const subData = transformSubmitData(data, CustomDataSet);
-    handleJobAddCallback(subData);
+    handleJobAddCallback({
+      ...subData,
+      completed: true,
+    });
     resolve(true);
   });
 
