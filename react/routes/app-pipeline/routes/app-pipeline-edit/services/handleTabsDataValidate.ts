@@ -48,6 +48,9 @@ function handleValidBasicInfo(data:any, type:'create'|'edit'|'copy') {
 }
 
 function handleValideStage(stagesData:Array<{jobList:{completed:boolean}[]} & Record<string, any>>, type:'create'|'edit'|'copy'):{ reason:string |'', isValidated:boolean } {
+  if (!stagesData.length) {
+    return { isValidated: false, reason: '流水线的阶段不能为空' };
+  }
   const isCompleted = stagesData.every(({ jobList }) => {
     if (!jobList?.length) return false;
     return jobList.every(({ completed }) => completed);
