@@ -1,6 +1,6 @@
 import React from 'react';
 import './index.less';
-import { Icon } from 'choerodon-ui/pro';
+import { Icon } from 'choerodon-ui';
 import useStageModal from '../../hooks/useStageModal';
 import { STAGE_TYPES } from '../../../../interface';
 import useStageEdit from '../../hooks/useStageEdit';
