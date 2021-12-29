@@ -552,16 +552,25 @@ const DetailItem = (props) => {
           type, reportUrl,
         } = item;
         const unitType = {
-          maven_unit_test: '下载Maven单测报告',
-          node_js_unit_test: '下载Node.js单测报告',
-          go_unit_test: '下载Go单测报告',
+          maven_unit_test: {
+            name: '下载Maven单测报告',
+            filename: 'Maven单测报告.html',
+          },
+          node_js_unit_test: {
+            name: '下载Node.js单测报告',
+            filename: 'Nodejs单测报告.zip',
+          },
+          go_unit_test: {
+            name: '下载Go单测报告',
+            filename: 'Go单测报告.xml',
+          },
         };
         const handleDownload = () => {
-          saveAs(reportUrl);
+          saveAs(reportUrl, unitType[type]?.filename);
         };
         data.push({
           service: [],
-          text: unitType[type],
+          text: unitType[type]?.name,
           action: handleDownload,
         });
       });
