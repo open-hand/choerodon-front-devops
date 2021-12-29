@@ -274,6 +274,7 @@ const PipelineManage = observer(() => {
     buttons.push({
       icon: 'refresh',
       handler: handleRefresh,
+      display: true,
     });
     return buttons;
   }
