@@ -26,7 +26,6 @@ import usePipelineContext from '../../hooks/usePipelineContext';
 import { handleTabDataValidate } from './services/handleTabsDataValidate';
 import { handleTabDataTransform } from './services/handleTabDataTransform';
 import { ciCdPipelineApi } from '@/api/cicd-pipelines';
-import { stepDataTitleList } from '@/routes/app-center-pro/components/OpenAppCreateModal/constant';
 
 const { TabPane } = Tabs;
 
@@ -37,7 +36,7 @@ const AppPipelineEdit = () => {
     formatCommon,
     currentKey,
     setTabKey,
-    type,
+    type = 'create',
     tabsData,
   } = useAppPipelineEditStore();
 
@@ -85,7 +84,7 @@ const AppPipelineEdit = () => {
    * 项目层的处理提交的事件
    */
   const handleSumitWhileProjectCreate = async () => {
-    const { isValidated, key, reason } = handleTabDataValidate(tabsData);
+    const { isValidated, key, reason } = handleTabDataValidate(tabsData, type);
     if (isValidated) {
       const finalData = handleTabDataTransform(tabsData);
       try {
@@ -107,7 +106,7 @@ const AppPipelineEdit = () => {
    * 项目层的编辑
    */
   const handleSumitWhileProjectEdit = async () => {
-    const { isValidated, key, reason } = handleTabDataValidate(tabsData);
+    const { isValidated, key, reason } = handleTabDataValidate(tabsData, type);
     if (isValidated) {
       const finalData = handleTabDataTransform(tabsData);
       try {
@@ -125,23 +124,23 @@ const AppPipelineEdit = () => {
     }
   };
 
-  const submitMapWhileCreate = {
+  const submitMapWhileCreate:Record<'project'|'site'|'orgnization', Function | undefined> = {
     project: handleSumitWhileProjectCreate,
     site: onCreate,
     orgnization: onCreate,
   };
 
-  const submitMapWhileEdit = {
+  const submitMapWhileEdit:Record<'project'|'site'|'orgnization', Function | undefined> = {
     project: handleSumitWhileProjectEdit,
     site: onSave,
     orgnization: onSave,
   };
 
   const handleSubmit = () => {
-    if (type === 'create') {
-      return level && submitMapWhileCreate[level]?.(tabsData);
+    if (['create', 'copy'].includes(type)) {
+      return level && submitMapWhileCreate[level]?.(tabsData, setTabKey);
     }
-    return level && submitMapWhileEdit[level]?.(tabsData);
+    return level && submitMapWhileEdit[level]?.(tabsData, setTabKey);
   };
 
   /** @type {*} 头部按钮 */
@@ -181,7 +180,7 @@ const AppPipelineEdit = () => {
   const renderTitle = () => {
     let title = '';
     if (level === 'project') {
-      title = type === 'create' ? '创建流水线' : '编辑流水线';
+      title = ['create', 'copy'].includes(type) ? '创建流水线' : '编辑流水线';
     } else {
       title = type === 'create' ? '创建流水线模板' : '编辑流水线模板';
     }

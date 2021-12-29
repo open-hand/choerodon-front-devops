@@ -1,11 +1,10 @@
 /* eslint-disable no-param-reassign */
 
-import React, { useMemo, useCallback, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { runInAction } from 'mobx';
 import { useFormatMessage } from '@choerodon/master';
 import { Icon, TextField, Tree } from 'choerodon-ui/pro';
-import { Collapse } from 'choerodon-ui';
 import toUpper from 'lodash/toUpper';
 import { useDebounceFn } from 'ahooks';
 import ScrollContext from 'react-infinite-scroll-component';
