@@ -43,10 +43,10 @@ const TemplatePreview:FC<TemplatePreviewProps> = (props) => {
     [`${prefixCls}-active`]: isActive,
   });
 
-  const renderStages = () => stagesData.map((item) => {
+  const renderStages = () => (stagesData.length ? stagesData.map((item) => {
     const { id: jobTmpId } = item;
     return <StageTemplate key={jobTmpId} {...item} />;
-  });
+  }) : '');
 
   const handleClick = () => {
     handleSelect?.({ ...props });
