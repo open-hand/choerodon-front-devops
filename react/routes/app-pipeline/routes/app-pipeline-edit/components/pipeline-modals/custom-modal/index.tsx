@@ -11,9 +11,9 @@ const Index = observer((props: any) => (
   </StoreProvider>
 ));
 
-const handleCustomModal = (data: any, handleJobAddCallback: any) => {
+const handleCustomModal = (data: any, handleJobAddCallback: any, title?: any) => {
   Modal.open({
-    title: '添加【自定义】阶段',
+    title: title || '添加【自定义】阶段',
     drawer: true,
     children: <Index data={data} handleJobAddCallback={handleJobAddCallback} />,
     style: {
