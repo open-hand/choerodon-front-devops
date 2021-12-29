@@ -272,21 +272,24 @@ const Index = observer(() => {
   const handleOk = async (canWait?: boolean) => {
     const res = await BuildDataSet.current.validate(true);
     let stepRes = true;
-    for (let i = 0; i < StepDataSet.records.filter((j: any) => j.status !== 'delete').length; i += 1) {
-      const item = StepDataSet.records.filter((j: any) => j.status !== 'delete')[i];
-      // eslint-disable-next-line no-await-in-loop
-      const itemResult = await item.validate(true);
-      let configFlag = true;
-      if ([BUILD_MAVEN, BUILD_MAVEN_PUBLISH].includes(item?.get(StepMapping.type.name))) {
+    let advancedRes = true;
+    if (template !== STEP_TEMPLATE) {
+      for (let i = 0; i < StepDataSet.records.filter((j: any) => j.status !== 'delete').length; i += 1) {
+        const item = StepDataSet.records.filter((j: any) => j.status !== 'delete')[i];
         // eslint-disable-next-line no-await-in-loop
-        configFlag = await item.getField(StepMapping.customRepoConfig.name).options.validate();
+        const itemResult = await item.validate(true);
+        let configFlag = true;
+        if ([BUILD_MAVEN, BUILD_MAVEN_PUBLISH].includes(item?.get(StepMapping.type.name))) {
+          // eslint-disable-next-line no-await-in-loop
+          configFlag = await item.getField(StepMapping.customRepoConfig.name).options.validate();
+        }
+        if (!itemResult || !configFlag) {
+          stepRes = false;
+          break;
+        }
       }
-      if (!itemResult || !configFlag) {
-        stepRes = false;
-        break;
-      }
+      advancedRes = await advancedRef?.current?.getDataSet()?.current?.validate(true);
     }
-    const advancedRes = await advancedRef?.current?.getDataSet()?.current?.validate(true);
     const result = {
       ...transformSubmitData(BuildDataSet),
       devopsCiStepVOList: stepDataSetTransformSubmitData(StepDataSet),
@@ -297,10 +300,10 @@ const Index = observer(() => {
       type,
       // TODO 待删
       appService,
-      completed: res && stepRes && advancedRes,
+      completed: template !== STEP_TEMPLATE ? res && stepRes && advancedRes : res,
     };
     if (canWait) {
-      if (res && stepRes && advancedRes) {
+      if (template !== STEP_TEMPLATE ? res && stepRes && advancedRes : res) {
         const flag = await handleJobAddCallback(result);
         return flag;
       }
