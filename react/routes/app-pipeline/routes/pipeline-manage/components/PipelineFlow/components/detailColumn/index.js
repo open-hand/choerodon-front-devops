@@ -40,8 +40,6 @@ export default observer((props) => {
           gitlabJobId,
           id: jobRecordId,
           durationSeconds,
-          startedDate,
-          finishedDate,
           type,
           name,
           ...rest

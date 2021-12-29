@@ -45,7 +45,9 @@ const PipelineCreateModal:FC<PipelineCreateModalProps> = observer((props) => {
 
   const formatCommon = useFormatCommon();
   const formatPipelineCreateModal = useFormatMessage(intlPrefix);
+
   const history = useHistory();
+
   const {
     pathname,
     search,

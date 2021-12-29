@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions, QueryKey } from 'react-query';
 import { pipelinTemplateApi } from '@/api/pipeline-template';
 import { DEFAULT_TMP_ID } from '@/routes/app-pipeline/stores/CONSTANTS';
-import { DEFAULT_STAGES_DATA, TAB_FLOW_CONFIG } from '../stores/CONSTANTS';
+import { DEFAULT_STAGES_DATA, DEFAUTL_CD_STAGE, TAB_FLOW_CONFIG } from '../stores/CONSTANTS';
 import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
 import { ciCdPipelineApi } from '@/api/cicd-pipelines';
 
@@ -30,7 +30,11 @@ function useLoadStageData(configs:PipelineApiConfigs, options?:LoadStageDataProp
   const handleSuccess = (stageObject:Record<string, any>) => {
     let stageLists = [];
     if (level === 'project') {
-      stageLists = stageObject?.devopsCiStageVOS || [];
+      if (type === 'create') {
+        stageLists = stageObject?.devopsCiStageVOS.concat(DEFAUTL_CD_STAGE);
+      } else {
+        stageLists = stageObject?.devopsCiStageVOS || [];
+      }
     } else {
       stageLists = stageObject?.templateStageVOS || [];
     }

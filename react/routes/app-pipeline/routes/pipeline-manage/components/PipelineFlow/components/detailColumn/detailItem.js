@@ -13,6 +13,7 @@ import copy from 'copy-to-clipboard';
 import StreamSaver from 'streamsaver';
 import { Base64 } from 'js-base64';
 import { get } from 'lodash';
+import classnames from 'classnames';
 import renderDuration from '@/utils/getDuration';
 import { handlePromptError } from '@/utils';
 import { MIDDLE } from '@/utils/getModalWidth';
@@ -24,6 +25,8 @@ import { usePipelineManageStore } from '../../../../stores';
 import MirrorScanning from '../MirrorScanningLog';
 import jobTypesMappings from '../../../../stores/jobsTypeMappings';
 import { JOB_GROUP_TYPES } from '@/routes/app-pipeline/stores/CONSTANTS';
+
+const prefixCls = 'c7n-piplineManage-detail-column';
 
 const DetailItem = (props) => {
   const {
@@ -326,17 +329,6 @@ const DetailItem = (props) => {
     );
   };
 
-  const renderChart = () => (
-    <main>
-      <div>
-        <span>生成版本:</span>
-        <Tooltip title={chartVersion}>
-          <span>{chartVersion || '-'}</span>
-        </Tooltip>
-      </div>
-    </main>
-  );
-
   function calcValue(successCount, failCount) {
     const sum = failCount + successCount;
     if (sum) {
@@ -380,19 +372,6 @@ const DetailItem = (props) => {
     );
   };
 
-  const renderSonar = () => (
-    <main>
-      <div>
-        <span>检查类型:</span>
-        <span>{sonarScannerType}</span>
-      </div>
-      <div>
-        <span>单测覆盖率:</span>
-        <span>{codeCoverage ? `${codeCoverage}%` : '-'}</span>
-      </div>
-    </main>
-  );
-
   function getRetryBtnDisabled() {
     const successAndFailed = jobStatus === 'success' || jobStatus === 'failed';
     if (itemType?.indexOf('cd') !== -1 && jobStatus === 'success') {
@@ -435,17 +414,11 @@ const DetailItem = (props) => {
       ['cdDeploy', renderCdChart],
       ['cdDeployment', renderCdDeployment],
       ['cdAudit', renderCdAudit],
-      ['chart', renderChart],
       ['cdHost', renderCdHost],
-      ['sonar', renderSonar],
       ['cdApiTest', renderApiTest],
       ['cdExternalApproval', renderCdExternalApproval],
     ]);
     return funcMap.get(itemType) && funcMap.get(itemType)();
-  };
-
-  const renderCheckLogFun = () => {
-    openDescModal(itemType);
   };
 
   const logCheckDisabeldCondition = jobStatus === 'created';
@@ -550,7 +523,7 @@ const DetailItem = (props) => {
         data.push({
           service: ['choerodon.code.project.develop.ci-pipeline.ps.job.log'],
           text: format({ id: 'ViewLog' }),
-          action: renderCheckLogFun,
+          action: openDescModal.bind(null, itemType),
         });
       }
       if (!getRetryBtnDisabled()) {
@@ -560,6 +533,13 @@ const DetailItem = (props) => {
           action: renderRetryBtnFn,
         });
       }
+    }
+    if (itemType === 'cdApiTest' && ['success', 'failed'].includes(jobStatus)) {
+      data.push({
+        text: '查看详情',
+        service: [],
+        action: goToApiTest,
+      });
     }
     if (itemType === 'build') {
       downloadMavenJarVO && data.push({
@@ -574,15 +554,6 @@ const DetailItem = (props) => {
           action: openMirrorScanningLog,
         });
       }
-      // 目前先不做npm代码保留着
-      // if (downloadNpm) {
-      //   data.push({
-      //     service: [],
-      //     text: 'npm下载',
-      //     action: handleNpmDownload,
-      //     // disabled: getRetryBtnDisabled(),
-      //   });
-      // }
       downloadImage && data.push({
         service: [],
         text: format({ id: 'CopyAddress' }),
@@ -597,13 +568,7 @@ const DetailItem = (props) => {
         action: openCodequalityModal,
       });
     }
-    if (itemType === 'cdApiTest' && ['success', 'failed'].includes(jobStatus)) {
-      data.push({
-        text: '查看详情',
-        service: [],
-        action: goToApiTest,
-      });
-    }
+
     if (itemType === 'custom' && jobStatus === 'manual') {
       data.push({
         text: '执行',
@@ -624,21 +589,27 @@ const DetailItem = (props) => {
 
     return (
       <Tooltip title={get(currentJobGroupType, 'name')}>
-        <Icon className="c7n-piplineManage-detail-column-item-icon" type={get(currentJobGroupType, 'icon')} />
+        <Icon className={`${prefixCls}-item-icon`} type={get(currentJobGroupType, 'icon')} />
       </Tooltip>
     );
   };
 
+  const isDetailItemClickable = ['success', 'failed'].includes(jobStatus);
+
+  const detailItemCls = classnames(`${prefixCls}-item`, {
+    [`${prefixCls}-item-clickable`]: isDetailItemClickable,
+  });
+
   return (
-    <div className="c7n-piplineManage-detail-column-item">
+    <div className={detailItemCls}>
       <header>
         <StatusDot
           size={13}
           status={jobStatus}
           style={{ lineHeight: '22px', marginRight: '4px' }}
         />
-        <div className="c7n-piplineManage-detail-column-item-sub">
-          <div className="c7n-piplineManage-detail-column-item-title">
+        <div className={`${prefixCls}-item-sub`}>
+          <div className={`${prefixCls}-item-title`}>
             {renderJobPrefix()}
             <Tooltip title={jobName}>
               {jobName}
@@ -646,7 +617,7 @@ const DetailItem = (props) => {
           </div>
           {startedDate && finishedDate && (
             <Tooltip title={`${startedDate}-${finishedDate}`}>
-              <span>
+              <span className={`${prefixCls}-item-date`}>
                 {startedDate}
                 -
                 {finishedDate}
@@ -658,7 +629,7 @@ const DetailItem = (props) => {
       {renderItemDetail()}
       <footer>
         {renderFooterBtns()}
-        <span className="c7n-piplineManage-detail-column-item-time">
+        <span className={`${prefixCls}-item-time`}>
           <span>任务耗时：</span>
           <span>
             {jobDurationSeconds ? `${renderDuration({ value: jobDurationSeconds })}` : '-'}
