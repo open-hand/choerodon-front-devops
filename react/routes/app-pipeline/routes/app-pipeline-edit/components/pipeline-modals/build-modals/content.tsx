@@ -300,8 +300,11 @@ const Index = observer(() => {
       completed: res && stepRes && advancedRes,
     };
     if (canWait) {
-      const flag = await handleJobAddCallback(result);
-      return flag;
+      if (res && stepRes && advancedRes) {
+        const flag = await handleJobAddCallback(result);
+        return flag;
+      }
+      return false;
     }
     handleJobAddCallback(result);
     return true;
