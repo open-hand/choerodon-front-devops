@@ -554,6 +554,7 @@ export default observer(() => {
         triggerValue:
           typeof ds.triggerValue === 'object' ? ds.triggerValue?.join(',') : ds.triggerValue,
         // configSettingVOS: configData,
+        completed: true,
       };
       if (ds.type !== 'cdAudit') {
         data.metadata = getMetadata(ds, deployChartData, {

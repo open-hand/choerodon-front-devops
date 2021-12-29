@@ -291,6 +291,10 @@ const mapping: {
     name: 'sequence',
     type: 'number',
   },
+  id: {
+    name: 'id',
+    type: 'string',
+  },
 };
 
 const transformLoadDataItem = (d: any, index: number) => ({
@@ -302,6 +306,7 @@ const transformLoadDataItem = (d: any, index: number) => ({
   [mapping.sonarqubeAccountConfig.name]: accountConfigData[0].value,
   [mapping.whetherMavenSingleMeasure.name]: false,
   [mapping.sequence.name]: index,
+  [mapping.id.name]: d?.[mapping.id.name],
   ...d[STEPVO[d.type]],
   [mapping.customRepoConfig.name]: d[STEPVO[d.type]]?.repos,
 });
@@ -380,6 +385,7 @@ const transformSubmitData = (ds: any) => ds.records.filter((i: any) => i.status 
   [mapping.type.name]: record?.get(mapping.type.name),
   [mapping.script.name]: record?.get(mapping.script.name),
   [mapping.sequence.name]: record?.get(mapping.sequence.name),
+  [mapping.id.name]: record?.get(mapping.id.name),
   ...STEPVO?.[record?.get(mapping.type.name)] ? {
     [STEPVO?.[record?.get(mapping.type.name)]]: getInsideDtoData(record),
   } : {},
