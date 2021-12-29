@@ -104,7 +104,7 @@ const TemplatesSelector:FC<TemplatesSelectorProps> = (props) => {
   const getSectionGroup = useMemo(() => {
     const sectionGroup:Map<string, any[]> = new Map();
     const tmpLists = [DEFAULT_TMP, ...(pipelineTemplateVOList || []).slice()];
-    tmpLists?.forEach((item:{ciTemplateCategoryId:string}) => {
+    tmpLists?.forEach((item:{ ciTemplateCategoryId:string }) => {
       const { ciTemplateCategoryId } = item;
       if (!sectionGroup.get(ciTemplateCategoryId)) sectionGroup.set(ciTemplateCategoryId, []);
       sectionGroup.get(ciTemplateCategoryId)?.push(item);

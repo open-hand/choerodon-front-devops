@@ -59,7 +59,7 @@ const JOB_GROUP_UNIT_TEST = {
 // 代码扫描
 const JOB_GROUP_CODE_SCANN = {
   name: '代码扫描',
-  code: 'code-scann',
+  code: 'code-scan',
   icon: 'playlist_add_check',
 } as const;
 
