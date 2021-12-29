@@ -14,6 +14,7 @@ import StreamSaver from 'streamsaver';
 import { Base64 } from 'js-base64';
 import { get } from 'lodash';
 import classnames from 'classnames';
+import { saveAs } from 'file-saver';
 import renderDuration from '@/utils/getDuration';
 import { handlePromptError } from '@/utils';
 import { MIDDLE } from '@/utils/getModalWidth';
@@ -25,6 +26,7 @@ import { usePipelineManageStore } from '../../../../stores';
 import MirrorScanning from '../MirrorScanningLog';
 import jobTypesMappings from '../../../../stores/jobsTypeMappings';
 import { JOB_GROUP_TYPES } from '@/routes/app-pipeline/stores/CONSTANTS';
+import { openExcuteDetailModal } from './components/excute-details';
 
 const prefixCls = 'c7n-piplineManage-detail-column';
 
@@ -60,16 +62,18 @@ const DetailItem = (props) => {
     history,
     location: { search },
     countersigned,
-    chartVersion,
-    sonarScannerType,
-    codeCoverage,
+    pipelineChartInfo,
+    pipelineImageInfo,
+    pipelineJarInfo,
+    pipelineSonarInfo,
     apiTestTaskRecordVO, // api测试任务独有的
     externalApprovalJobVO,
     viewId,
     downloadMavenJarVO,
-    downloadImage,
+    // downloadImage,
     gitlabPipelineId,
     imageScan, // 是否显示镜像的扫描报告btn
+    devopsCiUnitTestReportInfoList,
   } = props;
 
   const { gitlabProjectId, appServiceId } = getDetailData && getDetailData.ciCdPipelineVO;
@@ -480,7 +484,7 @@ const DetailItem = (props) => {
   };
 
   const handleImageCopy = () => {
-    copy(downloadImage);
+    copy(pipelineImageInfo?.downloadUrl);
     message.success('复制成功');
   };
 
@@ -541,41 +545,59 @@ const DetailItem = (props) => {
         action: goToApiTest,
       });
     }
-    if (itemType === 'build') {
-      downloadMavenJarVO && data.push({
+
+    if (['success', 'failed'].includes(jobStatus)) {
+      devopsCiUnitTestReportInfoList?.forEach((item) => {
+        const {
+          type, reportUrl,
+        } = item;
+        const unitType = {
+          maven_unit_test: 'Maven单元测试',
+          node_js_unit_test: 'Node.js单元测试',
+          go_unit_test: 'Go单元测试',
+        };
+        const handleDownload = () => {
+          saveAs(reportUrl);
+        };
+        data.push({
+          service: [],
+          text: unitType[type],
+          action: handleDownload,
+        });
+      });
+      pipelineJarInfo && data.push({
         service: [],
         text: 'jar包下载',
         action: handleJarDownload,
       });
-      if (imageScan && jobStatus === 'success') {
-        data.push({
-          service: ['choerodon.code.project.develop.ci-pipeline.ps.job.imageReport'],
-          text: format({ id: 'ScanReport' }),
-          action: openMirrorScanningLog,
-        });
-      }
-      downloadImage && data.push({
+
+      imageScan && jobStatus === 'success' && data.push({
+        service: ['choerodon.code.project.develop.ci-pipeline.ps.job.imageReport'],
+        text: format({ id: 'ScanReport' }),
+        action: openMirrorScanningLog,
+      });
+
+      pipelineImageInfo && data.push({
         service: [],
         text: format({ id: 'CopyAddress' }),
         action: handleImageCopy,
       });
-    }
 
-    if (itemType === 'sonar') {
-      data.push({
+      pipelineSonarInfo && data.push({
         service: ['choerodon.code.project.develop.ci-pipeline.ps.job.sonarqube'],
         text: format({ id: 'QualityReport' }),
         action: openCodequalityModal,
       });
     }
 
-    if (itemType === 'custom' && jobStatus === 'manual') {
+    if (['custom', 'normal'].includes(itemType) && jobStatus === 'manual') {
       data.push({
         text: '执行',
         service: ['choerodon.code.project.develop.ci-pipeline.ps.job.execute'],
         action: handleExecute,
       });
     }
+
     return (
       data.length ? <Action data={data} /> : ''
     );
@@ -601,7 +623,24 @@ const DetailItem = (props) => {
   });
 
   return (
-    <div className={detailItemCls}>
+    <div
+      className={detailItemCls}
+      onClick={openExcuteDetailModal.bind(null, {
+        jobName,
+        jobId: jobRecordId,
+        devopsCiUnitTestReportInfoList,
+        pipelineChartInfo,
+        pipelineImageInfo,
+        pipelineSonarInfo,
+        pipelineJarInfo,
+        imageScan,
+        jobStatus,
+        openCodequalityModal,
+        handleJarDownload,
+        openMirrorScanningLog,
+        handleImageCopy,
+      })}
+    >
       <header>
         <StatusDot
           size={13}
