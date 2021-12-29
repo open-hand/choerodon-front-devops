@@ -11,21 +11,21 @@ import {
   CUSTOM_BUILD, MAVEN_BUILD, STEP_TEMPLATE, TASK_TEMPLATE,
 } from '@/routes/app-pipeline/CONSTANTS';
 
-const handleValidatorName = async (v: any, t: any, l: any) => {
+const handleValidatorName = async (v: any, t: any, l: any, id?: any) => {
   let res = true;
   if (l === 'project') {
     return true;
   }
   if (l === 'organization') {
     if (t === TASK_TEMPLATE) {
-      res = await ciTemplateJobApi.checkName(v);
+      res = await ciTemplateJobApi.checkName(v, id);
     } else if (t === STEP_TEMPLATE) {
-      res = await ciTemplateStepApi.checkOrgStepName(v);
+      res = await ciTemplateStepApi.checkOrgStepName(v, id);
     }
   } else if (t === TASK_TEMPLATE) {
-    res = await ciTemplateJobApi.checkJobName(v);
+    res = await ciTemplateJobApi.checkJobName(v, id);
   } else if (t === STEP_TEMPLATE) {
-    res = await ciTemplateStepApi.checkStepName(v);
+    res = await ciTemplateStepApi.checkStepName(v, id);
   }
   return !res ? '名称重复' : true;
 };
@@ -219,7 +219,12 @@ const Index = (appServiceId: any, data: any, level: any): any => {
         case 'name': {
           item.label = data?.template === TASK_TEMPLATE ? '任务模板名称' : '任务名称';
           item.maxLength = !data?.template ? 30 : 60;
-          item.validator = async (value: string) => handleValidatorName(value, template, level);
+          item.validator = async (value: string) => handleValidatorName(
+            value,
+            template,
+            level,
+            data?.id,
+          );
           break;
         }
         default: {
