@@ -18,6 +18,7 @@ const handleBuildModal = (
   handleJobAddCallback: any,
   advancedData?: any,
   level?: any,
+  title?: any,
 ) => {
   const { template } = data;
   function getTitle() {
@@ -30,7 +31,7 @@ const handleBuildModal = (
   }
 
   Modal.open({
-    title: getTitle(),
+    title: title || getTitle(),
     drawer: true,
     children: (
       <Index
