@@ -15,6 +15,9 @@ const BUILD_GO = 'go_build';
 const BUILD_MAVEN_PUBLISH = 'maven_publish';
 const BUILD_SONARQUBE = 'sonar';
 const BUILD_UPLOAD_CHART_CHOERODON = 'upload_chart';
+const MAVEN_UNIT_TEST = 'maven_unit_test';
+const GO_UNIT_TEST = 'go_unit_test';
+const NODE_JS_UNIT_TEST = 'node_js_unit_test';
 
 const STEPVO: any = {
   [BUILD_DOCKER]: 'dockerBuildConfig',
@@ -43,4 +46,7 @@ export {
   PIPELINE_TEMPLATE,
   TASK_TEMPLATE,
   STEP_TEMPLATE,
+  MAVEN_UNIT_TEST,
+  GO_UNIT_TEST,
+  NODE_JS_UNIT_TEST,
 };
