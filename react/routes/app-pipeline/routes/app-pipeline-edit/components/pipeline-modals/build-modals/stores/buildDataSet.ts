@@ -26,7 +26,7 @@ const handleValidatorName = async (v: any, t: any, l: any) => {
   } else if (t === STEP_TEMPLATE) {
     res = await ciTemplateStepApi.checkStepName(v);
   }
-  return res;
+  return !res ? '名称重复' : true;
 };
 
 const transformSubmitData = (ds: any) => {
