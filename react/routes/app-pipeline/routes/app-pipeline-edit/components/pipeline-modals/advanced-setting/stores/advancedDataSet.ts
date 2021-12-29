@@ -118,21 +118,26 @@ const Index = (data?: any, outSideAdvancedData?: any) => ({
   events: {
     create: async ({ dataSet, record }: any) => {
       const res = await record.getField(mapping.ciRunnerImage.name).options.query();
-      const {
-        [outsideAdvancedMapping.CIRunnerImage.name]: outsideImage,
-      } = outSideAdvancedData;
-      if (outsideImage !== res[0].value) {
-        record.getField(mapping.ciRunnerImage.name).options.loadData([
-          ...res,
-          {
-            text: outsideImage,
+      let flag = false;
+      if (outSideAdvancedData) {
+        const {
+          [outsideAdvancedMapping.CIRunnerImage.name]: outsideImage,
+        } = outSideAdvancedData;
+        if (outsideImage !== res[0].value) {
+          flag = true;
+          record.getField(mapping.ciRunnerImage.name).options.loadData([
+            ...res,
+            {
+              text: outsideImage,
+              value: outsideImage,
+            },
+          ]);
+          dataSet.loadData([transformLoadData(data, [{
             value: outsideImage,
-          },
-        ]);
-        dataSet.loadData([transformLoadData(data, [{
-          value: outsideImage,
-        }])]);
-      } else {
+          }])]);
+        }
+      }
+      if (!flag) {
         dataSet.loadData([transformLoadData(data, res)]);
       }
     },
