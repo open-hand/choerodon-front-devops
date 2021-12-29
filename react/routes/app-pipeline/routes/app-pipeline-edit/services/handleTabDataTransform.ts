@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 import map from 'lodash/map';
+import isEmpty from 'lodash/isEmpty';
 import { TabkeyTypes } from '@/routes/app-pipeline/interface';
 import { STAGE_CD, STAGE_CI } from '../stores/CONSTANTS';
 
@@ -37,7 +38,7 @@ export function handleTabDataTransform(tabsData:Record<TabkeyTypes, any>) {
   }
 
   if (ciConfigs && ciConfigs.length) {
-    finalData.devopsCiPipelineVariableDTOList = ciConfigs;
+    finalData.devopsCiPipelineVariableDTOList = ciConfigs.filter((obj:any) => !isEmpty(obj));
   }
 
   if (flowConfiguration && flowConfiguration.length) {
