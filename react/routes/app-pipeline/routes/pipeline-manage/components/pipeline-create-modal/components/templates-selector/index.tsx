@@ -12,6 +12,7 @@ import classNames from 'classnames';
 import PipelineTemplatesDataSet from '../../stores/PipelineTemplatesDataSet';
 import TemplatePreview from '../template-preview';
 import { DEFAULT_TMP_ID, DEFAULT_TMP } from '@/routes/app-pipeline/stores/CONSTANTS';
+import cutomizeImg from '../../assets/cutomize.png';
 
 export type TemplatesSelectorProps = {
   handleSelectTmpCallback:(tempData:any)=>void
@@ -83,7 +84,7 @@ const TemplatesSelector:FC<TemplatesSelectorProps> = (props) => {
         role="none"
       >
         <div className={`${prefixCls}-menu-item-image-container`}>
-          <img src={image} alt="" />
+          <img src={image || cutomizeImg} alt="" />
         </div>
         <span>{category}</span>
       </div>
