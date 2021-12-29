@@ -231,7 +231,6 @@ const mapping: {
     label: '市场服务及版本',
     textField: 'marketServiceName',
     valueField: 'id',
-    options: marketServiceVersionDataSet,
     dynamicProps: {
       label: ({ record }) => {
         if (record.get(mapping.productSource.name) === productSourceData[1].value) {
@@ -266,22 +265,6 @@ const mapping: {
     label: '服务版本',
     textField: 'version',
     valueField: 'id',
-    dynamicProps: {
-      required: ({ record }) => record?.get(mapping.productType.name) === productTypeData[0].value
-        && record?.get(
-          mapping.productSource.name,
-        ) === productSourceData[3].value,
-      lookupAxiosConfig: ({ record }) => {
-        if (record?.get(mapping.shareAppService.name)) {
-          return appServiceVersionApiConfig.getVersions(
-            record?.get(mapping.shareAppService.name),
-            true,
-            true,
-          );
-        }
-        return undefined;
-      },
-    },
 
   },
   repoAddress: {
@@ -348,7 +331,6 @@ const mapping: {
           mapping.productSource.name,
         ) === productSourceData[0].value,
     },
-    lookupAxiosConfig: () => nexusApiConfig.getServerList(),
   },
   projectProductRepo: {
     name: 'repositoryId',
@@ -356,18 +338,6 @@ const mapping: {
     label: '项目制品库',
     textField: 'neRepositoryName',
     valueField: 'repositoryId',
-    dynamicProps: {
-      required: ({ record }) => record?.get(mapping.productType.name) === productTypeData[1].value
-        && record?.get(
-          mapping.productSource.name,
-        ) === productSourceData[0].value,
-      lookupAxiosConfig: ({ record }) => {
-        if (record?.get(mapping.nexus.name)) {
-          return rdupmApiApiConfig.getMavenList(record?.get(mapping.nexus.name));
-        }
-        return undefined;
-      },
-    },
   },
   groupId: {
     name: 'groupId',
@@ -375,42 +345,6 @@ const mapping: {
     label: 'groupId',
     textField: 'name',
     valueField: 'value',
-    dynamicProps: {
-      required: ({ record }) => record?.get(mapping.productType.name) === productTypeData[1].value
-        && record?.get(
-          mapping.productSource.name,
-        ) === productSourceData[0].value,
-      lookupAxiosConfig: ({ record }) => {
-        if (record?.get(mapping.projectProductRepo.name)) {
-          return ({
-            ...rdupmApiApiConfig.getGroupId(
-              record?.get(mapping.projectProductRepo.name).repositoryId,
-            ),
-            transformResponse: (res) => {
-              function init(data: any) {
-                return data.map((i: any) => {
-                  if (typeof i === 'string') {
-                    return ({
-                      name: i,
-                      value: i,
-                    });
-                  }
-                  return i;
-                });
-              }
-              let newRes = res;
-              try {
-                newRes = JSON.parse(res);
-                return init(newRes);
-              } catch (e) {
-                return init(newRes);
-              }
-            },
-          });
-        }
-        return undefined;
-      },
-    },
   },
   artifactId: {
     name: 'artifactId',
@@ -418,42 +352,7 @@ const mapping: {
     label: 'artifactId',
     textField: 'name',
     valueField: 'value',
-    dynamicProps: {
-      required: ({ record }) => record?.get(mapping.productType.name) === productTypeData[1].value
-        && record?.get(
-          mapping.productSource.name,
-        ) === productSourceData[0].value,
-      lookupAxiosConfig: ({ record }) => {
-        if (record?.get(mapping.projectProductRepo.name)) {
-          return ({
-            ...rdupmApiApiConfig.getArtifactId(
-              record?.get(mapping.projectProductRepo.name).repositoryId,
-            ),
-            transformResponse: (res) => {
-              function init(data: any) {
-                return data.map((i: any) => {
-                  if (typeof i === 'string') {
-                    return ({
-                      name: i,
-                      value: i,
-                    });
-                  }
-                  return i;
-                });
-              }
-              let newRes = res;
-              try {
-                newRes = JSON.parse(res);
-                return init(newRes);
-              } catch (e) {
-                return init(newRes);
-              }
-            },
-          });
-        }
-        return undefined;
-      },
-    },
+
   },
   jarVersion: {
     name: 'version',
@@ -461,29 +360,6 @@ const mapping: {
     label: 'jar包版本',
     textField: 'version',
     valueField: 'version',
-    dynamicProps: {
-      required: ({ record }) => record?.get(mapping.productType.name) === productTypeData[1].value
-        && record?.get(
-          mapping.productSource.name,
-        ) === productSourceData[0].value,
-      lookupAxiosConfig: ({ record }) => {
-        if (
-          record?.get(mapping.projectProductRepo.name)
-          && record?.get(mapping.groupId.name)
-          && record?.get(mapping.artifactId.name)
-        ) {
-          return ({
-            ...rdupmApiApiConfig.getJarVersion({
-              artifactId: record?.get(mapping.artifactId.name),
-              groupId: record?.get(mapping.groupId.name),
-              repositoryId: record?.get(mapping.projectProductRepo.name).repositoryId,
-              repositoryName: record?.get(mapping.projectProductRepo.name).neRepositoryName,
-            }),
-          });
-        }
-        return undefined;
-      },
-    },
   },
   CPUReserved: {
     name: 'requestCpu',
@@ -528,7 +404,6 @@ const mapping: {
   portConfig: {
     name: 'portConfig',
     type: 'object' as FieldType,
-    options: new DataSet(portConfigDataSet()),
   },
   enVariable: {
     name: 'enVariable',
@@ -694,6 +569,166 @@ const conGroupDataSet = (
               }),
             },
           });
+        }
+        case 'marketServiceVersion': {
+          item.options = marketServiceVersionDataSet;
+          break;
+        }
+        case 'shareServiceVersion': {
+          item.dynamicProps = {
+            required: ({ record }) => record?.get(
+              mapping.productType.name,
+            ) === productTypeData[0].value
+              && record?.get(
+                mapping.productSource.name,
+              ) === productSourceData[3].value,
+            lookupAxiosConfig: ({ record }) => {
+              if (record?.get(mapping.shareAppService.name)) {
+                return appServiceVersionApiConfig.getVersions(
+                  record?.get(mapping.shareAppService.name),
+                  true,
+                  true,
+                );
+              }
+              return undefined;
+            },
+          };
+          break;
+        }
+        case 'nexus': {
+          item.lookupAxiosConfig = () => nexusApiConfig.getServerList();
+          break;
+        }
+        case 'projectProductRepo': {
+          item.dynamicProps = {
+            required: ({ record }) => record?.get(
+              mapping.productType.name,
+            ) === productTypeData[1].value
+              && record?.get(
+                mapping.productSource.name,
+              ) === productSourceData[0].value,
+            lookupAxiosConfig: ({ record }) => {
+              if (record?.get(mapping.nexus.name)) {
+                return rdupmApiApiConfig.getMavenList(record?.get(mapping.nexus.name));
+              }
+              return undefined;
+            },
+          };
+          break;
+        }
+        case 'groupId': {
+          item.dynamicProps = {
+            required: ({ record }) => record?.get(
+              mapping.productType.name,
+            ) === productTypeData[1].value
+              && record?.get(
+                mapping.productSource.name,
+              ) === productSourceData[0].value,
+            lookupAxiosConfig: ({ record }) => {
+              if (record?.get(mapping.projectProductRepo.name)) {
+                return ({
+                  ...rdupmApiApiConfig.getGroupId(
+                    record?.get(mapping.projectProductRepo.name).repositoryId,
+                  ),
+                  transformResponse: (res) => {
+                    function init(data: any) {
+                      return data.map((j: any) => {
+                        if (typeof i === 'string') {
+                          return ({
+                            name: j,
+                            value: j,
+                          });
+                        }
+                        return j;
+                      });
+                    }
+                    let newRes = res;
+                    try {
+                      newRes = JSON.parse(res);
+                      return init(newRes);
+                    } catch (e) {
+                      return init(newRes);
+                    }
+                  },
+                });
+              }
+              return undefined;
+            },
+          };
+          break;
+        }
+        case 'artifactId': {
+          item.dynamicProps = {
+            required: ({ record }) => record?.get(
+              mapping.productType.name,
+            ) === productTypeData[1].value
+              && record?.get(
+                mapping.productSource.name,
+              ) === productSourceData[0].value,
+            lookupAxiosConfig: ({ record }) => {
+              if (record?.get(mapping.projectProductRepo.name)) {
+                return ({
+                  ...rdupmApiApiConfig.getArtifactId(
+                    record?.get(mapping.projectProductRepo.name).repositoryId,
+                  ),
+                  transformResponse: (res) => {
+                    function init(data: any) {
+                      return data.map((j: any) => {
+                        if (typeof i === 'string') {
+                          return ({
+                            name: j,
+                            value: j,
+                          });
+                        }
+                        return j;
+                      });
+                    }
+                    let newRes = res;
+                    try {
+                      newRes = JSON.parse(res);
+                      return init(newRes);
+                    } catch (e) {
+                      return init(newRes);
+                    }
+                  },
+                });
+              }
+              return undefined;
+            },
+          };
+          break;
+        }
+        case 'jarVersion': {
+          item.dynamicProps = {
+            required: ({ record }) => record?.get(
+              mapping.productType.name,
+            ) === productTypeData[1].value
+              && record?.get(
+                mapping.productSource.name,
+              ) === productSourceData[0].value,
+            lookupAxiosConfig: ({ record }) => {
+              if (
+                record?.get(mapping.projectProductRepo.name)
+                && record?.get(mapping.groupId.name)
+                && record?.get(mapping.artifactId.name)
+              ) {
+                return ({
+                  ...rdupmApiApiConfig.getJarVersion({
+                    artifactId: record?.get(mapping.artifactId.name),
+                    groupId: record?.get(mapping.groupId.name),
+                    repositoryId: record?.get(mapping.projectProductRepo.name).repositoryId,
+                    repositoryName: record?.get(mapping.projectProductRepo.name).neRepositoryName,
+                  }),
+                });
+              }
+              return undefined;
+            },
+          };
+          break;
+        }
+        case 'portConfig': {
+          item.options = new DataSet(portConfigDataSet());
+          break;
         }
         default: {
           break;

@@ -91,7 +91,6 @@ const mapping: {
     label: '主机',
     textField: 'name',
     valueField: 'id',
-    options: new DataSet(hostDataSetConfig()),
   },
   jarSource: {
     name: 'sourceType',
@@ -115,7 +114,6 @@ const mapping: {
         mapping.jarSource.name,
       ) === productSourceData[0].value,
     },
-    lookupAxiosConfig: () => nexusApiConfig.getServerList(),
   },
   projectProductRepo: {
     name: 'repositoryId',
@@ -123,17 +121,6 @@ const mapping: {
     label: '项目制品库',
     textField: 'neRepositoryName',
     valueField: 'repositoryId',
-    dynamicProps: {
-      required: ({ record }) => record?.get(
-        mapping.jarSource.name,
-      ) === productSourceData[0].value,
-      lookupAxiosConfig: ({ record }) => {
-        if (record?.get(mapping.nexus.name)) {
-          return rdupmApiApiConfig.getMavenList(record?.get(mapping.nexus.name));
-        }
-        return undefined;
-      },
-    },
   },
   groupId: {
     name: 'groupId',
@@ -141,42 +128,7 @@ const mapping: {
     label: 'groupId',
     textField: 'name',
     valueField: 'value',
-    dynamicProps: {
-      required: ({ record }) => record?.get(
-        mapping.jarSource.name,
-      ) === productSourceData[0].value,
-      lookupAxiosConfig: ({ record }) => {
-        if (record?.get(mapping.projectProductRepo.name)) {
-          return ({
-            ...rdupmApiApiConfig.getGroupId(
-              record?.get(mapping.projectProductRepo.name).repositoryId
-              || record?.get(mapping.projectProductRepo.name),
-            ),
-            transformResponse: (res) => {
-              function init(data: any) {
-                return data.map((i: any) => {
-                  if (typeof i === 'string') {
-                    return ({
-                      name: i,
-                      value: i,
-                    });
-                  }
-                  return i;
-                });
-              }
-              let newRes = res;
-              try {
-                newRes = JSON.parse(res);
-                return init(newRes);
-              } catch (e) {
-                return init(newRes);
-              }
-            },
-          });
-        }
-        return undefined;
-      },
-    },
+
   },
   artifactId: {
     name: 'artifactId',
@@ -184,42 +136,6 @@ const mapping: {
     label: 'artifactId',
     textField: 'name',
     valueField: 'value',
-    dynamicProps: {
-      required: ({ record }) => record?.get(
-        mapping.jarSource.name,
-      ) === productSourceData[0].value,
-      lookupAxiosConfig: ({ record }) => {
-        if (record?.get(mapping.projectProductRepo.name)) {
-          return ({
-            ...rdupmApiApiConfig.getArtifactId(
-              record?.get(mapping.projectProductRepo.name).repositoryId
-              || record?.get(mapping.projectProductRepo.name),
-            ),
-            transformResponse: (res) => {
-              function init(data: any) {
-                return data.map((i: any) => {
-                  if (typeof i === 'string') {
-                    return ({
-                      name: i,
-                      value: i,
-                    });
-                  }
-                  return i;
-                });
-              }
-              let newRes = res;
-              try {
-                newRes = JSON.parse(res);
-                return init(newRes);
-              } catch (e) {
-                return init(newRes);
-              }
-            },
-          });
-        }
-        return undefined;
-      },
-    },
   },
   jarVersion: {
     name: 'version',
@@ -227,29 +143,6 @@ const mapping: {
     label: 'jar包版本',
     textField: 'version',
     valueField: 'version',
-    dynamicProps: {
-      required: ({ record }) => record?.get(
-        mapping.jarSource.name,
-      ) === productSourceData[0].value,
-      lookupAxiosConfig: ({ record }) => {
-        if (
-          record?.get(mapping.projectProductRepo.name)
-          && record?.get(mapping.groupId.name)
-          && record?.get(mapping.artifactId.name)
-        ) {
-          return ({
-            ...rdupmApiApiConfig.getJarVersion({
-              artifactId: record?.get(mapping.artifactId.name),
-              groupId: record?.get(mapping.groupId.name),
-              repositoryId: record?.get(mapping.projectProductRepo.name).repositoryId
-                || record?.get(mapping.projectProductRepo.name),
-              repositoryName: record?.get(mapping.projectProductRepo.name).neRepositoryName,
-            }),
-          });
-        }
-        return undefined;
-      },
-    },
   },
   marketAppVersion: {
     name: 'marketAppVersion',
@@ -272,38 +165,6 @@ const mapping: {
     label: '市场服务及版本',
     textField: 'marketServiceName',
     valueField: 'id',
-    dynamicProps: {
-      required: ({ record }) => [
-        productSourceData[1].value,
-        productSourceData[2].value,
-      ].includes(record?.get(
-        mapping.jarSource.name,
-      )),
-      lookupAxiosConfig: ({ record }) => {
-        if (record?.get(mapping.marketAppVersion.name)) {
-          return ({
-            ...deployApiConfig.deployVersion(record?.get(mapping.marketAppVersion.name), 'jar'),
-            transformResponse: (res: any) => {
-              function init(dt: any) {
-                return dt.map((d: any) => {
-                  const newD = d;
-                  newD.id = newD.marketServiceDeployObjectVO.id;
-                  return newD;
-                });
-              }
-              let newRes = res;
-              try {
-                newRes = JSON.parse(res);
-                return init(newRes);
-              } catch (e) {
-                return init(newRes);
-              }
-            },
-          });
-        }
-        return undefined;
-      },
-    },
   },
   value: {
     name: 'preCommand',
@@ -372,6 +233,7 @@ const hostAppConfigDataSet = (modal: any, detail: any): DataSetProps => ({
         if (detail) {
           item.required = true;
         }
+        item.options = new DataSet(hostDataSetConfig());
         break;
       }
       case 'marketAppVersion': {
@@ -405,6 +267,163 @@ const hostAppConfigDataSet = (modal: any, detail: any): DataSetProps => ({
             }),
           },
         });
+      }
+      case 'nexus': {
+        item.lookupAxiosConfig = () => nexusApiConfig.getServerList();
+        break;
+      }
+      case 'projectProductRepo': {
+        item.dynamicProps = {
+          required: ({ record }) => record?.get(
+            mapping.jarSource.name,
+          ) === productSourceData[0].value,
+          lookupAxiosConfig: ({ record }) => {
+            if (record?.get(mapping.nexus.name)) {
+              return rdupmApiApiConfig.getMavenList(record?.get(mapping.nexus.name));
+            }
+            return undefined;
+          },
+        };
+        break;
+      }
+      case 'groupId': {
+        item.dynamicProps = {
+          required: ({ record }) => record?.get(
+            mapping.jarSource.name,
+          ) === productSourceData[0].value,
+          lookupAxiosConfig: ({ record }) => {
+            if (record?.get(mapping.projectProductRepo.name)) {
+              return ({
+                ...rdupmApiApiConfig.getGroupId(
+                  record?.get(mapping.projectProductRepo.name).repositoryId
+                  || record?.get(mapping.projectProductRepo.name),
+                ),
+                transformResponse: (res) => {
+                  function init(data: any) {
+                    return data.map((j: any) => {
+                      if (typeof j === 'string') {
+                        return ({
+                          name: j,
+                          value: j,
+                        });
+                      }
+                      return j;
+                    });
+                  }
+                  let newRes = res;
+                  try {
+                    newRes = JSON.parse(res);
+                    return init(newRes);
+                  } catch (e) {
+                    return init(newRes);
+                  }
+                },
+              });
+            }
+            return undefined;
+          },
+        };
+        break;
+      }
+      case 'artifactId': {
+        item.dynamicProps = {
+          required: ({ record }) => record?.get(
+            mapping.jarSource.name,
+          ) === productSourceData[0].value,
+          lookupAxiosConfig: ({ record }) => {
+            if (record?.get(mapping.projectProductRepo.name)) {
+              return ({
+                ...rdupmApiApiConfig.getArtifactId(
+                  record?.get(mapping.projectProductRepo.name).repositoryId
+                  || record?.get(mapping.projectProductRepo.name),
+                ),
+                transformResponse: (res) => {
+                  function init(data: any) {
+                    return data.map((j: any) => {
+                      if (typeof j === 'string') {
+                        return ({
+                          name: j,
+                          value: j,
+                        });
+                      }
+                      return j;
+                    });
+                  }
+                  let newRes = res;
+                  try {
+                    newRes = JSON.parse(res);
+                    return init(newRes);
+                  } catch (e) {
+                    return init(newRes);
+                  }
+                },
+              });
+            }
+            return undefined;
+          },
+        };
+        break;
+      }
+      case 'jarVersion': {
+        item.dynamicProps = {
+          required: ({ record }) => record?.get(
+            mapping.jarSource.name,
+          ) === productSourceData[0].value,
+          lookupAxiosConfig: ({ record }) => {
+            if (
+              record?.get(mapping.projectProductRepo.name)
+              && record?.get(mapping.groupId.name)
+              && record?.get(mapping.artifactId.name)
+            ) {
+              return ({
+                ...rdupmApiApiConfig.getJarVersion({
+                  artifactId: record?.get(mapping.artifactId.name),
+                  groupId: record?.get(mapping.groupId.name),
+                  repositoryId: record?.get(mapping.projectProductRepo.name).repositoryId
+                    || record?.get(mapping.projectProductRepo.name),
+                  repositoryName: record?.get(mapping.projectProductRepo.name).neRepositoryName,
+                }),
+              });
+            }
+            return undefined;
+          },
+        };
+        break;
+      }
+      case 'marketServiceVersion': {
+        item.dynamicProps = {
+          required: ({ record }) => [
+            productSourceData[1].value,
+            productSourceData[2].value,
+          ].includes(record?.get(
+            mapping.jarSource.name,
+          )),
+          lookupAxiosConfig: ({ record }) => {
+            if (record?.get(mapping.marketAppVersion.name)) {
+              return ({
+                ...deployApiConfig.deployVersion(record?.get(mapping.marketAppVersion.name), 'jar'),
+                transformResponse: (res: any) => {
+                  function init(dt: any) {
+                    return dt.map((d: any) => {
+                      const newD = d;
+                      newD.id = newD.marketServiceDeployObjectVO.id;
+                      return newD;
+                    });
+                  }
+                  let newRes = res;
+                  try {
+                    newRes = JSON.parse(res);
+                    return init(newRes);
+                  } catch (e) {
+                    return init(newRes);
+                  }
+                },
+              });
+            }
+            return undefined;
+          },
+        };
+        break;
       }
       default: {
         break;

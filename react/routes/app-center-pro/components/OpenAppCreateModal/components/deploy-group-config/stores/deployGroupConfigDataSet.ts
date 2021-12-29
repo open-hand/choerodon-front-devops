@@ -61,7 +61,6 @@ const mapping: {
     name: 'envId',
     type: 'string' as FieldType,
     label: '环境',
-    options: new DataSet(envDataSet),
     textField: 'name',
     valueField: 'id',
   },
@@ -187,6 +186,7 @@ const deployGroupConfigDataSet = (
           required: () => !isPipeline && detail,
         };
         item.disabled = Boolean(envId);
+        item.options = new DataSet(envDataSet);
         break;
       }
       case 'appName': {

@@ -12,7 +12,6 @@ const mapping: {
     required: false,
     textField: 'name',
     valueField: 'id',
-    options: new DataSet(hostDataSetConfig()),
   },
   fileName: {
     name: 'fileName',
@@ -70,7 +69,19 @@ const mapping: {
 
 const hostOtherProductDataSet = (): DataSetProps => ({
   autoCreate: true,
-  fields: Object.keys(mapping).map((i) => mapping[i]),
+  fields: Object.keys(mapping).map((i) => {
+    const item = mapping[i];
+    switch (i) {
+      case 'host': {
+        item.options = new DataSet(hostDataSetConfig());
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+    return item;
+  }),
 });
 
 export default hostOtherProductDataSet;
