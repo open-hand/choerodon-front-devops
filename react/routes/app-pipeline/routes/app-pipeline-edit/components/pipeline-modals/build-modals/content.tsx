@@ -23,7 +23,7 @@ import {
   BUILD_SONARQUBE,
   BUILD_UPLOAD_CHART_CHOERODON,
   TASK_TEMPLATE,
-  STEP_TEMPLATE, MAVEN_BUILD, CUSTOM_BUILD,
+  STEP_TEMPLATE, MAVEN_BUILD, CUSTOM_BUILD, MAVEN_UNIT_TEST, GO_UNIT_TEST, NODE_JS_UNIT_TEST,
 } from '@/routes/app-pipeline/CONSTANTS';
 import {
   mapping as StepMapping,
@@ -437,6 +437,23 @@ const Index = observer(() => {
         result = (
           <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={2}>
             <TextField name={StepMapping.stepName.name} />
+          </Form>
+        );
+        break;
+      }
+      case MAVEN_UNIT_TEST: case GO_UNIT_TEST: case NODE_JS_UNIT_TEST: {
+        result = (
+          <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={2}>
+            <TextField name={StepMapping.stepName.name} />
+            <YamlEditor
+              showError={false}
+              value={itemRecord.get(StepMapping.script.name)}
+              onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
+              newLine
+              colSpan={2}
+              readOnly={disabled || template === TASK_TEMPLATE}
+              modeChange={false}
+            />
           </Form>
         );
         break;
