@@ -625,7 +625,13 @@ const DetailItem = (props) => {
     );
   };
 
-  const isDetailItemClickable = ['success', 'failed'].includes(jobStatus);
+  const isDetailItemClickable = ['success', 'failed'].includes(jobStatus) && (
+    pipelineChartInfo
+    || pipelineImageInfo
+    || pipelineSonarInfo
+    || pipelineJarInfo
+    || devopsCiUnitTestReportInfoList
+  );
 
   const detailItemCls = classnames(`${prefixCls}-item`, {
     [`${prefixCls}-item-clickable`]: isDetailItemClickable,
