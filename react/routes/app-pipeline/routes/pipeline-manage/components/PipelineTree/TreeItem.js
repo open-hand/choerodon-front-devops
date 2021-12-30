@@ -12,7 +12,6 @@ import includes from 'lodash/includes';
 import { usePipelineManageStore } from '../../stores';
 import TimePopover from '@/components/timePopover';
 import eventStopProp from '@/utils/eventStopProp';
-import PipelineType from '../pipeline-type';
 import ExecuteContent from './execute-content';
 import TreeItemName from '@/components/treeitem-name';
 import { usePipelineTreeStore } from './stores';
@@ -293,7 +292,6 @@ const TreeItem = observer(({ record, search }) => {
     return (
       <div className={`${prefixCls}-sidebar-header-parent`}>
         <div className={`${prefixCls}-sidebar-header`}>
-          <PipelineType name={name} type={triggerType} />
           <Tooltip title={`${name}(${appServiceName})`} placement="top">
             <span className={`${prefixCls}-sidebar-header-name`}>
               <TreeItemName name={name} search={search} headSpace={false} />
