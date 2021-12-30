@@ -219,9 +219,7 @@ const Index = observer(() => {
       ...transformSubmitData(BuildDataSet),
       devopsCiStepVOList: stepDataSetTransformSubmitData(StepDataSet),
       ...advancedTransformSubmitData(advancedRef?.current?.getDataSet()),
-      ciTemplateJobGroupDTO: {
-        type,
-      },
+      groupType: type,
       type,
       // TODO 待删
       appService,
