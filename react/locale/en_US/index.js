@@ -231,6 +231,9 @@ const enUS = {
   'apptag.link': '',
   'apptag.table': 'Tag list',
 
+  'c7ncd.environment.description': 'Description',
+  appService: 'App Service',
+
 };
 export { enUS };
 export * from './components';
