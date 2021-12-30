@@ -75,7 +75,7 @@ const Index = observer(({
 
   const handleChangeText = (v: string, index: number) => {
     if (v) {
-      const res = validatorName(v);
+      const res = validatorName(v, index);
       funcList[index] = {
         ...funcList[index],
         name: v,
@@ -115,8 +115,10 @@ const Index = observer(({
     });
   };
 
-  const validatorName = (value: string) => {
-    const flag = funcList.some((i: any) => i.name === value);
+  const validatorName = (value: string, index: any) => {
+    const arr = funcList;
+    arr[index].name = value;
+    const flag = arr.filter((i: any) => i.name === value)?.length > 1;
     if (flag) {
       return '函数名称不可重复';
     }
@@ -143,7 +145,7 @@ const Index = observer(({
             maxLength={60}
             onChange={(v: string) => console.log(v)}
             onBlur={(e) => handleChangeText(e.target.value, index)}
-            validator={validatorName}
+            validator={(value) => validatorName(value, index)}
           />
         ) : (
           <Tooltip title={item.name}>

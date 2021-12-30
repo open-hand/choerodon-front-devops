@@ -42,93 +42,12 @@ import AdvancedSetting from '../advanced-setting';
 import StepTitle from '../step-title';
 import SideStep, { typeProps } from '../side-step';
 import AddStep from './components/add-step';
+import StepContent from './components/step-content';
 import MavenBuildAdvancedSetting from './components/mavenBuild-advancedSetting';
 
 import './index.less';
 
 const prefix = 'c7ncd-buildModal-content';
-
-const DockerDom = observer(({
-  record,
-  disabled,
-}: any) => (
-  <>
-    <Form disabled={disabled} record={record} columns={2}>
-      <TextField name={StepMapping.stepName.name} />
-      <TextField
-        newLine
-        name={StepMapping.dockerFilePath.name}
-      />
-      <TextField name={StepMapping.imageContext.name} />
-      <SelectBox name={StepMapping.TLS.name} />
-      <SelectBox name={StepMapping.imageSafeScan.name} />
-      {
-        record.get(StepMapping.imageSafeScan.name) && (
-          <SelectBox name={StepMapping.imagePublishGuard.name} />
-        )
-      }
-    </Form>
-    {
-      record.get(StepMapping.imageSafeScan.name)
-      && record.get(StepMapping.imagePublishGuard.name) && (
-        <>
-          <p>门禁限制</p>
-          <Form disabled={disabled} columns={3} record={record}>
-            <Select name={StepMapping.bugLevel.name} />
-            <Select name={StepMapping.symbol.name} />
-            <NumberField name={StepMapping.condition.name} />
-          </Form>
-        </>
-      )
-    }
-  </>
-));
-
-const SonarDom = observer(({
-  record,
-  disabled,
-}: any) => (
-  <Form disabled={disabled} record={record} columns={2}>
-    <TextField name={StepMapping.stepName.name} />
-    <Select name={StepMapping.examType.name} />
-    {
-      (function () {
-        if (record.get(StepMapping.examType.name) === scanTypeData[0].value) {
-          return <TextField name={StepMapping.scanPath.name} />;
-        }
-        if (record.get(StepMapping.examType.name) === scanTypeData[1].value) {
-          return <SelectBox name={StepMapping.whetherMavenSingleMeasure.name} />;
-        }
-        return '';
-      }())
-    }
-    <SelectBox
-      name={StepMapping.sonarqubeConfigWay.name}
-      newLine
-    />
-    {
-      record.get(StepMapping.sonarqubeConfigWay.name) === sonarConfigData[1].value && (
-        <>
-          <SelectBox
-            name={StepMapping.sonarqubeAccountConfig.name}
-          />
-          {
-            record.get(StepMapping.sonarqubeAccountConfig.name) === accountConfigData[0].value ? (
-              <>
-                <TextField name={StepMapping.username.name} />
-                <TextField name={StepMapping.password.name} />
-              </>
-            ) : (
-              <TextField name={StepMapping.token.name} />
-            )
-          }
-          <TextField name={StepMapping.address.name} />
-        </>
-      )
-    }
-
-  </Form>
-));
 
 const Index = observer(() => {
   const {
@@ -219,7 +138,13 @@ const Index = observer(() => {
               // overlay: addStepMenu,
               }]}
             />
-            {renderSteps(stepData)}
+            <StepContent
+              stepData={stepData}
+              disabled={disabled}
+              template={template}
+              prefix={prefix}
+              dataSet={StepDataSet}
+            />
             <div
               style={{
                 marginTop: stepData.length > 0 ? 0 : 20,
@@ -317,231 +242,11 @@ const Index = observer(() => {
     modal.handleOk(() => handleOk(true));
   }
 
-  const renderStepItemForm = (itemRecord: Record) => {
-    let result: any = '';
-    switch (itemRecord.get(StepMapping.type.name)) {
-      case BUILD_MAVEN: {
-        result = (
-          <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={2}>
-            <TextField name={StepMapping.stepName.name} />
-            <Select name={StepMapping.projectRelyRepo.name} />
-            {/* @ts-ignore */}
-            <div colSpan={2}>
-              <MavenBuildAdvancedSetting
-                prefix={prefix}
-                record={itemRecord}
-              />
-            </div>
-            <YamlEditor
-              newLine
-              colSpan={2}
-              showError={false}
-              readOnly={disabled || template === TASK_TEMPLATE}
-              modeChange={false}
-              value={itemRecord.get(StepMapping.script.name)}
-              onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
-            />
-          </Form>
-        );
-        break;
-      }
-      case BUILD_NPM: {
-        result = (
-          <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={2}>
-            <TextField name={StepMapping.stepName.name} />
-            <YamlEditor
-              value={itemRecord.get(StepMapping.script.name)}
-              onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
-              newLine
-              colSpan={2}
-              readOnly={disabled || template === TASK_TEMPLATE}
-              modeChange={false}
-              showError={false}
-            />
-          </Form>
-        );
-        break;
-      }
-      case BUILD_DOCKER: {
-        result = (
-          <DockerDom
-            disabled={disabled || template === TASK_TEMPLATE}
-            record={itemRecord}
-          />
-        );
-        break;
-      }
-      case BUILD_UPLOADJAR: {
-        result = (
-          <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={2}>
-            <TextField name={StepMapping.stepName.name} />
-            <Select name={StepMapping.targetProductsLibrary.name} />
-            <YamlEditor
-              value={itemRecord.get(StepMapping.script.name)}
-              onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
-              newLine
-              colSpan={2}
-              readOnly={disabled || template === TASK_TEMPLATE}
-              modeChange={false}
-              showError={false}
-            />
-          </Form>
-        );
-        break;
-      }
-      case BUILD_GO: {
-        result = (
-          <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={2}>
-            <TextField name={StepMapping.stepName.name} />
-            <YamlEditor
-              showError={false}
-              value={itemRecord.get(StepMapping.script.name)}
-              onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
-              newLine
-              colSpan={2}
-              readOnly={disabled || template === TASK_TEMPLATE}
-              modeChange={false}
-            />
-          </Form>
-        );
-        break;
-      }
-      case BUILD_MAVEN_PUBLISH: {
-        result = (
-          <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={2}>
-            <TextField name={StepMapping.stepName.name} />
-            <Select name={StepMapping.targetProductsLibrary.name} />
-            <Select colSpan={2} name={StepMapping.projectRelyRepo.name} />
-            {/* @ts-ignore */}
-            <div colSpan={2}>
-              <MavenBuildAdvancedSetting
-                prefix={prefix}
-                record={itemRecord}
-              />
-            </div>
-            <YamlEditor
-              showError={false}
-              value={itemRecord.get(StepMapping.script.name)}
-              onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
-              newLine
-              colSpan={2}
-              readOnly={disabled || template === TASK_TEMPLATE}
-              modeChange={false}
-            />
-          </Form>
-        );
-        break;
-      }
-      case BUILD_SONARQUBE: {
-        result = <SonarDom disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} />;
-        break;
-      }
-      case BUILD_UPLOAD_CHART_CHOERODON: {
-        result = (
-          <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={2}>
-            <TextField name={StepMapping.stepName.name} />
-          </Form>
-        );
-        break;
-      }
-      case MAVEN_UNIT_TEST: case GO_UNIT_TEST: case NODE_JS_UNIT_TEST: {
-        result = (
-          <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={2}>
-            <TextField name={StepMapping.stepName.name} />
-            <YamlEditor
-              showError={false}
-              value={itemRecord.get(StepMapping.script.name)}
-              onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
-              newLine
-              colSpan={2}
-              readOnly={disabled || template === TASK_TEMPLATE}
-              modeChange={false}
-            />
-          </Form>
-        );
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-    return result;
-  };
-
   const handleExpand = (value: boolean) => {
     stepData.forEach((record: Record) => {
       record.set(StepMapping.expand.name, value);
     });
   };
-
-  const renderStepItem = (record: any, index: number) => (
-    // TODO 这里要改
-    <Draggable draggableId={String(record.id)} index={index}>
-      {(dragProvided: any, dragSnapshot: any) => (
-        <div
-          className={`${prefix}__stepItem`}
-          ref={dragProvided.innerRef}
-          {...dragProvided.draggableProps}
-        >
-          <div
-            className={`${prefix}__stepItem__side`}
-            {...dragProvided.dragHandleProps}
-          >
-            <Icon type="baseline-drag_indicator" />
-          </div>
-          <div className={`${prefix}__stepItem__main`}>
-            <div className={`${prefix}__stepItem__main__first`}>
-              <div className={`${prefix}__stepItem__main__first__left`}>
-                <Icon
-                  className={`${prefix}__stepItem__main__expand`}
-                  type={record.get(StepMapping.expand.name) ? 'arrow_drop_down' : 'arrow_drop_up'}
-                  onClick={() => {
-                    record.set(StepMapping.expand.name, !record.get(StepMapping.expand.name));
-                  }}
-                />
-                <p className={`${prefix}__stepItem__main__name`}>{ record.get(StepMapping.name.name) }</p>
-              </div>
-              {
-                !disabled && (
-                  <Icon
-                    className={`${prefix}__stepItem__main__first__remove`}
-                    type="remove_circle_outline"
-                    onClick={() => {
-                      StepDataSet.delete([record], false);
-                    }}
-                  />
-                )
-              }
-            </div>
-            {record.get(StepMapping.expand.name) && renderStepItemForm(record)}
-          </div>
-        </div>
-      )}
-    </Draggable>
-  );
-
-  const renderSteps = (ds: any) => (
-    <DragDropContext
-      onDragEnd={(d: any) => console.log(d)}
-    >
-      <Droppable droppableId="context">
-        {(provided: any, snapshot: any) => (
-          <div
-            ref={provided.innerRef}
-            style={{
-              // background: snapshot.isDraggingOver ? 'blue' : 'white',
-            }}
-            {...provided.droppableProps}
-          >
-            {
-              ds?.map((record: Record, index: number) => renderStepItem(record, index))
-            }
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
-  );
 
   const renderTriggerValue = (ds: any) => {
     if (ds.current?.get(mapping.triggerType.name) === triggerTypeOptionsData[1].value) {

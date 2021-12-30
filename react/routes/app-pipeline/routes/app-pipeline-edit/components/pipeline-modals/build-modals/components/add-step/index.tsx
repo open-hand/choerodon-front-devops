@@ -26,7 +26,10 @@ const Index = ({
 
   const handleMenuClick = (e: any) => {
     const { key } = e;
-    ds.create(transformLoadDataItem(JSON.parse(key), ds?.records.length));
+    ds.loadData([
+      ...ds.toData(),
+      transformLoadDataItem(JSON.parse(key), ds?.records.length),
+    ]);
   };
 
   const renderMenuItem = (d: any) => {
