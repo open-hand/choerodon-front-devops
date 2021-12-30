@@ -9,7 +9,7 @@ import {
 import { Content, Choerodon } from '@choerodon/master';
 import classnames from 'classnames';
 import _ from 'lodash';
-import uuidv1 from 'uuid/v1';
+import uuidv1 from 'uuid';
 import PipelineCreateStore from '../../stores/PipelineCreateStore';
 import Tips from '../../../../components/Tips';
 import YamlEditor from '../../../../components/yamlEditor';

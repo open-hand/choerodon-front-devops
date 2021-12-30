@@ -260,6 +260,29 @@ const ImportForm = injectIntl(observer((props) => {
         </>
       )}
 
+      {(platformType === 'gerneralGit') && (
+      <Form columns={3} record={record}>
+        <TextField
+          colSpan={2}
+          name="repositoryUrl"
+          addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.address.${platformType}.tips` })} />}
+        />
+        <TextField
+          colSpan={1}
+          name="username"
+          newLine
+          addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.username.tips` })} />}
+        />
+        <TextField
+          colSpan={1}
+          name="password"
+        />
+        <Select name="type" clearButton={false} colSpan={1} newLine />
+        <TextField name="name" colSpan={1} />
+        <TextField name="code" colSpan={1} />
+      </Form>
+      )}
+
     </div>
   );
 }));

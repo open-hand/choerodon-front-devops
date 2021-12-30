@@ -6,7 +6,7 @@
  */
 const appService = {
   'c7ncd.appService.title': '应用服务',
-  'c7ncd.appService.searchAppService': '搜索用用服务',
+  'c7ncd.appService.searchAppService': '搜索应用服务',
   'c7ncd.appService.permissionManage': '权限管理',
   'c7ncd.appService.importAppService': '导入应用服务',
   'c7ncd.appService.createAppService': '创建应用服务',

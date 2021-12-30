@@ -1,5 +1,5 @@
 /* eslint-disable import/no-anonymous-default-export */
-import uuidV1 from 'uuid/v1';
+import uuidV1 from 'uuid';
 import { axios, apiTestApiConfig } from '@choerodon/master';
 import forEach from 'lodash/forEach';
 import JSONbig from 'json-bigint';
