@@ -6,8 +6,8 @@ import './index.less';
 
 const CustomHeader = memo(({ show }) => (
   <div className="c7ncd-custom-header">
-    {show && <div className="c7ncd-custom-header-placeholder" />}
     <Breadcrumb />
+    {/* {show && <div className="c7ncd-custom-header-placeholder" />} */}
   </div>
 ));
 
