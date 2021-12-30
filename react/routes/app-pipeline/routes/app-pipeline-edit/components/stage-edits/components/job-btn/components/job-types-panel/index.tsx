@@ -16,7 +16,7 @@ import './index.less';
 import useGetJobPanel from '../../../../hooks/useGetJobPanel';
 import { templateJobsApi } from '@/api/template-jobs';
 import useTabData from '@/routes/app-pipeline/routes/app-pipeline-edit/hooks/useTabData';
-import { TAB_BASIC, TAB_ADVANCE_SETTINGS, TAB_FLOW_CONFIG } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
+import { TAB_BASIC, TAB_ADVANCE_SETTINGS } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
 import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
 
 export type JobTypesPanelProps = {
@@ -86,7 +86,6 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props: { handleJobAddCallback: any
       data: stepData,
       callback: handleJobAddCallback,
       advancedData: getTabData(TAB_ADVANCE_SETTINGS),
-      stageData: getTabData(TAB_FLOW_CONFIG),
       level,
     });
   };
