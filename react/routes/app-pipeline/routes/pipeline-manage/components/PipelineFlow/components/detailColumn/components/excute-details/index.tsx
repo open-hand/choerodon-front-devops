@@ -53,7 +53,7 @@ const ExcuteDetails:FC<ExcuteDetailsProps> = (props) => {
 
   const renderUnitSection = () => devopsCiUnitTestReportInfoList.map((item:any) => {
     const {
-      type, passes, reportUrl, failures, skipped, tests,
+      type, passes, reportUrl, failures, skipped, tests, successRate = 0,
     } = item;
     const unitType:any = {
       maven_unit_test: {
@@ -107,7 +107,7 @@ const ExcuteDetails:FC<ExcuteDetailsProps> = (props) => {
         <footer>
           <span>单元测试通过率：</span>
           <span>
-            {(passes / tests) * 100}
+            {successRate}
             %
           </span>
         </footer>
