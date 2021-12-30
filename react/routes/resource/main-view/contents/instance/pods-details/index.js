@@ -157,19 +157,21 @@ const PodDetail = memo(() => {
         action: () => deletePod(),
       },
     ];
-    if (record.get('containers')?.length && record.get('status') === 'Running') {
-      if(record.get('CrashLoopBackOff')){
+    if (record.get('containers')?.length) {
+      if(record.get('status') === 'Running'){
+        buttons.unshift({
+          service: ['choerodon.code.project.deploy.app-deployment.resource.ps.pod.shell'],
+          text: format({ id: 'RunCommand' }),
+          action: () => openShell(),
+        });
+      }
+      if(['CrashLoopBackOff','Running'].includes(record.get('status'))){
         buttons.unshift({
           service: ['choerodon.code.project.deploy.app-deployment.resource.ps.pod.log'],
           text: format({ id: 'ContainerLog' }),
           action: () => openLog(),
         })
       }
-      buttons.unshift({
-        service: ['choerodon.code.project.deploy.app-deployment.resource.ps.pod.shell'],
-        text: format({ id: 'RunCommand' }),
-        action: () => openShell(),
-      });
     }
     return <Action data={buttons} />;
   }
