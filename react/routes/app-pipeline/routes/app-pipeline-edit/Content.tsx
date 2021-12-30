@@ -75,7 +75,7 @@ const AppPipelineEdit = () => {
     ...getBasicInfo(),
     [TAB_FLOW_CONFIG]: <StagesEdits />,
     [TAB_CI_CONFIG]: <CiVariasConfigs />,
-    [TAB_ADVANCE_SETTINGS]: <PipelineAdvancedConfig />,
+    [TAB_ADVANCE_SETTINGS]: <PipelineAdvancedConfig level={level} />,
   };
 
   const handleTabChange = (value:TabkeyTypes) => setTabKey(value);

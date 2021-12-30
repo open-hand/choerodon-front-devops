@@ -8,6 +8,8 @@ import { TAB_ADVANCE_SETTINGS } from '@/routes/app-pipeline/routes/app-pipeline-
 
 interface pipelineAdvancedProps {
   PipelineAdvancedConfigDataSet: any
+  // 层级
+  level: string,
 }
 
 const Store = createContext({} as pipelineAdvancedProps);
