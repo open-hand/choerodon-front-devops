@@ -14,12 +14,14 @@ import './index.less';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import classnames from 'classnames';
 import { InfoIcon } from '@choerodon/components';
+import { observer } from 'mobx-react-lite';
 import JobItem from '../job-item';
 import JobAddBtn from '../job-btn';
 import { STAGE_TYPES } from '../../../../interface';
 import useStageModal from '../../hooks/useStageModal';
 import { STAGE_CI } from '../../../../stores/CONSTANTS';
 import useStageEdit from '../../hooks/useStageEdit';
+import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
 
 export type StageProps = {
   type: STAGE_TYPES
@@ -49,6 +51,10 @@ const Stage:FC<StageProps> = (props) => {
     addJob,
     editJob,
   } = useStageEdit();
+
+  const {
+    level,
+  } = usePipelineContext();
 
   const formatCommon = useFormatCommon();
 
@@ -172,7 +178,7 @@ const Stage:FC<StageProps> = (props) => {
   const renderDraggerContainer = useCallback(
     (draggableProvided:any, draggableSnapshot:any) => {
       const headerCls = classnames(`${prefixCls}-header`, {
-        [`${prefixCls}-header-notComplete`]: !jobList?.length,
+        [`${prefixCls}-header-notComplete`]: level === 'project' && !jobList?.length,
       });
       return (
         <div
@@ -207,7 +213,7 @@ const Stage:FC<StageProps> = (props) => {
         </div>
       );
     },
-    [getItemStyle, getTransfromStylesByFromToId, renderJobs],
+    [getItemStyle, getTransfromStylesByFromToId, jobList.length, linesType, name, renderJobs, type],
   );
 
   const renderDraggable = useCallback(
@@ -222,7 +228,7 @@ const Stage:FC<StageProps> = (props) => {
         </Draggable>
       </div>
     ),
-    [getStageStyle, renderDraggerContainer],
+    [getStageStyle, renderDraggerContainer, stageIndex],
   );
 
   return (
@@ -232,4 +238,4 @@ const Stage:FC<StageProps> = (props) => {
   );
 };
 
-export default React.memo(Stage);
+export default observer(Stage);
