@@ -44,6 +44,7 @@ import { mapping as deployGroupMapping } from './stores/deployGroupDataSet';
 import { productTypeData } from './stores/addCDTaskDataSetMap';
 import OperationYaml from '@/routes/app-center-pro/components/OpenAppCreateModal/components/operation-yaml';
 import { valueCheckValidate } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-app-config/content';
+import {BUILD_DOCKER, BUILD_MAVEN_PUBLISH, BUILD_UPLOADJAR, MAVEN_BUILD} from "@/routes/app-pipeline/CONSTANTS";
 // import { queryConfigCodeOptions } from '@/components/configuration-center/ConfigurationTab';
 
 let currentSize = 10;
@@ -91,9 +92,9 @@ export default observer(() => {
     handleOk,
     taskType,
     jobDetail,
-    pipelineStageMainSource,
-    columnIndex,
-    witchColumnJobIndex,
+    stageData: pipelineStageMainSource,
+    stageIndex: columnIndex,
+    jobIndex: witchColumnJobIndex,
     index: taskIndex,
     DeployChartDataSet,
     DeployGroupDataSet,
@@ -204,20 +205,20 @@ export default observer(() => {
   }, []);
 
   const getRelativeBaseOnCondition = () => {
-    // const filterColumns = pipelineStageMainSource.slice(0, columnIndex);
-    // let itemPreJobLists = [];
-    // filterColumns.forEach((item, itemIndex) => {
-    //   if (itemIndex + 1 < columnIndex) {
-    //     itemPreJobLists = [...itemPreJobLists, ...item.jobList];
-    //   } else {
-    //     item.jobList.forEach((jobItem, jobItemIndex) => {
-    //       if (jobItemIndex + 1 < witchColumnJobIndex) {
-    //         itemPreJobLists.push(jobItem);
-    //       }
-    //     });
-    //   }
-    // });
-    // setPreJobList(itemPreJobLists);
+    const filterColumns = pipelineStageMainSource.slice(0, columnIndex);
+    let itemPreJobLists = [];
+    filterColumns.forEach((item, itemIndex) => {
+      if (itemIndex + 1 < columnIndex) {
+        itemPreJobLists = [...itemPreJobLists, ...item?.jobList || []];
+      } else {
+        item?.jobList?.forEach((jobItem, jobItemIndex) => {
+          if (jobItemIndex + 1 < witchColumnJobIndex) {
+            itemPreJobLists.push(jobItem);
+          }
+        });
+      }
+    });
+    setPreJobList(itemPreJobLists);
   };
 
   useEffect(() => {
@@ -229,33 +230,32 @@ export default observer(() => {
   }, [ADDCDTaskDataSet.current.get(fieldMap.deployWay.name)]);
 
   useEffect(() => {
-    // const currentHostDeployType = ADDCDTaskDataSet?.current?.get('hostDeployType');
-    // const tempArr = [];
-    //   pipelineStageMainSource &&
-    //   pipelineStageMainSource.length > 0 &&
-    //   pipelineStageMainSource.map((item) => item?.jobList.slice());
-    // const jobArr = tempArr ? tempArr.length > 0 && [].concat.apply(...tempArr) : [];
-    // let filterArr;
-    // if (jobArr && currentHostDeployType && currentHostDeployType === 'image') {
-    //   filterArr = jobArr.filter((x) => x.configJobTypes?.includes('docker') && x.type === 'build');
-    // } else if (currentHostDeployType === 'jar') {
-    //   filterArr = jobArr.filter(
-    //     (x) =>
-    //       (x.configJobTypes?.includes('maven_deploy') ||
-    //         x.configJobTypes?.includes('upload_jar')) &&
-    //       x.type === 'build',
-    //   );
-    // }
-    // if (filterArr && filterArr.length === 1) {
-    //   if (typeof filterArr[0] === 'object') {
-    //     ADDCDTaskDataSet.current.set('pipelineTask', filterArr[0].name);
-    //   }
-    // }
-    // if (filterArr && filterArr.length > 0) {
-    //   setRelatedJobOpts(filterArr);
-    // } else {
-    //   setRelatedJobOpts([]);
-    // }
+    const currentHostDeployType = ADDCDTaskDataSet?.current?.get('hostDeployType');
+    const tempArr =
+      pipelineStageMainSource &&
+      pipelineStageMainSource.length > 0 &&
+      pipelineStageMainSource.map((item) => item?.jobList?.slice()) || [];
+    const jobArr = tempArr ? tempArr.length > 0 && [].concat.apply(...tempArr) : [];
+    let filterArr;
+    if (jobArr && currentHostDeployType && currentHostDeployType === 'image') {
+      filterArr = jobArr.filter((x) => x?.devopsCiStepVOList?.some(i => i?.type === BUILD_DOCKER) && x.type === MAVEN_BUILD);
+    } else if (currentHostDeployType === 'jar') {
+      filterArr = jobArr.filter(
+        (x) =>
+          (x?.devopsCiStepVOList?.some(i => [BUILD_MAVEN_PUBLISH, BUILD_UPLOADJAR].includes(i?.type)) &&
+          x.type === MAVEN_BUILD
+      ));
+    }
+    if (filterArr && filterArr.length === 1) {
+      if (typeof filterArr[0] === 'object') {
+        ADDCDTaskDataSet.current.set('pipelineTask', filterArr[0].name);
+      }
+    }
+    if (filterArr && filterArr.length > 0) {
+      setRelatedJobOpts(filterArr);
+    } else {
+      setRelatedJobOpts([]);
+    }
   }, [ADDCDTaskDataSet?.current?.get('hostDeployType')]);
 
   useEffect(() => {
@@ -805,39 +805,39 @@ export default observer(() => {
         });
     });
 
-  // const renderRelatedJobOpts = () => {
-  //   const currentHostDeployType = ADDCDTaskDataSet?.current?.get(
-  //     'hostDeployType'
-  //   );
-  //   const tempArr = pipelineStageMainSource
-  //     && pipelineStageMainSource.length > 0
-  //     && pipelineStageMainSource.map((item) => item?.jobList.slice());
-  //   const jobArr = tempArr
-  //     ? tempArr.length > 0 && [].concat.apply(...tempArr)
-  //     : [];
-  //   let filterArr;
-  //   if (jobArr && currentHostDeployType && currentHostDeployType === 'image') {
-  //     filterArr = jobArr.filter(
-  //       (x) => x.configJobTypes?.includes('docker') && x.type === 'build',
-  //     );
-  //   } else if (currentHostDeployType === 'jar') {
-  //     filterArr = jobArr.filter(
-  //       (x) => (x.configJobTypes?.includes('maven_deploy')
-  //           || x.configJobTypes?.includes('upload_jar'))
-  //         && x.type === 'build',
-  //     );
-  //   }
-  //   if (filterArr && filterArr.length > 0) {
-  //     if (typeof filterArr[0] === 'object') {
-  //       ADDCDTaskDataSet.current.set('pipelineTask', filterArr[0].name);
-  //     }
-  //   }
-  //   return (
-  //     filterArr
-  //     && filterArr.length > 0
-  //     && filterArr.map((item) => <Option value={item.name}>{item.name}</Option>)
-  //   );
-  // };
+  const renderRelatedJobOpts = () => {
+    const currentHostDeployType = ADDCDTaskDataSet?.current?.get(
+      'hostDeployType'
+    );
+    const tempArr = pipelineStageMainSource
+      && pipelineStageMainSource.length > 0
+      && pipelineStageMainSource.map((item) => item?.jobList?.slice());
+    const jobArr = tempArr
+      ? tempArr.length > 0 && [].concat.apply(...tempArr)
+      : [];
+    let filterArr;
+    if (jobArr && currentHostDeployType && currentHostDeployType === 'image') {
+      filterArr = jobArr.filter(
+        (x) => x.configJobTypes?.includes('docker') && x.type === 'build',
+      );
+    } else if (currentHostDeployType === 'jar') {
+      filterArr = jobArr.filter(
+        (x) => (x.configJobTypes?.includes('maven_deploy')
+            || x.configJobTypes?.includes('upload_jar'))
+          && x.type === 'build',
+      );
+    }
+    if (filterArr && filterArr.length > 0) {
+      if (typeof filterArr[0] === 'object') {
+        ADDCDTaskDataSet.current.set('pipelineTask', filterArr[0].name);
+      }
+    }
+    return (
+      filterArr
+      && filterArr.length > 0
+      && filterArr.map((item) => <Option value={item.name}>{item.name}</Option>)
+    );
+  };
 
   function searchMatcher({ record, text }) {
     return record.get('pipelineTask')?.indexOf(text) !== -1;
@@ -1617,18 +1617,18 @@ export default observer(() => {
    */
   const renderRelatedMission = () => {
     let lists = [];
-    // JSON.parse(JSON.stringify(pipelineStageMainSource)).forEach((i, iIndex) => {
-    //   // 是cd阶段
-    //   if (i.type === 'CD') {
-    //     // 如果遍历列小于当前列 则直接存入joblist
-    //     if (iIndex < columnIndex - 1) {
-    //       lists = [...lists, ...i.jobList];
-    //     } else {
-    //       //  如果遍历列是当切列
-    //       lists = [...lists, ...i.jobList.splice(0, taskIndex || witchColumnJobIndex)];
-    //     }
-    //   }
-    // });
+    JSON.parse(JSON.stringify(pipelineStageMainSource)).forEach((i, iIndex) => {
+      // 是cd阶段
+      if (i.type === 'CD') {
+        // 如果遍历列小于当前列 则直接存入joblist
+        if (iIndex < columnIndex - 1) {
+          lists = [...lists, ...i?.jobList || []];
+        } else {
+          //  如果遍历列是当切列
+          lists = [...lists, ...i?.jobList?.splice(0, taskIndex || witchColumnJobIndex) || []];
+        }
+      }
+    });
     // 返回任务是部署任务的options
     return lists
       .filter((l) => l.type === 'cdDeploy')
