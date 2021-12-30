@@ -265,20 +265,22 @@ const Index = observer(() => {
       {renderCloseModal()}
       <SideStep
         scrollContext=".c7ncd-buildModal-content__main"
-        data={[{
-          text: '基础配置',
-          el: '.c7ncd-buildModal-content__main',
-          type: 'scrollTop' as typeProps,
-          display: true,
-        }, {
-          text: BuildDataSet?.current?.get(mapping.type.name) === MAVEN_BUILD ? '步骤配置' : '自定义脚本',
-          el: '.c7ncd-buildModal-content__main__step',
-          display: true,
-        }, {
-          text: '高级设置',
-          el: '.c7ncd-buildModal-content__main__advanced',
-          display: BuildDataSet?.current?.get(mapping.type.name) === MAVEN_BUILD,
-        }]}
+        data={[
+          {
+            text: '基础配置',
+            el: '.c7ncd-buildModal-content__main',
+            type: 'scrollTop' as typeProps,
+            display: true,
+          }, {
+            text: BuildDataSet?.current?.get(mapping.type.name) === MAVEN_BUILD ? '步骤配置' : '自定义脚本',
+            el: '.c7ncd-buildModal-content__main__step',
+            display: true,
+          }, {
+            text: '高级设置',
+            el: '.c7ncd-buildModal-content__main__advanced',
+            display: BuildDataSet?.current?.get(mapping.type.name) === MAVEN_BUILD,
+          },
+        ]}
       />
       <div className={`${prefix}__main`}>
         <Form

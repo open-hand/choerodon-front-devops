@@ -35,9 +35,10 @@ const Index = observer(({
   }, [list]);
 
   useEffect(() => {
+    const focusIndex = list?.findIndex((i: any) => i.focus);
     const newList = data.map((item, index) => {
       const newItem = item;
-      newItem.focus = (index === 0);
+      newItem.focus = (focusIndex !== -1 ? index === focusIndex : index === 0);
       return newItem;
     });
     setList(newList);

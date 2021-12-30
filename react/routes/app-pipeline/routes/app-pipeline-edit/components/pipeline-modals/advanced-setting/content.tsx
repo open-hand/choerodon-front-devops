@@ -51,7 +51,7 @@ const Index = observer(() => {
       {
         visible && (
           <Form disabled={disabled} columns={2} className={`${prefix}__form`} dataSet={AdvancedDataSet}>
-            <Select colSpan={2} name={mapping.ciRunnerImage.name} />
+            <Select combo colSpan={2} name={mapping.ciRunnerImage.name} />
             <SelectBox colSpan={2} name={mapping.shareFolderSetting.name} />
             <SelectBox name={mapping.whetherConcurrent.name} />
             {
