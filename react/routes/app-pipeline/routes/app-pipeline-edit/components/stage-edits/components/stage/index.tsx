@@ -177,9 +177,7 @@ const Stage:FC<StageProps> = (props) => {
 
   const renderDraggerContainer = useCallback(
     (draggableProvided:any, draggableSnapshot:any) => {
-      const headerCls = classnames(`${prefixCls}-header`, {
-        [`${prefixCls}-header-notComplete`]: level === 'project' && !jobList?.length,
-      });
+      const headerCls = classnames(`${prefixCls}-header`);
       return (
         <div
           className={prefixCls}
@@ -200,7 +198,6 @@ const Stage:FC<StageProps> = (props) => {
               <span className={`${prefixCls}-stageName`}>{name}</span>
             </Tooltip>
             <div className={`${prefixCls}-btnGroups`}>
-              {!jobList?.length && <InfoIcon className={`${prefixCls}-btnGroups-notComplete`} />}
               <Icon onClick={handleDeleteStage} type="delete_black-o" className={`${prefixCls}-btnGroups-delete`} />
             </div>
           </header>
