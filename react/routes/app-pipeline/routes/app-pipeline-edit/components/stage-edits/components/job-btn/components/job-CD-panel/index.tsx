@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Menu } from 'choerodon-ui';
 import { Modal } from 'choerodon-ui/pro';
 import useTabData from '@/routes/app-pipeline/routes/app-pipeline-edit/hooks/useTabData';
-import { TAB_BASIC } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
+import { TAB_BASIC, TAB_FLOW_CONFIG } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
 import jobTypes from '@/routes/app-pipeline/routes/pipeline-manage/stores/jobsTypeMappings';
 import './index.less';
 import { LARGE } from '@/utils/getModalWidth';
@@ -55,6 +55,7 @@ const JobCdPanel:FC<JobTypesPanelProps> = (props) => {
           random={Math.random()}
           handleOk={handleJobAddCallback}
           taskType={keyPath[0]}
+          stageData={getTabData(TAB_FLOW_CONFIG)}
         />
       ),
       drawer: true,

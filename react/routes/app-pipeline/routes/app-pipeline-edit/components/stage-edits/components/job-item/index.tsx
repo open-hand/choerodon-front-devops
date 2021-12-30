@@ -8,7 +8,7 @@ import { omit, get } from 'lodash';
 import { OverflowWrap, InfoIcon } from '@choerodon/components';
 import classNames from 'classnames';
 import { handlePipelineModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/stage-edits/components/job-btn/components/job-types-panel';
-import { TAB_ADVANCE_SETTINGS } from '../../../../stores/CONSTANTS';
+import { TAB_ADVANCE_SETTINGS, TAB_FLOW_CONFIG } from '../../../../stores/CONSTANTS';
 import { JOB_GROUP_TYPES } from '@/routes/app-pipeline/stores/CONSTANTS';
 import ParalleLines from '../paralle-lines';
 
@@ -100,6 +100,7 @@ const JobItem:FC<JobProps> = (props) => {
         },
         children: (
           <AddCDTask
+            stageData={getTabDataByKey(TAB_FLOW_CONFIG)}
             jobDetail={modifyData}
             appServiceName={appServiceName}
             appServiceId={appServiceId}
