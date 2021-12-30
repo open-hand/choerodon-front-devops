@@ -87,19 +87,19 @@ const ExcuteDetails:FC<ExcuteDetailsProps> = (props) => {
           <div className={`${prefixCls}-unitTest-section-title`}>{unitType[type].name}</div>
           <div className={`${prefixCls}-unitTest-section-group`}>
             <div className={`${prefixCls}-unitTest-section-group-item`}>
-              <span>{tests || '-'}</span>
+              <span>{tests}</span>
               <span>用例总数</span>
             </div>
             <div className={`${prefixCls}-unitTest-section-group-item`}>
-              <span>{passes || '-'}</span>
+              <span>{passes}</span>
               <span>成功</span>
             </div>
             <div className={`${prefixCls}-unitTest-section-group-item`}>
-              <span>{failures || '-'}</span>
+              <span>{failures}</span>
               <span>失败</span>
             </div>
             <div className={`${prefixCls}-unitTest-section-group-item`}>
-              <span>{skipped || '-'}</span>
+              <span>{skipped}</span>
               <span>跳过</span>
             </div>
           </div>
