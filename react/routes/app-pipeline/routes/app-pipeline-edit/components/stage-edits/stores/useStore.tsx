@@ -54,9 +54,7 @@ export default function useStore() {
      * @param {Record<string, any>} stageData
      */
     editStage(stageIndex:number, stageData:Record<string, any>) {
-      const { name, type } = stageData;
-      this.sourceData[stageIndex].name = name;
-      this.sourceData[stageIndex].type = type;
+      this.sourceData[stageIndex] = { ...this.sourceData[stageIndex], ...stageData };
       this.handleEditCallback();
     },
 
