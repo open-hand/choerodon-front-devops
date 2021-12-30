@@ -204,15 +204,15 @@ const ExcuteDetails:FC<ExcuteDetailsProps> = (props) => {
           <span>
             <span>
               GroupId：
-              {groupId}
+              {groupId || '-'}
             </span>
             <span>
               ArtifactId：
-              {artifactId}
+              {artifactId || '-'}
             </span>
             <span>
               Jar包版本：
-              {downloadUrl ? <a href={downloadUrl} target="_blank" rel="noreferrer">{version}</a> : version}
+              {downloadUrl ? <a href={downloadUrl} target="_blank" rel="noreferrer">{version}</a> : (version || '-')}
             </span>
           </span>
         </div>
