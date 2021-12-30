@@ -11,9 +11,9 @@ const JobTemplateItem = (props:JobTemplateItemProps) => {
     name: jobName,
   } = props;
   return (
-    <OverflowWrap className={`${prefixCls}-jobTmp`}>
-      {jobName}
-    </OverflowWrap>
+    <div className={`${prefixCls}-jobTmp`}>
+      <OverflowWrap width="80%">{jobName}</OverflowWrap>
+    </div>
   );
 };
 
