@@ -2,7 +2,7 @@ import React, {
   FC,
 } from 'react';
 import { useFormatCommon, useFormatMessage, Action } from '@choerodon/master';
-import { Modal, Button } from 'choerodon-ui/pro';
+import { Modal } from 'choerodon-ui/pro';
 // @ts-ignore
 import { saveAs } from 'file-saver';
 import {} from '@choerodon/components';
@@ -53,7 +53,7 @@ const ExcuteDetails:FC<ExcuteDetailsProps> = (props) => {
 
   const renderUnitSection = () => devopsCiUnitTestReportInfoList.map((item:any) => {
     const {
-      type, passes, reportUrl, failures, skipped, tests,
+      type, passes, reportUrl, failures, skipped, tests, successRate = 0,
     } = item;
     const unitType:any = {
       maven_unit_test: {
@@ -107,7 +107,7 @@ const ExcuteDetails:FC<ExcuteDetailsProps> = (props) => {
         <footer>
           <span>单元测试通过率：</span>
           <span>
-            {(passes / tests) * 100}
+            {successRate}
             %
           </span>
         </footer>
@@ -204,15 +204,15 @@ const ExcuteDetails:FC<ExcuteDetailsProps> = (props) => {
           <span>
             <span>
               GroupId：
-              {groupId}
+              {groupId || '-'}
             </span>
             <span>
               ArtifactId：
-              {artifactId}
+              {artifactId || '-'}
             </span>
             <span>
               Jar包版本：
-              {downloadUrl ? <a href={downloadUrl} target="_blank" rel="noreferrer">{version}</a> : version}
+              {downloadUrl ? <a href={downloadUrl} target="_blank" rel="noreferrer">{version}</a> : (version || '-')}
             </span>
           </span>
         </div>
@@ -233,6 +233,7 @@ const ExcuteDetails:FC<ExcuteDetailsProps> = (props) => {
   const renderPipelineJobDetail = () => {
     const cls = classnames(`${prefixCls}-box`, `${prefixCls}-pipeline`);
     const data = [];
+
     pipelineJarInfo && data.push({
       service: [],
       text: 'jar包下载',

@@ -52,7 +52,7 @@ const handlePipelineModal = ({
 
 const prefixCls = 'c7ncd-job-types-panel';
 
-const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
+const JobTypesPanel:FC<JobTypesPanelProps> = (props: { handleJobAddCallback: any; }) => {
   const {
     handleJobAddCallback,
   } = props;
@@ -110,10 +110,13 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
       const {
         id, name,
       } = item;
-      const concatItem = {
-        ...item,
-        ...getTabData(TAB_BASIC),
-      };
+      let concatItem = item;
+      if (level === 'project') {
+        concatItem = {
+          ...item,
+          ...getTabData(TAB_BASIC),
+        };
+      }
       return (
         <Item key={JSON.stringify(concatItem)}>
           {name}
@@ -122,7 +125,7 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
     });
   };
 
-  const renderSubMenus = () => panels?.map((item) => {
+  const renderSubMenus = () => panels?.map((item: { id: any; name: any; type: any; }) => {
     const { id, name, type } = item;
     return (
       <SubMenu
