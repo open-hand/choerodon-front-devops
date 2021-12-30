@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from 'react';
 import { Icon } from 'choerodon-ui/pro';
 import './index.less';
@@ -13,6 +14,8 @@ interface JobAddBtnProps {
   type:'circle' | 'normal'
   linesType: 'paralle' | 'serial'
   handleJobAddCallback: (jobData:any)=>void
+  stageIndex:number
+  jobIndex:number
 }
 
 const JobAddBtn = (props:JobAddBtnProps) => {
@@ -20,6 +23,8 @@ const JobAddBtn = (props:JobAddBtnProps) => {
     type,
     linesType,
     handleJobAddCallback,
+    stageIndex,
+    jobIndex,
   } = props;
 
   const linesMap = {
@@ -29,7 +34,7 @@ const JobAddBtn = (props:JobAddBtnProps) => {
 
   const jobTypePanelMap = {
     paralle: <JobTypesPanel handleJobAddCallback={handleJobAddCallback} />,
-    serial: <JobCdPanel handleJobAddCallback={handleJobAddCallback} />,
+    serial: <JobCdPanel jobIndex={jobIndex} stageIndex={stageIndex} handleJobAddCallback={handleJobAddCallback} />,
   };
 
   const renderContent = () => {

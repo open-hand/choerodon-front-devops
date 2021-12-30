@@ -42,6 +42,7 @@ const JobItem:FC<JobProps> = (props) => {
     groupType,
     linesType,
     jobIndex,
+    stageIndex,
     showLines = true,
 
     handleJobDeleteCallback,
@@ -107,6 +108,8 @@ const JobItem:FC<JobProps> = (props) => {
             random={Math.random()}
             handleOk={handleEditJobData}
             taskType={type}
+            jobIndex={jobIndex}
+            stageIndex={stageIndex}
           />
         ),
         drawer: true,

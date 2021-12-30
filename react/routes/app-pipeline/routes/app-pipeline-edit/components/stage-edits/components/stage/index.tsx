@@ -126,6 +126,7 @@ const Stage:FC<StageProps> = (props) => {
       const data = {
         ...item,
         jobIndex: index, // job的index
+        stageIndex,
         linesType, // job线条的类型
         showLines: !isDragging, // 是否展示线条
       };
@@ -205,7 +206,7 @@ const Stage:FC<StageProps> = (props) => {
             {renderJobs()}
           </main>
           <footer>
-            <JobAddBtn handleJobAddCallback={handleJobAddCallback} linesType={linesType} type={jobList.length ? 'circle' : 'normal'} />
+            <JobAddBtn jobIndex={jobList.length} stageIndex={stageIndex} handleJobAddCallback={handleJobAddCallback} linesType={linesType} type={jobList.length ? 'circle' : 'normal'} />
           </footer>
         </div>
       );
