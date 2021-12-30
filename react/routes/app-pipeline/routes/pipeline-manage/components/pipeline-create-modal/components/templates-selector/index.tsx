@@ -22,6 +22,7 @@ type MenuItemTypes= {
   category:string
   id:string |number
   image:string
+  handleSelectTmpCallback:CallableFunction
 }
 
 const prefixCls = 'c7ncd-templates-selector';
@@ -95,7 +96,8 @@ const TemplatesSelector:FC<TemplatesSelectorProps> = (props) => {
    * 选模板的回调函数
    */
   const handleSelectTmp = (tmpData:any) => {
-    const { id } = tmpData || {};
+    const { id, ciTemplateCategoryId } = tmpData || {};
+    ciTemplateCategoryId && setSelectedMenuId(ciTemplateCategoryId);
     setSelectedTmpId(id);
     handleSelectTmpCallback(id);
   };
