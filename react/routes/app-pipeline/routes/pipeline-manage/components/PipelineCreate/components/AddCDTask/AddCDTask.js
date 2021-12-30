@@ -652,12 +652,12 @@ export default observer(() => {
         }
         initValueIdDataSet(
           deployConfigDataSet,
-          trueAppServiceId,
+          appServiceId,
           metadata.envId,
           ADDCDTaskUseStore.getValueIdRandom,
           afterQuery,
         );
-        initValueIdDataSet(appNameChartDataSet, trueAppServiceId, metadata.envId);
+        initValueIdDataSet(appNameChartDataSet, appServiceId, metadata.envId);
       } else if (jobDetail.type === typeData[1].value) {
         const metadata = JSON.parse(jobDetail.metadata.replace(/'/g, '"'));
         setDeployGroupDetail(metadata);
