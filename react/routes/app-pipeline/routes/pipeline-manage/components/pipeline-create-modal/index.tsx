@@ -148,6 +148,7 @@ const usePipelineCreateModal = () => {
     Modal.open({
       title: '创建流水线',
       children: <PipelineCreateModal />,
+      className: `${prefixCls}-container`,
       style: {
         width: CONSTANTS.MODAL_WIDTH.MIDDLE,
       },

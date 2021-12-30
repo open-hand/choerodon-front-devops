@@ -98,7 +98,7 @@ const AppPipelineEdit = () => {
       }
     } else {
       key && setTabKey(key);
-      reason && message.info(reason);
+      reason && message.error(reason);
     }
   };
 
@@ -120,7 +120,7 @@ const AppPipelineEdit = () => {
       }
     } else {
       key && setTabKey(key);
-      reason && message.info(reason);
+      reason && message.error(reason);
     }
   };
 

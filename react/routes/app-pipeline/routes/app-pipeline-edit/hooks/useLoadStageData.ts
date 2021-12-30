@@ -33,7 +33,7 @@ function useLoadStageData(configs:PipelineApiConfigs, options?:LoadStageDataProp
       if (type === 'create') {
         stageLists = stageObject?.devopsCiStageVOS.concat(DEFAUTL_CD_STAGE);
       } else {
-        stageLists = stageObject?.devopsCiStageVOS || [];
+        stageLists = stageObject?.devopsCiStageVOS.concat(stageObject.devopsCdStageVOS) || [];
       }
     } else {
       stageLists = stageObject?.templateStageVOS || [];
