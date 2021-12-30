@@ -17,7 +17,9 @@ const Index = observer(() => {
 
   const {
     PipelineAdvancedConfigDataSet,
+    level,
   } = usePipelineAdvancedStore();
+
   return (
     <>
       <Form dataSet={PipelineAdvancedConfigDataSet} columns={2}>
@@ -32,19 +34,23 @@ const Index = observer(() => {
             )
         }
       </Form>
-      <CustomFunc
-        useStore={{
-          getFuncList: tabsData?.[TAB_ADVANCE_SETTINGS]?.devopsCiPipelineFunctionDTOList,
-          setFuncList: (list: any) => {
-            setTabsDataState({
-              [TAB_ADVANCE_SETTINGS]: {
-                ...tabsData?.[TAB_ADVANCE_SETTINGS],
-                devopsCiPipelineFunctionDTOList: list,
+      {
+        level === 'project' && (
+          <CustomFunc
+            useStore={{
+              getFuncList: tabsData?.[TAB_ADVANCE_SETTINGS]?.devopsCiPipelineFunctionDTOList,
+              setFuncList: (list: any) => {
+                setTabsDataState({
+                  [TAB_ADVANCE_SETTINGS]: {
+                    ...tabsData?.[TAB_ADVANCE_SETTINGS],
+                    devopsCiPipelineFunctionDTOList: list,
+                  },
+                });
               },
-            });
-          },
-        }}
-      />
+            }}
+          />
+        )
+      }
     </>
   );
 });
