@@ -4,7 +4,7 @@ import React, {
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
-import uuidv1 from 'uuid/v1';
+import uuidv1 from 'uuid';
 import FormDataSet from './FormDataSet';
 import useStore from './useStore';
 

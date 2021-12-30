@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import uuidv1 from 'uuid/v1';
+import uuidv1 from 'uuid';
 import Cookies from 'universal-cookie';
 import { Loading } from '@choerodon/components';
 import ResourceTitle from '../../components/resource-title';

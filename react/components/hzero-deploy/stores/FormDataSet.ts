@@ -2,7 +2,7 @@
 /* eslint-disable no-param-reassign */
 
 import { map, isEmpty, pick } from 'lodash';
-import uuidV1 from 'uuid/v1';
+import uuidV1 from 'uuid';
 import {
   DataSet, FieldType, UpdateEventProps, DataSetStatus,
 } from '@/interface';

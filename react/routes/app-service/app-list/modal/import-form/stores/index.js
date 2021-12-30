@@ -15,6 +15,7 @@ import shareImage from '../../../../images/share.svg';
 import marketImage from '../../../../images/market.svg';
 import githubImage from '../../../../images/github.svg';
 import gitlabImage from '../../../../images/gitlab.svg';
+import gerneralGitImage from '../../../../images/generalGit.svg';
 
 const Store = createContext();
 
@@ -71,7 +72,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       marketSelectedDs,
       gitlabSelectedDs,
     })), [projectId]);
-    const IMPORT_METHOD_LIST = isSaaS ? [{ type: 'share', img: shareImage }, { type: 'github', img: gitlabImage }, { type: 'gitlab', img: gitlabImage }] : [{ type: 'share', img: shareImage }, { type: 'market', img: marketImage }, { type: 'github', img: githubImage }, { type: 'gitlab', img: gitlabImage }];
+    const IMPORT_METHOD_LIST = isSaaS ? [{ type: 'share', img: shareImage }, { type: 'github', img: gitlabImage }, { type: 'gitlab', img: gitlabImage }] : [{ type: 'github', img: githubImage }, { type: 'gitlab', img: gitlabImage }, { type: 'gerneralGit', img: gerneralGitImage }, { type: 'share', img: shareImage }, { type: 'market', img: marketImage }];
     const value = {
       ...props,
       IMPORT_METHOD: IMPORT_METHOD_LIST,

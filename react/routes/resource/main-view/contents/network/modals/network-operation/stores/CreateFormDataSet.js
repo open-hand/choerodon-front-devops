@@ -4,7 +4,7 @@
 import {
   map, forOwn, isEmpty, forEach,
 } from 'lodash';
-import uuidv1 from 'uuid/v1';
+import uuidv1 from 'uuid';
 
 export default ({
   formatMessage, portDs, endPointsDs, targetLabelsDs, appInstanceOptionsDs, appDeployOptionsDs, networkStore, projectId, envId, networkEdit,

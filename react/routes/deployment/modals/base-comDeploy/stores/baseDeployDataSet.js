@@ -1,8 +1,8 @@
 import { DataSet } from 'choerodon-ui/pro';
+import uuidV1 from 'uuid';
+import { axios } from '@choerodon/master';
 import BaseComDeployApis from '@/routes/deployment/modals/base-comDeploy/apis';
 import BaseComDeployServices from '@/routes/deployment/modals/base-comDeploy/services';
-import uuidV1 from 'uuid/v1';
-import { axios } from '@choerodon/master';
 // eslint-disable-next-line import/no-cycle
 import { mapping as paramsMapping } from './paramSettingDataSet';
 

@@ -482,6 +482,8 @@ const deployment = {
 
 const appService = {
   'c7ncd.appService': '应用服务',
+  'c7ncd.appService.username': '用户名',
+  'c7ncd.appService.password': '密码',
   'c7ncd.appService.name': '服务名称',
   'c7ncd.appService.code': '服务编码',
   'c7ncd.appService.type': '服务类型',
@@ -524,12 +526,14 @@ const appService = {
   'c7ncd.appService.import.type.market': '市场应用',
   'c7ncd.appService.import.type.github': '从GitHub导入',
   'c7ncd.appService.import.type.gitlab': '从GitLab导入',
+  'c7ncd.appService.import.type.gerneralGit': '通用Git',
   'c7ncd.appService.gitlab.updateDate': '最新更新',
   'c7ncd.appService.gitlab.name': '仓库名称',
   'c7ncd.appService.url.gitlab': 'GitLab地址',
   'c7ncd.appService.url.github': 'GitHub地址',
   'c7ncd.appService.url.gitlab.clone': 'GitLab仓库克隆地址',
   'c7ncd.appService.url.github.clone': 'GitHub仓库克隆地址',
+  'c7ncd.appService.url.gerneralGit.clone': 'Git仓库克隆地址',
   'c7ncd.appService.token': '私有Token',
   'c7ncd.appService.import': '导入应用服务',
   'c7ncd.appService.add': '添加应用服务',
@@ -606,8 +610,12 @@ const appService = {
     '目前仅支持从GitHub公库导入应用服务。仓库为空时不可导入',
   'c7ncd.appService.gitlab.tips':
     '支持从GitLab公库或私库导入应用服务，填写私库地址后，还需填写私有Token',
+  'c7ncd.appService.username.tips':
+  '此处提供的用户需要至少含有目标仓库的克隆权限。',
   'c7ncd.appService.market.tips':
     '市场应用指的是应用市场中已发布的应用',
+  'c7ncd.appService.gerneralGit.tips':
+    '支持从Gitee、Gitea、Bitbucket等通用Git来源导入应用服务。',
   'c7ncd.appService.add.tips':
     '您可在此批量选择应用服务添加至导入列表。此处展示的均是有代码库的应用服务',
   'c7ncd.appService.import.tips':
@@ -616,6 +624,8 @@ const appService = {
     '此处支持HTTP或HTTPS地址',
   'c7ncd.appService.address.github.tips':
     '此处仅支持HTTPS地址',
+  'c7ncd.appService.address.gerneralGit.tips':
+    '仅支持HTTP或HTTPS地址',
   'c7ncd.appService.detail.share.tips':
     '共享设置用于为该应用服务添加共享规则，并按照共享规则分别将其共享给范围内的项目',
   'c7ncd.appService.detail.permission.tips':
