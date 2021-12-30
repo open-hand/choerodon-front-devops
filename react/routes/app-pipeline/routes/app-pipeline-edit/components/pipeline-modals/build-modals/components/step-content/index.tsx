@@ -267,7 +267,7 @@ const Index = observer(({
 
   const renderStepItem = (record: any, index: number) => (
     // TODO 这里要改
-    <Draggable draggableId={String(record.id)} index={index}>
+    <Draggable draggableId={String(record.id)} index={record.get(StepMapping.sequence.name)}>
       {(dragProvided: any, dragSnapshot: any) => (
         <div
           className={`${prefix}__stepItem`}
@@ -311,9 +311,61 @@ const Index = observer(({
     </Draggable>
   );
 
+  const changeArrayItemPos = (arr: any, pos: any, toPos: any) => {
+    // 目标索引溢出修复下
+    // eslint-disable-next-line
+    toPos = Math.min(Math.max(0, toPos), arr.length - 1);
+    // 待换索引溢出或与目标索引相同，则不做处理
+    if (pos === toPos || pos < 0 || pos > arr.length - 1) {
+      return [].concat(arr);
+    }
+    // eslint-disable-next-line
+    const _arr = []; const
+      after = pos > toPos;
+    // eslint-disable-next-line
+    for (let i = 0, len = arr.length; i < len; i++) {
+      // 待换索引直接pass
+      if (i === pos) {
+        // eslint-disable-next-line
+        continue;
+      } else if (i === toPos) {
+        // 目标索引与待换索引前后位置有关系
+        if (after) {
+          _arr.push(arr[pos]);
+          _arr.push(arr[i]);
+        } else {
+          _arr.push(arr[i]);
+          _arr.push(arr[pos]);
+        }
+      } else {
+        _arr.push(arr[i]);
+      }
+    }
+    return _arr;
+  };
+
+  const handleDragEnd = (result: any) => {
+    const {
+      destination: {
+        index: desIndex,
+      },
+      source: {
+        index: sourceIndex,
+      },
+      draggableId,
+    } = result;
+
+    const data = dataSet.toData();
+    const newData = changeArrayItemPos(data, sourceIndex, desIndex).map((i, index) => ({
+      ...i,
+      [StepMapping.sequence.name]: index,
+    }));
+    dataSet.loadData(newData);
+  };
+
   const renderSteps = (ds: any) => (
     <DragDropContext
-      onDragEnd={(d: any) => console.log(d)}
+      onDragEnd={handleDragEnd}
     >
       <Droppable droppableId="context">
         {(provided: any, snapshot: any) => (
