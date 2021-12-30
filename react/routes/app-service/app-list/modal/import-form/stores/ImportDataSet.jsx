@@ -45,7 +45,7 @@ function getMarketRequestData(appServiceList) {
 }
 
 function isGit({ record }) {
-  const flag = record.get('platformType') === 'github' || (record.get('platformType') === 'gitlab' && record.get('isGitLabTemplate'));
+  const flag = record.get('platformType') === 'github' || (record.get('platformType') === 'gitlab' && record.get('isGitLabTemplate')) || record.get('platformType') === 'gerneralGit';
   return flag;
 }
 
@@ -177,6 +177,11 @@ export default ({
             res = getMarketRequestData(marketSelectedDs.toData());
             result = marketApiConfig.Import(res);
             break;
+          case 'gerneralGit':
+            url = 'general_git';
+            res = pick(data, ['code', 'name', 'type', 'repositoryUrl', 'username', 'password']);
+            result = appServiceApiConfig.Import(url, res);
+            break;
         }
         return result;
       },
@@ -191,6 +196,24 @@ export default ({
           validator: ({ record }) => isGit({ record }) && checkName,
         },
         label: formatMessage({ id: `${intlPrefix}.name` }),
+      },
+      {
+        name: 'username',
+        type: 'string',
+        maxLength: 40,
+        dynamicProps: {
+          required: ({ record }) => record.get('platformType') === 'gerneralGit',
+        },
+        label: formatMessage({ id: `${intlPrefix}.username` }),
+      },
+      {
+        name: 'password',
+        type: 'string',
+        maxLength: 40,
+        dynamicProps: {
+          required: ({ record }) => record.get('platformType') === 'gerneralGit',
+        },
+        label: formatMessage({ id: `${intlPrefix}.password` }),
       },
       {
         name: 'code',
@@ -226,7 +249,7 @@ export default ({
         dynamicProps: {
           required: isGit,
           label: ({ record }) => {
-            if (record.get('platformType') === 'gitlab' || record.get('platformType') === 'github') {
+            if (record.get('platformType') === 'gitlab' || record.get('platformType') === 'github' || record.get('platformType') === 'gerneralGit') {
               return formatMessage({ id: `${intlPrefix}.url.${record.get('platformType')}.clone` });
             }
             return false;

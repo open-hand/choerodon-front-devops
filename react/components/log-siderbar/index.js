@@ -8,7 +8,7 @@ import { Modal, Select, message } from 'choerodon-ui';
 import { Button } from 'choerodon-ui/pro';
 import { Content } from '@choerodon/master';
 import ReactCodeMirror from 'react-codemirror';
-import uuidv1 from 'uuid/v1';
+import uuidv1 from 'uuid';
 import Cookies from 'universal-cookie';
 import { saveAs } from 'file-saver';
 import { removeEndsChar } from '../../utils';
