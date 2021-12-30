@@ -297,19 +297,22 @@ const mapping: {
   },
 };
 
-const transformLoadDataItem = (d: any, index: number) => ({
-  ...d,
-  [mapping.expand.name]: true,
-  [mapping.settingConfig.name]: settingConfigOptionsData[0].value,
-  [mapping.advancedExpand.name]: false,
-  [mapping.sonarqubeConfigWay.name]: sonarConfigData[0].value,
-  [mapping.sonarqubeAccountConfig.name]: accountConfigData[0].value,
-  [mapping.whetherMavenSingleMeasure.name]: false,
-  [mapping.sequence.name]: index,
-  [mapping.id.name]: d?.[mapping.id.name],
-  ...d[STEPVO[d.type]],
-  [mapping.customRepoConfig.name]: d[STEPVO[d.type]]?.repos,
-});
+const transformLoadDataItem = (d: any, index: number) => {
+  const newD = JSON.parse(JSON.stringify(d));
+  return ({
+    ...newD,
+    [mapping.expand.name]: true,
+    [mapping.settingConfig.name]: settingConfigOptionsData[0].value,
+    [mapping.advancedExpand.name]: false,
+    [mapping.sonarqubeConfigWay.name]: sonarConfigData[0].value,
+    [mapping.sonarqubeAccountConfig.name]: accountConfigData[0].value,
+    [mapping.whetherMavenSingleMeasure.name]: false,
+    [mapping.sequence.name]: index,
+    [mapping.id.name]: newD?.[mapping.id.name],
+    ...newD[STEPVO[newD.type]],
+    [mapping.customRepoConfig.name]: newD[STEPVO[newD.type]]?.repos,
+  });
+};
 
 const transformLoadData = (data: any) => data
   && data.map((d: any, index: number) => transformLoadDataItem(d, index));
