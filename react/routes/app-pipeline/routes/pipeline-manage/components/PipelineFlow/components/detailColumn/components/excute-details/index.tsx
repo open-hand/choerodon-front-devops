@@ -57,15 +57,15 @@ const ExcuteDetails:FC<ExcuteDetailsProps> = (props) => {
     } = item;
     const unitType:any = {
       maven_unit_test: {
-        name: '下载Maven单测报告',
+        name: 'Maven单测报告',
         filename: 'Maven单测报告.html',
       },
       node_js_unit_test: {
-        name: '下载Node.js单测报告',
+        name: 'Node.js单测报告',
         filename: 'Nodejs单测报告.zip',
       },
       go_unit_test: {
-        name: '下载Go单测报告',
+        name: 'Go单测报告',
         filename: 'Go单测报告.xml',
       },
     };
