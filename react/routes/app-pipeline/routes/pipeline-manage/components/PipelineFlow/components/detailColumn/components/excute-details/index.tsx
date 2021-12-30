@@ -57,15 +57,15 @@ const ExcuteDetails:FC<ExcuteDetailsProps> = (props) => {
     } = item;
     const unitType:any = {
       maven_unit_test: {
-        name: '下载Maven单测报告',
+        name: 'Maven单测报告',
         filename: 'Maven单测报告.html',
       },
       node_js_unit_test: {
-        name: '下载Node.js单测报告',
+        name: 'Node.js单测报告',
         filename: 'Nodejs单测报告.zip',
       },
       go_unit_test: {
-        name: '下载Go单测报告',
+        name: 'Go单测报告',
         filename: 'Go单测报告.xml',
       },
     };
@@ -87,19 +87,19 @@ const ExcuteDetails:FC<ExcuteDetailsProps> = (props) => {
           <div className={`${prefixCls}-unitTest-section-title`}>{unitType[type].name}</div>
           <div className={`${prefixCls}-unitTest-section-group`}>
             <div className={`${prefixCls}-unitTest-section-group-item`}>
-              <span>{tests || '-'}</span>
+              <span>{tests}</span>
               <span>用例总数</span>
             </div>
             <div className={`${prefixCls}-unitTest-section-group-item`}>
-              <span>{passes || '-'}</span>
+              <span>{passes}</span>
               <span>成功</span>
             </div>
             <div className={`${prefixCls}-unitTest-section-group-item`}>
-              <span>{failures || '-'}</span>
+              <span>{failures}</span>
               <span>失败</span>
             </div>
             <div className={`${prefixCls}-unitTest-section-group-item`}>
-              <span>{skipped || '-'}</span>
+              <span>{skipped}</span>
               <span>跳过</span>
             </div>
           </div>
