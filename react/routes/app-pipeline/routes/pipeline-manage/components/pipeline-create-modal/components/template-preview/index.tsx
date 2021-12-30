@@ -12,12 +12,14 @@ import StageTemplate from './StageTemplate';
 
 export type TemplatePreviewProps = {
   name:string
-  image:string
   id:string
   ciTemplateStageVOList: any[]
   cdTemplateStageVOList:any[]
   isActive?:boolean
   handleSelect?:(data:any)=>void
+  ciTemplateCategoryDTO:{
+    image:string
+  }
 }
 
 export const prefixCls = 'c7ncd-template-preview';
@@ -26,8 +28,7 @@ export const intlPrefix = 'c7ncd.template.preview';
 const TemplatePreview:FC<TemplatePreviewProps> = (props) => {
   const {
     name,
-    id,
-    image,
+    ciTemplateCategoryDTO = { image: '' },
     ciTemplateStageVOList = [],
     cdTemplateStageVOList = [],
     isActive,
@@ -55,7 +56,7 @@ const TemplatePreview:FC<TemplatePreviewProps> = (props) => {
   return (
     <div className={cls} onClick={handleClick} role="none">
       <header>
-        <img src={image || cutomizeImg} alt="img" />
+        <img src={ciTemplateCategoryDTO?.image || cutomizeImg} alt="img" />
         <span>{name}</span>
       </header>
       <main>
