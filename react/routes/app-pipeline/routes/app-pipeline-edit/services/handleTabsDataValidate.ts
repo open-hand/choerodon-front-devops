@@ -56,7 +56,7 @@ function handleValideStage(stagesData:Array<{jobList:{completed:boolean}[]} & Re
     return jobList.every(({ completed }) => completed);
   });
   if (!isCompleted) {
-    return { isValidated: false, reason: '存在空阶段或是未填写必填项的job' };
+    return { isValidated: false, reason: '存在空阶段或是未填写必填项的任务' };
   }
   return { isValidated: true, reason: '' };
 }
