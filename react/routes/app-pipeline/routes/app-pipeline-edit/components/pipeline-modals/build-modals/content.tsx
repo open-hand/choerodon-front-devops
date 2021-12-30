@@ -57,6 +57,7 @@ const Index = observer(() => {
     handleJobAddCallback,
     data,
     data: {
+      id,
       type,
       // TODO 待删
       appService,
@@ -224,6 +225,7 @@ const Index = observer(() => {
       // TODO 待删
       appService,
       completed: template !== STEP_TEMPLATE ? res && stepRes && advancedRes : res,
+      id,
     };
     if (canWait) {
       if (template !== STEP_TEMPLATE ? res && stepRes && advancedRes : res) {
