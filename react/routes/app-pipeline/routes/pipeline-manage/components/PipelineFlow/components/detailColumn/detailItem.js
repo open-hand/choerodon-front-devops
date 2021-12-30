@@ -471,8 +471,8 @@ const DetailItem = (props) => {
   };
 
   const handleJarDownload = () => {
-    const jarUrl = get(downloadMavenJarVO, 'downloaJar');
-    const server = get(downloadMavenJarVO, 'server');
+    const jarUrl = get(pipelineJarInfo, 'downloaJar');
+    const server = get(pipelineJarInfo, 'server');
     const password = get(server, 'password');
     const username = get(server, 'username');
     Modal.open({

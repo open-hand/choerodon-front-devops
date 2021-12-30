@@ -2,7 +2,7 @@ import React, {
   FC,
 } from 'react';
 import { useFormatCommon, useFormatMessage, Action } from '@choerodon/master';
-import { Modal, Button } from 'choerodon-ui/pro';
+import { Modal } from 'choerodon-ui/pro';
 // @ts-ignore
 import { saveAs } from 'file-saver';
 import {} from '@choerodon/components';
@@ -233,6 +233,7 @@ const ExcuteDetails:FC<ExcuteDetailsProps> = (props) => {
   const renderPipelineJobDetail = () => {
     const cls = classnames(`${prefixCls}-box`, `${prefixCls}-pipeline`);
     const data = [];
+
     pipelineJarInfo && data.push({
       service: [],
       text: 'jar包下载',
