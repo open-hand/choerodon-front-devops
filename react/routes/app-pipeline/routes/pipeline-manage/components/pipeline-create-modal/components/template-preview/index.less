@@ -38,6 +38,14 @@
     width: 100px;
     height: fit-content;
   }
+  &-stageTmp:last-of-type {
+    .@{prefixCls}-jobTmp {
+      &::before {
+        width: 0;
+        border: none;
+      }
+    }
+  }
   &-jobTmp {
     width: 100px;
     height: 32px;
@@ -50,7 +58,7 @@
     box-shadow: 0px 2px 4px 0px rgba(65, 91, 201, 0.12);
     border-radius: 2px;
     display: block;
-    >p {
+    > p {
       width: 80%;
       margin: 0 auto;
     }
