@@ -6,6 +6,9 @@ const app = {
   'c7ncd.app.operation.type.base_component': '基础组件',
   'c7ncd.app.operation.type.batch_deploy': '批量部署',
   'c7ncd.app.operation.type.pipeline_deploy': '流水线部署',
+
+  'c7ncd.environment.description': '描述',
+  appService: '应用服务',
 };
 
 const commonField = {

@@ -16,6 +16,7 @@ interface FormProps {
   appSelectDisabled?: boolean;
   appServiceName?: string;
   setValueLoading: CallableFunction;
+  format: any,
 }
 
 export default ({
@@ -28,6 +29,7 @@ export default ({
   appSelectDisabled,
   appServiceName,
   setValueLoading,
+  format,
 }: FormProps): DataSetProps => {
   const loadValue = async ({ id, record }: { id: string; record: Record }) => {
     !deployConfigId && setValueLoading(true);
@@ -93,7 +95,7 @@ export default ({
     }, {
       name: 'description',
       required: true,
-      label: formatMessage({ id: 'c7ncd.environment.description' }),
+      label: format({ id: 'description' }),
       maxLength: 200,
     }, {
       name: 'appServiceId',
