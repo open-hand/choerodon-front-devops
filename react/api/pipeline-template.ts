@@ -12,6 +12,12 @@ class PipelinTemplateApi extends Api<PipelinTemplateApi> {
     });
   }
 
+  /**
+   * 根据ID查具体的模板数据
+   * @param {(string | number)} id
+   * @return {*}
+   * @memberof PipelinTemplateApi
+   */
   getTemplateDataById(id:string | number) {
     return this.request({
       url: `${this.prefix}/${id}`,

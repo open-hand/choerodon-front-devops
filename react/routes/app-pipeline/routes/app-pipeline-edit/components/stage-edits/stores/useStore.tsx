@@ -54,7 +54,9 @@ export default function useStore() {
      * @param {Record<string, any>} stageData
      */
     editStage(stageIndex:number, stageData:Record<string, any>) {
-      this.sourceData[stageIndex] = stageData;
+      const { name, type } = stageData;
+      this.sourceData[stageIndex].name = name;
+      this.sourceData[stageIndex].type = type;
       this.handleEditCallback();
     },
 
@@ -64,6 +66,18 @@ export default function useStore() {
      */
     deleteStage(stageIndex:number) {
       this.sourceData.splice(stageIndex, 1);
+
+      this.handleStageSequenceSort();
+      this.handleEditCallback();
+    },
+
+    /**
+     * 阶段排序
+     * @param {number} from
+     * @param {number} to
+     */
+    orderStage(from:number, to:number) {
+      this.sourceData.splice(to, 0, this.sourceData.splice(from, 1)[0]);
 
       this.handleStageSequenceSort();
       this.handleEditCallback();
@@ -86,7 +100,14 @@ export default function useStore() {
       this.handleEditCallback();
     },
 
-    edit(stageIndex:number, jobIndex:number, jobData:any) {
+    /**
+     * 编辑job
+     * @param {number} stageIndex
+     * @param {number} jobIndex
+     * @param {*} jobData
+     * @return {*}
+     */
+    editJob(stageIndex:number, jobIndex:number, jobData:any) {
       if (!this.sourceData[stageIndex]?.jobList) {
         return;
       }

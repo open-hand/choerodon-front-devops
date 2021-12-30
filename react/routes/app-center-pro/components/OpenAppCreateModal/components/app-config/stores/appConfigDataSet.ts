@@ -329,7 +329,6 @@ const mapping: {
     label: '市场应用及版本',
     textField: 'versionNumber',
     valueField: 'versionId',
-    options: new DataSet(marketVersionOptionsDs),
     dynamicProps: {
       required: ({ record }) => ![chartSourceData[0].value, chartSourceData[1].value]
         .includes(record.get(mapping.chartSource.name)),
@@ -341,7 +340,6 @@ const mapping: {
     label: '服务版本',
     textField: 'version',
     valueField: 'id',
-    options: serviceVersionDataSet,
     dynamicProps: {
       disabled: ({ record }) => !record.get(mapping.hzeroVersion.name),
       required: ({ record }) => [chartSourceData[0].value, chartSourceData[1].value]
@@ -373,7 +371,6 @@ const mapping: {
     label: '市场服务及版本',
     textField: 'marketServiceName',
     valueField: 'id',
-    options: marketServiceVersionDataSet,
     dynamicProps: {
       disabled: ({ record }) => !record.get(mapping.marketVersion.name),
       required: ({ record }) => ![chartSourceData[0].value, chartSourceData[1].value]
@@ -404,7 +401,6 @@ const mapping: {
     type: 'string' as FieldType,
     label: '环境',
     required: true,
-    options: new DataSet(envDataSet),
     textField: 'name',
     valueField: 'id',
   },
@@ -422,6 +418,7 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
         if (!detail) {
           item.required = false;
         }
+        item.options = new DataSet(envDataSet);
         break;
       }
       case 'appName': {
@@ -450,11 +447,17 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
       }
       case 'marketVersion': {
         item.disabled = Boolean(detail);
+        item.options = new DataSet(marketVersionOptionsDs);
         break;
       }
       case 'marketServiceVersion': {
         // @ts-ignore
         item.dynamicProps.disabled = ({ record }: { record: Record }) => !(record.get(mapping.marketVersion.name) && !detail);
+        item.options = marketServiceVersionDataSet;
+        break;
+      }
+      case 'serviceVersion': {
+        item.options = serviceVersionDataSet;
         break;
       }
       default: {

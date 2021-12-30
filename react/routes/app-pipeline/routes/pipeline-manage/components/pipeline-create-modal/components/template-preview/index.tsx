@@ -1,12 +1,11 @@
 import React, {
   useEffect, FC, useState,
 } from 'react';
-import { observer } from 'mobx-react-lite';
 import { useFormatCommon, useFormatMessage } from '@choerodon/master';
 import {} from 'choerodon-ui/pro';
 import {} from '@choerodon/components';
 import classNames from 'classnames';
-import appImg from '@/images/app.svg';
+import cutomizeImg from '../../assets/cutomize.png';
 
 import './index.less';
 import StageTemplate from './StageTemplate';
@@ -44,10 +43,10 @@ const TemplatePreview:FC<TemplatePreviewProps> = (props) => {
     [`${prefixCls}-active`]: isActive,
   });
 
-  const renderStages = () => stagesData.map((item) => {
+  const renderStages = () => (stagesData.length ? stagesData.map((item) => {
     const { id: jobTmpId } = item;
     return <StageTemplate key={jobTmpId} {...item} />;
-  });
+  }) : '');
 
   const handleClick = () => {
     handleSelect?.({ ...props });
@@ -56,7 +55,7 @@ const TemplatePreview:FC<TemplatePreviewProps> = (props) => {
   return (
     <div className={cls} onClick={handleClick} role="none">
       <header>
-        <img src={appImg} alt="img" />
+        <img src={image || cutomizeImg} alt="img" />
         <span>{name}</span>
       </header>
       <main>

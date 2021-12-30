@@ -7,20 +7,20 @@ import {
   Page, Header, Breadcrumb, Content, HeaderButtons, useFormatMessage,
 } from '@choerodon/master';
 import { Modal } from 'choerodon-ui/pro';
-import { toJS } from 'mobx';
+import { useSessionStorageState } from 'ahooks';
 import { useHistory, useLocation } from 'react-router';
+import { OverflowWrap } from '@choerodon/components';
 import PipelineTree from './components/PipelineTree';
 import PipelineFlow from './components/PipelineFlow';
 import DragBar from '@/components/drag-bar';
-import PipelineCreate from './components/PipelineCreate';
 import RecordDetail from './components/record-detail';
 import EmptyPage from '@/components/empty-page';
 import { usePipelineManageStore } from './stores';
 import VariableSettings from './components/variable-settings';
 import AuditModal from './components/audit-modal';
 import GitlabRunner from './components/gitlab-runner';
-import MouserOverWrapper from '@/components/MouseOverWrapper';
 import { usePipelineCreateModal } from './components/pipeline-create-modal';
+import { PIPELINE_CREATE_LOCALSTORAGE_IDENTIFY } from '@/routes/app-pipeline/stores/CONSTANTS';
 
 import './index.less';
 
@@ -49,6 +49,7 @@ const PipelineManage = observer(() => {
   } = usePipelineManageStore();
 
   const format = useFormatMessage('c7ncd.pipelineManage');
+  const [, setPipelineCreateData] = useSessionStorageState(PIPELINE_CREATE_LOCALSTORAGE_IDENTIFY);
 
   const {
     getMainData, loadData,
@@ -65,24 +66,6 @@ const PipelineManage = observer(() => {
   } = useLocation();
 
   const handleModalOpen = usePipelineCreateModal();
-
-  const handleCreatePipeline = () => {
-    Modal.open({
-      key: Modal.key(),
-      title: '创建流水线',
-      style: {
-        width: 'calc(100vw - 3.52rem)',
-      },
-      drawer: true,
-      children: <PipelineCreate
-        mathRandom={Math.random()}
-        refreshTree={handleRefresh}
-        editBlockStore={editBlockStore}
-        mainStore={mainStore}
-      />,
-      okText: '创建',
-    });
-  };
 
   const rootRef = useRef(null);
 
@@ -102,23 +85,21 @@ const PipelineManage = observer(() => {
     }
   };
 
-  function openEditModal() {
-    const oldEditMainData = toJS(editBlockStore.getMainData);
-    Modal.open({
-      key: Modal.key(),
-      title: '修改流水线',
-      style: {
-        width: 'calc(100vw - 3.52rem)',
+  function handleModify() {
+    const {
+      id, appServiceCode, appServiceId, appServiceName, name, objectVersionNumber,
+    } = getMainData || {};
+    setPipelineCreateData({
+      pipelineId: id,
+      pipelineName: name,
+      objectVersionNumber,
+      appService: {
+        appServiceCode, appServiceId, appServiceName,
       },
-      drawer: true,
-      children: <PipelineCreate
-        dataSource={editBlockStore.getMainData}
-        refreshTree={handleRefresh}
-        editBlockStore={editBlockStore}
-        oldEditMainData={oldEditMainData}
-        isEdit
-      />,
-      okText: formatMessage({ id: 'boot.save' }),
+    });
+    history.push({
+      search,
+      pathname: `${pathname}/edit/edit/${id}`,
     });
   }
 
@@ -132,9 +113,9 @@ const PipelineManage = observer(() => {
       title: (
         <span className={`${prefixCls}-detail-modal-title`}>
           流水线记录“
-          <MouserOverWrapper width="100px" text={`#${viewId}`}>
-            <span>{`#${viewId}`}</span>
-          </MouserOverWrapper>
+          <OverflowWrap width="100px">
+            {`#${viewId}`}
+          </OverflowWrap>
           ”的详情
         </span>
       ),
@@ -228,11 +209,10 @@ const PipelineManage = observer(() => {
       devopsCdPipelineDeatilVO: detailDevopsCdPipelineDeatilVO,
     } = getDetailData;
     const buttons = [{
-      permissions: ['choerodon.code.project.develop.ci-pipeline.ps.create'],
+      permissions: ['choerodon.code.project.develop.ci-pipeline.ps.createPro'],
       name: format({ id: 'CreatePipeline' }),
       icon: 'playlist_add',
-      handler: handleCreatePipeline,
-      display: true,
+      handler: handleModalOpen,
     }, {
       permissions: ['choerodon.code.project.develop.ci-pipeline.ps.variable.project'],
       name: format({ id: 'GlobalCI' }),
@@ -253,17 +233,15 @@ const PipelineManage = observer(() => {
     if (treeDs.length && treeDs.status === 'ready') {
       if (!parentId) {
         buttons.push({
-          // permissions: ['choerodon.code.project.develop.ci-pipeline.ps.update'],
+          permissions: ['choerodon.code.project.develop.ci-pipeline.ps.update'],
           name: format({ id: 'Modify' }),
           icon: 'edit-o',
-          handler: openEditModal,
-          // display: edit,
+          handler: handleModify,
         }, {
           permissions: ['choerodon.code.project.develop.ci-pipeline.ps.variable.app'],
           name: format({ id: 'CIVariable' }),
           icon: 'settings-o',
           handler: () => openSettingsModal('local'),
-          display: true,
         });
       } else {
         const newStatus = status || detailStatus;
@@ -272,7 +250,6 @@ const PipelineManage = observer(() => {
           name: format({ id: 'RecordDetails' }),
           icon: 'find_in_page-o',
           handler: openRecordDetail,
-          display: true,
         }, {
           permissions: ['choerodon.code.project.develop.ci-pipeline.ps.cancel'],
           name: format({ id: 'CancelExecution' }),
@@ -316,7 +293,7 @@ const PipelineManage = observer(() => {
                 title={formatMessage({ id: 'empty.title.pipeline' })}
                 describe={formatMessage({ id: 'empty.tips.pipeline.owner' })}
                 btnText={formatMessage({ id: `${intlPrefix}.create` })}
-                onClick={handleCreatePipeline}
+                onClick={handleModalOpen}
                 access
               />
             </Suspense>

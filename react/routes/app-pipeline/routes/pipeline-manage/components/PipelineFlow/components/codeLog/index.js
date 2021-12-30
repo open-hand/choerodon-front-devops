@@ -37,7 +37,7 @@ export default observer((props) => {
   // 是cd阶段的这些类型
   const isCd = ['cdHost', 'cdDeploy', 'cdExternalApproval', 'cdDeployment'].includes(type);
   // 是ci阶段的这些类型
-  const isCi = ['build', 'sonar', 'custom', 'chart'].includes(type);
+  const isCi = ['normal', 'custom'].includes(type);
 
   const prefixCls = useMemo(() => 'c7n-pipelineManage-codeLog', []);
   const [interval, setInterTime] = useState(isCi || isCd ? 5000 : null);

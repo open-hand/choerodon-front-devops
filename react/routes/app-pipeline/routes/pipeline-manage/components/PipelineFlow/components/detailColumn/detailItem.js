@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React from 'react';
 import { Tooltip } from 'choerodon-ui';
-import { Modal, message } from 'choerodon-ui/pro';
+import { Modal, message, Icon } from 'choerodon-ui/pro';
 import {
   WritableStream,
 } from 'web-streams-polyfill/ponyfill';
@@ -13,6 +13,8 @@ import copy from 'copy-to-clipboard';
 import StreamSaver from 'streamsaver';
 import { Base64 } from 'js-base64';
 import { get } from 'lodash';
+import classnames from 'classnames';
+import { saveAs } from 'file-saver';
 import renderDuration from '@/utils/getDuration';
 import { handlePromptError } from '@/utils';
 import { MIDDLE } from '@/utils/getModalWidth';
@@ -23,6 +25,10 @@ import CodeLog from '../codeLog';
 import { usePipelineManageStore } from '../../../../stores';
 import MirrorScanning from '../MirrorScanningLog';
 import jobTypesMappings from '../../../../stores/jobsTypeMappings';
+import { JOB_GROUP_TYPES } from '@/routes/app-pipeline/stores/CONSTANTS';
+import { openExcuteDetailModal } from './components/excute-details';
+
+const prefixCls = 'c7n-piplineManage-detail-column';
 
 const DetailItem = (props) => {
   const {
@@ -43,6 +49,7 @@ const DetailItem = (props) => {
     startedDate,
     finishedDate,
     itemType,
+    groupType,
     gitlabJobId,
     jobName,
     handleRefresh,
@@ -55,16 +62,18 @@ const DetailItem = (props) => {
     history,
     location: { search },
     countersigned,
-    chartVersion,
-    sonarScannerType,
-    codeCoverage,
+    pipelineChartInfo,
+    pipelineImageInfo,
+    pipelineJarInfo,
+    pipelineSonarInfo,
     apiTestTaskRecordVO, // api测试任务独有的
     externalApprovalJobVO,
     viewId,
     downloadMavenJarVO,
-    downloadImage,
+    // downloadImage,
     gitlabPipelineId,
     imageScan, // 是否显示镜像的扫描报告btn
+    devopsCiUnitTestReportInfoList,
   } = props;
 
   const { gitlabProjectId, appServiceId } = getDetailData && getDetailData.ciCdPipelineVO;
@@ -324,17 +333,6 @@ const DetailItem = (props) => {
     );
   };
 
-  const renderChart = () => (
-    <main>
-      <div>
-        <span>生成版本:</span>
-        <Tooltip title={chartVersion}>
-          <span>{chartVersion || '-'}</span>
-        </Tooltip>
-      </div>
-    </main>
-  );
-
   function calcValue(successCount, failCount) {
     const sum = failCount + successCount;
     if (sum) {
@@ -378,19 +376,6 @@ const DetailItem = (props) => {
     );
   };
 
-  const renderSonar = () => (
-    <main>
-      <div>
-        <span>检查类型:</span>
-        <span>{sonarScannerType}</span>
-      </div>
-      <div>
-        <span>单测覆盖率:</span>
-        <span>{codeCoverage ? `${codeCoverage}%` : '-'}</span>
-      </div>
-    </main>
-  );
-
   function getRetryBtnDisabled() {
     const successAndFailed = jobStatus === 'success' || jobStatus === 'failed';
     if (itemType?.indexOf('cd') !== -1 && jobStatus === 'success') {
@@ -433,17 +418,11 @@ const DetailItem = (props) => {
       ['cdDeploy', renderCdChart],
       ['cdDeployment', renderCdDeployment],
       ['cdAudit', renderCdAudit],
-      ['chart', renderChart],
       ['cdHost', renderCdHost],
-      ['sonar', renderSonar],
       ['cdApiTest', renderApiTest],
       ['cdExternalApproval', renderCdExternalApproval],
     ]);
     return funcMap.get(itemType) && funcMap.get(itemType)();
-  };
-
-  const renderCheckLogFun = () => {
-    openDescModal(itemType);
   };
 
   const logCheckDisabeldCondition = jobStatus === 'created';
@@ -485,7 +464,6 @@ const DetailItem = (props) => {
             ? writer.close()
             : writer.write(res.value).then(pump)));
         pump();
-        // message.success('下载成功');
         return true;
       }).catch((error) => {
         throw new Error(error);
@@ -506,7 +484,7 @@ const DetailItem = (props) => {
   };
 
   const handleImageCopy = () => {
-    copy(downloadImage);
+    copy(pipelineImageInfo?.downloadUrl);
     message.success('复制成功');
   };
 
@@ -549,7 +527,7 @@ const DetailItem = (props) => {
         data.push({
           service: ['choerodon.code.project.develop.ci-pipeline.ps.job.log'],
           text: format({ id: 'ViewLog' }),
-          action: renderCheckLogFun,
+          action: openDescModal.bind(null, itemType),
         });
       }
       if (!getRetryBtnDisabled()) {
@@ -560,42 +538,6 @@ const DetailItem = (props) => {
         });
       }
     }
-    if (itemType === 'build') {
-      downloadMavenJarVO && data.push({
-        service: [],
-        text: 'jar包下载',
-        action: handleJarDownload,
-      });
-      if (imageScan && jobStatus === 'success') {
-        data.push({
-          service: ['choerodon.code.project.develop.ci-pipeline.ps.job.imageReport'],
-          text: format({ id: 'ScanReport' }),
-          action: openMirrorScanningLog,
-        });
-      }
-      // 目前先不做npm代码保留着
-      // if (downloadNpm) {
-      //   data.push({
-      //     service: [],
-      //     text: 'npm下载',
-      //     action: handleNpmDownload,
-      //     // disabled: getRetryBtnDisabled(),
-      //   });
-      // }
-      downloadImage && data.push({
-        service: [],
-        text: format({ id: 'CopyAddress' }),
-        action: handleImageCopy,
-      });
-    }
-
-    if (itemType === 'sonar') {
-      data.push({
-        service: ['choerodon.code.project.develop.ci-pipeline.ps.job.sonarqube'],
-        text: format({ id: 'QualityReport' }),
-        action: openCodequalityModal,
-      });
-    }
     if (itemType === 'cdApiTest' && ['success', 'failed'].includes(jobStatus)) {
       data.push({
         text: '查看详情',
@@ -603,36 +545,127 @@ const DetailItem = (props) => {
         action: goToApiTest,
       });
     }
-    if (itemType === 'custom' && jobStatus === 'manual') {
+
+    if (['success', 'failed'].includes(jobStatus)) {
+      devopsCiUnitTestReportInfoList?.forEach((item) => {
+        const {
+          type, reportUrl,
+        } = item;
+        const unitType = {
+          maven_unit_test: {
+            name: '下载Maven单测报告',
+            filename: 'Maven单测报告.html',
+          },
+          node_js_unit_test: {
+            name: '下载Node.js单测报告',
+            filename: 'Nodejs单测报告.zip',
+          },
+          go_unit_test: {
+            name: '下载Go单测报告',
+            filename: 'Go单测报告.xml',
+          },
+        };
+        const handleDownload = () => {
+          saveAs(reportUrl, unitType[type]?.filename);
+        };
+        data.push({
+          service: [],
+          text: unitType[type]?.name,
+          action: handleDownload,
+        });
+      });
+      pipelineJarInfo && data.push({
+        service: [],
+        text: 'jar包下载',
+        action: handleJarDownload,
+      });
+
+      imageScan && jobStatus === 'success' && data.push({
+        service: ['choerodon.code.project.develop.ci-pipeline.ps.job.imageReport'],
+        text: format({ id: 'ScanReport' }),
+        action: openMirrorScanningLog,
+      });
+
+      pipelineImageInfo && data.push({
+        service: [],
+        text: format({ id: 'CopyAddress' }),
+        action: handleImageCopy,
+      });
+
+      pipelineSonarInfo && data.push({
+        service: ['choerodon.code.project.develop.ci-pipeline.ps.job.sonarqube'],
+        text: format({ id: 'QualityReport' }),
+        action: openCodequalityModal,
+      });
+    }
+
+    if (['custom', 'normal'].includes(itemType) && jobStatus === 'manual') {
       data.push({
         text: '执行',
         service: ['choerodon.code.project.develop.ci-pipeline.ps.job.execute'],
         action: handleExecute,
       });
     }
+
     return (
       data.length ? <Action data={data} /> : ''
     );
   };
 
+  const renderJobPrefix = () => {
+    if (itemType.indexOf('cd') !== -1) {
+      return `【${jobTypesMappings[itemType]}】`;
+    }
+    const currentJobGroupType = JOB_GROUP_TYPES?.[groupType];
+
+    return (
+      <Tooltip title={get(currentJobGroupType, 'name')}>
+        <Icon className={`${prefixCls}-item-icon`} type={get(currentJobGroupType, 'icon')} />
+      </Tooltip>
+    );
+  };
+
+  const isDetailItemClickable = ['success', 'failed'].includes(jobStatus);
+
+  const detailItemCls = classnames(`${prefixCls}-item`, {
+    [`${prefixCls}-item-clickable`]: isDetailItemClickable,
+  });
+
   return (
-    <div className="c7n-piplineManage-detail-column-item">
+    <div
+      className={detailItemCls}
+      onClick={isDetailItemClickable ? openExcuteDetailModal.bind(null, {
+        jobName,
+        jobId: jobRecordId,
+        devopsCiUnitTestReportInfoList,
+        pipelineChartInfo,
+        pipelineImageInfo,
+        pipelineSonarInfo,
+        pipelineJarInfo,
+        imageScan,
+        jobStatus,
+        openCodequalityModal,
+        handleJarDownload,
+        openMirrorScanningLog,
+        handleImageCopy,
+      }) : () => {}}
+    >
       <header>
         <StatusDot
           size={13}
           status={jobStatus}
-          style={{ lineHeight: '22px' }}
+          style={{ lineHeight: '22px', marginRight: '4px' }}
         />
-        <div className="c7n-piplineManage-detail-column-item-sub">
-          <Tooltip title={jobName}>
-            <span>
-              {itemType && `【${jobTypesMappings[itemType]}】`}
+        <div className={`${prefixCls}-item-sub`}>
+          <div className={`${prefixCls}-item-title`}>
+            {renderJobPrefix()}
+            <Tooltip title={jobName}>
               {jobName}
-            </span>
-          </Tooltip>
+            </Tooltip>
+          </div>
           {startedDate && finishedDate && (
             <Tooltip title={`${startedDate}-${finishedDate}`}>
-              <span>
+              <span className={`${prefixCls}-item-date`}>
                 {startedDate}
                 -
                 {finishedDate}
@@ -644,7 +677,7 @@ const DetailItem = (props) => {
       {renderItemDetail()}
       <footer>
         {renderFooterBtns()}
-        <span className="c7n-piplineManage-detail-column-item-time">
+        <span className={`${prefixCls}-item-time`}>
           <span>任务耗时：</span>
           <span>
             {jobDurationSeconds ? `${renderDuration({ value: jobDurationSeconds })}` : '-'}

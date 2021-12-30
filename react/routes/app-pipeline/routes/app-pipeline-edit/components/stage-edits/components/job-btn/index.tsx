@@ -5,6 +5,7 @@ import { Popover } from 'choerodon-ui';
 import ParalleLines from '../paralle-lines';
 import SerialLines from '../serial-lines';
 import JobTypesPanel from './components/job-types-panel';
+import JobCdPanel from './components/job-CD-panel';
 
 const prefixCls = 'c7ncd-pipeline-edit-jobbtn';
 
@@ -26,6 +27,11 @@ const JobAddBtn = (props:JobAddBtnProps) => {
     serial: <SerialLines />,
   } as const;
 
+  const jobTypePanelMap = {
+    paralle: <JobTypesPanel handleJobAddCallback={handleJobAddCallback} />,
+    serial: <JobCdPanel handleJobAddCallback={handleJobAddCallback} />,
+  };
+
   const renderContent = () => {
     if (type === 'circle') {
       return <Icon type="add" className={`${prefixCls}`} />;
@@ -44,7 +50,7 @@ const JobAddBtn = (props:JobAddBtnProps) => {
   return (
     <Popover
       trigger={['click'] as any}
-      content={<JobTypesPanel handleJobAddCallback={handleJobAddCallback} />}
+      content={jobTypePanelMap[linesType]}
       placement={'bottom' as any}
       overlayClassName={`${prefixCls}-popover`}
     >

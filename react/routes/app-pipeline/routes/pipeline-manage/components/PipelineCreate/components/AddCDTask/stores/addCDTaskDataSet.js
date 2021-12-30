@@ -58,6 +58,7 @@ export default (
   random,
   valueIdDataSet,
   trueAppServiceId,
+  appServiceId,
 ) => ({
   autoCreate: true,
   fields: [
@@ -204,7 +205,7 @@ export default (
           method: 'get',
           url:
             record.get('envId')
-            && `/devops/v1/projects/${projectId}/app_service_instances/list_running_and_failed?app_service_id=${PipelineCreateFormDataSet?.current?.get('appServiceId') || trueAppServiceId}&env_id=${record.get('envId')}&random=${random}`,
+            && `/devops/v1/projects/${projectId}/app_service_instances/list_running_and_failed?app_service_id=${appServiceId}&env_id=${record.get('envId')}&random=${random}`,
           transformResponse: (res) => {
             let newRes = res;
             try {
@@ -231,7 +232,7 @@ export default (
           method: 'get',
           url:
             record.get('envId')
-            && `/devops/v1/projects/${projectId}/deploy_value/list_by_env_and_app?app_service_id=${PipelineCreateFormDataSet?.current?.get('appServiceId') || trueAppServiceId}&env_id=${record.get('envId')}&random=${random}&createValueRandom=${useStore.getValueIdRandom}`,
+            && `/devops/v1/projects/${projectId}/deploy_value/list_by_env_and_app?app_service_id=${appServiceId}&env_id=${record.get('envId')}&random=${random}&createValueRandom=${useStore.getValueIdRandom}`,
           transformResponse: (res) => {
             let newRes = res;
             try {
@@ -654,7 +655,7 @@ export default (
             }
             return {
               method: 'post',
-              url: `/devops/v1/projects/${projectId}/users/app_services/${PipelineCreateFormDataSet?.current?.get('appServiceId') || trueAppServiceId}`,
+              url: `/devops/v1/projects/${projectId}/users/app_services/${appServiceId}`,
               data: {
                 userName: realName || '',
                 ids: cdAuditIds || [],
@@ -760,13 +761,13 @@ export default (
           if (record.get('type') === typeData[0].value) {
             initValueIdDataSet(
               valueIdDataSet,
-              PipelineCreateFormDataSet?.current?.get('appServiceId') || trueAppServiceId,
+              appServiceId,
               value,
               useStore.getValueIdRandom,
             );
             initValueIdDataSet(
               appNameChartDataSet,
-              PipelineCreateFormDataSet?.current?.get('appServiceId') || trueAppServiceId,
+              appServiceId,
               value,
             );
           }
