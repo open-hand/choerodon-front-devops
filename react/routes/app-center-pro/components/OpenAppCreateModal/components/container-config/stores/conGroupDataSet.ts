@@ -29,6 +29,7 @@ import { nexusApiConfig } from '@/api/Nexus';
 import { devopsDeployGroupApiConfig } from '@/api/DevopsDeployGroup';
 import { setReturnData } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config/content';
 import { OPTIONAL } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-config/constant';
+import { BUILD_DOCKER, BUILD_MAVEN_PUBLISH, BUILD_UPLOADJAR } from '@/routes/app-pipeline/CONSTANTS';
 
 const checkReserved = async (
   value: string,
@@ -436,31 +437,12 @@ const conGroupDataSet = (
   let dockerData: any[] = [];
   let jarData: any[] = [];
   if (preJobList && preJobList.length > 0) {
-    dockerData = preJobList.filter((itemList) => {
-      if (itemList.metadata) {
-        try {
-          const metadata = JSON.parse(itemList?.metadata?.replace(/'/g, '"'));
-          if (metadata) {
-            return metadata?.config?.some((c: any) => c.type === 'docker');
-          }
-          return false;
-        } catch (e) {
-          return false;
-        }
-      }
-      return false;
-    });
-    jarData = preJobList.filter((itemList) => {
-      if (itemList.metadata) {
-        try {
-          const metadata = JSON.parse(itemList.metadata.replace(/'/g, '"'));
-          return metadata?.config?.some((c: any) => ['maven_deploy', 'upload_jar'].includes(c.type));
-        } catch (e) {
-          return false;
-        }
-      }
-      return false;
-    });
+    dockerData = preJobList
+      .filter((itemList: any) => itemList?.devopsCiStepVOList
+        ?.some((c: any) => c.type === BUILD_DOCKER));
+    jarData = preJobList
+      .filter((itemList: any) => itemList?.devopsCiStepVOList
+        ?.some((c: any) => [BUILD_MAVEN_PUBLISH, BUILD_UPLOADJAR].includes(c?.type)));
   }
   return ({
     dataToJSON: 'all' as DataToJSON,
