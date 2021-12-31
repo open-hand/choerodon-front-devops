@@ -199,7 +199,7 @@ const Index = observer(() => {
     const res = await BuildDataSet.current.validate(true);
     let stepRes = true;
     let advancedRes = true;
-    if (template !== STEP_TEMPLATE) {
+    if (level === 'project' || !template || ((template === TASK_TEMPLATE) && (BuildDataSet.current?.get('type') === MAVEN_BUILD))) {
       for (let i = 0; i < StepDataSet.records.filter((j: any) => j.status !== 'delete').length; i += 1) {
         const item = StepDataSet.records.filter((j: any) => j.status !== 'delete')[i];
         // eslint-disable-next-line no-await-in-loop
