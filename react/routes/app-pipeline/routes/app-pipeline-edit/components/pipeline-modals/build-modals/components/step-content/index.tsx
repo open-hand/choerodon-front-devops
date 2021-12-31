@@ -16,7 +16,7 @@ import {
   BUILD_DOCKER,
   BUILD_GO,
   BUILD_MAVEN, BUILD_MAVEN_PUBLISH,
-  BUILD_NPM, BUILD_SONARQUBE, BUILD_UPLOAD_CHART_CHOERODON,
+  BUILD_NPM, BUILD_SONARQUBE, BUILD_UPLOAD_CHART_CHOERODON, BUILD_UPLOAD_NPM,
   BUILD_UPLOADJAR, GO_UNIT_TEST, MAVEN_UNIT_TEST, NODE_JS_UNIT_TEST,
   TASK_TEMPLATE,
 } from '@/routes/app-pipeline/CONSTANTS';
@@ -241,7 +241,7 @@ const Index = observer(({
         );
         break;
       }
-      case MAVEN_UNIT_TEST: case GO_UNIT_TEST: case NODE_JS_UNIT_TEST: {
+      case MAVEN_UNIT_TEST: case GO_UNIT_TEST: case NODE_JS_UNIT_TEST: case BUILD_UPLOAD_NPM: {
         result = (
           <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={2}>
             <TextField name={StepMapping.stepName.name} />
@@ -257,6 +257,19 @@ const Index = observer(({
           </Form>
         );
         break;
+      }
+      case 'custom': {
+        result = (
+          <YamlEditor
+            showError={false}
+            value={itemRecord.get(StepMapping.script.name)}
+            onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
+            newLine
+            colSpan={2}
+            readOnly={disabled || template === TASK_TEMPLATE}
+            modeChange={false}
+          />
+        );
       }
       default: {
         break;

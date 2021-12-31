@@ -11,6 +11,7 @@ const BUILD_MAVEN = 'maven_build';
 const BUILD_NPM = 'npm_build';
 const BUILD_DOCKER = 'docker_build';
 const BUILD_UPLOADJAR = 'upload_jar';
+const BUILD_UPLOAD_NPM = 'npm_upload';
 const BUILD_GO = 'go_build';
 const BUILD_MAVEN_PUBLISH = 'maven_publish';
 const BUILD_SONARQUBE = 'sonar';
@@ -49,4 +50,5 @@ export {
   MAVEN_UNIT_TEST,
   GO_UNIT_TEST,
   NODE_JS_UNIT_TEST,
+  BUILD_UPLOAD_NPM,
 };

@@ -217,7 +217,15 @@ const Index = (appServiceId: any, data: any, level: any): any => {
           break;
         }
         case 'name': {
-          item.label = data?.template === TASK_TEMPLATE ? '任务模板名称' : '任务名称';
+          if (data?.template) {
+            if (data?.template === TASK_TEMPLATE) {
+              item.label = '任务模板名称';
+            } else {
+              item.label = '步骤模板名称';
+            }
+          } else {
+            item.label = '任务名称';
+          }
           item.maxLength = !data?.template ? 30 : 60;
           item.validator = async (value: string) => handleValidatorName(
             value,
