@@ -258,6 +258,19 @@ const Index = observer(({
         );
         break;
       }
+      case 'custom': {
+        result = (
+          <YamlEditor
+            showError={false}
+            value={itemRecord.get(StepMapping.script.name)}
+            onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
+            newLine
+            colSpan={2}
+            readOnly={disabled || template === TASK_TEMPLATE}
+            modeChange={false}
+          />
+        );
+      }
       default: {
         break;
       }
