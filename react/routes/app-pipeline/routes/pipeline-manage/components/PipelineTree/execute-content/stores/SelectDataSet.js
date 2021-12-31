@@ -24,14 +24,14 @@ export default ({
     {
       name: 'appServiceName',
       type: 'string',
-      label: formatMessage({ id: 'c7ncd.pipelineManage.appService' }),
+      label: '应用服务',
       defaultValue: appServiceName,
     },
     {
       name: 'branch',
       type: 'string',
       required: true,
-      label: formatMessage({ id: 'branch' }),
+      label: '分支',
     },
   ],
 });
