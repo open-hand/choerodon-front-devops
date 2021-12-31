@@ -221,7 +221,9 @@ const Index = observer(() => {
       devopsCiStepVOList: stepDataSetTransformSubmitData(StepDataSet),
       ...advancedTransformSubmitData(advancedRef?.current?.getDataSet()),
       groupType: type,
-      type,
+      ...template === STEP_TEMPLATE ? {
+        type,
+      } : {},
       // TODO 待删
       appService,
       completed: template !== STEP_TEMPLATE ? res && stepRes && advancedRes : res,
