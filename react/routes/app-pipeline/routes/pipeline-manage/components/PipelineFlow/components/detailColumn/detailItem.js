@@ -471,7 +471,7 @@ const DetailItem = (props) => {
   };
 
   const handleJarDownload = () => {
-    const jarUrl = get(pipelineJarInfo, 'downloaJar');
+    const jarUrl = get(pipelineJarInfo, 'downloadUrl');
     const server = get(pipelineJarInfo, 'server');
     const password = get(server, 'password');
     const username = get(server, 'username');
