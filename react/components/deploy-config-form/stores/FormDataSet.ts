@@ -62,7 +62,6 @@ export default ({
       return formatMessage({ id: 'checkNameFailed' });
     }
   };
-
   return {
     autoQuery: false,
     autoCreate: false,

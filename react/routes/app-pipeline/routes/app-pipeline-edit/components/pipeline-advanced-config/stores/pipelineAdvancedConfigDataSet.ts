@@ -14,7 +14,7 @@ const versionStrategyData = [{
 
 const mapping: any = {
   CIRunnerImage: {
-    name: 'CIRunnerImage',
+    name: 'image',
     type: 'string',
     label: 'CI流程Runner镜像',
     required: true,
@@ -37,7 +37,6 @@ const mapping: any = {
   versionStrategy: {
     name: 'versionStrategy',
     type: 'boolean',
-    label: '版本策略',
     defaultValue: false,
     textField: 'text',
     valueField: 'value',

@@ -234,8 +234,8 @@ export default observer(() => {
     const tempArr =
       pipelineStageMainSource &&
       pipelineStageMainSource.length > 0 &&
-      pipelineStageMainSource.map((item) => item?.jobList?.slice()) || [];
-    const jobArr = tempArr ? tempArr.length > 0 && [].concat.apply(...tempArr) : [];
+      pipelineStageMainSource.map((item) => item?.jobList?.slice()).filter(i => i) || [];
+    const jobArr = tempArr && tempArr.length > 0 ? [].concat.apply(...tempArr) : [];
     let filterArr;
     if (jobArr && currentHostDeployType && currentHostDeployType === 'image') {
       filterArr = jobArr.filter((x) => x?.devopsCiStepVOList?.some(i => i?.type === BUILD_DOCKER) && x.type === MAVEN_BUILD);
@@ -856,7 +856,7 @@ export default observer(() => {
         <DeployConfig
           envId={ADDCDTaskDataSet.current.get('envId')}
           appServiceId={appServiceId}
-          appServiceName={appServiceId}
+          appServiceName={appServiceName}
           refresh={({ valueId, value }) => {
             ADDCDTaskUseStore.setValueIdRandom(Math.random());
             ADDCDTaskDataSet.current.set('valueId', valueId);
