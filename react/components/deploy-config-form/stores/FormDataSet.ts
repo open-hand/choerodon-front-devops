@@ -94,19 +94,19 @@ export default ({
     }, {
       name: 'description',
       required: true,
-      label: format({ id: 'description' }),
+      label: '描述',
       maxLength: 200,
     }, {
       name: 'appServiceId',
       textField: 'appServiceName',
       valueField: 'appServiceId',
-      label: formatMessage({ id: 'appService' }),
+      label: '应用服务',
       required: true,
       defaultValue: appServiceId,
       options: appOptionDs,
     }, {
       name: 'appServiceName',
-      label: formatMessage({ id: 'appService' }),
+      label: '应用服务',
       readOnly: true,
       ignore: 'always' as FieldIgnore,
       defaultValue: appSelectDisabled ? appServiceName : null,
