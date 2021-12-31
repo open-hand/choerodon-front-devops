@@ -217,7 +217,6 @@ const Index = observer(() => {
       advancedRes = await advancedRef?.current?.getDataSet()?.current?.validate(true);
     }
     const result = {
-      ...transformSubmitData(BuildDataSet),
       devopsCiStepVOList: stepDataSetTransformSubmitData(StepDataSet),
       ...advancedTransformSubmitData(advancedRef?.current?.getDataSet()),
       groupType: type,
@@ -226,6 +225,7 @@ const Index = observer(() => {
       appService,
       completed: template !== STEP_TEMPLATE ? res && stepRes && advancedRes : res,
       id,
+      ...transformSubmitData(BuildDataSet),
     };
     if (canWait) {
       if (template !== STEP_TEMPLATE ? res && stepRes && advancedRes : res) {
