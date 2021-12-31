@@ -16,6 +16,8 @@ const Index = observer(() => {
     setTabsDataState,
   } = useAppPipelineEditStore();
 
+  const data = tabsData?.[TAB_ADVANCE_SETTINGS]?.defaultImage;
+
   const {
     PipelineAdvancedConfigDataSet,
     level,
@@ -24,7 +26,25 @@ const Index = observer(() => {
   return (
     <>
       <Form dataSet={PipelineAdvancedConfigDataSet} columns={2}>
-        <Select combo colSpan={2} name={mapping.CIRunnerImage.name} />
+        <Select
+          combo
+          colSpan={2}
+          name={mapping.CIRunnerImage.name}
+          optionRenderer={({ value }) => {
+            if (value === data) {
+              return (
+                <span>
+                  {`${value}(平台预置)`}
+                </span>
+              );
+            }
+            return (
+              <span>
+                {value}
+              </span>
+            );
+          }}
+        />
         <SelectBox
           colSpan={1}
           name={mapping.versionStrategy.name}
