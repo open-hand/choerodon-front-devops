@@ -199,18 +199,22 @@ const mapping: {
     defaultValue: '<=',
     textField: 'text',
     valueField: 'value',
+    dynamicProps: {
+      disabled: ({ record }: any) => !record.get(mapping.imagePublishGuard.name),
+    },
     options: new DataSet({
       data: [{
         text: '小于等于',
         value: '<=',
       }],
     }),
-    disabled: true,
   },
   condition: {
     name: 'vulnerabilityCount',
     type: 'number',
     label: '漏洞数量',
+    min: 0,
+    step: 1,
   },
   examType: {
     name: 'scannerType',
