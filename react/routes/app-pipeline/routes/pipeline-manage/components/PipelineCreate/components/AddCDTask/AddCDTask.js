@@ -208,11 +208,11 @@ export default observer(() => {
     const filterColumns = pipelineStageMainSource.slice(0, columnIndex);
     let itemPreJobLists = [];
     filterColumns.forEach((item, itemIndex) => {
-      if (itemIndex + 1 < columnIndex) {
+      if (itemIndex + 1 <= columnIndex) {
         itemPreJobLists = [...itemPreJobLists, ...item?.jobList || []];
       } else {
         item?.jobList?.forEach((jobItem, jobItemIndex) => {
-          if (jobItemIndex + 1 < witchColumnJobIndex) {
+          if (jobItemIndex + 1 <= witchColumnJobIndex) {
             itemPreJobLists.push(jobItem);
           }
         });
