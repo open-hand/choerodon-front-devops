@@ -3,6 +3,7 @@ import every from 'lodash/every';
 import { isEmpty } from 'lodash';
 import { TabkeyTypes } from '@/routes/app-pipeline/interface';
 import {
+  STAGE_CI,
   TAB_ADVANCE_SETTINGS, TAB_BASIC, TAB_CI_CONFIG, TAB_FLOW_CONFIG,
 } from '../stores/CONSTANTS';
 
@@ -51,7 +52,7 @@ function handleValideStage(stagesData:Array<{jobList:{completed:boolean}[]} & Re
   if (!stagesData.length) {
     return { isValidated: false, reason: '流水线的阶段不能为空' };
   }
-  const isCompleted = stagesData.every(({ jobList }) => {
+  const isCompleted = stagesData.filter(({ type: stageType }:any) => stageType === STAGE_CI).every(({ jobList }) => {
     if (!jobList?.length) return false;
     return jobList.every(({ completed }) => completed);
   });
