@@ -187,7 +187,7 @@ class CodeMirror extends React.Component {
       editor = (
         <div className="c7ncd-editor-tools">
           <Button funcType="flat" onClick={this.handleChangeView}>
-            <FormattedMessage id="editor.mode.changer" />
+            切换编辑器模式
           </Button>
           {viewMode === "diff" ? (
             <div className="c7ncd-editor-legend">{this.getLegends}</div>
