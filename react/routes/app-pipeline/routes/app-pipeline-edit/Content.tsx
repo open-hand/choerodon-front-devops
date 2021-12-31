@@ -180,7 +180,7 @@ const AppPipelineEdit = () => {
   const renderTitle = () => {
     let title = '';
     if (level === 'project') {
-      title = ['create', 'copy'].includes(type) ? '创建流水线' : '编辑流水线';
+      title = ['create', 'copy'].includes(type) ? '创建流水线' : '修改流水线';
     } else {
       title = type === 'create' ? '创建流水线模板' : '编辑流水线模板';
     }
