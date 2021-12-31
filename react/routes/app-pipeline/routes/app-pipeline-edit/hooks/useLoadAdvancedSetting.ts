@@ -22,6 +22,7 @@ function useAdvancedSetting(configs: any, options?: any) {
         ...transformLoadData(undefined, {
           [mapping.CIRunnerImage.name]: defaultImage,
         }),
+        defaultImage,
         devopsCiPipelineFunctionDTOList: data || [],
       },
     });
