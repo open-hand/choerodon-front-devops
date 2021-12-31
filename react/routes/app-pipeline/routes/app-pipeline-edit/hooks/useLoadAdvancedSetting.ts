@@ -1,11 +1,13 @@
 import { useQuery, UseQueryOptions, QueryKey } from 'react-query';
 import { devopsAlienApi } from '@choerodon/master';
+import { useLocation, useHistory, useParams } from 'react-router';
 import { TAB_ADVANCE_SETTINGS } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
 import { initCustomFunc } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-advanced-config/stores';
 import {
   mapping,
   transformLoadData,
 } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-advanced-config/stores/pipelineAdvancedConfigDataSet';
+import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
 
 function useAdvancedSetting(configs: any, options?: any) {
   const {
@@ -15,6 +17,14 @@ function useAdvancedSetting(configs: any, options?: any) {
     level,
   } = configs;
 
+  const {
+    tabApis,
+  } = usePipelineContext();
+
+  const {
+    id: urlId,
+  } = useParams<any>();
+
   const handleSuccess = async (data:Record<string, any>) => {
     const defaultImage = await devopsAlienApi.getDefaultImage();
     setTabsDataState({
@@ -23,7 +33,8 @@ function useAdvancedSetting(configs: any, options?: any) {
           [mapping.CIRunnerImage.name]: defaultImage,
         }),
         defaultImage,
-        devopsCiPipelineFunctionDTOList: data || [],
+        devopsCiPipelineFunctionDTOList: data?.devopsCiPipelineFunctionDTOList || [],
+        ...data,
       },
     });
   };
@@ -32,12 +43,23 @@ function useAdvancedSetting(configs: any, options?: any) {
     if (level === 'project') {
       if (type === 'create') {
         const res = await initCustomFunc();
-        return res;
+        return {
+          devopsCiPipelineFunctionDTOList: res,
+        };
       }
       const res = await initCustomFunc(id);
-      return res;
+      return {
+        devopsCiPipelineFunctionDTOList: res,
+      };
     }
-    return [];
+    if (type !== 'create') {
+      const data = await tabApis?.[TAB_ADVANCE_SETTINGS]?.modify(urlId);
+      return data;
+    }
+
+    return {
+      devopsCiPipelineFunctionDTOList: [],
+    };
   };
 
   return useQuery<unknown, unknown, Record<string, any>>(['app-pipeline-advancedSetting', id],
