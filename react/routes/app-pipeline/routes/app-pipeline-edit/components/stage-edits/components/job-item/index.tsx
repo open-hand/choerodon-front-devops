@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { useFormatCommon } from '@choerodon/master';
 import { Icon, Modal, Tooltip } from 'choerodon-ui/pro';
-import { omit, get } from 'lodash';
+import { omit, get, isBoolean } from 'lodash';
 
 import { OverflowWrap, InfoIcon } from '@choerodon/components';
 import classNames from 'classnames';
@@ -126,7 +126,7 @@ const JobItem:FC<JobProps> = (props) => {
   };
 
   const jobContentCls = classNames(`${prefixCls}-content`, {
-    [`${prefixCls}-content-notComplete`]: !completed,
+    [`${prefixCls}-content-notComplete`]: isBoolean(completed) && !completed,
   });
 
   return (
@@ -136,12 +136,11 @@ const JobItem:FC<JobProps> = (props) => {
         <Tooltip title={get(currentJobGroupType, 'name')}>
           <Icon className={`${`${prefixCls}`}-icon`} type={get(currentJobGroupType, 'icon')} />
         </Tooltip>
-
         <OverflowWrap className={`${prefixCls}-name`} width={120}>
           {name}
         </OverflowWrap>
         <div className={`${prefixCls}-iconGroups`}>
-          {!completed && (
+          {isBoolean(completed) && !completed && (
           <InfoIcon
             className={`${prefixCls}-iconGroups-notComplete`}
           />

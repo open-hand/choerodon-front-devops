@@ -199,6 +199,7 @@ const ExcuteDetails:FC<ExcuteDetailsProps> = (props) => {
     const { chartVersion } = pipelineChartInfo || {};
     return (
       <div className={cls}>
+        {pipelineJarInfo && (
         <div className={`${cls}-item`}>
           <span>生成Jar包：</span>
           <span>
@@ -216,16 +217,23 @@ const ExcuteDetails:FC<ExcuteDetailsProps> = (props) => {
             </span>
           </span>
         </div>
+        )}
+        {pipelineImageInfo && (
         <div className={`${cls}-item`}>
           <span>生成镜像地址：</span>
           <span>
             {imageTag || '-'}
           </span>
         </div>
-        <div className={`${cls}-item`}>
-          <span>生成Chart版本：</span>
-          <span>{chartVersion || '-'}</span>
-        </div>
+        )}
+        {
+          pipelineChartInfo && (
+          <div className={`${cls}-item`}>
+            <span>生成Chart版本：</span>
+            <span>{chartVersion || '-'}</span>
+          </div>
+          )
+        }
       </div>
     );
   };

@@ -11,6 +11,7 @@ import StageAddBtn from './components/stage-btn';
 import { STAGE_CD, STAGE_CI } from '../../stores/CONSTANTS';
 import { STAGE_TYPES } from '../../interface';
 import useStageEdit from './hooks/useStageEdit';
+import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
 
 const StageEdits = () => {
   const {
@@ -21,6 +22,10 @@ const StageEdits = () => {
     getSourceData,
     orderStage,
   } = useStageEdit();
+
+  const {
+    level,
+  } = usePipelineContext();
 
   const [fromToId, setFromToId] = useState<string>('');
   const [isDragging, { setFalse, setTrue }] = useBoolean(false);
@@ -126,7 +131,9 @@ const StageEdits = () => {
 
   return (
     <div className={prefixCls}>
-      <Alert closable showIcon type="warning" message="此页面定义了CI阶段或其中的任务后，GitLab仓库中的.gitlab-ci.yml文件也会同步修改。" />
+      {
+        level === 'project' ? <Alert closable showIcon type="warning" message="此页面定义了CI阶段或其中的任务后，GitLab仓库中的.gitlab-ci.yml文件也会同步修改。" /> : ''
+      }
       <div className={`${prefixCls}-container`}>
         <DragDropContext
           onDragStart={() => window.requestIdleCallback(setTrue)}
