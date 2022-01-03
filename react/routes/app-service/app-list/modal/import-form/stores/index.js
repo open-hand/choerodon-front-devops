@@ -15,7 +15,7 @@ import shareImage from '../../../../images/share.svg';
 import marketImage from '../../../../images/market.svg';
 import githubImage from '../../../../images/github.svg';
 import gitlabImage from '../../../../images/gitlab.svg';
-import gerneralGitImage from '../../../../images/gerneralGit.svg';
+import gerneralGitImage from '../../../../images/generalGit.svg';
 
 const Store = createContext();
 
