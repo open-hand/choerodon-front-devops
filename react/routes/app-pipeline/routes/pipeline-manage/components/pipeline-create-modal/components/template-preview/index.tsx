@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { useFormatCommon, useFormatMessage } from '@choerodon/master';
 import {} from 'choerodon-ui/pro';
-import {} from '@choerodon/components';
+import { StatusTag } from '@choerodon/components';
 import classNames from 'classnames';
 import cutomizeImg from '../../assets/cutomize.png';
 
@@ -13,6 +13,7 @@ import StageTemplate from './StageTemplate';
 export type TemplatePreviewProps = {
   name:string
   id:string
+  showCustomizeTag:boolean
   ciTemplateStageVOList: any[]
   cdTemplateStageVOList:any[]
   isActive?:boolean
@@ -32,6 +33,7 @@ const TemplatePreview:FC<TemplatePreviewProps> = (props) => {
     ciTemplateStageVOList = [],
     cdTemplateStageVOList = [],
     isActive,
+    showCustomizeTag,
     handleSelect,
   } = props;
 
@@ -57,7 +59,8 @@ const TemplatePreview:FC<TemplatePreviewProps> = (props) => {
     <div className={cls} onClick={handleClick} role="none">
       <header>
         <img src={ciTemplateCategoryDTO?.image || cutomizeImg} alt="img" />
-        <span>{name}</span>
+        <span className={`${prefixCls}-name`}>{name}</span>
+        {showCustomizeTag && <StatusTag className={`${prefixCls}-tag`} name="自定义" colorCode="operating" type="border" />}
       </header>
       <main>
         {renderStages()}
