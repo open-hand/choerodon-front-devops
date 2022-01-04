@@ -225,7 +225,17 @@ const CreateForm = injectIntl(observer((props) => {
                 && (
                   <Alert
                     className="outGitlab-alert"
-                    message={formatMessage({ id: `${intlPrefix}.outGitlab.alert.tips` })}
+                    message={(
+                      <div>
+                        {formatMessage({ id: `${intlPrefix}.outGitlab.alert.tips.attention` })}
+                        <br />
+                        {formatMessage({ id: `${intlPrefix}.outGitlab.alert.tips.one` })}
+                        <br />
+                        {formatMessage({ id: `${intlPrefix}.outGitlab.alert.tips.two` })}
+                        <br />
+                        {formatMessage({ id: `${intlPrefix}.outGitlab.alert.tips.three` })}
+                      </div>
+        )}
                     type="warning"
                     showIcon
                   />

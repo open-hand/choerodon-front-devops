@@ -21,11 +21,13 @@ export default function DragBar({ parentRef, store }) {
     'c7ncd-draggers-handle-dragged': isDragging,
   }), [isDragging]);
 
-  const dragRight = resizeNav.x >= X_AXIS_WIDTH_MAX ? X_AXIS_WIDTH_MAX : bounds.width - X_AXIS_WIDTH;
+  const dragRight = resizeNav.x >= X_AXIS_WIDTH_MAX
+    ? X_AXIS_WIDTH_MAX : bounds.width - X_AXIS_WIDTH;
 
-  return <Fragment>
-    {draggable && (
-      <Fragment>
+  return (
+    <>
+      {draggable && (
+      <>
         <Draggable
           axis="x"
           position={resizeNav}
@@ -44,7 +46,8 @@ export default function DragBar({ parentRef, store }) {
           </div>
         </Draggable>
         {isDragging && <div className="c7ncd-draggers-blocker" />}
-      </Fragment>
-    )}
-  </Fragment>;
+      </>
+      )}
+    </>
+  );
 }
