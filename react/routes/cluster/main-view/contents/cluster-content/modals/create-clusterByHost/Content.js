@@ -7,9 +7,8 @@ import {
   Modal,
   message,
   Button,
-  Icon,
 } from 'choerodon-ui/pro';
-import { forEach, toUpper } from 'lodash';
+import { forEach } from 'lodash';
 
 import { Alert } from 'choerodon-ui';
 
@@ -51,10 +50,6 @@ function CreateClusterHostForm() {
     },
     [],
   );
-
-  // if (isEdit) {
-  //   formDs.query();
-  // }
 
   const openNoticeEvenModal = () => {
     confirmModal = Modal.open({
