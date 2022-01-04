@@ -171,7 +171,7 @@ const ExcuteDetails:FC<ExcuteDetailsProps> = (props) => {
       <div className={cls}>
         <Action
           data={[{
-            service: ['choerodon.code.project.develop.ci-pipeline.ps.job.sonarqube'],
+            service: [],
             text: '查看代码质量报告',
             action: openCodequalityModal,
           }]}
