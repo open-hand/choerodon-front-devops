@@ -77,7 +77,7 @@ const ExcuteDetails:FC<ExcuteDetailsProps> = (props) => {
         <Action
           data={[
             {
-              text: '下载单侧报告',
+              text: '下载单测报告',
               action: handleDownload,
             },
           ]}
