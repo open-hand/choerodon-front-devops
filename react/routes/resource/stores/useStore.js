@@ -163,7 +163,7 @@ export default function useStore(viewType) {
               const newItemKey = `${envId}**${item.id}**${type}`;
               const newItem = ({
                 ...item,
-                name: type === 'instances' ? item.code : item.name,
+                name: item.name,
                 key: newItemKey,
                 itemType: type,
                 parentId: groupKey,
