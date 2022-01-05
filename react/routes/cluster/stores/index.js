@@ -67,7 +67,15 @@ export const StoreProvider = injectIntl(inject('AppState')(observer(
       formatMessage,
       intlPrefix,
       projectId,
-    }), [projectId]));
+    })), [projectId]);
+
+    // const nodesDs = useMemo(() => new DataSet(NodeDataSet({
+    //   ...props,
+    //   accountDs,
+    //   formatMessage,
+    //   intlPrefix,
+    //   projectId,
+    // }), [projectId]));
 
     const addNodesDs = useMemo(() => new DataSet(NodeDataSet({
       ...props,
@@ -78,7 +86,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer(
       isModal: true,
       clusterId: clusterStore.getSelectedMenu.id,
       projectId,
-    }), [projectId, clusterStore.getSelectedMenu.id]));
+    })), [projectId, clusterStore.getSelectedMenu.id]);
 
     const publicNodeDs = useMemo(() => new DataSet(publicNodeDataSet({
       ...props,
