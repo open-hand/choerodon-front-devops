@@ -20,7 +20,7 @@
     "lint-staged": "lint-staged",
     "lint-staged:es": "eslint",
     "compile": "choerodon-front-boot compile",
-    "clean-install": "rm -rf node_modules && rm package-lock.json && npm i --registry https://nexus.choerodon.com.cn/repository/choerodon-npm && chmod -R u+x node_modules"
+    "clean-install": "rm -rf node_modules && rm -fr package-lock.json && npm i --registry https://nexus.choerodon.com.cn/repository/choerodon-npm && chmod -R u+x node_modules"
   },
   "resolutions": {
     "react": "16.14.0",
