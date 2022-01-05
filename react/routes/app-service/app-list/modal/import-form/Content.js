@@ -157,8 +157,8 @@ const ImportForm = injectIntl(observer((props) => {
             <div
               className={`${prefixCls}-select-custom-wrap`}
             >
-              <div><img src={item.img} style={{ width: '50px', height: '50px' }} /></div>
-              <div style={{ paddingLeft: '5px', paddingTop: '20px' }}>
+              <div className={`${prefixCls}-select-custom-image-wrapper`}><img src={item.img} /></div>
+              <div className={`${prefixCls}-select-custom-content`}>
                 <Tooltip title={hasMarket || item.type !== 'market' ? '' : '未安装【应用市场】插件，无法使用此功能'}>
                   <div className={`${prefixCls}-select-custom-title`}>
                     {formatMessage({ id: `${intlPrefix}.import.type.${item.type}` })}
