@@ -93,9 +93,9 @@ const Stage:FC<StageProps> = (props) => {
    * @param {number} jobIndex
    * @param {*} jobData
    */
-  const handleJobAddCallback = () => {
+  const handleJobAddCallback = (addonData:any) => {
     const jobIndex = jobList.length;
-    addJob(stageIndex, jobIndex, { type });
+    addJob(stageIndex, jobIndex, addonData);
     return (jobData:any) => editJob(stageIndex, jobIndex, jobData);
   };
 
