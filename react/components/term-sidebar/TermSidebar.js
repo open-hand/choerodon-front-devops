@@ -6,7 +6,7 @@ import { Select, Modal } from 'choerodon-ui';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Content } from '@choerodon/master';
 import _ from 'lodash';
-import uuidv1 from 'uuid/v1';
+import uuidv1 from 'uuid';
 import Cookies from 'universal-cookie';
 import { removeEndsChar } from '../../utils';
 import Term from '../term';

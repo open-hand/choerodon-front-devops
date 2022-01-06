@@ -153,7 +153,7 @@ export default (({
       { name: 'imgUrl', type: 'string' },
       {
         name: 'appServiceSource',
-        defaultValue: 'normal_service',
+        defaultValue: 'site_template',
         type: 'string',
         textField: 'text',
         valueField: 'value',

@@ -1,4 +1,5 @@
 /* eslint-disable */
+// @ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import { axios } from '@choerodon/master';
@@ -1389,7 +1390,7 @@ const AddTask = observer(() => {
                         门禁限制
                         <Tooltip title={(<>
                           <p>门禁限制可选择漏洞的严重度与漏洞数量作为基准。且只有满足限制时，才可通过设置的门禁。</p>
-                          <p>若镜像漏洞扫描的结果中存在漏洞严重度比限制中设置的严重度层级更高（严重度层级由高至低：危急>严重>中等>较低）或者同层级严重度的漏洞数量超过了设置的数量时，该镜像均视作不满足门禁限制而不会被推送至镜像仓库。</p>
+                          <p>{'若镜像漏洞扫描的结果中存在漏洞严重度比限制中设置的严重度层级更高（严重度层级由高至低：危急>严重>中等>较低）或者同层级严重度的漏洞数量超过了设置的数量时，该镜像均视作不满足门禁限制而不会被推送至镜像仓库。'}</p>
                         </>
                         )}>
                           <Icon

@@ -12,6 +12,7 @@ import classNames from 'classnames';
 import PipelineTemplatesDataSet from '../../stores/PipelineTemplatesDataSet';
 import TemplatePreview from '../template-preview';
 import { DEFAULT_TMP_ID, DEFAULT_TMP } from '@/routes/app-pipeline/stores/CONSTANTS';
+import cutomizeImg from '../../assets/cutomize.png';
 
 export type TemplatesSelectorProps = {
   handleSelectTmpCallback:(tempData:any)=>void
@@ -21,6 +22,7 @@ type MenuItemTypes= {
   category:string
   id:string |number
   image:string
+  handleSelectTmpCallback:CallableFunction
 }
 
 const prefixCls = 'c7ncd-templates-selector';
@@ -83,7 +85,7 @@ const TemplatesSelector:FC<TemplatesSelectorProps> = (props) => {
         role="none"
       >
         <div className={`${prefixCls}-menu-item-image-container`}>
-          <img src={image} alt="" />
+          <img src={image || cutomizeImg} alt="" />
         </div>
         <span>{category}</span>
       </div>
@@ -94,7 +96,8 @@ const TemplatesSelector:FC<TemplatesSelectorProps> = (props) => {
    * 选模板的回调函数
    */
   const handleSelectTmp = (tmpData:any) => {
-    const { id } = tmpData || {};
+    const { id, ciTemplateCategoryId } = tmpData || {};
+    ciTemplateCategoryId && setSelectedMenuId(ciTemplateCategoryId);
     setSelectedTmpId(id);
     handleSelectTmpCallback(id);
   };
@@ -103,9 +106,9 @@ const TemplatesSelector:FC<TemplatesSelectorProps> = (props) => {
   const getSectionGroup = useMemo(() => {
     const sectionGroup:Map<string, any[]> = new Map();
     const tmpLists = [DEFAULT_TMP, ...(pipelineTemplateVOList || []).slice()];
-    tmpLists?.forEach((item:{ciTemplateCategoryId:string}) => {
+    tmpLists?.forEach((item:{ ciTemplateCategoryId:string }) => {
       const { ciTemplateCategoryId } = item;
-      if (!(ciTemplateCategoryId in sectionGroup)) sectionGroup.set(ciTemplateCategoryId, []);
+      if (!sectionGroup.get(ciTemplateCategoryId)) sectionGroup.set(ciTemplateCategoryId, []);
       sectionGroup.get(ciTemplateCategoryId)?.push(item);
     });
     return sectionGroup;
@@ -134,11 +137,13 @@ const TemplatesSelector:FC<TemplatesSelectorProps> = (props) => {
   const renderContainerItems = (array:any[]) => array?.map((item) => {
     const {
       id: tmpId,
+      builtIn,
     } = item;
 
     return (
       <TemplatePreview
         {...item}
+        showCustomizeTag={!builtIn}
         key={tmpId}
         isActive={tmpId === selectedTmpId}
         handleSelect={handleSelectTmp}

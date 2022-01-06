@@ -8,10 +8,15 @@ const prefix = 'c7ncd-closeModal';
 const Index = (props: any) => {
   const {
     modal,
+    preCheck,
   } = props;
 
-  const handleClick = () => {
-    modal && modal.close();
+  const handleClick = async () => {
+    let result = true;
+    if (preCheck) {
+      result = await preCheck();
+    }
+    result && modal && modal.close();
   };
 
   return (

@@ -7,7 +7,7 @@ import './index.less';
 const prefix = 'c7ncd-sideStep';
 
 // eslint-disable-next-line no-shadow
-declare enum typeProps {
+enum typeProps {
   scrollTop= 'scrollTop',
 }
 
@@ -23,6 +23,7 @@ const Index = observer(({
     el: any
     focus?: any,
     type?: typeProps,
+    display: boolean,
   }[],
 }) => {
   const [list, setList] = useState<any>([]);
@@ -34,9 +35,10 @@ const Index = observer(({
   }, [list]);
 
   useEffect(() => {
+    const focusIndex = list?.findIndex((i: any) => i.focus);
     const newList = data.map((item, index) => {
       const newItem = item;
-      newItem.focus = (index === 0);
+      newItem.focus = (focusIndex !== -1 ? index === focusIndex : index === 0);
       return newItem;
     });
     setList(newList);
@@ -44,7 +46,7 @@ const Index = observer(({
     return () => {
       document.querySelector(scrollContext)?.removeEventListener('scroll', listen);
     };
-  }, []);
+  }, [data]);
 
   const scrollListener = () => {
     const scrollDom = document.querySelector(scrollContext);
@@ -94,7 +96,7 @@ const Index = observer(({
   return (
     <div className={prefix}>
       {
-        list.map((item: any) => (
+        list.filter((item: any) => item.display).map((item: any) => (
           <div
             role="none"
             className={classnames({

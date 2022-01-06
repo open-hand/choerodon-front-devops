@@ -5,6 +5,7 @@ import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
+import { useFormatMessage } from '@choerodon/master';
 import { DataSet as DataSetProps } from '@/interface';
 import FormDataSet from './FormDataSet';
 import AppOptionDataSet from './AppOptionDataSet';
@@ -42,6 +43,8 @@ export const StoreProvider = injectIntl(inject('AppState')(
       appServiceName,
     } = props;
 
+    const format = useFormatMessage('c7ncd.environment');
+
     const [valueLoading, setValueLoading] = useState(true);
 
     const isModify = useMemo(() => deployConfigId || appSelectDisabled, []);
@@ -58,6 +61,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       appSelectDisabled,
       appServiceName,
       setValueLoading,
+      format,
     })),
     [
       appOptionDs,

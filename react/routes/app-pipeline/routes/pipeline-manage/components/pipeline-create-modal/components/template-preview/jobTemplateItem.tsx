@@ -1,17 +1,19 @@
 import React from 'react';
+import { OverflowWrap } from '@choerodon/components';
 import { prefixCls } from './index';
 
-type JobTemplateItem ={
+type JobTemplateItemProps ={
   name: string
 }
 
-const JobTemplateItem = (props:JobTemplateItem) => {
+const JobTemplateItem = (props:JobTemplateItemProps) => {
   const {
     name: jobName,
   } = props;
+
   return (
     <div className={`${prefixCls}-jobTmp`}>
-      {jobName}
+      <OverflowWrap width="80%">{jobName}</OverflowWrap>
     </div>
   );
 };

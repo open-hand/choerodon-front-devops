@@ -2,10 +2,10 @@
 
 .@{prefixCls} {
   padding: 12px;
+  padding-bottom: 8px;
   height: fit-content;
-  background: var(--ck-color-list-button-on-background);
+  background: rgba(104, 135, 232, 0.08);
   border-radius: 4px;
-  overflow: hidden;
   border: 1px solid transparent;
   cursor: pointer;
   &-active {
@@ -17,8 +17,7 @@
   > main {
     display: flex;
     margin-top: 10px;
-    overflow-x: scroll;
-    padding-bottom: 10px;
+    margin-bottom: 4px;
   }
   > header {
     display: flex;
@@ -27,26 +26,44 @@
       width: 32px;
       height: 26px;
     }
-    > span {
+    .@{prefixCls}-name {
       font-size: 13px;
       font-weight: 400;
       color: var(--text-color);
       line-height: 20px;
       margin-left: 8px;
     }
+    .@{prefixCls}-tag {
+      margin-left: 60px;
+    }
   }
   &-stageTmp {
-    width: 100px;
+    min-width: 29%;
     height: fit-content;
   }
+  &-stageTmp:last-of-type {
+    .@{prefixCls}-jobTmp {
+      &::before {
+        width: 0;
+        border: none;
+      }
+    }
+  }
   &-jobTmp {
-    width: 100px;
     height: 32px;
+    padding: 0 2px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     text-align: center;
     line-height: 32px;
     background: #fff;
     box-shadow: 0px 2px 4px 0px rgba(65, 91, 201, 0.12);
     border-radius: 2px;
+    display: block;
+    > p {
+      width: 80%;
+      margin: 0 auto;
+    }
   }
   &-jobTmp + &-jobTmp {
     margin-top: 10px;
@@ -68,15 +85,15 @@
   &-stageTmp + &-stageTmp {
     margin-left: 32px;
     position: relative;
+    padding-bottom: 2px;
     &::before {
       position: absolute;
       content: "";
-      width: 32px;
+      width: 20%;
       height: 1px;
       display: block;
       background: #6887e8;
-      top: 0;
-      bottom: 0;
+      top: 15px;
       margin: auto;
       left: -32px;
     }

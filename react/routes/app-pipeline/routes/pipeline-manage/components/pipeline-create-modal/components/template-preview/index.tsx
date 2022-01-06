@@ -1,24 +1,26 @@
 import React, {
   useEffect, FC, useState,
 } from 'react';
-import { observer } from 'mobx-react-lite';
 import { useFormatCommon, useFormatMessage } from '@choerodon/master';
 import {} from 'choerodon-ui/pro';
-import {} from '@choerodon/components';
+import { StatusTag } from '@choerodon/components';
 import classNames from 'classnames';
-import appImg from '@/images/app.svg';
+import cutomizeImg from '../../assets/cutomize.png';
 
 import './index.less';
 import StageTemplate from './StageTemplate';
 
 export type TemplatePreviewProps = {
   name:string
-  image:string
   id:string
+  showCustomizeTag:boolean
   ciTemplateStageVOList: any[]
   cdTemplateStageVOList:any[]
   isActive?:boolean
   handleSelect?:(data:any)=>void
+  ciTemplateCategoryDTO:{
+    image:string
+  }
 }
 
 export const prefixCls = 'c7ncd-template-preview';
@@ -27,11 +29,11 @@ export const intlPrefix = 'c7ncd.template.preview';
 const TemplatePreview:FC<TemplatePreviewProps> = (props) => {
   const {
     name,
-    id,
-    image,
+    ciTemplateCategoryDTO = { image: '' },
     ciTemplateStageVOList = [],
     cdTemplateStageVOList = [],
     isActive,
+    showCustomizeTag,
     handleSelect,
   } = props;
 
@@ -44,10 +46,10 @@ const TemplatePreview:FC<TemplatePreviewProps> = (props) => {
     [`${prefixCls}-active`]: isActive,
   });
 
-  const renderStages = () => stagesData.map((item) => {
+  const renderStages = () => (stagesData.length ? stagesData.map((item) => {
     const { id: jobTmpId } = item;
     return <StageTemplate key={jobTmpId} {...item} />;
-  });
+  }) : '');
 
   const handleClick = () => {
     handleSelect?.({ ...props });
@@ -56,8 +58,9 @@ const TemplatePreview:FC<TemplatePreviewProps> = (props) => {
   return (
     <div className={cls} onClick={handleClick} role="none">
       <header>
-        <img src={appImg} alt="img" />
-        <span>{name}</span>
+        <img src={ciTemplateCategoryDTO?.image || cutomizeImg} alt="img" />
+        <span className={`${prefixCls}-name`}>{name}</span>
+        {showCustomizeTag && <StatusTag className={`${prefixCls}-tag`} name="自定义" colorCode="operating" type="border" />}
       </header>
       <main>
         {renderStages()}

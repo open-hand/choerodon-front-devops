@@ -3,7 +3,7 @@ import React, {
   Fragment, useState, useEffect, useMemo,
 } from 'react';
 import {
-  Form, TextField, Select, SelectBox, Tooltip,
+  Form, TextField, Select, SelectBox, Tooltip, Password,
 } from 'choerodon-ui/pro';
 import { injectIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
@@ -157,8 +157,8 @@ const ImportForm = injectIntl(observer((props) => {
             <div
               className={`${prefixCls}-select-custom-wrap`}
             >
-              <div><img src={item.img} style={{ width: '50px', height: '50px' }} /></div>
-              <div style={{ padding: '5px' }}>
+              <div className={`${prefixCls}-select-custom-image-wrapper`}><img src={item.img} /></div>
+              <div className={`${prefixCls}-select-custom-content`}>
                 <Tooltip title={hasMarket || item.type !== 'market' ? '' : '未安装【应用市场】插件，无法使用此功能'}>
                   <div className={`${prefixCls}-select-custom-title`}>
                     {formatMessage({ id: `${intlPrefix}.import.type.${item.type}` })}
@@ -258,6 +258,29 @@ const ImportForm = injectIntl(observer((props) => {
             </span>
           )}
         </>
+      )}
+
+      {(platformType === 'gerneralGit') && (
+      <Form columns={3} record={record}>
+        <TextField
+          colSpan={2}
+          name="repositoryUrl"
+          addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.address.${platformType}.tips` })} />}
+        />
+        <TextField
+          colSpan={1}
+          name="username"
+          newLine
+          addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.username.tips` })} />}
+        />
+        <Password
+          colSpan={1}
+          name="password"
+        />
+        <Select name="type" clearButton={false} colSpan={1} newLine />
+        <TextField name="name" colSpan={1} />
+        <TextField name="code" colSpan={1} />
+      </Form>
       )}
 
     </div>

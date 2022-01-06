@@ -1,24 +1,31 @@
 import React, {
   useMemo,
   useCallback,
+  cloneElement,
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Page, Content, Header, HeaderButtons, Breadcrumb,
 } from '@choerodon/master';
-import { useRouteMatch } from 'react-router';
-import { Tabs } from 'choerodon-ui';
+import { Tabs, message } from 'choerodon-ui';
 import map from 'lodash/map';
 import classNames from 'classnames';
+import { isEmpty } from 'lodash';
+import { useRouteMatch, useHistory } from 'react-router';
 import { useAppPipelineEditStore } from './stores';
 import {
   TAB_ADVANCE_SETTINGS, TAB_BASIC, TAB_CI_CONFIG, TAB_FLOW_CONFIG,
 } from './stores/CONSTANTS';
-import { TabkeyTypes } from './interface';
 import PipelineBasicInfo from './components/pipeline-basic-info';
 import StagesEdits from './components/stage-edits';
 import CiVariasConfigs from './components/ci-varias-configs';
 import PipelineAdvancedConfig from './components/pipeline-advanced-config';
+import { TabkeyTypes } from '../../interface';
+import useTabData from './hooks/useTabData';
+import usePipelineContext from '../../hooks/usePipelineContext';
+import { handleTabDataValidate } from './services/handleTabsDataValidate';
+import { handleTabDataTransform } from './services/handleTabDataTransform';
+import { ciCdPipelineApi } from '@/api/cicd-pipelines';
 
 const { TabPane } = Tabs;
 
@@ -29,29 +36,114 @@ const AppPipelineEdit = () => {
     formatCommon,
     currentKey,
     setTabKey,
-    type,
+    type = 'create',
     tabsData,
   } = useAppPipelineEditStore();
 
-  const { params } = useRouteMatch<{id:string}>();
+  const {
+    basicInfo,
+    level,
+    onSave,
+    onCreate,
+  } = usePipelineContext();
+
+  const {
+    params: {
+      id,
+    },
+  } = useRouteMatch<any>();
+
+  const history = useHistory();
 
   const contentCls = classNames(`${prefixCls}-content`, {
     [`${prefixCls}-content-bgnone`]: TAB_FLOW_CONFIG === currentKey,
   });
 
-  const tabsCompoents = {
-    [TAB_BASIC]: <PipelineBasicInfo />,
+  const getBasicInfo = () => {
+    const tempObj:Record<string, JSX.Element> = {
+    };
+    if (basicInfo && !isEmpty(basicInfo)) {
+      const { Component } = basicInfo;
+      tempObj[TAB_BASIC] = cloneElement(Component, { useTabData });
+    } else {
+      tempObj[TAB_BASIC] = <PipelineBasicInfo />;
+    }
+    return tempObj;
+  };
+
+  const tabsCompoents:Record<string, JSX.Element> = {
+    ...getBasicInfo(),
     [TAB_FLOW_CONFIG]: <StagesEdits />,
     [TAB_CI_CONFIG]: <CiVariasConfigs />,
-    [TAB_ADVANCE_SETTINGS]: <PipelineAdvancedConfig />,
+    [TAB_ADVANCE_SETTINGS]: <PipelineAdvancedConfig level={level} />,
   };
 
   const handleTabChange = (value:TabkeyTypes) => setTabKey(value);
 
-  const handleSubmit = () => {
-    console.log(tabsData);
+  /**
+   * 项目层的处理提交的事件
+   */
+  const handleSumitWhileProjectCreate = async () => {
+    const { isValidated, key, reason } = handleTabDataValidate(tabsData, type);
+    if (isValidated) {
+      const finalData = handleTabDataTransform(tabsData);
+      try {
+        const res = await ciCdPipelineApi.handlePipelineCreate(finalData);
+        if (res && res.failed) {
+          return;
+        }
+        history.go(-1);
+      } catch (error) {
+        throw new Error(error);
+      }
+    } else {
+      key && setTabKey(key);
+      reason && message.error(reason);
+    }
   };
 
+  /**
+   * 项目层的编辑
+   */
+  const handleSumitWhileProjectEdit = async () => {
+    const { isValidated, key, reason } = handleTabDataValidate(tabsData, type);
+    if (isValidated) {
+      const finalData = handleTabDataTransform(tabsData);
+      try {
+        const res = await ciCdPipelineApi.handlePipelineModify(id, finalData);
+        if (res && res.failed) {
+          return;
+        }
+        history.go(-1);
+      } catch (error) {
+        throw new Error(error);
+      }
+    } else {
+      key && setTabKey(key);
+      reason && message.error(reason);
+    }
+  };
+
+  const submitMapWhileCreate:Record<'project'|'site'|'orgnization', Function | undefined> = {
+    project: handleSumitWhileProjectCreate,
+    site: onCreate,
+    orgnization: onCreate,
+  };
+
+  const submitMapWhileEdit:Record<'project'|'site'|'orgnization', Function | undefined> = {
+    project: handleSumitWhileProjectEdit,
+    site: onSave,
+    orgnization: onSave,
+  };
+
+  const handleSubmit = () => {
+    if (['create', 'copy'].includes(type)) {
+      return level && submitMapWhileCreate[level]?.(tabsData, setTabKey);
+    }
+    return level && submitMapWhileEdit[level]?.(tabsData, setTabKey);
+  };
+
+  /** @type {*} 头部按钮 */
   const headerItems = useMemo(() => ([
     {
       handler: handleSubmit,
@@ -59,7 +151,9 @@ const AppPipelineEdit = () => {
       icon: 'check',
     },
     {
-      handler: () => {},
+      handler: () => {
+        history.go(-1);
+      },
       name: formatCommon({ id: 'cancel' }),
       icon: 'close',
     },
@@ -79,11 +173,18 @@ const AppPipelineEdit = () => {
     </Tabs>
   ), [currentKey]);
 
+  /**
+   * 根据当前的层级和编辑修改情况渲染title
+   * @return {string}
+   */
   const renderTitle = () => {
-    if (type === 'create') {
-      return '创建流水线';
+    let title = '';
+    if (level === 'project') {
+      title = ['create', 'copy'].includes(type) ? '创建流水线' : '修改流水线';
+    } else {
+      title = type === 'create' ? '创建流水线模板' : '编辑流水线模板';
     }
-    return `编辑流水线${params?.id}`;
+    return title;
   };
 
   return (

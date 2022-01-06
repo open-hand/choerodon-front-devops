@@ -2,7 +2,7 @@
 import React, { Fragment } from 'react';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
-import { Tooltip, Icon } from 'choerodon-ui';
+import { Tooltip } from 'choerodon-ui';
 import MouseOverWrapper from '../MouseOverWrapper';
 import projectImg from '../../images/project.svg';
 import shareImg from '../../images/share.svg';

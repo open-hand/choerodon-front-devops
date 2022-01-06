@@ -44,6 +44,7 @@ import { mapping as deployGroupMapping } from './stores/deployGroupDataSet';
 import { productTypeData } from './stores/addCDTaskDataSetMap';
 import OperationYaml from '@/routes/app-center-pro/components/OpenAppCreateModal/components/operation-yaml';
 import { valueCheckValidate } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-app-config/content';
+import {BUILD_DOCKER, BUILD_MAVEN_PUBLISH, BUILD_UPLOADJAR, MAVEN_BUILD} from "@/routes/app-pipeline/CONSTANTS";
 // import { queryConfigCodeOptions } from '@/components/configuration-center/ConfigurationTab';
 
 let currentSize = 10;
@@ -81,7 +82,7 @@ export default observer(() => {
   const {
     ADDCDTaskDataSet,
     appServiceId,
-    PipelineCreateFormDataSet,
+    appServiceName,
     AppState,
     AppState: {
       currentMenuType: { projectId },
@@ -91,9 +92,9 @@ export default observer(() => {
     handleOk,
     taskType,
     jobDetail,
-    pipelineStageMainSource,
-    columnIndex,
-    witchColumnJobIndex,
+    stageData: pipelineStageMainSource,
+    stageIndex: columnIndex,
+    jobIndex: witchColumnJobIndex,
     index: taskIndex,
     DeployChartDataSet,
     DeployGroupDataSet,
@@ -178,11 +179,7 @@ export default observer(() => {
     ADDCDTaskDataSet.current.set('type', taskType);
     const newData = {
       type: taskType,
-      glyyfw:
-        appServiceId ||
-        PipelineCreateFormDataSet.getField('appServiceId').getText(
-          PipelineCreateFormDataSet.current.get('appServiceId'),
-        ),
+      glyyfw: appServiceName,
       triggerType: 'refs',
       deployType: 'create',
       authType: 'accountPassword',
@@ -211,11 +208,11 @@ export default observer(() => {
     const filterColumns = pipelineStageMainSource.slice(0, columnIndex);
     let itemPreJobLists = [];
     filterColumns.forEach((item, itemIndex) => {
-      if (itemIndex + 1 < columnIndex) {
-        itemPreJobLists = [...itemPreJobLists, ...item.jobList];
+      if (itemIndex + 1 <= columnIndex) {
+        itemPreJobLists = [...itemPreJobLists, ...item?.jobList || []];
       } else {
-        item.jobList.forEach((jobItem, jobItemIndex) => {
-          if (jobItemIndex + 1 < witchColumnJobIndex) {
+        item?.jobList?.forEach((jobItem, jobItemIndex) => {
+          if (jobItemIndex + 1 <= witchColumnJobIndex) {
             itemPreJobLists.push(jobItem);
           }
         });
@@ -237,18 +234,17 @@ export default observer(() => {
     const tempArr =
       pipelineStageMainSource &&
       pipelineStageMainSource.length > 0 &&
-      pipelineStageMainSource.map((item) => item?.jobList.slice());
-    const jobArr = tempArr ? tempArr.length > 0 && [].concat.apply(...tempArr) : [];
+      pipelineStageMainSource.map((item) => item?.jobList?.slice()).filter(i => i) || [];
+    const jobArr = tempArr && tempArr.length > 0 ? [].concat.apply(...tempArr) : [];
     let filterArr;
     if (jobArr && currentHostDeployType && currentHostDeployType === 'image') {
-      filterArr = jobArr.filter((x) => x.configJobTypes?.includes('docker') && x.type === 'build');
+      filterArr = jobArr.filter((x) => x?.devopsCiStepVOList?.some(i => i?.type === BUILD_DOCKER) && x.type === MAVEN_BUILD);
     } else if (currentHostDeployType === 'jar') {
       filterArr = jobArr.filter(
         (x) =>
-          (x.configJobTypes?.includes('maven_deploy') ||
-            x.configJobTypes?.includes('upload_jar')) &&
-          x.type === 'build',
-      );
+          (x?.devopsCiStepVOList?.some(i => [BUILD_MAVEN_PUBLISH, BUILD_UPLOADJAR].includes(i?.type)) &&
+          x.type === MAVEN_BUILD
+      ));
     }
     if (filterArr && filterArr.length === 1) {
       if (typeof filterArr[0] === 'object') {
@@ -260,7 +256,7 @@ export default observer(() => {
     } else {
       setRelatedJobOpts([]);
     }
-  }, [ADDCDTaskDataSet?.current?.get('hostDeployType'), pipelineStageMainSource]);
+  }, [ADDCDTaskDataSet?.current?.get('hostDeployType')]);
 
   useEffect(() => {
     const value = ADDCDTaskDataSet.current.get('envId');
@@ -449,7 +445,7 @@ export default observer(() => {
         [fieldMap.deployWay.name]: ds[fieldMap.deployWay.name],
       };
     }
-    ds.appServiceId = PipelineCreateFormDataSet?.current?.get('appServiceId') || trueAppServiceId;
+    ds.appServiceId = appServiceId;
     return JSON.stringify(ds).replace(/"/g, "'");
   }
 
@@ -558,6 +554,7 @@ export default observer(() => {
         triggerValue:
           typeof ds.triggerValue === 'object' ? ds.triggerValue?.join(',') : ds.triggerValue,
         // configSettingVOS: configData,
+        completed: true,
       };
       if (ds.type !== 'cdAudit') {
         data.metadata = getMetadata(ds, deployChartData, {
@@ -655,12 +652,12 @@ export default observer(() => {
         }
         initValueIdDataSet(
           deployConfigDataSet,
-          trueAppServiceId,
+          appServiceId,
           metadata.envId,
           ADDCDTaskUseStore.getValueIdRandom,
           afterQuery,
         );
-        initValueIdDataSet(appNameChartDataSet, trueAppServiceId, metadata.envId);
+        initValueIdDataSet(appNameChartDataSet, appServiceId, metadata.envId);
       } else if (jobDetail.type === typeData[1].value) {
         const metadata = JSON.parse(jobDetail.metadata.replace(/'/g, '"'));
         setDeployGroupDetail(metadata);
@@ -696,13 +693,10 @@ export default observer(() => {
     }
     ADDCDTaskDataSet.current.set(
       'glyyfw',
-      appServiceId ||
-        PipelineCreateFormDataSet.getField('appServiceId').getText(
-          PipelineCreateFormDataSet.current.get('appServiceId'),
-        ),
+        appServiceName,
     );
     handleClickMore();
-  }, [ADDCDTaskDataSet, PipelineCreateFormDataSet, appServiceId, jobDetail]);
+  }, [ADDCDTaskDataSet,appServiceId, jobDetail]);
 
   useEffect(() => {
     async function initBranchs() {
@@ -811,39 +805,39 @@ export default observer(() => {
         });
     });
 
-  // const renderRelatedJobOpts = () => {
-  //   const currentHostDeployType = ADDCDTaskDataSet?.current?.get(
-  //     'hostDeployType'
-  //   );
-  //   const tempArr = pipelineStageMainSource
-  //     && pipelineStageMainSource.length > 0
-  //     && pipelineStageMainSource.map((item) => item?.jobList.slice());
-  //   const jobArr = tempArr
-  //     ? tempArr.length > 0 && [].concat.apply(...tempArr)
-  //     : [];
-  //   let filterArr;
-  //   if (jobArr && currentHostDeployType && currentHostDeployType === 'image') {
-  //     filterArr = jobArr.filter(
-  //       (x) => x.configJobTypes?.includes('docker') && x.type === 'build',
-  //     );
-  //   } else if (currentHostDeployType === 'jar') {
-  //     filterArr = jobArr.filter(
-  //       (x) => (x.configJobTypes?.includes('maven_deploy')
-  //           || x.configJobTypes?.includes('upload_jar'))
-  //         && x.type === 'build',
-  //     );
-  //   }
-  //   if (filterArr && filterArr.length > 0) {
-  //     if (typeof filterArr[0] === 'object') {
-  //       ADDCDTaskDataSet.current.set('pipelineTask', filterArr[0].name);
-  //     }
-  //   }
-  //   return (
-  //     filterArr
-  //     && filterArr.length > 0
-  //     && filterArr.map((item) => <Option value={item.name}>{item.name}</Option>)
-  //   );
-  // };
+  const renderRelatedJobOpts = () => {
+    const currentHostDeployType = ADDCDTaskDataSet?.current?.get(
+      'hostDeployType'
+    );
+    const tempArr = pipelineStageMainSource
+      && pipelineStageMainSource.length > 0
+      && pipelineStageMainSource.map((item) => item?.jobList?.slice());
+    const jobArr = tempArr
+      ? tempArr.length > 0 && [].concat.apply(...tempArr)
+      : [];
+    let filterArr;
+    if (jobArr && currentHostDeployType && currentHostDeployType === 'image') {
+      filterArr = jobArr.filter(
+        (x) => x.configJobTypes?.includes('docker') && x.type === 'build',
+      );
+    } else if (currentHostDeployType === 'jar') {
+      filterArr = jobArr.filter(
+        (x) => (x.configJobTypes?.includes('maven_deploy')
+            || x.configJobTypes?.includes('upload_jar'))
+          && x.type === 'build',
+      );
+    }
+    if (filterArr && filterArr.length > 0) {
+      if (typeof filterArr[0] === 'object') {
+        ADDCDTaskDataSet.current.set('pipelineTask', filterArr[0].name);
+      }
+    }
+    return (
+      filterArr
+      && filterArr.length > 0
+      && filterArr.map((item) => <Option value={item.name}>{item.name}</Option>)
+    );
+  };
 
   function searchMatcher({ record, text }) {
     return record.get('pipelineTask')?.indexOf(text) !== -1;
@@ -861,8 +855,8 @@ export default observer(() => {
       children: (
         <DeployConfig
           envId={ADDCDTaskDataSet.current.get('envId')}
-          appServiceId={PipelineCreateFormDataSet?.current?.get('appServiceId') || trueAppServiceId}
-          appServiceName={appServiceId}
+          appServiceId={appServiceId}
+          appServiceName={appServiceName}
           refresh={({ valueId, value }) => {
             ADDCDTaskUseStore.setValueIdRandom(Math.random());
             ADDCDTaskDataSet.current.set('valueId', valueId);
@@ -871,7 +865,7 @@ export default observer(() => {
               DeployChartDataSet.current.set(mapping().value.name, value);
               initValueIdDataSet(
                 deployConfigDataSet,
-                PipelineCreateFormDataSet?.current?.get('appServiceId') || trueAppServiceId,
+                appServiceId,
                 ADDCDTaskDataSet.current.get('envId'),
                 ADDCDTaskUseStore.getValueIdRandom,
               );
@@ -1490,9 +1484,7 @@ export default observer(() => {
     const pageSize = !e
       ? ADDCDTaskDataSet.current.get('pageSize')
       : ADDCDTaskDataSet.current.get('pageSize') + 20;
-    const url = `/devops/v1/projects/${projectId}/users/app_services/${PipelineCreateFormDataSet?.current?.get(
-      'appServiceId',
-    ) || trueAppServiceId}?page=0&size=${pageSize}`;
+    const url = `/devops/v1/projects/${projectId}/users/app_services/${appServiceId}?page=0&size=${pageSize}`;
     const cdAuditsUserIds = [];
     jobDetail?.cdAuditUserIds &&
       jobDetail.cdAuditUserIds.forEach((obj) => {
@@ -1547,9 +1539,7 @@ export default observer(() => {
   };
 
   const getBranchsList = useCallback(async () => {
-    const url = `devops/v1/projects/${projectId}/app_service/${PipelineCreateFormDataSet.current.get(
-      'appServiceId',
-    )}/git/page_branch_by_options?page=1&size=${currentSize}`;
+    const url = `devops/v1/projects/${projectId}/app_service/${appServiceId}/git/page_branch_by_options?page=1&size=${currentSize}`;
     const res = await axios.post(url);
     if (res.content.length % 10 === 0 && res.content.length !== 0) {
       res.content.push({
@@ -1566,7 +1556,7 @@ export default observer(() => {
         return c;
       }),
     );
-  }, [PipelineCreateFormDataSet, projectId]);
+  }, [appServiceId, projectId]);
 
   const renderderBranchs = ({ text }) =>
     text === '加载更多' ? (
@@ -1632,10 +1622,10 @@ export default observer(() => {
       if (i.type === 'CD') {
         // 如果遍历列小于当前列 则直接存入joblist
         if (iIndex < columnIndex - 1) {
-          lists = [...lists, ...i.jobList];
+          lists = [...lists, ...i?.jobList || []];
         } else {
           //  如果遍历列是当切列
-          lists = [...lists, ...i.jobList.splice(0, taskIndex || witchColumnJobIndex)];
+          lists = [...lists, ...i?.jobList?.splice(0, taskIndex || witchColumnJobIndex) || []];
         }
       }
     });
@@ -1648,43 +1638,6 @@ export default observer(() => {
   return (
     <div className="addcdTask">
       <Form columns={6} dataSet={ADDCDTaskDataSet}>
-        {/* <Select
-          onChange={(data) => {
-            const newData = {
-              type: data,
-              glyyfw:
-                appServiceId
-                || PipelineCreateFormDataSet.getField('appServiceId').getText(
-                  PipelineCreateFormDataSet.current.get('appServiceId'),
-                ),
-              triggerType: 'refs',
-              deployType: 'create',
-              authType: 'accountPassword',
-              hostDeployType: 'image',
-              deploySource: 'pipelineDeploy',
-              [addCDTaskDataSetMap.hostSource]: addCDTaskDataSetMap.alreadyhost,
-              workingPath: './',
-              name: ADDCDTaskDataSet.current.get('name') || undefined,
-              [addCDTaskDataSetMap.alarm]: false,
-              [addCDTaskDataSetMap.whetherBlock]: true,
-              [fieldMap.deployWay.name]: deployWayData[0].value,
-            };
-            if (data === 'cdHost' && relatedJobOpts
-              && relatedJobOpts.length === 1) {
-              newData.pipelineTask = relatedJobOpts[0].name;
-            }
-            ADDCDTaskDataSet.loadData([newData]);
-          }}
-          colSpan={1}
-          name="type"
-        >
-          <Option value="cdDeploy">部署</Option>
-          <Option value="cdHost">主机部署</Option>
-          <Option value="cdAudit">人工卡点</Option>
-          <Option value={addCDTaskDataSetMap.apiTest}>API测试</Option>
-          <Option value={addCDTaskDataSetMap.externalStuck}>外部卡点</Option>
-          <Option value={typeData[0].value}>{typeData[0].name}</Option>
-        </Select> */}
         <TextField colSpan={3} name="name" />
         <TextField colSpan={3} name="glyyfw" />
         <div className="addcdTask-wrap" colSpan={6}>

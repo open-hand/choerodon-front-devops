@@ -1,24 +1,26 @@
 import React, {
-  useEffect, FC, useState,
+  FC, useState,
 } from 'react';
-import { observer } from 'mobx-react-lite';
 import { useQuery } from 'react-query';
 import { Loading } from '@choerodon/components';
 import { useFormatCommon } from '@choerodon/master';
-import { Menu, Icon } from 'choerodon-ui';
+import { Menu } from 'choerodon-ui';
 import { handleBuildModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals';
 import { handleCustomModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/custom-modal';
-import { BUILD, CUSTOM } from '@/routes/app-pipeline/CONSTANTS';
+import {
+  MAVEN_BUILD, CUSTOM_BUILD,
+} from '@/routes/app-pipeline/CONSTANTS';
 import {} from 'choerodon-ui/pro';
 
 import './index.less';
 import useGetJobPanel from '../../../../hooks/useGetJobPanel';
 import { templateJobsApi } from '@/api/template-jobs';
 import useTabData from '@/routes/app-pipeline/routes/app-pipeline-edit/hooks/useTabData';
-import { TAB_BASIC } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
+import { TAB_BASIC, TAB_ADVANCE_SETTINGS } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
+import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
 
 export type JobTypesPanelProps = {
-  handleJobAddCallback:(jobData:any)=>void
+  handleJobAddCallback:(jobData: any)=>void
 }
 
 const {
@@ -26,19 +28,49 @@ const {
   Item,
 } = Menu;
 
+const handlePipelineModal = ({
+  data,
+  callback,
+  advancedData,
+  level,
+  title,
+}: any) => {
+  switch (level) {
+    case 'project': {
+      if (data?.type === MAVEN_BUILD) {
+        handleBuildModal(data, callback, advancedData, level, title);
+      } else {
+        handleCustomModal(data, callback, title);
+      }
+      break;
+    }
+    default: {
+      handleBuildModal(data, callback, advancedData, level, title);
+    }
+  }
+};
+
 const prefixCls = 'c7ncd-job-types-panel';
 
-const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
+const JobTypesPanel:FC<JobTypesPanelProps> = (props: { handleJobAddCallback: any; }) => {
   const {
     handleJobAddCallback,
   } = props;
   const panels = useGetJobPanel();
   const [currentSelectedSubMenuId, setSubMenuId] = useState('');
-  const [,, getTabData] = useTabData();
+  const [_data, _setdata, getTabData] = useTabData();
+
+  const {
+    level,
+    jobPanelApiCallback,
+  } = usePipelineContext();
 
   const getSubMenuChild = ({ queryKey }:any) => {
     const [_key, subMenuId] = queryKey;
-    return templateJobsApi.getJobByGroupId(subMenuId);
+    if (level === 'project') {
+      return templateJobsApi.getJobByGroupId(subMenuId);
+    }
+    return jobPanelApiCallback?.(subMenuId);
   };
 
   const { data: childrenMenus, isLoading, isFetching } = useQuery(['sub-menu-child', currentSelectedSubMenuId], getSubMenuChild, {
@@ -50,19 +82,12 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
   const handleClick = (data: any) => {
     const { keyPath } = data;
     const stepData = JSON.parse(keyPath[0]);
-
-    // 添加job的回调函数
-    // handleJobAddCallback
-
-    // switch (stepData.type) {
-    //   case MAVEN_BUILD: {
-    //     handleBuildModal(stepData);
-    //     break;
-    //   }
-    //   default: {
-    //     break;
-    //   }
-    // }
+    handlePipelineModal({
+      data: stepData,
+      callback: handleJobAddCallback,
+      advancedData: getTabData(TAB_ADVANCE_SETTINGS),
+      level,
+    });
   };
 
   const renderChildrenMenu = ({ parentId }:{
@@ -85,10 +110,13 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
       const {
         id, name,
       } = item;
-      const concatItem = {
-        ...item,
-        ...getTabData(TAB_BASIC),
-      };
+      let concatItem = item;
+      if (level === 'project') {
+        concatItem = {
+          ...item,
+          ...getTabData(TAB_BASIC),
+        };
+      }
       return (
         <Item key={JSON.stringify(concatItem)}>
           {name}
@@ -97,7 +125,7 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
     });
   };
 
-  const renderSubMenus = () => panels?.map((item) => {
+  const renderSubMenus = () => panels?.map((item: { id: any; name: any; type: any; }) => {
     const { id, name, type } = item;
     return (
       <SubMenu
@@ -121,3 +149,5 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
 };
 
 export default JobTypesPanel;
+
+export { handlePipelineModal };

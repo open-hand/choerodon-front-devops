@@ -16,6 +16,7 @@ interface FormProps {
   appSelectDisabled?: boolean;
   appServiceName?: string;
   setValueLoading: CallableFunction;
+  format: any,
 }
 
 export default ({
@@ -28,6 +29,7 @@ export default ({
   appSelectDisabled,
   appServiceName,
   setValueLoading,
+  format,
 }: FormProps): DataSetProps => {
   const loadValue = async ({ id, record }: { id: string; record: Record }) => {
     !deployConfigId && setValueLoading(true);
@@ -60,7 +62,6 @@ export default ({
       return formatMessage({ id: 'checkNameFailed' });
     }
   };
-
   return {
     autoQuery: false,
     autoCreate: false,
@@ -93,19 +94,19 @@ export default ({
     }, {
       name: 'description',
       required: true,
-      label: formatMessage({ id: 'c7ncd.environment.description' }),
+      label: '描述',
       maxLength: 200,
     }, {
       name: 'appServiceId',
       textField: 'appServiceName',
       valueField: 'appServiceId',
-      label: formatMessage({ id: 'appService' }),
+      label: '应用服务',
       required: true,
       defaultValue: appServiceId,
       options: appOptionDs,
     }, {
       name: 'appServiceName',
-      label: formatMessage({ id: 'appService' }),
+      label: '应用服务',
       readOnly: true,
       ignore: 'always' as FieldIgnore,
       defaultValue: appSelectDisabled ? appServiceName : null,

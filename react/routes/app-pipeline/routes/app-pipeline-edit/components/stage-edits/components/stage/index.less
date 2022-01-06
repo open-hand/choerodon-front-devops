@@ -4,11 +4,14 @@
 
 .@{prefixCls} {
   position: relative;
-  height: fit-content;
+  height: 100%;
+  width: 200px;
   &-btnGroups {
     position: absolute;
     right: 11px;
-    top: 0;
+    top: 10px;
+    display: flex;
+    align-items: center;
     > i.icon {
       font-size: 17px;
       transition: 0.2s;
@@ -17,6 +20,7 @@
     &-delete {
       opacity: 0;
       color: var(--primary-color);
+      display: none;
       &:hover {
         box-shadow: @boxShadaw;
       }
@@ -24,6 +28,7 @@
   }
   &-stageType {
     width: 40px;
+    flex-grow: 0;
     background: #f0f8ff;
     font-size: 13px;
     font-weight: 400;
@@ -32,32 +37,35 @@
   &-stageName {
     flex: 1;
     background: #fff;
+    line-height: 38px;
+    text-align: left;
+    padding-left: 12px;
   }
   > main {
-    margin-top: 72px;
   }
   > footer {
     position: relative;
   }
-  > header {
+  &-header {
     width: 200px;
     margin: 0 auto;
     display: flex;
     height: 40px;
     border-radius: 2px;
-    cursor: pointer;
+    cursor: all-scroll;
     z-index: 2;
-    position: absolute;
     transition: 0.2s;
     box-shadow: @boxShadaw;
     border-style: solid;
     border-color: rgba(65, 91, 201, 0.24);
     border-width: 1px;
+    
     &:hover {
       border-color: var(--primary-color);
       .@{prefixCls}-btnGroups {
         &-delete {
           opacity: 1;
+          display: block;
         }
       }
     }

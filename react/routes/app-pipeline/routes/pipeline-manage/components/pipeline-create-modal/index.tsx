@@ -45,7 +45,9 @@ const PipelineCreateModal:FC<PipelineCreateModalProps> = observer((props) => {
 
   const formatCommon = useFormatCommon();
   const formatPipelineCreateModal = useFormatMessage(intlPrefix);
+
   const history = useHistory();
+
   const {
     pathname,
     search,
@@ -79,7 +81,7 @@ const PipelineCreateModal:FC<PipelineCreateModalProps> = observer((props) => {
       <Select
         name="appService"
         searchable
-        searchMatcher="appServiceName"
+        searchMatcher="name"
         popupCls={`${prefixCls}-project`}
         colSpan={1}
         addonAfter={<NewTips helpText="此处仅能看到您有开发权限的启用状态的应用服务，并要求该应用服务未有关联的流水线" />}
@@ -104,8 +106,7 @@ const PipelineCreateModal:FC<PipelineCreateModalProps> = observer((props) => {
       const isValid = await pipelinBasicInfoDs.validate();
       if (isValid) {
         const sumitData:any = {
-          basicInfo: pipelinBasicInfoDs.current?.toData() || {},
-          templateId: submitTmpId,
+          ...pipelinBasicInfoDs.current?.toData(),
         };
         setPipelineCreateData(sumitData);
         modal?.close();
@@ -147,6 +148,7 @@ const usePipelineCreateModal = () => {
     Modal.open({
       title: '创建流水线',
       children: <PipelineCreateModal />,
+      className: `${prefixCls}-container`,
       style: {
         width: CONSTANTS.MODAL_WIDTH.MIDDLE,
       },

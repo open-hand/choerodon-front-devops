@@ -6,21 +6,21 @@ type StageTemplateItem ={
   ciTemplateJobVOList: any[]
 }
 
-const StageTemplate = (props:StageTemplateItem) => {
+const StageTemplate:any = (props:StageTemplateItem) => {
   const { ciTemplateJobVOList = [] } = props;
 
-  const renderJobTmp = () => ciTemplateJobVOList.map((item:any) => {
+  const renderJobTmp = () => (ciTemplateJobVOList.map((item:any) => {
     const {
       id,
     } = item;
     return <JobTemplateItem key={id} {...item} />;
-  });
+  }));
 
-  return (
+  return ciTemplateJobVOList.length ? (
     <div className={`${prefixCls}-stageTmp`}>
       {renderJobTmp()}
     </div>
-  );
+  ) : '';
 };
 
 export default StageTemplate;

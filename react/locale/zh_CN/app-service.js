@@ -6,7 +6,7 @@
  */
 const appService = {
   'c7ncd.appService.title': '应用服务',
-  'c7ncd.appService.searchAppService': '搜索用用服务',
+  'c7ncd.appService.searchAppService': '搜索应用服务',
   'c7ncd.appService.permissionManage': '权限管理',
   'c7ncd.appService.importAppService': '导入应用服务',
   'c7ncd.appService.createAppService': '创建应用服务',
@@ -37,6 +37,10 @@ const appService = {
   'c7ncd.appService.active': '启用',
   'c7ncd.appService.unready': '停用',
   'c7ncd.appService.operating': '处理中',
+  'c7ncd.appService.outGitlab.alert.tips.one': '1、选择外置代码仓库创建得到应用服务，将无法使用代码管理、代码库管理等功能。服务共享、流水线和部署块等其他功能可正常使用',
+  'c7ncd.appService.outGitlab.alert.tips.two': '2、请保证外置GitLab版本为V11.0.0或以上',
+  'c7ncd.appService.outGitlab.alert.tips.three': '3、请保证外置GitLab版本为V11.0.0或以上',
+  'c7ncd.appService.outGitlab.alert.tips.attention': '注意：',
 
 };
 

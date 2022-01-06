@@ -6,7 +6,7 @@ import MainView from './main-view';
 import CustomHeader from '../../components/custom-header';
 
 export default observer(() => {
-  const { permission, clusterStore } = useClusterStore();
+  const { clusterStore } = useClusterStore();
   return (
     <Page service={['choerodon.code.project.deploy.cluster.cluster-management.ps.default']}>
       <CustomHeader show={!clusterStore.getNoHeader} />

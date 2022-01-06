@@ -33,13 +33,11 @@
   }
   .c7ncd-appService-select-custom-list {
     display: flex;
-    justify-content: space-around;
-    margin-bottom: 16px;
+    flex-wrap: wrap-reverse;
     .c7ncd-customSelect-container {
-      flex: 1;
-    }
-    .c7ncd-customSelect-container + .c7ncd-customSelect-container {
-      margin-left: 10px;
+      width: 30%;
+      margin-right: 16px;
+      margin-bottom: 16px;
     }
     .c7ncd-appService-select-custom-wrap {
       display: flex;
@@ -47,12 +45,21 @@
       height: 100%;
       border-radius: 4px;
       border: 1px solid #d9e6f2;
-      z-index: 10;
       position: relative;
+      .c7ncd-appService-select-custom-image-wrapper {
+        margin: 12px;
+        img {
+          width: 50px;
+          height: 50px;
+        }
+      }
       .c7ncd-appService-select-custom-title {
         font-size: 14px;
         font-weight: 500;
         color: #0f1348;
+      }
+      .c7ncd-appService-select-custom-content {
+        padding-top: 12px;
       }
       .c7ncd-appService-select-custom-tip {
         -webkit-line-clamp: 2; //（用来限制在一个块元素显示的文本的行数，2 表示最多显示 2 行。为了实现该效果，它需要组合其他的 WebKit 属性）

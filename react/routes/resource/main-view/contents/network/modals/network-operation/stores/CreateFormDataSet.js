@@ -4,7 +4,8 @@
 import {
   map, forOwn, isEmpty, forEach,
 } from 'lodash';
-import uuidv1 from 'uuid/v1';
+import uuidv1 from 'uuid';
+import { appServiceApiConfig } from '@choerodon/master';
 
 export default ({
   formatMessage, portDs, endPointsDs, targetLabelsDs, appInstanceOptionsDs, appDeployOptionsDs, networkStore, projectId, envId, networkEdit,
@@ -114,10 +115,7 @@ export default ({
         required: true,
         valueField: 'id',
         textField: 'name',
-        lookupAxiosConfig: {
-          method: 'get',
-          url: `devops/v1/projects/${projectId}/app_service/list_all`,
-        },
+        lookupAxiosConfig: appServiceApiConfig.getAppServiceList(envId),
         dynamicProps: {
           required: ({ dataSet, record, name }) => record.get('target') === 'instance' && record.get('isChart') === 'chart',
         },

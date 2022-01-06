@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from 'react';
 import { Icon } from 'choerodon-ui/pro';
 import './index.less';
@@ -5,6 +6,7 @@ import { Popover } from 'choerodon-ui';
 import ParalleLines from '../paralle-lines';
 import SerialLines from '../serial-lines';
 import JobTypesPanel from './components/job-types-panel';
+import JobCdPanel from './components/job-CD-panel';
 
 const prefixCls = 'c7ncd-pipeline-edit-jobbtn';
 
@@ -12,6 +14,8 @@ interface JobAddBtnProps {
   type:'circle' | 'normal'
   linesType: 'paralle' | 'serial'
   handleJobAddCallback: (jobData:any)=>void
+  stageIndex:number
+  jobIndex:number
 }
 
 const JobAddBtn = (props:JobAddBtnProps) => {
@@ -19,12 +23,19 @@ const JobAddBtn = (props:JobAddBtnProps) => {
     type,
     linesType,
     handleJobAddCallback,
+    stageIndex,
+    jobIndex,
   } = props;
 
   const linesMap = {
     paralle: <ParalleLines />,
     serial: <SerialLines />,
   } as const;
+
+  const jobTypePanelMap = {
+    paralle: <JobTypesPanel handleJobAddCallback={handleJobAddCallback} />,
+    serial: <JobCdPanel jobIndex={jobIndex} stageIndex={stageIndex} handleJobAddCallback={handleJobAddCallback} />,
+  };
 
   const renderContent = () => {
     if (type === 'circle') {
@@ -44,7 +55,7 @@ const JobAddBtn = (props:JobAddBtnProps) => {
   return (
     <Popover
       trigger={['click'] as any}
-      content={<JobTypesPanel handleJobAddCallback={handleJobAddCallback} />}
+      content={jobTypePanelMap[linesType]}
       placement={'bottom' as any}
       overlayClassName={`${prefixCls}-popover`}
     >

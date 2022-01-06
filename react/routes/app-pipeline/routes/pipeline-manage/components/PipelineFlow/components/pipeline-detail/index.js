@@ -3,11 +3,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import map from 'lodash/map';
+import get from 'lodash/get';
 import forEach from 'lodash/forEach';
-import { Tooltip } from 'choerodon-ui/pro';
+import { Tooltip, Icon } from 'choerodon-ui/pro';
 import { Loading } from '@choerodon/components';
 import jobTypesMappings from '../../../../stores/jobsTypeMappings';
 import { usePipelineManageStore } from '../../../../stores';
+import { JOB_GROUP_TYPES } from '@/routes/app-pipeline/stores/CONSTANTS';
 import StageType from '../stage-type';
 
 import './index.less';
@@ -190,6 +192,18 @@ export default observer((props) => {
     return { height: sum };
   }
 
+  const renderJobPrefix = (jobType, groupType) => {
+    if (jobType.indexOf('cd') !== -1) {
+      return `【${jobTypesMappings[jobType]}】`;
+    }
+    const currentJobGroupType = JOB_GROUP_TYPES?.[groupType];
+    return (
+      <Tooltip title={get(currentJobGroupType, 'name')}>
+        <Icon className="c7ncd-pipeline-detail-job-icon" type={get(currentJobGroupType, 'icon')} />
+      </Tooltip>
+    );
+  };
+
   return (
     !getLoading ? (
       <div className="c7ncd-pipeline-detail">
@@ -225,19 +239,15 @@ export default observer((props) => {
                 </div>
               ) : null}
               {map(jobList, ({
-                id: jobId, type: jobType, name: jobName, metadata, iamUserDTOS, triggerType: jobTriggerValue, triggerValue, envName, countersigned,
+                id: jobId, name: jobName, type: jobType, groupType, metadata, iamUserDTOS, triggerType: jobTriggerValue, triggerValue, envName, countersigned,
               }, index) => (
                 <div key={`${stageId}-${jobId}`}>
                   {index && leftLineDom[stageIndex] ? leftLineDom[stageIndex][index] : null}
                   <div className={`c7ncd-pipeline-detail-job c7ncd-pipeline-detail-job-${stageType}`} id={`${id}-${stageIndex}-job-${index}`}>
-                    <Tooltip title={`【${jobTypesMappings[jobType]}】${jobName}`} placement="top">
-                      <div className="c7ncd-pipeline-detail-job-title">
-                        【
-                        {jobTypesMappings[jobType]}
-                        】
-                        {jobName}
-                      </div>
-                    </Tooltip>
+                    <div className="c7ncd-pipeline-detail-job-title">
+                      {renderJobPrefix(jobType, groupType)}
+                      {jobName}
+                    </div>
                     {jobType !== 'custom' && getJobTask({
                       jobType, metadata, iamUserDTOS, jobTriggerValue, triggerValue, envName, countersigned,
                     })}

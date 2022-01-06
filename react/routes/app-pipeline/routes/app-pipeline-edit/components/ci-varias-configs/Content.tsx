@@ -49,11 +49,11 @@ const CiVariasConfigs = () => {
   const renderForm = () => (
     formDs.map((eachRecord) => (
       <Form record={eachRecord} columns={14} key={eachRecord.id}>
-        <TextField colSpan={5} name="key" />
+        <TextField colSpan={5} name="variableKey" />
         <span className={`${prefixCls}-equal`}>=</span>
         <TextArea
           colSpan={7}
-          name="value"
+          name="variableValue"
           renderer={renderValue}
           resize={'vertical' as ResizeType}
           autoSize={{ minRows: 1 }}
