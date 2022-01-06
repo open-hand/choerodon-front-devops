@@ -1,4 +1,5 @@
 /* eslint-disable max-len */
+import { message } from 'choerodon-ui';
 import { useLocalStore } from 'mobx-react-lite';
 import useTabData from '../../../hooks/useTabData';
 
@@ -103,16 +104,21 @@ export default function useStore() {
      * @param {number} stageIndex
      * @param {number} jobIndex
      * @param {*} jobData
-     * @return {*}
+     * @return {boolean} 是否添加成功
      */
     editJob(stageIndex:number, jobIndex:number, jobData:any) {
       if (!this.sourceData[stageIndex]?.jobList) {
-        return;
+        return false;
+      }
+      const isJobNameRepeated = this.sourceData[stageIndex].jobList?.some((job: { name: string; }) => job.name === jobData?.name);
+      if (isJobNameRepeated) {
+        isJobNameRepeated && message.error('当前阶段存在同名的任务！');
+        return false;
       }
       this.sourceData[stageIndex].jobList[jobIndex] = jobData;
-
       this.handleJobSequenceSort(stageIndex);
       this.handleEditCallback();
+      return true;
     },
 
     /**
