@@ -22,7 +22,7 @@ const HostConfig = {
   'c7ncd.HostConfig.Delete': '删除',
   'c7ncd.HostConfig.Save': '保存',
   'c7ncd.HostConfig.Create': '创建',
-
+  'c7ncd.HostConfig.reset': '重置',
 };
 
 export {
