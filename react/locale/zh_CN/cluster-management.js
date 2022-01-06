@@ -57,12 +57,15 @@ const Index = {
   'c7ncd-clusterManagement.NodePods': '节点Pods',
   'c7ncd-clusterManagement.Status': '状态',
   'c7ncd-clusterManagement.PodLog': 'Pod日志',
+  'c7ncd.cluster.modal.create': '连接集群',
+  'c7ncd.cluster.modal.createByHost': '创建集群',
   'c7ncd-clusterManagement.Environment': '环境',
   'c7ncd-clusterManagement.EnvironmentCode': '环境编码',
   'c7ncd-clusterManagement.install': '安装',
   'c7ncd-clusterManagement.uninstall': '卸载',
   'c7ncd-clusterManagement.add': '添加',
-
+  'c7ncd.cluster.empty.title': '暂无集群',
+  'c7ncd.cluster.empty.describe': '当前项目下无集群，请创建',
 };
 
 export {
