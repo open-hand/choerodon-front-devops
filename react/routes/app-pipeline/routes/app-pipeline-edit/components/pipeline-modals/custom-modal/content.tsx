@@ -24,13 +24,16 @@ const Index = observer(() => {
 
   return (
     <>
-      <CloseModal preCheck={handleOk} modal={modal} />
+      <CloseModal modal={modal} />
       <YamlEditor
         readOnly={false}
         modeChange={false}
         showError={false}
         value={CustomDataSet?.current?.get(mapping.value.name)}
-        onValueChange={(value: any) => CustomDataSet.current.set(mapping.value.name, value)}
+        onValueChange={(value: any) => {
+          CustomDataSet.current.set(mapping.value.name, value);
+          handleOk();
+        }}
       />
     </>
   );
