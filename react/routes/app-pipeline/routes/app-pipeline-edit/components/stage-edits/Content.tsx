@@ -129,19 +129,27 @@ const StageEdits = () => {
     [fromToId, getAddStageType, getSourceData, isDragging],
   );
 
+  const renderDragContainer = useCallback(() => (
+    <DragDropContext
+      onDragStart={() => {
+        console.log('托起来了');
+        window.requestIdleCallback(setTrue);
+      }}
+      onDragEnd={handleDragEnd}
+      onDragUpdate={handleDragOver}
+      style={{ overflow: 'auto' }}
+    >
+      {renderStages()}
+    </DragDropContext>
+  ), [handleDragEnd, handleDragOver, renderStages, setTrue]);
+
   return (
     <div className={prefixCls}>
       {
         level === 'project' ? <Alert closable showIcon type="warning" message="此页面定义了CI阶段或其中的任务后，GitLab仓库中的.gitlab-ci.yml文件也会同步修改。" /> : ''
       }
       <div className={`${prefixCls}-container`}>
-        <DragDropContext
-          onDragStart={() => window.requestIdleCallback(setTrue)}
-          onDragEnd={handleDragEnd}
-          onDragUpdate={handleDragOver}
-        >
-          {renderStages()}
-        </DragDropContext>
+        {renderDragContainer()}
       </div>
     </div>
   );

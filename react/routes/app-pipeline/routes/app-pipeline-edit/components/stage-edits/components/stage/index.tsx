@@ -5,12 +5,9 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
-import { useFormatCommon } from '@choerodon/master';
 import map from 'lodash/map';
 import { Icon, Tooltip } from 'choerodon-ui/pro';
-
 import './index.less';
-
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import classnames from 'classnames';
 import { observer } from 'mobx-react-lite';
@@ -20,7 +17,6 @@ import { STAGE_TYPES } from '../../../../interface';
 import useStageModal from '../../hooks/useStageModal';
 import { STAGE_CI } from '../../../../stores/CONSTANTS';
 import useStageEdit from '../../hooks/useStageEdit';
-import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
 
 export type StageProps = {
   type: STAGE_TYPES
@@ -50,12 +46,6 @@ const Stage:FC<StageProps> = (props) => {
     addJob,
     editJob,
   } = useStageEdit();
-
-  const {
-    level,
-  } = usePipelineContext();
-
-  const formatCommon = useFormatCommon();
 
   const linesType = type === STAGE_CI ? 'paralle' : 'serial';
 
@@ -224,6 +214,7 @@ const Stage:FC<StageProps> = (props) => {
         <Draggable draggableId={`draggable-${stageIndex}`} index={stageIndex}>
           {renderDraggerContainer}
         </Draggable>
+        {provided.placeholder}
       </div>
     ),
     [getStageStyle, renderDraggerContainer, stageIndex],
