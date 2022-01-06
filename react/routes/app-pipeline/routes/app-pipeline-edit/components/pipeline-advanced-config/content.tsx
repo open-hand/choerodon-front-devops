@@ -25,7 +25,7 @@ const Index = observer(() => {
 
   return (
     <>
-      <Form dataSet={PipelineAdvancedConfigDataSet} columns={2}>
+      <Form style={{ width: '60%' }} dataSet={PipelineAdvancedConfigDataSet} columns={2}>
         <Select
           combo
           colSpan={2}
