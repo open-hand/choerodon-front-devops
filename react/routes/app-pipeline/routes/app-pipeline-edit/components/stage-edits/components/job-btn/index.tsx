@@ -13,7 +13,7 @@ const prefixCls = 'c7ncd-pipeline-edit-jobbtn';
 interface JobAddBtnProps {
   type:'circle' | 'normal'
   linesType: 'paralle' | 'serial'
-  handleJobAddCallback: (jobData:any)=>void
+  handleJobAddCallback:(addonData: any)=>(editData:any)=>void
   stageIndex:number
   jobIndex:number
 }

@@ -10,7 +10,7 @@ import AddCDTask
   from '@/routes/app-pipeline/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask';
 
 export type JobTypesPanelProps = {
-  handleJobAddCallback:(jobData: any)=>void
+  handleJobAddCallback:(addonData: any)=>(editData:any)=>void
   stageIndex:number
   jobIndex:number
 }
@@ -57,7 +57,7 @@ const JobCdPanel:FC<JobTypesPanelProps> = (props) => {
           appServiceName={appServiceName}
           appServiceId={appServiceId}
           random={Math.random()}
-          handleOk={handleJobAddCallback}
+          handleOk={handleJobAddCallback({ type: keyPath[0] })}
           taskType={keyPath[0]}
           stageData={getTabData(TAB_FLOW_CONFIG)}
           stageIndex={stageIndex}

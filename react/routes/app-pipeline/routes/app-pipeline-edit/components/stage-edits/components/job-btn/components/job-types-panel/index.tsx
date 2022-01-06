@@ -8,7 +8,7 @@ import { Menu } from 'choerodon-ui';
 import { handleBuildModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals';
 import { handleCustomModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/custom-modal';
 import {
-  MAVEN_BUILD, CUSTOM_BUILD,
+  MAVEN_BUILD,
 } from '@/routes/app-pipeline/CONSTANTS';
 import {} from 'choerodon-ui/pro';
 
@@ -20,7 +20,7 @@ import { TAB_BASIC, TAB_ADVANCE_SETTINGS } from '@/routes/app-pipeline/routes/ap
 import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
 
 export type JobTypesPanelProps = {
-  handleJobAddCallback:(jobData: any)=>void
+  handleJobAddCallback:(addonData: any)=>(editData:any)=>void
 }
 
 const {
@@ -84,7 +84,7 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props: { handleJobAddCallback: any
     const stepData = JSON.parse(keyPath[0]);
     handlePipelineModal({
       data: stepData,
-      callback: handleJobAddCallback,
+      callback: handleJobAddCallback(stepData),
       advancedData: getTabData(TAB_ADVANCE_SETTINGS),
       level,
     });
