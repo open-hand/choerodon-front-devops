@@ -1,6 +1,7 @@
 import { DataSet } from 'choerodon-ui/pro';
 import { DevopsAlienApiConfig } from '@choerodon/master';
 import { mapping as outsideAdvancedMapping } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-advanced-config/stores/pipelineAdvancedConfigDataSet';
+import { handleOk } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/content';
 
 function checkImage(value: any, name: any, record: any) {
   const pa = /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}(\/.+)*:.+$/;
@@ -112,7 +113,12 @@ const transformLoadData = (data: any, imageRes: any) => ({
   [mapping.concurrentCount.name]: data?.[mapping.concurrentCount.name],
 });
 
-const Index = (data?: any, outSideAdvancedData?: any) => ({
+const Index = ({
+  data,
+  outSideAdvancedData,
+  level,
+  handleJobAddCallback,
+}: any) => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((key) => mapping[key]),
   events: {
@@ -139,6 +145,31 @@ const Index = (data?: any, outSideAdvancedData?: any) => ({
       }
       if (!flag) {
         dataSet.loadData([transformLoadData(data, res)]);
+      }
+    },
+    update: ({ dataSet }: any) => {
+      const {
+        template,
+        type,
+        appService,
+        id,
+      } = data;
+      if (!template) {
+        handleOk({
+          canWait: false,
+          advancedRef: {
+            current: {
+              getDataSet: () => dataSet,
+            },
+          },
+          level,
+          template,
+          handleJobAddCallback,
+          type,
+          appService,
+          id,
+          data,
+        });
       }
     },
   },

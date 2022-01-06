@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useImperativeHandle } from 'react';
 import {
   Form,
   TextField,
@@ -49,6 +49,84 @@ import './index.less';
 
 const prefix = 'c7ncd-buildModal-content';
 
+const handleOk = async ({
+  canWait,
+  BuildDataSet,
+  level,
+  template,
+  StepDataSet,
+  advancedRef,
+  handleJobAddCallback,
+  type,
+  appService,
+  id,
+  data,
+}: {
+  canWait?: boolean,
+  BuildDataSet?: any,
+  level: any,
+  template: any,
+  StepDataSet?: any,
+  advancedRef: any
+  handleJobAddCallback: any,
+  type: any,
+  appService: any,
+  id: any,
+  data?: any,
+}) => {
+  let res = true;
+  if (BuildDataSet) {
+    res = await BuildDataSet.current.validate(true);
+  }
+  let stepRes = true;
+  let advancedRes = true;
+  if (level === 'project' || !template || ((template === TASK_TEMPLATE) && (BuildDataSet.current?.get('type') === MAVEN_BUILD))) {
+    if (StepDataSet) {
+      for (let i = 0; i < StepDataSet.records.filter((j: any) => j.status !== 'delete').length; i += 1) {
+        const item = StepDataSet.records.filter((j: any) => j.status !== 'delete')[i];
+        // eslint-disable-next-line no-await-in-loop
+        const itemResult = await item.validate(true);
+        let configFlag = true;
+        if ([BUILD_MAVEN, BUILD_MAVEN_PUBLISH].includes(item?.get(StepMapping.type.name))) {
+          // eslint-disable-next-line no-await-in-loop
+          configFlag = await item.getField(StepMapping.customRepoConfig.name).options.validate();
+        }
+        if (!itemResult || !configFlag) {
+          stepRes = false;
+          break;
+        }
+      }
+    }
+    advancedRes = await advancedRef?.current?.getDataSet()?.current?.validate(true);
+  }
+  const result = {
+    // 如果需要覆盖加上data 比如builddataset和stepdataset的update更新事件
+    ...data || {},
+    ...BuildDataSet ? transformSubmitData(BuildDataSet) : {},
+    ...StepDataSet ? {
+      devopsCiStepVOList: stepDataSetTransformSubmitData(StepDataSet),
+    } : {},
+    ...advancedTransformSubmitData(advancedRef?.current?.getDataSet()),
+    groupType: type,
+    ...template === STEP_TEMPLATE ? {
+      type,
+    } : {},
+    // TODO 待删
+    appService,
+    completed: template !== STEP_TEMPLATE ? res && stepRes && advancedRes : res,
+    id,
+  };
+  if (canWait) {
+    if (template !== STEP_TEMPLATE ? res && stepRes && advancedRes : res) {
+      const flag = await handleJobAddCallback(result);
+      return flag;
+    }
+    return false;
+  }
+  handleJobAddCallback(result);
+  return true;
+};
+
 const Index = observer(() => {
   const {
     modal,
@@ -64,9 +142,8 @@ const Index = observer(() => {
       template,
     },
     level,
+    advancedRef,
   } = useBuildModalStore();
-
-  const advancedRef = useRef<any>();
 
   const stepData = StepDataSet.data;
 
@@ -75,7 +152,9 @@ const Index = observer(() => {
   const renderCloseModal = () => {
     if (!template) {
       return (
-        <CloseModal preCheck={handleOk} modal={modal} />
+        <CloseModal
+          modal={modal}
+        />
       );
     }
     return '';
@@ -133,7 +212,22 @@ const Index = observer(() => {
                 onClick: () => handleExpand(true),
               }, {
                 custom: true,
-                dom: disabled ? '' : <AddStep level={level} ds={StepDataSet} />,
+                dom: disabled ? '' : (
+                  <AddStep
+                    okProps={{
+                      level,
+                      template,
+                      advancedRef,
+                      handleJobAddCallback,
+                      type,
+                      appService,
+                      id,
+                      data,
+                    }}
+                    level={level}
+                    ds={StepDataSet}
+                  />
+                ),
               // text: '添加步骤',
               // onClick: handleAddStep,
               // overlay: addStepMenu,
@@ -145,6 +239,16 @@ const Index = observer(() => {
               template={template}
               prefix={prefix}
               dataSet={StepDataSet}
+              okProps={{
+                level,
+                template,
+                advancedRef,
+                handleJobAddCallback,
+                type,
+                appService,
+                id,
+                data,
+              }}
             />
             <div
               style={{
@@ -195,53 +299,19 @@ const Index = observer(() => {
     }
   };
 
-  const handleOk = async (canWait?: boolean) => {
-    const res = await BuildDataSet.current.validate(true);
-    let stepRes = true;
-    let advancedRes = true;
-    if (level === 'project' || !template || ((template === TASK_TEMPLATE) && (BuildDataSet.current?.get('type') === MAVEN_BUILD))) {
-      for (let i = 0; i < StepDataSet.records.filter((j: any) => j.status !== 'delete').length; i += 1) {
-        const item = StepDataSet.records.filter((j: any) => j.status !== 'delete')[i];
-        // eslint-disable-next-line no-await-in-loop
-        const itemResult = await item.validate(true);
-        let configFlag = true;
-        if ([BUILD_MAVEN, BUILD_MAVEN_PUBLISH].includes(item?.get(StepMapping.type.name))) {
-          // eslint-disable-next-line no-await-in-loop
-          configFlag = await item.getField(StepMapping.customRepoConfig.name).options.validate();
-        }
-        if (!itemResult || !configFlag) {
-          stepRes = false;
-          break;
-        }
-      }
-      advancedRes = await advancedRef?.current?.getDataSet()?.current?.validate(true);
-    }
-    const result = {
-      ...transformSubmitData(BuildDataSet),
-      devopsCiStepVOList: stepDataSetTransformSubmitData(StepDataSet),
-      ...advancedTransformSubmitData(advancedRef?.current?.getDataSet()),
-      groupType: type,
-      ...template === STEP_TEMPLATE ? {
-        type,
-      } : {},
-      // TODO 待删
-      appService,
-      completed: template !== STEP_TEMPLATE ? res && stepRes && advancedRes : res,
-      id,
-    };
-    if (canWait) {
-      if (template !== STEP_TEMPLATE ? res && stepRes && advancedRes : res) {
-        const flag = await handleJobAddCallback(result);
-        return flag;
-      }
-      return false;
-    }
-    handleJobAddCallback(result);
-    return true;
-  };
-
   if (modal) {
-    modal.handleOk(() => handleOk(true));
+    modal.handleOk(() => handleOk({
+      canWait: true,
+      BuildDataSet,
+      level,
+      template,
+      StepDataSet,
+      advancedRef,
+      handleJobAddCallback,
+      type,
+      appService,
+      id,
+    }));
   }
 
   const handleExpand = (value: boolean) => {
@@ -305,3 +375,7 @@ const Index = observer(() => {
 });
 
 export default Index;
+
+export {
+  handleOk,
+};

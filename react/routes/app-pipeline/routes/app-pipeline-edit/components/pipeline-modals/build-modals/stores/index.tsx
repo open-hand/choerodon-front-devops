@@ -1,5 +1,5 @@
 import React, {
-  createContext, useContext, useMemo, useEffect,
+  createContext, useContext, useMemo, useEffect, useRef,
 } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
@@ -20,6 +20,7 @@ interface buildModalProps {
   advancedData: any,
   // 层级
   level: any,
+  advancedRef: any,
 }
 
 const Store = createContext({} as buildModalProps);
@@ -33,15 +34,29 @@ export const StoreProvider = observer((props: any) => {
     children,
     data,
     level,
+    handleJobAddCallback,
   } = props;
+
+  const advancedRef = useRef<any>();
 
   const appServiceId = data?.appService?.appServiceId;
   const appServiceName = data?.appService?.appServiceName;
 
   const BuildDataSet = useMemo(() => new DataSet(
-    buildDataSet(appServiceId, data, level),
+    buildDataSet(
+      appServiceId,
+      data,
+      level,
+      handleJobAddCallback,
+      advancedRef,
+    ),
   ), [appServiceId]);
-  const StepDataSet = useMemo(() => new DataSet(stepDataSet(level)), []);
+  const StepDataSet = useMemo(() => new DataSet(stepDataSet(
+    level,
+    data,
+    handleJobAddCallback,
+    advancedRef,
+  )), []);
 
   useEffect(() => {
     if (data) {
@@ -56,6 +71,7 @@ export const StoreProvider = observer((props: any) => {
     ...props,
     BuildDataSet,
     StepDataSet,
+    advancedRef,
   };
   return (
     <Store.Provider value={value}>

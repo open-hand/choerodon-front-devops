@@ -7,6 +7,7 @@ import {
 } from '@/routes/app-pipeline/CONSTANTS';
 import customRepoConfigDataSet
   from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/stores/customRepoConfigDataSet';
+import { handleOk } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/content';
 
 const settingConfigOptionsData = [{
   text: '自定义仓库配置',
@@ -398,105 +399,135 @@ const transformSubmitData = (ds: any) => ds.records.filter((i: any) => i.status 
   } : {},
 }));
 
-const Index = (level: any) => ({
-  autoCreate: true,
-  fields: Object.keys(mapping).map((key) => {
-    const item = mapping[key];
-    switch (key) {
-      case 'projectRelyRepo': {
-        if (level === 'project') {
-          item.options = new DataSet({
-            paging: true,
-            autoQuery: true,
-            transport: {
-              read: () => ({
-                ...RdupmAlienApiConfig.getnexusMavenRepoIds(),
-              }),
-            },
-          });
-        }
-        break;
-      }
-      case 'targetProductsLibrary': {
-        if (level === 'project') {
-          item.options = new DataSet({
-            paging: true,
-            autoQuery: true,
-            transport: {
-              read: () => ({
-                ...RdupmAlienApiConfig.getnexusMavenRepoIds('hosted'),
-              }),
-            },
-          });
-        }
-        item.dynamicProps = {
-          required: ({ record }: any) => (record.get(mapping.type.name) === BUILD_UPLOADJAR) && level === 'project',
-        };
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-    return item;
-  }),
-  events: {
-    update: ({ name, value, record }: any) => {
-      switch (name) {
-        case mapping.settingConfig.name: {
-          let flag = false;
-          if (value === settingConfigOptionsData[0].value) {
-            if (record.get(mapping.advancedXml.name)) {
-              flag = true;
-            }
-          } else if (record.Field(mapping.customRepoConfig.name).options?.records.length > 0) {
-            flag = true;
+const Index = (
+  level: any,
+  data: any,
+  handleJobAddCallback: any,
+  advancedRef: any,
+) => {
+  const {
+    template,
+    type,
+    appService,
+    id,
+  } = data;
+
+  return ({
+    autoCreate: true,
+    fields: Object.keys(mapping).map((key) => {
+      const item = mapping[key];
+      switch (key) {
+        case 'projectRelyRepo': {
+          if (level === 'project') {
+            item.options = new DataSet({
+              paging: true,
+              autoQuery: true,
+              transport: {
+                read: () => ({
+                  ...RdupmAlienApiConfig.getnexusMavenRepoIds(),
+                }),
+              },
+            });
           }
-          flag && Modal.confirm({
-            title: '清空配置',
-            children: (
-              <p>
-                {
-                  value === settingConfigOptionsData[0].value
-                    ? '切换至【自定义仓库配置】维护setting配置的方式后，下述已经维护的内容将会清空，确定要切换吗？'
-                    : '切换至【粘贴XML内容】维护setting配置的方式后，下述已经维护的仓库信息将会清空，确定要切换吗？'
-                }
-              </p>
-            ),
-          }).then((button: any) => {
-            if (button === 'ok') {
-              record.set(mapping.advancedXml.name, '');
-              record.Field(mapping.customRepoConfig.name).options.loadData([]);
-            } else {
-              record.set(
-                mapping.settingConfig.name,
-                value === settingConfigOptionsData[0].value
-                  ? settingConfigOptionsData[1].value
-                  : settingConfigOptionsData[0].value,
-              );
-            }
-          });
           break;
         }
-        case mapping.dockerFilePath.name: {
-          let res;
-          const arrValue = value.split('');
-          const lastIndex = _.findLastIndex(arrValue, (o: any) => o === '/');
-          if (lastIndex !== -1) {
-            res = arrValue.slice(0, lastIndex).join('');
-          } else {
-            res = '.';
+        case 'targetProductsLibrary': {
+          if (level === 'project') {
+            item.options = new DataSet({
+              paging: true,
+              autoQuery: true,
+              transport: {
+                read: () => ({
+                  ...RdupmAlienApiConfig.getnexusMavenRepoIds('hosted'),
+                }),
+              },
+            });
           }
-          record.set(mapping.imageContext.name, res);
+          item.dynamicProps = {
+            required: ({ record }: any) => (record.get(mapping.type.name) === BUILD_UPLOADJAR) && level === 'project',
+          };
           break;
         }
         default: {
           break;
         }
       }
+      return item;
+    }),
+    events: {
+      update: ({
+        name, value, record, dataSet,
+      }: any) => {
+        switch (name) {
+          case mapping.settingConfig.name: {
+            let flag = false;
+            if (value === settingConfigOptionsData[0].value) {
+              if (record.get(mapping.advancedXml.name)) {
+                flag = true;
+              }
+            } else if (record.Field(mapping.customRepoConfig.name).options?.records.length > 0) {
+              flag = true;
+            }
+            flag && Modal.confirm({
+              title: '清空配置',
+              children: (
+                <p>
+                  {
+                    value === settingConfigOptionsData[0].value
+                      ? '切换至【自定义仓库配置】维护setting配置的方式后，下述已经维护的内容将会清空，确定要切换吗？'
+                      : '切换至【粘贴XML内容】维护setting配置的方式后，下述已经维护的仓库信息将会清空，确定要切换吗？'
+                  }
+                </p>
+              ),
+            }).then((button: any) => {
+              if (button === 'ok') {
+                record.set(mapping.advancedXml.name, '');
+                record.Field(mapping.customRepoConfig.name).options.loadData([]);
+              } else {
+                record.set(
+                  mapping.settingConfig.name,
+                  value === settingConfigOptionsData[0].value
+                    ? settingConfigOptionsData[1].value
+                    : settingConfigOptionsData[0].value,
+                );
+              }
+            });
+            break;
+          }
+          case mapping.dockerFilePath.name: {
+            let res;
+            const arrValue = value.split('');
+            const lastIndex = _.findLastIndex(arrValue, (o: any) => o === '/');
+            if (lastIndex !== -1) {
+              res = arrValue.slice(0, lastIndex).join('');
+            } else {
+              res = '.';
+            }
+            record.set(mapping.imageContext.name, res);
+            break;
+          }
+          default: {
+            break;
+          }
+        }
+        if (!template) {
+          handleOk({
+            canWait: false,
+            StepDataSet: dataSet,
+            level,
+            template,
+            advancedRef,
+            handleJobAddCallback,
+            type,
+            appService,
+            id,
+            data,
+          });
+        }
+      },
     },
-  },
-});
+  });
+};
 
 export default Index;
 
