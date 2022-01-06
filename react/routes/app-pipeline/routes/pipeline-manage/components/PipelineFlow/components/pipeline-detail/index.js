@@ -193,7 +193,7 @@ export default observer((props) => {
   }
 
   const renderJobPrefix = (jobType, groupType) => {
-    if (jobType.indexOf('cd') !== -1) {
+    if (jobType?.indexOf('cd') !== -1) {
       return `【${jobTypesMappings[jobType]}】`;
     }
     const currentJobGroupType = JOB_GROUP_TYPES?.[groupType];

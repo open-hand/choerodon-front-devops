@@ -613,7 +613,7 @@ const DetailItem = (props) => {
   };
 
   const renderJobPrefix = () => {
-    if (itemType.indexOf('cd') !== -1) {
+    if (itemType?.indexOf('cd') !== -1) {
       return `【${jobTypesMappings[itemType]}】`;
     }
     const currentJobGroupType = JOB_GROUP_TYPES?.[groupType];
