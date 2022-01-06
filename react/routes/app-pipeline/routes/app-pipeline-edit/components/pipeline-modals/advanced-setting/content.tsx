@@ -35,16 +35,10 @@ const Index = observer(() => {
       <StepTitle
         title="高级设置"
         buttons={[{
-          text: '隐藏高级设置',
-          icon: 'visibility_off-o',
+          text: visible ? '隐藏高级设置' : '显示高级设置',
+          icon: visible ? 'visibility_off-o' : 'tune',
           onClick: () => {
-            setVisible(false);
-          },
-        }, {
-          text: '显示高级设置',
-          icon: 'tune',
-          onClick: () => {
-            setVisible(true);
+            setVisible(!visible);
           },
         }]}
       />

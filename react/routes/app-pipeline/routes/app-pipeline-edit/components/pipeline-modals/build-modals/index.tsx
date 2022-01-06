@@ -39,6 +39,7 @@ const handleBuildModal = (
   modal = Modal.open({
     title: title || getTitle(),
     drawer: true,
+    className: 'c7ncd-buildModals',
     children: (
       <Index
         data={data}

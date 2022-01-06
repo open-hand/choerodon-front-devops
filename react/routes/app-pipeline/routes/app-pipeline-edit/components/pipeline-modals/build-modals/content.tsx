@@ -1,4 +1,6 @@
-import React, { useRef, useMemo, useImperativeHandle } from 'react';
+import React, {
+  useRef, useMemo, useImperativeHandle, useState,
+} from 'react';
 import {
   Form,
   TextField,
@@ -145,6 +147,9 @@ const Index = observer(() => {
     advancedRef,
   } = useBuildModalStore();
 
+  // 这里是全部展开和收起的变量
+  const [expand, setExpand] = useState(true);
+
   const stepData = StepDataSet.data;
 
   const disabled = useMemo(() => level !== 'project' && !template, []);
@@ -203,13 +208,9 @@ const Index = observer(() => {
               className={`${prefix}__main__step`}
               title="步骤配置"
               buttons={[{
-                text: '全部收起',
-                icon: 'vertical_align_bottom',
-                onClick: () => handleExpand(false),
-              }, {
-                text: '展开',
-                icon: 'vertical_align_top',
-                onClick: () => handleExpand(true),
+                text: expand ? '全部收起' : '全部展开',
+                icon: expand ? 'vertical_align_bottom' : 'vertical_align_top',
+                onClick: () => handleExpand(!expand),
               }, {
                 custom: true,
                 dom: disabled ? '' : (
@@ -318,6 +319,7 @@ const Index = observer(() => {
     stepData.forEach((record: Record) => {
       record.set(StepMapping.expand.name, value);
     });
+    setExpand(value);
   };
 
   const renderTriggerValue = (ds: any) => {
