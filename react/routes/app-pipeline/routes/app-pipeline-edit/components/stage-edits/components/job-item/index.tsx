@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, {
   FC,
 } from 'react';
@@ -28,7 +29,7 @@ export type JobProps = {
   groupType: keyof typeof JOB_GROUP_TYPES // job的分组类型
   linesType: 'paralle' | 'serial'
   handleJobDeleteCallback: (jobIndex:number)=>void
-  handleJobEditCallback:(jobIndex:number, jobData:Record<string, any>)=>void
+  handleJobEditCallback:(jobIndex:number, jobData:Record<string, any>)=>boolean
 } & Record<string, any>
 
 const prefixCls = 'c7ncd-pipeline-jobItem';
@@ -71,9 +72,7 @@ const JobItem:FC<JobProps> = (props) => {
    * 编辑job的数据
    * @param {Record<string, any>} jobData
    */
-  const handleEditJobData = (jobData:Record<string, any>) => {
-    handleJobEditCallback(jobIndex, jobData);
-  };
+  const handleEditJobData = (jobData:Record<string, any>) => handleJobEditCallback(jobIndex, jobData);
 
   const handleOpenEditJobModal = () => {
     // 保存数据的时候掉用handleEditJobData 方法

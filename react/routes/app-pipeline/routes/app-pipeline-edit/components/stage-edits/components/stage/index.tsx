@@ -103,9 +103,7 @@ const Stage:FC<StageProps> = (props) => {
    * @param {number} jobIndex
    * @param {Record<string, any>} jobData
    */
-  const handleJobEditCallback = (jobIndex:number, jobData:Record<string, any>) => {
-    editJob(stageIndex, jobIndex, jobData);
-  };
+  const handleJobEditCallback = (jobIndex:number, jobData:Record<string, any>) => editJob(stageIndex, jobIndex, jobData);
 
   const renderJobs = useCallback(
     () => map(jobList, (item, index:number) => {
