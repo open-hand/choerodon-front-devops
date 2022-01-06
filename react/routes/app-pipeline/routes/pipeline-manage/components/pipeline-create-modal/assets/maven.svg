@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="26px" viewBox="0 0 32 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #FFFFFF;">
+    <title>icon/maven</title>
+    <g id="icon/maven" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect fill="#FFFFFF" x="0" y="0" width="32" height="26"></rect>
+        <g id="编组">
+            <rect id="Cover-BG" fill="#F5F7FA" fill-rule="nonzero" x="0" y="0" width="32" height="26" rx="2"></rect>
+            <rect id="path-1" fill="#FFFFFF" x="3" y="3" width="26" height="20" rx="2"></rect>
+            <path d="M3.92857143,3 L28.0714286,3 C28.5842644,3 29,3.67157287 29,4.5 L29,6 L29,6 L3,6 L3,4.5 C3,3.67157287 3.41573559,3 3.92857143,3 Z" id="Rectangle-Copy-10" fill="#D8E0EB" fill-rule="nonzero"></path>
+            <path d="M6.8,3.7 C7.2418278,3.7 7.6,4.0581722 7.6,4.5 C7.6,4.9418278 7.2418278,5.3 6.8,5.3 C6.3581722,5.3 6,4.9418278 6,4.5 C6,4.0581722 6.3581722,3.7 6.8,3.7 Z M9.4,3.7 C9.8418278,3.7 10.2,4.0581722 10.2,4.5 C10.2,4.9418278 9.8418278,5.3 9.4,5.3 C8.9581722,5.3 8.6,4.9418278 8.6,4.5 C8.6,4.0581722 8.9581722,3.7 9.4,3.7 Z M12,3.7 C12.4418278,3.7 12.8,4.0581722 12.8,4.5 C12.8,4.9418278 12.4418278,5.3 12,5.3 C11.5581722,5.3 11.2,4.9418278 11.2,4.5 C11.2,4.0581722 11.5581722,3.7 12,3.7 Z" id="形状结合" fill="#FFFFFF" fill-rule="nonzero"></path>
+        </g>
+    </g>
+</svg>
