@@ -13,7 +13,6 @@ import './index.less';
 
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import classnames from 'classnames';
-import { InfoIcon } from '@choerodon/components';
 import { observer } from 'mobx-react-lite';
 import JobItem from '../job-item';
 import JobAddBtn from '../job-btn';
