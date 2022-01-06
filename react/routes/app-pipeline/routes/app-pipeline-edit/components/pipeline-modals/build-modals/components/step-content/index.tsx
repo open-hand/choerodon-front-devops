@@ -80,7 +80,6 @@ const SonarDom = observer(({
     }
     <SelectBox
       name={StepMapping.sonarqubeConfigWay.name}
-      newLine
     />
     {
       record.get(StepMapping.sonarqubeConfigWay.name) === sonarConfigData[1].value && (
