@@ -132,7 +132,6 @@ const StageEdits = () => {
   const renderDragContainer = useCallback(() => (
     <DragDropContext
       onDragStart={() => {
-        console.log('托起来了');
         window.requestIdleCallback(setTrue);
       }}
       onDragEnd={handleDragEnd}
