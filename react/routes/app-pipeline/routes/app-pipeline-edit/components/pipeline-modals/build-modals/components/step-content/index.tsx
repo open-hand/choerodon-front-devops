@@ -285,6 +285,10 @@ const Index = observer(({
           className={`${prefix}__stepItem`}
           ref={dragProvided.innerRef}
           {...dragProvided.draggableProps}
+          style={{
+            ...dragProvided.draggableProps.style,
+            marginTop: index === 0 ? 15 : 0,
+          }}
         >
           <div
             className={`${prefix}__stepItem__side`}
