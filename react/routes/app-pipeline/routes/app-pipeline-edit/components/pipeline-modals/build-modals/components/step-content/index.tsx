@@ -22,6 +22,7 @@ import {
 } from '@/routes/app-pipeline/CONSTANTS';
 import MavenBuildAdvancedSetting
   from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/components/mavenBuild-advancedSetting';
+import { handleOk } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/content';
 
 const DockerDom = observer(({
   record,
@@ -111,9 +112,8 @@ const Index = observer(({
   template,
   prefix,
   dataSet,
+  okProps,
 }: any) => {
-  console.log(stepData);
-
   const renderStepItemForm = (itemRecord: Record) => {
     let result: any = '';
     switch (itemRecord.get(StepMapping.type.name)) {
@@ -312,6 +312,11 @@ const Index = observer(({
                     type="remove_circle_outline"
                     onClick={() => {
                       dataSet.delete([record], false);
+                      handleOk({
+                        canWait: false,
+                        StepDataSet: dataSet,
+                        ...okProps,
+                      });
                     }}
                   />
                 )

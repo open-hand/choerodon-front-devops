@@ -2,10 +2,12 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { templateStepsApi, ciTemplateStepApi } from '@choerodon/master';
 import { Dropdown, Menu, Button } from 'choerodon-ui/pro';
 import { transformLoadDataItem } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/stores/stepDataSet';
+import { handleOk } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/content';
 
 const Index = ({
   ds,
   level,
+  okProps,
 }: any) => {
   const [data, setData] = useState([]);
 
@@ -30,6 +32,11 @@ const Index = ({
       ...ds.toData(),
       transformLoadDataItem(JSON.parse(key), ds?.records.length),
     ]);
+    handleOk({
+      canWait: false,
+      StepDataSet: ds,
+      ...okProps,
+    });
   };
 
   const renderMenuItem = (d: any) => {

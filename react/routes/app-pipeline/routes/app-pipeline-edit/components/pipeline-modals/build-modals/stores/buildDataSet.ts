@@ -10,6 +10,9 @@ import {
 import {
   CUSTOM_BUILD, MAVEN_BUILD, STEP_TEMPLATE, TASK_TEMPLATE,
 } from '@/routes/app-pipeline/CONSTANTS';
+import {
+  handleOk,
+} from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/content';
 
 const handleValidatorName = async (v: any, t: any, l: any, id?: any) => {
   let res = true;
@@ -162,9 +165,18 @@ const mapping: {
   },
 };
 
-const Index = (appServiceId: any, data: any, level: any): any => {
+const Index = (
+  appServiceId: any,
+  data: any,
+  level: any,
+  handleJobAddCallback: any,
+  advancedRef: any,
+): any => {
   const {
     template,
+    type,
+    appService,
+    id,
   } = data;
   return ({
     autoCreate: true,
@@ -251,7 +263,9 @@ const Index = (appServiceId: any, data: any, level: any): any => {
           }));
         }
       },
-      update: ({ name, value, record }: any) => {
+      update: ({
+        name, value, record, dataSet,
+      }: any) => {
         switch (name) {
           case mapping.triggerType.name: {
             if (value === triggerTypeOptionsData[0].value) {
@@ -265,6 +279,20 @@ const Index = (appServiceId: any, data: any, level: any): any => {
           default: {
             break;
           }
+        }
+        if (!template) {
+          handleOk({
+            canWait: false,
+            BuildDataSet: dataSet,
+            level,
+            template,
+            advancedRef,
+            handleJobAddCallback,
+            type,
+            appService,
+            id,
+            data,
+          });
         }
       },
     },

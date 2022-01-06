@@ -31,10 +31,17 @@ export const StoreProvider = observer((props: any) => {
 
   const {
     advancedData: outSideAdvancedData,
+    level,
+    handleJobAddCallback,
   } = useBuildModalStore();
 
   const AdvancedDataSet = useMemo(() => new DataSet(
-    advancedDataSet(data, outSideAdvancedData),
+    advancedDataSet({
+      data,
+      outSideAdvancedData,
+      level,
+      handleJobAddCallback,
+    }),
   ), [data]);
 
   const value = {

@@ -17,7 +17,7 @@ const handleCustomModal = (data: any, handleJobAddCallback: any, title?: any) =>
     drawer: true,
     children: <Index data={data} handleJobAddCallback={handleJobAddCallback} />,
     style: {
-      width: CONSTANTS.MODAL_WIDTH.MAX,
+      width: CONSTANTS.MODAL_WIDTH.MIDDLE,
     },
     key: Modal.key(),
     footer: null,

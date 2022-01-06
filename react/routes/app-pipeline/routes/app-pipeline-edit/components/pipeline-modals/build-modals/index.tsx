@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Modal } from 'choerodon-ui/pro';
 import { CONSTANTS } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
@@ -6,6 +6,8 @@ import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
 import { StoreProvider } from './stores';
 import Content from './content';
 import { STEP_TEMPLATE, TASK_TEMPLATE } from '@/routes/app-pipeline/CONSTANTS';
+
+let modal: any;
 
 const Index = observer((props: any) => (
   <StoreProvider {...props}>
@@ -30,7 +32,11 @@ const handleBuildModal = (
     return '添加【构建】阶段';
   }
 
-  Modal.open({
+  if (modal) {
+    modal.close();
+  }
+
+  modal = Modal.open({
     title: title || getTitle(),
     drawer: true,
     children: (
@@ -41,8 +47,9 @@ const handleBuildModal = (
         level={level}
       />
     ),
+    mask: false,
     style: {
-      width: CONSTANTS.MODAL_WIDTH.MAX,
+      width: CONSTANTS.MODAL_WIDTH.MIDDLE,
     },
     maskClosable: false,
     key: Modal.key(),
