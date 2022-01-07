@@ -21,27 +21,27 @@ export default function useStore() {
     },
 
     /**
-     * 新增，删除阶段重新排序
-     * @return {*}
-     */
+       * 新增，删除阶段重新排序
+       * @return {*}
+       */
     handleStageSequenceSort() {
       const sortData = this.sourceData.slice().map((item:any, sequence:number) => ({ ...item, sequence }));
       this.sourceData = sortData;
     },
 
     /**
-     * 新增，删除job重新排序
-     * @return {*}
-     */
+       * 新增，删除job重新排序
+       * @return {*}
+       */
     handleJobSequenceSort(stageIndex:number) {
       const sortData = this.sourceData[stageIndex]?.jobList.map((item:any, sequence:number) => ({ ...item, sequence }));
       this.sourceData[stageIndex].jobList = sortData;
     },
 
     /**
-     * 添加阶段
-     * @param {number} stageIndex
-     */
+       * 添加阶段
+       * @param {number} stageIndex
+       */
     addStage(stageIndex:number, stageData:Record<string, any>) {
       this.sourceData.splice(stageIndex, 0, stageData);
       this.handleStageSequenceSort();
@@ -50,19 +50,19 @@ export default function useStore() {
     },
 
     /**
-     * 编辑阶段
-     * @param {number} stageIndex
-     * @param {Record<string, any>} stageData
-     */
+       * 编辑阶段
+       * @param {number} stageIndex
+       * @param {Record<string, any>} stageData
+       */
     editStage(stageIndex:number, stageData:Record<string, any>) {
       this.sourceData[stageIndex] = { ...this.sourceData[stageIndex], ...stageData };
       this.handleEditCallback();
     },
 
     /**
-     * 删除阶段
-     * @param {number} stageIndex
-     */
+       * 删除阶段
+       * @param {number} stageIndex
+       */
     deleteStage(stageIndex:number) {
       this.sourceData.splice(stageIndex, 1);
 
@@ -71,10 +71,10 @@ export default function useStore() {
     },
 
     /**
-     * 阶段排序
-     * @param {number} from
-     * @param {number} to
-     */
+       * 阶段排序
+       * @param {number} from
+       * @param {number} to
+       */
     orderStage(from:number, to:number) {
       this.sourceData.splice(to, 0, this.sourceData.splice(from, 1)[0]);
 
@@ -83,11 +83,11 @@ export default function useStore() {
     },
 
     /**
-     * 添加job
-     * @param {number} stageIndex
-     * @param {number} jobIndex
-     * @param {*} jobData
-     */
+       * 添加job
+       * @param {number} stageIndex
+       * @param {number} jobIndex
+       * @param {*} jobData
+       */
     addJob(stageIndex:number, jobIndex:number, jobData:any) {
       if (!this.sourceData[stageIndex]?.jobList) {
         this.sourceData[stageIndex].jobList = [jobData];
@@ -100,12 +100,12 @@ export default function useStore() {
     },
 
     /**
-     * 编辑job
-     * @param {number} stageIndex
-     * @param {number} jobIndex
-     * @param {*} jobData
-     * @return {boolean} 是否添加成功
-     */
+       * 编辑job
+       * @param {number} stageIndex
+       * @param {number} jobIndex
+       * @param {*} jobData
+       * @return {boolean} 是否添加成功
+       */
     editJob(stageIndex:number, jobIndex:number, jobData:any) {
       if (!this.sourceData[stageIndex]?.jobList) {
         return;
@@ -121,11 +121,11 @@ export default function useStore() {
     },
 
     /**
-     * 删除job
-     * @param {number} stageIndex
-     * @param {number} jobIndex
-     * @return {*}
-     */
+       * 删除job
+       * @param {number} stageIndex
+       * @param {number} jobIndex
+       * @return {*}
+       */
     deleteJob(stageIndex:number, jobIndex:number) {
       if (!this.sourceData[stageIndex]?.jobList) {
         return;

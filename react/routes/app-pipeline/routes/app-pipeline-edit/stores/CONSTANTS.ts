@@ -10,7 +10,7 @@ const STAGE_CI = 'CI' as const;
 const STAGE_CD = 'CD' as const;
 
 const DEFAUTL_CD_STAGE = [{
-  name: '部署', sequence: 3, id: 3, type: 'CD',
+  name: '部署', sequence: 3, type: 'CD',
 }];
 
 // 空白得分组
