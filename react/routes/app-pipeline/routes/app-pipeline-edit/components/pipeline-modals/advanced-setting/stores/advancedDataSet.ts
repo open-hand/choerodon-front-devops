@@ -97,21 +97,25 @@ const transformSubmitData = (ds: any) => {
   });
 };
 
-const transformLoadData = (data: any, imageRes: any) => ({
-  [mapping.ciRunnerImage.name]: data?.[mapping.ciRunnerImage.name] || imageRes[0].value,
-  [mapping.shareFolderSetting.name]: (function () {
-    const result = [];
-    if (data?.[shareOptionsData[0].value]) {
-      result.push(shareOptionsData[0].value);
-    }
-    if (data?.[shareOptionsData[1].value]) {
-      result.push(shareOptionsData[1].value);
-    }
-    return result;
-  }()),
-  [mapping.whetherConcurrent.name]: data?.[mapping.whetherConcurrent.name] || false,
-  [mapping.concurrentCount.name]: data?.[mapping.concurrentCount.name],
-});
+const transformLoadData = (data: any, imageRes: any) => {
+  const data2 = {
+    [mapping.ciRunnerImage.name]: data?.[mapping.ciRunnerImage.name] || imageRes[0].value,
+    [mapping.shareFolderSetting.name]: (function () {
+      const result = [];
+      if (data?.[shareOptionsData[0].value]) {
+        result.push(shareOptionsData[0].value);
+      }
+      if (data?.[shareOptionsData[1].value]) {
+        result.push(shareOptionsData[1].value);
+      }
+      return result;
+    }()),
+    [mapping.whetherConcurrent.name]: Boolean(data?.[mapping.concurrentCount.name]
+      && data?.[mapping.concurrentCount.name] > 0),
+    [mapping.concurrentCount.name]: data?.[mapping.concurrentCount.name],
+  };
+  return data2;
+};
 
 const Index = ({
   data,

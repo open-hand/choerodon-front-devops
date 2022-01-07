@@ -313,9 +313,9 @@ const transformLoadDataItem = (d: any, index: number) => {
     [mapping.sonarqubeAccountConfig.name]: accountConfigData[0].value,
     [mapping.whetherMavenSingleMeasure.name]: false,
     [mapping.sequence.name]: index,
-    [mapping.id.name]: newD?.[mapping.id.name],
     ...newD[STEPVO[newD.type]],
     [mapping.customRepoConfig.name]: newD[STEPVO[newD.type]]?.repos,
+    [mapping.id.name]: newD?.[mapping.id.name],
   });
 };
 
