@@ -151,7 +151,20 @@ const Index = ({
         dataSet.loadData([transformLoadData(data, res)]);
       }
     },
-    update: ({ dataSet }: any) => {
+    update: ({
+      dataSet, name, value, record,
+    }: any) => {
+      switch (name) {
+        case mapping.whetherConcurrent.name: {
+          if (!value) {
+            record.set(mapping.concurrentCount.name, undefined);
+          }
+          break;
+        }
+        default: {
+          break;
+        }
+      }
       const {
         template,
         type,
