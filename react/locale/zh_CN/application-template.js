@@ -13,6 +13,8 @@ const applicationTemplate = {
   'c7ncd.template.custom': '自定义',
   'c7ncd.template.title.create': '创建应用模板',
   'c7ncd.template.getGitlabPermission': '获取GitLab仓库权限',
+  'c7ncd.template.enable': '启用',
+  'c7ncd.template.stop': '停用',
   'c7ncd-template.applicationTemplate': '应用模版',
   'c7ncd-template.create': '创建应用模板',
   'c7ncd-template.templateCode': '模板编码',
