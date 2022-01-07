@@ -115,7 +115,7 @@ const Index = observer(({
     });
   };
 
-  const validatorName = (value: string, index: any) => {
+  const validatorName = (value: string, index: any): any => {
     const arr = funcList;
     arr[index].name = value;
     const flag = arr.filter((i: any) => i.name === value)?.length > 1;

@@ -51,7 +51,7 @@ const mapping: {
     type: 'string' as FieldType,
     label: '应用名称',
     required: true,
-    maxLength: 64,
+    maxLength: 53,
     validator: async (value, type, record: Record) => {
       let res: any = '应用名称已重复';
       const needCheckEnv = record.getState('checkEnv');

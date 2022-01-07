@@ -48,7 +48,7 @@ const handleBuildModal = (
         level={level}
       />
     ),
-    mask: false,
+    mask: !!template,
     style: {
       width: CONSTANTS.MODAL_WIDTH.MIDDLE,
     },
