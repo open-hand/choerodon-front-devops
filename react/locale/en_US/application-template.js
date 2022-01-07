@@ -13,6 +13,8 @@ const applicationTemplate = {
   'c7ncd.template.title.create': 'Create',
   'c7ncd.template.getGitlabPermission': 'Obtain GitLab permissions',
   'c7ncd-template.applicationTemplate': 'Application Template',
+  'c7ncd-template.enable': 'Enable',
+  'c7ncd-template.stop': 'Disable',
   'c7ncd-template.create': 'Create',
   'c7ncd-template.templateCode': 'Template Code',
   'c7ncd-template.warehouseAddress': 'Warehouse Address',
