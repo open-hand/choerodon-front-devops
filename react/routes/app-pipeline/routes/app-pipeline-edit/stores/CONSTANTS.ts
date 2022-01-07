@@ -17,10 +17,10 @@ const DEFAUTL_CD_STAGE = [{
 const DEFAULT_STAGES_DATA = {
   devopsCiStageVOS: [
     {
-      name: '代码扫描', sequence: 1, id: 1, type: 'CI',
+      name: '代码扫描', sequence: 1, type: 'CI',
     },
     {
-      name: '构建', sequence: 2, id: 2, type: 'CI',
+      name: '构建', sequence: 2, type: 'CI',
     },
   ],
   hasRecords: false,
