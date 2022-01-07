@@ -108,17 +108,16 @@ export default function useStore() {
      */
     editJob(stageIndex:number, jobIndex:number, jobData:any) {
       if (!this.sourceData[stageIndex]?.jobList) {
-        return false;
+        return;
       }
-      const isJobNameRepeated = this.sourceData[stageIndex].jobList?.some((job: { name: string; }) => job.name === jobData?.name);
-      if (isJobNameRepeated) {
-        isJobNameRepeated && message.error('当前阶段存在同名的任务！');
-        return false;
-      }
+      // const isJobNameRepeated = this.sourceData[stageIndex].jobList?.some((job: { name: string; }) => job.name === jobData?.name);
+      // if (isJobNameRepeated) {
+      //   isJobNameRepeated && message.error('当前阶段存在同名的任务！');
+      //   return false;
+      // }
       this.sourceData[stageIndex].jobList[jobIndex] = jobData;
       this.handleJobSequenceSort(stageIndex);
       this.handleEditCallback();
-      return true;
     },
 
     /**
