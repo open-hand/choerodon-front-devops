@@ -3,7 +3,7 @@ const applicationTemplate = {
   'c7ncd.template.applicationTemplate': '应用模板',
   'c7ncd.template.templateCode': '模板编码',
   'c7ncd.template.createTime': '创建时间',
-  'c7ncd.template.delete': '确定',
+  'c7ncd.template.delete': '删除',
   'c7ncd.template.create': '确定',
   'c7ncd.template.iknow': '确定',
   'c7ncd.template.save': '保存',
