@@ -24,7 +24,10 @@ const Index = observer(() => {
 
   return (
     <>
-      <CloseModal modal={modal} />
+      <CloseModal
+        modal={modal}
+        preCheck={handleOk}
+      />
       <YamlEditor
         readOnly={false}
         modeChange={false}

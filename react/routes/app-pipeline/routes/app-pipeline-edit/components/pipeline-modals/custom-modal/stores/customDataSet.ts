@@ -9,9 +9,6 @@ const transformSubmitData = (data: any, ds: any) => ({
   name: data?.name,
   type: data?.type,
   [mapping.value.name]: ds?.current?.get(mapping.value.name),
-  ciTemplateJobGroupDTO: {
-    type: 'custom',
-  },
 });
 
 const Index = () => ({
