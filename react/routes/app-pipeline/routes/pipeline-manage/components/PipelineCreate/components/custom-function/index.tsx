@@ -145,6 +145,7 @@ const Index = observer(({
             maxLength={60}
             onChange={(v: string) => console.log(v)}
             onBlur={(e) => handleChangeText(e.target.value, index)}
+            // @ts-ignore
             validator={(value) => validatorName(value, index)}
           />
         ) : (

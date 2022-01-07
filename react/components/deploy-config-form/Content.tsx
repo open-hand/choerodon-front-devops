@@ -31,6 +31,10 @@ const DeployConfigForm = () => {
 
   const [isError, setValueError] = useState(false);
 
+  useEffect(() => {
+    modal.update({ okProps: { disabled: isError } });
+  }, [isError]);
+
   modal.handleOk(async () => {
     if (isError) return false;
 
