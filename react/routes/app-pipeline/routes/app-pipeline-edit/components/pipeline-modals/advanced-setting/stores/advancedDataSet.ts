@@ -3,7 +3,7 @@ import { DevopsAlienApiConfig } from '@choerodon/master';
 import { mapping as outsideAdvancedMapping } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-advanced-config/stores/pipelineAdvancedConfigDataSet';
 import { handleOk } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/content';
 
-function checkImage(value: any, name: any, record: any) {
+function checkImage(value: any) {
   const pa = /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}(\/.+)*:.+$/;
   if (value && pa.test(value)) {
     return true;
@@ -26,22 +26,8 @@ const mapping: {
     name: 'image',
     type: 'string',
     label: 'CI任务Runner镜像',
-    required: true,
-    validator: checkImage,
     textField: 'text',
     valueField: 'value',
-    options: new DataSet({
-      autoQuery: false,
-      transport: {
-        read: () => ({
-          ...DevopsAlienApiConfig.getDefaultImage(),
-          transformResponse: (res) => [{
-            text: res,
-            value: res,
-          }],
-        }),
-      },
-    }),
   },
   shareFolderSetting: {
     name: 'share',
@@ -124,7 +110,40 @@ const Index = ({
   handleJobAddCallback,
 }: any) => ({
   autoCreate: true,
-  fields: Object.keys(mapping).map((key) => mapping[key]),
+  fields: Object.keys(mapping).map((key) => {
+    const item = mapping[key];
+    switch (key) {
+      case 'ciRunnerImage': {
+        item.options = new DataSet({
+          autoQuery: false,
+          transport: {
+            read: () => ({
+              ...DevopsAlienApiConfig.getDefaultImage(),
+              transformResponse: (res) => [{
+                text: res,
+                value: res,
+              }],
+            }),
+          },
+        });
+        item.dynamicProps = {
+          required: () => level === 'project',
+        };
+        item.validator = (value: any) => {
+          if (level === 'project') {
+            return checkImage(value);
+          }
+          return true;
+        };
+
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+    return item;
+  }),
   events: {
     create: async ({ dataSet, record }: any) => {
       const res = await record.getField(mapping.ciRunnerImage.name).options.query();
