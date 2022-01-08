@@ -115,7 +115,7 @@ const Index = observer(({
     });
   };
 
-  const validatorName = (value: string, index: any) => {
+  const validatorName = (value: string, index: any): any => {
     const arr = funcList;
     arr[index].name = value;
     const flag = arr.filter((i: any) => i.name === value)?.length > 1;
@@ -145,6 +145,7 @@ const Index = observer(({
             maxLength={60}
             onChange={(v: string) => console.log(v)}
             onBlur={(e) => handleChangeText(e.target.value, index)}
+            // @ts-ignore
             validator={(value) => validatorName(value, index)}
           />
         ) : (

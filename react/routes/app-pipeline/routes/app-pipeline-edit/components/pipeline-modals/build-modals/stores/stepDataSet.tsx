@@ -96,17 +96,11 @@ const mapping: {
     name: 'dockerFilePath',
     type: 'string',
     label: 'Dockerfile文件路径',
-    dynamicProps: {
-      required: ({ record }: any) => record.get(mapping.type.name) === BUILD_DOCKER,
-    },
   },
   imageContext: {
     name: 'dockerContextDir',
     type: 'string',
     label: '镜像构建上下文',
-    dynamicProps: {
-      required: ({ record }: any) => record.get(mapping.type.name) === BUILD_DOCKER,
-    },
   },
   token: {
     name: 'token',
@@ -313,9 +307,9 @@ const transformLoadDataItem = (d: any, index: number) => {
     [mapping.sonarqubeAccountConfig.name]: accountConfigData[0].value,
     [mapping.whetherMavenSingleMeasure.name]: false,
     [mapping.sequence.name]: index,
-    [mapping.id.name]: newD?.[mapping.id.name],
     ...newD[STEPVO[newD.type]],
     [mapping.customRepoConfig.name]: newD[STEPVO[newD.type]]?.repos,
+    [mapping.id.name]: newD?.[mapping.id.name],
   });
 };
 
@@ -445,6 +439,18 @@ const Index = (
           }
           item.dynamicProps = {
             required: ({ record }: any) => (record.get(mapping.type.name) === BUILD_UPLOADJAR) && level === 'project',
+          };
+          break;
+        }
+        case 'dockerFilePath': {
+          item.dynamicProps = {
+            required: ({ record }: any) => (record.get(mapping.type.name) === BUILD_DOCKER) && level === 'project',
+          };
+          break;
+        }
+        case 'imageContext': {
+          item.dynamicProps = {
+            required: ({ record }: any) => (record.get(mapping.type.name) === BUILD_DOCKER) && level === 'project',
           };
           break;
         }

@@ -158,6 +158,19 @@ const Index = observer(() => {
     if (!template) {
       return (
         <CloseModal
+          preCheck={() => handleOk({
+            canWait: false,
+            BuildDataSet,
+            level,
+            template,
+            StepDataSet,
+            advancedRef,
+            handleJobAddCallback,
+            type,
+            id,
+            appService,
+            data,
+          })}
           modal={modal}
         />
       );

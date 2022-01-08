@@ -2579,6 +2579,7 @@ const zhCN = {
   'ctf.crt.required': '请上传Cert格式的文件',
   'validDate.tip': '证书的可用期限',
   'ctf.validDate': '证书有效期',
+  'ctf.creator': '创建人',
 
   // 报表
   'report.bread.title': '图表',

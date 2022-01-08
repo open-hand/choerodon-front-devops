@@ -10,17 +10,17 @@ const STAGE_CI = 'CI' as const;
 const STAGE_CD = 'CD' as const;
 
 const DEFAUTL_CD_STAGE = [{
-  name: '部署', sequence: 3, id: 3, type: 'CD',
+  name: '部署', sequence: 3, type: 'CD',
 }];
 
 // 空白得分组
 const DEFAULT_STAGES_DATA = {
   devopsCiStageVOS: [
     {
-      name: '代码扫描', sequence: 1, id: 1, type: 'CI',
+      name: '代码扫描', sequence: 1, type: 'CI',
     },
     {
-      name: '构建', sequence: 2, id: 2, type: 'CI',
+      name: '构建', sequence: 2, type: 'CI',
     },
   ],
   hasRecords: false,

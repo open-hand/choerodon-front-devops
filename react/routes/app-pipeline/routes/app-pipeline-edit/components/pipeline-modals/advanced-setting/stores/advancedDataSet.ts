@@ -3,7 +3,7 @@ import { DevopsAlienApiConfig } from '@choerodon/master';
 import { mapping as outsideAdvancedMapping } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-advanced-config/stores/pipelineAdvancedConfigDataSet';
 import { handleOk } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/content';
 
-function checkImage(value: any, name: any, record: any) {
+function checkImage(value: any) {
   const pa = /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}(\/.+)*:.+$/;
   if (value && pa.test(value)) {
     return true;
@@ -26,22 +26,8 @@ const mapping: {
     name: 'image',
     type: 'string',
     label: 'CI任务Runner镜像',
-    required: true,
-    validator: checkImage,
     textField: 'text',
     valueField: 'value',
-    options: new DataSet({
-      autoQuery: false,
-      transport: {
-        read: () => ({
-          ...DevopsAlienApiConfig.getDefaultImage(),
-          transformResponse: (res) => [{
-            text: res,
-            value: res,
-          }],
-        }),
-      },
-    }),
   },
   shareFolderSetting: {
     name: 'share',
@@ -97,21 +83,25 @@ const transformSubmitData = (ds: any) => {
   });
 };
 
-const transformLoadData = (data: any, imageRes: any) => ({
-  [mapping.ciRunnerImage.name]: data?.[mapping.ciRunnerImage.name] || imageRes[0].value,
-  [mapping.shareFolderSetting.name]: (function () {
-    const result = [];
-    if (data?.[shareOptionsData[0].value]) {
-      result.push(shareOptionsData[0].value);
-    }
-    if (data?.[shareOptionsData[1].value]) {
-      result.push(shareOptionsData[1].value);
-    }
-    return result;
-  }()),
-  [mapping.whetherConcurrent.name]: data?.[mapping.whetherConcurrent.name] || false,
-  [mapping.concurrentCount.name]: data?.[mapping.concurrentCount.name],
-});
+const transformLoadData = (data: any, imageRes: any) => {
+  const data2 = {
+    [mapping.ciRunnerImage.name]: data?.[mapping.ciRunnerImage.name] || imageRes[0].value,
+    [mapping.shareFolderSetting.name]: (function () {
+      const result = [];
+      if (data?.[shareOptionsData[0].value]) {
+        result.push(shareOptionsData[0].value);
+      }
+      if (data?.[shareOptionsData[1].value]) {
+        result.push(shareOptionsData[1].value);
+      }
+      return result;
+    }()),
+    [mapping.whetherConcurrent.name]: Boolean(data?.[mapping.concurrentCount.name]
+      && data?.[mapping.concurrentCount.name] > 0),
+    [mapping.concurrentCount.name]: data?.[mapping.concurrentCount.name],
+  };
+  return data2;
+};
 
 const Index = ({
   data,
@@ -120,7 +110,40 @@ const Index = ({
   handleJobAddCallback,
 }: any) => ({
   autoCreate: true,
-  fields: Object.keys(mapping).map((key) => mapping[key]),
+  fields: Object.keys(mapping).map((key) => {
+    const item = mapping[key];
+    switch (key) {
+      case 'ciRunnerImage': {
+        item.options = new DataSet({
+          autoQuery: false,
+          transport: {
+            read: () => ({
+              ...DevopsAlienApiConfig.getDefaultImage(),
+              transformResponse: (res) => [{
+                text: res,
+                value: res,
+              }],
+            }),
+          },
+        });
+        item.dynamicProps = {
+          required: () => level === 'project',
+        };
+        item.validator = (value: any) => {
+          if (level === 'project') {
+            return checkImage(value);
+          }
+          return true;
+        };
+
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+    return item;
+  }),
   events: {
     create: async ({ dataSet, record }: any) => {
       const res = await record.getField(mapping.ciRunnerImage.name).options.query();
@@ -147,7 +170,20 @@ const Index = ({
         dataSet.loadData([transformLoadData(data, res)]);
       }
     },
-    update: ({ dataSet }: any) => {
+    update: ({
+      dataSet, name, value, record,
+    }: any) => {
+      switch (name) {
+        case mapping.whetherConcurrent.name: {
+          if (!value) {
+            record.set(mapping.concurrentCount.name, undefined);
+          }
+          break;
+        }
+        default: {
+          break;
+        }
+      }
       const {
         template,
         type,
