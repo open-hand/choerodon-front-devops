@@ -205,27 +205,56 @@ const Index = (
         }
         case 'groupId': {
           item.required = template === TASK_TEMPLATE;
-          item.options = new DataSet({
-            autoQuery: true,
-            paging: false,
-            transport: {
-              read: () => ({
-                ...ciTemplateJobGroupApiConfig.getList(),
-              }),
-            },
-          });
+          if (level !== 'project') {
+            if (level === 'organization') {
+              item.options = new DataSet({
+                autoQuery: true,
+                paging: false,
+                transport: {
+                  read: () => ({
+                    ...ciTemplateJobGroupApiConfig.getList(),
+                  }),
+                },
+              });
+            } else {
+              item.options = new DataSet({
+                autoQuery: true,
+                paging: false,
+                transport: {
+                  read: () => ({
+                    ...ciTemplateJobGroupApiConfig.getSiteList(),
+                  }),
+                },
+              });
+            }
+          }
+
           break;
         }
         case 'categoryId': {
           item.required = template === STEP_TEMPLATE;
-          item.options = new DataSet({
-            autoQuery: true,
-            transport: {
-              read: () => ({
-                ...ciTemplateStepCategoryApiConfig.getSteps(),
-              }),
-            },
-          });
+          if (level !== 'project') {
+            if (level === 'organization') {
+              item.options = new DataSet({
+                autoQuery: true,
+                transport: {
+                  read: () => ({
+                    ...ciTemplateStepCategoryApiConfig.getSteps(),
+                  }),
+                },
+              });
+            } else {
+              item.options = new DataSet({
+                autoQuery: true,
+                transport: {
+                  read: () => ({
+                    ...ciTemplateStepCategoryApiConfig.getSiteSteps(),
+                  }),
+                },
+              });
+            }
+          }
+
           break;
         }
         case 'name': {
