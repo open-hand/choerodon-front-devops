@@ -1,8 +1,7 @@
-import { axios } from '@choerodon/master';
+import { axios, CONSTANTS } from '@choerodon/master';
 import {
   omit, pick, map, compact, forEach, get, isEmpty,
 } from 'lodash';
-import { CONSTANTS } from '@choerodon/master';
 
 const {
   WEBSITE_REGEX: {
@@ -123,10 +122,10 @@ export default (({
         options: clusterDs,
       },
       {
-        name: 'name', type: 'string', label: formatMessage({ id: 'name' }), required: true, maxLength: 30, validator: checkName,
+        name: 'name', type: 'string', label: '名称', required: true, maxLength: 30, validator: checkName,
       },
       {
-        name: 'description', type: 'string', label: formatMessage({ id: 'description' }), maxLength: 40,
+        name: 'description', type: 'string', label: '描述', maxLength: 40,
       },
       {
         name: 'type', type: 'string', textField: 'value', defaultValue: 'NFS', label: formatMessage({ id: `${intlPrefix}.type` }), required: true, options: typeDs,
