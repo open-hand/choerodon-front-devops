@@ -205,7 +205,7 @@ const Index = (
         }
         case 'groupId': {
           item.required = template === TASK_TEMPLATE;
-          if (level !== 'project') {
+          if (level && level !== 'project') {
             if (level === 'organization') {
               item.options = new DataSet({
                 autoQuery: true,
@@ -233,7 +233,7 @@ const Index = (
         }
         case 'categoryId': {
           item.required = template === STEP_TEMPLATE;
-          if (level !== 'project') {
+          if (level && level !== 'project') {
             if (level === 'organization') {
               item.options = new DataSet({
                 autoQuery: true,
