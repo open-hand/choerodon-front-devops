@@ -60,9 +60,10 @@ const mapping: any = {
 
 const transformLoadData = (queryData?: any, data?: any) => ({
   [mapping.CIRunnerImage.name]: data?.[mapping.CIRunnerImage.name] || (queryData ? queryData[0].value : ''),
-  [mapping.versionStrategy.name]: data?.[mapping.versionStrategy.name] || false,
+  [mapping.versionStrategy.name]: data?.[mapping.versionName.name] ? true
+    : (data?.[mapping.versionStrategy.name] || false),
   [mapping.nameRules.name]: data?.[mapping.nameRules.name] || '${C7N_COMMIT_TIME}-${C7N_BRANCH}',
-  [mapping.versionName.name]: data?.[mapping.versionName.name] || '${C7N_COMMIT_TIME}-${C7N_BRANCH}',
+  [mapping.versionName.name]: data?.[mapping.versionName.name] || '',
 });
 
 const Index = (data: any, setTabsDataState: any) => ({
@@ -72,7 +73,16 @@ const Index = (data: any, setTabsDataState: any) => ({
     create: async ({ dataSet, record }: any) => {
       dataSet.loadData([transformLoadData(undefined, data)]);
     },
-    update: ({ name, value }: any) => {
+    update: ({ name, value, record }: any) => {
+      switch (name) {
+        case mapping.versionStrategy.name: {
+          record.set(mapping.versionName.name, undefined);
+          break;
+        }
+        default: {
+          break;
+        }
+      }
       setTabsDataState({
         [TAB_ADVANCE_SETTINGS]: {
           ...data,
