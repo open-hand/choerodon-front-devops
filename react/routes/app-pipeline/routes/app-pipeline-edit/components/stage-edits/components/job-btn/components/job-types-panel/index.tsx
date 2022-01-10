@@ -34,18 +34,19 @@ const handlePipelineModal = ({
   advancedData,
   level,
   title,
+  modalProps,
 }: any) => {
   switch (level) {
     case 'project': {
       if (data?.type === MAVEN_BUILD) {
-        handleBuildModal(data, callback, advancedData, level, title);
+        handleBuildModal(data, callback, advancedData, level, title, modalProps);
       } else {
         handleCustomModal(data, callback, title);
       }
       break;
     }
     default: {
-      handleBuildModal(data, callback, advancedData, level, title);
+      handleBuildModal(data, callback, advancedData, level, title, modalProps);
     }
   }
 };

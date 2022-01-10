@@ -21,6 +21,7 @@ const handleBuildModal = (
   advancedData?: any,
   level?: any,
   title?: any,
+  modalProps?: any,
 ) => {
   const { template } = data;
   function getTitle() {
@@ -60,6 +61,7 @@ const handleBuildModal = (
         {okbtn}
       </>
     ),
+    ...modalProps || {},
   });
 };
 
