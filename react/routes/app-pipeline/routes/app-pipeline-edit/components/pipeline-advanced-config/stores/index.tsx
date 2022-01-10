@@ -35,7 +35,7 @@ export const StoreProvider = observer((props: any) => {
   } = useAppPipelineEditStore();
 
   const PipelineAdvancedConfigDataSet = useMemo(
-    () => new DataSet(pipelineAdvancedConfigDataSet(data, setTabsDataState)), [],
+    () => new DataSet(pipelineAdvancedConfigDataSet(data, setTabsDataState)), [data],
   );
 
   const value = {
