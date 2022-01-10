@@ -18,7 +18,7 @@ export type AppPipelineProps = {
   }
   defaultTabKey?:TabkeyTypes,
   // 项目 平台 组织层
-  level?: 'project' | 'site' | 'orgnization',
+  level?: 'project' | 'site' | 'organization',
   // 创建的时候的回调
   onCreate?:(data:any)=>void
   // 保存的时候的回调
