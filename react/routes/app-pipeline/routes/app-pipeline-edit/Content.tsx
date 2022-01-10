@@ -124,16 +124,16 @@ const AppPipelineEdit = () => {
     }
   };
 
-  const submitMapWhileCreate:Record<'project'|'site'|'orgnization', Function | undefined> = {
+  const submitMapWhileCreate:Record<'project'|'site'|'organization', Function | undefined> = {
     project: handleSumitWhileProjectCreate,
     site: onCreate,
-    orgnization: onCreate,
+    organization: onCreate,
   };
 
-  const submitMapWhileEdit:Record<'project'|'site'|'orgnization', Function | undefined> = {
+  const submitMapWhileEdit:Record<'project'|'site'|'organization', Function | undefined> = {
     project: handleSumitWhileProjectEdit,
     site: onSave,
-    orgnization: onSave,
+    organization: onSave,
   };
 
   const handleSubmit = () => {
