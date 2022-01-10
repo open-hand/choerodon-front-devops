@@ -58,9 +58,17 @@ const Index = observer(() => {
         {
           PipelineAdvancedConfigDataSet
             ?.current?.get(mapping.versionStrategy.name) === versionStrategyData[0].value ? (
-              <TextField colSpan={1} name={mapping.nameRules.name} />
+              <TextField
+                colSpan={level === 'project' ? 1 : 2}
+                name={mapping.nameRules.name}
+                newLine={level !== 'project'}
+              />
             ) : (
-              <TextField colSpan={1} name={mapping.versionName.name} />
+              <TextField
+                colSpan={level === 'project' ? 1 : 2}
+                name={mapping.versionName.name}
+                newLine={level !== 'project'}
+              />
             )
         }
       </Form>
