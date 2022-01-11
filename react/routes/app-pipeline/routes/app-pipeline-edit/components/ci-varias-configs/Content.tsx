@@ -57,6 +57,7 @@ const CiVariasConfigs = () => {
           renderer={renderValue}
           resize={'vertical' as ResizeType}
           autoSize={{ minRows: 1 }}
+          className={`${prefixCls}-textfiels`}
         />
         {formDs.length > 1 ? (
           <Button

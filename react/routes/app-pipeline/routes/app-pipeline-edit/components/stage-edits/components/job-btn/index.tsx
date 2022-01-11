@@ -1,8 +1,9 @@
 /* eslint-disable max-len */
-import React from 'react';
+import React, { useState } from 'react';
 import { Icon } from 'choerodon-ui/pro';
 import './index.less';
 import { Popover } from 'choerodon-ui';
+import { useBoolean } from 'ahooks';
 import ParalleLines from '../paralle-lines';
 import SerialLines from '../serial-lines';
 import JobTypesPanel from './components/job-types-panel';
@@ -27,22 +28,28 @@ const JobAddBtn = (props:JobAddBtnProps) => {
     jobIndex,
   } = props;
 
+  const [popoverVisible, { setFalse, toggle }] = useBoolean(false);
+
   const linesMap = {
     paralle: <ParalleLines />,
     serial: <SerialLines />,
   } as const;
 
+  const handlePanelClickCallback = () => {
+    setFalse();
+  };
+
   const jobTypePanelMap = {
-    paralle: <JobTypesPanel handleJobAddCallback={handleJobAddCallback} />,
-    serial: <JobCdPanel jobIndex={jobIndex} stageIndex={stageIndex} handleJobAddCallback={handleJobAddCallback} />,
+    paralle: <JobTypesPanel handleJobAddCallback={handleJobAddCallback} handlePanelClickCallback={handlePanelClickCallback} />,
+    serial: <JobCdPanel jobIndex={jobIndex} stageIndex={stageIndex} handleJobAddCallback={handleJobAddCallback} handlePanelClickCallback={handlePanelClickCallback} />,
   };
 
   const renderContent = () => {
     if (type === 'circle') {
-      return <Icon type="add" className={`${prefixCls}`} />;
+      return <Icon type="add" onClick={() => toggle()} className={`${prefixCls}`} />;
     }
     return (
-      <div className={`${prefixCls}-normal`}>
+      <div className={`${prefixCls}-normal`} onClick={() => { toggle(); }} role="none">
         {linesMap[linesType]}
         <div className={`${prefixCls}-normal-content`}>
           <Icon type="add" />
@@ -54,6 +61,7 @@ const JobAddBtn = (props:JobAddBtnProps) => {
 
   return (
     <Popover
+      visible={popoverVisible}
       trigger={['click'] as any}
       content={jobTypePanelMap[linesType]}
       placement={'bottom' as any}

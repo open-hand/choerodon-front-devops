@@ -152,6 +152,7 @@ const usePipelineCreateModal = () => {
       style: {
         width: CONSTANTS.MODAL_WIDTH.MIDDLE,
       },
+      okText: '下一步',
       drawer: true,
     });
   };

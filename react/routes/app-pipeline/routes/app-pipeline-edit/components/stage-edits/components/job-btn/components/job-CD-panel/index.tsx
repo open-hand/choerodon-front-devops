@@ -11,6 +11,7 @@ import AddCDTask
 
 export type JobTypesPanelProps = {
   handleJobAddCallback:(addonData: any)=>(editData:any)=>void
+  handlePanelClickCallback:()=>void
   stageIndex:number
   jobIndex:number
 }
@@ -25,6 +26,7 @@ const prefixCls = 'c7ncd-job-cd-panel';
 const JobCdPanel:FC<JobTypesPanelProps> = (props) => {
   const {
     handleJobAddCallback,
+    handlePanelClickCallback,
     stageIndex,
     jobIndex,
   } = props;
@@ -32,6 +34,7 @@ const JobCdPanel:FC<JobTypesPanelProps> = (props) => {
   const [_data, _setdata, getTabData] = useTabData();
 
   const handleMenuSelect = (data:any) => {
+    handlePanelClickCallback();
     const { keyPath } = data;
     const basicData = getTabData(TAB_BASIC);
     const {
