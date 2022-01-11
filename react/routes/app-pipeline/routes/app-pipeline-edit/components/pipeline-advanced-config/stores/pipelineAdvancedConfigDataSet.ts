@@ -68,7 +68,23 @@ const transformLoadData = (queryData?: any, data?: any) => ({
 
 const Index = (data: any, setTabsDataState: any) => ({
   autoCreate: true,
-  fields: Object.keys(mapping).map((key) => mapping[key]),
+  fields: Object.keys(mapping).map((key) => {
+    const item = mapping[key];
+    switch (key) {
+      case 'CIRunnerImage': {
+        const {
+          defaultImage,
+        } = data;
+        item.options = new DataSet({
+          data: [{
+            text: defaultImage,
+            value: defaultImage,
+          }],
+        });
+      }
+    }
+    return item;
+  }),
   events: {
     create: async ({ dataSet, record }: any) => {
       dataSet.loadData([transformLoadData(undefined, data)]);
