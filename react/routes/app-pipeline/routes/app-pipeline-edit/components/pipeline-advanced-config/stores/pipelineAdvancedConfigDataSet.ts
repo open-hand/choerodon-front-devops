@@ -72,13 +72,10 @@ const Index = (data: any, setTabsDataState: any) => ({
     const item = mapping[key];
     switch (key) {
       case 'CIRunnerImage': {
-        const {
-          defaultImage,
-        } = data;
         item.options = new DataSet({
           data: [{
-            text: defaultImage,
-            value: defaultImage,
+            text: data?.defaultImage,
+            value: data?.defaultImage,
           }],
         });
       }

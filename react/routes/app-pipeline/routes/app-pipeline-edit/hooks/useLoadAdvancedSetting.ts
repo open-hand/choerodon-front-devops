@@ -33,16 +33,17 @@ function useAdvancedSetting(configs: any, options?: any) {
   } = useParams<any>();
 
   const handleSuccess = async (data:Record<string, any>) => {
+    const res = {
+      ...transformLoadData(undefined, data),
+      ...data,
+      devopsCiPipelineFunctionDTOList: data?.devopsCiPipelineFunctionDTOList
+        ?.map((i: any, index: number) => ({
+          ...i,
+          focus: index === 0,
+        })) || [],
+    };
     setTabsDataState({
-      [TAB_ADVANCE_SETTINGS]: {
-        ...transformLoadData(undefined, data),
-        ...data,
-        devopsCiPipelineFunctionDTOList: data?.devopsCiPipelineFunctionDTOList
-          .map((i: any, index: number) => ({
-            ...i,
-            focus: index === 0,
-          })) || [],
-      },
+      [TAB_ADVANCE_SETTINGS]: res,
     });
   };
 
