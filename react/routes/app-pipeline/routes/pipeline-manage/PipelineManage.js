@@ -15,6 +15,7 @@ import PipelineFlow from './components/PipelineFlow';
 import DragBar from '@/components/drag-bar';
 import RecordDetail from './components/record-detail';
 import EmptyPage from '@/components/empty-page';
+import { mapping } from '../app-pipeline-edit/components/pipeline-advanced-config/stores/pipelineAdvancedConfigDataSet';
 import { usePipelineManageStore } from './stores';
 import VariableSettings from './components/variable-settings';
 import AuditModal from './components/audit-modal';
@@ -96,6 +97,8 @@ const PipelineManage = observer(() => {
       appService: {
         appServiceCode, appServiceId, appServiceName,
       },
+      [mapping.CIRunnerImage.name]: getMainData?.[mapping.CIRunnerImage.name],
+      [mapping.versionName.name]: getMainData?.[mapping.versionName.name],
     });
     history.push({
       search,

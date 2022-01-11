@@ -411,6 +411,12 @@ const Index = (
     fields: Object.keys(mapping).map((key) => {
       const item = mapping[key];
       switch (key) {
+        case 'bugLevel': case 'symbol': case 'condition': {
+          item.dynamicProps = {
+            required: ({ record }: any) => record.get(mapping.imagePublishGuard.name),
+          };
+          break;
+        }
         case 'projectRelyRepo': {
           if (level === 'project') {
             item.options = new DataSet({

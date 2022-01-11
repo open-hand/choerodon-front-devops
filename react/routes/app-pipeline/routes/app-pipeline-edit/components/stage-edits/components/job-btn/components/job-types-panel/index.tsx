@@ -1,17 +1,16 @@
 import React, {
-  FC, useState,
+  FC, useRef, useState,
 } from 'react';
 import { useQuery } from 'react-query';
 import { Loading } from '@choerodon/components';
 import { useFormatCommon } from '@choerodon/master';
 import { Menu } from 'choerodon-ui';
+import { useClickAway } from 'ahooks';
 import { handleBuildModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals';
 import { handleCustomModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/custom-modal';
 import {
   MAVEN_BUILD,
 } from '@/routes/app-pipeline/CONSTANTS';
-import {} from 'choerodon-ui/pro';
-
 import './index.less';
 import useGetJobPanel from '../../../../hooks/useGetJobPanel';
 import { templateJobsApi } from '@/api/template-jobs';
@@ -21,6 +20,7 @@ import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
 
 export type JobTypesPanelProps = {
   handleJobAddCallback:(addonData: any)=>(editData:any)=>void
+  handlePanelClickCallback:()=>void
 }
 
 const {
@@ -53,10 +53,12 @@ const handlePipelineModal = ({
 
 const prefixCls = 'c7ncd-job-types-panel';
 
-const JobTypesPanel:FC<JobTypesPanelProps> = (props: { handleJobAddCallback: any; }) => {
+const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
   const {
     handleJobAddCallback,
+    handlePanelClickCallback,
   } = props;
+
   const panels = useGetJobPanel();
   const [currentSelectedSubMenuId, setSubMenuId] = useState('');
   const [_data, _setdata, getTabData] = useTabData();
@@ -83,6 +85,7 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props: { handleJobAddCallback: any
   const handleClick = (data: any) => {
     const { keyPath } = data;
     const stepData = JSON.parse(keyPath[0]);
+    handlePanelClickCallback();
     handlePipelineModal({
       data: stepData,
       callback: handleJobAddCallback(stepData),

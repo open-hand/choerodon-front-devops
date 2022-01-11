@@ -53,7 +53,7 @@ export const StoreProvider = inject('AppState')((props: ProviderProps) => {
   const { isFetching: isCiVariasLoading } = useLoadCiVariasLists({ type, id, setTabsDataState });
 
   const { isFetching: isAdvancedLoading } = useLoadAdvancedSetting({
-    type, id, setTabsDataState, level,
+    type, id, setTabsDataState, level, tabsData,
   });
 
   const loadingMap = {
