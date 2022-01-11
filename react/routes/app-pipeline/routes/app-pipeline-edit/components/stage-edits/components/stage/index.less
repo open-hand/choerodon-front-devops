@@ -32,7 +32,15 @@
     background: #f0f8ff;
     font-size: 13px;
     font-weight: 400;
-    color: #4d90fe;
+    border-right: 1px solid #d5e0ff;
+    &-ci {
+      color: #6887e8;
+      background: #f0f4ff;
+    }
+    &-cd {
+      color: #4d90fe;
+      background: #f0f8ff;
+    }
   }
   &-stageName {
     flex: 1;
@@ -59,7 +67,7 @@
     border-style: solid;
     border-color: rgba(65, 91, 201, 0.24);
     border-width: 1px;
-    
+
     &:hover {
       border-color: var(--primary-color);
       .@{prefixCls}-btnGroups {

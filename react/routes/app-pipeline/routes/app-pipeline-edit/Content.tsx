@@ -11,7 +11,7 @@ import { Tabs, message } from 'choerodon-ui';
 import map from 'lodash/map';
 import classNames from 'classnames';
 import { isEmpty } from 'lodash';
-import { useRouteMatch, useHistory } from 'react-router';
+import { useRouteMatch, useHistory, useLocation } from 'react-router';
 import { useAppPipelineEditStore } from './stores';
 import {
   TAB_ADVANCE_SETTINGS, TAB_BASIC, TAB_CI_CONFIG, TAB_FLOW_CONFIG,
@@ -54,6 +54,10 @@ const AppPipelineEdit = () => {
   } = useRouteMatch<any>();
 
   const history = useHistory();
+  const {
+    pathname,
+    search,
+  } = useLocation();
 
   const contentCls = classNames(`${prefixCls}-content`, {
     [`${prefixCls}-content-bgnone`]: TAB_FLOW_CONFIG === currentKey,
@@ -114,7 +118,10 @@ const AppPipelineEdit = () => {
         if (res && res.failed) {
           return;
         }
-        history.go(-1);
+        history.push({
+          pathname: '/devops/pipeline-manage',
+          search: `${search}&pipelineId=${id}`,
+        });
       } catch (error) {
         throw new Error(error);
       }

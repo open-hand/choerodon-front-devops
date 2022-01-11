@@ -15,7 +15,7 @@ const HEIGHT = window.innerHeight || document.documentElement.clientHeight
 
 const Store = createContext();
 
-export function usePipelineManageStore() {
+export function usePipelineManageStore () {
   return useContext(Store);
 }
 
@@ -27,7 +27,8 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
 
   const DEFAULT_SIZE = HEIGHT > 900 ? 20 : 12;
 
-  function handleSelect(record, store, editBlockStore, previous) {
+  function handleSelect (record, store, editBlockStore, previous) {
+    console.log(mainStore.getSelectedMenu);
     if (record) {
       const data = record.toData();
       store.setSelectedMenu(data);
@@ -52,6 +53,13 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
         key: `${newPipelineId}-${newPipelineIdRecordId}`,
         parentId: newPipelineId,
         devopsPipelineRecordRelId: newPipelineIdRecordId,
+      });
+      mainStore.setExpandedKeys([newPipelineId]);
+    } else if (newPipelineId && !newPipelineIdRecordId) {
+      mainStore.setSelectedMenu({
+        key: newPipelineId,
+        expand: true,
+        parentId: null,
       });
       mainStore.setExpandedKeys([newPipelineId]);
     }

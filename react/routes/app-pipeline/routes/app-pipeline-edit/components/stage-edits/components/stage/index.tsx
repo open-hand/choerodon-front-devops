@@ -167,6 +167,7 @@ const Stage:FC<StageProps> = (props) => {
   const renderDraggerContainer = useCallback(
     (draggableProvided:any, draggableSnapshot:any) => {
       const headerCls = classnames(`${prefixCls}-header`);
+      const stageHeaderCls = classnames(`${prefixCls}-stageType`, `${prefixCls}-stageType-${type.toLocaleLowerCase()}`);
       return (
         <div
           className={prefixCls}
@@ -182,7 +183,7 @@ const Stage:FC<StageProps> = (props) => {
             }
         >
           <header className={headerCls} onClick={handleModalOpen} role="none">
-            <div className={`${prefixCls}-stageType`}>{type}</div>
+            <div className={stageHeaderCls}>{type}</div>
             <Tooltip title={name}>
               <span className={`${prefixCls}-stageName`}>{name}</span>
             </Tooltip>
