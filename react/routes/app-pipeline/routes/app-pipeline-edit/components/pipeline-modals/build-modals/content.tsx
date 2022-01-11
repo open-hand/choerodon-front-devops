@@ -182,11 +182,12 @@ const Index = observer(() => {
     switch (temp) {
       case TASK_TEMPLATE: {
         return (
-          <>
-            <TextField colSpan={2} name={mapping.name.name} />
-            <Select colSpan={2} name={mapping.groupId.name} />
-            <SelectBox colSpan={2} name={mapping.type.name} />
-          </>
+          // @ts-ignore
+          <Form colSpan={6} columns={16}>
+            <TextField colSpan={5} name={mapping.name.name} />
+            <Select colSpan={5} name={mapping.groupId.name} />
+            <SelectBox colSpan={6} name={mapping.type.name} />
+          </Form>
         );
         break;
       }

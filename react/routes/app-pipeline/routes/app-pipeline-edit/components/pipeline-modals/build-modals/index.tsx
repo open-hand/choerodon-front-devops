@@ -52,6 +52,10 @@ const handleBuildModal = (
     mask: !!template,
     style: {
       width: CONSTANTS.MODAL_WIDTH.MIDDLE,
+      ...template ? {} : {
+        height: 'calc(100% - 48px)',
+        top: '48px',
+      },
     },
     maskClosable: false,
     key: Modal.key(),
