@@ -120,7 +120,7 @@ const InstanceContent = observer(() => {
     if (record) {
       const id = record.get('id');
       const status = record.get('status');
-      const name = record.get('code');
+      const name = record.get('name');
       const podRunningCount = record.get('podRunningCount');
       const podCount = record.get('podCount');
       const error = record.get('error');
