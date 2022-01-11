@@ -67,11 +67,16 @@ function useAdvancedSetting(configs: any, options?: any) {
     }
     if (type !== 'create') {
       const data = await tabApis?.[TAB_ADVANCE_SETTINGS]?.modify(urlId);
-      return data;
+      return {
+        ...data,
+        defaultImage,
+      };
     }
 
     return {
+      [mapping.CIRunnerImage.name]: defaultImage,
       devopsCiPipelineFunctionDTOList: [],
+      defaultImage,
     };
   };
 
