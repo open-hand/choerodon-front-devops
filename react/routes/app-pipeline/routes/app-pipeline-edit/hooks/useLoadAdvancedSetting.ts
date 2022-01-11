@@ -33,8 +33,12 @@ function useAdvancedSetting(configs: any, options?: any) {
           [mapping.CIRunnerImage.name]: defaultImage,
         }),
         defaultImage,
-        devopsCiPipelineFunctionDTOList: data?.devopsCiPipelineFunctionDTOList || [],
         ...data,
+        devopsCiPipelineFunctionDTOList: data?.devopsCiPipelineFunctionDTOList
+          .map((i: any, index: number) => ({
+            ...i,
+            focus: index === 0,
+          })) || [],
       },
     });
   };
