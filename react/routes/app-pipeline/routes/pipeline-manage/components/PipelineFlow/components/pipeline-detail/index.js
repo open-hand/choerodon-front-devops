@@ -74,7 +74,7 @@ export default observer((props) => {
     </span>
   ), []);
 
-  function getJobTask({
+  function getJobTask ({
     jobType: type, metadata, iamUserDTOS, jobTriggerValue, triggerValue, envName, countersigned,
   }) {
     const branchContent = getTriggerBranch({ triggerType: jobTriggerValue, triggerValue });
@@ -107,11 +107,16 @@ export default observer((props) => {
         </div>
       );
     }
-    if (metadata) {
-      const newData = JSON.parse(metadata.replace(/'/g, '"'));
+    if (typeof metadata === 'string') {
+      let newData = {};
+      try {
+        newData = JSON.parse(metadata.replace(/'/g, '"'));
+      } catch (error) {
+        throw new Error(error);
+      }
       const {
         sonarUrl, config, scannerType, blockAfterJob,
-      } = newData || {};
+      } = newData;
       let content;
       let showBranchContent;
       switch (type) {
@@ -184,7 +189,7 @@ export default observer((props) => {
     }
   }
 
-  function getJobRectStyle(stageIndex, index) {
+  function getJobRectStyle (stageIndex, index) {
     let sum = 0;
     for (let i = 0; i < index; i += 1) {
       sum += document.getElementById(`${id}-${stageIndex}-job-${i}`) ? document.getElementById(`${id}-${stageIndex}-job-${i}`).offsetHeight + 32 : 0;
