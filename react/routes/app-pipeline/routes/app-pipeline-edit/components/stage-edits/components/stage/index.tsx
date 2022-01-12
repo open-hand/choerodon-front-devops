@@ -89,7 +89,10 @@ const Stage:FC<StageProps> = (props) => {
       addJob(stageIndex, jobIndex, addonData);
       return (jobData:any) => editJob(stageIndex, jobIndex, jobData);
     }
-    return () => addJob(stageIndex, jobIndex, addonData);
+    return (jobData:any) => {
+      const combineData = { ...addonData, ...jobData };
+      addJob(stageIndex, jobIndex, combineData);
+    };
   };
 
   /**
