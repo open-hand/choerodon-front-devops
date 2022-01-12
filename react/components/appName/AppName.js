@@ -45,9 +45,9 @@ export default function AppName(props) {
           {name}
         </MouseOverWrapper>
       ) : (
-        <MouseOverWrapper className="c7ncd-app-text" text={name} width={width}>
-          {name}
-        </MouseOverWrapper>
+        <Tooltip title={name}>
+          { name }
+        </Tooltip>
       )}
     </>
   );
