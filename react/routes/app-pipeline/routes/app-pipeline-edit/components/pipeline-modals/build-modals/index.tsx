@@ -30,7 +30,7 @@ const handleBuildModal = (
     } if (template && template === STEP_TEMPLATE) {
       return '创建步骤模板';
     }
-    return '添加【构建】阶段';
+    return '添加【构建】任务';
   }
 
   if (modal) {

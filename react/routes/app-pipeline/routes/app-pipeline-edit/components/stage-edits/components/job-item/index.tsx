@@ -98,6 +98,7 @@ const JobItem:FC<JobProps> = (props) => {
         style: {
           width: LARGE,
         },
+        maskClosable: false,
         children: (
           <AddCDTask
             stageData={getTabDataByKey(TAB_FLOW_CONFIG)}
