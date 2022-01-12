@@ -55,6 +55,7 @@ const JobCdPanel:FC<JobTypesPanelProps> = (props) => {
       style: {
         width: LARGE,
       },
+      maskClosable: false,
       children: (
         <AddCDTask
           appServiceName={appServiceName}
