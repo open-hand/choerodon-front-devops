@@ -79,14 +79,17 @@ const Stage:FC<StageProps> = (props) => {
   });
 
   /**
-   * 新增job的回调
+   * 新增job的回调(到时候cd的添加逻辑去掉了，可以把addAndEdit去掉了)
    * @param {number} jobIndex
    * @param {*} jobData
    */
-  const handleJobAddCallback = (addonData:any) => {
+  const handleJobAddCallback = (addonData:any, addAndEdit:boolean = true) => {
     const jobIndex = jobList.length;
-    addJob(stageIndex, jobIndex, addonData);
-    return (jobData:any) => editJob(stageIndex, jobIndex, jobData);
+    if (addAndEdit) {
+      addJob(stageIndex, jobIndex, addonData);
+      return (jobData:any) => editJob(stageIndex, jobIndex, jobData);
+    }
+    return () => addJob(stageIndex, jobIndex, addonData);
   };
 
   /**
