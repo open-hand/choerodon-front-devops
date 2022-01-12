@@ -1689,6 +1689,20 @@ export default observer(() => {
             searchable
             searchMatcher="task_name"
             name={addCDTaskDataSetMap.apiTestMission}
+            optionRenderer={({ record, text }) => {
+              if (!record.get('executeOnline')) {
+                return (
+                    <Tooltip title="含有自定义脚本，无法选择">
+                      {text}
+                    </Tooltip>
+                )
+              } else {
+                return text
+              } 
+            }}
+            onOption={({ record }) => ({
+              disabled: !record.get('executeOnline')
+            })}
             addonAfter={<Tips helpText="此处仅能从项目下已有的API测试任务中进行选择" />}
           />,
           <Select colSpan={3} name="apiTestConfigId" />,

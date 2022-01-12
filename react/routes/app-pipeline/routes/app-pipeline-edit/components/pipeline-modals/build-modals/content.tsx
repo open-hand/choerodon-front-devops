@@ -125,8 +125,8 @@ const handleOk = async ({
     }
     return false;
   }
-  handleJobAddCallback(result);
-  return true;
+  const f = await handleJobAddCallback(result);
+  return f;
 };
 
 const Index = observer(() => {

@@ -100,24 +100,25 @@ export default function useStore() {
     },
 
     /**
-       * 编辑job
-       * @param {number} stageIndex
-       * @param {number} jobIndex
-       * @param {*} jobData
-       * @return {boolean} 是否添加成功
-       */
+     * 编辑job
+     * @param {number} stageIndex
+     * @param {number} jobIndex
+     * @param {*} jobData
+     * @return {boolean} 是否添加成功
+     */
     editJob(stageIndex:number, jobIndex:number, jobData:any) {
       if (!this.sourceData[stageIndex]?.jobList) {
-        return;
+        return false;
       }
-      // const isJobNameRepeated = this.sourceData[stageIndex].jobList?.some((job: { name: string; }) => job.name === jobData?.name);
-      // if (isJobNameRepeated) {
-      //   isJobNameRepeated && message.error('当前阶段存在同名的任务！');
-      //   return false;
-      // }
+      const isJobNameRepeated = this.sourceData[stageIndex].jobList?.some((job: { name: string; }, index:number) => job.name === jobData?.name && jobIndex !== index);
+      if (isJobNameRepeated) {
+        isJobNameRepeated && message.error('当前阶段存在同名的任务！');
+        return false;
+      }
       this.sourceData[stageIndex].jobList[jobIndex] = jobData;
       this.handleJobSequenceSort(stageIndex);
       this.handleEditCallback();
+      return true;
     },
 
     /**
