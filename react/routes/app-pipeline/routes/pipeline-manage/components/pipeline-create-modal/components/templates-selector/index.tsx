@@ -137,13 +137,13 @@ const TemplatesSelector:FC<TemplatesSelectorProps> = (props) => {
   const renderContainerItems = (array:any[]) => array?.map((item) => {
     const {
       id: tmpId,
-      builtIn,
+      sourceType,
     } = item;
 
     return (
       <TemplatePreview
         {...item}
-        showCustomizeTag={!builtIn}
+        showCustomizeTag={sourceType === 'organization'}
         key={tmpId}
         isActive={tmpId === selectedTmpId}
         handleSelect={handleSelectTmp}
