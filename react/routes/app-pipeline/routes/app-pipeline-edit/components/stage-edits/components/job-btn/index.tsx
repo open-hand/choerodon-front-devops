@@ -35,13 +35,9 @@ const JobAddBtn = (props:JobAddBtnProps) => {
     serial: <SerialLines />,
   } as const;
 
-  const handlePanelClickCallback = () => {
-    setFalse();
-  };
-
   const jobTypePanelMap = {
-    paralle: <JobTypesPanel handleJobAddCallback={handleJobAddCallback} handlePanelClickCallback={handlePanelClickCallback} />,
-    serial: <JobCdPanel jobIndex={jobIndex} stageIndex={stageIndex} handleJobAddCallback={handleJobAddCallback} handlePanelClickCallback={handlePanelClickCallback} />,
+    paralle: <JobTypesPanel handleJobAddCallback={handleJobAddCallback} handlePanelClickCallback={setFalse} />,
+    serial: <JobCdPanel jobIndex={jobIndex} stageIndex={stageIndex} handleJobAddCallback={handleJobAddCallback} handlePanelClickCallback={setFalse} />,
   };
 
   const renderContent = () => {
