@@ -72,7 +72,7 @@ export default (): DataSetProps => {
         defaultValue: '/',
         label: '路径',
         validator: checkPath,
-        maxLength: 30,
+        maxLength: 500,
       },
       {
         name: 'serviceName',
