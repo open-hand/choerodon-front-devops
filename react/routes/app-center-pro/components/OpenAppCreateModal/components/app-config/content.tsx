@@ -1,5 +1,5 @@
 import React, {
-  ReactDOM, ReactElement, useEffect, useImperativeHandle, useMemo,
+  ReactDOM, ReactElement, useEffect, useImperativeHandle, useMemo, useState,
 } from 'react';
 import {
   Form, Select, TextField, Output,
@@ -24,6 +24,16 @@ const Index = observer(() => {
     modal,
     refresh,
   } = useAppConfigStore();
+
+  const [isError, setValueError] = useState(false);
+
+  useEffect(() => {
+    modal.update({ okProps: { disabled: isError } });
+  }, [isError]);
+
+  const handleEnableNext = (flag: boolean) => {
+    setValueError(flag);
+  };
 
   const getValues = async (chartSource: string | undefined, detailData: any) => {
     switch (chartSource) {
@@ -192,6 +202,7 @@ const Index = observer(() => {
       value={AppConfigDataSet.current.get(mapping.value.name)}
       originValue={AppConfigDataSet.current.get(mapping.originValue.name)}
       onValueChange={(value: string) => AppConfigDataSet.current.set(mapping.value.name, value)}
+      handleEnableNext={handleEnableNext}
     />
   );
 
