@@ -27,11 +27,12 @@ export function useIngressConfig() {
 export const StoreProvider = (props: any) => {
   const {
     children,
+    envId,
   } = props;
 
   const PathListDataSet = useMemo(() => new DataSet(pathListDataSet()), []);
   const AnnotationDataSet = useMemo(() => new DataSet(annotationDataSet()), []);
-  const IngressDataSet = useMemo(() => new DataSet(ingressDataSet(PathListDataSet)), []);
+  const IngressDataSet = useMemo(() => new DataSet(ingressDataSet(PathListDataSet, envId)), []);
 
   const value = {
     ...props,
