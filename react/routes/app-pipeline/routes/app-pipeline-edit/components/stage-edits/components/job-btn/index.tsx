@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React, { useState } from 'react';
+import React from 'react';
 import { Icon } from 'choerodon-ui/pro';
 import './index.less';
 import { Popover } from 'choerodon-ui';
@@ -36,8 +36,8 @@ const JobAddBtn = (props:JobAddBtnProps) => {
   } as const;
 
   const jobTypePanelMap = {
-    paralle: <JobTypesPanel handleJobAddCallback={handleJobAddCallback} handlePanelClickCallback={setFalse} />,
-    serial: <JobCdPanel jobIndex={jobIndex} stageIndex={stageIndex} handleJobAddCallback={handleJobAddCallback} handlePanelClickCallback={setFalse} />,
+    paralle: <JobTypesPanel handleBlur={setFalse} handleJobAddCallback={handleJobAddCallback} handlePanelClickCallback={setFalse} />,
+    serial: <JobCdPanel handleBlur={setFalse} jobIndex={jobIndex} stageIndex={stageIndex} handleJobAddCallback={handleJobAddCallback} handlePanelClickCallback={setFalse} />,
   };
 
   const renderContent = () => {
@@ -45,7 +45,11 @@ const JobAddBtn = (props:JobAddBtnProps) => {
       return <Icon type="add" onClick={() => toggle()} className={`${prefixCls}`} />;
     }
     return (
-      <div className={`${prefixCls}-normal`} onClick={() => { toggle(); }} role="none">
+      <div
+        className={`${prefixCls}-normal`}
+        onClick={() => { toggle(); }}
+        role="none"
+      >
         {linesMap[linesType]}
         <div className={`${prefixCls}-normal-content`}>
           <Icon type="add" />
@@ -58,7 +62,6 @@ const JobAddBtn = (props:JobAddBtnProps) => {
   return (
     <Popover
       visible={popoverVisible}
-      trigger={['click'] as any}
       content={jobTypePanelMap[linesType]}
       placement={'bottom' as any}
       overlayClassName={`${prefixCls}-popover`}

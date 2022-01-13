@@ -8,6 +8,8 @@ const PipelineBasicInfoDataSet = ():any => ({
   transport: {
     read({ data }:any) {
       const postData = getTablePostData(data);
+      postData.searchParam.name = postData.searchParam?.key;
+      postData.searchParam?.key && delete postData.searchParam?.key;
       return appServiceApiConfig.getAppListsService(postData);
     },
   },
