@@ -41,6 +41,7 @@ const appService = {
   'c7ncd.appService.outGitlab.alert.tips.two': '2、请保证外置GitLab版本为V11.0.0或以上',
   'c7ncd.appService.outGitlab.alert.tips.three': '3、请保证外置GitLab版本为V11.0.0或以上',
   'c7ncd.appService.outGitlab.alert.tips.attention': '注意：',
+  'c7ncd.appService.Warehouse': '仓库配置',
 
 };
 

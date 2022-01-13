@@ -1,11 +1,11 @@
 import React, {
-  FC, useRef, useState,
+  FC, useState,
 } from 'react';
 import { useQuery } from 'react-query';
 import { Loading } from '@choerodon/components';
 import { useFormatCommon } from '@choerodon/master';
 import { Menu } from 'choerodon-ui';
-import { useClickAway } from 'ahooks';
+import { useUnmount } from 'ahooks';
 import { handleBuildModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals';
 import { handleCustomModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/custom-modal';
 import {
@@ -21,6 +21,7 @@ import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
 export type JobTypesPanelProps = {
   handleJobAddCallback:(addonData: any)=>(editData:any)=>void
   handlePanelClickCallback:()=>void
+  handleBlur:any
 }
 
 const {
@@ -57,7 +58,12 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
   const {
     handleJobAddCallback,
     handlePanelClickCallback,
+    handleBlur,
   } = props;
+
+  useUnmount(() => {
+    handleBlur();
+  });
 
   const panels = useGetJobPanel();
   const [currentSelectedSubMenuId, setSubMenuId] = useState('');

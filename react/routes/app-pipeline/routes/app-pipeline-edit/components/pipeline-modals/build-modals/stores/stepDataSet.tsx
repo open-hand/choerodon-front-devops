@@ -413,7 +413,8 @@ const Index = (
       switch (key) {
         case 'bugLevel': case 'symbol': case 'condition': {
           item.dynamicProps = {
-            required: ({ record }: any) => record.get(mapping.imagePublishGuard.name),
+            required: ({ record }: any) => record
+              .get(mapping.imagePublishGuard.name) && record.get(mapping.imageSafeScan.name),
           };
           break;
         }

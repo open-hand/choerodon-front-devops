@@ -77,7 +77,7 @@ export default ({ formatMessage, projectId, envId, ingressId, serviceDs }:any):a
     selection: false,
     paging: false,
     fields: [
-      { name: 'path', type: 'string', defaultValue: '/', label: formatMessage({ id: 'path' }), validator: checkPath, maxLength: 30 },
+      { name: 'path', type: 'string', defaultValue: '/', label: formatMessage({ id: 'path' }), validator: checkPath, maxLength: 500 },
       {
         name: 'serviceId',
         type: 'string',

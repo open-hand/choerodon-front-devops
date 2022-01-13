@@ -235,6 +235,35 @@ const enUS = {
   appService: 'App Service',
 
 };
+const oldAppService = {
+  'c7ncd.appService.create': 'Create Application Service',
+  'c7ncd.appService.type': 'Service type',
+  'c7ncd.appService.type.normal': 'Normal service',
+  'c7ncd.appService.type.test': 'Test services',
+  'c7ncd.appService.code': 'Service code',
+  'c7ncd.appService.name': 'Service name',
+  'c7ncd.appService.code.registry': 'Code warehouse',
+  'c7ncd.appService.code.registry.buildin': 'Built-in GitLab warehouse',
+  'c7ncd.appService.code.registry.External': 'External GitLab warehouse',
+  'c7ncd.appService.template': 'Service template',
+  'c7ncd.appService.template.source': 'Template source',
+  'c7ncd.appService.source.project': 'Project Application Service',
+  'c7ncd.appService.source.organization': 'Shared application',
+  'c7ncd.appService.template.organization': 'Organization layer template',
+  'c7ncd.appService.template.site': 'Platform layer template',
+  'c7ncd.appService.template.name': 'Template name',
+  'c7ncd.appService.gitLabRepositoryUrl': 'GitLab warehouse address',
+  'c7ncd.appService.approve.setting': 'Authentication configuration',
+  'c7ncd.appService.Usernameandpassword': 'User name and password',
+  'c7ncd.appService.Usernameandpassword.content': 'Enter a minimum user name and password for the Maintainer role in the warehouse',
+  'c7ncd.appService.PrivateToken': 'Private Token',
+  'c7ncd.appService.PrivateToken.content': 'Use at least Maintainer roles to create Access tokens with API permissions in GitLab',
+  'c7ncd.appService.username': 'User name',
+  'c7ncd.appService.userPassword': 'Password',
+  'c7ncd.appService.Testlink': 'Test link',
+  'c7ncd.appService.token': 'Private Token',
+};
+export { oldAppService };
 export { enUS };
 export * from './components';
 export * from './repository';
