@@ -235,6 +235,25 @@ const enUS = {
   appService: 'App Service',
 
 };
+const oldAppService = {
+  'c7ncd.appService.create': 'Create Application Service',
+  'c7ncd.appService.type': 'Service type',
+  'c7ncd.appService.type.normal': 'Normal service',
+  'c7ncd.appService.type.test': 'Test services',
+  'c7ncd.appService.code': 'Service code',
+  'c7ncd.appService.name': 'Service name',
+  'c7ncd.appService.code.registry': 'Code warehouse',
+  'c7ncd.appService.code.registry.buildin': 'Built-in GitLab warehouse',
+  'c7ncd.appService.code.registry.External': 'External GitLab warehouse',
+  'c7ncd.appService.template': 'Service template',
+  'c7ncd.appService.template.source': 'Template source',
+  'c7ncd.appService.source.project': 'Project Application Service',
+  'c7ncd.appService.source.organization': 'Shared application',
+  'c7ncd.appService.template.organization': 'Organization layer template',
+  'c7ncd.appService.template.site': 'Platform layer template',
+  'c7ncd.appService.template.name': 'Template name',
+};
+export { oldAppService };
 export { enUS };
 export * from './components';
 export * from './repository';

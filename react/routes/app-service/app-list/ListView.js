@@ -618,8 +618,6 @@ const ListView = withRouter(observer((props) => {
     wait: 500
   })
 
-  console.log(AppState.getCurrentTheme);
-
   return (
     <>
       {getHeader()}
