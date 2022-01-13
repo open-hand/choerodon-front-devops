@@ -14,6 +14,7 @@ export type JobTypesPanelProps = {
   handlePanelClickCallback:()=>void
   stageIndex:number
   jobIndex:number
+  handleBlur:CallableFunction
 }
 
 const {
