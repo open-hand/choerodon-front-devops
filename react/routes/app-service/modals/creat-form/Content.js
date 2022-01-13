@@ -137,7 +137,7 @@ const CreateForm = injectIntl(observer((props) => {
   }
   const isTestDisable = record.get('repositoryUrl') && ((record.get('username') && record.get('password') && record.get('authType') === 'username_password') || (record.get('accessToken') && record.get('authType') === 'access_token'));
   const gitlabSelectList = [{ gitLabType: 'inGitlab', value: formatMessage({ id: 'c7ncd.appService.code.registry.buildin' }) }, { gitLabType: 'outGitlab', value: formatMessage({ id: 'c7ncd.appService.code.registry.External' }) }];
-  const authTypeList = [{ authType: 'username_password', title: '用户名与密码', content: '需至少输入该仓库内Maintainer角色的用户名和密码' }, { authType: 'access_token', title: '私有Token', content: '需至少使用Maintainer角色在GitLab中创建含有api权限的Access Token' }];
+  const authTypeList = [{ authType: 'username_password', title: formatMessage({ id: 'c7ncd.appService.Usernameandpassword' }), content: formatMessage({ id: 'c7ncd.appService.Usernameandpassword.content' }) }, { authType: 'access_token', title: formatMessage({ id: 'c7ncd.appService.PrivateToken' }), content: formatMessage({ id: 'c7ncd.appService.PrivateToken.content' }) }];
   const renderTemplateOption = useCallback(({ value, text, record: optionRecord }) => {
     if (optionRecord?.get('remark')) {
       return <Tips title={text} helpText={optionRecord?.get('remark')} />;
@@ -290,7 +290,7 @@ const CreateForm = injectIntl(observer((props) => {
         ) : (
           <>
             <div className={appServiceId ? `${prefixCls}-create-wrap-template-outTitle` : `${prefixCls}-create-wrap-template-title`}>
-              仓库配置
+              {formatMessage({ id: 'c7ncd.appService.Warehouse' })}
             </div>
             <Form dataSet={formDs}>
               <TextField name="repositoryUrl" disabled={appServiceId} addonAfter={<Tips helpText={formatMessage({ id: `${intlPrefix}.gitLabRepositoryUrl.tips` })} />} />
@@ -326,7 +326,7 @@ const CreateForm = injectIntl(observer((props) => {
             </Form>
             <div className="testConnect">
               <Button funcType="raised" disabled={!isTestDisable} onClick={handleTest}>
-                测试链接
+                {formatMessage({ id: 'c7ncd.appService.Testlink' })}
               </Button>
               {(isTestDisable && isShow)
                 && <TestConnect status={testStatus} />}
