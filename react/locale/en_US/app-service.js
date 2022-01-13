@@ -31,6 +31,11 @@ const appService = {
   'c7ncd.appService.active': 'Enable',
   'c7ncd.appService.unready': 'Disable',
   'c7ncd.appService.operating': 'Operating',
+  'c7ncd.appService.outGitlab.alert.tips.attention': 'Note：',
+  'c7ncd.appService.outGitlab.alert.tips.one': '1、choose external code repository to create application services, will not be able to use code management, code base management and other functions. Other functions such as service sharing, pipelining, and deployment blocks are available',
+  'c7ncd.appService.outGitlab.alert.tips.two': '2. Please ensure that the external GitLab version is V11.0.0 or above',
+  'c7ncd.appService.outGitlab.alert.tips.three': '3. Please ensure that the external GitLab version is V11.0.0 or above',
+  'c7ncd.appService.Warehouse': 'Warehouse configuration',
 };
 
 export { appService };

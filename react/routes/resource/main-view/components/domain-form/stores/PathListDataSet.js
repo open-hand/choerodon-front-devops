@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { axios } from '@choerodon/master';
 import find from 'lodash/find';
 import some from 'lodash/some';
@@ -8,7 +9,9 @@ function handleCreate({ dataSet }) {
   });
 }
 
-export default ({ formatMessage, projectId, envId, ingressId, serviceDs }) => {
+export default ({
+  formatMessage, projectId, envId, ingressId, serviceDs,
+}) => {
   async function checkPath(value, name, record) {
     const p = /^\/(\S)*$/;
     const domain = record.cascadeParent.get('domain');
@@ -17,21 +20,19 @@ export default ({ formatMessage, projectId, envId, ingressId, serviceDs }) => {
       return formatMessage({ id: 'domain.path.check.notSet' });
     }
     if (p.test(value)) {
-      const dataSet = record.dataSet;
+      const { dataSet } = record;
       const repeatRecord = dataSet.find((pathRecord) => pathRecord.id !== record.id && pathRecord.get('path') === value);
       if (repeatRecord) {
         return formatMessage({ id: 'domain.path.check.exist' });
-      } else {
-        try {
-          const res = await axios.get(`/devops/v1/projects/${projectId}/ingress/check_domain?domain=${domain}&env_id=${envId}&path=${value}&id=${ingressId || ''}`);
-          if (res && !res.failed) {
-            return true;
-          } else {
-            return formatMessage({ id: 'domain.path.check.exist' });
-          }
-        } catch (e) {
-          return formatMessage({ id: 'domain.path.check.failed' });
+      }
+      try {
+        const res = await axios.get(`/devops/v1/projects/${projectId}/ingress/check_domain?domain=${domain}&env_id=${envId}&path=${value}&id=${ingressId || ''}`);
+        if (res && !res.failed) {
+          return true;
         }
+        return formatMessage({ id: 'domain.path.check.exist' });
+      } catch (e) {
+        return formatMessage({ id: 'domain.path.check.failed' });
       }
     } else {
       return formatMessage({ id: 'domain.path.check.failed' });
@@ -46,7 +47,9 @@ export default ({ formatMessage, projectId, envId, ingressId, serviceDs }) => {
     }
   }
 
-  async function handleUpdate({ value, name, record, dataSet }) {
+  async function handleUpdate({
+    value, name, record, dataSet,
+  }) {
     if (name === 'path' && value) {
       dataSet.forEach((eachRecord) => {
         if (record.id !== eachRecord.id) {
@@ -76,7 +79,9 @@ export default ({ formatMessage, projectId, envId, ingressId, serviceDs }) => {
     selection: false,
     paging: false,
     fields: [
-      { name: 'path', type: 'string', defaultValue: '/', label: formatMessage({ id: 'path' }), validator: checkPath, maxLength: 30 },
+      {
+        name: 'path', type: 'string', defaultValue: '/', label: formatMessage({ id: 'path' }), validator: checkPath, maxLength: 500,
+      },
       {
         name: 'serviceId',
         type: 'string',
@@ -87,7 +92,9 @@ export default ({ formatMessage, projectId, envId, ingressId, serviceDs }) => {
         options: serviceDs,
         validator: checkService,
       },
-      { name: 'servicePort', type: 'number', label: formatMessage({ id: 'port' }), required: true },
+      {
+        name: 'servicePort', type: 'number', label: formatMessage({ id: 'port' }), required: true,
+      },
       { name: 'serviceName', type: 'string' },
       { name: 'ports', type: 'object', ignore: 'always' },
     ],

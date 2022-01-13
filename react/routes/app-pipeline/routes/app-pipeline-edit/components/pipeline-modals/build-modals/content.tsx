@@ -109,7 +109,6 @@ const handleOk = async ({
       devopsCiStepVOList: stepDataSetTransformSubmitData(StepDataSet),
     } : {},
     ...advancedTransformSubmitData(advancedRef?.current?.getDataSet()),
-    groupType: type,
     ...template === STEP_TEMPLATE ? {
       type,
     } : {},
@@ -142,6 +141,7 @@ const Index = observer(() => {
       // TODO 待删
       appService,
       template,
+      groupType,
     },
     level,
     advancedRef,
