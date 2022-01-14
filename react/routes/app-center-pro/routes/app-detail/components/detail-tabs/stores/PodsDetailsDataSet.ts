@@ -51,5 +51,15 @@ export default ({
       type: 'dateTime',
       label: formatMessage({ id: 'boot.createDate' }),
     },
+    {
+      name: 'restartCount',
+      type: 'string',
+      label: formatMessage({ id: `${intlPrefix}.restartCount` }),
+    },
+    {
+      name: 'nodeName',
+      type: 'string',
+      label: formatMessage({ id: `${intlPrefix}.nodeName` }),
+    },
   ],
 });
