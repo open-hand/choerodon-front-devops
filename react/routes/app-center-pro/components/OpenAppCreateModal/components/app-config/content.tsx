@@ -28,7 +28,7 @@ const Index = observer(() => {
   const [isError, setValueError] = useState(false);
 
   useEffect(() => {
-    modal.update({ okProps: { disabled: isError } });
+    modal?.update({ okProps: { disabled: isError } });
   }, [isError]);
 
   const handleEnableNext = (flag: boolean) => {
