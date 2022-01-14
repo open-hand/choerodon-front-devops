@@ -4,10 +4,12 @@ import { Icon } from 'choerodon-ui/pro';
 import './index.less';
 import { Popover } from 'choerodon-ui';
 import { useBoolean } from 'ahooks';
+import { observer } from 'mobx-react-lite';
 import ParalleLines from '../paralle-lines';
 import SerialLines from '../serial-lines';
 import JobTypesPanel from './components/job-types-panel';
 import JobCdPanel from './components/job-CD-panel';
+import { useStageEditsStore } from '../../stores';
 
 const prefixCls = 'c7ncd-pipeline-edit-jobbtn';
 
@@ -30,6 +32,11 @@ const JobAddBtn = (props:JobAddBtnProps) => {
 
   const [popoverVisible, { setFalse, toggle }] = useBoolean(false);
 
+  const {
+    currentOpenPanelIdentity,
+    setOpenPanelIdentity,
+  } = useStageEditsStore();
+
   const linesMap = {
     paralle: <ParalleLines />,
     serial: <SerialLines />,
@@ -40,14 +47,19 @@ const JobAddBtn = (props:JobAddBtnProps) => {
     serial: <JobCdPanel handleBlur={setFalse} jobIndex={jobIndex} stageIndex={stageIndex} handleJobAddCallback={handleJobAddCallback} handlePanelClickCallback={setFalse} />,
   };
 
+  const handlePanelToggle = () => {
+    setOpenPanelIdentity(popoverVisible ? '' : stageIndex);
+    toggle();
+  };
+
   const renderContent = () => {
     if (type === 'circle') {
-      return <Icon type="add" onClick={() => toggle()} className={`${prefixCls}`} />;
+      return <Icon type="add" onClick={handlePanelToggle} className={`${prefixCls}`} />;
     }
     return (
       <div
         className={`${prefixCls}-normal`}
-        onClick={() => { toggle(); }}
+        onClick={handlePanelToggle}
         role="none"
       >
         {linesMap[linesType]}
@@ -61,7 +73,7 @@ const JobAddBtn = (props:JobAddBtnProps) => {
 
   return (
     <Popover
-      visible={popoverVisible}
+      visible={currentOpenPanelIdentity === stageIndex && popoverVisible}
       content={jobTypePanelMap[linesType]}
       placement={'bottom' as any}
       overlayClassName={`${prefixCls}-popover`}
@@ -71,4 +83,4 @@ const JobAddBtn = (props:JobAddBtnProps) => {
   );
 };
 
-export default JobAddBtn;
+export default observer(JobAddBtn);
