@@ -54,6 +54,7 @@ const AppPipelineEdit = () => {
   } = useRouteMatch<any>();
 
   const history = useHistory();
+
   const {
     pathname,
     search,

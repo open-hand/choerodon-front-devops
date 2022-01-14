@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { useFormatCommon, useFormatMessage } from '@choerodon/master';
 import useStore from './useStore';
 import { StageEditsStoreContext, ProviderProps } from '../interface';
@@ -26,6 +26,8 @@ export const StoreProvider = (props: ProviderProps) => {
 
   const mainStore = useStore();
 
+  const [currentOpenPanelIdentity, setOpenPanelIdentity] = useState('');
+
   const value = {
     ...props,
     mainStore,
@@ -33,6 +35,8 @@ export const StoreProvider = (props: ProviderProps) => {
     intlPrefix,
     formatPipelinEdit,
     formatCommon,
+    currentOpenPanelIdentity,
+    setOpenPanelIdentity,
   };
   return (
     <Store.Provider value={value}>
