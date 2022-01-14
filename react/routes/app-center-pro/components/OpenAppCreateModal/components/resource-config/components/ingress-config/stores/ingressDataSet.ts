@@ -4,12 +4,7 @@ import { ingressApi } from '@/api/Ingress';
 import { DataSetProps, FieldProps } from '@/interface';
 import { certificationsApiConfig } from '@/api/Certifications';
 
-async function checkName(value: string, name: string, record: any) {
-  const parentRecord = record.cascadeParent;
-  if (!parentRecord) {
-    return;
-  }
-  const envId = parentRecord.get('environmentId');
+async function checkName(value: string, name: string, record: any, envId: any) {
   if (!envId) {
     return;
   }
@@ -66,7 +61,7 @@ function renderLookupUrl({ record }: any) {
   }
 }
 
-const ingressDataSet = (PathListDataSet: any): DataSetProps => ({
+const ingressDataSet = (PathListDataSet: any, envId: any): DataSetProps => ({
   autoCreate: true,
   autoQuery: false,
   selection: false,
@@ -74,7 +69,7 @@ const ingressDataSet = (PathListDataSet: any): DataSetProps => ({
     name: 'name',
     type: 'string',
     label: '域名名称',
-    validator: checkName,
+    validator: (value: any, name: any, record: any) => checkName(value, name, record, envId),
     maxLength: 40,
     dynamicProps: {
       required: isRequired,
