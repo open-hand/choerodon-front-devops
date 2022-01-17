@@ -38,7 +38,15 @@ const transformSubmitData = (ds: any) => {
   return ({
     [mapping.name.name]: record?.get(mapping.name.name),
     [mapping.triggerType.name]: record?.get(mapping.triggerType.name),
-    [mapping.triggerValue.name]: record?.get(mapping.triggerValue.name)?.join(','),
+    [mapping.triggerValue.name]: (function () {
+      try {
+        const res = JSON.parse(JSON.stringify(record?.get(mapping.triggerValue.name)));
+        return res.filter((i: any) => i).join(',');
+      } catch (e) {
+        console.log(e);
+        return record?.get(mapping.triggerValue.name)?.join(',');
+      }
+    }()),
     [mapping.groupId.name]: record?.get(mapping.groupId.name),
     [mapping.categoryId.name]: record?.get(mapping.categoryId.name),
     [mapping.type.name]: record?.get(mapping.type.name),
