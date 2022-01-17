@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import React, {
-  FC, useMemo, useState, useEffect,
+  FC, useMemo, useState, useEffect, useImperativeHandle,
 } from 'react';
 import { useFormatCommon } from '@choerodon/master';
 import { DataSet } from 'choerodon-ui/pro';
@@ -15,7 +15,8 @@ import { DEFAULT_TMP_ID, DEFAULT_TMP } from '@/routes/app-pipeline/stores/CONSTA
 import cutomizeImg from '../../assets/cutomize.png';
 
 export type TemplatesSelectorProps = {
-  handleSelectTmpCallback:(tempData:any)=>void
+  handleSelectTmpCallback:(tempData:any)=>void,
+  cRef?: any,
 }
 
 type MenuItemTypes= {
@@ -31,6 +32,7 @@ const TemplatesSelector:FC<TemplatesSelectorProps> = (props) => {
   const formatCommon = useFormatCommon();
   const {
     handleSelectTmpCallback,
+    cRef,
   } = props;
 
   const [selectedMenuId, setSelectedMenuId] = useState<string | number>('');
@@ -50,6 +52,10 @@ const TemplatesSelector:FC<TemplatesSelectorProps> = (props) => {
     }
     handleSelectTmp({ id: DEFAULT_TMP_ID });
   }, [ciTemplateCategoryDTOList]);
+
+  useImperativeHandle(cRef, () => ({
+    getTemplateData: () => record,
+  }));
 
   /**
    * 选中当前的menu之后会自动滚动到右侧对应的section单元

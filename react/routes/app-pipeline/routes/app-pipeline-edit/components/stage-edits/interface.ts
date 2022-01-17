@@ -15,6 +15,8 @@ export type StageEditsStoreContext = {
   mainStore: StoreProps
   formatPipelinEdit: any,
   formatCommon: any,
+  setOpenPanelIdentity:Function,
+  currentOpenPanelIdentity:any
 } & ProviderProps;
 
 export type ProviderProps = {

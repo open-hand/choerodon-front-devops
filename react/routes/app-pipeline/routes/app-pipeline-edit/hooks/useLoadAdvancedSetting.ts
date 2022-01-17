@@ -53,7 +53,8 @@ function useAdvancedSetting(configs: any, options?: any) {
       if (type === 'create') {
         const res = await initCustomFunc();
         return {
-          [mapping.CIRunnerImage.name]: defaultImage,
+          [mapping.CIRunnerImage.name]: localData?.[mapping.CIRunnerImage.name] || defaultImage,
+          [mapping.versionName.name]: localData?.[mapping.versionName.name],
           devopsCiPipelineFunctionDTOList: res,
           defaultImage,
         };

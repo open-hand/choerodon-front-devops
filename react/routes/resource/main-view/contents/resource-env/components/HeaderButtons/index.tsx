@@ -164,6 +164,7 @@ const REModals = observer(() => {
       {
         name: format({ id: 'CreateApplication' }),
         icon: 'playlist_add',
+        disabled: !connect,
         handler: () => openAppCreateModal(handleCreateCallback, true, id),
       },
       {
