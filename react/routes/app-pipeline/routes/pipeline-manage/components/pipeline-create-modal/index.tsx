@@ -1,5 +1,5 @@
 import React, {
-  FC, useMemo, useState,
+  FC, useMemo, useState, useRef,
 } from 'react';
 import { useFormatCommon, useFormatMessage, CONSTANTS } from '@choerodon/master';
 import {
@@ -13,6 +13,7 @@ import { useHistory, useLocation } from 'react-router';
 import PipeBasicInfoDs from './stores/PipelineBasicInfoDataSet';
 import AppServiceDataSet from '@/routes/app-pipeline/stores/AppServiceDataSet';
 import BranchDataSet from '@/routes/app-pipeline/stores/BranchDataSet';
+import { mapping } from '../../../app-pipeline-edit/components/pipeline-advanced-config/stores/pipelineAdvancedConfigDataSet';
 
 import './index.less';
 import { DataSet } from '@/interface';
@@ -27,6 +28,8 @@ const prefixCls = 'c7ncd-pipeline-create-modal';
 const intlPrefix = 'c7ncd.pipeline.create.modal';
 
 const PipelineCreateModal:FC<PipelineCreateModalProps> = observer((props) => {
+  const templateRef = useRef<any>();
+
   const { modal } = props;
 
   const branchDs = useMemo(() => new DataSet(
@@ -105,8 +108,13 @@ const PipelineCreateModal:FC<PipelineCreateModalProps> = observer((props) => {
     try {
       const isValid = await pipelinBasicInfoDs.validate();
       if (isValid) {
+        const templateRecord = templateRef?.current?.getTemplateData();
+        const pipelineTemplateVOList = templateRecord?.get('pipelineTemplateVOList');
+        const item = pipelineTemplateVOList?.find((i: any) => String(i.id) === String(submitTmpId));
         const sumitData:any = {
           ...pipelinBasicInfoDs.current?.toData(),
+          [mapping.CIRunnerImage.name]: item?.[mapping.CIRunnerImage.name],
+          [mapping.versionName.name]: item?.[mapping.versionName.name],
         };
         setPipelineCreateData(sumitData);
         modal?.close();
@@ -136,7 +144,10 @@ const PipelineCreateModal:FC<PipelineCreateModalProps> = observer((props) => {
   return (
     <div className={prefixCls}>
       {renderForm()}
-      <TemplatesSelector handleSelectTmpCallback={handleSelectTmpCallback} />
+      <TemplatesSelector
+        handleSelectTmpCallback={handleSelectTmpCallback}
+        cRef={templateRef}
+      />
     </div>
   );
 });
