@@ -247,7 +247,7 @@ const IstModals = injectIntl(observer(() => {
       },
     },
     {
-      name: formatMessage({ id: 'upgrade' }),
+      name: format({ id: 'upgrade' }),
       icon: 'backup_line',
       handler: openMarketUpgradeModal,
       permissions: ['choerodon.code.project.deploy.app-deployment.resource.ps.market.upgrade'],

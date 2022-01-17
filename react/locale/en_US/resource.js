@@ -57,6 +57,7 @@ const resource = {
   'c7ncd.resource.Enable': 'Enable',
   'c7ncd.resource.Disable': 'Disable',
   'c7ncd.resource.Redeploy': 'Redeploy',
+  'c7ncd.resource.upgrade': 'Upgrade',
   'c7ncd.resource.ModifyApplication': 'Modify Application',
   'c7ncd.resource.ModifyValues': 'Modify Values',
   'c7ncd.resource.OperationDetails': 'Operation Details',

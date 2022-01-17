@@ -56,6 +56,7 @@ const resource = {
   'c7ncd.resource.Enable': '启用应用',
   'c7ncd.resource.Disable': '停用应用',
   'c7ncd.resource.Redeploy': '重新部署',
+  'c7ncd.resource.upgrade': '升级应用',
   'c7ncd.resource.ModifyApplication': '修改应用',
   'c7ncd.resource.ModifyValues': '修改Values',
   'c7ncd.resource.OperationDetails': '运行详情',
