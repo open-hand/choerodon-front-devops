@@ -69,7 +69,10 @@ const ingressDataSet = (PathListDataSet: any, envId: any): DataSetProps => ({
     name: 'name',
     type: 'string',
     label: '域名名称',
-    validator: (value: any, name: any, record: any) => checkName(value, name, record, envId),
+    validator: async (value: any, name: any, record: any) => {
+      const res = await checkName(value, name, record, envId);
+      return res;
+    },
     maxLength: 40,
     dynamicProps: {
       required: isRequired,

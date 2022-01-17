@@ -34,5 +34,15 @@ export default ({ intl, intlPrefix, format }) => ({
       type: 'dateTime',
       label: format({ id: 'CreationTime' }),
     },
+    {
+      name: 'restartCount',
+      type: 'string',
+      label: format({ id: 'restartCount' }),
+    },
+    {
+      name: 'nodeName',
+      type: 'string',
+      label: format({ id: 'nodeName' }),
+    },
   ],
 });
