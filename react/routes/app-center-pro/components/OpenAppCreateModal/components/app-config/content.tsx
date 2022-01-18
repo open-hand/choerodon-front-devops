@@ -67,6 +67,8 @@ const Index = observer(() => {
         }]);
         AppConfigDataSet?.getField(mapping.hzeroVersion.name)?.options?.setQueryParameter('appServiceId', detail?.[mapping.hzeroVersion.name as string]);
         AppConfigDataSet?.getField(mapping.hzeroVersion.name)?.options?.query();
+      } else {
+        AppConfigDataSet?.getField(mapping.hzeroVersion.name)?.options?.query();
       }
     }
     init();

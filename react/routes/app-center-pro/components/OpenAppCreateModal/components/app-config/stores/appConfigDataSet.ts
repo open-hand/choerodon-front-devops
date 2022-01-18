@@ -44,7 +44,7 @@ const chartSourceData: {
 }];
 
 const appServiceOptionsDs = {
-  autoQuery: true,
+  autoQuery: false,
   paging: false,
   fields: [{
     name: 'groupName',
