@@ -58,12 +58,28 @@ export const StoreProvider = observer((props: any) => {
     advancedRef,
   )), []);
 
+  const locationValidate = async (buildDs: any, stepDs: any) => {
+    async function validateRecord(record: any) {
+      const res = await record.validate(true);
+      return res;
+    }
+    for (let i = 0; i < stepDs.records.length; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      const res = await validateRecord(stepDs.records[i]);
+      if (!res) {
+        document.querySelectorAll('.c7ncd-buildModal-content__stepItem')?.[i]?.scrollIntoView();
+        break;
+      }
+    }
+  };
+
   useEffect(() => {
     if (data) {
       const buildData: any = {};
 
       BuildDataSet.loadData([buildTransformLoadData(data, appServiceName)]);
       StepDataSet.loadData(transformLoadData(data?.devopsCiStepVOList));
+      locationValidate(BuildDataSet, StepDataSet);
     }
   }, []);
 
