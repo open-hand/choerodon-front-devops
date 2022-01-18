@@ -261,7 +261,7 @@ export default class LogSidebar extends Component {
     const wsUrl = removeEndsChar(window._env_.DEVOPS_HOST, '/');
     const secretKey = window._env_.DEVOPS_WEBSOCKET_SECRET_KEY;
     const key = `cluster:${clusterId}.log:${uuidv1()}`;
-    const url = `${wsUrl}/websocket?&previous=${previous}key=${key}&group=from_front:${key}&processor=front_download_log&secret_key=${secretKey}&env=${namespace}&podName=${podName}&containerName=${containerName}&logId=${logId}&clusterId=${clusterId}&oauthToken=${getAccessToken()}&projectId=${projectId}`;
+    const url = `${wsUrl}/websocket?previous=${previous}&key=${key}&group=from_front:${key}&processor=front_download_log&secret_key=${secretKey}&env=${namespace}&podName=${podName}&containerName=${containerName}&logId=${logId}&clusterId=${clusterId}&oauthToken=${getAccessToken()}&projectId=${projectId}`;
     const ws = new WebSocket(url);
     const logData = [];
     let time = 0;
