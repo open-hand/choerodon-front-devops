@@ -42,6 +42,7 @@ export default class LogSidebar extends Component {
       containerName: '',
       logId: null,
       isDownload: false,
+      isRestartDownload: false,
     };
     this.timer = null;
     this.socket = null;
@@ -248,6 +249,7 @@ export default class LogSidebar extends Component {
 
   handleDownload = ({
     previous = false,
+    state = 'isDownload',
   }) => {
     const {
       record, clusterId: propsClusterId, projectId: propsProjectId,
@@ -275,17 +277,17 @@ export default class LogSidebar extends Component {
             ws.close();
           }
         }, 1000);
-        this.setState({ isDownload: true });
+        this.setState({ [state]: true });
       };
       ws.onerror = (e) => {
         message.error('连接出错');
-        this.setState({ isDownload: false });
+        this.setState({ [state]: false });
       };
       ws.onclose = () => {
         const blob = new Blob([logData.length ? _.join(logData, '') : ''], { type: 'text/plain' });
         const filename = '容器日志.log';
         saveAs(blob, filename);
-        this.setState({ isDownload: false });
+        this.setState({ [state]: false });
       };
 
       ws.onmessage = (e) => {
@@ -309,7 +311,7 @@ export default class LogSidebar extends Component {
     const { visible, onClose, record: { containers, restartCount } } = this.props;
     const logCanRestart = restartCount > 0;
     const {
-      following, fullScreen, containerName, isDownload,
+      following, fullScreen, containerName, isDownload, isRestartDownload,
     } = this.state;
     const containerOptions = _.map(containers, (container) => {
       const { logId, name } = container;
@@ -348,8 +350,9 @@ export default class LogSidebar extends Component {
                   disabled={!logCanRestart}
                   onClick={() => this.handleDownload({
                     previous: true,
+                    state: 'isRestartDownload',
                   })}
-                  loading={isDownload}
+                  loading={isRestartDownload}
                 >
                   下载重启前容器日志
                 </Button>
