@@ -18,7 +18,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       children,
       intlPrefix,
     } = props;
-    const formDs = useMemo(() => new DataSet(FormDataSet({ ...props }), [projectId]));
+    const formDs = useMemo(() => new DataSet(FormDataSet({ ...props })), [projectId]);
 
     const value = {
       ...props,
