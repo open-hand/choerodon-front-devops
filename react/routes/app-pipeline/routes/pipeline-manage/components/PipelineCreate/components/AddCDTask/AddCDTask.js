@@ -296,12 +296,14 @@ export default observer(() => {
       ADDCDTaskDataSet.current.set('triggerType', triggerType);
       ADDCDTaskDataSet.getField('triggerType').set('disabled', true);
       ADDCDTaskDataSet.current.set('triggerValue', triggerValue?.split(','));
-      setBranchsList(
-        triggerValue?.split(',').map((i) => ({
-          value: i,
-          name: i,
-        })),
-      );
+      if (triggerValue) {
+        setBranchsList(
+            triggerValue?.split(',').map((i) => ({
+              value: i,
+              name: i,
+            })),
+        );
+      }
     } else {
       ADDCDTaskDataSet.getField('triggerType').set('disabled', false);
       setBranchsList(originBranchs);
@@ -1698,7 +1700,7 @@ export default observer(() => {
                 )
               } else {
                 return text
-              } 
+              }
             }}
             onOption={({ record }) => ({
               disabled: !record.get('executeOnline')

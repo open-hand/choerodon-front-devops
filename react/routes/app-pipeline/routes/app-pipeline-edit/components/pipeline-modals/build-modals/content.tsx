@@ -112,6 +112,7 @@ const handleOk = async ({
     ...template === STEP_TEMPLATE ? {
       type,
     } : {},
+    groupType: data?.groupType || 'build',
     // TODO 待删
     appService,
     completed: template !== STEP_TEMPLATE ? res && stepRes && advancedRes : res,
