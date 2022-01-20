@@ -279,7 +279,7 @@ const TreeItem = observer(({ record, search }) => {
         action: handleChangeActive,
       },
       {
-        service: ['choerodon.code.project.develop.ci-pipeline.ps.create'],
+        service: ['choerodon.code.project.develop.ci-pipeline.ps.createPro'],
         text: <NewTips title={format({ id: 'Copy' })} helpText="此操作将复制出该流水线中的CI阶段及其任务至目标应用服务" />,
         action: handleCopy,
       },

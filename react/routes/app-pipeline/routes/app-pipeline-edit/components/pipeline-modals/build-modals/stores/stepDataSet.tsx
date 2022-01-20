@@ -445,7 +445,7 @@ const Index = (
             });
           }
           item.dynamicProps = {
-            required: ({ record }: any) => (record.get(mapping.type.name) === BUILD_UPLOADJAR) && level === 'project',
+            required: ({ record }: any) => ([BUILD_MAVEN_PUBLISH, BUILD_UPLOADJAR].includes(record.get(mapping.type.name))) && level === 'project',
           };
           break;
         }

@@ -28,6 +28,9 @@
     "react-dom": "16.14.0",
     "styled-components": "5.2.0"
   },
+  "peerDependencies": {
+    "js-yaml": "3.14.1"
+  },
   "dependencies": {
     "copy-to-clipboard": "^3.3.1",
     "diff-match-patch": "^1.0.4",

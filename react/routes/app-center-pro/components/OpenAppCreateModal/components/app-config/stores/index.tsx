@@ -15,16 +15,7 @@ interface ContextType {
   cRef: any,
   modal?: any,
   refresh?: Function,
-  detail?: string | {
-    value: string,
-    prodJarInfoVO: object,
-    instanceId: string,
-    appServiceVersionId: string,
-    chartSource: string,
-    mktAppVersionId: string,
-    mktDeployObjectId: string,
-    source?: string,
-  },
+  detail?: any,
   envId?: string,
 }
 

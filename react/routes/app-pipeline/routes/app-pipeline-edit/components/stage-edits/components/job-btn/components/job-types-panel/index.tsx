@@ -91,9 +91,13 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
   const handleClick = (data: any) => {
     const { keyPath } = data;
     const stepData = JSON.parse(keyPath[0]);
+    const categoryData = JSON.parse(keyPath[1]);
     handlePanelClickCallback();
     handlePipelineModal({
-      data: stepData,
+      data: {
+        ...stepData,
+        groupType: categoryData?.type,
+      },
       callback: handleJobAddCallback(stepData),
       advancedData: getTabData(TAB_ADVANCE_SETTINGS),
       level,

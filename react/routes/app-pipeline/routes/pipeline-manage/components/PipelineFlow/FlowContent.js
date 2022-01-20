@@ -14,13 +14,11 @@ export default observer(() => {
     parentId,
   } = getSelectedMenu;
 
-  const renderPipeline = () => (
-    parentId ? (
-      <OptsDetailContent
-        handleRefresh={handleRefresh}
-      />
-    ) : <PipelineDetail />
-  );
+  const renderPipeline = () => (parentId ? (
+    <OptsDetailContent
+      handleRefresh={handleRefresh}
+    />
+  ) : <PipelineDetail />);
   return (
     <div className="c7ncd-pipelineManage_flow">
       {renderPipeline()}

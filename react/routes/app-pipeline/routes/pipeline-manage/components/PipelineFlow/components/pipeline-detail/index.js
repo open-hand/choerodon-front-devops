@@ -251,7 +251,9 @@ export default observer((props) => {
                   <div className={`c7ncd-pipeline-detail-job c7ncd-pipeline-detail-job-${stageType}`} id={`${id}-${stageIndex}-job-${index}`}>
                     <div className="c7ncd-pipeline-detail-job-title">
                       {renderJobPrefix(jobType, groupType)}
-                      {jobName}
+                      <Tooltip title={jobName} placement="topLeft">
+                        {jobName}
+                      </Tooltip>
                     </div>
                     {jobType !== 'custom' && getJobTask({
                       jobType, metadata, iamUserDTOS, jobTriggerValue, triggerValue, envName, countersigned,
