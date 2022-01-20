@@ -233,6 +233,8 @@ const enUS = {
 
   'c7ncd.environment.description': 'Description',
   appService: 'App Service',
+  'c7ncd.pipelineManage.settings.values.reveal': 'Display all Values',
+  'c7ncd.pipelineManage.settings.add': 'Add Variables',
 
 };
 const oldAppService = {
