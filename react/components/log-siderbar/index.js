@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { observer, inject } from 'mobx-react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Modal, Select, message } from 'choerodon-ui';
-import { Button } from 'choerodon-ui/pro';
+import { Button, Tooltip } from 'choerodon-ui/pro';
 import { Content } from '@choerodon/master';
 import ReactCodeMirror from 'react-codemirror';
 import uuidv1 from 'uuid';
@@ -42,6 +42,7 @@ export default class LogSidebar extends Component {
       containerName: '',
       logId: null,
       isDownload: false,
+      isRestartDownload: false,
     };
     this.timer = null;
     this.socket = null;
@@ -246,7 +247,10 @@ export default class LogSidebar extends Component {
     }
   };
 
-  handleDownload = () => {
+  handleDownload = ({
+    previous = false,
+    state = 'isDownload',
+  }) => {
     const {
       record, clusterId: propsClusterId, projectId: propsProjectId,
       AppState: { currentMenuType: { projectId: currentProjectId } },
@@ -259,7 +263,7 @@ export default class LogSidebar extends Component {
     const wsUrl = removeEndsChar(window._env_.DEVOPS_HOST, '/');
     const secretKey = window._env_.DEVOPS_WEBSOCKET_SECRET_KEY;
     const key = `cluster:${clusterId}.log:${uuidv1()}`;
-    const url = `${wsUrl}/websocket?key=${key}&group=from_front:${key}&processor=front_download_log&secret_key=${secretKey}&env=${namespace}&podName=${podName}&containerName=${containerName}&logId=${logId}&clusterId=${clusterId}&oauthToken=${getAccessToken()}&projectId=${projectId}`;
+    const url = `${wsUrl}/websocket?previous=${previous}&key=${key}&group=from_front:${key}&processor=front_download_log&secret_key=${secretKey}&env=${namespace}&podName=${podName}&containerName=${containerName}&logId=${logId}&clusterId=${clusterId}&oauthToken=${getAccessToken()}&projectId=${projectId}`;
     const ws = new WebSocket(url);
     const logData = [];
     let time = 0;
@@ -273,17 +277,17 @@ export default class LogSidebar extends Component {
             ws.close();
           }
         }, 1000);
-        this.setState({ isDownload: true });
+        this.setState({ [state]: true });
       };
       ws.onerror = (e) => {
         message.error('连接出错');
-        this.setState({ isDownload: false });
+        this.setState({ [state]: false });
       };
       ws.onclose = () => {
         const blob = new Blob([logData.length ? _.join(logData, '') : ''], { type: 'text/plain' });
         const filename = '容器日志.log';
         saveAs(blob, filename);
-        this.setState({ isDownload: false });
+        this.setState({ [state]: false });
       };
 
       ws.onmessage = (e) => {
@@ -304,9 +308,10 @@ export default class LogSidebar extends Component {
   };
 
   render() {
-    const { visible, onClose, record: { containers } } = this.props;
+    const { visible, onClose, record: { containers, restartCount } } = this.props;
+    const logCanRestart = restartCount > 0;
     const {
-      following, fullScreen, containerName, isDownload,
+      following, fullScreen, containerName, isDownload, isRestartDownload,
     } = this.state;
     const containerOptions = _.map(containers, (container) => {
       const { logId, name } = container;
@@ -337,8 +342,22 @@ export default class LogSidebar extends Component {
               <Select className="c7n-log-siderbar-select" value={containerName} onChange={this.handleChange}>
                 {containerOptions}
               </Select>
+              <Tooltip title={!logCanRestart && '该容器暂未重启过，无法下载重启前容器日志。'}>
+                <Button
+                  className="c7ncd-container-log-download"
+                  icon="get_app"
+                  funcType="flat"
+                  disabled={!logCanRestart}
+                  onClick={() => this.handleDownload({
+                    previous: true,
+                    state: 'isRestartDownload',
+                  })}
+                  loading={isRestartDownload}
+                >
+                  下载重启前容器日志
+                </Button>
+              </Tooltip>
               <Button
-                className="c7ncd-container-log-download"
                 icon="get_app"
                 funcType="flat"
                 onClick={this.handleDownload}

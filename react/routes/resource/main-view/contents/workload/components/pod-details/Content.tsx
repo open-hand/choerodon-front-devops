@@ -6,8 +6,8 @@ import { Action } from '@choerodon/master';
 import { Table } from 'choerodon-ui/pro';
 import { Icon, Popover, Tooltip } from 'choerodon-ui';
 import map from 'lodash/map';
-import { TableQueryBarType } from '@/interface';
 import { observer } from 'mobx-react-lite';
+import { TableQueryBarType } from '@/interface';
 import MouserOverWrapper from '@/components/MouseOverWrapper';
 import TimePopover from '@/components/timePopover/TimePopover';
 import StatusTags from '@/components/status-tag';
@@ -49,7 +49,7 @@ const PodDetail = observer(() => {
     return statusCode;
   }
 
-  function renderName({ value, record }:any) {
+  const renderName = ({ value, record }:any) => {
     const statusCode = getStatusCode(record);
 
     return (
@@ -65,9 +65,9 @@ const PodDetail = observer(() => {
         </MouserOverWrapper>
       </>
     );
-  }
+  };
 
-  function renderStatus({ value, record }:any) {
+  const renderStatus = ({ value, record }:any) => {
     const wrapStyle = {
       width: 54,
     };
@@ -90,9 +90,9 @@ const PodDetail = observer(() => {
         style={wrapStyle}
       />
     );
-  }
+  };
 
-  function renderContainers({ value }:any) {
+  const renderContainers = ({ value }:any) => {
     const node:any = [];
     let item;
     if (value && value.length) {
@@ -139,13 +139,13 @@ const PodDetail = observer(() => {
         )}
       </div>
     );
-  }
+  };
 
   const renderDate = useCallback(({ value }) => (
     <TimePopover content={value} />
   ), []);
 
-  function renderAction({ value, record }:any) {
+  const renderAction = ({ value, record }:any) => {
     const buttons = [
       {
         service: ['choerodon.code.project.deploy.app-deployment.resource.ps.pod.delete'],
@@ -165,25 +165,25 @@ const PodDetail = observer(() => {
       });
     }
     return <Action data={buttons} />;
-  }
+  };
   /**
    * 控制Log侧边窗的可见性
    */
   function openLog() {
     setVisible(true);
   }
-  function closeLog() {
+  const closeLog = () => {
     setVisible(false);
-  }
+  };
   /**
    * 控制Shell侧边窗的可见性
    */
   function openShell() {
     setShellVisible(true);
   }
-  function closeShell() {
+  const closeShell = () => {
     setShellVisible(false);
-  }
+  };
   /**
    * 删除Pod
    */
@@ -208,6 +208,8 @@ const PodDetail = observer(() => {
           <Column name="name" renderer={renderName} />
           <Column renderer={renderAction} width={70} />
           <Column name="containers" renderer={renderContainers} />
+          <Column name="restartCount" />
+          <Column name="nodeName" />
           <Column name="ip" width={120} />
           <Column name="creationDate" sortable renderer={renderDate} width={120} />
           <Column name="status" renderer={renderStatus} width={100} />

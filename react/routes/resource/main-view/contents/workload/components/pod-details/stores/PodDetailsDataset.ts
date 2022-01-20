@@ -58,6 +58,16 @@ export default ({
       label: formatMessage({ id: `${intlPrefix}.instance.ip` }),
     },
     {
+      name: 'restartCount',
+      type: 'string',
+      label: formatMessage({ id: `${intlPrefix}.restartCount` }),
+    },
+    {
+      name: 'nodeName',
+      type: 'string',
+      label: formatMessage({ id: `${intlPrefix}.nodeName` }),
+    },
+    {
       name: 'creationDate',
       type: 'dateTime',
       label: formatMessage({ id: 'boot.createDate' }),
