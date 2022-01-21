@@ -9,7 +9,7 @@ type LoadStageDataProps = Omit<UseQueryOptions<unknown, unknown, Record<string, 
 
 type PipelineApiConfigs = {
   id:string | number
-  type?: 'create' | 'modify'
+  type?: 'create' | 'modify' | 'copy'
   setTabsDataState:(...args:any[])=>void
 }
 
@@ -33,7 +33,7 @@ function useLoadStageData(configs:PipelineApiConfigs, options?:LoadStageDataProp
       if (type === 'create') {
         stageLists = stageObject?.devopsCiStageVOS.concat(DEFAUTL_CD_STAGE);
       } else {
-        stageLists = stageObject?.devopsCiStageVOS.concat(stageObject.devopsCdStageVOS) || [];
+        stageLists = stageObject?.devopsCiStageVOS.concat(type === 'copy' ? [] : stageObject.devopsCdStageVOS) || [];
       }
     } else {
       stageLists = stageObject?.templateStageVOS || [];
