@@ -1,4 +1,5 @@
-/* eslint-disable max-len */
+/* eslint-disable */
+// @ts-nocheck
 import React, { useMemo } from 'react';
 import { FieldProps } from 'choerodon-ui/pro/lib/data-set/field';
 import { DataSet } from 'choerodon-ui/pro';
@@ -144,7 +145,15 @@ const serviceVersionOptionDs = {
   pageSize: 20,
   transport: {
     read: ({ data, params }: any) => (data.appServiceId ? ({
-      ...appServiceVersionApiConfig.getVersions(data.appServiceId, true, true, params, data.appServiceVersionId),
+      ...appServiceVersionApiConfig.getVersions(
+        data.appServiceId,
+        true,
+        true,
+        {
+          ...params,
+          version: data?.key || undefined,
+        }, data.appServiceVersionId,
+      ),
     }) : undefined),
   },
 };
