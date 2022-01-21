@@ -37,9 +37,10 @@ const appService = {
   'c7ncd.appService.active': '启用',
   'c7ncd.appService.unready': '停用',
   'c7ncd.appService.operating': '处理中',
-  'c7ncd.appService.outGitlab.alert.tips.one': '1、选择外置代码仓库创建得到应用服务，将无法使用代码管理、代码库管理等功能。服务共享、流水线和部署块等其他功能可正常使用',
-  'c7ncd.appService.outGitlab.alert.tips.two': '2、请保证外置GitLab版本为V11.0.0或以上',
-  'c7ncd.appService.outGitlab.alert.tips.three': '3、请保证外置GitLab版本为V11.0.0或以上',
+  'c7ncd.appService.outGitlab.alert.tips.one': '1、选择外置代码仓库创建得到应用服务，将无法使用代码管理、代码库管理等功能。服务共享、流水线和部署块等其他功能可正常使用。',
+  'c7ncd.appService.outGitlab.alert.tips.two': '2、请保证外置GitLab版本为V11.0.0或以上。',
+  'c7ncd.appService.outGitlab.alert.tips.three': '3、请保证服务编码与外置gitlab项目code一致。',
+  'c7ncd.appService.outGitlab.alert.tips.four': '4、如果要使用流水线中的「上传Chart至猪齿鱼」任务，请保证chart目录下的子目录名以及Chart.yaml文件中的name属性值皆为服务编码。',
   'c7ncd.appService.outGitlab.alert.tips.attention': '注意：',
   'c7ncd.appService.Warehouse': '仓库配置',
 
