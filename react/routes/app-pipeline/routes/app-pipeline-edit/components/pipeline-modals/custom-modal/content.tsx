@@ -42,11 +42,11 @@ const Index = observer(() => {
       }
     }
 
-    document.addEventListener('dblclick', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
       // Unbind the event listener on clean up
-      document.removeEventListener('dblclick', handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [contentRef]);
 
