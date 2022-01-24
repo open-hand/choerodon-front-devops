@@ -432,6 +432,15 @@ const DetailItem = (props) => {
     : handleJobRetry;
 
   const handleFileDownLoad = async (url, username, password, filename) => {
+    const ele = document.createElement('a');
+    ele.download = filename;
+    ele.href = url;
+    ele.style.display = 'none';
+    document.body.appendChild(ele);
+    ele.click();
+    document.body.removeChild(ele);
+    return;
+
     const tempHeader = new Headers();
     tempHeader.append('Authorization', `Basic ${Base64.encode(`${username}:${password}`)}`);
     fetch(`${url}`, {
