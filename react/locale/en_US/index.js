@@ -26,6 +26,7 @@ const enUS = {
   deleted: 'Deleted',
   null: 'null',
   language: 'en_US',
+  iknow: 'I Know',
 
   // ist
   ist_create: 'Creating',

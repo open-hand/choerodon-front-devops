@@ -28,6 +28,7 @@ const commonField = {
   commit: '提交',
   available: '可用',
   unavailable: '不可用',
+  iknow: '我知道了',
   log: '日志',
   ingress: '域名',
   address: '地址',
