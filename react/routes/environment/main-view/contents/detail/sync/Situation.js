@@ -15,7 +15,7 @@ const SyncSituation = observer(() => {
   const {
     envStore: { getSelectedMenu },
   } = useEnvironmentStore();
-  const disabled = isNotRunning(getSelectedMenu || {});
+  const disabled = isNotRunning(getSelectedMenu || {}) || !getSelectedMenu?.connect;
   const {
     prefixCls,
     intlPrefix,

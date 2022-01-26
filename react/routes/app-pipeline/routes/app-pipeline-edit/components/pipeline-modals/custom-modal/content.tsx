@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { YamlEditor } from '@choerodon/components';
 import { observer } from 'mobx-react-lite';
 import yaml from 'js-yaml';
@@ -13,6 +13,8 @@ const Index = observer(() => {
     handleJobAddCallback,
     data,
   } = useCustomModalStore();
+
+  const contentRef = useRef<any>();
 
   const handleOk = async () => new Promise((resolve) => {
     const subData = transformSubmitData(data, CustomDataSet);
@@ -32,8 +34,24 @@ const Index = observer(() => {
     resolve(true);
   });
 
+  useEffect(() => {
+    function handleClickOutside(event: any) {
+      if (contentRef.current && !contentRef.current.contains(event.target)) {
+        handleOk();
+        modal?.close();
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [contentRef]);
+
   return (
-    <>
+    <div ref={contentRef}>
       <CloseModal
         modal={modal}
         preCheck={handleOk}
@@ -48,7 +66,7 @@ const Index = observer(() => {
           handleOk();
         }}
       />
-    </>
+    </div>
   );
 });
 

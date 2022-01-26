@@ -6,7 +6,7 @@ class AppServiceVersionsApi extends Api<AppServiceVersionsApi> {
   }
 
   getVersions(
-    appServiceId: string,
+    appServiceId: any,
     deployOnly: boolean,
     doPage: boolean,
     othersParams: object = {},

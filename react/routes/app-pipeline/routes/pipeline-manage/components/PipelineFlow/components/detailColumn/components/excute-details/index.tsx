@@ -213,7 +213,7 @@ const ExcuteDetails:FC<ExcuteDetailsProps> = (props) => {
             </span>
             <span>
               Jar包版本：
-              {downloadUrl ? <a href={downloadUrl} target="_blank" rel="noreferrer">{version}</a> : (version || '-')}
+              {downloadUrl ? <span>{version}</span> : (version || '-')}
             </span>
           </span>
         </div>

@@ -1,5 +1,5 @@
 import React, {
-  useRef, useMemo, useImperativeHandle, useState,
+  useRef, useMemo, useImperativeHandle, useState, useEffect,
 } from 'react';
 import {
   Form,
@@ -147,6 +147,36 @@ const Index = observer(() => {
     level,
     advancedRef,
   } = useBuildModalStore();
+
+  const contentRef = useRef<any>();
+
+  useEffect(() => {
+    function handleClickOutside(event: any) {
+      if (!template && contentRef.current && !contentRef.current.contains(event.target)) {
+        handleOk({
+          canWait: false,
+          BuildDataSet,
+          level,
+          template,
+          StepDataSet,
+          advancedRef,
+          handleJobAddCallback,
+          type,
+          id,
+          appService,
+          data,
+        });
+        modal?.close();
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [contentRef]);
 
   // 这里是全部展开和收起的变量
   const [expand, setExpand] = useState(true);
@@ -350,7 +380,7 @@ const Index = observer(() => {
   };
 
   return (
-    <div className={prefix}>
+    <div ref={contentRef} className={prefix}>
       {renderCloseModal()}
       <SideStep
         scrollContext=".c7ncd-buildModal-content__main"

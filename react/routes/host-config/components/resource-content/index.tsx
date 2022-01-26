@@ -80,17 +80,25 @@ const ResourceContent = observer(() => {
         {mainStore.getSelectedHost?.name}
       </span>
       <div className={`${prefixCls}-resource-usage`}>
-        {map(usageData, ({ title, value }) => (
-          <div className={`${prefixCls}-resource-usage-item`}>
-            <span className={`${prefixCls}-resource-usage-label`}>
-              {title}
-              ：
-            </span>
-            {mainStore.getSelectedHost?.hostStatus === 'connected' ? (
-              <Progress value={value} size={'small' as Size} />
-            ) : '-'}
-          </div>
-        ))}
+        {map(usageData, ({ title, value }) => {
+          console.log(title + value);
+          return (
+            <div className={`${prefixCls}-resource-usage-item`}>
+              <span className={`${prefixCls}-resource-usage-label`}>
+                {title}
+                ：
+              </span>
+              {mainStore.getSelectedHost?.hostStatus === 'connected' ? (
+                <Progress
+                  value={value}
+                  size={'small' as Size}
+                  // @ts-ignore
+                  format={(percent) => `${percent}%`}
+                />
+              ) : '-'}
+            </div>
+          );
+        })}
       </div>
       {getContent()}
     </div>

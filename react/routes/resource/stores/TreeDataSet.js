@@ -143,7 +143,8 @@ export default ({
               return data;
             }
             // 这里加上data[0].id是为了默认展开第一个环境的节点
-            const expandsKeys = [...store.getExpandedKeys, data[0]?.id].filter(Boolean);
+            const expandsKeys = [...(store.getExpandedKeys?.length === 0
+              ? [data[0]?.id] : store.getExpandedKeys)].filter(Boolean);
             store.getSearchValue && store.setSearchValue('');
             return formatMaps[type]({ value: data, expandsKeys, formatMessage });
           } catch (e) {
