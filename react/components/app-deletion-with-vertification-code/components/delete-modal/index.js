@@ -268,9 +268,12 @@ class DeleteModal extends Component {
       isError,
     } = this.state;
     const isRelatedApplicationName=relatedApplicationName&&relatedApplicationName.length>0;
-    const relatedApplicationNameMessage=relatedApplicationName.map((item)=>{
-      return `"${item}"`;
-    }).join();
+    let relatedApplicationNameMessage;
+    if(relatedApplicationName){
+      relatedApplicationNameMessage=relatedApplicationName.map((item)=>{
+        return `"${item}"`;
+      }).join();
+    }
     let content = <Spin spinning />;
 
     if (!checkLoading) {
