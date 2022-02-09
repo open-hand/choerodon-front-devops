@@ -78,6 +78,7 @@ class DeleteModal extends Component {
       objectType,
       envId,
       store,
+
     } = this.props;
 
     this.setState({ checkLoading: true });
@@ -253,6 +254,8 @@ class DeleteModal extends Component {
       intl: { formatMessage },
       form: { getFieldDecorator },
       objectType,
+      relatedApplicationName,
+      instanceName,
     } = this.props;
 
     const {
@@ -264,18 +267,21 @@ class DeleteModal extends Component {
       checkLoading,
       isError,
     } = this.state;
-
+    const isRelatedApplicationName=relatedApplicationName&&relatedApplicationName.length>0;
+    const relatedApplicationNameMessage=relatedApplicationName.map((item)=>{
+      return `"${item}"`;
+    }).join();
     let content = <Spin spinning />;
 
     if (!checkLoading) {
       content = isVerification ? (
         <>
-          <FormattedMessage id={`${objectType}.delete.verify.message`} />
+          <FormattedMessage id={isRelatedApplicationName?`related.message`:`${objectType}.delete.verify.message`} values={{relatedApplicationNameMessage}}/>
           <br />
           <FormattedMessage
             id="delete.verify.message"
             values={{ method, user }}
-          />
+          /> 
           <div className="c7ncd-delete-check">
             <Form className="c7ncd-captcha-form">
               <FormItem>
@@ -314,7 +320,7 @@ class DeleteModal extends Component {
           </div>
           {isError && <span className="c7ncd-captcha-error">{formatMessage({ id: 'captcha.error' })}</span>}
         </>
-      ) : <FormattedMessage id={`${objectType}.delete.message`} />;
+      ) : <FormattedMessage id={isRelatedApplicationName?`noRelated.message`:`${objectType}.delete.message`} values={{relatedApplicationNameMessage,instanceName}}/>;
     }
 
     return content;

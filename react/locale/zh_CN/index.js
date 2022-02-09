@@ -3090,11 +3090,13 @@ const zhCN = {
   'delete.verify.message': '若确认删除，请先点击下方的发送按钮，验证码将会通过【{method}】发送给【{user}】，获取后请填入下方，最后点击删除即可。',
   'instance.delete.message': '删除应用将不可恢复，其配置网络同时失效，确定要删除应用吗？',
   'ingress.delete.message': '确定要删除该域名吗？',
-  'service.delete.message': '删除网络后，需要您再去修改相关的域名信息。',
+  'service.delete.message': '确定要删除网络"{instanceName}"吗？删除后，您需要去修改与之关联的域名信息。',
   'certificate.delete.message': '删除证书后，将会导致与此证书相关的域名失效。确定要删除该证书吗？',
   'configMap.delete.message': '确认删除配置映射吗？',
   'secret.delete.message': '确认删除密文吗？',
   'deployGroup.delete.message': '确认删除此部署组应用吗？',
+  'related.message': '该网络还关联了应用{relatedApplicationNameMessage}，删除后，会将该应用与网络的关联关系一并删除',
+  'noRelated.message': '该网络还关联了应用{relatedApplicationNameMessage}，删除后，会将该应用与网络的关联关系一并删除。确定要删除吗？',
 
   // 0.19
   'data.changed': '基本数据发生变化，已更新。',
