@@ -217,6 +217,8 @@ const PodDetail = memo(() => {
           <Column name="name" renderer={renderName} />
           <Column renderer={renderAction} width={60} />
           <Column name="containers" renderer={renderContainers} />
+          <Column name="restartCount" tooltip='overflow' />
+          <Column name="nodeName" tooltip='overflow' />
           <Column name="ip" tooltip='overflow' />
           <Column name="creationDate" sortable renderer={renderDate} width={105} />
           <Column name="status" renderer={renderStatus} width="1rem" />

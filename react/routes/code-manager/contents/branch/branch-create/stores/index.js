@@ -44,7 +44,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       projectOptionsDs,
       currentProjectData,
       getUserId,
-    }), [projectId, appServiceId]));
+    })), [projectId, appServiceId]);
 
     const value = {
       ...props,

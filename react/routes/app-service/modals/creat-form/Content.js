@@ -31,6 +31,7 @@ const CreateForm = injectIntl(observer((props) => {
     refresh,
     formDs,
     appServiceId,
+    format,
   } = useCreateAppServiceStore();
   const record = formDs.current;
   const [testStatus, setTestStatus] = useState('loading');
@@ -232,6 +233,10 @@ const CreateForm = injectIntl(observer((props) => {
                         {formatMessage({ id: `${intlPrefix}.outGitlab.alert.tips.one` })}
                         <br />
                         {formatMessage({ id: `${intlPrefix}.outGitlab.alert.tips.two` })}
+                        <br />
+                        {formatMessage({ id: `${intlPrefix}.outGitlab.alert.tips.three` })}
+                        <br />
+                        {formatMessage({ id: `${intlPrefix}.outGitlab.alert.tips.four` })}
                       </div>
         )}
                     type="warning"

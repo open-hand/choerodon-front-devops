@@ -213,6 +213,8 @@ const PodDetail = observer(() => {
           <Column name="name" renderer={renderName} />
           <Column renderer={renderAction} width={60} />
           <Column name="containers" renderer={renderContainers} />
+          <Column name="restartCount" />
+          <Column name="nodeName" />
           <Column name="ip" width={'1.2rem' as any} />
           <Column name="creationDate" sortable renderer={renderDate} width={105} />
           <Column name="status" renderer={renderStatus} width={'1rem' as any} />

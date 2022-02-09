@@ -5,6 +5,7 @@ import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
 import uuidv1 from 'uuid';
+import { useFormatMessage } from '@choerodon/master';
 import FormDataSet from './FormDataSet';
 import useStore from './useStore';
 
@@ -24,7 +25,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       externalConfigId,
       appServiceId,
     } = props;
-
+    const format = useFormatMessage(intlPrefix);
     // 确保每次打开弹窗时能够重新请求数据
     const randomString = useMemo(() => uuidv1().substring(0, 5), []);
     const store = useStore();
@@ -75,6 +76,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       ...props,
       formDs,
       store,
+      format,
     };
     return (
       <Store.Provider value={value}>
