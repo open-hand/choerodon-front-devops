@@ -150,6 +150,7 @@ const resource = {
   'c7ncd.resource.stop.application': '暂停应用',
   'c7ncd.resource.restart.application': '重启应用',
   'c7ncd.resource.delete.application': '删除应用',
+  'c7ncd.resource.update.application': '更新应用',
   'c7ncd.resource.restartCount': 'Pod重启次数',
   'c7ncd.resource.nodeName': '当前所属节点',
 
