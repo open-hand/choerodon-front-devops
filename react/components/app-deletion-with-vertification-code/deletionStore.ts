@@ -17,6 +17,7 @@ type openDeleteProps = {
   instanceName:string
   callback:(...args:any[])=>any
   projectId:string
+  relatedApplicationName?:string[]
 }
 
 function useAppDeletionWithVertificationStore() {
@@ -40,7 +41,7 @@ function useAppDeletionWithVertificationStore() {
     },
 
     openDeleteModal({
-      envId, instanceId, type, callback, instanceName,
+      envId, instanceId, type, callback, instanceName, relatedApplicationName,
     }:Omit<openDeleteProps, 'projectId'> & { type: string}) {
       const newDeleteArr = [...this.deleteArr];
       const currentIndex = findIndex(newDeleteArr, (item:any) => instanceId === item.deleteId && type === item.type);
@@ -60,6 +61,7 @@ function useAppDeletionWithVertificationStore() {
           type,
           refresh: callback,
           envId,
+          relatedApplicationName,
         };
         newDeleteArr.push(newItem);
       }

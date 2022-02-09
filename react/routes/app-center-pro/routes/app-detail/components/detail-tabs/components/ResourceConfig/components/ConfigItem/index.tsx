@@ -40,6 +40,7 @@ const ResourceConfigItem:React.FC<Props> = ({
     type,
     status,
     error,
+    relatedApplicationName,
   } = data;
 
   const {
@@ -286,6 +287,7 @@ const ResourceConfigItem:React.FC<Props> = ({
             callback: refresh,
             instanceName: name,
             type: 'service',
+            relatedApplicationName,
           });
         },
       },

@@ -32,7 +32,7 @@ const AppCenterPro = observer(() => {
 
   const deleteModals = useMemo(() => (
     map(getDeleteArr, ({
-      name, display, deleteId, type, refresh, envId,
+      name, display, deleteId, type, refresh, envId, relatedApplicationName,
     }) => (
       <AppDeletionsModal
         key={deleteId}
@@ -43,6 +43,8 @@ const AppCenterPro = observer(() => {
         objectId={deleteId}
         objectType={type}
         refresh={refresh}
+        relatedApplicationName={relatedApplicationName}
+        instanceName={name}
       />
     ))
   ), [deletionStore, formatMessage, getDeleteArr]);
