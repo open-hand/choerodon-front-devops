@@ -268,6 +268,8 @@ const oldAppService = {
   'c7ncd.appService.gitLabRepositoryUrl.tips': 'Here you need to enter the warehouse address you already have in private GitLab; You can enter the HTTP or HTTPS address.',
   'empty.tips.app-list.des.owner': 'There is no application service under the current project,',
   'empty.pleaseCreate': 'please create',
+  'c7ncd.appService.detail': 'Service Detail',
+  'repository.head': 'Code warehouse',
 };
 export { oldAppService };
 export { enUS };
