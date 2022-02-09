@@ -217,9 +217,12 @@ const DetailAside = () => {
         <span>文件名</span>
         <span>
           {
-            <a href={fileInfoVO?.uploadUrl}>
+            <span>
               {fileInfoVO?.fileName}
-            </a> || '-'
+            </span>
+            // <a href={fileInfoVO?.uploadUrl}>
+            //   {fileInfoVO?.fileName}
+            // </a> || '-'
           }
         </span>
       </div>
