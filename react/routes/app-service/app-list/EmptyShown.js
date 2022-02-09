@@ -54,7 +54,7 @@ export default function EmptyShown({ access, onClick, openImport }) {
             display: true,
             handler: onClick,
           }, {
-            name: formatMessage({ id: `${intlPrefix}.import` }),
+            name: formatMessage({ id: 'c7ncd.appService.importAppService' }),
             icon: 'archive-o',
             permissions: ['choerodon.code.project.develop.app-service.ps.import'],
             display: true,
@@ -74,7 +74,7 @@ export default function EmptyShown({ access, onClick, openImport }) {
             <>
               {formatMessage({ id: 'empty.tips.app-list.des.owner' })}
               <EmptyPage.Button onClick={onClick}>
-                请创建
+                {formatMessage({ id: 'empty.pleaseCreate' })}
               </EmptyPage.Button>
             </>
           ) : formatMessage({ id: 'empty.tips.app.member' })}

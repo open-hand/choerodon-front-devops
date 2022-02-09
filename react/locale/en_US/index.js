@@ -265,6 +265,9 @@ const oldAppService = {
   'c7ncd.appService.userPassword': 'Password',
   'c7ncd.appService.Testlink': 'Test link',
   'c7ncd.appService.token': 'Private Token',
+  'c7ncd.appService.gitLabRepositoryUrl.tips': 'Here you need to enter the warehouse address you already have in private GitLab; You can enter the HTTP or HTTPS address.',
+  'empty.tips.app-list.des.owner': 'There is no application service under the current project,',
+  'empty.pleaseCreate': 'please create',
 };
 export { oldAppService };
 export { enUS };
