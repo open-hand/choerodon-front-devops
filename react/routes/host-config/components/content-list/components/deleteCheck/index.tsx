@@ -8,10 +8,11 @@ import HostConfigApis from '@/routes/host-config/apis/DeployApis';
 
 import './index.less';
 
-interface DeleteCheckProps {
+export interface DeleteCheckProps {
   modal?: any,
   projectId: number,
   hostId: string,
+  hostName: string,
   handleDelete(): void,
   formatMessage(arg0: object, arg1?: object): string,
 }
@@ -23,6 +24,7 @@ const DeleteCheck: FC<DeleteCheckProps> = (props) => {
     hostId,
     handleDelete,
     formatMessage,
+    hostName,
   } = props;
   const [loading, setLoading] = useState<boolean>(true);
   const [text, setText] = useState<string | ReactNode>('');
@@ -38,7 +40,7 @@ const DeleteCheck: FC<DeleteCheckProps> = (props) => {
         const shell = await HostConfigServices.getDeleteShell(projectId, hostId);
         setText(
           <div>
-            <span>{formatMessage({ id: `${intlPrefix}.delete.des1` })}</span>
+            <span>{formatMessage({ id: `${intlPrefix}.delete.des1` }, { name: hostName })}</span>
             <br />
             <span>{formatMessage({ id: `${intlPrefix}.delete.des2` })}</span>
             <div
