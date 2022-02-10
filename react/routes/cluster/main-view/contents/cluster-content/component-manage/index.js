@@ -43,12 +43,12 @@ export default observer((props) => {
     const content = map(getComponentList, ({
       message, type, status, operate,
     }, index) => {
-      const componentType = type === 'prometheus' ? formatMessage({ id: 'c7ncd-clusterManagement.monitor' }) : 'Cert-Manager';
+      const componentType = type === 'prometheus' ? 'monitor' : 'cert';
       return (
         <ComponentCard
           key={type}
           className={index !== length - 1 ? `${prefixCls}-component-wrap-card` : ''}
-          name={componentType}
+          name={componentType === 'monitor' ? formatMessage({ id: 'c7ncd-clusterManagement.monitor' }) : 'Cert-Manager'}
           describe={formatMessage({ id: `c7ncd-clusterManagement.${componentType}.des` })}
           buttonData={getButtonData(type, status, operate, message)}
           status={status}
