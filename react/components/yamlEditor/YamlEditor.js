@@ -155,11 +155,6 @@ export default class YamlEditor extends Component {
           <div className="c7ncd-yaml-error">
             <Icon type="error" className="c7ncd-yaml-error-icon" />
             <span className="c7ncd-yaml-error-msg">
-              {/* {formatMessage({
-                id: showMoreDocumentErrorTips && moreDocumentErrorTip
-                  ? 'yaml.error.tooltip.moreDocument'
-                  : 'yaml.error.tooltip',
-              })} */}
               {showMoreDocumentErrorTips && moreDocumentErrorTip ? 'YAML文件中仅支持包含1个资源对象':
               'Values文件yaml格式错误，请根据错误提示信息修改'
               }
