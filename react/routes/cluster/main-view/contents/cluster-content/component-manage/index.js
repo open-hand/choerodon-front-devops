@@ -197,7 +197,7 @@ export default observer((props) => {
       key: monitorUninstallKey,
       title: formatMessage({ id: `${intlPrefix}.monitor.uninstall` }),
       children: formatMessage({ id: `${intlPrefix}.monitor.uninstall.des` }),
-      okText: formatMessage({ id: 'uninstall' }),
+      okText: formatMessage({ id: 'c7ncd-clusterManagement.uninstall' }),
       onOk: handleUninstallMonitor,
     });
   }
