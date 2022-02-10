@@ -992,7 +992,7 @@ const hostConfig = {
   'c7ncd.host.config.connect.shell': '连接指令',
   'c7ncd.host.config.connect.tips': '复制以下指令至对应节点执行，与平台建立连接。',
   'c7ncd.host.config.connect.attention': '注意：在执行连接指令时，请确保主机中当前登录的用户已被分配docker执行权限。否则，需执行以下指令为当前登录用户分配权限。',
-  'c7ncd.host.config.delete.des1': '确定要删除主机“XXX”吗？删除后，主机上资源也将随之删除。',
+  'c7ncd.host.config.delete.des1': '确定要删除主机“{name}”吗？删除后，主机上资源也将随之删除。',
   'c7ncd.host.config.delete.des2': '复制以下指令至对应主机执行，来删除该主机的agent。',
   'c7ncd.host.config.delete.tips': '请确保您已在主机中运行以上指令，否则会导致主机删除不彻底！',
   'c7ncd.host.config.delete.btn': '已执行，删除',
@@ -2456,9 +2456,6 @@ const zhCN = {
   'editor.legend.error': '格式错误',
   'editor.mode.changer': '切换编辑器模式',
   'yaml.modify': '当前修改',
-  'yaml.error.tooltip':
-    'Values文件yaml格式错误，请根据错误提示信息修改',
-  'yaml.error.tooltip.moreDocument': 'YAML文件中仅支持包含1个资源对象',
 
   // merge request
   'merge.head': '合并请求',
