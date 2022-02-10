@@ -275,6 +275,8 @@ const oldAppService = {
   'c7ncd.appService.version.specific': 'Specific Version',
   'c7ncd.appService.share.range': 'Shared Scope',
   'c7ncd.appService.project.all': 'All Project Of The Organization',
+  'c7ncd.appService.approve.setting.tips': 'After you select the user name and password, enter the user name and password of the Owner role of the warehouse. If you enter a Token, you need to create an Access Token with API permission in GitLab as the Owner.',
+  'c7ncd.appService.userName': 'User Name',
 };
 export { oldAppService };
 export { enUS };
