@@ -13,6 +13,7 @@ const app = {
 
 const commonField = {
   // 通用描述
+  save: '保存',
   appName: '应用名称',
   appCode: '应用编码',
   environment: '环境',

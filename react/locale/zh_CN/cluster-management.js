@@ -43,6 +43,7 @@ const Index = {
   'c7ncd-clusterManagement.ComponentManagement': '组件管理',
   'c7ncd-clusterManagement.cert.des': 'CertManager用于帮助集群下的环境申请或上传域名证书',
   'c7ncd-clusterManagement.monitor.des': '监控组件用于帮助监控集群中资源的使用情况。该组件包括了Prometheus、Grafana和AlertManager',
+  'c7ncd-clusterManagement.monitor': '监控组件',
   'c7ncd-clusterManagement.ClusterMonitor': '集群监控',
   'c7ncd-clusterManagement.InstallingMonitoringComponents': '安装监控组件',
   'c7ncd-clusterManagement.Nomonitoring': '暂未安装监控组件，若想查看集群的监控情况，请转至组件管理页面安装',

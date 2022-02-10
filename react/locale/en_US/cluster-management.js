@@ -66,6 +66,7 @@ const Index = {
   'c7ncd-clusterManagement.add': 'Add',
   'c7ncd.cluster.empty.title': 'No Cluster',
   'c7ncd.cluster.empty.describe': 'No Cluster In This Project, Please Create',
+  'c7ncd-clusterManagement.monitor': 'Monitoring component',
 };
 
 export {

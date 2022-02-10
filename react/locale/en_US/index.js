@@ -270,6 +270,11 @@ const oldAppService = {
   'empty.pleaseCreate': 'please create',
   'c7ncd.appService.detail': 'Service Detail',
   'repository.head': 'Code warehouse',
+  'c7ncd.appService.share.rule.add': 'Adding a Share Rule',
+  'c7ncd.appService.version.type': 'Version Type',
+  'c7ncd.appService.version.specific': 'Specific Version',
+  'c7ncd.appService.share.range': 'Shared Scope',
+  'c7ncd.appService.project.all': 'All Project Of The Organization',
 };
 export { oldAppService };
 export { enUS };

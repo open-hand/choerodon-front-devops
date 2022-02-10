@@ -43,7 +43,7 @@ export default observer((props) => {
     const content = map(getComponentList, ({
       message, type, status, operate,
     }, index) => {
-      const componentType = type === 'prometheus' ? 'monitor' : 'cert';
+      const componentType = type === 'prometheus' ? formatMessage({ id: 'c7ncd-clusterManagement.monitor' }) : 'Cert-Manager';
       return (
         <ComponentCard
           key={type}
@@ -188,7 +188,7 @@ export default observer((props) => {
         clusterId={clusterId}
         showPassword={showPassword}
       />,
-      okText: formatMessage({ id: type === 'edit' ? 'save' : 'install' }),
+      okText: formatMessage({ id: type === 'edit' ? 'save' : 'c7ncd-clusterManagement.install' }),
     });
   }
 
@@ -217,7 +217,7 @@ export default observer((props) => {
         if (!res) {
           deleteModal.update({
             children: formatMessage({ id: `${intlPrefix}.cert.uninstall.des` }),
-            okText: formatMessage({ id: 'uninstall' }),
+            okText: formatMessage({ id: 'c7ncd-clusterManagement.uninstall' }),
             okCancel: true,
             onOk: handleUninstallCert,
             footer: (okBtn, cancelBtn) => (
