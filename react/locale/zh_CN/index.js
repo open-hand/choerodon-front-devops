@@ -2455,8 +2455,7 @@ const zhCN = {
   'editor.legend.error': '格式错误',
   'editor.mode.changer': '切换编辑器模式',
   'yaml.modify': '当前修改',
-  'yaml.error.tooltip':
-    'Values文件yaml格式错误，请根据错误提示信息修改',
+  'yaml.error.tooltip': 'Values文件yaml格式错误，请根据错误提示信息修改',
   'yaml.error.tooltip.moreDocument': 'YAML文件中仅支持包含1个资源对象',
 
   // merge request
