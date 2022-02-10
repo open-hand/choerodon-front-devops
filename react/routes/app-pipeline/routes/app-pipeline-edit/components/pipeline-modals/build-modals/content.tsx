@@ -152,7 +152,11 @@ const Index = observer(() => {
 
   useEffect(() => {
     function handleClickOutside(event: any) {
-      if (!template && contentRef.current && !contentRef.current.contains(event.target)) {
+      if (!template
+        && contentRef.current
+        && !contentRef.current.contains(event.target)
+        && !document?.querySelector('.c7n-pro-popup-container')?.contains(event.target)
+      ) {
         handleOk({
           canWait: false,
           BuildDataSet,
