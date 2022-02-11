@@ -71,7 +71,7 @@ const DeployConfigForm = () => {
       <YamlEditor
         readOnly={false}
         value={record?.get('value')}
-        originValue={record?.get('oldValue') || record?.get('value')}
+        originValue={record?.get('oldValue')}
         onValueChange={handleValueChange}
         handleEnableNext={handleEnableNext}
       />
