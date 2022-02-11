@@ -9,6 +9,7 @@ const enUS = {
   operate: 'Operate',
   cancel: 'Cancel',
   delete: 'Delete',
+  appName: 'Application Name',
   'confirm.delete': 'Confirm delete',
   'confirm.delete.tip': 'When you click delete, after which the data will be permanently deleted and irreversible!',
   MicroApp: 'MicroApp',
@@ -97,7 +98,8 @@ const enUS = {
   'app.commitCode': 'Commit Code',
   'app.commitDescription': 'Commit Description',
   'app.commitUser': 'Commit User',
-  'app.creator': ' Created by',
+  'app.creator': 'Created by',
+  'app.updater': 'Update by',
   'app.commitTime': 'Commit Time',
   'app.pipeline': 'Pipeline',
   'app.status': 'Status',
@@ -270,6 +272,15 @@ const oldAppService = {
   'empty.pleaseCreate': 'please create',
   'c7ncd.appService.detail': 'Service Detail',
   'repository.head': 'Code warehouse',
+  'c7ncd.appService.share.rule.add': 'Adding a Share Rule',
+  'c7ncd.appService.version.type': 'Version Type',
+  'c7ncd.appService.version.specific': 'Specific Version',
+  'c7ncd.appService.share.range': 'Shared Scope',
+  'c7ncd.appService.project.all': 'All Project Of The Organization',
+  'c7ncd.appService.approve.setting.tips': 'After you select the user name and password, enter the user name and password of the Owner role of the warehouse. If you enter a Token, you need to create an Access Token with API permission in GitLab as the Owner.',
+  'c7ncd.appService.userName': 'User Name',
+  deployment: 'Deployment',
+  'c7ncd.appService.cannot.stop': 'Can Not Stop',
 };
 export { oldAppService };
 export { enUS };

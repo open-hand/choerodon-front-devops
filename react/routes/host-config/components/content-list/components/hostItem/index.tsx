@@ -75,6 +75,7 @@ const HostsItem: React.FC<any> = observer(({
       children: <DeleteCheck
         formatMessage={formatMessage}
         hostId={id}
+        hostName={name}
         projectId={projectId}
         handleDelete={deleteRecord}
       />,

@@ -55,17 +55,20 @@ function getRequestData(data, res) {
   }
 }
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default ((formatRepository, formatCommon, url) => {
   function checkUserName(value, name, record) {
     if (!value && record.get('password')) {
       return formatRepository({ id: 'name.check.failed' });
     }
+    return true;
   }
 
   function checkPassword(value, name, record) {
     if (!value && record.get('userName')) {
       return formatRepository({ id: 'name.check.failed' });
     }
+    return true;
   }
 
   return ({
@@ -101,7 +104,7 @@ export default ((formatRepository, formatCommon, url) => {
         },
       },
       {
-        name: 'userName', type: 'string', label: formatCommon({ id: 'username' }), validator: checkUserName,
+        name: 'userName', type: 'string', label: formatCommon({ id: 'userName' }), validator: checkUserName,
       },
       {
         name: 'password', type: 'string', label: formatCommon({ id: 'password' }), validator: checkPassword,

@@ -5,8 +5,8 @@ import { useFormatCommon, useFormatMessage, Action } from '@choerodon/master';
 import { Modal } from 'choerodon-ui/pro';
 // @ts-ignore
 import { saveAs } from 'file-saver';
-import {} from '@choerodon/components';
 import classnames from 'classnames';
+import roadSvg from '../../images/roadmap.svg';
 
 import './index.less';
 
@@ -279,11 +279,24 @@ const ExcuteDetails:FC<ExcuteDetailsProps> = (props) => {
     );
   };
 
+  const renderBlank = () => (
+    (!pipelineJarInfo && !pipelineImageInfo && !pipelineChartInfo
+      && !devopsCiUnitTestReportInfoList?.length && !pipelineSonarInfo)
+      ? (
+        <div className={`${prefixCls}-blank-container`}>
+          <img src={roadSvg} alt="" />
+          <div className={`${prefixCls}-blank-container-desc`}>暂无流水线任务详情</div>
+        </div>
+      )
+      : ''
+  );
+
   return (
     <div className={prefixCls}>
       {renderUnitTest()}
       {renderSonar()}
       {renderPipelineJobDetail()}
+      {renderBlank()}
     </div>
   );
 };

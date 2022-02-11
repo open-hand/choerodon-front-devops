@@ -22,7 +22,7 @@ export default () => {
     const actionData = [
       {
         service: ['choerodon.code.project.deploy.cluster.cluster-management.ps.permission-manage'],
-        text: formatMessage({ id: 'c7ncd-clusterManagement.' }),
+        text: formatMessage({ id: 'delete' }),
         action: () => {
           PermissionDs.transport.destroy.params = {
             delete_project_id: record.get('id'),

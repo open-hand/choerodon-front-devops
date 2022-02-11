@@ -48,7 +48,7 @@ export default observer((props) => {
         <ComponentCard
           key={type}
           className={index !== length - 1 ? `${prefixCls}-component-wrap-card` : ''}
-          name={componentType}
+          name={componentType === 'monitor' ? formatMessage({ id: 'c7ncd-clusterManagement.monitor' }) : 'Cert-Manager'}
           describe={formatMessage({ id: `c7ncd-clusterManagement.${componentType}.des` })}
           buttonData={getButtonData(type, status, operate, message)}
           status={status}
@@ -188,7 +188,7 @@ export default observer((props) => {
         clusterId={clusterId}
         showPassword={showPassword}
       />,
-      okText: formatMessage({ id: type === 'edit' ? 'save' : 'install' }),
+      okText: formatMessage({ id: type === 'edit' ? 'save' : 'c7ncd-clusterManagement.install' }),
     });
   }
 
@@ -197,7 +197,7 @@ export default observer((props) => {
       key: monitorUninstallKey,
       title: formatMessage({ id: `${intlPrefix}.monitor.uninstall` }),
       children: formatMessage({ id: `${intlPrefix}.monitor.uninstall.des` }),
-      okText: formatMessage({ id: 'uninstall' }),
+      okText: formatMessage({ id: 'c7ncd-clusterManagement.uninstall' }),
       onOk: handleUninstallMonitor,
     });
   }
@@ -217,7 +217,7 @@ export default observer((props) => {
         if (!res) {
           deleteModal.update({
             children: formatMessage({ id: `${intlPrefix}.cert.uninstall.des` }),
-            okText: formatMessage({ id: 'uninstall' }),
+            okText: formatMessage({ id: 'c7ncd-clusterManagement.uninstall' }),
             okCancel: true,
             onOk: handleUninstallCert,
             footer: (okBtn, cancelBtn) => (
