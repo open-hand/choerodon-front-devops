@@ -43,6 +43,7 @@ const appService = {
   'c7ncd.appService.outGitlab.alert.tips.four': '4、如果要使用流水线中的「上传Chart至猪齿鱼」任务，请保证chart目录下的子目录名以及Chart.yaml文件中的name属性值皆为服务编码。',
   'c7ncd.appService.outGitlab.alert.tips.attention': '注意：',
   'c7ncd.appService.Warehouse': '仓库配置',
+  'c7ncd.appService.cannotstop.des': '该应用服务下存在流水线资源，无法停用。',
 
 };
 

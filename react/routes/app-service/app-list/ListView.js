@@ -433,7 +433,7 @@ const ListView = withRouter(observer((props) => {
         if (!status) {
           childrenContent = <FormattedMessage id={`${intlPrefix}.stop.tips`} />;
         } else if (checkCi) {
-          childrenContent = '该应用服务下存在流水线资源，无法停用。';
+          childrenContent = formatMessage({ id: 'c7ncd.appService.cannotstop.des' });
         } else if (checkResources && !checkRule) {
           childrenContent = formatMessage({ id: `${intlPrefix}.has.resource` });
         } else if (!checkResources && checkRule) {

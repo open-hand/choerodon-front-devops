@@ -74,6 +74,7 @@ export default ({ formatMessage, portDs, targetLabelsDs, code, networkStore, pro
         name: 'appInstance',
         type: 'string',
         defaultValue:code,
+        label: formatMessage({ id: 'appName' }),
       },
       {
         name: 'externalIps',

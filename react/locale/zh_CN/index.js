@@ -2119,6 +2119,7 @@ const zhCN = {
   'app.commitUser': '提交者',
   'app.stage': '阶段',
   'app.creator': '创建者',
+  'app.updater': '更新者',
   'app.commitTime': '提交时间',
   'app.pipeline': '工作台',
   'app.status': '服务状态',
@@ -3156,6 +3157,7 @@ const zhCN = {
   'global.saga-instance.failedCount': '失败',
   'global.saga-instance.runningCount': '运行中',
   'global.saga-instance.waitToBePulledCount': '等待被拉取',
+  deployment: '部署',
 
   ...commonField,
   ...deployment,

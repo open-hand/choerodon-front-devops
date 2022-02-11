@@ -37,6 +37,9 @@ const appService = {
   'c7ncd.appService.outGitlab.alert.tips.three': '3. Please ensure that the service code is consistent with the external GitLab project code.',
   'c7ncd.appService.outGitlab.alert.tips.four': '4. If you want to use the "upload Chart to Choerodon" task in the pipeline, please ensure that the subdirectory name under Chart directory and the name attribute value in chart.yaml file are service codes',
   'c7ncd.appService.Warehouse': 'Warehouse configuration',
+  'c7ncd.appService.cannotstop.des': 'The application service has pipeline resources and cannot be stopped.',
+  'c7ncd.appService.stop': 'Stop Service"{name}"',
+  'c7ncd.appService.stop.tips': 'Are you sure you want to disable the application service？',
 };
 
 export { appService };
