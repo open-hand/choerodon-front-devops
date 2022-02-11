@@ -54,7 +54,7 @@ export default function useStore() {
     }) {
       try {
         const postData = { searchParam: { branchName: searchValue }, param: [] };
-        const res = await axios.post(`devops/v1/projects/${projectId}/app_service/${appServiceId}/git/page_branch_by_options?page=${page}&size=5`, postData);
+        const res = await axios.post(`devops/v1/projects/${projectId}/app_service/${appServiceId}/git/page_branch_basic_info_by_options?page=${page}&size=5`, postData);
         if (handlePromptError(res)) {
           this.setBranchData(res.list, res.pageNum === 1);
           this.setHasMoreBranch(res.hasNextPage);
