@@ -12,6 +12,10 @@ const app = {
 };
 
 const commonField = {
+  'app.failed': '失败',
+  'app.active': '启用',
+  'app.create': '创建中',
+  'app.stop': '停用',
   // 通用描述
   save: '保存',
   appName: '应用名称',
