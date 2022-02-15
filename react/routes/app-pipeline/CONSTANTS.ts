@@ -17,6 +17,7 @@ const BUILD_MAVEN_PUBLISH = 'maven_publish';
 const BUILD_SONARQUBE = 'sonar';
 const BUILD_UPLOAD_CHART_CHOERODON = 'upload_chart';
 const MAVEN_UNIT_TEST = 'maven_unit_test';
+const UNIT_TEST = 'general_unit_test';
 const GO_UNIT_TEST = 'go_unit_test';
 const NODE_JS_UNIT_TEST = 'node_js_unit_test';
 
@@ -51,4 +52,5 @@ export {
   GO_UNIT_TEST,
   NODE_JS_UNIT_TEST,
   BUILD_UPLOAD_NPM,
+  UNIT_TEST,
 };
