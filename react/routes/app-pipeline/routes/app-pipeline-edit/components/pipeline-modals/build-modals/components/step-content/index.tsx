@@ -19,6 +19,7 @@ import {
   BUILD_NPM, BUILD_SONARQUBE, BUILD_UPLOAD_CHART_CHOERODON, BUILD_UPLOAD_NPM,
   BUILD_UPLOADJAR, GO_UNIT_TEST, MAVEN_UNIT_TEST, NODE_JS_UNIT_TEST,
   TASK_TEMPLATE,
+  UNIT_TEST,
 } from '@/routes/app-pipeline/CONSTANTS';
 import MavenBuildAdvancedSetting
   from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/components/mavenBuild-advancedSetting';
@@ -240,7 +241,11 @@ const Index = observer(({
         );
         break;
       }
-      case MAVEN_UNIT_TEST: case GO_UNIT_TEST: case NODE_JS_UNIT_TEST: case BUILD_UPLOAD_NPM: {
+      case MAVEN_UNIT_TEST:
+      case GO_UNIT_TEST:
+      case NODE_JS_UNIT_TEST:
+      case BUILD_UPLOAD_NPM:
+      case UNIT_TEST: {
         result = (
           <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={2}>
             <TextField name={StepMapping.stepName.name} />
