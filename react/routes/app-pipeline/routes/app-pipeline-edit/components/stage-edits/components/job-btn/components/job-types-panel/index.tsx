@@ -129,6 +129,7 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
         concatItem = {
           ...item,
           ...getTabData(TAB_BASIC),
+          image: item?.image || getTabData(TAB_BASIC)?.image,
         };
       }
       return (

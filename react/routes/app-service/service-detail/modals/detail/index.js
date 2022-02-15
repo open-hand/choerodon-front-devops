@@ -11,25 +11,25 @@ export default function ({
   if (record.get('fail')) {
     // 失败
     statusLabel = {
-      status: 'failed',
+      status: formatMessage({ id: 'failed' }),
       color: '#f44336',
     };
   } else if (record.get('synchro') && record.get('active')) {
     // 运行中
     statusLabel = {
-      status: 'active',
+      status: formatMessage({ id: 'app.active' }),
       color: '#00bf96',
     };
   } else if (record.get('active')) {
     // 创建中
     statusLabel = {
-      status: 'ci_created',
+      status: formatMessage({ id: 'app.create' }),
       color: '#4d90fe',
     };
   } else {
     // 停止
     statusLabel = {
-      status: 'stop',
+      status: formatMessage({ id: 'app.stop' }),
       color: '#d3d3d3',
     };
   }
