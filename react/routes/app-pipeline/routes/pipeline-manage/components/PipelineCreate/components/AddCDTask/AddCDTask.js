@@ -1100,7 +1100,7 @@ export default observer(() => {
           />,
         ],
         jar: [
-          ADDCDTaskDataSet.current.get(fieldMap.productType.name) === productTypeData[0].value
+          [productTypeData[0].value, productTypeData[1].value].includes(ADDCDTaskDataSet.current.get(fieldMap.productType.name))
             ? [
                 <Select
                   newLine
@@ -1129,6 +1129,9 @@ export default observer(() => {
                     ))}
                   </Select>
                 ),
+                ADDCDTaskDataSet.current.get(fieldMap.productType.name) === productTypeData[1].value && (
+                  <TextField colSpan={3} name='containerName' />
+                )
               ]
             : '',
           currentDepoySource === 'matchDeploy' && <Select colSpan={3} name="serverName" />,
@@ -1163,6 +1166,7 @@ export default observer(() => {
           //   name="workingPath"
           // />,
           // <TextField colSpan={3} name="appInstanceName" />,
+          [productTypeData[0].value, productTypeData[2].value].includes(ADDCDTaskDataSet.current.get(fieldMap.productType.name)) ?
           <OperationYaml
             colSpan={6}
             newLine
@@ -1172,7 +1176,16 @@ export default observer(() => {
             preName={fieldMap.preCommand.name}
             startName={fieldMap.runCommand.name}
             postName={fieldMap.postCommand.name}
-          />,
+          /> : (
+              <YamlEditor
+                colSpan={6}
+                // className="addcdTask-yamleditor"
+                newLine
+                readOnly={false}
+                value={ADDCDTaskDataSet.current.get(fieldMap.runCommand.name)}
+                onValueChange={(data) => ADDCDTaskDataSet.current.set(fieldMap.runCommand.name, data)}
+              />
+            ),
           // <YamlEditor
           //   colSpan={6}
           //   newLine

@@ -61,6 +61,9 @@ const productTypeData = [{
   value: 'jar',
   name: 'jar包',
 }, {
+  value: 'docker',
+  name: 'Docker镜像',
+}, {
   value: 'other',
   name: '其他制品',
 }];
@@ -131,6 +134,26 @@ const fieldMap = {
 #启动PHP服务：php-fpm -c /usr/local/php/etc/php.ini -y /usr/local/php/etc/php-fpm.conf
 #重启PHP服务（ps -ef | grep 'php-fpm'|awk '{print $2}'|kill -USR2）
 #./server.startup -tomcat`,
+  },
+  killCommand: {
+    name: 'killCommand',
+    type: 'string',
+    defaultValue: `
+    #删除命令： 
+    #例如：
+    #PID=$(ps -ef |grep "app.jar" |grep -v 'grep'|awk '{print $2}')
+    #if [ $PID ]; then
+    #  kill -9 $PID
+    #fi
+    `,
+  },
+  healthProb: {
+    name: 'healthProb',
+    type: 'string',
+    defaultValue: `
+    #可读健康探针根据命令的执行后退出状态码进行判断，只有状态码为0才认为探针执行成功
+    #例如 nc -z localhost 8070 && curl -s --fail localhost:8071/actuator/health
+    `,
   },
 };
 

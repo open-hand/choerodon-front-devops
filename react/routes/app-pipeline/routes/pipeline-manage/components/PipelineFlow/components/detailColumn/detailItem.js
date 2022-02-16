@@ -573,6 +573,10 @@ const DetailItem = (props) => {
             name: '下载Go单测报告',
             filename: 'Go单测报告.xml',
           },
+          general_unit_test: {
+            name: '下载单元测试(通用)报告',
+            filename: '单元测试(通用)报告.xml',
+          },
         };
         const handleDownload = () => {
           saveAs(reportUrl, unitType[type]?.filename);
