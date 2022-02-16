@@ -154,7 +154,7 @@ const Index = observer(() => {
           data={
             AppInfoDataSet.current.get(mapping.deployMode.name) === deployModeOptionsData[0].value
               ? deployProductOptionsData.slice(0, 2)
-              : deployProductOptionsData.slice(2, 4)
+              : deployProductOptionsData.slice(2, 5)
           }
           identity="value"
           mode="single"

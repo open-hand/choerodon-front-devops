@@ -350,7 +350,7 @@ export default (
       dynamicProps: {
         required: ({ record }) => record.get('type') === 'cdHost'
           && (record.get('hostDeployType') === 'image'
-            || record.get('hostDeployType') === 'jar'),
+            || ['jar', 'docker'].includes(record.get('hostDeployType'))),
       },
     },
     {
@@ -375,8 +375,8 @@ export default (
         required: ({ record }) => record.get('type') === 'cdHost'
           && ((record.get('hostDeployType') === 'image'
             && record.get('deploySource') === 'pipelineDeploy')
-            || (record.get('hostDeployType') === 'jar'
-              && record.get('deploySource') === 'pipelineDeploy')),
+            || ['jar', 'docker'].includes(record.get('hostDeployType'))
+              && record.get('deploySource') === 'pipelineDeploy'),
       },
     },
     {
@@ -471,8 +471,10 @@ export default (
       dynamicProps: {
         required: ({ record }) => record.get('type') === 'cdHost'
           && record.get('hostDeployType') === 'image'
-          && (record.get('deploySource') === 'matchDeploy'
-            || record.get('deploySource') === 'pipelineDeploy'),
+          || (record.get('deploySource') === 'matchDeploy'
+            || record.get('deploySource') === 'pipelineDeploy')
+          || (record.get('deploySource') === 'pipelineDeploy'
+            || record.get('hostDeployType') === 'docker'),
       },
     },
     {

@@ -10,6 +10,7 @@ import ResourceConfig from '@/routes/app-center-pro/components/OpenAppCreateModa
 import DeployGroupConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/deploy-group-config';
 import ContainerConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config';
 import HostAppConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-app-config';
+import HostDockerConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-docker-config';
 import { mapping, chartSourceData } from './components/app-config/stores/appConfigDataSet';
 import { mapping as infoMapping, deployProductOptionsData, deployModeOptionsData } from './components/app-info/stores/appInfoDataSet';
 import { appServiceInstanceApi, deployApi } from '@/api';
@@ -290,6 +291,15 @@ const AppCreateForm = (props: any) => {
               break;
             }
             case deployProductOptionsData[3].value: {
+              return (
+                <HostDockerConfig
+                  cRef={appConfigRef}
+                  modal={modal}
+                />
+              );
+              break;
+            }
+            case deployProductOptionsData[4].value: {
               return (
                 <HostOtherProduct
                   style={{

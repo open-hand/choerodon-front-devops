@@ -18,6 +18,8 @@ const Index = observer(({
   preName,
   startName,
   postName,
+  deleteName,
+  healthName,
   style,
 }: {
     configDataSet?:DataSet,
@@ -27,6 +29,8 @@ const Index = observer(({
     startName: string,
     postName: string,
     style?: object,
+    deleteName?: string,
+    healthName?: string,
 }) => {
   useEffect(() => {
     originValue = {
@@ -124,10 +128,35 @@ const Index = observer(({
         value={getValue('value')}
         originValue={getValue('origin')}
         onValueChange={(value: string) => {
-                        dataSet?.current?.set(getValue('valueChange'), value);
+          dataSet?.current?.set(getValue('valueChange'), value);
         }}
       />
-      {/* )} */}
+      {/* { */}
+      {/*  deleteName && activeKey === '2' && [ */}
+      {/*    <p>删除操作</p>, */}
+      {/*    <YamlEditor */}
+      {/*      readonly={false} */}
+      {/*      originValue={originValue?.[deleteName]} */}
+      {/*      value={dataSet?.current?.get(deleteName)} */}
+      {/*      onValueChange={(value: string) => { */}
+      {/*        dataSet?.current?.set(deleteName, value); */}
+      {/*      }} */}
+      {/*    />, */}
+      {/*  ] */}
+      {/* } */}
+      {/* { */}
+      {/*  healthName && activeKey === '2' && [ */}
+      {/*    <p>Readiness Probe</p>, */}
+      {/*    <YamlEditor */}
+      {/*      readonly={false} */}
+      {/*      originValue={originValue?.[healthName]} */}
+      {/*      value={dataSet?.current?.get(healthName)} */}
+      {/*      onValueChange={(value: string) => { */}
+      {/*        dataSet?.current?.set(healthName, value); */}
+      {/*      }} */}
+      {/*    />, */}
+      {/*  ] */}
+      {/* } */}
     </div>
   );
 });
