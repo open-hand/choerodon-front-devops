@@ -75,6 +75,7 @@ const enUS = {
   'project.code': 'Code',
 
   // app
+  'app.failed': 'Failed',
   'app.title': 'App',
   'app.appVersion': 'App Version',
   'app.appDetail': 'App Detail',
@@ -98,6 +99,8 @@ const enUS = {
   'app.commitCode': 'Commit Code',
   'app.commitDescription': 'Commit Description',
   'app.commitUser': 'Commit User',
+  'app.create': 'Creating',
+  'app.stop': 'Stop',
   'app.creator': 'Created by',
   'app.updater': 'Update by',
   'app.commitTime': 'Commit Time',
