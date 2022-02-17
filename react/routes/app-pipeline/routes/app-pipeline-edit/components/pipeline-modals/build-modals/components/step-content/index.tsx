@@ -20,6 +20,7 @@ import {
   BUILD_UPLOADJAR, GO_UNIT_TEST, MAVEN_UNIT_TEST, NODE_JS_UNIT_TEST,
   TASK_TEMPLATE,
   UNIT_TEST,
+  BUILD_CUSTOM,
 } from '@/routes/app-pipeline/CONSTANTS';
 import MavenBuildAdvancedSetting
   from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/components/mavenBuild-advancedSetting';
@@ -245,6 +246,7 @@ const Index = observer(({
       case GO_UNIT_TEST:
       case NODE_JS_UNIT_TEST:
       case BUILD_UPLOAD_NPM:
+      case BUILD_CUSTOM:
       case UNIT_TEST: {
         result = (
           <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={2}>

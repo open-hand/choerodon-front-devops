@@ -20,6 +20,7 @@ const MAVEN_UNIT_TEST = 'maven_unit_test';
 const UNIT_TEST = 'general_unit_test';
 const GO_UNIT_TEST = 'go_unit_test';
 const NODE_JS_UNIT_TEST = 'node_js_unit_test';
+const BUILD_CUSTOM = 'custom';
 
 const STEPVO: any = {
   [BUILD_DOCKER]: 'dockerBuildConfig',
@@ -53,4 +54,5 @@ export {
   NODE_JS_UNIT_TEST,
   BUILD_UPLOAD_NPM,
   UNIT_TEST,
+  BUILD_CUSTOM,
 };

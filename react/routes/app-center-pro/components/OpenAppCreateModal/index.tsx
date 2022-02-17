@@ -1,7 +1,10 @@
 import React, {
   useEffect, useRef, useState, useMemo,
 } from 'react';
-import { CONSTANTS } from '@choerodon/master';
+import {
+  CONSTANTS,
+  devopsDeployApi,
+} from '@choerodon/master';
 import { Modal, Button, DataSet } from 'choerodon-ui/pro';
 import { Steps } from 'choerodon-ui';
 import AppInfo from '@/routes/app-center-pro/components/OpenAppCreateModal/components/app-info';
@@ -16,6 +19,7 @@ import { mapping as infoMapping, deployProductOptionsData, deployModeOptionsData
 import { appServiceInstanceApi, deployApi } from '@/api';
 import { mapping as deployGroupConfigMapping } from './components/deploy-group-config/stores/deployGroupConfigDataSet';
 import { devopsDeployGroupApi } from '@/api/DevopsDeployGroup';
+
 import { ENV_TAB, HOST_TAB } from '@/routes/app-center-pro/stores/CONST';
 import HostOtherProduct from './components/host-other-product';
 import { stepDataTitleList } from '@/routes/app-center-pro/components/OpenAppCreateModal/constant';
@@ -481,6 +485,7 @@ const AppCreateForm = (props: any) => {
                 ...submitData,
                 // @ts-ignore
                 ...appConfigData,
+                operation: 'create',
               };
               request = 'deploy_host';
               break;
@@ -489,8 +494,18 @@ const AppCreateForm = (props: any) => {
               key = HOST_TAB;
               submitData = {
                 ...submitData,
+                ...appConfigData || {},
+              };
+              request = 'deploy_docker';
+              break;
+            }
+            case (deployProductOptionsData[4].value): {
+              key = HOST_TAB;
+              submitData = {
+                ...submitData,
                 // @ts-ignore
                 ...appConfigData,
+                operation: 'create',
               };
               request = 'deploy_other';
               break;
@@ -528,6 +543,10 @@ const AppCreateForm = (props: any) => {
       }
       case 'deploy_host': {
         result = await deployApi.deployJava(submitData);
+        break;
+      }
+      case 'deploy_docker': {
+        result = await devopsDeployApi.deployDocker(submitData);
         break;
       }
       case 'deploy_other': {
