@@ -455,6 +455,7 @@ const hostAppConfigDataSet = (modal: any, detail: any): DataSetProps => ({
       if (data.rdupmType === 'other') {
         return deployApiConfig.deployCustom({
           ...setData(data),
+          operation: 'update',
           appName: data[mapping.appName.name as string],
           appCode: data[mapping.appCode.name as string],
         });
@@ -468,6 +469,7 @@ const hostAppConfigDataSet = (modal: any, detail: any): DataSetProps => ({
       }
       return deployApiConfig.deployJava({
         ...setData(data),
+        operation: 'update',
         appName: data[mapping.appName.name as string],
         appCode: data[mapping.appCode.name as string],
       });
