@@ -37,6 +37,12 @@ const Index = observer(({
       [preName]: _.cloneDeep(dataSet.current?.get(preName)),
       [startName]: _.cloneDeep(dataSet.current?.get(startName)),
       [postName]: _.cloneDeep(dataSet.current?.get(postName)),
+      ...deleteName ? {
+        [deleteName]: _.cloneDeep(dataSet.current?.get(deleteName)),
+      } : {},
+      ...healthName ? {
+        [healthName]: _.cloneDeep(dataSet.current?.get(healthName)),
+      } : {},
     };
   }, []);
 
@@ -131,32 +137,32 @@ const Index = observer(({
           dataSet?.current?.set(getValue('valueChange'), value);
         }}
       />
-      {/* { */}
-      {/*  deleteName && activeKey === '2' && [ */}
-      {/*    <p>删除操作</p>, */}
-      {/*    <YamlEditor */}
-      {/*      readonly={false} */}
-      {/*      originValue={originValue?.[deleteName]} */}
-      {/*      value={dataSet?.current?.get(deleteName)} */}
-      {/*      onValueChange={(value: string) => { */}
-      {/*        dataSet?.current?.set(deleteName, value); */}
-      {/*      }} */}
-      {/*    />, */}
-      {/*  ] */}
-      {/* } */}
-      {/* { */}
-      {/*  healthName && activeKey === '2' && [ */}
-      {/*    <p>Readiness Probe</p>, */}
-      {/*    <YamlEditor */}
-      {/*      readonly={false} */}
-      {/*      originValue={originValue?.[healthName]} */}
-      {/*      value={dataSet?.current?.get(healthName)} */}
-      {/*      onValueChange={(value: string) => { */}
-      {/*        dataSet?.current?.set(healthName, value); */}
-      {/*      }} */}
-      {/*    />, */}
-      {/*  ] */}
-      {/* } */}
+      {
+        deleteName && activeKey === '2' && [
+          <p>删除操作</p>,
+          <YamlEditor
+            readOnly={false}
+            originValue={originValue?.[deleteName]}
+            value={dataSet?.current?.get(deleteName)}
+            onValueChange={(value: string) => {
+              dataSet?.current?.set(deleteName, value);
+            }}
+          />,
+        ]
+       }
+      {
+        healthName && activeKey === '2' && [
+          <p>Readiness Probe</p>,
+          <YamlEditor
+            readOnly={false}
+            originValue={originValue?.[healthName]}
+            value={dataSet?.current?.get(healthName)}
+            onValueChange={(value: string) => {
+              dataSet?.current?.set(healthName, value);
+            }}
+          />,
+        ]
+       }
     </div>
   );
 });
