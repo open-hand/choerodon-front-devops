@@ -25,7 +25,12 @@ import PodsDetailsDataSet from './PodsDetailsDataSet';
 import ResourceConfigDs from './ResourceConfigDataSet';
 import { getAppCategories } from '@/routes/app-center-pro/utils';
 import {
-  CHART_CATERGORY, DEPLOY_CATERGORY, HOST_CATERGORY, MIDDLWARE_CATERGORY, OTHER_CATERGORY,
+  CHART_CATERGORY,
+  DEPLOY_CATERGORY,
+  HOST_CATERGORY,
+  MIDDLWARE_CATERGORY,
+  OTHER_CATERGORY,
+  DOCKER_CATEGORY,
 } from '@/routes/app-center-pro/stores/CONST';
 // import {
 //   ConfigurationDetailDataSet,
@@ -88,6 +93,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
       case HOST_CATERGORY:
       case OTHER_CATERGORY:
       case MIDDLWARE_CATERGORY:
+      case DOCKER_CATEGORY:
         current = hostKeys;
         break;
       default:

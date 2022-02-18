@@ -5,7 +5,20 @@
 // 3. 否者就是 jar包，主机的
 
 import {
-  CHART_CATERGORY, DEPLOY_CATERGORY, ENV_TAB, HOST_CATERGORY, OTHER_CATERGORY, HOST_TAB, isHostGroup, MIDDLWARE_CATERGORY, isMarketGroup, isServiceGroup, IS_HOST, IS_MARKET, IS_SERVICE,
+  CHART_CATERGORY,
+  DEPLOY_CATERGORY,
+  ENV_TAB,
+  HOST_CATERGORY,
+  OTHER_CATERGORY,
+  HOST_TAB,
+  isHostGroup,
+  MIDDLWARE_CATERGORY,
+  isMarketGroup,
+  isServiceGroup,
+  IS_HOST,
+  IS_MARKET,
+  IS_SERVICE,
+  DOCKER_CATEGORY,
 } from '../stores/CONST';
 
 // Chart包，部署组，还是jar包
@@ -23,6 +36,9 @@ const getAppCategories = (rdupmType:string, deployType = 'env') => {
   } else if (rdupmType === 'jar') {
     name = 'jar包';
     code = HOST_CATERGORY;
+  } else if (rdupmType === 'docker') {
+    name = 'Docker镜像';
+    code = DOCKER_CATEGORY;
   } else if (rdupmType === 'middleware') {
     name = '中间件';
     code = MIDDLWARE_CATERGORY;
