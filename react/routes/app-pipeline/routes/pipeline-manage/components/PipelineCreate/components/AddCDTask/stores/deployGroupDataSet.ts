@@ -97,13 +97,13 @@ const deployGroupDataSet = (ADDCDTaskDataSet: DataSet) => ({
       switch (name) {
         case mapping().appName.name: {
           if (ADDCDTaskDataSet.current?.get(fieldMap.deployWay.name) === deployWayData[1].value) {
-            const item = appNameDataSet.records.find((itemRecord: Record) => itemRecord.get('name') === value);
+            const item = appNameDataSet.records.find((itemRecord: Record) => itemRecord?.get('name') === value);
             if (item) {
-              record.set(mapping().appCode.name as string, item.get('code'));
-                record.getField(mapping().appCode.name)?.set('disabled', true);
+              record?.set(mapping().appCode.name as string, item.get('code'));
+              record?.getField(mapping().appCode.name)?.set('disabled', true);
             }
           } else {
-              record.getField(mapping().appCode.name)?.set('disabled', false);
+            record?.getField(mapping().appCode.name)?.set('disabled', false);
           }
           break;
         }

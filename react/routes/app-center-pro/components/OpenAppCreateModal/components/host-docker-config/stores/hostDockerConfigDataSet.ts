@@ -31,7 +31,7 @@ const mapping: {
     valueField: 'tagName',
   },
   name: {
-    name: 'name',
+    name: 'containerName',
     type: 'string' as FieldType,
     label: '容器名称',
     required: true,
@@ -39,7 +39,7 @@ const mapping: {
   value: {
     name: 'value',
     type: 'string' as FieldType,
-    defaultValue: 'docker run -d java:1.2.0',
+    defaultValue: 'docker run --name=${containerName} -d ${imageName}',
   },
 };
 
@@ -110,8 +110,11 @@ const transformSubmitData = (ds: any) => {
   return ({
     [mapping.name.name as string]: record?.get(mapping.name.name),
     [mapping.value.name as string]: Base64.encode(record?.get(mapping.value.name)),
+    sourceType: 'currentProject',
     imageInfo: {
-      [mapping.repoName.name as string]: record?.get(mapping.repoName.name)?.repoName,
+      repoType: record?.get(mapping.repoName.name)?.repoType,
+      repoId: record?.get(mapping.repoName.name)?.repoId,
+      repoName: record?.get(mapping.repoName.name)?.repoName,
       [mapping.imageName.name as string]: record?.get(mapping.imageName.name)?.imageName,
       [mapping.tag.name as string]: record?.get(mapping.tag.name),
     },
