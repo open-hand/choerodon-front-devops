@@ -23,11 +23,16 @@ import {
   IS_SERVICE,
   MIDDLWARE_CATERGORY,
   OTHER_CATERGORY,
+  DOCKER_CATEGORY,
 } from '@/routes/app-center-pro/stores/CONST';
 import { getAppCategories, getChartSourceGroup } from '@/routes/app-center-pro/utils';
 import AppCenterProServices from '@/routes/app-center-pro/services';
 import {
-  openAppConfigModal, openContainerConfigModal, openDeployGroupConfigModal, openHostAppConfigModal,
+  openAppConfigModal,
+  openContainerConfigModal,
+  openDeployGroupConfigModal,
+  openHostAppConfigModal,
+  openHostDockerConfigModal,
 } from '@/components/appCenter-editModal';
 import openDeleteHostAppModal from '@/components/app-deletion-host';
 
@@ -146,6 +151,18 @@ const DetailsTabsHeaderButtons = () => {
           icon: 'add_comment-o',
         };
         break;
+      case DOCKER_CATEGORY: {
+        obj = {
+          name: '修改应用',
+          handler: () => {
+            openHostDockerConfigModal(appRecord?.toData() || {}, refresh);
+          },
+          disabled: btnDisabledHost,
+          permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateHost'],
+          icon: 'add_comment-o',
+        };
+        break;
+      }
       default:
         break;
     }
@@ -263,7 +280,7 @@ const DetailsTabsHeaderButtons = () => {
         instanceName: name,
         appId,
         callback: goBackHomeBaby,
-      }) : openDeleteHostAppModal(hostOrEnvId, appId, name, goBackHomeBaby);
+      }) : openDeleteHostAppModal(hostOrEnvId, appId, name, goBackHomeBaby, appRecord);
     },
   };
 
