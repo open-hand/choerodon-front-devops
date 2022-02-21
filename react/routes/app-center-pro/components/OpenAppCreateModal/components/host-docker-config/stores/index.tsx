@@ -7,6 +7,8 @@ interface ContextType {
   children: any;
   cRef: any;
   HostDockerConfigDataSet: any,
+  detail?: any,
+  refresh?: any,
 }
 
 const Store = createContext({} as ContextType);

@@ -11,10 +11,20 @@ async function openDeleteHostAppModal(
   appId: string,
   appName: string,
   callback?:CallableFunction,
+  appRecord?: any,
 ) {
+  const params: any = {};
+  const data = appRecord?.toData();
+  if (data?.rdupmType === 'docker') {
+    params.host_deploy_type = 'image';
+  } else if (data?.rdupmType === 'jar') {
+    params.host_deploy_type = 'jar';
+  } else {
+    params.host_deploy_type = 'customize';
+  }
   async function deleteHostApp() {
     try {
-      const res = await hostApi.jarDelete(hostId, appId);
+      const res = await hostApi.jarDelete(hostId, appId, params);
       if (res && res?.failed) {
         return res;
       }

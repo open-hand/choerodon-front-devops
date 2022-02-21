@@ -9,6 +9,7 @@ import {
 } from '@/routes/app-center-pro/routes/app-detail/CONSTANT';
 import DetailAside from './components/detail-side';
 import DetailsTabs from './components/detail-tabs';
+import HostDetail from './components/host-detail';
 import './index.less';
 import { useAppDetailsStore } from './stores';
 
@@ -29,7 +30,11 @@ const AppDetail = () => {
       <Breadcrumb title="应用详情" />
       <Content className={`${subfixCls}-content`}>
         {
-          isHost ? '' : (
+          isHost ? (
+            <HostDetail
+              data={appDs?.current?.toData()}
+            />
+          ) : (
             <>
               <DetailAside />
               <DetailsTabs />

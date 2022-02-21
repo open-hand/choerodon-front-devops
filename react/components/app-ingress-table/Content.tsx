@@ -6,9 +6,12 @@ import React, { useMemo, useState, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Action } from '@choerodon/master';
 import { Modal, Table, Tooltip } from 'choerodon-ui/pro';
+import { Tag } from 'choerodon-ui';
 import { StatusTag, TimePopover, UserInfo } from '@choerodon/components';
 import { MIDDLE } from '@/utils/getModalWidth';
 import { TableQueryBarType } from '@/interface';
+import { getAppCategories } from '@/routes/app-center-pro/utils';
+import { getReady } from '@/routes/app-center-pro/routes/app-detail/components/host-detail';
 import { useAppIngressTableStore } from './stores';
 import HostConfigServices from './services';
 // import ConfigurationModal from '@/components/configuration-center/ConfigurationModal';
@@ -181,8 +184,12 @@ const AppIngress = observer(() => {
     );
   };
 
-  const renderStatus = ({ text }: any) => (
-    text ? <StatusTag colorCode={text} name={text?.toUpperCase() || 'UNKNOWN'} /> : ''
+  const renderStatus = ({ text, record }: any) => (
+    <Tag
+      color={getReady(record?.get('ready'), record, 'color')}
+    >
+      {getReady(record?.get('ready'), record, 'text')}
+    </Tag>
   );
 
   const renderUser = ({ value }: any) => {
@@ -210,9 +217,15 @@ const AppIngress = observer(() => {
       <Column header={formatMessage({ id: 'c7ncd.environment.Name' })} name="name" renderer={renderName} />
       <Column renderer={renderAction} width={55} />
       <Column header={formatMessage({ id: 'c7ncd.environment.ApplicationCode' })} name="code" width={90} />
+      <Column
+        header={formatMessage({ id: 'c7ncd.environment.rdupm' })}
+        name="rdupmType"
+        width={90}
+        renderer={({ value, record }) => getAppCategories(record?.get('rdupmType'), 'host')?.name}
+      />
       <Column header={formatMessage({ id: 'c7ncd.environment.Status' })} name="status" renderer={renderStatus} />
-      <Column header={formatMessage({ id: 'c7ncd.environment.ProcessID' })} name="pid" width={80} />
-      <Column header={formatMessage({ id: 'c7ncd.environment.OccupiedPort' })} name="ports" width={100} renderer={({ value }) => <Tooltip title={value}>{value}</Tooltip>} />
+      {/* <Column header={formatMessage({ id: 'c7ncd.environment.ProcessID' })} name="pid" width={80} /> */}
+      {/* <Column header={formatMessage({ id: 'c7ncd.environment.OccupiedPort' })} name="ports" width={100} renderer={({ value }) => <Tooltip title={value}>{value}</Tooltip>} /> */}
       <Column header={formatMessage({ id: 'c7ncd.environment.Creator' })} name="creator" renderer={renderUser} />
       <Column header={formatMessage({ id: 'c7ncd.environment.CreationTime' })} name="creationDate" renderer={({ text }) => <TimePopover content={text} />} />
     </Table>
