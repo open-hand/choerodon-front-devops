@@ -3,7 +3,7 @@ import { CONSTANTS } from '@choerodon/master';
 import { FieldProps, FieldType, Record } from '@/interface';
 import { deployValueConfigApi } from '@/api/DeployValue';
 import { fieldMap, deployWayData } from './addCDTaskDataSetMap';
-import { deployAppCenterApi, deployAppCenterApiConfig } from '@/api';
+import { deployAppCenterApi, deployAppCenterApiConfig, hostApi } from '@/api';
 
 const {
   LCLETTER_NUMREGEX,

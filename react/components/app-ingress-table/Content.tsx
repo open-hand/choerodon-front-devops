@@ -14,6 +14,9 @@ import { getAppCategories } from '@/routes/app-center-pro/utils';
 import { getReady } from '@/routes/app-center-pro/routes/app-detail/components/host-detail';
 import { useAppIngressTableStore } from './stores';
 import HostConfigServices from './services';
+import {
+  DOCKER_TYPE,
+} from '@/components/app-ingress-table/CONSTANT';
 // import ConfigurationModal from '@/components/configuration-center/ConfigurationModal';
 
 import './index.less';
@@ -184,13 +187,18 @@ const AppIngress = observer(() => {
     );
   };
 
-  const renderStatus = ({ text, record }: any) => (
-    <Tag
-      color={getReady(record?.get('ready'), record, 'color')}
-    >
-      {getReady(record?.get('ready'), record, 'text')}
-    </Tag>
-  );
+  const renderStatus = ({ text, record }: any) => {
+    if (record?.get('rdupmType') === DOCKER_TYPE) {
+      return record?.get('status');
+    }
+    return (
+      <Tag
+        color={getReady(record?.get('ready'), record, 'color')}
+      >
+        {getReady(record?.get('ready'), record, 'text')}
+      </Tag>
+    );
+  };
 
   const renderUser = ({ value }: any) => {
     if (!value) {
@@ -223,7 +231,11 @@ const AppIngress = observer(() => {
         width={90}
         renderer={({ value, record }) => getAppCategories(record?.get('rdupmType'), 'host')?.name}
       />
-      <Column header={formatMessage({ id: 'c7ncd.environment.Status' })} name="status" renderer={renderStatus} />
+      <Column
+        header={formatMessage({ id: 'c7ncd.environment.Status' })}
+        name="status"
+        renderer={renderStatus}
+      />
       {/* <Column header={formatMessage({ id: 'c7ncd.environment.ProcessID' })} name="pid" width={80} /> */}
       {/* <Column header={formatMessage({ id: 'c7ncd.environment.OccupiedPort' })} name="ports" width={100} renderer={({ value }) => <Tooltip title={value}>{value}</Tooltip>} /> */}
       <Column header={formatMessage({ id: 'c7ncd.environment.Creator' })} name="creator" renderer={renderUser} />

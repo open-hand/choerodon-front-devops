@@ -131,6 +131,7 @@ const Index = observer(({
       {/* {activeKey !== 'configurationCenter' && ( */}
       <YamlEditor
         readOnly={false}
+        showError={false}
         value={getValue('value')}
         originValue={getValue('origin')}
         onValueChange={(value: string) => {
@@ -141,6 +142,7 @@ const Index = observer(({
         deleteName && activeKey === '2' && [
           <p>删除操作</p>,
           <YamlEditor
+            showError={false}
             readOnly={false}
             originValue={originValue?.[deleteName]}
             value={dataSet?.current?.get(deleteName)}
@@ -154,6 +156,7 @@ const Index = observer(({
         healthName && activeKey === '2' && [
           <p>Readiness Probe</p>,
           <YamlEditor
+            showError={false}
             readOnly={false}
             originValue={originValue?.[healthName]}
             value={dataSet?.current?.get(healthName)}

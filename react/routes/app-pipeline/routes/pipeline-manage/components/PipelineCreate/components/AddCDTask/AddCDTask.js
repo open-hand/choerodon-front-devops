@@ -197,6 +197,7 @@ export default observer(() => {
       [fieldMap.runCommand.name]: fieldMap.runCommand.defaultValue,
       [fieldMap.postCommand.name]: fieldMap.postCommand.defaultValue,
       [fieldMap.killCommand.name]: fieldMap.killCommand.defaultValue,
+      [fieldMap.dockerCommand.name]: fieldMap.dockerCommand.defaultValue,
       [fieldMap.healthProb.name]: fieldMap.healthProb.defaultValue,
     };
     if (taskType === 'cdHost' && relatedJobOpts && relatedJobOpts.length === 1) {
@@ -247,6 +248,12 @@ export default observer(() => {
           (x?.devopsCiStepVOList?.some(i => [BUILD_MAVEN_PUBLISH, BUILD_UPLOADJAR].includes(i?.type)) &&
           x.type === MAVEN_BUILD
       ));
+    } else if (currentHostDeployType === 'docker') {
+      filterArr = jobArr.filter(
+        (x) =>
+          (x?.devopsCiStepVOList?.some(i => [BUILD_DOCKER].includes(i?.type)) &&
+            x.type === MAVEN_BUILD
+          ));
     }
     if (filterArr && filterArr.length === 1) {
       if (typeof filterArr[0] === 'object') {
@@ -323,6 +330,7 @@ export default observer(() => {
     ds[fieldMap.runCommand.name] = Base64.encode(ds[fieldMap.runCommand.name]);
     ds[fieldMap.postCommand.name] = Base64.encode(ds[fieldMap.postCommand.name]);
     ds[fieldMap.killCommand.name] = Base64.encode(ds[fieldMap.killCommand.name]);
+    ds[fieldMap.dockerCommand.name] = Base64.encode(ds[fieldMap.dockerCommand.name]);
     ds[fieldMap.healthProb.name] = Base64.encode(ds[fieldMap.healthProb.name]);
     if (ds.type === 'cdDeploy') {
       ds.value = Base64.encode(valueIdValues);
@@ -583,6 +591,7 @@ export default observer(() => {
       let runCommand;
       let postCommand;
       let killCommand;
+      let dockerCommand;
       let healthProb;
       let extra = {};
       // if (jobDetail.type === "cdDeploy") {
@@ -618,6 +627,7 @@ export default observer(() => {
         postCommand = Base64.decode(metadata[fieldMap.postCommand.name]);
         killCommand = metadata?.[fieldMap.killCommand.name] ? Base64.decode(metadata[fieldMap.killCommand.name]) : '';
         healthProb = metadata?.[fieldMap.healthProb.name] ? Base64.decode(metadata[fieldMap.healthProb.name]) : '';
+        dockerCommand = metadata?.[fieldMap.dockerCommand.name] ? Base64.decode(metadata[fieldMap.dockerCommand.name]) : '';
         HostJarDataSet.loadData([
           {
             appName: metadata.appName,
@@ -692,7 +702,8 @@ export default observer(() => {
         runCommand,
         postCommand,
         killCommand,
-        healthProb
+        healthProb,
+        dockerCommand
       };
       delete newJobDetail.metadata;
       if (newJobDetail.envId) {
@@ -1110,7 +1121,7 @@ export default observer(() => {
           />,
         ],
         jar: [
-          [productTypeData[0].value, productTypeData[2].value].includes(ADDCDTaskDataSet.current.get(fieldMap.productType.name))
+          [productTypeData[0].value, productTypeData[1].value].includes(ADDCDTaskDataSet.current.get(fieldMap.productType.name))
             ? [
                 <Select
                   newLine
@@ -1139,7 +1150,7 @@ export default observer(() => {
                     ))}
                   </Select>
                 ),
-                ADDCDTaskDataSet.current.get(fieldMap.productType.name) === productTypeData[2].value && (
+                [productTypeData[1].value].includes(ADDCDTaskDataSet.current.get(fieldMap.productType.name)) && (
                   <TextField colSpan={3} name='containerName' />
                 )
               ]
@@ -1193,9 +1204,10 @@ export default observer(() => {
                 colSpan={6}
                 // className="addcdTask-yamleditor"
                 newLine
+                showError={false}
                 readOnly={false}
-                value={ADDCDTaskDataSet.current.get(fieldMap.runCommand.name)}
-                onValueChange={(data) => ADDCDTaskDataSet.current.set(fieldMap.runCommand.name, data)}
+                value={ADDCDTaskDataSet.current.get(fieldMap.dockerCommand.name)}
+                onValueChange={(data) => ADDCDTaskDataSet.current.set(fieldMap.dockerCommand.name, data)}
               />
             ),
           // <YamlEditor
