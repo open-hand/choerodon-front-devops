@@ -1,5 +1,5 @@
 import { DataSet } from 'choerodon-ui/pro';
-import { hostApiConfig } from '@/api';
+import { hostApi, hostApiConfig } from '@/api';
 import { Record } from '@/interface';
 import addCDTaskDataSetMap, { fieldMap, deployWayData } from './addCDTaskDataSetMap';
 
@@ -13,6 +13,18 @@ const hostJarDataSet = (ADDCDTaskDataSet: DataSet) => ({
     textField: 'name',
     valueField: 'name',
     options: new DataSet(hotJarOptionsDataSet()),
+    validator: async (value: string, type: string, record: any) => {
+      const isCreate = ADDCDTaskDataSet
+        ?.current?.get(fieldMap.deployWay.name) === deployWayData[0].value;
+      if (isCreate) {
+        const flag = await hostApi.checkAppName(value);
+        if (flag) {
+          return true;
+        }
+        return '应用名称已重复';
+      }
+      return true;
+    },
   }, {
     name: 'appCode',
     type: 'string',

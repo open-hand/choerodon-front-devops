@@ -5,23 +5,34 @@ import { DataSetProps, FieldProps, FieldType } from '@/interface';
 
 const deployTypeOptionsData = [{
   text: '项目制品库',
-  value: 'default',
+  value: 'DEFAULT_REPO',
 }, {
   text: '自定义仓库',
-  value: 'custom',
+  value: 'CUSTOM_REPO',
 }];
+
+const repoNameUpdate = (record: any, value: any) => {
+  record.getField(mapping.imageName.name).options.setQueryParameter('repoId', value?.repoId);
+  record.getField(mapping.imageName.name).options.setQueryParameter('repoType', value?.repoType);
+  record.getField(mapping.imageName.name).options.query();
+};
+
+const imageNameUpdate = (record: any, value: any) => {
+  record.getField(mapping.tag.name).options.setQueryParameter('repoName', `${record.get(mapping.repoName.name)?.repoName}/${value?.imageName}`);
+  record.getField(mapping.tag.name).options.query();
+};
 
 const mapping: {
   [key: string]: FieldProps,
 } = {
   deployType: {
-    name: 'deployType',
+    name: 'repoType',
     type: 'string' as FieldType,
     label: 'Docker镜像来源',
     required: true,
     textField: 'text',
     valueField: 'value',
-    defaultValue: 'default',
+    defaultValue: 'DEFAULT_REPO',
     options: new DataSet({
       data: deployTypeOptionsData,
     }),
@@ -46,7 +57,7 @@ const mapping: {
         .get(mapping.deployType.name) === deployTypeOptionsData[0].value,
     },
     textField: 'imageName',
-    valueField: 'imageId',
+    valueField: 'imageName',
   },
   tag: {
     name: 'tag',
@@ -166,20 +177,27 @@ const hostDockerConfigDataSet = (): DataSetProps => ({
     return item;
   }),
   events: {
+    load: ({
+      dataSet,
+    }: any) => {
+      const record = dataSet?.current;
+      if (record?.get(mapping.repoName.name)) {
+        repoNameUpdate(record, record?.get(mapping.repoName.name));
+      }
+      if (record?.get(mapping.imageName.name)) {
+        imageNameUpdate(record, record?.get(mapping.imageName.name));
+      }
+    },
     update: ({
       value, name, record, dataSet,
     }:any) => {
       switch (name) {
         case mapping.repoName.name: {
-          record.getField(mapping.imageName.name).options.setQueryParameter('repoId', value?.repoId);
-          record.getField(mapping.imageName.name).options.setQueryParameter('repoType', value?.repoType);
-          record.getField(mapping.imageName.name).options.query();
+          repoNameUpdate(record, value);
           break;
         }
         case mapping.imageName.name: {
-          console.log(value, record.get(mapping.repoName.name));
-          record.getField(mapping.tag.name).options.setQueryParameter('repoName', `${record.get(mapping.repoName.name)?.repoName}/${value?.imageName}`);
-          record.getField(mapping.tag.name).options.query();
+          imageNameUpdate(record, value);
           break;
         }
       }
@@ -193,6 +211,7 @@ const transformSubmitData = (ds: any) => {
     [mapping.name.name as string]: record?.get(mapping.name.name),
     [mapping.value.name as string]: Base64.encode(record?.get(mapping.value.name)),
     sourceType: 'currentProject',
+    repoType: record?.get(mapping.repoName.name)?.repoType,
     [mapping.deployType.name as string]: record?.get(mapping.deployType.name),
     externalImageInfo: {
       [mapping.imageUrl.name as string]: record?.get(mapping.imageUrl.name),
@@ -201,7 +220,6 @@ const transformSubmitData = (ds: any) => {
       [mapping.privateRepository.name as string]: record?.get(mapping.privateRepository.name),
     },
     imageInfo: {
-      repoType: record?.get(mapping.repoName.name)?.repoType,
       repoId: record?.get(mapping.repoName.name)?.repoId,
       repoName: record?.get(mapping.repoName.name)?.repoName,
       [mapping.imageName.name as string]: record?.get(mapping.imageName.name)?.imageName,
@@ -211,10 +229,31 @@ const transformSubmitData = (ds: any) => {
   });
 };
 
+const transformLoadData = (data: any) => ({
+  [mapping.deployType.name as string]: data
+    ?.devopsDockerInstanceVO?.[mapping.deployType.name as string],
+  [mapping.repoName.name as string]: {
+    repoId: data?.devopsDockerInstanceVO?.repoId,
+    repoName: data?.devopsDockerInstanceVO?.repoName,
+    repoType: data?.devopsDockerInstanceVO?.repoType,
+  },
+  [mapping.imageName.name as string]: {
+    imageName: data
+      ?.devopsDockerInstanceVO?.[mapping.imageName.name as string],
+  },
+  [mapping.tag.name as string]: data
+    ?.devopsDockerInstanceVO?.[mapping.tag.name as string],
+  [mapping.name.name as string]: data
+    ?.devopsDockerInstanceVO?.name,
+  [mapping.value.name as string]: data
+    ?.devopsDockerInstanceVO?.dockerCommand,
+});
+
 export default hostDockerConfigDataSet;
 
 export {
   mapping,
   transformSubmitData,
   deployTypeOptionsData,
+  transformLoadData,
 };

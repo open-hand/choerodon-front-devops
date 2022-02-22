@@ -8,7 +8,13 @@ import {
   Password,
 } from 'choerodon-ui/pro';
 import { YamlEditor } from '@choerodon/components';
-import { mapping, transformSubmitData, deployTypeOptionsData } from './stores/hostDockerConfigDataSet';
+import { devopsDeployApi } from '@choerodon/master/lib/apis';
+import {
+  mapping,
+  transformSubmitData,
+  deployTypeOptionsData,
+  transformLoadData,
+} from './stores/hostDockerConfigDataSet';
 import { useDockerConfigStore } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-docker-config/stores';
 
 const Index = observer(() => {
@@ -17,15 +23,49 @@ const Index = observer(() => {
     cRef,
     detail,
     refresh,
+    modal,
   } = useDockerConfigStore();
 
-  console.log(detail);
+  useEffect(() => {
+    if (detail) {
+      const data = transformLoadData(detail);
+      HostDockerConfigDataSet.loadData([data]);
+    }
+  }, []);
+
+  const handleSubmit = async () => {
+    const res = await HostDockerConfigDataSet.validate();
+    if (res) {
+      const data = {
+        ...transformSubmitData(HostDockerConfigDataSet),
+        operation: 'update',
+        hostAppId: detail?.id,
+        hostId: detail?.hostId,
+      };
+      try {
+        await devopsDeployApi.deployDocker(data);
+        refresh && refresh();
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+    return false;
+  };
+
+  if (modal && detail) {
+    console.log(modal);
+    modal.handleOk(handleSubmit);
+  }
 
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
       const flag = await HostDockerConfigDataSet?.current?.validate(true);
       if (flag) {
-        return transformSubmitData(HostDockerConfigDataSet);
+        return ({
+          ...transformSubmitData(HostDockerConfigDataSet),
+          operation: 'create',
+        });
       }
       return false;
     },

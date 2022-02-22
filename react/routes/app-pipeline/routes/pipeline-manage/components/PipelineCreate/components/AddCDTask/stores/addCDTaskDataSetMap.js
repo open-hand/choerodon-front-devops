@@ -135,6 +135,13 @@ const fieldMap = {
 #重启PHP服务（ps -ef | grep 'php-fpm'|awk '{print $2}'|kill -USR2）
 #./server.startup -tomcat`,
   },
+  dockerCommand: {
+    name: 'dockerCommand',
+    type: 'string',
+    defaultValue: `
+    # 通过docker部署镜像，预置环境变量：\${containerName} 容器名称 \${imageName} 镜像名称和tag。例如docker run -d --name=\${containerName} \${imageName}
+    `,
+  },
   killCommand: {
     name: 'killCommand',
     type: 'string',

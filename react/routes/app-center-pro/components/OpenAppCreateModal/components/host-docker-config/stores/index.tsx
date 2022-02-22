@@ -9,6 +9,7 @@ interface ContextType {
   HostDockerConfigDataSet: any,
   detail?: any,
   refresh?: any,
+  modal?: any,
 }
 
 const Store = createContext({} as ContextType);

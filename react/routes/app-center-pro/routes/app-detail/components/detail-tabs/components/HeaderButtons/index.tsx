@@ -155,7 +155,7 @@ const DetailsTabsHeaderButtons = () => {
         obj = {
           name: '修改应用',
           handler: () => {
-            openHostDockerConfigModal(appRecord?.toData() || {}, refresh);
+            openHostDockerConfigModal(appRecord?.toData() || {}, () => appDs.query());
           },
           disabled: btnDisabledHost,
           permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateHost'],
