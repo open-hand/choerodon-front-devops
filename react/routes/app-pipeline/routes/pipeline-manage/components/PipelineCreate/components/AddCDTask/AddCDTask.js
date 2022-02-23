@@ -702,14 +702,15 @@ export default observer(() => {
         cdAuditUserIds: newCdAuditUserIds && [...newCdAuditUserIds],
         triggerValue:
           jobDetail.triggerType === 'regex'
-            ? jobDetail.triggerValue
-            : jobDetail.triggerValue?.split(','),
+            ? (jobDetail?.triggerValue ? jobDetail?.triggerValue : undefined)
+            : (jobDetail?.triggerValue ? jobDetail?.triggerValue?.split(',') : undefined),
         preCommand,
         runCommand,
         postCommand,
         killCommand,
         healthProb,
-        dockerCommand
+        dockerCommand,
+        deploySource: extra?.deploySource || 'pipelineDeploy',
       };
       delete newJobDetail.metadata;
       if (newJobDetail.envId) {
