@@ -434,6 +434,12 @@ export default observer(() => {
         }
         ds.jarDeploy.name = ds.appInstanceName;
         ds.jarDeploy.workingPath = ds.workingPath;
+      } else if (ds.hostDeployType === productTypeData[1].value) {
+        ds.imageDeploy = {
+          ...currentObj,
+          containerName: ds.containerName,
+          pipelineTask: ds.pipelineTask,
+        }
       } else if (ds.hostDeployType === productTypeData[2].value) {
         // ds[fieldMap.preCommand.name] = Base64.encode(ds[fieldMap.preCommand.name]);
         // ds[fieldMap.runCommand.name] = Base64.encode(ds[fieldMap.runCommand.name]);

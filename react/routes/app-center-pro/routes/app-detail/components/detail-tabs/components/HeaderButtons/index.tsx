@@ -151,7 +151,7 @@ const DetailsTabsHeaderButtons = () => {
         obj = {
           name: '修改应用',
           handler: () => {
-            openHostAppConfigModal(appRecord?.toData() || {}, refresh);
+            openHostAppConfigModal(appRecord?.toData() || {}, () => appDs.query());
             // const data = appRecord?.toData();
             // if (['jar', 'other'].includes(data?.rdupmType)) {
             //   const killCommandExist = data?.killCommandExist;
