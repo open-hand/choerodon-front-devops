@@ -2,7 +2,7 @@
 import React, { useMemo } from 'react';
 import { HeaderButtons } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
-import { Tooltip } from 'choerodon-ui/pro';
+import { Tooltip, Modal } from 'choerodon-ui/pro';
 import { useAppDetailTabsStore } from '../../stores';
 import { openModifyValueModal } from '@/components/modify-values';
 import { useAppDetailsStore } from '../../../../stores';
@@ -144,7 +144,20 @@ const DetailsTabsHeaderButtons = () => {
         obj = {
           name: '修改应用',
           handler: () => {
-            openHostAppConfigModal(appRecord?.toData() || {}, refresh);
+            const data = appRecord?.toData();
+            if (['jar', 'other'].includes(data?.rdupmType)) {
+              const killCommandExist = data?.killCommandExist;
+              if (!killCommandExist) {
+                Modal.confirm({
+                  title: '未维护删除操作',
+                  children: '此应用当前暂未维护【删除操作】，无法执行修改操作。',
+                  okText: '我知道了',
+                  okCancel: false,
+                });
+              } else {
+                openHostAppConfigModal(appRecord?.toData() || {}, refresh);
+              }
+            }
           },
           disabled: btnDisabledHost,
           permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateHost'],

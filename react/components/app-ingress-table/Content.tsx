@@ -16,6 +16,10 @@ import { useAppIngressTableStore } from './stores';
 import HostConfigServices from './services';
 import {
   DOCKER_TYPE,
+  OTHER_TYPE,
+  JAR_TYPE,
+  SUCCESS_HOST_STATUS,
+  FAILED_HOST_STATUS,
 } from '@/components/app-ingress-table/CONSTANT';
 // import ConfigurationModal from '@/components/configuration-center/ConfigurationModal';
 
@@ -105,34 +109,45 @@ const AppIngress = observer(() => {
 
   const renderAction = useCallback(({ record: tableRecord }) => {
     const devopsHostCommandDTO = tableRecord.get('devopsHostCommandDTO');
-    const operateStatus = devopsHostCommandDTO?.status;
-
-    if (operateStatus === 'operating') {
-      return null;
+    const rdupmType = tableRecord?.get('rdupmType');
+    const status = devopsHostCommandDTO?.status;
+    switch (rdupmType) {
+      case JAR_TYPE:
+      case OTHER_TYPE: {
+        if (status === '') break;
+      }
+      default: {
+        break;
+      }
     }
-
-    const status = tableRecord.get('status');
-    // console.log(status);
-
-    const actionData = [
-      {
-        service: ['choerodon.code.project.deploy.host.ps.docker.delete'],
-        text: formatMessage({ id: 'delete' }),
-        action: () => handleDelete({ record: tableRecord }),
-      },
+    // const operateStatus = devopsHostCommandDTO?.status;
+    //
+    // if (operateStatus === 'operating') {
+    //   return null;
+    // }
+    //
+    // const status = tableRecord.get('status');
+    // // console.log(status);
+    //
+    // const actionData = [
     //   {
-    //     text: '查看配置文件',
-    //     action: () => handleOpenConfigurationModal({ record: tableRecord }),
+    //     service: ['choerodon.code.project.deploy.host.ps.docker.delete'],
+    //     text: formatMessage({ id: 'delete' }),
+    //     action: () => handleDelete({ record: tableRecord }),
     //   },
-    ];
-
-    if (!status || (['normal_process', 'java_process'].includes(tableRecord.get('instanceType')))) {
-      return <Action data={actionData} />;
-    }
-
-    if (!['running', 'exited', 'removed'].includes(status)) {
-      return null;
-    }
+    // //   {
+    // //     text: '查看配置文件',
+    // //     action: () => handleOpenConfigurationModal({ record: tableRecord }),
+    // //   },
+    // ];
+    //
+    // if (!status || (['normal_process', 'java_process'].includes(tableRecord.get('instanceType')))) {
+    //   return <Action data={actionData} />;
+    // }
+    //
+    // if (!['running', 'exited', 'removed'].includes(status)) {
+    //   return null;
+    // }
 
     // switch (status) {
     //   case 'running':
@@ -156,7 +171,7 @@ const AppIngress = observer(() => {
     //     });
     //     break;
     // }
-    return <Action data={actionData} />;
+    // return <Action data={actionData} />;
   }, [handleDelete, handleRestart, handleStart, openStopModal]);
 
   const renderName = ({ record, text }: any) => {
