@@ -83,6 +83,7 @@ const mapping: {
     type: 'string',
     label: '步骤名称',
     required: true,
+    maxLength: 30,
   },
   projectRelyRepo: {
     name: 'nexusMavenRepoIds',
