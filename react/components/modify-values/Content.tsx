@@ -47,6 +47,8 @@ const ValueModalContent = observer(() => {
       instanceId,
       type: 'update',
       environmentId: envId,
+      appServiceId,
+      appServiceVersionId,
     };
 
     try {
