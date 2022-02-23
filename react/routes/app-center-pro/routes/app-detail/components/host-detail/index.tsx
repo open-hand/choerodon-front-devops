@@ -173,7 +173,6 @@ const Index = observer(({
 
   const isEnv = deployType === ENV_TAB;
 
-  console.log(data, params, ref, appCatergory);
   return (
     <div className={cssPrefix}>
       <DetailsTabsHeaderButtons />

@@ -25,6 +25,16 @@ const imageNameUpdate = (record: any, value: any) => {
 const mapping: {
   [key: string]: FieldProps,
 } = {
+  appName: {
+    name: 'name',
+    type: 'string' as FieldType,
+    label: '应用名称',
+  },
+  appCode: {
+    name: 'code',
+    type: 'string' as FieldType,
+    label: '应用编码',
+  },
   deployType: {
     name: 'repoType',
     type: 'string' as FieldType,
@@ -136,12 +146,39 @@ const mapping: {
   },
 };
 
-const hostDockerConfigDataSet = (): DataSetProps => ({
+const hostDockerConfigDataSet = (isDetail: any): DataSetProps => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((i) => {
     const item = mapping[i];
     switch (i) {
+      case 'appCode': {
+        item.dynamicProps = {
+          disabled: () => isDetail,
+          required: () => isDetail,
+        };
+        break;
+      }
+      case 'appName': {
+        item.dynamicProps = {
+          required: () => isDetail,
+        };
+        break;
+      }
+      case 'name':
+      case 'imageUrl':
+      case 'privateRepository':
+      case 'username':
+      case 'password':
+      case 'deployType': {
+        item.dynamicProps = {
+          disabled: () => isDetail,
+        };
+        break;
+      }
       case 'repoName': {
+        item.dynamicProps = {
+          disabled: () => isDetail,
+        };
         item.options = new DataSet({
           autoQuery: true,
           transport: {
@@ -153,6 +190,9 @@ const hostDockerConfigDataSet = (): DataSetProps => ({
         break;
       }
       case 'imageName': {
+        item.dynamicProps = {
+          disabled: () => isDetail,
+        };
         item.options = new DataSet({
           autoQuery: false,
           transport: {
@@ -194,10 +234,12 @@ const hostDockerConfigDataSet = (): DataSetProps => ({
       switch (name) {
         case mapping.repoName.name: {
           repoNameUpdate(record, value);
+          record?.set(mapping.imageName.name, undefined);
           break;
         }
         case mapping.imageName.name: {
           imageNameUpdate(record, value);
+          record?.set(mapping.tag.name, undefined);
           break;
         }
       }
@@ -230,6 +272,8 @@ const transformSubmitData = (ds: any) => {
 };
 
 const transformLoadData = (data: any) => ({
+  [mapping.appName.name as string]: data?.[mapping.appName.name as string],
+  [mapping.appCode.name as string]: data?.[mapping.appCode.name as string],
   [mapping.deployType.name as string]: data
     ?.devopsDockerInstanceVO?.[mapping.deployType.name as string],
   [mapping.repoName.name as string]: {
