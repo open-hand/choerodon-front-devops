@@ -20,6 +20,10 @@ import {
   JAR_TYPE,
   SUCCESS_HOST_STATUS,
   FAILED_HOST_STATUS,
+  OPERATING_HOST_STATUS,
+  RUNNING_DOCKER,
+  CREATED_DOCKER,
+  EXITED_DOCKER,
 } from '@/components/app-ingress-table/CONSTANT';
 // import ConfigurationModal from '@/components/configuration-center/ConfigurationModal';
 
@@ -111,10 +115,46 @@ const AppIngress = observer(() => {
     const devopsHostCommandDTO = tableRecord.get('devopsHostCommandDTO');
     const rdupmType = tableRecord?.get('rdupmType');
     const status = devopsHostCommandDTO?.status;
+    const dockerStatus = tableRecord?.get('status');
+    let actionData = [];
+    const deleteObj = {
+      service: ['choerodon.code.project.deploy.host.ps.docker.delete'],
+      text: formatMessage({ id: 'delete' }),
+      action: () => handleDelete({ record: tableRecord }),
+    };
+    const stopObj = {
+      service: ['choerodon.code.project.deploy.host.ps.docker.stop'],
+      text: '停止',
+      action: () => openStopModal({ record: tableRecord }),
+    };
+    const restartObj = {
+      service: ['choerodon.code.project.deploy.host.ps.docker.restart'],
+      text: '重启',
+      action: () => handleRestart({ record: tableRecord }),
+    };
+    const startObj = {
+      service: ['choerodon.code.project.deploy.host.ps.docker.start'],
+      text: '启动',
+      action: () => handleStart({ record: tableRecord }),
+    };
     switch (rdupmType) {
       case JAR_TYPE:
       case OTHER_TYPE: {
-        if (status === '') break;
+        if ([SUCCESS_HOST_STATUS, FAILED_HOST_STATUS].includes(status)) {
+          actionData.push(deleteObj);
+        } break;
+      }
+      case DOCKER_TYPE: {
+        if ([SUCCESS_HOST_STATUS, FAILED_HOST_STATUS].includes(status)) {
+          if (dockerStatus === RUNNING_DOCKER) {
+            actionData = [restartObj, stopObj, deleteObj];
+          } else if (dockerStatus === CREATED_DOCKER) {
+            actionData = [restartObj, startObj, deleteObj];
+          } else if (dockerStatus === EXITED_DOCKER) {
+            actionData = [startObj, deleteObj];
+          }
+        }
+        break;
       }
       default: {
         break;
@@ -130,11 +170,6 @@ const AppIngress = observer(() => {
     // // console.log(status);
     //
     // const actionData = [
-    //   {
-    //     service: ['choerodon.code.project.deploy.host.ps.docker.delete'],
-    //     text: formatMessage({ id: 'delete' }),
-    //     action: () => handleDelete({ record: tableRecord }),
-    //   },
     // //   {
     // //     text: '查看配置文件',
     // //     action: () => handleOpenConfigurationModal({ record: tableRecord }),
@@ -155,7 +190,8 @@ const AppIngress = observer(() => {
     //       service: ['choerodon.code.project.deploy.host.ps.docker.stop'],
     //       text: '停止',
     //       action: () => openStopModal({ record: tableRecord }),
-    //     }, {
+    //     },
+    //     {
     //       service: ['choerodon.code.project.deploy.host.ps.docker.restart'],
     //       text: '重启',
     //       action: () => handleRestart({ record: tableRecord }),
@@ -171,7 +207,7 @@ const AppIngress = observer(() => {
     //     });
     //     break;
     // }
-    // return <Action data={actionData} />;
+    return <Action data={actionData} />;
   }, [handleDelete, handleRestart, handleStart, openStopModal]);
 
   const renderName = ({ record, text }: any) => {
