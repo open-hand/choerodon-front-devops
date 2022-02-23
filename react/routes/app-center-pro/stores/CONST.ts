@@ -47,6 +47,8 @@ const APP_STATUS = {
   SUCCESS: 'success',
   FAILED: 'failed',
   RUNNING: 'running',
+  CREATED: 'created',
+  EXITED: 'exited',
 };
 
 // 操作类型

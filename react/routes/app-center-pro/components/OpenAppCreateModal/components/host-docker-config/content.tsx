@@ -1,4 +1,4 @@
-import React, { useEffect, useImperativeHandle } from 'react';
+import React, { useEffect, useImperativeHandle, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Form,
@@ -24,6 +24,7 @@ const Index = observer(() => {
     detail,
     refresh,
     modal,
+    isDetail,
   } = useDockerConfigStore();
 
   useEffect(() => {
@@ -74,6 +75,14 @@ const Index = observer(() => {
   return (
     <>
       <Form columns={2} dataSet={HostDockerConfigDataSet}>
+        {
+          isDetail && (
+            <>
+              <TextField name={mapping.appName.name} />
+              <TextField name={mapping.appCode.name} />
+            </>
+          )
+        }
         <SelectBox name={mapping.deployType.name} />
         {
           HostDockerConfigDataSet?.current?.get(mapping.deployType.name)

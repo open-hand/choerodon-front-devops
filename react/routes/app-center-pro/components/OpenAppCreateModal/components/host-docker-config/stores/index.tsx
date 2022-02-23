@@ -10,6 +10,7 @@ interface ContextType {
   detail?: any,
   refresh?: any,
   modal?: any,
+  isDetail?: any,
 }
 
 const Store = createContext({} as ContextType);
@@ -21,13 +22,19 @@ export function useDockerConfigStore() {
 export const StoreProvider = (props: any) => {
   const {
     children,
+    detail,
   } = props;
 
-  const HostDockerConfigDataSet = useMemo(() => new DataSet(hostDockerConfigDataSet()), []);
+  const isDetail = useMemo(() => Boolean(detail), [detail]);
+
+  const HostDockerConfigDataSet = useMemo(() => new DataSet(
+    hostDockerConfigDataSet(isDetail),
+  ), [isDetail]);
 
   const value = {
     ...props,
     HostDockerConfigDataSet,
+    isDetail,
   };
 
   return <Store.Provider value={value}>{children}</Store.Provider>;
