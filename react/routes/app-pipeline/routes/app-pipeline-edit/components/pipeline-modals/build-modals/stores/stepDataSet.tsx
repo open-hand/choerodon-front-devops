@@ -8,6 +8,10 @@ import {
 import customRepoConfigDataSet
   from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/stores/customRepoConfigDataSet';
 import { handleOk } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/content';
+import {
+  mapping as customMapping,
+  typeData,
+} from './customRepoConfigDataSet';
 
 const settingConfigOptionsData = [{
   text: '自定义仓库配置',
@@ -48,6 +52,18 @@ const accountConfigData = [{
   text: 'Token',
   value: 'token',
 }];
+
+const getSubmitRepos = (record: any) => {
+  const reposData = record.getField(mapping.customRepoConfig.name).options.toData();
+  return reposData.map((d: any) => ({
+    url: d?.[customMapping.repoAddress.name],
+    name: d?.[customMapping.repoName.name],
+    type: d?.[customMapping.repoType.name].join(','),
+    private: d?.[customMapping.type.name] === typeData[1].value,
+    password: d?.[customMapping.password.name],
+    username: d?.[customMapping.username.name],
+  }));
+};
 
 const mapping: {
   [key: string]: any
@@ -377,9 +393,19 @@ const transformLoadDataItemByType = (data: any) => {
   }
 };
 
+const getLoadReposData = (repos: any) => (repos ? repos.map((i: any) => ({
+  [customMapping.repoAddress.name]: i?.url,
+  [customMapping.repoName.name]: i?.name,
+  [customMapping.repoType.name]: i?.type.split(','),
+  [customMapping.type.name]: i?.private ? typeData[1].value : typeData[0].value,
+  [customMapping.password.name]: i?.password,
+  [customMapping.username.name]: i?.username,
+})) : []);
+
 const transformLoadDataItem = (d: any, index: number) => {
   const newD = JSON.parse(JSON.stringify(d));
-  return ({
+  const reposData = getLoadReposData(newD[STEPVO[newD.type]]?.repos);
+  const result = ({
     ...newD,
     [mapping.expand.name]: true,
     [mapping.settingConfig.name]: settingConfigOptionsData[0].value,
@@ -390,9 +416,10 @@ const transformLoadDataItem = (d: any, index: number) => {
     [mapping.sequence.name]: index,
     ...newD[STEPVO[newD.type]],
     ...transformLoadDataItemByType(newD),
-    [mapping.customRepoConfig.name]: newD[STEPVO[newD.type]]?.repos,
+    [mapping.customRepoConfig.name]: reposData,
     [mapping.id.name]: newD?.[mapping.id.name],
   });
+  return result;
 };
 
 const transformLoadData = (data: any) => data
@@ -432,13 +459,13 @@ const getInsideDtoData = (record: any) => {
           [mapping.projectRelyRepo.name]:
             JSON.parse(JSON.stringify(record.get(mapping.projectRelyRepo.name))),
           [mapping.settingConfig.name]: record.get(mapping.settingConfig.name),
-          repos: record.getField(mapping.customRepoConfig.name).options.toData(),
+          repos: getSubmitRepos(record),
           [mapping.advancedXml.name]: record?.get(mapping.advancedXml.name),
         });
       }
       return ({
         [mapping.settingConfig.name]: record.get(mapping.settingConfig.name),
-        repos: record.getField(mapping.customRepoConfig.name).options.toData(),
+        repos: getSubmitRepos(record),
         [mapping.advancedXml.name]: record?.get(mapping.advancedXml.name),
         targetRepo: {
           private: true,
@@ -595,6 +622,13 @@ const Index = (
       return item;
     }),
     events: {
+      load: ({
+        dataSet,
+      }: any) => {
+        const record = dataSet?.current;
+        const repos = record?.get('repos');
+        record?.getField(mapping.customRepoConfig.name)?.options?.loadData(getLoadReposData(repos));
+      },
       update: ({
         name, value, record, dataSet,
       }: any) => {
