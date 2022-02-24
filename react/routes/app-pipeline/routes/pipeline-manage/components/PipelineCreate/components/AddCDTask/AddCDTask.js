@@ -688,7 +688,6 @@ export default observer(() => {
         const metadata = JSON.parse(jobDetail.metadata.replace(/'/g, '"'));
         setDeployGroupDetail(metadata);
       }
-
       const newJobDetail = {
         ...jobDetail,
         ...extra,
