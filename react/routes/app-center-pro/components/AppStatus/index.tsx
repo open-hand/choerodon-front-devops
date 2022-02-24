@@ -17,14 +17,19 @@ const AppStatus = ({
 }) => {
   const statusCls = `${prefixcls}-status ${prefixcls}-status-${status}`;
 
-  const ErrorIcon = () => (
-    <Tooltip title={error}>
-      <Icon
-        className={statusCls}
-        type="info"
-      />
-    </Tooltip>
-  );
+  const ErrorIcon = () => {
+    const titleDom = error?.split('\n')?.map((e) => (
+      <p style={{ margin: 0 }}>{e}</p>
+    ));
+    return (
+      <Tooltip title={titleDom}>
+        <Icon
+          className={statusCls}
+          type="info"
+        />
+      </Tooltip>
+    );
+  };
 
   const getTagEnv = () => {
     let tag:any = '';
