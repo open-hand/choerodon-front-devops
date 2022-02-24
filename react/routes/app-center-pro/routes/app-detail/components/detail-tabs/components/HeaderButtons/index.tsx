@@ -284,6 +284,7 @@ const DetailsTabsHeaderButtons = () => {
       envId: hostOrEnvId,
       instanceId,
       appCatergoryCode: appCatergory.code,
+      hostId,
     }),
   };
 

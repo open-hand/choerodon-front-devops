@@ -57,7 +57,7 @@ const AppIngress = observer(() => {
 
   // 停止
   const handleStop = useCallback(async ({ record: tableRecord }) => {
-    const res = await HostConfigServices.stopDocker(projectId, tableRecord.get('hostId'), tableRecord.get('id'));
+    const res = await HostConfigServices.stopDocker(projectId, tableRecord.get('hostId'), tableRecord.get('instanceId'));
     if (res) {
       refresh();
     }
@@ -66,7 +66,7 @@ const AppIngress = observer(() => {
 
   // 重启
   const handleRestart = useCallback(async ({ record: tableRecord }) => {
-    const res = await HostConfigServices.restartDocker(projectId, tableRecord.get('hostId'), tableRecord.get('id'));
+    const res = await HostConfigServices.restartDocker(projectId, tableRecord.get('hostId'), tableRecord.get('instanceId'));
     if (res) {
       refresh();
     }
@@ -74,7 +74,7 @@ const AppIngress = observer(() => {
   }, []);
 
   const handleStart = useCallback(async ({ record: tableRecord }) => {
-    const res = await HostConfigServices.startDocker(projectId, tableRecord.get('hostId'), tableRecord.get('id'));
+    const res = await HostConfigServices.startDocker(projectId, tableRecord.get('hostId'), tableRecord.get('instanceId'));
     if (res) {
       refresh();
     }
