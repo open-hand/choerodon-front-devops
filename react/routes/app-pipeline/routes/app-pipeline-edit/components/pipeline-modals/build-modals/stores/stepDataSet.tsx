@@ -437,6 +437,9 @@ const getInsideDtoData = (record: any) => {
         });
       }
       return ({
+        [mapping.settingConfig.name]: record.get(mapping.settingConfig.name),
+        repos: record.getField(mapping.customRepoConfig.name).options.toData(),
+        [mapping.advancedXml.name]: record?.get(mapping.advancedXml.name),
         targetRepo: {
           private: true,
           name: record?.get(mapping.repoName.name),
