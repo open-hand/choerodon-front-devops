@@ -36,9 +36,12 @@ const Index = observer(() => {
 
   const handleSubmit = async () => {
     const res = await HostDockerConfigDataSet.validate();
+    const record = HostDockerConfigDataSet?.current;
     if (res) {
       const data = {
         ...transformSubmitData(HostDockerConfigDataSet),
+        [mapping.appName.name as string]: record?.get(mapping.appName.name),
+        [mapping.appCode.name as string]: record?.get(mapping.appCode.name),
         operation: 'update',
         hostAppId: detail?.id,
         hostId: detail?.hostId,
