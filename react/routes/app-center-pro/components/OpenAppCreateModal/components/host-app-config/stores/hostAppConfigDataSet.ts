@@ -443,6 +443,12 @@ const hostAppConfigDataSet = (modal: any, detail: any): DataSetProps => ({
         };
         break;
       }
+      case 'appName': {
+        item.dynamicProps = {
+          required: () => Boolean(detail),
+        };
+        break;
+      }
       default: {
         break;
       }

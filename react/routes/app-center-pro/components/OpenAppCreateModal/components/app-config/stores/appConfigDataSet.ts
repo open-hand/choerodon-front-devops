@@ -431,6 +431,9 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
         break;
       }
       case 'appName': {
+        item.dynamicProps = {
+          required: () => Boolean(detail)
+        }
         if (detail) {
           item.validator = async (value, type, record: Record) => {
             let res: any = '应用名称已重复';
