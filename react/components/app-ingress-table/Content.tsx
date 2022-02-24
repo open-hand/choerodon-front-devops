@@ -240,7 +240,7 @@ const AppIngress = observer(() => {
 
   const renderStatus = ({ text, record }: any) => {
     if (record?.get('rdupmType') === DOCKER_TYPE) {
-      return record?.get('status');
+      return record?.get('status') || '-';
     }
     return (
       <Tag
