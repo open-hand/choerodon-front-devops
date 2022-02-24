@@ -11,6 +11,7 @@ import {
   accountConfigData,
   mapping as StepMapping,
   scanTypeData, sonarConfigData,
+  repoSourceData,
 } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/stores/stepDataSet';
 import {
   BUILD_DOCKER,
@@ -19,6 +20,8 @@ import {
   BUILD_NPM, BUILD_SONARQUBE, BUILD_UPLOAD_CHART_CHOERODON, BUILD_UPLOAD_NPM,
   BUILD_UPLOADJAR, GO_UNIT_TEST, MAVEN_UNIT_TEST, NODE_JS_UNIT_TEST,
   TASK_TEMPLATE,
+  UNIT_TEST,
+  BUILD_CUSTOM,
 } from '@/routes/app-pipeline/CONSTANTS';
 import MavenBuildAdvancedSetting
   from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/components/mavenBuild-advancedSetting';
@@ -169,14 +172,27 @@ const Index = observer(({
       }
       case BUILD_UPLOADJAR: {
         result = (
-          <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={2}>
-            <TextField name={StepMapping.stepName.name} />
-            <Select name={StepMapping.targetProductsLibrary.name} />
+          <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={4}>
+            <TextField colSpan={2} name={StepMapping.stepName.name} />
+            <SelectBox colSpan={2} name={StepMapping.repoSource.name} />
+            {
+              itemRecord?.get(StepMapping.repoSource.name) === repoSourceData[0].value ? (
+                <Select colSpan={2} name={StepMapping.targetProductsLibrary.name} />
+              ) : (
+                <>
+                  <TextField colSpan={2} name={StepMapping.repoUrl.name} />
+                  <TextField colSpan={2} name={StepMapping.repoName.name} />
+                  <Select multiple colSpan={2} name={StepMapping.repoType.name} />
+                  <TextField colSpan={1} name={StepMapping.repoUsername.name} />
+                  <TextField colSpan={1} name={StepMapping.repoPassword.name} />
+                </>
+              )
+            }
             <YamlEditor
               value={itemRecord.get(StepMapping.script.name)}
               onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
               newLine
-              colSpan={2}
+              colSpan={4}
               readOnly={disabled || template === TASK_TEMPLATE}
               modeChange={false}
               showError={false}
@@ -204,12 +220,27 @@ const Index = observer(({
       }
       case BUILD_MAVEN_PUBLISH: {
         result = (
-          <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={2}>
-            <TextField name={StepMapping.stepName.name} />
-            <Select name={StepMapping.targetProductsLibrary.name} />
-            <Select colSpan={2} name={StepMapping.projectRelyRepo.name} />
+          <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={4}>
+            <TextField colSpan={2} name={StepMapping.stepName.name} />
+            <SelectBox colSpan={2} name={StepMapping.repoSource.name} />
+            {
+              itemRecord?.get(StepMapping.repoSource.name) === repoSourceData[0].value ? (
+                <>
+                  <Select colSpan={2} name={StepMapping.targetProductsLibrary.name} />
+                  <Select colSpan={2} name={StepMapping.projectRelyRepo.name} />
+                </>
+              ) : (
+                <>
+                  <TextField colSpan={2} name={StepMapping.repoUrl.name} />
+                  <TextField colSpan={2} name={StepMapping.repoName.name} />
+                  <Select multiple colSpan={2} name={StepMapping.repoType.name} />
+                  <TextField colSpan={1} name={StepMapping.repoUsername.name} />
+                  <TextField colSpan={1} name={StepMapping.repoPassword.name} />
+                </>
+              )
+            }
             {/* @ts-ignore */}
-            <div colSpan={2}>
+            <div colSpan={4}>
               <MavenBuildAdvancedSetting
                 prefix={prefix}
                 record={itemRecord}
@@ -220,7 +251,7 @@ const Index = observer(({
               value={itemRecord.get(StepMapping.script.name)}
               onValueChange={(value: string) => itemRecord.set(StepMapping.script.name, value)}
               newLine
-              colSpan={2}
+              colSpan={4}
               readOnly={disabled || template === TASK_TEMPLATE}
               modeChange={false}
             />
@@ -240,7 +271,12 @@ const Index = observer(({
         );
         break;
       }
-      case MAVEN_UNIT_TEST: case GO_UNIT_TEST: case NODE_JS_UNIT_TEST: case BUILD_UPLOAD_NPM: {
+      case MAVEN_UNIT_TEST:
+      case GO_UNIT_TEST:
+      case NODE_JS_UNIT_TEST:
+      case BUILD_UPLOAD_NPM:
+      case BUILD_CUSTOM:
+      case UNIT_TEST: {
         result = (
           <Form disabled={disabled || template === TASK_TEMPLATE} record={itemRecord} columns={2}>
             <TextField name={StepMapping.stepName.name} />

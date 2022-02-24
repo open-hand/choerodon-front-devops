@@ -24,6 +24,16 @@ import {
 } from '@/routes/app-center-pro/stores/CONST';
 import AppStatus from '@/routes/app-center-pro/components/AppStatus';
 
+const getChartSourceName:any = {
+  [CHART_HZERO]: 'HZERO服务',
+  [CHART_MARKET]: '市场服务',
+  [CHART_MIDDLEWARE]: '中间件',
+  [CHART_SHARE]: '共享服务',
+  [CHART_REPO]: '项目制品库',
+  [CHART_NORMAL]: '项目服务',
+  [CHART_UPLOAD]: '本地上传',
+};
+
 const DetailAside = () => {
   const {
     subfixCls,
@@ -90,16 +100,6 @@ const DetailAside = () => {
   const isEnv = deployType === ENV_TAB;
 
   const isHost = deployType === HOST_TAB;
-
-  const getChartSourceName:any = {
-    [CHART_HZERO]: 'HZERO服务',
-    [CHART_MARKET]: '市场服务',
-    [CHART_MIDDLEWARE]: '中间件',
-    [CHART_SHARE]: '共享服务',
-    [CHART_REPO]: '项目制品库',
-    [CHART_NORMAL]: '项目服务',
-    [CHART_UPLOAD]: '本地上传',
-  };
 
   function getVersionName() {
     if (objectStatus === 'failed' && !effectCommandVersion) {
@@ -320,3 +320,7 @@ const DetailAside = () => {
 };
 
 export default observer(DetailAside);
+
+export {
+  getChartSourceName,
+};

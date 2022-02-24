@@ -41,7 +41,7 @@ const valueCheckValidate = (value, startCommand, postCommand) => {
   return true;
 }
 
-const setData = (data: any,configData?:any) => {  
+const setData = (data: any,configData?:any) => {
   const newData = data;
   newData.prodJarInfoVO = {
     [mapping.projectProductRepo.name as string]: newData[
@@ -67,6 +67,8 @@ const setData = (data: any,configData?:any) => {
   newData[mapping.value.name as string] = newData[mapping.value.name as string] ? Base64.encode(newData[mapping.value.name as string]) : '';
   newData[mapping.startCommand.name as string] = newData[mapping.startCommand.name as string] ? Base64.encode(newData[mapping.startCommand.name as string]) : '';
   newData[mapping.postCommand.name as string] = newData[mapping.postCommand.name as string] ? Base64.encode(newData[mapping.postCommand.name as string]) : '';
+  newData[mapping.killCommand.name as string] = newData[mapping.killCommand.name as string] ? Base64.encode(newData[mapping.killCommand.name as string]) : '';
+  newData[mapping.healthProb.name as string] = newData[mapping.healthProb.name as string] ? Base64.encode(newData[mapping.healthProb.name as string]) : '';
   // newData.deployObjectId = newData[
   //   mapping.marketServiceVersion.name as string]?.marketServiceDeployObjectVO?.id;
 //   newData.configSettingVOS= configData || data.configSettingVOS;
@@ -105,7 +107,7 @@ const Index = observer(() => {
 //     queryConfigCodeOptions(configCompareOptsDS, deployConfigDataSet);
 //     setConfigDataSet(deployConfigDataSet);
 //   }
-  
+
 
   const queryMarketAppVersionOptions = (data: any, ds: any) => {
     if (data[mapping.jarSource.name] === 'hzero') {
@@ -128,6 +130,8 @@ const Index = observer(() => {
         [mapping.value.name]: detail[mapping.value.name] ? Base64.decode(detail[mapping.value.name]) : '',
         [mapping.startCommand.name]: detail[mapping.startCommand.name] ? Base64.decode(detail[mapping.startCommand.name]) : '',
         [mapping.postCommand.name]: detail[mapping.postCommand.name] ? Base64.decode(detail[mapping.postCommand.name]) : '',
+        [mapping.killCommand.name]: detail[mapping.killCommand.name] ? Base64.decode(detail[mapping.killCommand.name]) : '',
+        [mapping.healthProb.name]: detail[mapping.healthProb.name] ? Base64.decode(detail[mapping.healthProb.name]) : '',
         [mapping.marketAppVersion.name as string]: detail
           ?.marketDeployObjectInfoVO?.mktAppVersionId,
         [mapping.marketServiceVersion.name as string]: detail
@@ -162,7 +166,7 @@ const Index = observer(() => {
           HostAppConfigDataSet.current.get(mapping.postCommand.name)
       );
     //   const configFlag = await deployConfigDataSet.validate();
-      if (flag 
+      if (flag
         // && configFlag
         ) {
         return await finalFunc();
@@ -183,7 +187,7 @@ const Index = observer(() => {
         HostAppConfigDataSet.current.get(mapping.value.name),
         HostAppConfigDataSet.current.get(mapping.startCommand.name),
         HostAppConfigDataSet.current.get(mapping.postCommand.name)
-        ) 
+        )
         // && configCenterFlag
         ) {
         const flag = await HostAppConfigDataSet.validate();
@@ -426,6 +430,8 @@ const Index = observer(() => {
             preName={mapping.value.name}
             startName={mapping.startCommand.name}
             postName={mapping.postCommand.name}
+            deleteName={mapping.killCommand.name}
+            healthName={mapping.healthProb.name}
           />
         )
       }

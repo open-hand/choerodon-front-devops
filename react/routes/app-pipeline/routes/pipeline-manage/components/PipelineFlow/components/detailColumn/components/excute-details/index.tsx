@@ -68,6 +68,10 @@ const ExcuteDetails:FC<ExcuteDetailsProps> = (props) => {
         name: 'Go单测报告',
         filename: 'Go单测报告.xml',
       },
+      general_unit_test: {
+        name: '单元测试(通用)报告',
+        filename: '单元测试(通用)报告.xml',
+      },
     };
     const handleDownload = () => {
       saveAs(reportUrl, unitType[type]?.filename);
@@ -84,7 +88,7 @@ const ExcuteDetails:FC<ExcuteDetailsProps> = (props) => {
           className={`${prefixCls}-unitTest-section-button`}
         />
         <main>
-          <div className={`${prefixCls}-unitTest-section-title`}>{unitType[type].name}</div>
+          <div className={`${prefixCls}-unitTest-section-title`}>{unitType?.[type]?.name}</div>
           <div className={`${prefixCls}-unitTest-section-group`}>
             <div className={`${prefixCls}-unitTest-section-group-item`}>
               <span style={{ color: '#0F1358' }}>{tests}</span>

@@ -39,6 +39,11 @@ const DsBasicObj = {
       name: 'creationDate',
       label: '创建时间',
     },
+    {
+      type: 'string',
+      name: 'rdupmType',
+      label: '部署对象',
+    },
   ],
   queryFields: [
     { name: 'name', label: '名称' },
