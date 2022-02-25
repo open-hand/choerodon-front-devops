@@ -1,3 +1,4 @@
+/* stylelint-disable */
 @prefixCls: ~"c7ncd-templates-selector";
 
 .@{prefixCls} {
@@ -44,6 +45,10 @@
         font-weight: 400;
         margin-left: 8px;
         color: var(--text-color);
+        max-width: 80px;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
       }
     }
     &-item + &-item {
