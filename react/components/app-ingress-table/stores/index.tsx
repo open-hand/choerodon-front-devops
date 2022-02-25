@@ -60,7 +60,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
           } else {
             type = 'customize';
           }
-          return (hostApi.jarDelete(data.hostId, data.instanceId, {
+          return (hostApi.jarDelete(data.hostId, data.id, {
             host_deploy_type: type,
           }));
         };
