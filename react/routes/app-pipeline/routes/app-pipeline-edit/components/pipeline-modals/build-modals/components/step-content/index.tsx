@@ -116,8 +116,6 @@ const Index = observer(({
   dataSet,
   okProps,
 }: any) => {
-  const stepDataRef = useRef(stepData);
-
   const renderStepItemForm = (itemRecord: Record) => {
     let result: any = '';
     switch (itemRecord.get(StepMapping.type.name)) {
@@ -428,7 +426,7 @@ const Index = observer(({
   const renderStepDom = (ds: any) => ds
     ?.map((record: Record, index: number) => renderStepItem(record, index));
 
-  const renderSteps = useCallback((ds: any) => (
+  const renderSteps = (ds: any) => (
     <DragDropContext
       onDragEnd={handleDragEnd}
     >
@@ -449,9 +447,9 @@ const Index = observer(({
         )}
       </Droppable>
     </DragDropContext>
-  ), [stepDataRef?.current]);
+  );
 
-  return renderSteps(stepDataRef?.current);
+  return renderSteps(stepData);
 });
 
 export default Index;

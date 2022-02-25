@@ -27,6 +27,7 @@ import MirrorScanning from '../MirrorScanningLog';
 import jobTypesMappings from '../../../../stores/jobsTypeMappings';
 import { JOB_GROUP_TYPES } from '@/routes/app-pipeline/stores/CONSTANTS';
 import { openExcuteDetailModal } from './components/excute-details';
+import { CHART_HOST } from '@/routes/app-center-pro/stores/CONST';
 
 const prefixCls = 'c7n-piplineManage-detail-column';
 
@@ -155,7 +156,7 @@ const DetailItem = (props) => {
   }) {
     if (appId) {
       history.push({
-        pathname: `/devops/application-center/detail/${appId}/${chartSource}/${deployType}/${deployTypeId}/${rdupmType}`,
+        pathname: `/devops/application-center/detail/${appId}/${chartSource || CHART_HOST}/${deployType}/${deployTypeId}/${rdupmType}`,
         search: `${search}`,
       });
     } else {
@@ -242,13 +243,15 @@ const DetailItem = (props) => {
           <Tooltip title={appName}>
             <span
               style={{ color: '#3F51B5', cursor: 'pointer' }}
-              onClick={() => linkToAppDetailsInAppCenter({
-                appId,
-                chartSource,
-                rdupmType,
-                deployType,
-                deployTypeId,
-              })}
+              onClick={() => {
+                linkToAppDetailsInAppCenter({
+                  appId,
+                  chartSource,
+                  rdupmType,
+                  deployType,
+                  deployTypeId,
+                });
+              }}
             >
               {(jobStatus !== 'created' && appName) || '-'}
             </span>
