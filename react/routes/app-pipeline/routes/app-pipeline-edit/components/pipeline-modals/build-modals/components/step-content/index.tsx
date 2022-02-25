@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import {
@@ -116,6 +116,8 @@ const Index = observer(({
   dataSet,
   okProps,
 }: any) => {
+  const stepDataRef = useRef(stepData);
+
   const renderStepItemForm = (itemRecord: Record) => {
     let result: any = '';
     switch (itemRecord.get(StepMapping.type.name)) {
@@ -313,6 +315,9 @@ const Index = observer(({
     return result;
   };
 
+  const renderItemDom = (record: any) => record.get(StepMapping.expand.name)
+    && renderStepItemForm(record);
+
   const renderStepItem = (record: any, index: number) => (
     // TODO 这里要改
     <Draggable draggableId={String(record.id)} index={record.get(StepMapping.sequence.name)}>
@@ -345,23 +350,23 @@ const Index = observer(({
                 <p className={`${prefix}__stepItem__main__name`}>{ record.get(StepMapping.name.name) }</p>
               </div>
               {
-                !disabled && (
-                  <Icon
-                    className={`${prefix}__stepItem__main__first__remove`}
-                    type="remove_circle_outline"
-                    onClick={() => {
-                      dataSet.delete([record], false);
-                      handleOk({
-                        canWait: false,
-                        StepDataSet: dataSet,
-                        ...okProps,
-                      });
-                    }}
-                  />
-                )
-              }
+                  !disabled && (
+                    <Icon
+                      className={`${prefix}__stepItem__main__first__remove`}
+                      type="remove_circle_outline"
+                      onClick={() => {
+                        dataSet.delete([record], false);
+                        handleOk({
+                          canWait: false,
+                          StepDataSet: dataSet,
+                          ...okProps,
+                        });
+                      }}
+                    />
+                  )
+                }
             </div>
-            {record.get(StepMapping.expand.name) && renderStepItemForm(record)}
+            {renderItemDom(record)}
           </div>
         </div>
       )}
@@ -420,7 +425,10 @@ const Index = observer(({
     dataSet.loadData(newData);
   };
 
-  const renderSteps = (ds: any) => (
+  const renderStepDom = (ds: any) => ds
+    ?.map((record: Record, index: number) => renderStepItem(record, index));
+
+  const renderSteps = useCallback((ds: any) => (
     <DragDropContext
       onDragEnd={handleDragEnd}
     >
@@ -434,16 +442,16 @@ const Index = observer(({
             {...provided.droppableProps}
           >
             {
-              ds?.map((record: Record, index: number) => renderStepItem(record, index))
+              renderStepDom(ds)
             }
             {provided.placeholder}
           </div>
         )}
       </Droppable>
     </DragDropContext>
-  );
+  ), [stepDataRef?.current]);
 
-  return renderSteps(stepData);
+  return renderSteps(stepDataRef?.current);
 });
 
 export default Index;

@@ -205,6 +205,15 @@ const DetailItem = (props) => {
     );
   };
 
+  const getRdupmType = (rdupmType) => {
+    const data = {
+      other_group: '其他制品',
+      jar: 'jar包',
+      image: 'docker镜像',
+    };
+    return data[rdupmType];
+  };
+
   const renderCdHost = () => {
     const {
       appId,
@@ -226,7 +235,7 @@ const DetailItem = (props) => {
         </div>
         <div>
           <span>制品类型：</span>
-          <span>{rdupmType === 'other_group' ? '其他制品' : 'jar包'}</span>
+          <span>{getRdupmType(rdupmType)}</span>
         </div>
         <div>
           <span>生成应用:</span>
