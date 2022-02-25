@@ -3,7 +3,7 @@ import { CONSTANTS } from '@choerodon/master';
 import { FieldProps, FieldType, Record } from '@/interface';
 import { deployValueConfigApi } from '@/api/DeployValue';
 import { fieldMap, deployWayData } from './addCDTaskDataSetMap';
-import { deployAppCenterApi, deployAppCenterApiConfig } from '@/api';
+import { deployAppCenterApi, deployAppCenterApiConfig, hostApi } from '@/api';
 
 const {
   LCLETTER_NUMREGEX,
@@ -149,18 +149,18 @@ const deployChartDataSet = (ADDCDTaskDataSet: DataSet) => ({
         case mapping().deployConfig.name: {
           const options = record?.getField(mapping().deployConfig.name)?.options;
           const item = options?.records.find((i) => i.get('id') === value);
-          record.set(mapping().value.name as string, item?.get('value'));
+          record?.set(mapping().value.name as string, item?.get('value'));
           break;
         }
         case mapping().appName.name: {
           if (ADDCDTaskDataSet.current?.get(fieldMap.deployWay.name) === deployWayData[1].value) {
-            const item = appNameChartDataSet.records.find((itemRecord: Record) => itemRecord.get('name') === value);
+            const item = appNameChartDataSet.records.find((itemRecord: Record) => itemRecord?.get('name') === value);
             if (item) {
-              record.set(mapping().appCode.name as string, item.get('code'));
-              record.getField(mapping().appCode.name)?.set('disabled', true);
+              record?.set(mapping().appCode.name as string, item.get('code'));
+              record?.getField(mapping().appCode.name)?.set('disabled', true);
             }
           } else {
-            record.getField(mapping().appCode.name)?.set('disabled', false);
+            record?.getField(mapping().appCode.name)?.set('disabled', false);
           }
           break;
         }

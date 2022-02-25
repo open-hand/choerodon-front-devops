@@ -15,10 +15,11 @@ class HostApi extends Api<HostApi> {
   }
 
   // 删除jar包
-  jarDelete(hostId:string, instanceId:string) {
+  jarDelete(hostId:string, instanceId:string, params?: any) {
     return this.request({
       url: `${this.prefix}/${hostId}/apps/${instanceId}`,
       method: 'delete',
+      params,
     });
   }
 
