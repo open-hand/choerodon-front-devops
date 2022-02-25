@@ -13,11 +13,11 @@ const appNameChartDataSet = new DataSet({
   autoQuery: false,
   paging: true,
   transport: {
-    read: ({ data: { data } }) => ({
+    read: ({ data: { data } }) => (data?.envId ? ({
       ...deployAppCenterApiConfig
         .getAppFromChart(data.envId, data.appServiceId),
       data: null,
-    }),
+    }) : undefined),
   },
 });
 
@@ -67,26 +67,31 @@ const deployConfigDataSet = new DataSet({
   paging: false,
   autoQuery: false,
   transport: {
-    read: ({ data: { data } }) => ({
-      ...deployValueConfigApi.getValueIdList(data),
-      transformResponse: (res) => {
-        let newRes = res;
-        try {
-          newRes = JSON.parse(res);
-          newRes.push({
-            name: '创建部署配置',
-            id: 'create',
-          });
-          return newRes;
-        } catch (e) {
-          newRes.push({
-            name: '创建部署配置',
-            id: 'create',
-          });
-          return newRes;
-        }
-      },
-    }),
+    read: ({ data: { data } }) => {
+      if (!data?.envId) {
+        return [];
+      }
+      return ({
+        ...deployValueConfigApi.getValueIdList(data),
+        transformResponse: (res) => {
+          let newRes = res;
+          try {
+            newRes = JSON.parse(res);
+            newRes.push({
+              name: '创建部署配置',
+              id: 'create',
+            });
+            return newRes;
+          } catch (e) {
+            newRes.push({
+              name: '创建部署配置',
+              id: 'create',
+            });
+            return newRes;
+          }
+        },
+      });
+    },
   },
 });
 

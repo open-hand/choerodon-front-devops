@@ -146,26 +146,32 @@ const Index = ({
   }),
   events: {
     create: async ({ dataSet, record }: any) => {
+      const dataImage = data?.image;
       const res = await record.getField(mapping.ciRunnerImage.name).options.query();
       let flag = false;
+      const optionsData = [...res];
+      if (dataImage !== res[0].value) {
+        optionsData.push({
+          text: dataImage,
+          value: dataImage,
+        });
+      }
       if (outSideAdvancedData) {
         const {
           [outsideAdvancedMapping.CIRunnerImage.name]: outsideImage,
         } = outSideAdvancedData;
         if (outsideImage !== res[0].value) {
           flag = true;
-          record.getField(mapping.ciRunnerImage.name).options.loadData([
-            ...res,
-            {
-              text: outsideImage,
-              value: outsideImage,
-            },
-          ]);
+          optionsData.push({
+            text: outsideImage,
+            value: outsideImage,
+          });
           dataSet.loadData([transformLoadData(data, [{
             value: outsideImage,
           }])]);
         }
       }
+      record.getField(mapping.ciRunnerImage.name).options.loadData(optionsData);
       if (!flag) {
         dataSet.loadData([transformLoadData(data, res)]);
       }

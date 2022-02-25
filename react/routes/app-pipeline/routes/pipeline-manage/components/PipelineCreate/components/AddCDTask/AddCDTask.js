@@ -1737,6 +1737,8 @@ export default observer(() => {
             colSpan={3}
             name="envId"
             onChange={() => {
+              DeployChartDataSet?.current?.set(deployChartMapping().deployConfig.name, undefined);
+              DeployChartDataSet?.current?.set(deployChartMapping().value.name, undefined);
               DeployChartDataSet.current.set(deployChartMapping().appName.name, undefined)
             }}
             optionRenderer={optionRenderer}
