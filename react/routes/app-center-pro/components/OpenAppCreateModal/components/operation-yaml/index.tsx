@@ -5,6 +5,8 @@ import _ from 'lodash';
 import { Alert, Tabs } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import YamlEditor from '@/components/yamlEditor';
+
+import './index.less';
 // import ConfigurationTab from '@/components/configuration-center/ConfigurationTab';
 
 const { TabPane } = Tabs;
@@ -96,6 +98,7 @@ const Index = observer(({
   return (
     <div
       style={style || {}}
+      className="c7ncd-operationYaml"
     >
       <Alert
         type="warning"
@@ -140,30 +143,34 @@ const Index = observer(({
       />
       {
         deleteName && activeKey === '2' && [
-          <p>删除操作</p>,
-          <YamlEditor
-            showError={false}
-            readOnly={false}
-            originValue={originValue?.[deleteName]}
-            value={dataSet?.current?.get(deleteName)}
-            onValueChange={(value: string) => {
-              dataSet?.current?.set(deleteName, value);
-            }}
-          />,
+          <div className="c7ncd-operationYaml-others">
+            <p className="c7ncd-operationYaml-title">删除操作</p>
+            <YamlEditor
+              showError={false}
+              readOnly={false}
+              originValue={originValue?.[deleteName]}
+              value={dataSet?.current?.get(deleteName)}
+              onValueChange={(value: string) => {
+                dataSet?.current?.set(deleteName, value);
+              }}
+            />
+          </div>,
         ]
        }
       {
         healthName && activeKey === '2' && [
-          <p>Readiness Probe</p>,
-          <YamlEditor
-            showError={false}
-            readOnly={false}
-            originValue={originValue?.[healthName]}
-            value={dataSet?.current?.get(healthName)}
-            onValueChange={(value: string) => {
-              dataSet?.current?.set(healthName, value);
-            }}
-          />,
+          <div className="c7ncd-operationYaml-others">
+            <p className="c7ncd-operationYaml-title">Readiness Probe</p>
+            <YamlEditor
+              showError={false}
+              readOnly={false}
+              originValue={originValue?.[healthName]}
+              value={dataSet?.current?.get(healthName)}
+              onValueChange={(value: string) => {
+                dataSet?.current?.set(healthName, value);
+              }}
+            />
+          </div>,
         ]
        }
     </div>
