@@ -67,7 +67,11 @@ const Index = ({
   ), [data]);
 
   return (
-    <Dropdown overlay={menu}>
+    <Dropdown
+      overlay={menu}
+      // @ts-ignore
+      getPopupContainer={() => document.querySelector('.c7ncd-buildModal-content')}
+    >
       <Button
         icon="add"
       >
