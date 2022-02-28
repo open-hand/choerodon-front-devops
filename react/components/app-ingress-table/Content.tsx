@@ -218,7 +218,7 @@ const AppIngress = observer(() => {
     return (
       <>
         <Tooltip
-          title={`[${commandType}]:${error}`}
+          title={error ? `[${commandType}]:${error}` : ''}
         >
           <span className={`${prefixCls}-name`}>
             {text}
