@@ -67,6 +67,12 @@ export default observer(() => {
             [mapping.postCommand.name as string]: data[mapping.postCommand.name as string]
               ? Base64.encode(data[mapping.postCommand.name as string])
               : '',
+            [mapping.killCommand.name as string]: data[mapping.killCommand.name as string]
+              ? Base64.encode(data[mapping.killCommand.name as string])
+              : '',
+            [mapping.healthProb.name as string]: data[mapping.healthProb.name as string]
+              ? Base64.encode(data[mapping.healthProb.name as string])
+              : '',
           };
           if (data[mapping.uploadUrl.name as string]) {
             res.sourceType = 'upload';
@@ -174,6 +180,8 @@ export default observer(() => {
         preName={mapping.value.name as string}
         startName={mapping.startCommand.name as string}
         postName={mapping.postCommand.name as string}
+        deleteName={mapping.killCommand.name}
+        healthName={mapping.healthProb.name}
       />
     </div>
   );

@@ -3,8 +3,7 @@ import React, {
   FC, useMemo, useState, useEffect, useImperativeHandle,
 } from 'react';
 import { useFormatCommon } from '@choerodon/master';
-import { DataSet } from 'choerodon-ui/pro';
-
+import { DataSet, Tooltip } from 'choerodon-ui/pro';
 import './index.less';
 import { Loading } from '@choerodon/components';
 import { observer } from 'mobx-react-lite';
@@ -93,7 +92,9 @@ const TemplatesSelector:FC<TemplatesSelectorProps> = (props) => {
         <div className={`${prefixCls}-menu-item-image-container`}>
           <img src={image || cutomizeImg} alt="" />
         </div>
-        <span>{category}</span>
+        <Tooltip title={category}>
+          <span>{category}</span>
+        </Tooltip>
       </div>
     );
   });

@@ -1,8 +1,11 @@
 /* eslint-disable max-len */
 import React, { useMemo } from 'react';
-import { HeaderButtons } from '@choerodon/master';
+import {
+  HeaderButtons,
+  devopsHostsApi,
+} from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
-import { Tooltip } from 'choerodon-ui/pro';
+import { Tooltip, Modal } from 'choerodon-ui/pro';
 import { useAppDetailTabsStore } from '../../stores';
 import { openModifyValueModal } from '@/components/modify-values';
 import { useAppDetailsStore } from '../../../../stores';
@@ -23,11 +26,19 @@ import {
   IS_SERVICE,
   MIDDLWARE_CATERGORY,
   OTHER_CATERGORY,
+  DOCKER_CATEGORY,
 } from '@/routes/app-center-pro/stores/CONST';
+import {
+  DOCKER_TYPE,
+} from '@/routes/app-center-pro/routes/app-detail/CONSTANT';
 import { getAppCategories, getChartSourceGroup } from '@/routes/app-center-pro/utils';
 import AppCenterProServices from '@/routes/app-center-pro/services';
 import {
-  openAppConfigModal, openContainerConfigModal, openDeployGroupConfigModal, openHostAppConfigModal,
+  openAppConfigModal,
+  openContainerConfigModal,
+  openDeployGroupConfigModal,
+  openHostAppConfigModal,
+  openHostDockerConfigModal,
 } from '@/components/appCenter-editModal';
 import openDeleteHostAppModal from '@/components/app-deletion-host';
 
@@ -58,6 +69,7 @@ const DetailsTabsHeaderButtons = () => {
     appServiceVersionId,
     appServiceName,
     appServiceId,
+    hostId,
     instanceId,
     chartSource,
     commandVersion,
@@ -139,13 +151,38 @@ const DetailsTabsHeaderButtons = () => {
         obj = {
           name: '修改应用',
           handler: () => {
-            openHostAppConfigModal(appRecord?.toData() || {}, refresh);
+            openHostAppConfigModal(appRecord?.toData() || {}, () => appDs.query());
+            // const data = appRecord?.toData();
+            // if (['jar', 'other'].includes(data?.rdupmType)) {
+            //   const killCommandExist = data?.killCommandExist;
+            //   if (!killCommandExist) {
+            //     Modal.confirm({
+            //       title: '未维护删除操作',
+            //       children: '此应用当前暂未维护【删除操作】，无法执行修改操作。',
+            //       okText: '我知道了',
+            //       okCancel: false,
+            //     });
+            //   } else {
+            //   }
+            // }
           },
           disabled: btnDisabledHost,
           permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateHost'],
           icon: 'add_comment-o',
         };
         break;
+      case DOCKER_CATEGORY: {
+        obj = {
+          name: '修改应用',
+          handler: () => {
+            openHostDockerConfigModal(appRecord?.toData() || {}, () => appDs.query());
+          },
+          disabled: btnDisabledHost,
+          permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateHost'],
+          icon: 'add_comment-o',
+        };
+        break;
+      }
       default:
         break;
     }
@@ -247,7 +284,21 @@ const DetailsTabsHeaderButtons = () => {
       envId: hostOrEnvId,
       instanceId,
       appCatergoryCode: appCatergory.code,
+      hostId,
     }),
+  };
+
+  const restartApp = {
+    name: '重启应用',
+    permissions: [],
+    handler: async () => {
+      try {
+        await devopsHostsApi.restartApp(hostId, instanceId);
+        appDs.query();
+      } catch (e) {
+        console.log(e);
+      }
+    },
   };
 
   // 删除应用
@@ -263,7 +314,7 @@ const DetailsTabsHeaderButtons = () => {
         instanceName: name,
         appId,
         callback: goBackHomeBaby,
-      }) : openDeleteHostAppModal(hostOrEnvId, appId, name, goBackHomeBaby);
+      }) : openDeleteHostAppModal(hostOrEnvId, appId, name, goBackHomeBaby, appRecord);
     },
   };
 
@@ -377,10 +428,25 @@ const DetailsTabsHeaderButtons = () => {
   // 主机分组
   const getIsHostActionData = () => {
     let data:any = [];
+    let extra: any = [];
+    const rdupm = appRecord?.toData()?.rdupmType;
+    const status = appRecord?.toData()?.status;
     switch (devopsHostCommandDTO?.status) {
       case APP_STATUS.SUCCESS:
       case APP_STATUS.FAILED:
-        data = [modifyAppObj, ...moreOpts];
+        if (rdupm === DOCKER_TYPE) {
+          if (status === APP_STATUS.RUNNING) {
+            extra = [...extra, stopApp, restartApp];
+          } else if (status === APP_STATUS.CREATED) {
+            extra = [...extra, activeApp, restartApp];
+          } else if (status === APP_STATUS.EXITED) {
+            extra = [...extra, restartApp];
+          }
+        }
+        data = [modifyAppObj, ...rdupmType === DOCKER_TYPE ? [deleteApp] : moreOpts, ...extra?.length > 0 ? [{
+          name: '容器操作',
+          groupBtnItems: extra,
+        }] : []];
         break;
       default:
         break;

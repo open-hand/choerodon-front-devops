@@ -5,6 +5,8 @@ import _ from 'lodash';
 import { Alert, Tabs } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import YamlEditor from '@/components/yamlEditor';
+
+import './index.less';
 // import ConfigurationTab from '@/components/configuration-center/ConfigurationTab';
 
 const { TabPane } = Tabs;
@@ -18,6 +20,8 @@ const Index = observer(({
   preName,
   startName,
   postName,
+  deleteName,
+  healthName,
   style,
 }: {
     configDataSet?:DataSet,
@@ -27,12 +31,20 @@ const Index = observer(({
     startName: string,
     postName: string,
     style?: object,
+    deleteName?: string,
+    healthName?: string,
 }) => {
   useEffect(() => {
     originValue = {
       [preName]: _.cloneDeep(dataSet.current?.get(preName)),
       [startName]: _.cloneDeep(dataSet.current?.get(startName)),
       [postName]: _.cloneDeep(dataSet.current?.get(postName)),
+      ...deleteName ? {
+        [deleteName]: _.cloneDeep(dataSet.current?.get(deleteName)),
+      } : {},
+      ...healthName ? {
+        [healthName]: _.cloneDeep(dataSet.current?.get(healthName)),
+      } : {},
     };
   }, []);
 
@@ -86,6 +98,7 @@ const Index = observer(({
   return (
     <div
       style={style || {}}
+      className="c7ncd-operationYaml"
     >
       <Alert
         type="warning"
@@ -121,13 +134,45 @@ const Index = observer(({
       {/* {activeKey !== 'configurationCenter' && ( */}
       <YamlEditor
         readOnly={false}
+        showError={false}
         value={getValue('value')}
         originValue={getValue('origin')}
         onValueChange={(value: string) => {
-                        dataSet?.current?.set(getValue('valueChange'), value);
+          dataSet?.current?.set(getValue('valueChange'), value);
         }}
       />
-      {/* )} */}
+      {
+        deleteName && activeKey === '2' && [
+          <div className="c7ncd-operationYaml-others">
+            <p className="c7ncd-operationYaml-title">删除操作</p>
+            <YamlEditor
+              showError={false}
+              readOnly={false}
+              originValue={originValue?.[deleteName]}
+              value={dataSet?.current?.get(deleteName)}
+              onValueChange={(value: string) => {
+                dataSet?.current?.set(deleteName, value);
+              }}
+            />
+          </div>,
+        ]
+       }
+      {
+        healthName && activeKey === '2' && [
+          <div className="c7ncd-operationYaml-others">
+            <p className="c7ncd-operationYaml-title">Readiness Probe</p>
+            <YamlEditor
+              showError={false}
+              readOnly={false}
+              originValue={originValue?.[healthName]}
+              value={dataSet?.current?.get(healthName)}
+              onValueChange={(value: string) => {
+                dataSet?.current?.set(healthName, value);
+              }}
+            />
+          </div>,
+        ]
+       }
     </div>
   );
 });

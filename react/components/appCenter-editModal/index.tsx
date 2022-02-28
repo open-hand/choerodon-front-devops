@@ -11,6 +11,7 @@ import AppConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/com
 import ContainerConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config';
 import DeployGroupConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/deploy-group-config';
 import HostAppConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-app-config';
+import HostDockerConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-docker-config';
 
 function openAppConfigModal(data: string | object, refresh: Function) {
   Modal.open({
@@ -84,6 +85,28 @@ function openHostAppConfigModal(data: string | object, refresh: Function) {
   });
 }
 
+function openHostDockerConfigModal(data: any, refresh: any) {
+  Modal.open({
+    title: '修改应用',
+    key: Modal.key(),
+    drawer: true,
+    style: {
+      width: CONSTANTS.MODAL_WIDTH.MAX,
+    },
+    children: (
+      <HostDockerConfig
+        refresh={refresh}
+        detail={data}
+      />
+    ),
+    okText: '修改',
+  });
+}
+
 export {
-  openHostAppConfigModal, openAppConfigModal, openContainerConfigModal, openDeployGroupConfigModal,
+  openHostAppConfigModal,
+  openAppConfigModal,
+  openContainerConfigModal,
+  openDeployGroupConfigModal,
+  openHostDockerConfigModal,
 };

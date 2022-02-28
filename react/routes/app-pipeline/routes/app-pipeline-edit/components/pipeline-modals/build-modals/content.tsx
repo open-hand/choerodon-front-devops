@@ -157,20 +157,29 @@ const Index = observer(() => {
         && !contentRef.current.contains(event.target)
         && !document?.querySelector('.c7n-pro-popup-container')?.contains(event.target)
       ) {
-        handleOk({
-          canWait: false,
-          BuildDataSet,
-          level,
-          template,
-          StepDataSet,
-          advancedRef,
-          handleJobAddCallback,
-          type,
-          id,
-          appService,
-          data,
+        const doms = document.querySelectorAll('.c7n-menu-submenu-popup');
+        let flag = false;
+        doms?.length > 0 && doms.forEach((d) => {
+          if (d?.contains(event.target)) {
+            flag = true;
+          }
         });
-        modal?.close();
+        if (!flag) {
+          handleOk({
+            canWait: false,
+            BuildDataSet,
+            level,
+            template,
+            StepDataSet,
+            advancedRef,
+            handleJobAddCallback,
+            type,
+            id,
+            appService,
+            data,
+          });
+          modal?.close();
+        }
       }
     }
 

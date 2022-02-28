@@ -47,6 +47,7 @@ const environment = {
   'c7ncd.environment.Application': '应用实例',
   'c7ncd.environment.Name': '应用名称',
   'c7ncd.environment.ApplicationCode': '应用编码',
+  'c7ncd.environment.rdupm': '部署对象',
   'c7ncd.environment.Status': '状态',
   'c7ncd.environment.ProcessID': '进程号',
   'c7ncd.environment.OccupiedPort': '占用端口',
