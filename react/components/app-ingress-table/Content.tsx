@@ -152,6 +152,8 @@ const AppIngress = observer(() => {
             actionData = [restartObj, startObj, deleteObj];
           } else if (dockerStatus === EXITED_DOCKER) {
             actionData = [startObj, deleteObj];
+          } else {
+            actionData = [deleteObj];
           }
         }
         break;
