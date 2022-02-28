@@ -208,7 +208,7 @@ const DetailItem = (props) => {
 
   const getRdupmType = (rdupmType) => {
     const data = {
-      other_group: '其他制品',
+      other: '其他制品',
       jar: 'jar包',
       image: 'docker镜像',
     };
