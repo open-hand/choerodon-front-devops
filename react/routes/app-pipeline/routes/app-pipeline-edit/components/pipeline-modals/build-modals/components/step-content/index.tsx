@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import {
@@ -26,6 +26,84 @@ import {
 import MavenBuildAdvancedSetting
   from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/components/mavenBuild-advancedSetting';
 import { handleOk } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/content';
+
+const DropObserver = observer(({
+  provided,
+  renderStepDom,
+  ds,
+}: any) => (
+  <div
+    ref={provided.innerRef}
+    style={{
+      // background: snapshot.isDraggingOver ? 'blue' : 'white',
+    }}
+    {...provided.droppableProps}
+  >
+    {
+      renderStepDom(ds)
+    }
+    {provided.placeholder}
+  </div>
+));
+
+const DraggableObserver = observer(({
+  prefix,
+  dragProvided,
+  index,
+  record,
+  dataSet,
+  disabled,
+  okProps,
+  renderItemDom,
+}: any) => (
+  <div
+    className={`${prefix}__stepItem`}
+    ref={dragProvided.innerRef}
+    {...dragProvided.draggableProps}
+    style={{
+      ...dragProvided.draggableProps.style,
+      marginTop: index === 0 ? 15 : 0,
+    }}
+  >
+    <div
+      className={`${prefix}__stepItem__side`}
+      {...dragProvided.dragHandleProps}
+    >
+      <Icon type="baseline-drag_indicator" />
+    </div>
+    <div className={`${prefix}__stepItem__main`}>
+      <div className={`${prefix}__stepItem__main__first`}>
+        <div className={`${prefix}__stepItem__main__first__left`}>
+          <Icon
+            className={`${prefix}__stepItem__main__expand`}
+            type={record.get(StepMapping.expand.name) ? 'arrow_drop_down' : 'arrow_drop_up'}
+            onClick={() => {
+              record.set(StepMapping.expand.name, !record.get(StepMapping.expand.name));
+            }}
+          />
+          <p className={`${prefix}__stepItem__main__name`}>{ record.get(StepMapping.name.name) }</p>
+        </div>
+        {
+          !disabled && (
+            <Icon
+              className={`${prefix}__stepItem__main__first__remove`}
+              type="remove_circle_outline"
+              onClick={() => {
+                dataSet.delete([record], false);
+                handleOk({
+                  canWait: false,
+                  StepDataSet: dataSet,
+                  ...okProps,
+                });
+              }}
+            />
+          )
+        }
+      </div>
+      {renderItemDom(record)}
+    </div>
+  </div>
+));
 
 const DockerDom = observer(({
   record,
@@ -320,53 +398,16 @@ const Index = observer(({
     // TODO 这里要改
     <Draggable draggableId={String(record.id)} index={record.get(StepMapping.sequence.name)}>
       {(dragProvided: any, dragSnapshot: any) => (
-        <div
-          className={`${prefix}__stepItem`}
-          ref={dragProvided.innerRef}
-          {...dragProvided.draggableProps}
-          style={{
-            ...dragProvided.draggableProps.style,
-            marginTop: index === 0 ? 15 : 0,
-          }}
-        >
-          <div
-            className={`${prefix}__stepItem__side`}
-            {...dragProvided.dragHandleProps}
-          >
-            <Icon type="baseline-drag_indicator" />
-          </div>
-          <div className={`${prefix}__stepItem__main`}>
-            <div className={`${prefix}__stepItem__main__first`}>
-              <div className={`${prefix}__stepItem__main__first__left`}>
-                <Icon
-                  className={`${prefix}__stepItem__main__expand`}
-                  type={record.get(StepMapping.expand.name) ? 'arrow_drop_down' : 'arrow_drop_up'}
-                  onClick={() => {
-                    record.set(StepMapping.expand.name, !record.get(StepMapping.expand.name));
-                  }}
-                />
-                <p className={`${prefix}__stepItem__main__name`}>{ record.get(StepMapping.name.name) }</p>
-              </div>
-              {
-                  !disabled && (
-                    <Icon
-                      className={`${prefix}__stepItem__main__first__remove`}
-                      type="remove_circle_outline"
-                      onClick={() => {
-                        dataSet.delete([record], false);
-                        handleOk({
-                          canWait: false,
-                          StepDataSet: dataSet,
-                          ...okProps,
-                        });
-                      }}
-                    />
-                  )
-                }
-            </div>
-            {renderItemDom(record)}
-          </div>
-        </div>
+        <DraggableObserver
+          prefix={prefix}
+          dragProvided={dragProvided}
+          index={index}
+          record={record}
+          dataSet={dataSet}
+          disabled={disabled}
+          okProps={okProps}
+          renderItemDom={renderItemDom}
+        />
       )}
     </Draggable>
   );
@@ -432,18 +473,11 @@ const Index = observer(({
     >
       <Droppable droppableId="context">
         {(provided: any, snapshot: any) => (
-          <div
-            ref={provided.innerRef}
-            style={{
-              // background: snapshot.isDraggingOver ? 'blue' : 'white',
-            }}
-            {...provided.droppableProps}
-          >
-            {
-              renderStepDom(ds)
-            }
-            {provided.placeholder}
-          </div>
+          <DropObserver
+            provided={provided}
+            renderStepDom={renderStepDom}
+            ds={ds}
+          />
         )}
       </Droppable>
     </DragDropContext>
