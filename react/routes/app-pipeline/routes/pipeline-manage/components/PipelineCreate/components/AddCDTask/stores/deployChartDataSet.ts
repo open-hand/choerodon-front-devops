@@ -13,26 +13,29 @@ const appNameChartDataSet = new DataSet({
   autoQuery: false,
   paging: true,
   transport: {
-    read: ({ data: { data } }) => ({
+    read: ({ data: { data } }) => (data?.envId ? ({
       ...deployAppCenterApiConfig
         .getAppFromChart(data.envId, data.appServiceId),
       data: null,
-    }),
+    }) : undefined),
   },
 });
 
 const mapping = (): {
   [key: string]: FieldProps
 } => ({
-  appName: {
+  appId: {
     textField: 'name',
-    valueField: 'name',
+    valueField: 'id',
+    name: 'appId',
+    label: '应用名称',
+    options: appNameChartDataSet,
+  },
+  appName: {
     name: 'appName',
     type: 'string' as FieldType,
     label: '应用名称',
-    required: true,
     maxLength: 64,
-    options: appNameChartDataSet,
   },
   appCode: {
     name: 'appCode',
@@ -67,26 +70,31 @@ const deployConfigDataSet = new DataSet({
   paging: false,
   autoQuery: false,
   transport: {
-    read: ({ data: { data } }) => ({
-      ...deployValueConfigApi.getValueIdList(data),
-      transformResponse: (res) => {
-        let newRes = res;
-        try {
-          newRes = JSON.parse(res);
-          newRes.push({
-            name: '创建部署配置',
-            id: 'create',
-          });
-          return newRes;
-        } catch (e) {
-          newRes.push({
-            name: '创建部署配置',
-            id: 'create',
-          });
-          return newRes;
-        }
-      },
-    }),
+    read: ({ data: { data } }) => {
+      if (!data?.envId) {
+        return [];
+      }
+      return ({
+        ...deployValueConfigApi.getValueIdList(data),
+        transformResponse: (res) => {
+          let newRes = res;
+          try {
+            newRes = JSON.parse(res);
+            newRes.push({
+              name: '创建部署配置',
+              id: 'create',
+            });
+            return newRes;
+          } catch (e) {
+            newRes.push({
+              name: '创建部署配置',
+              id: 'create',
+            });
+            return newRes;
+          }
+        },
+      });
+    },
   },
 });
 
@@ -152,9 +160,9 @@ const deployChartDataSet = (ADDCDTaskDataSet: DataSet) => ({
           record?.set(mapping().value.name as string, item?.get('value'));
           break;
         }
-        case mapping().appName.name: {
+        case mapping().appId.name: {
           if (ADDCDTaskDataSet.current?.get(fieldMap.deployWay.name) === deployWayData[1].value) {
-            const item = appNameChartDataSet.records.find((itemRecord: Record) => itemRecord?.get('name') === value);
+            const item = appNameChartDataSet.records.find((itemRecord: Record) => itemRecord.get('id') === value);
             if (item) {
               record?.set(mapping().appCode.name as string, item.get('code'));
               record?.getField(mapping().appCode.name)?.set('disabled', true);

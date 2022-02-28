@@ -507,24 +507,24 @@ export default observer(() => {
       if (ds.type === typeData[0].value) {
         const chartDeployValidate = await DeployChartDataSet.current.validate(true);
         if (chartDeployValidate) {
-          let appId = {
-            appId: undefined,
-          };
+          // let appId = {
+          //   appId: undefined,
+          // };
           if (ADDCDTaskDataSet.current.get(fieldMap.deployWay.name) === deployWayData[1].value) {
-            const options = DeployChartDataSet.current.getField(deployChartMapping().appName.name)
-              .options;
-            const item = options.records.find(
-              (item) =>
-                item.get('name') ===
-                DeployChartDataSet.current.get(deployChartMapping().appName.name),
-            );
-            appId = {
-              appId: item.get('id'),
-            };
+            // const options = DeployChartDataSet.current.getField(deployChartMapping().appName.name)
+            //   .options;
+            // const item = options.records.find(
+            //   (item) =>
+            //     item.get('name') ===
+            //     DeployChartDataSet.current.get(deployChartMapping().appName.name),
+            // );
+            // appId = {
+            //   appId: item.get('id'),
+            // };
           }
           deployChartData = {
             ...DeployChartDataSet.current.toData(),
-            ...appId,
+            // ...appId,
           };
         } else {
           return false;
@@ -547,20 +547,20 @@ export default observer(() => {
             resourceConfigData: data.containerConfig,
             submitData: returnData,
           });
-          let appId;
-          if (ADDCDTaskDataSet.current.get(fieldMap.deployWay.name) === deployWayData[1].value) {
-            const options = DeployGroupDataSet.current.getField(deployGroupMapping().appName.name)
-              .options;
-            const item = options.records.find(
-              (item) =>
-                item.get('name') ===
-                DeployGroupDataSet.current.get(deployGroupMapping().appName.name),
-            );
-            appId = item.get('id');
-          }
+          // let appId;
+          // if (ADDCDTaskDataSet.current.get(fieldMap.deployWay.name) === deployWayData[1].value) {
+          //   const options = DeployGroupDataSet.current.getField(deployGroupMapping().appName.name)
+          //     .options;
+          //   const item = options.records.find(
+          //     (item) =>
+          //       item.get('name') ===
+          //       DeployGroupDataSet.current.get(deployGroupMapping().appName.name),
+          //   );
+          //   appId = item.get('id');
+          // }
           submitData = {
             ...result,
-            appId,
+            // appId,
           };
         }
       }
@@ -1782,6 +1782,8 @@ export default observer(() => {
             colSpan={3}
             name="envId"
             onChange={() => {
+              DeployChartDataSet?.current?.set(deployChartMapping().deployConfig.name, undefined);
+              DeployChartDataSet?.current?.set(deployChartMapping().value.name, undefined);
               DeployChartDataSet.current.set(deployChartMapping().appName.name, undefined)
             }}
             optionRenderer={optionRenderer}
