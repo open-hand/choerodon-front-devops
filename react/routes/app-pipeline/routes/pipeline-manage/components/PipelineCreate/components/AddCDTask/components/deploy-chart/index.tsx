@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   DataSet, Form, TextField, Select, Button, Modal,
 } from 'choerodon-ui/pro';
@@ -30,6 +30,11 @@ export default observer(({
     valueId: string,
   }): void,
 }) => {
+  useEffect(() => {
+    dataSet?.getField(mapping().appName.name)?.set('required', deployWay === deployWayData[0].value);
+    dataSet?.getField(mapping().appId.name)?.set('required', deployWay === deployWayData[1].value);
+  }, [deployWay]);
+
   const renderValueIdText = () => (
     <div
       style={{
@@ -93,7 +98,7 @@ export default observer(({
           deployWay === deployWayData[0].value ? (
             <TextField name={mapping().appName.name} />
           ) : (
-            <Select name={mapping().appName.name} />
+            <Select name={mapping().appId.name} />
           )
         }
         <TextField name={mapping().appCode.name} />

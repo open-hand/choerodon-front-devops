@@ -24,15 +24,18 @@ const appNameChartDataSet = new DataSet({
 const mapping = (): {
   [key: string]: FieldProps
 } => ({
-  appName: {
+  appId: {
     textField: 'name',
-    valueField: 'name',
+    valueField: 'id',
+    name: 'appId',
+    label: '应用名称',
+    options: appNameChartDataSet,
+  },
+  appName: {
     name: 'appName',
     type: 'string' as FieldType,
     label: '应用名称',
-    required: true,
     maxLength: 64,
-    options: appNameChartDataSet,
   },
   appCode: {
     name: 'appCode',
@@ -157,9 +160,9 @@ const deployChartDataSet = (ADDCDTaskDataSet: DataSet) => ({
           record.set(mapping().value.name as string, item?.get('value'));
           break;
         }
-        case mapping().appName.name: {
+        case mapping().appId.name: {
           if (ADDCDTaskDataSet.current?.get(fieldMap.deployWay.name) === deployWayData[1].value) {
-            const item = appNameChartDataSet.records.find((itemRecord: Record) => itemRecord.get('name') === value);
+            const item = appNameChartDataSet.records.find((itemRecord: Record) => itemRecord.get('id') === value);
             if (item) {
               record.set(mapping().appCode.name as string, item.get('code'));
               record.getField(mapping().appCode.name)?.set('disabled', true);
