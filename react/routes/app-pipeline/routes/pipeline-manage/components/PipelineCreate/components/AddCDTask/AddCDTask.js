@@ -240,6 +240,7 @@ export default observer(() => {
       pipelineStageMainSource.map((item) => item?.jobList?.slice()).filter(i => i) || [];
     const jobArr = tempArr && tempArr.length > 0 ? [].concat.apply(...tempArr) : [];
     let filterArr;
+    const alreadyPipelineTaskValue = ADDCDTaskDataSet?.current?.get('pipelineTask');
     if (jobArr && currentHostDeployType && currentHostDeployType === 'image') {
       filterArr = jobArr.filter((x) => x?.devopsCiStepVOList?.some(i => i?.type === BUILD_DOCKER) && x.type === MAVEN_BUILD);
     } else if (currentHostDeployType === 'jar') {
@@ -256,7 +257,7 @@ export default observer(() => {
           ));
     }
     if (filterArr && filterArr.length === 1) {
-      if (typeof filterArr[0] === 'object') {
+      if (typeof filterArr[0] === 'object' && !alreadyPipelineTaskValue) {
         ADDCDTaskDataSet.current.set('pipelineTask', filterArr[0].name);
       }
     }
@@ -276,9 +277,10 @@ export default observer(() => {
   }, [ADDCDTaskDataSet.current.get('envId')]);
 
   useEffect(() => {
-    if (relatedJobOpts && relatedJobOpts.length === 1) {
+    const alreadyPipelineTaskValue = ADDCDTaskDataSet?.current?.get('pipelineTask');
+    if (relatedJobOpts && relatedJobOpts.length === 1 && !alreadyPipelineTaskValue) {
       ADDCDTaskDataSet.current.set('pipelineTask', relatedJobOpts[0].name);
-    } else {
+    } else if (!alreadyPipelineTaskValue) {
       ADDCDTaskDataSet.current.init('pipelineTask');
     }
   }, [relatedJobOpts, ADDCDTaskDataSet?.current?.get('hostDeployType')]);
