@@ -32,7 +32,7 @@ const getReady = (
     if (record.get('healthProbExist')) {
       return value === 'true' ? 'blue-inverse' : 'gold-inverse';
     }
-    return 'gray-inverse';
+    return 'rgba(0, 0, 0, 0.24)';
   }
   if (record.get('healthProbExist')) {
     return value === 'true' ? '已就绪' : '未就绪';
@@ -193,7 +193,7 @@ const Index = observer(({
         <div
           className={`${cssPrefix}__content`}
           style={{
-            width: '70%',
+            width: '60%',
           }}
         >
           <p className={`${cssPrefix}__content__name`}>基本信息</p>
@@ -304,6 +304,7 @@ const Index = observer(({
                 marginLeft: 0,
                 paddingLeft: 0,
                 flex: 1,
+                marginRight: '15.6%',
               }}
             >
               <p className={`${cssPrefix}__content__name`}>运行详情</p>
