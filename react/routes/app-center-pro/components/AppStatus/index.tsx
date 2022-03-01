@@ -22,7 +22,13 @@ const AppStatus = ({
       <p style={{ margin: 0 }}>{e}</p>
     ));
     return (
-      <Tooltip title={titleDom}>
+      <Tooltip
+        title={titleDom}
+        popupStyle={{
+          maxHeight: 500,
+          overflow: 'auto',
+        }}
+      >
         <Icon
           className={statusCls}
           type="info"
