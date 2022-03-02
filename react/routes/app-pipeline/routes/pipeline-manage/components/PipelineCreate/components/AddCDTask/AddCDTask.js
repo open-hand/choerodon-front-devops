@@ -1149,7 +1149,9 @@ export default observer(() => {
                     name="pipelineTask"
                     searchable
                     addonAfter={
-                      <Tips helpText="此处的关联构建任务，仅会查询出该条流水线中存在'上传jar包至制品库'或“Maven发布”步骤的“构建类型”任务。若所选任务中存在多个满足条件的步骤，则只会部署所选任务中第一个满足条件的步骤产生的jar包；" />
+                      <Tips helpText={ADDCDTaskDataSet?.current?.get(fieldMap.productType.name) === productTypeData[1].value
+                      ? "此处的关联构建任务，仅会查询出该条流水线中存在'Docker构建'步骤的“构建类型”任务。若所选任务中存在多个满足条件的步骤，则只会部署所选任务中第一个满足条件的步骤产生的jar包；"
+                      : "此处的关联构建任务，仅会查询出该条流水线中存在'上传jar包至制品库'或“Maven发布”步骤的“构建类型”任务。若所选任务中存在多个满足条件的步骤，则只会部署所选任务中第一个满足条件的步骤产生的jar包；"} />
                     }
                     searchMatcher={searchMatcher}
                   >
