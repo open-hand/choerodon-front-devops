@@ -290,7 +290,8 @@ const transformLoadData = (data: any) => ({
   [mapping.name.name as string]: data
     ?.devopsDockerInstanceVO?.name,
   [mapping.value.name as string]: data
-    ?.devopsDockerInstanceVO?.dockerCommand,
+    ?.devopsDockerInstanceVO?.dockerCommand && Base64.decode(data
+    ?.devopsDockerInstanceVO?.dockerCommand),
 });
 
 export default hostDockerConfigDataSet;

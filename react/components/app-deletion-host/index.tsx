@@ -37,6 +37,7 @@ async function openDeleteHostAppModal(
     params.host_deploy_type = 'customize';
     checkKillCommandExist();
   }
+  // eslint-disable-next-line consistent-return
   async function deleteHostApp() {
     try {
       const res = await hostApi.jarDelete(hostId, appId, params);
@@ -46,7 +47,7 @@ async function openDeleteHostAppModal(
       typeof callback === 'function' && callback();
       return res;
     } catch (error) {
-      throw new Error(error);
+      console.log(error);
     }
   }
   if (!flag) {
