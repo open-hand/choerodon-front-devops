@@ -29,6 +29,8 @@ const CHART_REPO = 'currentProject'; // 项目制品库
 
 const CHART_UPLOAD = 'upload';
 
+const JAR_CUSTOM = 'custom_jar';
+
 const CHART_HOST = 'all'; // 主机的无chartsource，就是all
 
 const IS_MARKET = 'market_group';
@@ -113,4 +115,5 @@ export {
   PIPELINE_DEPLOY,
   APP_OPERATION,
   DOCKER_CATEGORY,
+  JAR_CUSTOM,
 };

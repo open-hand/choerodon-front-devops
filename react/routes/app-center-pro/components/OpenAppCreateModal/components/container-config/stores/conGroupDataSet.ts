@@ -17,6 +17,7 @@ import hzero from '../images/hzero.png';
 import shareService from '../images/shareService.png';
 import custom from '../images/custom.png';
 import upload from '../images/upload.png';
+import customRepo from '../images/customRepo.svg';
 import portConfigDataSet
   from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config/stores/portConfigDataSet';
 import optionDataSet
@@ -98,6 +99,10 @@ const productSourceData = [{
 }, {
   value: 'middleware',
   name: '中间件',
+}, {
+  value: 'custom_jar',
+  name: '自定义仓库',
+  img: customRepo,
 }];
 
 const repoTypeData = [{

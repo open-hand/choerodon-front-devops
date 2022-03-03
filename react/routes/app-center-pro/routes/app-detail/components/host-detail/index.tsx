@@ -17,7 +17,7 @@ import {
 } from '@/routes/app-center-pro/routes/app-detail/CONSTANT';
 
 import './index.less';
-import { ENV_TAB } from '@/routes/app-center-pro/stores/CONST';
+import { ENV_TAB, JAR_CUSTOM } from '@/routes/app-center-pro/stores/CONST';
 import get = Reflect.get;
 
 const cssPrefix = 'c7ncd-applicationCenter-hostDetail';
@@ -59,6 +59,7 @@ const Index = observer(({
       image: data?.devopsDockerInstanceVO?.image,
       containerName: data?.devopsDockerInstanceVO?.name,
       repoType: data?.devopsDockerInstanceVO?.repoType,
+      downloadUrl: data?.jarPullInfoDTO?.downloadUrl,
     }],
     fields: [{
       name: 'code',
@@ -139,6 +140,10 @@ const Index = observer(({
     }, {
       name: 'ports',
       label: '占用端口',
+      type: 'string' as any,
+    }, {
+      name: 'downloadUrl',
+      label: 'jar包地址',
       type: 'string' as any,
     }],
   }));
@@ -273,23 +278,34 @@ const Index = observer(({
                     renderer={({ value }) => getChartSourceName[value]}
                   />
                   {
-                    appCatergory?.code === OTHER_CATEGORY ? (
-                      <Output
-                        name="fileName"
-                        newLine
-                      />
-                    ) : (
-                      <>
-                        <Output
-                          newLine
-                          name="groupId"
-                        />
-                        <Output
-                          newLine
-                          name="artifactId"
-                        />
-                      </>
-                    )
+                    (function () {
+                      // eslint-disable-next-line no-nested-ternary
+                      return data?.sourceType === JAR_CUSTOM ? (
+                        <>
+                          <Output
+                            name="downloadUrl"
+                            newLine
+                          />
+                        </>
+                      )
+                        : (appCatergory?.code === OTHER_CATEGORY ? (
+                          <Output
+                            name="fileName"
+                            newLine
+                          />
+                        ) : (
+                          <>
+                            <Output
+                              newLine
+                              name="groupId"
+                            />
+                            <Output
+                              newLine
+                              name="artifactId"
+                            />
+                          </>
+                        ));
+                    }())
                   }
                 </>
               )

@@ -3,9 +3,24 @@
 import React, { useImperativeHandle, useEffect,useMemo ,useState} from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Form, Select, Button, TextField, Output, DataSet,
+  Form,
+  Select,
+  Button,
+  TextField,
+  Output,
+  DataSet,
+  Password,
 } from 'choerodon-ui/pro';
-import { Upload, Icon, Button as OldButton, Tabs, Alert, message } from 'choerodon-ui';
+import {
+  Upload,
+  Icon,
+  Button as OldButton,
+  Tabs,
+  Alert,
+  message,
+  Row,
+  Col,
+} from 'choerodon-ui';
 import { isNil } from 'lodash';
 import { CustomSelect, ChunkUploader } from '@choerodon/components';
 import { Base64 } from 'js-base64';
@@ -31,6 +46,7 @@ const TabPane = Tabs.TabPane;
 const jarSource = [
   ...JSON.parse(JSON.stringify(productSourceData)).splice(0, 3),
   productSourceData[5],
+  productSourceData[8],
 ];
 
 const valueCheckValidate = (value, startCommand, postCommand) => {
@@ -53,6 +69,11 @@ const setData = (data: any,configData?:any) => {
     [mapping.jarVersion.name as string]: newData[mapping.jarVersion.name as string],
     [mapping.nexus.name as string]: newData[mapping.nexus.name as string],
   };
+  newData.jarPullInfoDTO = {
+    [mapping.repoUrl.name]: newData?.[mapping.repoUrl.name],
+    [mapping.username.name]: newData?.[mapping.username.name],
+    [mapping.password.name]: newData?.[mapping.password.name],
+  }
   newData.fileInfoVO = {
     [mapping.uploadUrl.name as string]: newData[mapping.uploadUrl.name as string],
     [mapping.fileName.name as string]: newData[mapping.fileName.name as string],
@@ -126,6 +147,7 @@ const Index = observer(() => {
       HostAppConfigDataSet.loadData([{
         ...detail,
         ...detail?.prodJarInfoVO || {},
+        ...detail?.jarPullInfoDTO || {},
         ...detail?.fileInfoVO || {},
         [mapping.value.name]: detail[mapping.value.name] ? Base64.decode(detail[mapping.value.name]) : '',
         [mapping.startCommand.name]: detail[mapping.startCommand.name] ? Base64.decode(detail[mapping.startCommand.name]) : '',
@@ -305,6 +327,16 @@ const Index = observer(() => {
                 ) }
             </>
           );
+          break;
+        }
+        case productSourceData[8].value: {
+          return (
+            <>
+              <TextField name={mapping.repoUrl.name} />
+              <TextField name={mapping.username.name} />
+              <Password name={mapping.password.name} />
+            </>
+          )
         }
         // case productSourceData[1].value: case productSourceData[2].value: {
         //   return (
