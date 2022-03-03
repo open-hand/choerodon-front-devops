@@ -236,6 +236,21 @@ const mapping: {
     name: 'fileName',
     type: 'string' as FieldType,
   },
+  repoUrl: {
+    name: 'downloadUrl',
+    type: 'string' as FieldType,
+    label: '仓库地址',
+  },
+  username: {
+    name: 'pullUserId',
+    type: 'string' as FieldType,
+    label: '用户名',
+  },
+  password: {
+    name: 'pullUserPassword',
+    type: 'string' as FieldType,
+    label: '密码',
+  },
 //   configSettingVOS: {
 //     name: 'configSettingVOS',
 //     type: 'array' as FieldType,
@@ -446,6 +461,16 @@ const hostAppConfigDataSet = (modal: any, detail: any): DataSetProps => ({
       case 'appName': {
         item.dynamicProps = {
           required: () => Boolean(detail),
+        };
+        break;
+      }
+      case 'repoUrl':
+      case 'username':
+      case 'password': {
+        item.dynamicProps = {
+          required: ({ record }) => record?.get(
+            mapping.jarSource.name,
+          ) === productSourceData[8].value,
         };
         break;
       }

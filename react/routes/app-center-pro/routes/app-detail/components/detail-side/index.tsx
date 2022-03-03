@@ -21,6 +21,7 @@ import {
   HOST_TAB,
   OTHER_CATERGORY,
   MIDDLWARE_CATERGORY,
+  JAR_CUSTOM,
 } from '@/routes/app-center-pro/stores/CONST';
 import AppStatus from '@/routes/app-center-pro/components/AppStatus';
 
@@ -32,6 +33,7 @@ const getChartSourceName:any = {
   [CHART_REPO]: '项目制品库',
   [CHART_NORMAL]: '项目服务',
   [CHART_UPLOAD]: '本地上传',
+  [JAR_CUSTOM]: '自定义仓库',
 };
 
 const DetailAside = () => {
