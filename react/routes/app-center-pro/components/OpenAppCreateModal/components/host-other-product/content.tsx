@@ -174,6 +174,7 @@ export default observer(() => {
         style={{
           marginTop: 30,
         }}
+        hasGuide
         dataSet={HostOtherProductDataSet}
         // configDataSet={configurationCenterDataSet}
         // optsDS={configCompareOptsDS}

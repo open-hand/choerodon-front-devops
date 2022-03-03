@@ -423,6 +423,7 @@ const Index = observer(() => {
             style={{
               marginBottom: 20,
             }}
+            hasGuide={detail?.rdupmType === 'other'}
             dataSet={HostAppConfigDataSet}
             // configDataSet={isNil(detail)?configurationCenterDataSet:deployConfigDataSet}
             // configDataSet={configDataSet}

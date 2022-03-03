@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { DataSet, Tooltip, Icon } from 'choerodon-ui/pro';
+import {
+  DataSet, Tooltip, Icon, Button,
+} from 'choerodon-ui/pro';
 import _ from 'lodash';
 import { Alert, Tabs } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import YamlEditor from '@/components/yamlEditor';
+import {
+  handleModal,
+} from '@/components/host-guide';
 
 import './index.less';
 // import ConfigurationTab from '@/components/configuration-center/ConfigurationTab';
@@ -23,6 +28,7 @@ const Index = observer(({
   deleteName,
   healthName,
   style,
+  hasGuide,
 }: {
     configDataSet?:DataSet,
     optsDS?:DataSet,
@@ -33,6 +39,7 @@ const Index = observer(({
     style?: object,
     deleteName?: string,
     healthName?: string,
+    hasGuide?: boolean,
 }) => {
   useEffect(() => {
     originValue = {
@@ -103,7 +110,24 @@ const Index = observer(({
       <Alert
         type="warning"
         showIcon
-        message="【前置命令】、【启动命令】、【后置命令】三者之中，必须至少填写一个"
+        message={(
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <p style={{ margin: 0 }}>
+              【前置命令】、【启动命令】、【后置命令】三者之中，必须至少填写一个
+            </p>
+            {
+              hasGuide && (
+                <Button
+                  icon="view_list-o"
+                  funcType={'flat' as any}
+                  onClick={() => handleModal()}
+                >
+                  主机部署指引
+                </Button>
+              )
+            }
+          </div>
+        )}
       />
       <Tabs onChange={(value) => setActiveKey(value)} activeKey={activeKey}>
         {/* <TabPane

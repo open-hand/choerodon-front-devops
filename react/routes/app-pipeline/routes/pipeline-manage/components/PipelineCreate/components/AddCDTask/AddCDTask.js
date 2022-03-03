@@ -1201,6 +1201,7 @@ export default observer(() => {
           <OperationYaml
             colSpan={6}
             newLine
+            hasGuide={ADDCDTaskDataSet.current.get(fieldMap.productType.name) === productTypeData[2].value}
             dataSet={ADDCDTaskDataSet}
             // configDataSet={configDataSet}
             // optsDS={configCompareOptsDS}
