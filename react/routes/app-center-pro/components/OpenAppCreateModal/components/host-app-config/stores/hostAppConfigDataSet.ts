@@ -210,6 +210,24 @@ const mapping: {
 #重启PHP服务（ps -ef | grep 'php-fpm'|awk '{print $2}'|kill -USR2）
 #./server.startup -tomcat`,
   },
+  killCommand: {
+    name: 'killCommand',
+    type: 'string' as FieldType,
+    defaultValue: `
+    #删除命令： 
+#比如：
+#PID=$(ps -ef |grep "app.jar" |grep -v 'grep'|awk '{print $2}')
+#if [ $PID ]; then
+  #kill -9 $PID
+#fi`,
+  },
+  healthProb: {
+    name: 'healthProb',
+    type: 'string' as FieldType,
+    defaultValue: `
+    #可读健康探针根据命令的执行后退出状态码进行判断，只有状态码为0才认为探针执行成功
+#比如 nc -z localhost 8070 && curl -s --fail localhost:8071/actuator/health`,
+  },
   uploadUrl: {
     name: 'uploadUrl',
     type: 'string' as FieldType,
@@ -217,6 +235,21 @@ const mapping: {
   fileName: {
     name: 'fileName',
     type: 'string' as FieldType,
+  },
+  repoUrl: {
+    name: 'downloadUrl',
+    type: 'string' as FieldType,
+    label: '仓库地址',
+  },
+  username: {
+    name: 'pullUserId',
+    type: 'string' as FieldType,
+    label: '用户名',
+  },
+  password: {
+    name: 'pullUserPassword',
+    type: 'string' as FieldType,
+    label: '密码',
   },
 //   configSettingVOS: {
 //     name: 'configSettingVOS',
@@ -431,6 +464,16 @@ const hostAppConfigDataSet = (modal: any, detail: any): DataSetProps => ({
         };
         break;
       }
+      case 'repoUrl':
+      case 'username':
+      case 'password': {
+        item.dynamicProps = {
+          required: ({ record }) => record?.get(
+            mapping.jarSource.name,
+          ) === productSourceData[8].value,
+        };
+        break;
+      }
       default: {
         break;
       }
@@ -443,6 +486,7 @@ const hostAppConfigDataSet = (modal: any, detail: any): DataSetProps => ({
       if (data.rdupmType === 'other') {
         return deployApiConfig.deployCustom({
           ...setData(data),
+          operation: 'update',
           appName: data[mapping.appName.name as string],
           appCode: data[mapping.appCode.name as string],
         });
@@ -456,6 +500,7 @@ const hostAppConfigDataSet = (modal: any, detail: any): DataSetProps => ({
       }
       return deployApiConfig.deployJava({
         ...setData(data),
+        operation: 'update',
         appName: data[mapping.appName.name as string],
         appCode: data[mapping.appCode.name as string],
       });

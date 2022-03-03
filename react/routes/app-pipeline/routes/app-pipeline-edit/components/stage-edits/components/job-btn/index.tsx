@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Icon } from 'choerodon-ui/pro';
 import './index.less';
 import { Popover } from 'choerodon-ui';
@@ -31,6 +31,23 @@ const JobAddBtn = (props:JobAddBtnProps) => {
   } = props;
 
   const [popoverVisible, { setFalse, toggle }] = useBoolean(false);
+
+  useEffect(() => {
+    function handleClickOutside(event: any) {
+      if (!document?.querySelector('.c7ncd-pipeline-edit-jobbtn-normal')?.contains(event.target)
+        && !document?.querySelector('.c7ncd-pipeline-edit-jobbtn-popover')?.contains(event.target)
+      ) {
+        setFalse();
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const {
     currentOpenPanelIdentity,

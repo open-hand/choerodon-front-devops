@@ -196,6 +196,9 @@ export default observer(() => {
       [fieldMap.preCommand.name]: fieldMap.preCommand.defaultValue,
       [fieldMap.runCommand.name]: fieldMap.runCommand.defaultValue,
       [fieldMap.postCommand.name]: fieldMap.postCommand.defaultValue,
+      [fieldMap.killCommand.name]: fieldMap.killCommand.defaultValue,
+      [fieldMap.dockerCommand.name]: fieldMap.dockerCommand.defaultValue,
+      [fieldMap.healthProb.name]: fieldMap.healthProb.defaultValue,
     };
     if (taskType === 'cdHost' && relatedJobOpts && relatedJobOpts.length === 1) {
       newData.pipelineTask = relatedJobOpts[0].name;
@@ -237,6 +240,7 @@ export default observer(() => {
       pipelineStageMainSource.map((item) => item?.jobList?.slice()).filter(i => i) || [];
     const jobArr = tempArr && tempArr.length > 0 ? [].concat.apply(...tempArr) : [];
     let filterArr;
+    const alreadyPipelineTaskValue = ADDCDTaskDataSet?.current?.get('pipelineTask');
     if (jobArr && currentHostDeployType && currentHostDeployType === 'image') {
       filterArr = jobArr.filter((x) => x?.devopsCiStepVOList?.some(i => i?.type === BUILD_DOCKER) && x.type === MAVEN_BUILD);
     } else if (currentHostDeployType === 'jar') {
@@ -245,9 +249,15 @@ export default observer(() => {
           (x?.devopsCiStepVOList?.some(i => [BUILD_MAVEN_PUBLISH, BUILD_UPLOADJAR].includes(i?.type)) &&
           x.type === MAVEN_BUILD
       ));
+    } else if (currentHostDeployType === 'docker') {
+      filterArr = jobArr.filter(
+        (x) =>
+          (x?.devopsCiStepVOList?.some(i => [BUILD_DOCKER].includes(i?.type)) &&
+            x.type === MAVEN_BUILD
+          ));
     }
     if (filterArr && filterArr.length === 1) {
-      if (typeof filterArr[0] === 'object') {
+      if (typeof filterArr[0] === 'object' && !alreadyPipelineTaskValue) {
         ADDCDTaskDataSet.current.set('pipelineTask', filterArr[0].name);
       }
     }
@@ -267,9 +277,10 @@ export default observer(() => {
   }, [ADDCDTaskDataSet.current.get('envId')]);
 
   useEffect(() => {
-    if (relatedJobOpts && relatedJobOpts.length === 1) {
+    const alreadyPipelineTaskValue = ADDCDTaskDataSet?.current?.get('pipelineTask');
+    if (relatedJobOpts && relatedJobOpts.length === 1 && !alreadyPipelineTaskValue) {
       ADDCDTaskDataSet.current.set('pipelineTask', relatedJobOpts[0].name);
-    } else {
+    } else if (!alreadyPipelineTaskValue) {
       ADDCDTaskDataSet.current.init('pipelineTask');
     }
   }, [relatedJobOpts, ADDCDTaskDataSet?.current?.get('hostDeployType')]);
@@ -320,6 +331,9 @@ export default observer(() => {
     ds[fieldMap.preCommand.name] = Base64.encode(ds[fieldMap.preCommand.name]);
     ds[fieldMap.runCommand.name] = Base64.encode(ds[fieldMap.runCommand.name]);
     ds[fieldMap.postCommand.name] = Base64.encode(ds[fieldMap.postCommand.name]);
+    ds[fieldMap.killCommand.name] = Base64.encode(ds[fieldMap.killCommand.name]);
+    ds[fieldMap.dockerCommand.name] = Base64.encode(ds[fieldMap.dockerCommand.name]);
+    ds[fieldMap.healthProb.name] = Base64.encode(ds[fieldMap.healthProb.name]);
     if (ds.type === 'cdDeploy') {
       ds.value = Base64.encode(valueIdValues);
       // 如果部署模式是新建 则删掉多余的实例id
@@ -423,6 +437,12 @@ export default observer(() => {
         ds.jarDeploy.name = ds.appInstanceName;
         ds.jarDeploy.workingPath = ds.workingPath;
       } else if (ds.hostDeployType === productTypeData[1].value) {
+        ds.imageDeploy = {
+          ...currentObj,
+          containerName: ds.containerName,
+          pipelineTask: ds.pipelineTask,
+        }
+      } else if (ds.hostDeployType === productTypeData[2].value) {
         // ds[fieldMap.preCommand.name] = Base64.encode(ds[fieldMap.preCommand.name]);
         // ds[fieldMap.runCommand.name] = Base64.encode(ds[fieldMap.runCommand.name]);
         // ds[fieldMap.postCommand.name] = Base64.encode(ds[fieldMap.postCommand.name]);
@@ -578,6 +598,9 @@ export default observer(() => {
       let preCommand;
       let runCommand;
       let postCommand;
+      let killCommand;
+      let dockerCommand;
+      let healthProb;
       let extra = {};
       // if (jobDetail.type === "cdDeploy") {
       //   const { value } = JSONbig.parse(jobDetail.metadata.replace(/'/g, '"'));
@@ -610,6 +633,9 @@ export default observer(() => {
         preCommand = Base64.decode(metadata[fieldMap.preCommand.name]);
         runCommand = Base64.decode(metadata[fieldMap.runCommand.name]);
         postCommand = Base64.decode(metadata[fieldMap.postCommand.name]);
+        killCommand = metadata?.[fieldMap.killCommand.name] ? Base64.decode(metadata[fieldMap.killCommand.name]) : '';
+        healthProb = metadata?.[fieldMap.healthProb.name] ? Base64.decode(metadata[fieldMap.healthProb.name]) : '';
+        dockerCommand = metadata?.[fieldMap.dockerCommand.name] ? Base64.decode(metadata[fieldMap.dockerCommand.name]) : '';
         HostJarDataSet.loadData([
           {
             appName: metadata.appName,
@@ -664,7 +690,6 @@ export default observer(() => {
         const metadata = JSON.parse(jobDetail.metadata.replace(/'/g, '"'));
         setDeployGroupDetail(metadata);
       }
-
       const newJobDetail = {
         ...jobDetail,
         ...extra,
@@ -678,11 +703,15 @@ export default observer(() => {
         cdAuditUserIds: newCdAuditUserIds && [...newCdAuditUserIds],
         triggerValue:
           jobDetail.triggerType === 'regex'
-            ? jobDetail.triggerValue
-            : jobDetail.triggerValue?.split(','),
+            ? (jobDetail?.triggerValue ? jobDetail?.triggerValue : undefined)
+            : (jobDetail?.triggerValue ? jobDetail?.triggerValue?.split(',') : undefined),
         preCommand,
         runCommand,
         postCommand,
+        killCommand,
+        healthProb,
+        dockerCommand,
+        deploySource: extra?.deploySource || 'pipelineDeploy',
       };
       delete newJobDetail.metadata;
       if (newJobDetail.envId) {
@@ -842,7 +871,7 @@ export default observer(() => {
   };
 
   function searchMatcher({ record, text }) {
-    return record.get('pipelineTask')?.indexOf(text) !== -1;
+    return record?.get('pipelineTask')?.indexOf(text) !== -1;
   }
 
   const handleClickCreateValue = (e) => {
@@ -904,12 +933,12 @@ export default observer(() => {
   const optionRenderValueId = ({ value, text, record }) => rendererValueId({ text });
 
   const renderOptionProperty = ({ record }) => ({
-    disabled: !record.get('connect'),
+    disabled: !record?.get('connect'),
   });
 
   const renderEnvOption = ({ record, text }) => (
     <>
-      <StatusDot size="small" synchronize connect={record.get('connect')} />
+      <StatusDot size="small" synchronize connect={record?.get('connect')} />
       <span style={{ marginLeft: 5 }}>{text}</span>
     </>
   );
@@ -1100,7 +1129,7 @@ export default observer(() => {
           />,
         ],
         jar: [
-          ADDCDTaskDataSet.current.get(fieldMap.productType.name) === productTypeData[0].value
+          [productTypeData[0].value, productTypeData[1].value].includes(ADDCDTaskDataSet.current.get(fieldMap.productType.name))
             ? [
                 <Select
                   newLine
@@ -1120,7 +1149,9 @@ export default observer(() => {
                     name="pipelineTask"
                     searchable
                     addonAfter={
-                      <Tips helpText="此处的关联构建任务，仅会查询出该条流水线中存在'上传jar包至制品库'或“Maven发布”步骤的“构建类型”任务。若所选任务中存在多个满足条件的步骤，则只会部署所选任务中第一个满足条件的步骤产生的jar包；" />
+                      <Tips helpText={ADDCDTaskDataSet?.current?.get(fieldMap.productType.name) === productTypeData[1].value
+                      ? "此处的关联构建任务，仅会查询出该条流水线中存在'Docker构建'步骤的“构建类型”任务。若所选任务中存在多个满足条件的步骤，则只会部署所选任务中第一个满足条件的步骤产生的jar包；"
+                      : "此处的关联构建任务，仅会查询出该条流水线中存在'上传jar包至制品库'或“Maven发布”步骤的“构建类型”任务。若所选任务中存在多个满足条件的步骤，则只会部署所选任务中第一个满足条件的步骤产生的jar包；"} />
                     }
                     searchMatcher={searchMatcher}
                   >
@@ -1129,6 +1160,9 @@ export default observer(() => {
                     ))}
                   </Select>
                 ),
+                [productTypeData[1].value].includes(ADDCDTaskDataSet.current.get(fieldMap.productType.name)) && (
+                  <TextField colSpan={3} name='containerName' />
+                )
               ]
             : '',
           currentDepoySource === 'matchDeploy' && <Select colSpan={3} name="serverName" />,
@@ -1163,16 +1197,30 @@ export default observer(() => {
           //   name="workingPath"
           // />,
           // <TextField colSpan={3} name="appInstanceName" />,
+          [productTypeData[0].value, productTypeData[2].value].includes(ADDCDTaskDataSet.current.get(fieldMap.productType.name)) ?
           <OperationYaml
             colSpan={6}
             newLine
+            hasGuide={ADDCDTaskDataSet.current.get(fieldMap.productType.name) === productTypeData[2].value}
             dataSet={ADDCDTaskDataSet}
             // configDataSet={configDataSet}
             // optsDS={configCompareOptsDS}
             preName={fieldMap.preCommand.name}
             startName={fieldMap.runCommand.name}
             postName={fieldMap.postCommand.name}
-          />,
+            deleteName={fieldMap.killCommand.name}
+            healthName={fieldMap.healthProb.name}
+          /> : (
+              <YamlEditor
+                colSpan={6}
+                // className="addcdTask-yamleditor"
+                newLine
+                showError={false}
+                readOnly={false}
+                value={ADDCDTaskDataSet.current.get(fieldMap.dockerCommand.name)}
+                onValueChange={(data) => ADDCDTaskDataSet.current.set(fieldMap.dockerCommand.name, data)}
+              />
+            ),
           // <YamlEditor
           //   colSpan={6}
           //   newLine
@@ -1518,7 +1566,7 @@ export default observer(() => {
   }
 
   const renderderAuditUsersList = ({ text, record }) => {
-    const ldap = record.get('ldap');
+    const ldap = record?.get('ldap');
     if (text === '加载更多') {
       return (
         <a
@@ -1530,7 +1578,7 @@ export default observer(() => {
         </a>
       );
     }
-    return ldap ? `${text}(${record.get('loginName')})` : `${text}(${record.get('email')})`;
+    return ldap ? `${text}(${record?.get('loginName')})` : `${text}(${record?.get('email')})`;
   };
 
   /**
@@ -1600,7 +1648,7 @@ export default observer(() => {
             width: '0.08rem',
             height: '0.08rem',
             borderRadius: '50%',
-            backgroundColor: record.get('connected') ? 'rgb(0, 191, 165)' : '#ff9915',
+            backgroundColor: record?.get('connected') ? 'rgb(0, 191, 165)' : '#ff9915',
           }}
         />
       )}
@@ -1609,7 +1657,7 @@ export default observer(() => {
   );
 
   const optionRenderer = ({ record, text, value }) => (
-    <Tooltip title={!record.get('connected') && '未连接'}>
+    <Tooltip title={!record?.get('connected') && '未连接'}>
       {renderer({ record, text, value })}
     </Tooltip>
   );
@@ -1692,7 +1740,7 @@ export default observer(() => {
             searchMatcher="task_name"
             name={addCDTaskDataSetMap.apiTestMission}
             optionRenderer={({ record, text }) => {
-              if (!record.get('executeOnline')) {
+              if (!record?.get('executeOnline')) {
                 return (
                     <Tooltip title="含有自定义脚本，无法选择">
                       {text}
@@ -1703,7 +1751,7 @@ export default observer(() => {
               }
             }}
             onOption={({ record }) => ({
-              disabled: !record.get('executeOnline')
+              disabled: !record?.get('executeOnline')
             })}
             addonAfter={<Tips helpText="此处仅能从项目下已有的API测试任务中进行选择" />}
           />,
@@ -1744,7 +1792,7 @@ export default observer(() => {
             optionRenderer={optionRenderer}
             // renderer={renderer}
             onOption={({ record }) => ({
-              disabled: !record.get('connected'),
+              disabled: !record?.get('connected'),
             })}
           />,
           <div
@@ -1785,7 +1833,7 @@ export default observer(() => {
         {/*    optionRenderer={optionRenderer}*/}
         {/*    // renderer={renderer}*/}
         {/*    onOption={({ record }) => ({*/}
-        {/*      disabled: !record.get("connected"),*/}
+        {/*      disabled: !record?.get("connected"),*/}
         {/*    })}*/}
         {/*  />,*/}
         {/*  isProjectOwner && (*/}
@@ -1847,7 +1895,7 @@ export default observer(() => {
                 maxTagCount={3}
                 searchMatcher="realName"
                 onOption={({ record }) => ({
-                  disabled: record.get('id') === 'more',
+                  disabled: record?.get('id') === 'more',
                 })}
                 onChange={() => {
                   handleClickMore(null);

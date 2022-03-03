@@ -51,7 +51,19 @@ export const StoreProvider = injectIntl(inject('AppState')(
       });
       appIngressDataset.queryFields = queryFields;
       if (!appIngressDataset?.transport?.destroy) {
-        appIngressDataset.transport.destroy = ({ data: [data] }:any) => (hostApi.jarDelete(data.hostId, data.id));
+        appIngressDataset.transport.destroy = ({ data: [data] }:any) => {
+          let type;
+          if (data?.rdupmType === 'docker') {
+            type = 'image';
+          } else if (data?.rdupmType === 'jar') {
+            type = 'jar';
+          } else {
+            type = 'customize';
+          }
+          return (hostApi.jarDelete(data.hostId, data.id, {
+            host_deploy_type: type,
+          }));
+        };
       }
     }, [appIngressDataset, projectId]);
 

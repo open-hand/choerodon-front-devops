@@ -27,6 +27,7 @@ import MirrorScanning from '../MirrorScanningLog';
 import jobTypesMappings from '../../../../stores/jobsTypeMappings';
 import { JOB_GROUP_TYPES } from '@/routes/app-pipeline/stores/CONSTANTS';
 import { openExcuteDetailModal } from './components/excute-details';
+import { CHART_HOST } from '@/routes/app-center-pro/stores/CONST';
 
 const prefixCls = 'c7n-piplineManage-detail-column';
 
@@ -155,7 +156,7 @@ const DetailItem = (props) => {
   }) {
     if (appId) {
       history.push({
-        pathname: `/devops/application-center/detail/${appId}/${chartSource}/${deployType}/${deployTypeId}/${rdupmType}`,
+        pathname: `/devops/application-center/detail/${appId}/${chartSource || CHART_HOST}/${deployType}/${deployTypeId}/${rdupmType}`,
         search: `${search}`,
       });
     } else {
@@ -205,6 +206,16 @@ const DetailItem = (props) => {
     );
   };
 
+  const getRdupmType = (rdupmType) => {
+    const data = {
+      other: '其他制品',
+      jar: 'jar包',
+      image: 'docker镜像',
+      docker: 'docker镜像',
+    };
+    return data[rdupmType];
+  };
+
   const renderCdHost = () => {
     const {
       appId,
@@ -226,20 +237,22 @@ const DetailItem = (props) => {
         </div>
         <div>
           <span>制品类型：</span>
-          <span>{rdupmType === 'other_group' ? '其他制品' : 'jar包'}</span>
+          <span>{getRdupmType(rdupmType)}</span>
         </div>
         <div>
           <span>生成应用:</span>
           <Tooltip title={appName}>
             <span
               style={{ color: '#3F51B5', cursor: 'pointer' }}
-              onClick={() => linkToAppDetailsInAppCenter({
-                appId,
-                chartSource,
-                rdupmType,
-                deployType,
-                deployTypeId,
-              })}
+              onClick={() => {
+                linkToAppDetailsInAppCenter({
+                  appId,
+                  chartSource,
+                  rdupmType,
+                  deployType,
+                  deployTypeId,
+                });
+              }}
             >
               {(jobStatus !== 'created' && appName) || '-'}
             </span>
@@ -572,6 +585,10 @@ const DetailItem = (props) => {
           go_unit_test: {
             name: '下载Go单测报告',
             filename: 'Go单测报告.xml',
+          },
+          general_unit_test: {
+            name: '下载单元测试(通用)报告',
+            filename: '单元测试(通用)报告.xml',
           },
         };
         const handleDownload = () => {

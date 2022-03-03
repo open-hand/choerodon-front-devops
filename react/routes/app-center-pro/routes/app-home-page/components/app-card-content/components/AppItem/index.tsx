@@ -103,7 +103,7 @@ const AppItem = observer(({
       instanceName: name,
       callback: refresh,
       appId: id,
-    }) : openDeleteHostAppModal(hostId, id, name, refresh);
+    }) : openDeleteHostAppModal(hostId, id, name, refresh, record);
   };
 
   const stopObj = {

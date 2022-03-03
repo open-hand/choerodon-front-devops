@@ -56,9 +56,9 @@ const appServiceOptionsDs = {
     read: (params: any) => {
       const { data } = params;
       // 这里不知道为啥 searchMatcher的值变成了key
-      const { key, appServiceId } = data;
+      const { param, appServiceId } = data;
       return ({
-        ...appServiceApiConfig.getAppService(true, 'normal', data?.type || 'normal_service', key, appServiceId),
+        ...appServiceApiConfig.getAppService(true, 'normal', data?.type || 'normal_service', param, appServiceId),
         transformResponse: (res: any) => {
           let newRes = res;
           function init(d: {

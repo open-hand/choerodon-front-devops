@@ -75,7 +75,7 @@ const StageEdits = () => {
       }
       return addStageType;
     },
-    [],
+    [getSourceData?.length],
   );
 
   const renderStages = useCallback(
