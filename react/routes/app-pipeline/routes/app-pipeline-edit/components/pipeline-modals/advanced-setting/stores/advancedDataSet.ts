@@ -147,6 +147,7 @@ const Index = ({
   events: {
     create: async ({ dataSet, record }: any) => {
       const dataImage = data?.image;
+      const oldImage = data?.oldImage;
       const res = await record.getField(mapping.ciRunnerImage.name).options.query();
       let flag = false;
       const optionsData = [...res];
@@ -154,6 +155,12 @@ const Index = ({
         optionsData.push({
           text: dataImage,
           value: dataImage,
+        });
+      }
+      if (oldImage && oldImage !== dataImage && oldImage !== res[0].image) {
+        optionsData.push({
+          text: oldImage,
+          value: oldImage,
         });
       }
       if (outSideAdvancedData) {

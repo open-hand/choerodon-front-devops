@@ -24,6 +24,11 @@ const handleBuildModal = (
   modalProps?: any,
 ) => {
   const { template } = data;
+  const newData = data;
+  // 这里是设置一个值来保存老image值 为了在更新image后 还能选到老值
+  if (!newData?.oldImage) {
+    newData.oldImage = newData?.image;
+  }
   function getTitle() {
     if (template && template === TASK_TEMPLATE) {
       return '创建任务模板';
