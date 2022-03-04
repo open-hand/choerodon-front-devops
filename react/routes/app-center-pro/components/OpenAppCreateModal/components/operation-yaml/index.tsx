@@ -12,7 +12,6 @@ import {
 } from '@/components/host-guide';
 
 import './index.less';
-// import ConfigurationTab from '@/components/configuration-center/ConfigurationTab';
 
 const { TabPane } = Tabs;
 
