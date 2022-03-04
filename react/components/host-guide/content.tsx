@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { YamlEditor } from '@choerodon/components';
+import {
+  Spin,
+} from 'choerodon-ui/pro';
 
 import './index.less';
 
@@ -219,111 +222,141 @@ fi`,
 curl -s --fail localhost:5000`,
 }];
 
-const Index = () => (
-  <div className={prefix}>
-    {
-      data.map((i, index) => (
-        <>
-          {
-            index !== 0 && (
-              <div className={`${prefix}-divided`} />
-            )
-          }
-          <p className={`${prefix}-title`}>
-            {i.name}
-          </p>
-          <p className={`${prefix}-phrase`}>
-            环境准备相关事项
-          </p>
-          {i.prepare.map((p) => (
-            <p className={`${prefix}-phrase`}>
-              {p}
+const Index = () => {
+  const [visible, setVisible] = useState(false);
+
+  useLayoutEffect(() => {
+    setTimeout(() => {
+      setVisible(true);
+    }, 500);
+  }, []);
+
+  return (
+    <div className={prefix}>
+      {
+        data.map((i, index) => (
+          <>
+            {
+              index !== 0 && (
+                <div className={`${prefix}-divided`} />
+              )
+            }
+            <p className={`${prefix}-title`}>
+              {i.name}
             </p>
-          ))}
-          {
-            i?.pre && (
-              <>
-                <div className={`${prefix}-divided`} />
-                <p className={`${prefix}-title`}>
-                  前置操作
-                </p>
-                <YamlEditor
-                  modeChange={false}
-                  readOnly
-                  showError={false}
-                  value={i.pre}
-                />
-              </>
-            )
-          }
-          {
-            i?.start && (
-              <>
-                <div className={`${prefix}-divided`} />
-                <p className={`${prefix}-title`}>
-                  启动命令
-                </p>
-                <YamlEditor
-                  modeChange={false}
-                  readOnly
-                  showError={false}
-                  value={i.start}
-                />
-              </>
-            )
-          }
-          {
-            i?.delete && (
-              <>
-                <div className={`${prefix}-divided`} />
-                <p className={`${prefix}-title`}>
-                  删除命令
-                </p>
-                <YamlEditor
-                  modeChange={false}
-                  readOnly
-                  showError={false}
-                  value={i.delete}
-                />
-              </>
-            )
-          }
-          {
-            i?.probe && (
-              <>
-                <div className={`${prefix}-divided`} />
-                <p className={`${prefix}-title`}>
-                  Readiness Probe
-                </p>
-                <YamlEditor
-                  modeChange={false}
-                  readOnly
-                  showError={false}
-                  value={i.probe}
-                />
-              </>
-            )
-          }
-          {
-            i?.post && (
-              <>
-                <div className={`${prefix}-divided`} />
-                <p className={`${prefix}-title`}>
-                  后置操作
-                </p>
-                <YamlEditor
-                  modeChange={false}
-                  readOnly
-                  showError={false}
-                  value={i.post}
-                />
-              </>
-            )
-          }
-        </>
-      ))
-    }
-  </div>
-);
+            <p className={`${prefix}-phrase`}>
+              环境准备相关事项
+            </p>
+            {i.prepare.map((p) => (
+              <p className={`${prefix}-phrase`}>
+                {p}
+              </p>
+            ))}
+            {
+              i?.pre && (
+                <>
+                  <div className={`${prefix}-divided`} />
+                  <p className={`${prefix}-title`}>
+                    前置操作
+                  </p>
+                  {
+                    visible ? (
+                      <YamlEditor
+                        modeChange={false}
+                        readOnly
+                        showError={false}
+                        value={i.pre}
+                      />
+                    ) : <Spin />
+                  }
+                </>
+              )
+            }
+            {
+              i?.start && (
+                <>
+                  <div className={`${prefix}-divided`} />
+                  <p className={`${prefix}-title`}>
+                    启动命令
+                  </p>
+                  {
+                    visible ? (
+                      <YamlEditor
+                        modeChange={false}
+                        readOnly
+                        showError={false}
+                        value={i.start}
+                      />
+                    ) : <Spin />
+                  }
+                </>
+              )
+            }
+            {
+              i?.delete && (
+                <>
+                  <div className={`${prefix}-divided`} />
+                  <p className={`${prefix}-title`}>
+                    删除命令
+                  </p>
+                  {
+                    visible ? (
+                      <YamlEditor
+                        modeChange={false}
+                        readOnly
+                        showError={false}
+                        value={i.delete}
+                      />
+                    ) : <Spin />
+                  }
+                </>
+              )
+            }
+            {
+              i?.probe && (
+                <>
+                  <div className={`${prefix}-divided`} />
+                  <p className={`${prefix}-title`}>
+                    Readiness Probe
+                  </p>
+                  {
+                    visible ? (
+                      <YamlEditor
+                        modeChange={false}
+                        readOnly
+                        showError={false}
+                        value={i.probe}
+                      />
+                    ) : <Spin />
+                  }
+                </>
+              )
+            }
+            {
+              i?.post && (
+                <>
+                  <div className={`${prefix}-divided`} />
+                  <p className={`${prefix}-title`}>
+                    后置操作
+                  </p>
+                  {
+                    visible ? (
+                      <YamlEditor
+                        modeChange={false}
+                        readOnly
+                        showError={false}
+                        value={i.post}
+                      />
+                    ) : <Spin />
+                  }
+                </>
+              )
+            }
+          </>
+        ))
+      }
+    </div>
+  );
+};
 
 export default Index;

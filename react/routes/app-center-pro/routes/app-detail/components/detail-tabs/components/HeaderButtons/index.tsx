@@ -351,14 +351,14 @@ const DetailsTabsHeaderButtons = () => {
     switch (currentStatus) {
       case APP_STATUS.RUNNING:
       case APP_STATUS.ACTIVE:
-        btnsGroup = [stopApp, deleteApp];
+        btnsGroup = [stopApp];
         break;
       case APP_STATUS.STOP:
-        btnsGroup = [activeApp, deleteApp];
+        btnsGroup = [activeApp];
         break;
       case APP_STATUS.SUCCESS:
       case APP_STATUS.FAILED:
-        btnsGroup = [deleteApp];
+        btnsGroup = [];
         break;
       default:
         break;
@@ -443,7 +443,7 @@ const DetailsTabsHeaderButtons = () => {
             extra = [...extra, restartApp];
           }
         }
-        data = [modifyAppObj, ...rdupmType === DOCKER_TYPE ? [deleteApp] : moreOpts, ...extra?.length > 0 ? [{
+        data = [modifyAppObj, ...rdupmType === DOCKER_TYPE ? [deleteApp] : [deleteApp, ...moreOpts], ...extra?.length > 0 ? [{
           name: '容器操作',
           groupBtnItems: extra,
         }] : []];
