@@ -1,12 +1,12 @@
 import React from 'react';
-import YamlEditor from '@/components/yamlEditor';
+import { YamlEditor } from '@choerodon/components';
 
 import './index.less';
 
 const prefix = 'c7ncd-hostGuide';
 
 const data = [{
-  name: 'Goland',
+  name: 'Golang',
   prepare: [
     '1. 部署前需确保主机上已经准备好Golang运行环境。',
     '2. 您需要在目标主机上生成id_rsa.pub，并且在主机上进行配置。',
@@ -249,7 +249,7 @@ const Index = () => (
                 </p>
                 <YamlEditor
                   modeChange={false}
-                  readOnly={false}
+                  readOnly
                   showError={false}
                   value={i.pre}
                 />
@@ -265,7 +265,7 @@ const Index = () => (
                 </p>
                 <YamlEditor
                   modeChange={false}
-                  readOnly={false}
+                  readOnly
                   showError={false}
                   value={i.start}
                 />
@@ -281,7 +281,7 @@ const Index = () => (
                 </p>
                 <YamlEditor
                   modeChange={false}
-                  readOnly={false}
+                  readOnly
                   showError={false}
                   value={i.delete}
                 />
@@ -297,7 +297,7 @@ const Index = () => (
                 </p>
                 <YamlEditor
                   modeChange={false}
-                  readOnly={false}
+                  readOnly
                   showError={false}
                   value={i.probe}
                 />
@@ -313,7 +313,7 @@ const Index = () => (
                 </p>
                 <YamlEditor
                   modeChange={false}
-                  readOnly={false}
+                  readOnly
                   showError={false}
                   value={i.post}
                 />
