@@ -29,9 +29,9 @@ const getReady = (
 ) => {
   if (type === 'color') {
     if (record.get('healthProbExist')) {
-      return value === 'true' ? 'blue' : 'gold';
+      return value === 'true' ? 'blue-inverse' : 'gold-inverse';
     }
-    return 'rgba(0, 0, 0, 0.24)';
+    return 'gray-inverse';
   }
   if (record.get('healthProbExist')) {
     return value === 'true' ? '已就绪' : '未就绪';
