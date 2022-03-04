@@ -242,7 +242,20 @@ const AppIngress = observer(() => {
 
   const renderStatus = ({ text, record }: any) => {
     if (record?.get('rdupmType') === DOCKER_TYPE) {
-      return record?.get('status') || '-';
+      if (record?.get('status')) {
+        const data = {
+          running: 'green',
+          operating: 'blue',
+          removed: 'red',
+          exited: 'geekbule',
+        };
+        return (
+          <Tag color={data?.[record?.get('status')]}>
+            {record?.get('status')}
+          </Tag>
+        );
+      }
+      return '-';
     }
     return (
       <Tag
