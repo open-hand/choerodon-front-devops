@@ -65,7 +65,7 @@ const TemplatesSelector:FC<TemplatesSelectorProps> = (props) => {
     const doms = document.querySelectorAll('section[data-categoryKey]');
     doms.forEach((dom:any) => {
       if (String(dom.dataset?.categorykey) === String(selected)) {
-        dom.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
+        dom.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
       }
     });
     setSelectedMenuId(selected);
