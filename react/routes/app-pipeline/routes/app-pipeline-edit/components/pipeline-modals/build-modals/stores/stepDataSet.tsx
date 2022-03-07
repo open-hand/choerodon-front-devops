@@ -308,7 +308,7 @@ const mapping: {
     options: new DataSet(customRepoConfigDataSet()),
   },
   advancedXml: {
-    name: 'settings',
+    name: 'mavenSettings',
     type: 'string',
   },
   sequence: {

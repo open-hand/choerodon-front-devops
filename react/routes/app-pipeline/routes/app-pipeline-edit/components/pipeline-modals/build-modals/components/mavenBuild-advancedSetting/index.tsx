@@ -126,6 +126,7 @@ const Index = observer(({
                       <YamlEditor
                         modeChange={false}
                         readOnly={false}
+                        showError={false}
                         value={record.get(StepMapping.advancedXml.name)}
                         onValueChange={(value: string) => {
                           record.set(StepMapping.advancedXml.name, value);
