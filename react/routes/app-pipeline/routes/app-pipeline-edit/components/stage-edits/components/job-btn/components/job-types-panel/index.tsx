@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 import { Loading } from '@choerodon/components';
 import { useFormatCommon } from '@choerodon/master';
 import { Menu } from 'choerodon-ui';
-import { useUnmount } from 'ahooks';
+import { useUnmount, useDebounceFn } from 'ahooks';
 import { handleBuildModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals';
 import { handleCustomModal } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/custom-modal';
 import {
@@ -60,6 +60,14 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
     handlePanelClickCallback,
     handleBlur,
   } = props;
+
+  const {
+    run,
+  } = useDebounceFn((data: any) => {
+    setSubMenuId(data);
+  }, {
+    wait: 300,
+  });
 
   useUnmount(() => {
     handleBlur();
@@ -133,7 +141,7 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
         };
       }
       return (
-        <Item key={JSON.stringify(concatItem)}>
+        <Item onMouseHover={() => console.log(name)} key={JSON.stringify(concatItem)}>
           {name}
         </Item>
       );
@@ -146,9 +154,10 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
       <SubMenu
         key={JSON.stringify(item)}
         title={name}
-        onTitleClick={() => {
-          setSubMenuId(id);
-        }}
+        // onTitleClick={() => {
+        //   setSubMenuId(id);
+        // }}
+        onMouseEnter={() => run(id)}
         className={`${prefixCls}-subMenu`}
       >
         {renderChildrenMenu({ parentId: id })}
