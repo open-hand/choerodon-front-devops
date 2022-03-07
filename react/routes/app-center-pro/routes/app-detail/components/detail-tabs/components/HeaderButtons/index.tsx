@@ -41,6 +41,10 @@ import {
   openHostDockerConfigModal,
 } from '@/components/appCenter-editModal';
 import openDeleteHostAppModal from '@/components/app-deletion-host';
+import {
+  HOST_CONNECTED,
+  HOST_DISCONNECTED,
+} from '@/routes/app-center-pro/routes/app-detail/components/detail-tabs/components/HeaderButtons/CONSTANTS';
 
 const DetailsTabsHeaderButtons = () => {
   const {
@@ -429,7 +433,8 @@ const DetailsTabsHeaderButtons = () => {
   const getIsHostActionData = () => {
     let data:any = [];
     let extra: any = [];
-    const rdupm = appRecord?.toData()?.rdupmType;
+    const hostStatus = appRecord?.toData()?.hostStatus;
+    const rdupm = appRecord?.toData()?.rdupm;
     const status = appRecord?.toData()?.status;
     switch (devopsHostCommandDTO?.status) {
       case APP_STATUS.SUCCESS:
@@ -450,6 +455,15 @@ const DetailsTabsHeaderButtons = () => {
         break;
       default:
         break;
+    }
+    if (hostStatus !== HOST_CONNECTED) {
+      data = data.map((i: any) => ({
+        ...i,
+        disabled: true,
+        tooltipsConfig: {
+          title: '主机处于未连接状态，无法操作',
+        },
+      }));
     }
     return data;
   };
