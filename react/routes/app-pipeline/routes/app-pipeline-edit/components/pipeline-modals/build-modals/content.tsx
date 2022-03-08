@@ -157,12 +157,17 @@ const Index = observer(() => {
         && !contentRef.current.contains(event.target)
         && !document?.querySelector('.c7n-pro-popup-container')?.contains(event.target)
       ) {
-        const doms = document.querySelectorAll('.c7n-menu-submenu-popup');
+        const doms = [
+          document.querySelectorAll('.c7n-menu-submenu-popup'),
+          document.querySelectorAll('.c7n-pro-popup-container'),
+        ];
         let flag = false;
-        doms?.length > 0 && doms.forEach((d) => {
-          if (d?.contains(event.target)) {
-            flag = true;
-          }
+        doms.forEach((item: any) => {
+          item?.length > 0 && item.forEach((d: any) => {
+            if (d?.contains(event.target)) {
+              flag = true;
+            }
+          });
         });
         if (!flag) {
           handleOk({
