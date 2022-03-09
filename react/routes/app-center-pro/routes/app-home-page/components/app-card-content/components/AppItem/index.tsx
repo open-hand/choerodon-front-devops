@@ -20,6 +20,7 @@ import UPDATE_IMG from '@/routes/app-center-pro/assets/update.svg';
 import { openMarketUpgradeModal } from '@/components/app-upgrade';
 import { openHzeroUpgradeModal } from '@/components/app-upgrade-hzero';
 import openDeleteHostAppModal from '@/components/app-deletion-host';
+import EnvOption from '@/components/env-option';
 
 const AppItem = observer(({
   record,
@@ -50,7 +51,7 @@ const AppItem = observer(({
     envId,
     envConnected,
     envActive,
-
+    hostStatus,
     hostId,
     hostName,
     devopsHostCommandDTO,
@@ -284,7 +285,8 @@ const AppItem = observer(({
         <div>
           <span>{ format({ id: 'Host' }) }</span>
           <Tooltip title={hostName}>
-            <span>{hostName}</span>
+            <EnvOption connect={hostStatus === 'connected'} text={hostName} />
+            {/* <span>{hostName}</span> */}
           </Tooltip>
         </div>
         )}
