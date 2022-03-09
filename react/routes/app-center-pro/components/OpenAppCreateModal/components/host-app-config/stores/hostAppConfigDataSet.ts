@@ -235,7 +235,7 @@ const mapping: {
   repoUrl: {
     name: 'downloadUrl',
     type: 'string' as FieldType,
-    label: '仓库地址',
+    label: 'jar包地址',
   },
   username: {
     name: 'pullUserId',
