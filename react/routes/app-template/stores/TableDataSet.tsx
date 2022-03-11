@@ -98,14 +98,14 @@ const TableDataSet = ({ organizationId, formatCommon, format }: TableProps): Dat
       label: format({ id: mapping[key].label }),
     })),
     queryFields: [
-      { name: 'name', label: formatCommon({ id: 'name' }) },
-      { name: 'code', label: formatCommon({ id: 'code' }) },
+      { name: 'name', label: format({ id: 'applicationTemplate' }) },
+      { name: 'code', label: format({ id: 'templateCode' }) },
       { name: 'gitlabUrl', label: format({ id: 'warehouseAddress' }) },
       {
-        name: 'type', label: formatCommon({ id: 'source' }), options: sourceDs, textField: 'text', valueField: 'value',
+        name: 'type', label: format({ id: 'resource' }), options: sourceDs, textField: 'text', valueField: 'value',
       },
       {
-        name: 'enable', label: formatCommon({ id: 'states' }), options: statusDs, textField: 'text', valueField: 'value',
+        name: 'enable', label: format({ id: 'status' }), options: statusDs, textField: 'text', valueField: 'value',
       },
     ],
   });
