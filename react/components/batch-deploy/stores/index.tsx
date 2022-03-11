@@ -41,6 +41,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       AppState: { currentMenuType: { projectId } },
       intl: { formatMessage },
       children,
+      envId,
     } = props;
 
     const prefixCls = 'c7ncd-deploy';
@@ -72,7 +73,8 @@ export const StoreProvider = injectIntl(inject('AppState')(
       deployStore,
       networkDs,
       domainDs,
-    })), [projectId]);
+      envId,
+    })), [projectId, envId]);
 
     useEffect(() => {
       // @ts-expect-error
