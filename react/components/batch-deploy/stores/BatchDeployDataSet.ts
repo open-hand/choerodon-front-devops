@@ -27,10 +27,10 @@ function formatAnnotation(postData:any, oldAnnotation = []) {
 }
 
 export default (({
-  intlPrefix, formatMessage, projectId, envOptionsDs, deployStore, networkDs, domainDs,
+  intlPrefix, formatMessage, projectId, envOptionsDs, deployStore, networkDs, domainDs, envId,
 }:any):any => {
   function handleCreate({ dataSet, record }:any) {
-    const defaultEnvId = (dataSet.records)[0].get('environmentId');
+    const defaultEnvId = record.get('environmentId') || envId;
     defaultEnvId && record.set('environmentId', defaultEnvId);
     record.getField('appServiceId').set('disabled', !record.get('environmentId'));
   }
