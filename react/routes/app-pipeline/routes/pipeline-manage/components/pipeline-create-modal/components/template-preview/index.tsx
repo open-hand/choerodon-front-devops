@@ -58,7 +58,9 @@ const TemplatePreview:FC<TemplatePreviewProps> = (props) => {
   return (
     <div className={cls} onClick={handleClick} role="none">
       <header>
-        <img src={ciTemplateCategoryDTO?.image || cutomizeImg} alt="img" />
+        <div className="c7ncd-templates-selector-menu-item-image-container">
+          <img src={ciTemplateCategoryDTO?.image || cutomizeImg} alt="img" />
+        </div>
         <span className={`${prefixCls}-name`}>{name}</span>
         {showCustomizeTag && <StatusTag className={`${prefixCls}-tag`} name="自定义" colorCode="operating" type="border" />}
       </header>

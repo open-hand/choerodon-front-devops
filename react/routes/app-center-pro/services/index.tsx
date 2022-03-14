@@ -1,8 +1,11 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Modal } from 'choerodon-ui/pro';
+import {
+  devopsHostsApi,
+} from '@choerodon/master';
 import { deploymentsApi } from '@/api/Deployments';
-import { CHART_CATERGORY } from '../stores/CONST';
+import { CHART_CATERGORY, DOCKER_CATEGORY } from '../stores/CONST';
 import { openChangeActive } from '@/components/app-status-toggle';
 
 type activeStatus = 'stop' | 'start'
@@ -12,6 +15,7 @@ type toggleDeployGroupStatusModalOpen = {
   name: string
   instanceId: string | number
   refresh:(...args:any[])=>any
+  appCatergoryCode?: string,
 }
 
 type toggleDataProps ={
@@ -22,6 +26,7 @@ type toggleDataProps ={
   envId:string
   instanceId:string
   projectId:string
+  hostId?: string,
 }
 
 class AppCenterProServices {
@@ -29,9 +34,16 @@ class AppCenterProServices {
     active,
     instanceId,
     refresh,
-  }:Pick<toggleDeployGroupStatusModalOpen, 'active' |'instanceId' |'refresh'>) {
+    appCatergoryCode,
+    hostId,
+  }: any) {
     try {
-      const res = await deploymentsApi.toggleDeployStatus(instanceId, active);
+      let res;
+      if (appCatergoryCode === DOCKER_CATEGORY) {
+        res = await devopsHostsApi.stopDocker(hostId, instanceId);
+      } else {
+        res = await deploymentsApi.toggleDeployStatus(instanceId, active);
+      }
       if (res && res.failed) {
         return false;
       }
@@ -49,12 +61,16 @@ class AppCenterProServices {
     name,
     instanceId,
     refresh,
-  }:toggleDeployGroupStatusModalOpen) {
+    appCatergoryCode,
+    hostId,
+  }:any) {
     Modal.open({
       key: Modal.key(),
       title: <FormattedMessage id={`c7ncd.deployment.instance.action.${active}.title`} values={{ name }} />,
       children: <FormattedMessage id={`c7ncd.deployment.instance.action.${active}.tips`} />,
-      onOk: () => this.toggleDeployGroupStatus({ active, instanceId, refresh }),
+      onOk: () => this.toggleDeployGroupStatus({
+        active, instanceId, refresh, appCatergoryCode, hostId,
+      }),
     });
   }
 
@@ -67,6 +83,7 @@ class AppCenterProServices {
     envId,
     instanceId,
     projectId,
+    hostId,
   }:toggleDataProps) {
     if (appCatergoryCode === CHART_CATERGORY) {
       return openChangeActive({
@@ -83,6 +100,8 @@ class AppCenterProServices {
       name,
       instanceId,
       refresh,
+      appCatergoryCode,
+      hostId,
     });
   }
 }

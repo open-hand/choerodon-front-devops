@@ -6,11 +6,25 @@ import React, { useMemo, useState, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Action } from '@choerodon/master';
 import { Modal, Table, Tooltip } from 'choerodon-ui/pro';
+import { Tag } from 'choerodon-ui';
 import { StatusTag, TimePopover, UserInfo } from '@choerodon/components';
 import { MIDDLE } from '@/utils/getModalWidth';
 import { TableQueryBarType } from '@/interface';
+import { getAppCategories } from '@/routes/app-center-pro/utils';
+import { getReady } from '@/routes/app-center-pro/routes/app-detail/components/host-detail';
 import { useAppIngressTableStore } from './stores';
 import HostConfigServices from './services';
+import {
+  DOCKER_TYPE,
+  OTHER_TYPE,
+  JAR_TYPE,
+  SUCCESS_HOST_STATUS,
+  FAILED_HOST_STATUS,
+  OPERATING_HOST_STATUS,
+  RUNNING_DOCKER,
+  CREATED_DOCKER,
+  EXITED_DOCKER,
+} from '@/components/app-ingress-table/CONSTANT';
 // import ConfigurationModal from '@/components/configuration-center/ConfigurationModal';
 
 import './index.less';
@@ -43,7 +57,7 @@ const AppIngress = observer(() => {
 
   // 停止
   const handleStop = useCallback(async ({ record: tableRecord }) => {
-    const res = await HostConfigServices.stopDocker(projectId, tableRecord.get('hostId'), tableRecord.get('id'));
+    const res = await HostConfigServices.stopDocker(projectId, tableRecord.get('hostId'), tableRecord.get('instanceId'));
     if (res) {
       refresh();
     }
@@ -52,7 +66,7 @@ const AppIngress = observer(() => {
 
   // 重启
   const handleRestart = useCallback(async ({ record: tableRecord }) => {
-    const res = await HostConfigServices.restartDocker(projectId, tableRecord.get('hostId'), tableRecord.get('id'));
+    const res = await HostConfigServices.restartDocker(projectId, tableRecord.get('hostId'), tableRecord.get('instanceId'));
     if (res) {
       refresh();
     }
@@ -60,7 +74,7 @@ const AppIngress = observer(() => {
   }, []);
 
   const handleStart = useCallback(async ({ record: tableRecord }) => {
-    const res = await HostConfigServices.startDocker(projectId, tableRecord.get('hostId'), tableRecord.get('id'));
+    const res = await HostConfigServices.startDocker(projectId, tableRecord.get('hostId'), tableRecord.get('instanceId'));
     if (res) {
       refresh();
     }
@@ -99,34 +113,78 @@ const AppIngress = observer(() => {
 
   const renderAction = useCallback(({ record: tableRecord }) => {
     const devopsHostCommandDTO = tableRecord.get('devopsHostCommandDTO');
-    const operateStatus = devopsHostCommandDTO?.status;
-
-    if (operateStatus === 'operating') {
-      return null;
+    const rdupmType = tableRecord?.get('rdupmType');
+    const status = devopsHostCommandDTO?.status;
+    const dockerStatus = tableRecord?.get('status');
+    let actionData = [];
+    const deleteObj = {
+      service: ['choerodon.code.project.deploy.host.ps.docker.delete'],
+      text: formatMessage({ id: 'delete' }),
+      action: () => handleDelete({ record: tableRecord }),
+    };
+    const stopObj = {
+      service: ['choerodon.code.project.deploy.host.ps.docker.stop'],
+      text: '停止',
+      action: () => openStopModal({ record: tableRecord }),
+    };
+    const restartObj = {
+      service: ['choerodon.code.project.deploy.host.ps.docker.restart'],
+      text: '重启',
+      action: () => handleRestart({ record: tableRecord }),
+    };
+    const startObj = {
+      service: ['choerodon.code.project.deploy.host.ps.docker.start'],
+      text: '启动',
+      action: () => handleStart({ record: tableRecord }),
+    };
+    switch (rdupmType) {
+      case JAR_TYPE:
+      case OTHER_TYPE: {
+        if ([SUCCESS_HOST_STATUS, FAILED_HOST_STATUS].includes(status)) {
+          actionData.push(deleteObj);
+        } break;
+      }
+      case DOCKER_TYPE: {
+        if ([SUCCESS_HOST_STATUS, FAILED_HOST_STATUS].includes(status)) {
+          if (dockerStatus === RUNNING_DOCKER) {
+            actionData = [restartObj, stopObj, deleteObj];
+          } else if (dockerStatus === CREATED_DOCKER) {
+            actionData = [restartObj, startObj, deleteObj];
+          } else if (dockerStatus === EXITED_DOCKER) {
+            actionData = [startObj, deleteObj];
+          } else {
+            actionData = [deleteObj];
+          }
+        }
+        break;
+      }
+      default: {
+        break;
+      }
     }
-
-    const status = tableRecord.get('status');
-    // console.log(status);
-
-    const actionData = [
-      {
-        service: ['choerodon.code.project.deploy.host.ps.docker.delete'],
-        text: formatMessage({ id: 'delete' }),
-        action: () => handleDelete({ record: tableRecord }),
-      },
-    //   {
-    //     text: '查看配置文件',
-    //     action: () => handleOpenConfigurationModal({ record: tableRecord }),
-    //   },
-    ];
-
-    if (!status || (['normal_process', 'java_process'].includes(tableRecord.get('instanceType')))) {
-      return <Action data={actionData} />;
-    }
-
-    if (!['running', 'exited', 'removed'].includes(status)) {
-      return null;
-    }
+    // const operateStatus = devopsHostCommandDTO?.status;
+    //
+    // if (operateStatus === 'operating') {
+    //   return null;
+    // }
+    //
+    // const status = tableRecord.get('status');
+    // // console.log(status);
+    //
+    // const actionData = [
+    // //   {
+    // //     text: '查看配置文件',
+    // //     action: () => handleOpenConfigurationModal({ record: tableRecord }),
+    // //   },
+    // ];
+    //
+    // if (!status || (['normal_process', 'java_process'].includes(tableRecord.get('instanceType')))) {
+    //   return <Action data={actionData} />;
+    // }
+    //
+    // if (!['running', 'exited', 'removed'].includes(status)) {
+    //   return null;
+    // }
 
     // switch (status) {
     //   case 'running':
@@ -134,7 +192,8 @@ const AppIngress = observer(() => {
     //       service: ['choerodon.code.project.deploy.host.ps.docker.stop'],
     //       text: '停止',
     //       action: () => openStopModal({ record: tableRecord }),
-    //     }, {
+    //     },
+    //     {
     //       service: ['choerodon.code.project.deploy.host.ps.docker.restart'],
     //       text: '重启',
     //       action: () => handleRestart({ record: tableRecord }),
@@ -161,7 +220,7 @@ const AppIngress = observer(() => {
     return (
       <>
         <Tooltip
-          title={`[${commandType}]:${error}`}
+          title={error ? `[${commandType}]:${error}` : ''}
         >
           <span className={`${prefixCls}-name`}>
             {text}
@@ -181,9 +240,31 @@ const AppIngress = observer(() => {
     );
   };
 
-  const renderStatus = ({ text }: any) => (
-    text ? <StatusTag colorCode={text} name={text?.toUpperCase() || 'UNKNOWN'} /> : ''
-  );
+  const renderStatus = ({ text, record }: any) => {
+    if (record?.get('rdupmType') === DOCKER_TYPE) {
+      if (record?.get('status')) {
+        const data = {
+          running: 'green-inverse',
+          operating: 'blue-inverse',
+          removed: 'red-inverse',
+          exited: 'geekbule-inverse',
+        };
+        return (
+          <Tag color={data?.[record?.get('status')]}>
+            {record?.get('status')}
+          </Tag>
+        );
+      }
+      return '-';
+    }
+    return (
+      <Tag
+        color={getReady(record?.get('ready'), record, 'color')}
+      >
+        {getReady(record?.get('ready'), record, 'text')}
+      </Tag>
+    );
+  };
 
   const renderUser = ({ value }: any) => {
     if (!value) {
@@ -210,9 +291,19 @@ const AppIngress = observer(() => {
       <Column header={formatMessage({ id: 'c7ncd.environment.Name' })} name="name" renderer={renderName} />
       <Column renderer={renderAction} width={55} />
       <Column header={formatMessage({ id: 'c7ncd.environment.ApplicationCode' })} name="code" width={90} />
-      <Column header={formatMessage({ id: 'c7ncd.environment.Status' })} name="status" renderer={renderStatus} />
-      <Column header={formatMessage({ id: 'c7ncd.environment.ProcessID' })} name="pid" width={80} />
-      <Column header={formatMessage({ id: 'c7ncd.environment.OccupiedPort' })} name="ports" width={100} renderer={({ value }) => <Tooltip title={value}>{value}</Tooltip>} />
+      <Column
+        header={formatMessage({ id: 'c7ncd.environment.rdupm' })}
+        name="rdupmType"
+        width={90}
+        renderer={({ value, record }) => getAppCategories(record?.get('rdupmType'), 'host')?.name}
+      />
+      <Column
+        header={formatMessage({ id: 'c7ncd.environment.Status' })}
+        name="status"
+        renderer={renderStatus}
+      />
+      {/* <Column header={formatMessage({ id: 'c7ncd.environment.ProcessID' })} name="pid" width={80} /> */}
+      {/* <Column header={formatMessage({ id: 'c7ncd.environment.OccupiedPort' })} name="ports" width={100} renderer={({ value }) => <Tooltip title={value}>{value}</Tooltip>} /> */}
       <Column header={formatMessage({ id: 'c7ncd.environment.Creator' })} name="creator" renderer={renderUser} />
       <Column header={formatMessage({ id: 'c7ncd.environment.CreationTime' })} name="creationDate" renderer={({ text }) => <TimePopover content={text} />} />
     </Table>

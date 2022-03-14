@@ -129,12 +129,12 @@ const Index = ({
         item.dynamicProps = {
           required: () => level === 'project',
         };
-        item.validator = (value: any) => {
-          if (level === 'project') {
-            return checkImage(value);
-          }
-          return true;
-        };
+        // item.validator = (value: any) => {
+        //   if (level === 'project') {
+        //     return checkImage(value);
+        //   }
+        //   return true;
+        // };
 
         break;
       }

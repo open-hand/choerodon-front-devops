@@ -37,6 +37,9 @@ const Index = ({
       StepDataSet: ds,
       ...okProps,
     });
+    setTimeout(() => {
+      document.querySelectorAll('.c7ncd-buildModal-content__stepItem')?.[ds.length - 1]?.scrollIntoView();
+    }, 500);
   };
 
   const renderMenuItem = (d: any) => {
@@ -67,7 +70,11 @@ const Index = ({
   ), [data]);
 
   return (
-    <Dropdown overlay={menu}>
+    <Dropdown
+      overlay={menu}
+      // @ts-ignore
+      getPopupContainer={() => document.querySelector('.c7ncd-buildModal-content')}
+    >
       <Button
         icon="add"
       >

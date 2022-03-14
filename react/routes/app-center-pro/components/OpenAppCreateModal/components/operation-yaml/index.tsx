@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { DataSet, Tooltip, Icon } from 'choerodon-ui/pro';
+import {
+  DataSet, Tooltip, Icon, Button,
+} from 'choerodon-ui/pro';
 import _ from 'lodash';
 import { Alert, Tabs } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import YamlEditor from '@/components/yamlEditor';
-// import ConfigurationTab from '@/components/configuration-center/ConfigurationTab';
+import {
+  handleModal,
+} from '@/components/host-guide';
+
+import './index.less';
 
 const { TabPane } = Tabs;
 
@@ -18,7 +24,10 @@ const Index = observer(({
   preName,
   startName,
   postName,
+  deleteName,
+  healthName,
   style,
+  hasGuide,
 }: {
     configDataSet?:DataSet,
     optsDS?:DataSet,
@@ -27,12 +36,21 @@ const Index = observer(({
     startName: string,
     postName: string,
     style?: object,
+    deleteName?: string,
+    healthName?: string,
+    hasGuide?: boolean,
 }) => {
   useEffect(() => {
     originValue = {
       [preName]: _.cloneDeep(dataSet.current?.get(preName)),
       [startName]: _.cloneDeep(dataSet.current?.get(startName)),
       [postName]: _.cloneDeep(dataSet.current?.get(postName)),
+      ...deleteName ? {
+        [deleteName]: _.cloneDeep(dataSet.current?.get(deleteName)),
+      } : {},
+      ...healthName ? {
+        [healthName]: _.cloneDeep(dataSet.current?.get(healthName)),
+      } : {},
     };
   }, []);
 
@@ -86,11 +104,29 @@ const Index = observer(({
   return (
     <div
       style={style || {}}
+      className="c7ncd-operationYaml"
     >
       <Alert
         type="warning"
         showIcon
-        message="【前置命令】、【启动命令】、【后置命令】三者之中，必须至少填写一个"
+        message={(
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <p style={{ margin: 0 }}>
+              【前置命令】、【启动命令】、【后置命令】三者之中，必须至少填写一个
+            </p>
+            {
+              hasGuide && (
+                <Button
+                  icon="view_list-o"
+                  funcType={'flat' as any}
+                  onClick={() => handleModal()}
+                >
+                  主机部署指引
+                </Button>
+              )
+            }
+          </div>
+        )}
       />
       <Tabs onChange={(value) => setActiveKey(value)} activeKey={activeKey}>
         {/* <TabPane
@@ -121,13 +157,45 @@ const Index = observer(({
       {/* {activeKey !== 'configurationCenter' && ( */}
       <YamlEditor
         readOnly={false}
+        showError={false}
         value={getValue('value')}
         originValue={getValue('origin')}
         onValueChange={(value: string) => {
-                        dataSet?.current?.set(getValue('valueChange'), value);
+          dataSet?.current?.set(getValue('valueChange'), value);
         }}
       />
-      {/* )} */}
+      {
+        deleteName && activeKey === '2' && [
+          <div className="c7ncd-operationYaml-others">
+            <p className="c7ncd-operationYaml-title">删除操作</p>
+            <YamlEditor
+              showError={false}
+              readOnly={false}
+              originValue={originValue?.[deleteName]}
+              value={dataSet?.current?.get(deleteName)}
+              onValueChange={(value: string) => {
+                dataSet?.current?.set(deleteName, value);
+              }}
+            />
+          </div>,
+        ]
+       }
+      {
+        healthName && activeKey === '2' && [
+          <div className="c7ncd-operationYaml-others">
+            <p className="c7ncd-operationYaml-title">Readiness Probe</p>
+            <YamlEditor
+              showError={false}
+              readOnly={false}
+              originValue={originValue?.[healthName]}
+              value={dataSet?.current?.get(healthName)}
+              onValueChange={(value: string) => {
+                dataSet?.current?.set(healthName, value);
+              }}
+            />
+          </div>,
+        ]
+       }
     </div>
   );
 });

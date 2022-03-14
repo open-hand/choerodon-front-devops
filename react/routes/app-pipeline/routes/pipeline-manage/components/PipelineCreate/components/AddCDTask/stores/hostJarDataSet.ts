@@ -1,5 +1,5 @@
 import { DataSet } from 'choerodon-ui/pro';
-import { hostApiConfig } from '@/api';
+import { hostApi, hostApiConfig } from '@/api';
 import { Record } from '@/interface';
 import addCDTaskDataSetMap, { fieldMap, deployWayData } from './addCDTaskDataSetMap';
 
@@ -13,6 +13,18 @@ const hostJarDataSet = (ADDCDTaskDataSet: DataSet) => ({
     textField: 'name',
     valueField: 'name',
     options: new DataSet(hotJarOptionsDataSet()),
+    validator: async (value: string, type: string, record: any) => {
+      const isCreate = ADDCDTaskDataSet
+        ?.current?.get(fieldMap.deployWay.name) === deployWayData[0].value;
+      if (isCreate) {
+        const flag = await hostApi.checkAppName(value);
+        if (flag) {
+          return true;
+        }
+        return '应用名称已重复';
+      }
+      return true;
+    },
   }, {
     name: 'appCode',
     type: 'string',
@@ -30,15 +42,15 @@ const hostJarDataSet = (ADDCDTaskDataSet: DataSet) => ({
     }) => {
       switch (name) {
         case 'appName': {
-          const options = record.getField('appName')?.options;
+          const options = record?.getField('appName')?.options;
           const item = options?.records.find((option: Record) => option.get('name') === value);
           if (item) {
-            record.set('appCode', item.get('code'));
-            record.getField('appCode')?.set('disabled', true);
-            record.set('appId', item.get('id'));
+            record?.set('appCode', item.get('code'));
+            record?.getField('appCode')?.set('disabled', true);
+            record?.set('appId', item.get('id'));
           }
           if (ADDCDTaskDataSet.current?.get(fieldMap.deployWay.name) === deployWayData[1].value) {
-            ADDCDTaskDataSet.current?.set(addCDTaskDataSetMap.host, record.getField('appName')?.options?.records?.find((i) => i.get('name') === value)?.get('hostId'));
+            ADDCDTaskDataSet.current?.set(addCDTaskDataSetMap.host, record?.getField('appName')?.options?.records?.find((i) => i.get('name') === value)?.get('hostId'));
           }
           break;
         }

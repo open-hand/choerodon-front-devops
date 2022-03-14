@@ -16,6 +16,7 @@ const DEPLOY_CATERGORY = 'deploy_group'; // 部署组标识
 const HOST_CATERGORY = 'host_group'; // jar包标识
 const OTHER_CATERGORY = 'other_group'; // 其他制品标识
 const MIDDLWARE_CATERGORY = 'middleware_group';
+const DOCKER_CATEGORY = 'docker_group';
 
 // chartSource
 const CHART_MARKET = 'market'; // 市场
@@ -27,6 +28,8 @@ const CHART_NORMAL = 'normal'; // 应用服务来自本项目
 const CHART_REPO = 'currentProject'; // 项目制品库
 
 const CHART_UPLOAD = 'upload';
+
+const JAR_CUSTOM = 'custom_jar';
 
 const CHART_HOST = 'all'; // 主机的无chartsource，就是all
 
@@ -46,6 +49,8 @@ const APP_STATUS = {
   SUCCESS: 'success',
   FAILED: 'failed',
   RUNNING: 'running',
+  CREATED: 'created',
+  EXITED: 'exited',
 };
 
 // 操作类型
@@ -109,4 +114,6 @@ export {
   BATCH_DEPLOY,
   PIPELINE_DEPLOY,
   APP_OPERATION,
+  DOCKER_CATEGORY,
+  JAR_CUSTOM,
 };

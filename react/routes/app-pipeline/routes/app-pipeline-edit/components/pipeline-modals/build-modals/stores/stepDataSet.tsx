@@ -8,6 +8,10 @@ import {
 import customRepoConfigDataSet
   from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/stores/customRepoConfigDataSet';
 import { handleOk } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/content';
+import {
+  mapping as customMapping,
+  typeData,
+} from './customRepoConfigDataSet';
 
 const settingConfigOptionsData = [{
   text: '自定义仓库配置',
@@ -15,6 +19,14 @@ const settingConfigOptionsData = [{
 }, {
   text: '粘贴XML内容',
   value: 'xml',
+}];
+
+const repoSourceData = [{
+  value: 'default',
+  text: '项目仓库',
+}, {
+  value: 'custom',
+  text: '自定义仓库',
 }];
 
 const sonarConfigData = [{
@@ -40,6 +52,18 @@ const accountConfigData = [{
   text: 'Token',
   value: 'token',
 }];
+
+const getSubmitRepos = (record: any) => {
+  const reposData = record.getField(mapping.customRepoConfig.name).options.toData();
+  return reposData.map((d: any) => ({
+    url: d?.[customMapping.repoAddress.name],
+    name: d?.[customMapping.repoName.name],
+    type: d?.[customMapping.repoType.name].join(','),
+    private: d?.[customMapping.type.name] === typeData[1].value,
+    password: d?.[customMapping.password.name],
+    username: d?.[customMapping.username.name],
+  }));
+};
 
 const mapping: {
   [key: string]: any
@@ -83,6 +107,7 @@ const mapping: {
     type: 'string',
     label: '步骤名称',
     required: true,
+    maxLength: 30,
   },
   projectRelyRepo: {
     name: 'nexusMavenRepoIds',
@@ -283,7 +308,7 @@ const mapping: {
     options: new DataSet(customRepoConfigDataSet()),
   },
   advancedXml: {
-    name: 'settings',
+    name: 'mavenSettings',
     type: 'string',
   },
   sequence: {
@@ -294,11 +319,93 @@ const mapping: {
     name: 'id',
     type: 'string',
   },
+  repoSource: {
+    name: 'repoSource',
+    type: 'string',
+    label: '项目制品库来源',
+    valueField: 'value',
+    textField: 'text',
+    defaultValue: repoSourceData[0].value,
+    options: new DataSet({
+      data: repoSourceData,
+    }),
+  },
+  repoUrl: {
+    name: 'repoUrl',
+    type: 'string',
+    label: '仓库地址',
+  },
+  repoName: {
+    name: 'repoName',
+    type: 'string',
+    label: '仓库名称',
+  },
+  repoType: {
+    name: 'repoType',
+    type: 'string',
+    label: '仓库类型',
+    textField: 'text',
+    valueField: 'value',
+    defaultValue: 'release',
+    options: new DataSet({
+      data: [{
+        value: 'release',
+        text: 'release仓库',
+      }, {
+        value: 'snapshot',
+        text: 'snapshot仓库',
+      }],
+    }),
+  },
+  repoUsername: {
+    name: 'repoUsername',
+    type: 'string',
+    label: '用户名',
+  },
+  repoPassword: {
+    name: 'repoPassword',
+    type: 'string',
+    label: '密码',
+  },
 };
+
+const transformLoadDataItemByType = (data: any) => {
+  const type = data?.type;
+  switch (type) {
+    case BUILD_MAVEN_PUBLISH:
+    case BUILD_UPLOADJAR: {
+      const mavenPublishConfig = data?.[STEPVO[BUILD_UPLOADJAR]];
+      return ({
+        [mapping.repoSource.name]: mavenPublishConfig
+          ?.targetRepo?.private ? repoSourceData[1].value : repoSourceData[0].value,
+        [mapping.repoUrl.name]: mavenPublishConfig?.targetRepo?.url,
+        [mapping.repoName.name]: mavenPublishConfig?.targetRepo?.name,
+        [mapping.repoType.name]: mavenPublishConfig?.targetRepo?.type.split(','),
+        [mapping.repoUsername.name]: mavenPublishConfig?.targetRepo?.username,
+        [mapping.repoPassword.name]: mavenPublishConfig?.targetRepo?.password,
+      });
+      break;
+    }
+    default: {
+      return {};
+      break;
+    }
+  }
+};
+
+const getLoadReposData = (repos: any) => (repos ? repos.map((i: any) => ({
+  [customMapping.repoAddress.name]: i?.url,
+  [customMapping.repoName.name]: i?.name,
+  [customMapping.repoType.name]: i?.type.split(','),
+  [customMapping.type.name]: i?.private ? typeData[1].value : typeData[0].value,
+  [customMapping.password.name]: i?.password,
+  [customMapping.username.name]: i?.username,
+})) : []);
 
 const transformLoadDataItem = (d: any, index: number) => {
   const newD = JSON.parse(JSON.stringify(d));
-  return ({
+  const reposData = getLoadReposData(newD[STEPVO[newD.type]]?.repos);
+  const result = ({
     ...newD,
     [mapping.expand.name]: true,
     [mapping.settingConfig.name]: settingConfigOptionsData[0].value,
@@ -308,9 +415,11 @@ const transformLoadDataItem = (d: any, index: number) => {
     [mapping.whetherMavenSingleMeasure.name]: false,
     [mapping.sequence.name]: index,
     ...newD[STEPVO[newD.type]],
-    [mapping.customRepoConfig.name]: newD[STEPVO[newD.type]]?.repos,
+    ...transformLoadDataItemByType(newD),
+    [mapping.customRepoConfig.name]: reposData,
     [mapping.id.name]: newD?.[mapping.id.name],
   });
+  return result;
 };
 
 const transformLoadData = (data: any) => data
@@ -344,14 +453,30 @@ const getInsideDtoData = (record: any) => {
       break;
     }
     case BUILD_MAVEN_PUBLISH: {
+      if (record?.get(mapping.repoSource.name) === repoSourceData[0].value) {
+        return ({
+          [mapping.targetProductsLibrary.name]: record.get(mapping.targetProductsLibrary.name),
+          [mapping.projectRelyRepo.name]:
+            JSON.parse(JSON.stringify(record.get(mapping.projectRelyRepo.name))),
+          [mapping.settingConfig.name]: record.get(mapping.settingConfig.name),
+          repos: getSubmitRepos(record),
+          [mapping.advancedXml.name]: record?.get(mapping.advancedXml.name),
+        });
+      }
       return ({
-        [mapping.targetProductsLibrary.name]: record.get(mapping.targetProductsLibrary.name),
-        [mapping.projectRelyRepo.name]:
-          JSON.parse(JSON.stringify(record.get(mapping.projectRelyRepo.name))),
         [mapping.settingConfig.name]: record.get(mapping.settingConfig.name),
-        repos: record.getField(mapping.customRepoConfig.name).options.toData(),
+        repos: getSubmitRepos(record),
         [mapping.advancedXml.name]: record?.get(mapping.advancedXml.name),
+        targetRepo: {
+          private: true,
+          name: record?.get(mapping.repoName.name),
+          type: record?.get(mapping.repoType.name)?.join(','),
+          url: record?.get(mapping.repoUrl.name),
+          username: record?.get(mapping.repoUsername.name),
+          password: record?.get(mapping.repoPassword.name),
+        },
       });
+
       break;
     }
     case BUILD_SONARQUBE: {
@@ -370,9 +495,22 @@ const getInsideDtoData = (record: any) => {
       break;
     }
     case BUILD_UPLOADJAR: {
+      if (record?.get(mapping.repoSource.name) === repoSourceData[0].value) {
+        return ({
+          [mapping.targetProductsLibrary.name]: record.get(mapping.targetProductsLibrary.name),
+        });
+      }
       return ({
-        [mapping.targetProductsLibrary.name]: record.get(mapping.targetProductsLibrary.name),
+        targetRepo: {
+          private: true,
+          name: record?.get(mapping.repoName.name),
+          type: record?.get(mapping.repoType.name)?.join(','),
+          url: record?.get(mapping.repoUrl.name),
+          username: record?.get(mapping.repoUsername.name),
+          password: record?.get(mapping.repoPassword.name),
+        },
       });
+
       break;
     }
     default: {
@@ -445,7 +583,23 @@ const Index = (
             });
           }
           item.dynamicProps = {
-            required: ({ record }: any) => ([BUILD_MAVEN_PUBLISH, BUILD_UPLOADJAR].includes(record.get(mapping.type.name))) && level === 'project',
+            required: ({ record }: any) => ([BUILD_MAVEN_PUBLISH, BUILD_UPLOADJAR]
+              .includes(record.get(mapping.type.name)))
+              && level === 'project'
+              && record?.get(mapping.repoSource.name) === repoSourceData[0].value,
+          };
+          break;
+        }
+        case 'repoName':
+        case 'repoType':
+        case 'repoUsername':
+        case 'repoPassword':
+        case 'repoUrl': {
+          item.dynamicProps = {
+            required: ({ record }: any) => ([BUILD_MAVEN_PUBLISH, BUILD_UPLOADJAR]
+              .includes(record.get(mapping.type.name)))
+              && level === 'project'
+              && record?.get(mapping.repoSource.name) === repoSourceData[1].value,
           };
           break;
         }
@@ -468,6 +622,13 @@ const Index = (
       return item;
     }),
     events: {
+      load: ({
+        dataSet,
+      }: any) => {
+        const record = dataSet?.current;
+        const repos = record?.get('repos');
+        record?.getField(mapping.customRepoConfig.name)?.options?.loadData(getLoadReposData(repos));
+      },
       update: ({
         name, value, record, dataSet,
       }: any) => {
@@ -553,4 +714,5 @@ export {
   scanTypeData,
   sonarConfigData,
   accountConfigData,
+  repoSourceData,
 };

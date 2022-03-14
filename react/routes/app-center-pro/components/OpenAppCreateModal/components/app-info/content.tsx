@@ -69,10 +69,11 @@ const Index = observer(() => {
   );
 
   return (
-    <Form className="c7ncd-appCenterPro-appInfo__form" columns={2} dataSet={AppInfoDataSet}>
+    <Form className="c7ncd-appCenterPro-appInfo__form" columns={3} dataSet={AppInfoDataSet}>
       <TextField colSpan={1} name={mapping.appName.name} />
       <TextField colSpan={1} name={mapping.appCode.name} />
-      <p className="c7ncd-appCenterPro-appInfo__form__title">
+      {/* @ts-ignore */}
+      <p newLine className="c7ncd-appCenterPro-appInfo__form__title">
         部署模式
       </p>
       <div
@@ -141,7 +142,8 @@ const Index = observer(() => {
       <div
         className="c7ncd-appCenterPro-appInfo__form__selectContainer"
         // @ts-ignore
-        colSpan={2}
+        colSpan={AppInfoDataSet.current.get(mapping.deployMode.name)
+        === deployModeOptionsData[0].value ? 2 : 3}
         newLine
       >
         <CustomSelect
@@ -154,7 +156,7 @@ const Index = observer(() => {
           data={
             AppInfoDataSet.current.get(mapping.deployMode.name) === deployModeOptionsData[0].value
               ? deployProductOptionsData.slice(0, 2)
-              : deployProductOptionsData.slice(2, 4)
+              : deployProductOptionsData.slice(2, 5)
           }
           identity="value"
           mode="single"

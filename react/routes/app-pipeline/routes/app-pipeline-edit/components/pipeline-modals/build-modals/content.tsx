@@ -157,20 +157,34 @@ const Index = observer(() => {
         && !contentRef.current.contains(event.target)
         && !document?.querySelector('.c7n-pro-popup-container')?.contains(event.target)
       ) {
-        handleOk({
-          canWait: false,
-          BuildDataSet,
-          level,
-          template,
-          StepDataSet,
-          advancedRef,
-          handleJobAddCallback,
-          type,
-          id,
-          appService,
-          data,
+        const doms = [
+          document.querySelectorAll('.c7n-menu-submenu-popup'),
+          document.querySelectorAll('.c7n-pro-popup-container'),
+        ];
+        let flag = false;
+        doms.forEach((item: any) => {
+          item?.length > 0 && item.forEach((d: any) => {
+            if (d?.contains(event.target)) {
+              flag = true;
+            }
+          });
         });
-        modal?.close();
+        if (!flag) {
+          handleOk({
+            canWait: false,
+            BuildDataSet,
+            level,
+            template,
+            StepDataSet,
+            advancedRef,
+            handleJobAddCallback,
+            type,
+            id,
+            appService,
+            data,
+          });
+          modal?.close();
+        }
       }
     }
 

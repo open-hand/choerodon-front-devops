@@ -38,6 +38,10 @@ const deployProductOptionsData = [{
   name: 'jar包',
   description: '支持将制品库、应用市场或本地的jar包部署至主机',
 }, {
+  value: 'docker',
+  name: 'Docker镜像',
+  description: '部署Docker镜像至主机，部署前请确保主机已经准备好Docker环境',
+}, {
   value: 'other',
   name: '其他制品',
   description: '支持本地上传或远程拉取各种类型的制品部署至主机',
