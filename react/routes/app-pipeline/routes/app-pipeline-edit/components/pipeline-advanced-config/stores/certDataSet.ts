@@ -43,7 +43,7 @@ const mapping: any = {
 };
 
 const setTabData = async (ds: any, setData: any, origin: any) => {
-  const data = ds?.toData();
+  const data = ds?.toData().filter((d: any) => JSON.stringify(d) !== '{}');
   const flag = await ds.validate();
   setData({
     [TAB_ADVANCE_SETTINGS]: {
