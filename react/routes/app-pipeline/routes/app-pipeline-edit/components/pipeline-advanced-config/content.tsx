@@ -1,14 +1,21 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Form, Select, SelectBox, TextField,
+  Form, Select, SelectBox, TextField, Password, Button,
 } from 'choerodon-ui/pro';
 import { NewTips } from '@choerodon/components';
 import { mapping, versionStrategyData } from './stores/pipelineAdvancedConfigDataSet';
+import {
+  mapping as certMapping,
+} from './stores/certDataSet';
 import CustomFunc from '@/routes/app-pipeline/routes/pipeline-manage/components/PipelineCreate/components/custom-function';
 import { TAB_ADVANCE_SETTINGS } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
 import { usePipelineAdvancedStore } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-advanced-config/stores';
 import { useAppPipelineEditStore } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores';
+
+import './index.less';
+
+const prefix = 'c7ncd-pipelineAdvanced';
 
 const Index = observer(() => {
   const {
@@ -21,7 +28,44 @@ const Index = observer(() => {
   const {
     PipelineAdvancedConfigDataSet,
     level,
+    CertDataSet,
   } = usePipelineAdvancedStore();
+
+  const renderCert = () => (
+    <>
+      {
+        CertDataSet.map((record: any) => (
+          <>
+            <Form style={{ width: '60%', position: 'relative' }} record={record} columns={3}>
+              <TextField name={certMapping.repoAddress.name} />
+              <TextField name={certMapping.username.name} />
+              <Password name={certMapping.password.name} />
+              {
+                CertDataSet?.length > 1 && (
+                  <Button
+                    funcType={'flat' as any}
+                    icon="delete_black-o"
+                    className={`${prefix}-cert-delete`}
+                    onClick={() => {
+                      CertDataSet.remove([record], true);
+                    }}
+                  />
+                )
+              }
+            </Form>
+          </>
+        ))
+      }
+      <Button
+        className={`${prefix}-cert-add`}
+        funcType={'flat' as any}
+        icon="add"
+        onClick={() => CertDataSet.create()}
+      >
+        添加镜像仓库地址
+      </Button>
+    </>
+  );
 
   return (
     <>
@@ -45,6 +89,14 @@ const Index = observer(() => {
             );
           }}
         />
+      </Form>
+      <div className={`${prefix}-cert`}>
+        <p className={`${prefix}-cert-title`}>认证管理</p>
+        {
+          renderCert()
+        }
+      </div>
+      <Form style={{ width: '60%' }} dataSet={PipelineAdvancedConfigDataSet} columns={2}>
         <SelectBox
           colSpan={1}
           name={mapping.versionStrategy.name}

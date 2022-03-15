@@ -184,15 +184,16 @@ const CreateForm = injectIntl(observer((props) => {
               />
             </div>
             <Form dataSet={formDs}>
-              <SelectBox
-                name="type"
-                className="type-select"
-              >
-                <Option value="normal">
-                  {formatMessage({ id: `${intlPrefix}.type.normal` })}
-                </Option>
-                <Option value="test">{formatMessage({ id: `${intlPrefix}.type.test` })}</Option>
-              </SelectBox>
+              {/* <SelectBox */}
+              {/*  name="type" */}
+              {/*  className="type-select" */}
+              {/* > */}
+              {/*  <Option value="normal"> */}
+              {/*    {formatMessage({ id: `${intlPrefix}.type.normal` })} */}
+              {/*  </Option> */}
+              {/*  <Option value="test">{formatMessage
+              // ({ id: `${intlPrefix}.type.test` })}</Option> */}
+              {/* </SelectBox> */}
               <TextField
                 name="code"
                 autoFocus

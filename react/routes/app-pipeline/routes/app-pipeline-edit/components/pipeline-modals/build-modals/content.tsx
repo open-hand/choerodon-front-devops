@@ -156,6 +156,7 @@ const Index = observer(() => {
         && contentRef.current
         && !contentRef.current.contains(event.target)
         && !document?.querySelector('.c7n-pro-popup-container')?.contains(event.target)
+        && !document?.querySelector('.ReactModalPortal')?.contains(event.target)
       ) {
         const doms = [
           document.querySelectorAll('.c7n-menu-submenu-popup'),
