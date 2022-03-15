@@ -1,5 +1,8 @@
 import { useQuery, UseQueryOptions, QueryKey } from 'react-query';
-import { devopsAlienApi } from '@choerodon/master';
+import {
+  devopsAlienApi,
+  devopsDockerAuthConfigsApi,
+} from '@choerodon/master';
 import { useSessionStorageState } from 'ahooks';
 import { useLocation, useHistory, useParams } from 'react-router';
 import { TAB_ADVANCE_SETTINGS } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
@@ -59,11 +62,13 @@ function useAdvancedSetting(configs: any, options?: any) {
           defaultImage,
         };
       }
+      const configList = await devopsDockerAuthConfigsApi.getConfigs(id);
       const res = await initCustomFunc(id);
       return {
         [mapping.CIRunnerImage.name]: localData?.[mapping.CIRunnerImage.name] || defaultImage,
         [mapping.versionName.name]: localData?.[mapping.versionName.name],
         devopsCiPipelineFunctionDTOList: res,
+        ciDockerAuthConfigDTOList: configList,
         defaultImage,
       };
     }

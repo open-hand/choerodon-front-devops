@@ -62,6 +62,11 @@ const Index = (data: any, setData: any) => ({
   }),
   events: {
     create: ({ dataSet }: any) => {
+      if (dataSet?.length === 1) {
+        if (data?.ciDockerAuthConfigDTOList) {
+          dataSet.loadData(data?.ciDockerAuthConfigDTOList);
+        }
+      }
       setTabData(dataSet, setData, data);
     },
     update: ({ dataSet }: any) => {
