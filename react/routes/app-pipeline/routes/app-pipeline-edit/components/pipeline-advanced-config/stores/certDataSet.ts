@@ -63,7 +63,7 @@ const Index = (data: any, setData: any) => ({
   events: {
     create: ({ dataSet }: any) => {
       if (dataSet?.length === 1) {
-        if (data?.ciDockerAuthConfigDTOList) {
+        if (data?.ciDockerAuthConfigDTOList && data?.ciDockerAuthConfigDTOList?.length > 0) {
           dataSet.loadData(data?.ciDockerAuthConfigDTOList);
         }
       }
