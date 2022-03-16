@@ -113,7 +113,11 @@ const BatchDeployModal = injectIntl(observer(() => {
   }
 
   function handleAddForm(appServiceType: string) {
+    const environmentId = batchDeployDs?.current?.get('environmentId');
     batchDeployDs.create();
+    if (environmentId) {
+      batchDeployDs.current?.init('environmentId', environmentId);
+    }
     batchDeployDs.current?.init('appServiceSource', appServiceType);
     deployStore.setConfigValue('');
   }

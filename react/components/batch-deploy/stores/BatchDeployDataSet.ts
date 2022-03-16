@@ -32,9 +32,14 @@ export default (({
   function handleCreate({ dataSet, record }:any) {
     const defaultEnvId = record.get('environmentId') || envId;
     defaultEnvId && record.set('environmentId', defaultEnvId);
-    record.getField('appServiceId').set('disabled', !record.get('environmentId'));
+    const originRecord = dataSet.records?.[record?.index - 1];
+    let flag = false;
+    if (originRecord && originRecord?.get('environmentId')) {
+      flag = true
+    }
+    record.getField('appServiceId').set('disabled', !flag);
+    
   }
-
   async function handleUpdate({
     dataSet, record, name, value,
   }:any) {
