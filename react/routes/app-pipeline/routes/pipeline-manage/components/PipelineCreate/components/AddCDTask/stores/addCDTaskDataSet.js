@@ -643,7 +643,7 @@ export default (
         paging: true,
         pageSize: 10,
         transport: {
-          read: ({ dataSet, data }) => {
+          read: ({ dataSet, data, params }) => {
             const realName = data?.key;
             const cdAuditIdsArrayObj = dataSet.current?.get('cdAuditUserIds');
             let cdAuditIds = [];
@@ -656,6 +656,9 @@ export default (
             });
             if (realName && data.id) {
               cdAuditIds = [...cdAuditIds, data.id];
+            }
+            if (data?.ids) {
+              cdAuditIds = [...cdAuditIds || [], ...data?.ids];
             }
             return {
               method: 'post',
@@ -759,6 +762,14 @@ export default (
     },
   ],
   events: {
+    load: ({ dataSet }) => {
+      const record = dataSet?.current;
+      if (record?.get('cdAuditUserIds') && record?.get('cdAuditUserIds')?.length > 0) {
+        dataSet?.getField('cdAuditUserIds')?.options.query(0, {
+          ids: record?.get('cdAuditUserIds'),
+        });
+      }
+    },
     update: ({ name, value, record }) => {
       switch (name) {
         case 'envId': {
