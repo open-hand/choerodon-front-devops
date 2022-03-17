@@ -38,7 +38,10 @@ const Index = observer(() => {
       <div className={`${prefix}-tips-content`}>
         <p>此处支持手动输入自定义镜像;</p>
         <p>
-          若为私有镜像，需要在
+          若为私有镜像，还需注意以下事项:
+        </p>
+        <p>
+          1、需要在
           <span
             role="none"
             onClick={() => {
@@ -48,7 +51,10 @@ const Index = observer(() => {
             流水线-高级设置-认证管理
             <Icon type="image-o" />
           </span>
-          中维护对应的认证
+          中维护对应的镜像仓库认证。
+        </p>
+        <p>
+          2、请确保当前流水线的GitLab Runner版本在V13.1或以上。
         </p>
       </div>
     </div>

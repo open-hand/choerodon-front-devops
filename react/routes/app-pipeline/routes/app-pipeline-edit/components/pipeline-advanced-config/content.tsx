@@ -3,6 +3,9 @@ import { observer } from 'mobx-react-lite';
 import {
   Form, Select, SelectBox, TextField, Password, Button,
 } from 'choerodon-ui/pro';
+import {
+  Alert,
+} from 'choerodon-ui';
 import { NewTips } from '@choerodon/components';
 import { mapping, versionStrategyData } from './stores/pipelineAdvancedConfigDataSet';
 import {
@@ -92,6 +95,15 @@ const Index = observer(() => {
       </Form>
       <div className={`${prefix}-cert`}>
         <p className={`${prefix}-cert-title`}>认证管理</p>
+        <Alert
+          message="若想维护并使用镜像仓库的认证，请确保流水线的GitLab Runner版本在V13.1或以上。"
+          type="warning"
+          showIcon
+          style={{
+            marginBottom: 20,
+            width: '59%',
+          }}
+        />
         {
           renderCert()
         }
