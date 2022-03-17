@@ -35,7 +35,9 @@ async function openDeleteHostAppModal(
     checkKillCommandExist();
   } else {
     params.host_deploy_type = 'customize';
-    checkKillCommandExist();
+    if (data?.rdupmType !== 'middleware') {
+      checkKillCommandExist();
+    }
   }
   // eslint-disable-next-line consistent-return
   async function deleteHostApp() {
