@@ -59,6 +59,7 @@ export default (
   valueIdDataSet,
   trueAppServiceId,
   appServiceId,
+  jobDetail,
 ) => ({
   autoCreate: true,
   fields: [
@@ -639,7 +640,7 @@ export default (
       multiple: true,
       valueField: 'id',
       options: new DataSet({
-        autoQuery: true,
+        autoQuery: false,
         paging: true,
         pageSize: 10,
         transport: {
@@ -768,6 +769,11 @@ export default (
         dataSet?.getField('cdAuditUserIds')?.options.query(0, {
           ids: record?.get('cdAuditUserIds'),
         });
+      }
+    },
+    create: ({ dataSet }) => {
+      if (!jobDetail) {
+        dataSet?.getField('cdAuditUserIds')?.options.query();
       }
     },
     update: ({ name, value, record }) => {

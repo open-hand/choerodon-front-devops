@@ -34,6 +34,7 @@ export const StoreProvider = injectIntl(
       appServiceId,
       appServiceCode,
       trueAppServiceId,
+      jobDetail,
     } = props;
 
     const ADDCDTaskUseStore = useStore();
@@ -49,6 +50,7 @@ export const StoreProvider = injectIntl(
           deployConfigDataSet,
           trueAppServiceId,
           appServiceId,
+          jobDetail,
         ),
       ),
       [ADDCDTaskUseStore, random],
