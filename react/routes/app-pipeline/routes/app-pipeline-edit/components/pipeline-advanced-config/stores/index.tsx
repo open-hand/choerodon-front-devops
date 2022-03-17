@@ -37,7 +37,7 @@ export const StoreProvider = observer((props: any) => {
   } = useAppPipelineEditStore();
 
   const PipelineAdvancedConfigDataSet = useMemo(
-    () => new DataSet(pipelineAdvancedConfigDataSet(data, setTabsDataState)), [data],
+    () => new DataSet(pipelineAdvancedConfigDataSet(data, setTabsDataState)), [],
   );
 
   const CertDataSet = useMemo(() => new DataSet(certDataSet(data, setTabsDataState)), []);
