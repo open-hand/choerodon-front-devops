@@ -645,8 +645,8 @@ export default (
         pageSize: 10,
         transport: {
           read: ({ dataSet, data, params }) => {
-            const realName = data?.key;
-            const cdAuditIdsArrayObj = dataSet.current?.get('cdAuditUserIds');
+            const realName = data?.realName;
+            const cdAuditIdsArrayObj = jobDetail?.cdAuditUserIds || [];
             let cdAuditIds = [];
             forEach(cdAuditIdsArrayObj, (obj) => {
               if (typeof obj === 'string') {
