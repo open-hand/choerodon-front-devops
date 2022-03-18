@@ -104,7 +104,7 @@ export default ((formatRepository, formatCommon, url) => {
         },
       },
       {
-        name: 'userName', type: 'string', label: formatCommon({ id: 'userName' }), validator: checkUserName,
+        name: 'userName', type: 'string', label: formatCommon({ id: 'username' }), validator: checkUserName,
       },
       {
         name: 'password', type: 'string', label: formatCommon({ id: 'password' }), validator: checkPassword,
