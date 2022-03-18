@@ -291,6 +291,9 @@ const oldAppService = {
   'c7ncd.appService.userName': 'User Name',
   deployment: 'Deployment',
   'c7ncd.appService.cannot.stop': 'Can Not Stop',
+
+  'c7ncd.host.config.add.test.create': 'Create',
+  'c7ncd.host.config.add.test.save': 'Save',
 };
 export { oldAppService };
 export { enUS };

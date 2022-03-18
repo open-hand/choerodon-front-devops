@@ -948,6 +948,8 @@ const pipelineManage = {
 
 const hostConfig = {
   'c7ncd.host.config.add': '创建主机',
+  'c7ncd.host.config.add.test.create': '创建',
+  'c7ncd.host.config.add.test.save': '保存',
   'c7ncd.host.config.add.test': '创建测试主机',
   'c7ncd.host.config.add.deploy': '创建部署主机',
   'c7ncd.host.config.edit.test': '修改测试主机',
