@@ -152,28 +152,29 @@ const DetailsTabsHeaderButtons = () => {
       case HOST_CATERGORY:
       case OTHER_CATERGORY:
       case MIDDLWARE_CATERGORY:
-        obj = {
-          name: '修改应用',
-          handler: () => {
-            openHostAppConfigModal(appRecord?.toData() || {}, () => appDs.query());
-            // const data = appRecord?.toData();
-            // if (['jar', 'other'].includes(data?.rdupmType)) {
-            //   const killCommandExist = data?.killCommandExist;
-            //   if (!killCommandExist) {
-            //     Modal.confirm({
-            //       title: '未维护删除操作',
-            //       children: '此应用当前暂未维护【删除操作】，无法执行修改操作。',
-            //       okText: '我知道了',
-            //       okCancel: false,
-            //     });
-            //   } else {
-            //   }
-            // }
-          },
-          disabled: btnDisabledHost,
-          permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateHost'],
-          icon: 'add_comment-o',
-        };
+        obj = {};
+        // {
+        // name: '修改应用',
+        // handler: () => {
+        //   openHostAppConfigModal(appRecord?.toData() || {}, () => appDs.query());
+        //   // const data = appRecord?.toData();
+        //   // if (['jar', 'other'].includes(data?.rdupmType)) {
+        //   //   const killCommandExist = data?.killCommandExist;
+        //   //   if (!killCommandExist) {
+        //   //     Modal.confirm({
+        //   //       title: '未维护删除操作',
+        //   //       children: '此应用当前暂未维护【删除操作】，无法执行修改操作。',
+        //   //       okText: '我知道了',
+        //   //       okCancel: false,
+        //   //     });
+        //   //   } else {
+        //   //   }
+        //   // }
+        // },
+        // disabled: btnDisabledHost,
+        // permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateHost'],
+        // icon: 'add_comment-o',
+        // };
         break;
       case DOCKER_CATEGORY: {
         obj = {
@@ -448,10 +449,13 @@ const DetailsTabsHeaderButtons = () => {
             extra = [...extra, restartApp];
           }
         }
-        data = [modifyAppObj, ...rdupmType === DOCKER_TYPE ? [deleteApp] : [deleteApp, ...moreOpts], ...extra?.length > 0 ? [{
+        data = [...rdupmType === DOCKER_TYPE ? [deleteApp] : [deleteApp, ...moreOpts], ...extra?.length > 0 ? [{
           name: '容器操作',
           groupBtnItems: extra,
         }] : []];
+        if (rdupmType !== 'middleware') {
+          data.unshift(modifyAppObj);
+        }
         break;
       default:
         break;
