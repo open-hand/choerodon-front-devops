@@ -231,7 +231,7 @@ const Deployment = withRouter(
         auto: '流水线',
         manual: '手动部署',
         batch: '批量部署',
-        baseComponent: '基础组建',
+        baseComponent: '基础组件',
         hzero: 'Hzero部署',
       };
 

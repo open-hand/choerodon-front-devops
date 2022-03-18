@@ -44,6 +44,13 @@ const enUS = {
   domain_delete: 'Domain deleting',
   domain_update: 'Domain updating',
 
+  'c7ncd.pipelineManage.name': 'Pipeline Name',
+  'c7ncd.pipelineManage.appService': 'Associated Application Service',
+  'c7ncd.pipelineManage.result': 'Execution Result',
+  'c7ncd.pipelineManage.trigger.user': 'Trigger Person',
+  'c7ncd.pipelineManage.execute.date': 'Execution Time',
+  'c7ncd.pipelineManage.time': 'Process Takes',
+
   // deploy
   'deploy.title': 'Deploy Title',
   'deploy.status': 'Pod Status',
@@ -284,6 +291,9 @@ const oldAppService = {
   'c7ncd.appService.userName': 'User Name',
   deployment: 'Deployment',
   'c7ncd.appService.cannot.stop': 'Can Not Stop',
+
+  'c7ncd.host.config.add.test.create': 'Create',
+  'c7ncd.host.config.add.test.save': 'Save',
 };
 export { oldAppService };
 export { enUS };

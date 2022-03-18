@@ -15,6 +15,12 @@ const validateMap:Partial<Record<TabkeyTypes, (data:any, type:'create'|'edit'|'c
 };
 
 function handleValidAdvanced(data: any) {
+  if (String(data?.authFlag) !== 'undefined' && !data?.authFlag) {
+    return {
+      isValidated: false,
+      reason: '认证管理校验失败',
+    };
+  }
   const flag = data?.devopsCiPipelineFunctionDTOList?.some((i: any) => i.edit);
   return {
     isValidated: !flag,

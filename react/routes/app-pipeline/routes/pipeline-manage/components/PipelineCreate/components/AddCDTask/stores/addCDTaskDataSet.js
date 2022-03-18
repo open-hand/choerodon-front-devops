@@ -59,6 +59,7 @@ export default (
   valueIdDataSet,
   trueAppServiceId,
   appServiceId,
+  jobDetail,
 ) => ({
   autoCreate: true,
   fields: [
@@ -639,13 +640,13 @@ export default (
       multiple: true,
       valueField: 'id',
       options: new DataSet({
-        autoQuery: true,
+        autoQuery: false,
         paging: true,
         pageSize: 10,
         transport: {
-          read: ({ dataSet, data }) => {
-            const realName = data?.key;
-            const cdAuditIdsArrayObj = dataSet.current?.get('cdAuditUserIds');
+          read: ({ dataSet, data, params }) => {
+            const realName = data?.realName;
+            const cdAuditIdsArrayObj = jobDetail?.cdAuditUserIds || [];
             let cdAuditIds = [];
             forEach(cdAuditIdsArrayObj, (obj) => {
               if (typeof obj === 'string') {
@@ -656,6 +657,9 @@ export default (
             });
             if (realName && data.id) {
               cdAuditIds = [...cdAuditIds, data.id];
+            }
+            if (data?.ids) {
+              cdAuditIds = [...cdAuditIds || [], ...data?.ids];
             }
             return {
               method: 'post',
@@ -759,6 +763,19 @@ export default (
     },
   ],
   events: {
+    load: ({ dataSet }) => {
+      const record = dataSet?.current;
+      if (record?.get('cdAuditUserIds') && record?.get('cdAuditUserIds')?.length > 0) {
+        dataSet?.getField('cdAuditUserIds')?.options.query(0, {
+          ids: record?.get('cdAuditUserIds'),
+        });
+      }
+    },
+    create: ({ dataSet }) => {
+      if (!jobDetail) {
+        dataSet?.getField('cdAuditUserIds')?.options.query();
+      }
+    },
     update: ({ name, value, record }) => {
       switch (name) {
         case 'envId': {

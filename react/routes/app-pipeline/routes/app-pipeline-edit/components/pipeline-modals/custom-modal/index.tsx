@@ -13,7 +13,7 @@ const Index = observer((props: any) => (
 
 const handleCustomModal = (data: any, handleJobAddCallback: any, title?: any) => {
   Modal.open({
-    title: title || '添加【自定义】阶段',
+    title: title || '添加【自定义】任务',
     drawer: true,
     children: <Index data={data} handleJobAddCallback={handleJobAddCallback} />,
     style: {

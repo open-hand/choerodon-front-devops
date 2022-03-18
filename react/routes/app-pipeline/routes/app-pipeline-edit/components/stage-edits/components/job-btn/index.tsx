@@ -37,7 +37,21 @@ const JobAddBtn = (props:JobAddBtnProps) => {
       if (!document?.querySelector('.c7ncd-pipeline-edit-jobbtn-normal')?.contains(event.target)
         && !document?.querySelector('.c7ncd-pipeline-edit-jobbtn-popover')?.contains(event.target)
       ) {
-        setFalse();
+        let flag = false;
+        const doms = [
+          document.querySelectorAll('.c7ncd-pipeline-edit-jobbtn-normal'),
+          document.querySelectorAll('.c7n-popover-content'),
+        ];
+        doms.forEach((d: any) => {
+          d?.length > 0 && d.forEach((i: any) => {
+            if (i.contains(event.target)) {
+              flag = true;
+            }
+          });
+        });
+        if (!flag) {
+          setFalse();
+        }
       }
     }
 
