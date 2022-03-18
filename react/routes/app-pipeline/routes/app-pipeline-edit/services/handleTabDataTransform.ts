@@ -5,10 +5,14 @@ import { TabkeyTypes } from '@/routes/app-pipeline/interface';
 import { STAGE_CD, STAGE_CI } from '../stores/CONSTANTS';
 
 function transformAdvancedSetting(data: any) {
-  return ({
+  const result = {
     ...data,
     devopsCiPipelineFunctionDTOList: data?.devopsCiPipelineFunctionDTOList.filter((i: any) => i?.devopsPipelineId !== 0),
-  });
+  };
+  if (!result?.versionStrategy) {
+    delete result.versionName;
+  }
+  return result;
 }
 
 export function handleTabDataTransform(tabsData:Record<TabkeyTypes, any>) {
