@@ -177,12 +177,12 @@ const CreateForm = injectIntl(observer((props) => {
       {!appServiceId
         && (
           <>
-            <div className="create-tips">
+            {/* <div className="create-tips">
               <Tips
                 helpText={formatMessage({ id: `${intlPrefix}.type.tips` })}
                 title={formatMessage({ id: 'c7ncd.appService.type' })}
               />
-            </div>
+            </div> */}
             <Form dataSet={formDs}>
               {/* <SelectBox */}
               {/*  name="type" */}
