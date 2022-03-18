@@ -12,14 +12,18 @@ const deployTypeOptionsData = [{
 }];
 
 const repoNameUpdate = (record: any, value: any) => {
-  record.getField(mapping.imageName.name).options.setQueryParameter('repoId', value?.repoId);
-  record.getField(mapping.imageName.name).options.setQueryParameter('repoType', value?.repoType);
-  record.getField(mapping.imageName.name).options.query();
+  if (record?.get(mapping.deployType.name) === deployTypeOptionsData[0].value) {
+    record.getField(mapping.imageName.name).options.setQueryParameter('repoId', value?.repoId);
+    record.getField(mapping.imageName.name).options.setQueryParameter('repoType', value?.repoType);
+    record.getField(mapping.imageName.name).options.query();
+  }
 };
 
 const imageNameUpdate = (record: any, value: any) => {
-  record.getField(mapping.tag.name).options.setQueryParameter('repoName', `${record.get(mapping.repoName.name)?.repoName}/${value?.imageName}`);
-  record.getField(mapping.tag.name).options.query();
+  if (record?.get(mapping.deployType.name) === deployTypeOptionsData[0].value) {
+    record.getField(mapping.tag.name).options.setQueryParameter('repoName', `${record.get(mapping.repoName.name)?.repoName}/${value?.imageName}`);
+    record.getField(mapping.tag.name).options.query();
+  }
 };
 
 const mapping: {
