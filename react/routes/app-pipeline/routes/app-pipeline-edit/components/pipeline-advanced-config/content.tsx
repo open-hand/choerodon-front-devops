@@ -15,6 +15,7 @@ import CustomFunc from '@/routes/app-pipeline/routes/pipeline-manage/components/
 import { TAB_ADVANCE_SETTINGS } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
 import { usePipelineAdvancedStore } from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-advanced-config/stores';
 import { useAppPipelineEditStore } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores';
+import Tips from '@/components/new-tips';
 
 import './index.less';
 
@@ -40,7 +41,10 @@ const Index = observer(() => {
         CertDataSet.map((record: any) => (
           <>
             <Form style={{ width: '60%', position: 'relative' }} record={record} columns={3}>
-              <TextField name={certMapping.repoAddress.name} />
+              <TextField
+                name={certMapping.repoAddress.name}
+                addonAfter={<Tips helpText="镜像仓库域名地址,比如registry.example.com:5000" />}
+              />
               <TextField name={certMapping.username.name} />
               <Password name={certMapping.password.name} />
               {
