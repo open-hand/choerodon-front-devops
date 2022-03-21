@@ -389,6 +389,7 @@ export default class LogSidebar extends Component {
                 value="Loading..."
                 className="c7n-log-editor"
                 options={LOG_OPTIONS}
+                preserveScrollPosition
               />
             </div>
             <div
