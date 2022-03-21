@@ -79,7 +79,7 @@ export default ({
       const data = value.split(',');
       forEach(data, (item) => {
         const instance = appDeployOptionsDs.find((r) => r.get('code') === item);
-        const status = instance.get('status');
+        const status = instance?.get('status');
         if (instance && status && status !== 'running' && !msg) {
           msg = formatMessage({ id: 'network.application.check.failed' });
         }
