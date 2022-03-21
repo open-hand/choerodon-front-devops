@@ -163,6 +163,7 @@ function FormContent() {
               data={chartType}
               identity="isChart"
               mode="single"
+              selectedKeys={current.get('isChart')}
               customChildren={(item) => (
                 <div className="app-service-isChart-content">
                   {item.content}
