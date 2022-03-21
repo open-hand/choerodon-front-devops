@@ -14,7 +14,7 @@ import { saveAs } from 'file-saver';
 import { removeEndsChar } from '../../utils';
 
 import 'codemirror/lib/codemirror.css';
-import 'codemirror/theme/base16-dark.css';
+import 'codemirror/theme/material-darker.css';
 import './index.less';
 
 const LOG_OPTIONS = {
@@ -22,7 +22,7 @@ const LOG_OPTIONS = {
   lineNumbers: true,
   lineWrapping: true,
   autofocus: true,
-  theme: 'base16-dark',
+  theme: 'material-darker',
 };
 const { Sidebar } = Modal;
 const { Option } = Select;
