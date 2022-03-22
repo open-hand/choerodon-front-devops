@@ -191,7 +191,7 @@ export default class LogSidebar extends Component {
           }
           logs.push('\n连接出错，请重新打开\n');
           editor.setValue(_.join(logs, ''));
-          editor.execCommand('goDocEnd');
+          // editor.execCommand('goDocEnd');
         };
 
         ws.onclose = () => {
@@ -203,7 +203,7 @@ export default class LogSidebar extends Component {
             logs.push('\n连接已断开\n');
             editor.setValue(_.join(logs, ''));
           }
-          editor.execCommand('goDocEnd');
+          // editor.execCommand('goDocEnd');
           // setTimeout(() => {
           //  this.loadLog(false);
           // }, 1000);
@@ -232,7 +232,7 @@ export default class LogSidebar extends Component {
             if (!_.isEqual(logs, oldLogs)) {
               const logString = _.join(logs, '');
               editor.setValue(logString);
-              editor.execCommand('goDocEnd');
+              // editor.execCommand('goDocEnd');
               // 如果没有返回数据，则不进行重新赋值给编辑器
               oldLogs = _.cloneDeep(logs);
             }
