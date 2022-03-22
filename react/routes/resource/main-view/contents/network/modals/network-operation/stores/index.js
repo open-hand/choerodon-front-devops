@@ -149,16 +149,21 @@ function loadInfo({
     name, id, type, target, config, appServiceId,
   } = data;
   const {
-    instances, targetAppServiceId, selectors, endPoints,
+    instances, targetAppServiceId, selectors, endPoints, targetDeploymentId,
   } = target;
 
   // 判断目标对象类型
   let targetType = 'param';
-  if (targetAppServiceId || !isEmpty(instances)) {
+  if (targetAppServiceId || !isEmpty(instances) || targetDeploymentId) {
     targetType = 'instance';
   }
   if (!isEmpty(endPoints)) {
     targetType = 'endPoints';
+  }
+
+  if (targetDeploymentId) {
+    formDs.current.init('isChart', 'deployment');
+    formDs.current.init('appDeploy', targetDeploymentId);
   }
 
   const appInstance = initTargetLabel({

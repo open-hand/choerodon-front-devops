@@ -666,7 +666,7 @@ export default (
               url: `/devops/v1/projects/${projectId}/users/app_services/${appServiceId}`,
               data: {
                 userName: realName || '',
-                ids: cdAuditIds || [],
+                ids: [...new Set(cdAuditIds)] || [],
               },
               transformResponse: (res) => {
                 let newRes;

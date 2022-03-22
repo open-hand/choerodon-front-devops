@@ -144,17 +144,19 @@ const serviceVersionOptionDs = {
   paging: true,
   pageSize: 20,
   transport: {
-    read: ({ data, params }: any) => (data.appServiceId ? ({
-      ...appServiceVersionApiConfig.getVersions(
-        data.appServiceId,
-        true,
-        true,
-        {
-          ...params,
-          version: data?.key || undefined,
-        }, data.appServiceVersionId,
-      ),
-    }) : undefined),
+    read: ({ data, params }: any) => {
+      return (data.appServiceId ? ({
+        ...appServiceVersionApiConfig.getVersions(
+          data.appServiceId,
+          true,
+          true,
+          {
+            ...params,
+            version: data?.query || undefined,
+          }, data.appServiceVersionId,
+        ),
+      }) : undefined)
+    },
   },
 };
 
@@ -166,6 +168,7 @@ const marketServiceVersionOptionDs = {
   pageSize: 20,
   transport: {
     read: ({ data }: any) => {
+      debugger;
       if (data.type) {
         // 如果是选配
         if (data.type === OPTIONAL) {

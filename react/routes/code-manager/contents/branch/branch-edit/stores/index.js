@@ -33,17 +33,20 @@ export const StoreProvider = injectIntl(inject('AppState')(
     const projectOptionsDs = useMemo(() => new DataSet(ProjectOptionsDataSet({
       organizationId, userId: getUserId, projectId,
     })), [organizationId]);
-    const selectDs = useMemo(() => new DataSet(SelectDataSet({
-      projectId,
-      formatMessage,
-      appServiceId,
-      objectVersionNumber,
-      branchName,
-      projectOptionsDs,
-      initIssues,
-      projectName,
-      getUserId,
-    }), [projectId]));
+
+    const selectDs = useMemo(() => new DataSet(
+      SelectDataSet({
+        projectId,
+        formatMessage,
+        appServiceId,
+        objectVersionNumber,
+        branchName,
+        projectOptionsDs,
+        initIssues,
+        projectName,
+        getUserId,
+      }),
+    ), [projectId]);
 
     useEffect(() => {
       if (initIssues && initIssues.length) {
