@@ -52,7 +52,7 @@ export default class LogSidebar extends Component {
     const { record: { containers, containerIndex } } = this.props;
     const { name, logId } = containers[containerIndex || 0];
     this.setState({ containerName: name, logId });
-    setTimeout(() => this.loadLog(false), 500);
+    setTimeout(() => this.loadLog(false), 1500);
   }
 
   componentWillUnmount() {
@@ -68,7 +68,7 @@ export default class LogSidebar extends Component {
         logId,
       });
       this.clearLogAndTimer();
-      setTimeout(() => this.loadLog(false), 500);
+      setTimeout(() => this.loadLog(false), 1500);
     }
   };
 
