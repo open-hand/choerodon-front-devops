@@ -13,6 +13,9 @@ import { OverflowWrap } from '@choerodon/components';
 import PipelineTree from './components/PipelineTree';
 import PipelineFlow from './components/PipelineFlow';
 import DragBar from '@/components/drag-bar';
+import {
+  handleModal,
+} from './components/time-trigger';
 import RecordDetail from './components/record-detail';
 import EmptyPage from '@/components/empty-page';
 import { mapping } from '../app-pipeline-edit/components/pipeline-advanced-config/stores/pipelineAdvancedConfigDataSet';
@@ -274,6 +277,15 @@ const PipelineManage = observer(() => {
         });
       }
     }
+    buttons.push({
+      icon: 'settings-o',
+      permissions: [],
+      name: format({ id: 'timeTrigger' }),
+      display: true,
+      handler: () => {
+        handleModal();
+      },
+    });
     buttons.push({
       icon: 'refresh',
       handler: handleRefresh,
