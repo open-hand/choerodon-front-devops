@@ -17,6 +17,7 @@ const pipelineManage = {
   'c7ncd.pipelineManage.ScanReport': '查看镜像扫描报告',
   'c7ncd.pipelineManage.QualityReport': '查看代码质量报告',
   'c7ncd.pipelineManage.GitLabRunner': 'GitLab Runner配置指引',
+  'c7ncd.pipelineManage.timeTrigger': '定时触发配置',
 };
 
 export { pipelineManage };
