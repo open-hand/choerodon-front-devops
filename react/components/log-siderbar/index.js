@@ -43,16 +43,19 @@ export default class LogSidebar extends Component {
       logId: null,
       isDownload: false,
       isRestartDownload: false,
+      logList: [],
     };
     this.timer = null;
     this.socket = null;
   }
 
   componentDidMount() {
+    const that = this;
     const { record: { containers, containerIndex } } = this.props;
     const { name, logId } = containers[containerIndex || 0];
     this.setState({ containerName: name, logId });
-    setTimeout(() => this.loadLog(false), 500);
+    console.log('didmount loadlog');
+    setTimeout(() => this.loadLog(false, that), 500);
   }
 
   componentWillUnmount() {
@@ -60,6 +63,7 @@ export default class LogSidebar extends Component {
   }
 
   handleChange = (value) => {
+    const that = this;
     const [logId, containerName] = value.split('+');
     // eslint-disable-next-line react/destructuring-assignment
     if (logId !== this.state.logId) {
@@ -68,7 +72,8 @@ export default class LogSidebar extends Component {
         logId,
       });
       this.clearLogAndTimer();
-      setTimeout(() => this.loadLog(false), 500);
+      console.log('change loadlog');
+      setTimeout(() => this.loadLog(false, that), 500);
     }
   };
 
@@ -88,14 +93,16 @@ export default class LogSidebar extends Component {
    * 日志go top
    */
   goTop = () => {
-    const editor = this.editorLog.getCodeMirror();
-    editor.execCommand('goDocStart');
+    const element = document.querySelector('.c7n-log-editor');
+    element.scrollTop = 0;
   };
 
   /**
    * top log following
    */
+  // TODO
   stopFollowing = () => {
+    console.log('stopfollowing');
     if (this.socket) {
       this.socket.close();
     }
@@ -112,23 +119,30 @@ export default class LogSidebar extends Component {
    *  全屏查看日志
    */
   setFullScreen = () => {
-    const cm = this.editorLog.getCodeMirror();
-    const wrap = cm.getWrapperElement();
-    cm.state.fullScreenRestore = {
-      scrollTop: window.pageYOffset,
-      scrollLeft: window.pageXOffset,
-      width: wrap.style.width,
-      height: wrap.style.height,
-    };
-    wrap.style.width = '';
-    wrap.style.height = 'auto';
-    wrap.className += ' CodeMirror-fullScreen';
+    const cm = document.querySelector('.c7n-term-wrap');
+    // const wrap = cm.getWrapperElement();
+    // cm.state.fullScreenRestore = {
+    //   scrollTop: window.pageYOffset,
+    //   scrollLeft: window.pageXOffset,
+    //   width: wrap.style.width,
+    //   height: wrap.style.height,
+    // };
+    // wrap.style.width = '';
+    // wrap.style.height = 'auto';
+    // wrap.className += ' CodeMirror-fullScreen';
     this.setState({ fullScreen: true });
-    document.documentElement.style.overflow = 'hidden';
-    cm.refresh();
-    window.addEventListener('keydown', (e) => {
-      this.setNormal(e.which);
-    });
+    if (cm.requestFullscreen) {
+      cm.requestFullscreen();
+    } else if (cm.mozRequestFullScreen) {
+      cm.mozRequestFullScreen();
+    } else if (cm.webkitRequestFullScreen) {
+      cm.webkitRequestFullScreen();
+    }
+    // document.documentElement.style.overflow = 'hidden';
+    // cm.refresh();
+    // window.addEventListener('keydown', (e) => {
+    //   this.setNormal(e.which);
+    // });
   };
 
   /**
@@ -155,7 +169,7 @@ export default class LogSidebar extends Component {
   /**
    * 加载日志
    */
-  loadLog = (isFollow = true) => {
+  loadLog = (isFollow = true, that) => {
     const {
       record, clusterId: propsClusterId, projectId: propsProjectId,
       AppState: { currentMenuType: { projectId: currentProjectId } },
@@ -169,81 +183,111 @@ export default class LogSidebar extends Component {
     const secretKey = window._env_.DEVOPS_WEBSOCKET_SECRET_KEY;
     const key = `cluster:${clusterId}.log:${uuidv1()}`;
     const url = `${wsUrl}/websocket?key=${key}&group=from_front:${key}&processor=front_log&secret_key=${secretKey}&env=${namespace}&podName=${podName}&containerName=${containerName}&logId=${logId}&clusterId=${clusterId}&oauthToken=${getAccessToken()}&projectId=${projectId}`;
-    const logs = [];
-    let oldLogs = [];
-    let editor = null;
+    let logs = [];
 
-    if (this.editorLog) {
-      editor = this.editorLog.getCodeMirror();
-      try {
-        const ws = new WebSocket(url);
-        this.setState({ following: true });
-        if (!isFollow) {
-          editor.setValue('Loading...\n');
-        }
-        ws.onopen = () => {
-          editor.setValue('Loading...\n');
-        };
-        ws.onerror = (e) => {
-          if (this.timer) {
-            clearInterval(this.timer);
-            this.timer = null;
-          }
-          logs.push('\n连接出错，请重新打开\n');
-          editor.setValue(_.join(logs, ''));
-          // editor.execCommand('goDocEnd');
-        };
-
-        ws.onclose = () => {
-          if (this.timer) {
-            clearInterval(this.timer);
-            this.timer = null;
-          }
-          if (following) {
-            logs.push('\n连接已断开\n');
-            editor.setValue(_.join(logs, ''));
-          }
-          // editor.execCommand('goDocEnd');
-          // setTimeout(() => {
-          //  this.loadLog(false);
-          // }, 1000);
-        };
-
-        ws.onmessage = (e) => {
-          if (e.data.size) {
-            const reader = new FileReader();
-            reader.readAsText(e.data, 'utf-8');
-            reader.onload = () => {
-              if (reader.result !== '') {
-                logs.push(reader.result);
-              }
-            };
-          }
-          if (!logs.length) {
-            const logString = _.join(logs, '');
-            editor.setValue(logString);
-          }
-        };
-
-        this.socket = ws;
-
-        this.timer = setInterval(() => {
-          if (logs.length > 0) {
-            if (!_.isEqual(logs, oldLogs)) {
-              const logString = _.join(logs, '');
-              editor.setValue(logString);
-              // editor.execCommand('goDocEnd');
-              // 如果没有返回数据，则不进行重新赋值给编辑器
-              oldLogs = _.cloneDeep(logs);
-            }
-          } else if (!isFollow) {
-            editor.setValue('Loading...\n');
-          }
-        }, 0);
-      } catch (e) {
-        editor.setValue('连接失败\n');
-        throw new Error("Failed to construct 'WebSocket': The URL ERROR");
+    try {
+      const ws = new WebSocket(url);
+      this.setState({ following: true });
+      if (!isFollow) {
+        console.log('!isFollow');
+        logs = ['<span>1</span>Loading...\n'];
+        this.setState({
+          logList: logs,
+        });
       }
+      ws.onopen = () => {
+        console.log('open');
+        logs = ['<span>1</span>Loading...\n'];
+        this.setState({
+          logList: logs,
+        });
+      };
+      ws.onerror = (e) => {
+        if (this.timer) {
+          clearInterval(this.timer);
+          this.timer = null;
+        }
+        console.log('error');
+        logs.push(`<span>${logs.length}</span>连接出错，请重新打开\n`);
+        this.setState({
+          logList: logs,
+        });
+        // editor.setValue(_.join(logs, ''));
+        // editor.execCommand('goDocEnd');
+      };
+
+      ws.onclose = () => {
+        if (this.timer) {
+          clearInterval(this.timer);
+          this.timer = null;
+        }
+        if (following) {
+          console.log('follow');
+          logs.push(`<span>${logs.length}</span>连接已断开\n`);
+          this.setState({
+            logList: logs,
+          });
+        }
+        // editor.execCommand('goDocEnd');
+        // setTimeout(() => {
+        //  this.loadLog(false);
+        // }, 1000);
+      };
+
+      ws.onmessage = (e) => {
+        if (e.data.size) {
+          const reader = new FileReader();
+          reader.readAsText(e.data, 'utf-8');
+          reader.onload = () => {
+            if (reader.result !== '') {
+              const originLength = logs.length;
+              logs = [
+                ...logs,
+                ...reader.result.split('\n').map((item, index) => `<span>${originLength + index}</span>${item}`),
+              ];
+              console.log('onMessage');
+              this.setState({
+                logList: logs,
+              }, () => {
+                this.scrollToBottom();
+              });
+              // logs.push(reader.result);
+            }
+          };
+        }
+        if (!logs.length) {
+          // const logString = _.join(logs, '');
+          // this.setState({
+          //   logList: logs,
+          // });
+        }
+      };
+
+      this.socket = ws;
+
+      // this.timer = setInterval(() => {
+      //   if (logs.length > 0) {
+      //     if (!_.isEqual(logs, oldLogs)) {
+      //       const logString = _.join(logs, '');
+      //       // editor.setValue(logString);
+      //       // editor.execCommand('goDocEnd');
+      //       // 如果没有返回数据，则不进行重新赋值给编辑器
+      //       oldLogs = _.cloneDeep(logs);
+      //     }
+      //   } else if (!isFollow) {
+      //     console.log('timer');
+      //     // this.setState({
+      //     //   logList: ['Loading...\n'],
+      //     // });
+      //   }
+      // }, 0);
+    } catch (e) {
+      logs.push(`<span>${logs.length}</span>连接失败\n`);
+      console.log('failed');
+      this.setState({
+        logList: logs,
+      });
+      throw new Error("Failed to construct 'WebSocket': The URL ERROR");
     }
   };
 
@@ -307,11 +351,21 @@ export default class LogSidebar extends Component {
     }
   };
 
+  scrollToBottom = () => {
+    const element = document.querySelector('.c7n-log-editor');
+    element.scrollTop = element.scrollHeight;
+  }
+
   render() {
     const { visible, onClose, record: { containers, restartCount } } = this.props;
     const logCanRestart = restartCount > 0;
     const {
-      following, fullScreen, containerName, isDownload, isRestartDownload,
+      following,
+      fullScreen,
+      containerName,
+      isDownload,
+      isRestartDownload,
+      logList,
     } = this.state;
     const containerOptions = _.map(containers, (container) => {
       const { logId, name } = container;
@@ -376,13 +430,23 @@ export default class LogSidebar extends Component {
             </div>
             <div
               className={`c7n-podLog-action c7n-term-following ${fullScreen ? 'c7n-term-following_full' : ''}`}
-              onClick={following ? this.stopFollowing : this.loadLog}
+              onClick={following ? this.stopFollowing : () => {
+                console.log('click loadlog');
+                this.loadLog(true, this);
+              }}
               role="none"
             >
               {following ? 'Stop Following' : 'Start Following'}
             </div>
             <div className="c7n-term-wrap">
-              <ReactCodeMirror
+              <div
+                className="c7n-log-editor"
+              >
+                {logList.map((item) => (
+                  <p dangerouslySetInnerHTML={{ __html: item }} />
+                ))}
+              </div>
+              {/* <ReactCodeMirror
                 ref={(editor) => {
                   this.editorLog = editor;
                 }}
@@ -390,7 +454,7 @@ export default class LogSidebar extends Component {
                 className="c7n-log-editor"
                 options={LOG_OPTIONS}
                 preserveScrollPosition
-              />
+              /> */}
             </div>
             <div
               className={`c7n-podLog-action c7n-term-totop ${fullScreen ? 'c7n-term-totop_full' : ''}`}
