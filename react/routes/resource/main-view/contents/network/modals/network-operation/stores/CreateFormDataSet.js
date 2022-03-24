@@ -165,6 +165,7 @@ export default ({
         name: 'externalIps',
         label: formatMessage({ id: 'network.config.ip' }),
         multiple: true,
+        type: 'object',
         validator: checkIP,
       },
       {

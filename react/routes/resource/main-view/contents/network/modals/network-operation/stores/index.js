@@ -179,7 +179,7 @@ function loadInfo({
   formDs.current.init('type', type);
   formDs.current.init('target', targetType);
   formDs.current.init('appInstance', appInstance);
-  formDs.current.init('externalIps', externalIps);
+  formDs.current.init('externalIps', data?.config?.externalIps || []);
   formDs.current.init('targetIps', targetIps);
 }
 
