@@ -4,6 +4,8 @@ import {
   Form,
   TextField,
   Select,
+  SelectBox,
+  DatePicker,
 } from 'choerodon-ui/pro';
 import {
   Button,
@@ -33,22 +35,24 @@ const Index = observer(() => {
     VariableDataSet,
   } = useCreateTriggerStore();
 
-  const renderVariable = () => VariableDataSet.map((record: any) => (
-    <Form record={record} columns={24}>
-      <TextField colSpan={10} name={variableMapping.name.name} />
-      <span
+  const renderVariable = () => (
+    <>
+      {VariableDataSet.map((record: any) => (
+        <Form record={record} columns={24}>
+          <TextField colSpan={10} name={variableMapping.name.name} />
+          <span
         // @ts-ignore
-        colSpan={2}
-        style={{
-          position: 'relative',
-          top: '15px',
-        }}
-      >
-        =
-      </span>
-      <TextField colSpan={10} name={variableMapping.value.name} />
-      {/* @ts-ignore */}
-      {
+            colSpan={2}
+            style={{
+              position: 'relative',
+              top: '15px',
+            }}
+          >
+            =
+          </span>
+          <TextField colSpan={10} name={variableMapping.value.name} />
+          {/* @ts-ignore */}
+          {
         VariableDataSet.length > 1 && (
         <Button
           funcType="flat"
@@ -63,8 +67,19 @@ const Index = observer(() => {
         />
         )
       }
-    </Form>
-  ));
+        </Form>
+      ))}
+      <Button
+        style={{
+          marginBottom: 18,
+        }}
+        funcType="flat"
+        icon="add"
+      >
+        添加变量
+      </Button>
+    </>
+  );
 
   return (
     <>
@@ -95,6 +110,28 @@ const Index = observer(() => {
           )}
         />
       </div>
+      <Form columns={2} dataSet={CreateTriggerDataSet}>
+        <SelectBox colSpan={2} name={mapping.datePick.name} />
+        {
+          CreateTriggerDataSet?.current?.get(mapping.triggerWay.name)
+          === triggerWayData[0].value ? (
+            <>
+              <DatePicker
+                mode={'time' as any}
+                colSpan={1}
+                name={mapping.timePeriod.name}
+              />
+              <Select colSpan={1} name={mapping.timeInterval.name} />
+            </>
+            ) : (
+              <DatePicker
+                mode={'time' as any}
+                colSpan={2}
+                name={mapping.executeTime.name}
+              />
+            )
+        }
+      </Form>
     </>
 
   );
