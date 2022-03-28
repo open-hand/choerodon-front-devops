@@ -20,7 +20,7 @@ const Index = (props: any) => (
   </StoreProvider>
 );
 
-const handleModal = () => {
+const handleModal = (id: any) => {
   Modal.open({
     key: Modal.key(),
     title: '定时触发配置',
@@ -28,8 +28,10 @@ const handleModal = () => {
     style: {
       width: MIDDLE,
     },
+    okCancel: false,
+    okText: '关闭',
     children: (
-      <Index />
+      <Index appServiceId={id} />
     ),
   });
 };
