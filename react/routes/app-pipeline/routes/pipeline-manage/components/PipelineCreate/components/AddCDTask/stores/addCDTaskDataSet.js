@@ -4,7 +4,9 @@ import { axios, apiTestApiConfig } from '@choerodon/master';
 import forEach from 'lodash/forEach';
 import JSONbig from 'json-bigint';
 import { DataSet } from 'choerodon-ui/pro';
-import addCDTaskDataSetMap, { fieldMap, typeData, deployWayData } from './addCDTaskDataSetMap';
+import addCDTaskDataSetMap, {
+  fieldMap, typeData, deployWayData, relativeObjData,
+} from './addCDTaskDataSetMap';
 import { appNameDataSet } from './deployGroupDataSet';
 import { appNameChartDataSet } from './deployChartDataSet';
 
@@ -91,7 +93,8 @@ export default (
       textField: 'name',
       valueField: 'id',
       dynamicProps: {
-        required: ({ record }) => record?.get('type') === addCDTaskDataSetMap.apiTest,
+        required: ({ record }) => record?.get('type') === addCDTaskDataSetMap.apiTest
+        && record?.get(fieldMap.relativeObj.name) === relativeObjData[0].value,
       },
       options: new DataSet({
         autoQuery: true,
@@ -760,6 +763,20 @@ export default (
     },
     {
       ...fieldMap.postCommand,
+    },
+    {
+      ...fieldMap.relativeObj,
+    },
+    {
+      ...fieldMap.kits,
+      options: new DataSet({
+        autoQuery: true,
+        transport: {
+          read: () => ({
+            ...apiTestApiConfig.getSuitesList(),
+          }),
+        },
+      }),
     },
   ],
   events: {
