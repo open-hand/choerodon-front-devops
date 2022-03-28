@@ -1,5 +1,13 @@
 import { DataSet } from 'choerodon-ui/pro';
 
+const relativeObjData = [{
+  name: 'API测试任务',
+  value: 'task',
+}, {
+  name: 'API测试套件',
+  value: 'suite',
+}];
+
 const map = {
   // 主机来源name
   hostSource: 'hostSource',
@@ -158,10 +166,36 @@ const fieldMap = {
 #例如 nc -z localhost 8070 && curl -s --fail localhost:8071/actuator/health
     `,
   },
+  relativeObj: {
+    name: 'taskType',
+    type: 'string',
+    label: '关联对象',
+    defaultValue: relativeObjData[0].value,
+    textField: 'name',
+    valueField: 'value',
+    options: new DataSet({
+      data: relativeObjData,
+    }),
+  },
+  kits: {
+    name: 'apiTestSuiteId',
+    type: 'string',
+    label: 'API测试套件',
+    textField: 'name',
+    valueField: 'id',
+    dynamicProps: {
+      required: ({ record }) => record?.get('type') === map.apiTest
+      && record?.get(fieldMap.relativeObj.name) === relativeObjData[1].value,
+    },
+  },
 };
 
 export default map;
 
 export {
-  typeData, fieldMap, deployWayData, productTypeData,
+  typeData,
+  fieldMap,
+  deployWayData,
+  productTypeData,
+  relativeObjData,
 };

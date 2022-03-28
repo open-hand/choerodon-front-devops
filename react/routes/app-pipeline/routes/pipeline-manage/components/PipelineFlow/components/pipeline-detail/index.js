@@ -7,6 +7,7 @@ import get from 'lodash/get';
 import forEach from 'lodash/forEach';
 import { Tooltip, Icon } from 'choerodon-ui/pro';
 import { Loading } from '@choerodon/components';
+import { relativeObjData } from '../../../PipelineCreate/components/AddCDTask/stores/addCDTaskDataSetMap';
 import jobTypesMappings from '../../../../stores/jobsTypeMappings';
 import { usePipelineManageStore } from '../../../../stores';
 import { JOB_GROUP_TYPES } from '@/routes/app-pipeline/stores/CONSTANTS';
@@ -115,7 +116,11 @@ export default observer((props) => {
         throw new Error(error);
       }
       const {
-        sonarUrl, config, scannerType, blockAfterJob,
+        sonarUrl,
+        config,
+        scannerType,
+        blockAfterJob,
+        taskType,
       } = newData;
       let content;
       let showBranchContent;
@@ -165,6 +170,10 @@ export default observer((props) => {
         case 'cdApiTest':
           content = (
             <div className="c7ncd-pipeline-detail-job-task-deploy">
+              <span className="c7ncd-pipeline-detail-job-task-deploy-item">
+                对象类型：
+                {relativeObjData?.find((i) => i?.value === taskType)?.name}
+              </span>
               <span className="c7ncd-pipeline-detail-job-task-deploy-item">
                 是否阻塞：
                 {blockAfterJob ? '是' : '否'}

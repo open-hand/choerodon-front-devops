@@ -23,6 +23,7 @@ const pipelineManage = {
   'c7ncd.pipelineManage.ScanReport': 'View the Image Scan Report',
   'c7ncd.pipelineManage.QualityReport': 'View the Code Quality Report',
   'c7ncd.pipelineManage.GitLabRunner': 'GitLab Runner Configuration Guideline',
+  'c7ncd.pipelineManage.timeTrigger': 'Timing trigger configuration',
 };
 
 export { pipelineManage };
