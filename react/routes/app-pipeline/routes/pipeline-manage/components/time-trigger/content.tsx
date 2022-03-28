@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   TextField,
   Table,
@@ -7,6 +7,9 @@ import {
   Icon,
   Button,
 } from 'choerodon-ui';
+import {
+  Action,
+} from '@choerodon/master';
 import {
   observer,
 } from 'mobx-react-lite';
@@ -31,11 +34,34 @@ const cssPrefix = 'c7ncd-timeTrigger';
 const Index = observer(() => {
   const {
     TimeTriggerDataSet,
+    projectId,
+    appServiceId,
   } = useTimeTriggerStore();
 
-  const handleAddTrigger = () => {
-    handleModal();
+  const refresh = () => {
+    TimeTriggerDataSet?.query();
   };
+
+  const handleAddTrigger = () => {
+    handleModal(appServiceId, refresh);
+  };
+
+  const renderAction = ({ record }: any) => (
+    <Action data={[{
+      service: [],
+      text: '修改',
+      action: () => {},
+    }, {
+      service: [],
+      text: '停用',
+      action: () => {},
+    }, {
+      service: [],
+      text: '删除',
+      action: () => {},
+    }]}
+    />
+  );
 
   return (
     <div className={cssPrefix}>
@@ -59,6 +85,10 @@ const Index = observer(() => {
         className={`${cssPrefix}-table`}
       >
         <Column name={mapping.planName.name} />
+        <Column
+          width={55}
+          renderer={renderAction}
+        />
         <Column name={mapping.branch.name} />
         <Column name={mapping.triggerWay.name} />
         <Column name={mapping.nextTime.name} />

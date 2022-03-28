@@ -1,6 +1,6 @@
 const mapping: any = {
   name: {
-    name: 'name',
+    name: 'variableKey',
     type: 'string',
     label: '变量名',
     dynamicProps: {
@@ -13,7 +13,7 @@ const mapping: any = {
     },
   },
   value: {
-    name: 'value',
+    name: 'variableValue',
     type: 'string',
     label: '值',
     dynamicProps: {

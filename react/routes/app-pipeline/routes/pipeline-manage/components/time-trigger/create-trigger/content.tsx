@@ -1,5 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
+import {
+  axios,
+  Choerodon,
+  ciPipelineSchedulesApi,
+} from '@choerodon/master';
 import {
   Form,
   TextField,
@@ -7,6 +12,7 @@ import {
   SelectBox,
   DatePicker,
 } from 'choerodon-ui/pro';
+import concat from 'lodash/concat';
 import {
   Button,
 } from 'choerodon-ui';
@@ -14,12 +20,15 @@ import {
   NewTips,
   CustomSelect,
 } from '@choerodon/components';
+import { map, some, debounce } from 'lodash';
+import { handlePromptError } from '@/utils';
 import {
   useCreateTriggerStore,
 } from './stores';
 import {
   mapping,
   triggerWayData,
+  transformSubmitData,
 } from './stores/createTriggerDataSet';
 import {
   mapping as variableMapping,
@@ -29,11 +38,99 @@ import './index.less';
 
 const cssPrefix = 'c7ncd-createTrigger';
 
+const { OptGroup, Option } = Select;
+
 const Index = observer(() => {
   const {
     CreateTriggerDataSet,
     VariableDataSet,
+    appServiceId,
+    AppState: { currentMenuType: { projectId } },
+    modal,
+    refresh,
   } = useCreateTriggerStore();
+
+  const [branchData, setBranchData] = useState<any>([]);
+  const [hasMoreBranch, setHasMoreBranch] = useState<any>(false);
+  const [tagData, setTagData] = useState<any>([]);
+  const [hasMoreTag, setHasMoreTag] = useState<any>(false);
+
+  const handleOk = async () => {
+    const flag = await CreateTriggerDataSet?.current?.validate();
+    const variableFlag = await VariableDataSet?.validate();
+    if (flag && variableFlag) {
+      const data = {
+        appServiceId,
+        variableVOList: VariableDataSet?.toData(),
+        ...transformSubmitData(CreateTriggerDataSet),
+      };
+      try {
+        await ciPipelineSchedulesApi.createPlan({ data });
+        refresh && refresh();
+        return true;
+      } catch (e) {
+        console.log(e);
+        return false;
+      }
+    }
+    return false;
+  };
+
+  if (modal) {
+    modal.handleOk(handleOk);
+  }
+
+  const initBranchData = async ({
+    searchValue,
+    id,
+    page = 1,
+  }: any) => {
+    try {
+      const postData = { searchParam: { branchName: searchValue }, param: [] };
+      const res = await axios.post(`devops/v1/projects/${projectId}/app_service/${id}/git/page_branch_basic_info_by_options?page=${page}&size=5`, postData);
+      if (handlePromptError(res)) {
+        if (res.pageNum === 1) {
+          setBranchData(res.list);
+        } else {
+          setBranchData(concat(branchData.slice(), res.list));
+        }
+        setHasMoreBranch(res.hasNextPage);
+        return res;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  };
+
+  const initTagData = async ({
+    searchValue,
+    page = 1,
+    id,
+  }: any) => {
+    try {
+      const postData = { searchParam: { tagName: searchValue }, param: [] };
+      const res = await axios.post(`devops/v1/projects/${projectId}/app_service/${id}/git/page_tags_by_options?page=${page}&size=5`, postData);
+      if (handlePromptError(res)) {
+        if (res.pageNum === 1) {
+          setTagData(res.list);
+        } else {
+          setTagData(concat(branchData.slice(), res.list));
+        }
+        setHasMoreTag(res.hasNextPage);
+        return res;
+      }
+      return false;
+    } catch (e) {
+      Choerodon.handleResponseError(e);
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    initBranchData({ id: appServiceId });
+    initTagData({ id: appServiceId });
+  }, []);
 
   const renderVariable = () => (
     <>
@@ -59,6 +156,9 @@ const Index = observer(() => {
           icon="delete_black-o"
         // @ts-ignore
           colSpan={2}
+          onClick={() => {
+            VariableDataSet.delete([record], false);
+          }}
           style={{
             position: 'relative',
             top: '9px',
@@ -75,6 +175,9 @@ const Index = observer(() => {
         }}
         funcType="flat"
         icon="add"
+        onClick={() => {
+          VariableDataSet.create();
+        }}
       >
         添加变量
       </Button>
@@ -85,7 +188,34 @@ const Index = observer(() => {
     <>
       <Form dataSet={CreateTriggerDataSet}>
         <TextField name={mapping.planName.name} />
-        <Select name={mapping.branch.name} />
+        <Select name={mapping.branch.name}>
+          <OptGroup
+            label="分支"
+            key="proGroup"
+          >
+            {map(branchData, ({ branchName }: any) => (
+              <Option value={`${branchName}_type_b`} key={branchName} title={branchName}>
+                {branchName}
+              </Option>
+            ))}
+            {hasMoreBranch ? (
+              <Option value="branch" />
+            ) : null}
+          </OptGroup>
+          <OptGroup
+            label="Tag"
+            key="more"
+          >
+            {map(tagData, ({ release }: any) => (release
+              ? (
+                <Option value={`${release.tagName}_type_t`} key={release.tagName}>
+                  {release.tagName}
+                </Option>
+              ) : null))}
+            {hasMoreTag ? (
+              <Option value="tag" />) : null }
+          </OptGroup>
+        </Select>
       </Form>
       <p className={`${cssPrefix}-config ${cssPrefix}-title`}>
         执行变量配置

@@ -209,7 +209,9 @@ const PipelineManage = observer(() => {
   }
 
   function getHeaderButtons() {
-    const { parentId, status, devopsCdPipelineDeatilVO } = getSelectedMenu;
+    const {
+      parentId, status, devopsCdPipelineDeatilVO, appServiceId,
+    } = getSelectedMenu;
     const {
       status: detailStatus,
       devopsCdPipelineDeatilVO: detailDevopsCdPipelineDeatilVO,
@@ -283,7 +285,7 @@ const PipelineManage = observer(() => {
       name: format({ id: 'timeTrigger' }),
       display: true,
       handler: () => {
-        handleModal();
+        handleModal(appServiceId);
       },
     });
     buttons.push({
