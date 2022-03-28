@@ -153,7 +153,7 @@ const Stage:FC<StageProps> = (props) => {
     const [fromId, toId] = fromToId?.split('-').map(Number);
     let styles = {};
     if (String(stageIndex) !== String(fromId)) {
-      styles = { transform: 'translate(0,0)' };
+      styles = {};
       const mul = toId - fromId;
       if (mul > 0) {
         if (stageIndex <= toId && stageIndex >= fromId) {

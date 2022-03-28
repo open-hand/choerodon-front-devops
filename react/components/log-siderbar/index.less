@@ -133,13 +133,31 @@
 
 .c7n-log-editor {
   height: 100%;
-  display: flex;
   flex: 1;
+  overflow: auto;
+  padding-left: 80px;
+
+  p {
+    margin-bottom: 0;
+    color: rgb(238, 255, 255);
+    font-family: monospace;
+    font-size: 13px;
+    position: relative;
+
+    span {
+      position: absolute;
+      left: -70px;
+    }
+  }
 
   .CodeMirror {
     height: 100%;
     flex: 1;
   }
+}
+
+.c7n-log-editor::-webkit-scrollbar {
+  background: white;
 }
 
 .c7n-container-i {

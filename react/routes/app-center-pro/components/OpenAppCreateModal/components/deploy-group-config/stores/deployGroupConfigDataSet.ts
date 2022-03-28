@@ -193,7 +193,7 @@ const deployGroupConfigDataSet = (
         if (detail) {
           item.validator = async (value, type, record: Record) => {
             let res: any = '应用名称已重复';
-            const flag = await deployAppCenterApi.checkAppName(value, 'deployment', record.get('instanceId'), record.get(mapping.env.name));
+            const flag = await deployAppCenterApi.checkAppName(value, 'deployment', record.get('instanceId'), record.get(mapping.env.name) || detail?.envId);
             if (flag) {
               res = true;
             }
