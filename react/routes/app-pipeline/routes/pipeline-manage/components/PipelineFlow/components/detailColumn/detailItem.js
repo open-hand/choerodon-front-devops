@@ -377,18 +377,6 @@ const DetailItem = (props) => {
           <span>对象类型:</span>
           <span>{relativeObjData?.find((i) => i?.value === taskType)?.name}</span>
         </div>
-        {
-          taskType === relativeObjData[0].value && (
-            <div>
-              <span>用例数量:</span>
-              <span>{relativeObjData?.find((i) => i?.value === taskType)?.name}</span>
-            </div>
-          )
-        }
-        <div>
-          <span>对象类型:</span>
-          <span>{relativeObjData?.find((i) => i?.value === taskType)?.name}</span>
-        </div>
         <div>
           <span>阈值:</span>
           <span>{performThreshold ? `${performThreshold}%` : '未设置'}</span>
