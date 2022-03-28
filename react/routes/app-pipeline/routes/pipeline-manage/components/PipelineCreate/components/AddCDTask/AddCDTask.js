@@ -33,6 +33,7 @@ import addCDTaskDataSetMap, {
   typeData,
   fieldMap,
   deployWayData,
+  relativeObjData,
 } from './stores/addCDTaskDataSetMap';
 import { mapping } from './stores/deployChartDataSet';
 import { useAddCDTaskStore } from './stores';
@@ -199,6 +200,7 @@ export default observer(() => {
       [fieldMap.killCommand.name]: fieldMap.killCommand.defaultValue,
       [fieldMap.dockerCommand.name]: fieldMap.dockerCommand.defaultValue,
       [fieldMap.healthProb.name]: fieldMap.healthProb.defaultValue,
+      [fieldMap.relativeObj.name]: fieldMap.relativeObj.defaultValue,
     };
     if (taskType === 'cdHost' && relatedJobOpts && relatedJobOpts.length === 1) {
       newData.pipelineTask = relatedJobOpts[0].name;
@@ -347,9 +349,13 @@ export default observer(() => {
       }
     }
     if (ds.type === addCDTaskDataSetMap.apiTest) {
-      ds.apiTestTaskName = ADDCDTaskUseStore.getApiTestArray.find(
+      ds.apiTestTaskName = ADDCDTaskUseStore?.getApiTestArray?.find(
         (i) => i.id == ADDCDTaskDataSet.current.get(addCDTaskDataSetMap.apiTestMission),
-      ).name;
+      )?.name;
+      ds[fieldMap.relativeObj.name] = ADDCDTaskDataSet.current.get(
+        fieldMap.relativeObj.name);
+      ds[fieldMap.kits.name] = ADDCDTaskDataSet.current.get(
+        fieldMap.kits.name);
       ds[addCDTaskDataSetMap.relativeMission] = ADDCDTaskDataSet.current.get(
         addCDTaskDataSetMap.relativeMission,
       );
@@ -1733,7 +1739,12 @@ export default observer(() => {
           )}
         </div>
         {ADDCDTaskDataSet.current.get('type') === addCDTaskDataSetMap.apiTest && [
-          <Select
+          <SelectBox
+            name={fieldMap.relativeObj.name}
+            colSpan={3}
+          />,
+            ADDCDTaskDataSet?.current?.get(fieldMap.relativeObj.name) === relativeObjData[0].value ? (
+              <Select
             newLine
             colSpan={3}
             searchable
@@ -1754,8 +1765,17 @@ export default observer(() => {
               disabled: !record?.get('executeOnline')
             })}
             addonAfter={<Tips helpText="此处仅能从项目下已有的API测试任务中进行选择" />}
-          />,
-          <Select colSpan={3} name="apiTestConfigId" />,
+          />
+            ) : (
+              <Select
+                name={fieldMap.kits.name}
+                colSpan={3}
+                newLine
+              />
+            ),
+          ADDCDTaskDataSet?.current?.get(fieldMap.relativeObj.name) === relativeObjData[0].value && (
+            <Select colSpan={3} name="apiTestConfigId" />
+          ),
           <Select
             colSpan={3}
             name={addCDTaskDataSetMap.relativeMission}
