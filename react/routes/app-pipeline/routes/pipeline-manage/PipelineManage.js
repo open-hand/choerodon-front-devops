@@ -281,7 +281,7 @@ const PipelineManage = observer(() => {
     }
     buttons.push({
       icon: 'settings-o',
-      permissions: [],
+      permissions: ['choerodon.code.project.develop.ci-pipeline.ps.timeTrigger'],
       name: format({ id: 'timeTrigger' }),
       display: true,
       handler: () => {

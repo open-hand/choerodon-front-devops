@@ -6,10 +6,13 @@ import {
 import {
   Icon,
   Button,
+  message,
 } from 'choerodon-ui';
 import {
   Action,
+  ciPipelineSchedulesApi,
 } from '@choerodon/master';
+import { useDebounceEffect } from 'ahooks';
 import {
   observer,
 } from 'mobx-react-lite';
@@ -38,6 +41,26 @@ const Index = observer(() => {
     appServiceId,
   } = useTimeTriggerStore();
 
+  const [value, setValue] = useState('');
+
+  useDebounceEffect(
+    () => {
+      const func = async () => {
+        await TimeTriggerDataSet.query();
+        if (value) {
+          const data = TimeTriggerDataSet
+            .filter((record: any) => record?.get(mapping.planName.name).includes(value));
+          TimeTriggerDataSet.loadData(data?.map((i: any) => i?.toData()));
+        }
+      };
+      func();
+    },
+    [value],
+    {
+      wait: 300,
+    },
+  );
+
   const refresh = () => {
     TimeTriggerDataSet?.query();
   };
@@ -48,17 +71,38 @@ const Index = observer(() => {
 
   const renderAction = ({ record }: any) => (
     <Action data={[{
-      service: [],
+      service: ['choerodon.code.project.develop.ci-pipeline.ps.editTimeTrigger'],
       text: '修改',
-      action: () => {},
+      action: () => {
+        handleModal(appServiceId, refresh, record?.toData());
+      },
     }, {
-      service: [],
-      text: '停用',
-      action: () => {},
+      service: ['choerodon.code.project.develop.ci-pipeline.ps.stopTimeTrigger'],
+      text: record?.get('active') ? '停用' : '启用',
+      action: async () => {
+        try {
+          if (record?.get('active')) {
+            await ciPipelineSchedulesApi.disabledPlan({ id: record?.get('id') });
+          } else {
+            await ciPipelineSchedulesApi.enablePlan({ id: record?.get('id') });
+          }
+          message.success(record?.get('active') ? '停用成功' : '启用成功');
+          refresh();
+        } catch (e) {
+          console.log(e);
+        }
+      },
     }, {
-      service: [],
+      service: ['choerodon.code.project.develop.ci-pipeline.ps.deleteTimeTrigger'],
       text: '删除',
-      action: () => {},
+      action: async () => {
+        try {
+          await ciPipelineSchedulesApi.deletePlan({ id: record?.get('id') });
+          refresh();
+        } catch (e) {
+          console.log(e);
+        }
+      },
     }]}
     />
   );
@@ -70,6 +114,8 @@ const Index = observer(() => {
           placeholder="请输入搜索条件"
           prefix={<Icon type="search" />}
           className={`${cssPrefix}-title-textField`}
+          value={value}
+          onChange={(v) => setValue(v)}
         />
         <Button
           funcType="flat"

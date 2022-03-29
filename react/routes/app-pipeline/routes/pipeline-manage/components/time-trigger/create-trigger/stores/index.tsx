@@ -13,6 +13,7 @@ interface createTriggerProps {
   AppState: any,
   modal: any,
   refresh: any,
+  data?: any,
 }
 
 const Store = createContext({} as createTriggerProps);

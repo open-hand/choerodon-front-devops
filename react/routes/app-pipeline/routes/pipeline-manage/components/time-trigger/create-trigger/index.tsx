@@ -20,16 +20,16 @@ const Index = (props: any) => (
   </StoreProvider>
 );
 
-const handleModal = (appServiceId: any, refresh: any) => {
+const handleModal = (appServiceId: any, refresh: any, data?: any) => {
   Modal.open({
     key: Modal.key(),
-    title: '添加定时触发计划',
+    title: `${data ? '修改' : '添加'}定时触发计划`,
     drawer: true,
     style: {
       width: MIN,
     },
     children: (
-      <Index appServiceId={appServiceId} refresh={refresh} />
+      <Index appServiceId={appServiceId} refresh={refresh} data={data} />
     ),
   });
 };

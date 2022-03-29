@@ -68,7 +68,7 @@ const mapping: any = {
     type: 'time',
     label: '时间段',
     range: true,
-    format: 'HH',
+    format: 'H',
     dynamicProps: {
       required: ({ record }: any) => record?.get(mapping.triggerWay.name)
       === triggerWayData[0].value,
@@ -147,10 +147,22 @@ const transformSubmitData = (ds: any) => {
   });
 };
 
+const transformLoadData = (data: any) => ({
+  [mapping.planName.name]: data?.[mapping.planName.name],
+  [mapping.branch.name]: data?.[mapping.branch.name],
+  [mapping.triggerWay.name]: data?.[mapping.triggerWay.name],
+  [mapping.datePick.name]: data?.[mapping.datePick.name].split(','),
+  [mapping.timePeriod.name]: data?.[mapping.triggerWay.name] === triggerWayData[0].value
+    ? [moment(data?.startHourOfDay, 'H'), moment(data?.endHourOfDay, 'H')] : [],
+  [mapping.timeInterval.name]: data?.[mapping.timeInterval.name],
+  [mapping.executeTime.name]: data?.[mapping.executeTime.name] ? moment(data?.[mapping.executeTime.name], 'HH:mm') : '',
+});
+
 export default Index;
 
 export {
   mapping,
   triggerWayData,
   transformSubmitData,
+  transformLoadData,
 };
