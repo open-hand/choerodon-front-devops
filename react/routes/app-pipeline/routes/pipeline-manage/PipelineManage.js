@@ -59,6 +59,8 @@ const PipelineManage = observer(() => {
     getMainData, loadData,
   } = editBlockStore;
 
+  console.log(getMainData);
+
   const {
     loadDetailData, getDetailData,
   } = detailStore;
@@ -210,8 +212,13 @@ const PipelineManage = observer(() => {
 
   function getHeaderButtons() {
     const {
-      parentId, status, devopsCdPipelineDeatilVO, appServiceId,
+      parentId, status, devopsCdPipelineDeatilVO,
     } = getSelectedMenu;
+
+    const {
+      appServiceId,
+    } = getMainData;
+
     const {
       status: detailStatus,
       devopsCdPipelineDeatilVO: detailDevopsCdPipelineDeatilVO,
