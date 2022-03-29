@@ -68,7 +68,13 @@ const Index = observer(() => {
       };
       try {
         if (data) {
-          await ciPipelineSchedulesApi.editPlan({ id: data?.id, data: transData });
+          await ciPipelineSchedulesApi.editPlan({
+            id: data?.id,
+            data: {
+              objectVersionNumber: data?.objectVersionNumber,
+              ...transData,
+            },
+          });
         } else {
           await ciPipelineSchedulesApi.createPlan({ data: transData });
         }

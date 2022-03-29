@@ -410,20 +410,29 @@ const DetailItem = (props) => {
   }
 
   function goToApiTest() {
-    const id = apiTestTaskRecordVO.get('id'); // 记录id
-    const taskId = apiTestTaskRecordVO.get('taskId'); // 任务id
-    if (id && taskId) {
-      history.push({
-        pathname: '/testManager/test-task',
-        search,
-        state: {
-          taskId,
-          recordId: id,
-          type: 'task',
-        },
-      });
+    const parseMeta = JSON.parse(metadata.replace(/'/g, '"'));
+    const {
+      taskType,
+    } = parseMeta;
+
+    if (taskType === relativeObjData[0].value) {
+      const id = apiTestTaskRecordVO.get('id'); // 记录id
+      const taskId = apiTestTaskRecordVO.get('taskId'); // 任务id
+      if (id && taskId) {
+        history.push({
+          pathname: '/testManager/test-task',
+          search,
+          state: {
+            taskId,
+            recordId: id,
+            type: 'task',
+          },
+        });
+      } else {
+        history.push(`/testManager/test-task${search}`);
+      }
     } else {
-      history.push(`/testManager/test-task${search}`);
+      console.log(taskType);
     }
   }
 
