@@ -13,6 +13,9 @@ import { OverflowWrap } from '@choerodon/components';
 import PipelineTree from './components/PipelineTree';
 import PipelineFlow from './components/PipelineFlow';
 import DragBar from '@/components/drag-bar';
+import {
+  handleModal,
+} from './components/time-trigger';
 import RecordDetail from './components/record-detail';
 import EmptyPage from '@/components/empty-page';
 import { mapping } from '../app-pipeline-edit/components/pipeline-advanced-config/stores/pipelineAdvancedConfigDataSet';
@@ -55,6 +58,8 @@ const PipelineManage = observer(() => {
   const {
     getMainData, loadData,
   } = editBlockStore;
+
+  console.log(getMainData);
 
   const {
     loadDetailData, getDetailData,
@@ -206,7 +211,14 @@ const PipelineManage = observer(() => {
   }
 
   function getHeaderButtons() {
-    const { parentId, status, devopsCdPipelineDeatilVO } = getSelectedMenu;
+    const {
+      parentId, status, devopsCdPipelineDeatilVO,
+    } = getSelectedMenu;
+
+    const {
+      appServiceId,
+    } = getMainData;
+
     const {
       status: detailStatus,
       devopsCdPipelineDeatilVO: detailDevopsCdPipelineDeatilVO,
@@ -274,6 +286,15 @@ const PipelineManage = observer(() => {
         });
       }
     }
+    buttons.push({
+      icon: 'settings-o',
+      permissions: ['choerodon.code.project.develop.ci-pipeline.ps.timeTrigger'],
+      name: format({ id: 'timeTrigger' }),
+      display: true,
+      handler: () => {
+        handleModal(appServiceId);
+      },
+    });
     buttons.push({
       icon: 'refresh',
       handler: handleRefresh,

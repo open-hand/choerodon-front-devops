@@ -21,6 +21,7 @@ import { MIDDLE } from '@/utils/getModalWidth';
 import StatusTag from '../StatusTag';
 import StatusDot from '../statusDot';
 import CodeQuality from '../codeQuality';
+import { relativeObjData } from '../../../PipelineCreate/components/AddCDTask/stores/addCDTaskDataSetMap';
 import CodeLog from '../codeLog';
 import { usePipelineManageStore } from '../../../../stores';
 import MirrorScanning from '../MirrorScanningLog';
@@ -75,6 +76,7 @@ const DetailItem = (props) => {
     gitlabPipelineId,
     imageScan, // 是否显示镜像的扫描报告btn
     devopsCiUnitTestReportInfoList,
+    metadata,
   } = props;
 
   const { gitlabProjectId, appServiceId } = getDetailData && getDetailData.ciCdPipelineVO;
@@ -363,8 +365,18 @@ const DetailItem = (props) => {
       performThreshold,
     } = apiTestTaskRecordVO || {};
 
+    const parseMeta = JSON.parse(metadata.replace(/'/g, '"'));
+
+    const {
+      taskType,
+    } = parseMeta;
+
     return (
       <main>
+        <div>
+          <span>对象类型:</span>
+          <span>{relativeObjData?.find((i) => i?.value === taskType)?.name}</span>
+        </div>
         <div>
           <span>阈值:</span>
           <span>{performThreshold ? `${performThreshold}%` : '未设置'}</span>
@@ -398,20 +410,29 @@ const DetailItem = (props) => {
   }
 
   function goToApiTest() {
-    const id = apiTestTaskRecordVO.get('id'); // 记录id
-    const taskId = apiTestTaskRecordVO.get('taskId'); // 任务id
-    if (id && taskId) {
-      history.push({
-        pathname: '/testManager/test-task',
-        search,
-        state: {
-          taskId,
-          recordId: id,
-          type: 'task',
-        },
-      });
+    const parseMeta = JSON.parse(metadata.replace(/'/g, '"'));
+    const {
+      taskType,
+    } = parseMeta;
+
+    if (taskType === relativeObjData[0].value) {
+      const id = apiTestTaskRecordVO.get('id'); // 记录id
+      const taskId = apiTestTaskRecordVO.get('taskId'); // 任务id
+      if (id && taskId) {
+        history.push({
+          pathname: '/testManager/test-task',
+          search,
+          state: {
+            taskId,
+            recordId: id,
+            type: 'task',
+          },
+        });
+      } else {
+        history.push(`/testManager/test-task${search}`);
+      }
     } else {
-      history.push(`/testManager/test-task${search}`);
+      console.log(taskType);
     }
   }
 
