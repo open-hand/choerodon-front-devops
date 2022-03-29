@@ -433,7 +433,7 @@ const getInsideDtoData = (record: any) => {
         [mapping.projectRelyRepo.name]:
           JSON.parse(JSON.stringify(record.get(mapping.projectRelyRepo.name))),
         [mapping.settingConfig.name]: record.get(mapping.settingConfig.name),
-        repos: record.getField(mapping.customRepoConfig.name).options.toData(),
+        repos: getSubmitRepos(record),
         [mapping.advancedXml.name]: record?.get(mapping.advancedXml.name),
       };
       return result;
