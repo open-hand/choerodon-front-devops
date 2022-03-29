@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   TextField,
   Table,
+  Tooltip,
 } from 'choerodon-ui/pro';
 import {
   Icon,
@@ -137,7 +138,14 @@ const Index = observer(() => {
         />
         <Column name={mapping.branch.name} />
         <Column name={mapping.triggerWay.name} />
-        <Column name={mapping.nextTime.name} />
+        <Column
+          name={mapping.nextTime.name}
+          renderer={({ value: v }) => (
+            <Tooltip title={v}>
+              {v}
+            </Tooltip>
+          )}
+        />
         <Column name={mapping.updater.name} />
       </Table>
     </div>
