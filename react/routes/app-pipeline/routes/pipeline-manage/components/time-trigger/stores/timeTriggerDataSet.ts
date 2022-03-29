@@ -1,6 +1,7 @@
 import {
   ciPipelineSchedulesApiConfig,
 } from '@choerodon/master';
+import JSONbig from 'json-bigint';
 import {
   triggerWayData,
 } from '../create-trigger/stores/createTriggerDataSet';
@@ -17,7 +18,7 @@ const mapping: any = {
     label: '执行分支/标记',
   },
   triggerWay: {
-    name: 'triggerType',
+    name: 'triggerTypeName',
     type: 'string',
     label: '触发方式',
   },
@@ -34,7 +35,7 @@ const mapping: any = {
 };
 
 const Index = (appServiceId: any): any => ({
-  autoQuery: true,
+  autoQuery: false,
   fields: Object.keys(mapping).map((key) => {
     const item = mapping[key];
     return item;
@@ -46,7 +47,7 @@ const Index = (appServiceId: any): any => ({
       transformResponse: (res: any) => {
         let newRes = res;
         try {
-          newRes = JSON.parse(newRes);
+          newRes = JSONbig.parse(newRes);
           return d(newRes);
         } catch (e) {
           return d(newRes);
@@ -55,7 +56,7 @@ const Index = (appServiceId: any): any => ({
           return result.map((item: any) => ({
             ...item,
             realName: item?.userDTO?.realName,
-            triggerType: triggerWayData?.find((i: any) => i.value === item?.triggerType)?.name,
+            triggerTypeName: triggerWayData?.find((i: any) => i.value === item?.triggerType)?.name,
           }));
         }
       },

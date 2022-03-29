@@ -29,6 +29,7 @@ import {
   mapping,
   triggerWayData,
   transformSubmitData,
+  transformLoadData,
 } from './stores/createTriggerDataSet';
 import {
   mapping as variableMapping,
@@ -48,6 +49,7 @@ const Index = observer(() => {
     AppState: { currentMenuType: { projectId } },
     modal,
     refresh,
+    data,
   } = useCreateTriggerStore();
 
   const [branchData, setBranchData] = useState<any>([]);
@@ -59,13 +61,17 @@ const Index = observer(() => {
     const flag = await CreateTriggerDataSet?.current?.validate();
     const variableFlag = await VariableDataSet?.validate();
     if (flag && variableFlag) {
-      const data = {
+      const transData = {
         appServiceId,
-        variableVOList: VariableDataSet?.toData(),
+        variableVOList: JSON.stringify(VariableDataSet?.toData()) === '[{}]' ? [] : VariableDataSet?.toData(),
         ...transformSubmitData(CreateTriggerDataSet),
       };
       try {
-        await ciPipelineSchedulesApi.createPlan({ data });
+        if (data) {
+          await ciPipelineSchedulesApi.editPlan({ id: data?.id, data: transData });
+        } else {
+          await ciPipelineSchedulesApi.createPlan({ data: transData });
+        }
         refresh && refresh();
         return true;
       } catch (e) {
@@ -127,9 +133,17 @@ const Index = observer(() => {
     }
   };
 
+  const initData = () => {
+    if (data) {
+      CreateTriggerDataSet.loadData([transformLoadData(data)]);
+      VariableDataSet.loadData(data?.variableVOList || []);
+    }
+  };
+
   useEffect(() => {
     initBranchData({ id: appServiceId });
     initTagData({ id: appServiceId });
+    initData();
   }, []);
 
   const renderVariable = () => (
@@ -194,7 +208,7 @@ const Index = observer(() => {
             key="proGroup"
           >
             {map(branchData, ({ branchName }: any) => (
-              <Option value={`${branchName}_type_b`} key={branchName} title={branchName}>
+              <Option value={`${branchName}`} key={branchName} title={branchName}>
                 {branchName}
               </Option>
             ))}
@@ -208,7 +222,7 @@ const Index = observer(() => {
           >
             {map(tagData, ({ release }: any) => (release
               ? (
-                <Option value={`${release.tagName}_type_t`} key={release.tagName}>
+                <Option value={`${release.tagName}`} key={release.tagName}>
                   {release.tagName}
                 </Option>
               ) : null))}
@@ -230,6 +244,7 @@ const Index = observer(() => {
           onClickCallback={(value) => {
             CreateTriggerDataSet?.current?.set(mapping.triggerWay.name, value.value);
           }}
+          selectedKeys={CreateTriggerDataSet?.current?.get(mapping.triggerWay.name)}
           data={triggerWayData}
           identity="value"
           mode="single"
