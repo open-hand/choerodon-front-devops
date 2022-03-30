@@ -87,9 +87,13 @@ const Index = (data: any, setTabsDataState: any) => ({
       dataSet.loadData([transformLoadData(undefined, data)]);
     },
     update: ({ name, value, record }: any) => {
+      const result = {
+        ...data,
+        [name]: value,
+      };
       switch (name) {
         case mapping.versionStrategy.name: {
-          record.set(mapping.versionName.name, undefined);
+          result[mapping.versionName.name] = undefined;
           break;
         }
         default: {
@@ -97,10 +101,7 @@ const Index = (data: any, setTabsDataState: any) => ({
         }
       }
       setTabsDataState({
-        [TAB_ADVANCE_SETTINGS]: {
-          ...data,
-          [name]: value,
-        },
+        [TAB_ADVANCE_SETTINGS]: result,
       });
     },
   },
