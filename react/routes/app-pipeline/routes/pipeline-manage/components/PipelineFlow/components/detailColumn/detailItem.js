@@ -6,6 +6,7 @@ import { Modal, message, Icon } from 'choerodon-ui/pro';
 import {
   WritableStream,
 } from 'web-streams-polyfill/ponyfill';
+import JSONbig from 'json-bigint';
 import {
   Choerodon, Action, useFormatMessage,
 } from '@choerodon/master';
@@ -410,7 +411,7 @@ const DetailItem = (props) => {
   }
 
   function goToApiTest() {
-    const parseMeta = JSON.parse(metadata.replace(/'/g, '"'));
+    const parseMeta = JSONbig.parse(metadata.replace(/'/g, '"'));
     const {
       taskType,
     } = parseMeta;
@@ -432,7 +433,16 @@ const DetailItem = (props) => {
         history.push(`/testManager/test-task${search}`);
       }
     } else {
-      console.log(taskType);
+      history.push({
+        pathname: '/testManager/api-kits',
+        search,
+        state: {
+          selectedMenu: {
+            id: parseMeta?.apiTestSuiteId,
+          },
+          recordId: apiTestTaskRecordVO?.id,
+        },
+      });
     }
   }
 
