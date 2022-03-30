@@ -386,9 +386,9 @@ const DetailsTabsHeaderButtons = () => {
   const getRunningHeaderItemsOfMarket = () => {
     let data = [];
     if (appCatergory.code === DEPLOY_CATERGORY) {
-      data = [modifyAppObj, ...moreOpts];
+      data = [modifyAppObj, deleteApp, ...moreOpts];
     } else {
-      data = [modifyAppObj, createSource, upGrade, redeploy, ...moreOpts];
+      data = [modifyAppObj, deleteApp, createSource, upGrade, redeploy, ...moreOpts];
     }
     return data;
   };
