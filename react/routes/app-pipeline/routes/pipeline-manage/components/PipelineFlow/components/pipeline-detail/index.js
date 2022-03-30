@@ -20,6 +20,7 @@ export default observer((props) => {
     mainStore: { getSelectedMenu },
     projectId,
     editBlockStore,
+    getMainData,
   } = usePipelineManageStore();
 
   const { id, name, appServiceName } = getSelectedMenu;
@@ -224,6 +225,13 @@ export default observer((props) => {
         <div className="c7ncd-pipeline-detail-title">
           <span>{name}</span>
           <span className="c7ncd-pipeline-detail-title-appService">{appServiceName ? ` (${appServiceName}) ` : ''}</span>
+          <span>
+            {getMainData?.enableSchedule && (
+              <Tooltip title="定时执行已开启">
+                <Icon type="timer" />
+              </Tooltip>
+            )}
+          </span>
         </div>
         <div className="c7ncd-pipeline-detail-content">
           {map(getViewData, ({
