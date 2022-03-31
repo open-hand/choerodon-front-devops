@@ -636,9 +636,9 @@ const Deployment = withRouter(
           name: format({ id: 'CreateHZEROApplication' }),
         });
       }
-      if (has('base-pro:getBaseComponentDeployConfig')) {
+      if (has('base-business:getBaseComponentDeployConfig')) {
         res.splice(2, 0, {
-          ...get('base-pro:getBaseComponentDeployConfig')(refresh, format, false),
+          ...get('base-business:getBaseComponentDeployConfig')(refresh, format, false),
         });
       }
 
