@@ -15,6 +15,8 @@ import CollapseContainer from '../../../deploy-group-config/components/collapse-
 
 import './index.less';
 
+const hasMarketService = !window._env_.NON_INSTALL_MARKET;
+
 const Index = inject('AppState')(observer(({
   className,
   dataSource,
@@ -394,10 +396,12 @@ const Index = inject('AppState')(observer(({
   };
 
   const getProductSourceData = () => {
+    const currentImageSource = hasMarketService ? imageSource : imageSource?.filter(i => !['market', 'hzero'].includes(i?.value))
+    const currentJarSource = hasMarketService ? jarSource : jarSource?.filter(i => !['market', 'hzero'].includes(i?.value))
     if (dataSource) {
       return dataSource.get(mapping.productType.name) === productTypeData[0].value
-        ? imageSource
-        : jarSource
+        ? currentImageSource
+        : currentJarSource
     }
     return [{
       value: '',
