@@ -3,7 +3,7 @@ const resource = {
   'c7ncd.resource.EnvironmentalDetails': '环境详情',
   'c7ncd.resource.ConfigurationLibrary': '配置库',
   'c7ncd.resource.EnablingAutomaticDeployment': '开启自动部署',
-  'c7ncd.resource.DisableAutomaticDeployment': '停下自动部署',
+  'c7ncd.resource.DisableAutomaticDeployment': '停用自动部署',
   'c7ncd.resource.AuthorityManagement': '权限管理',
   'c7ncd.resource.CreateDeploymentConfiguration': '创建部署配置',
   'c7ncd.resource.CreateApplication': '创建应用',

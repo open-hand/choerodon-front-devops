@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable */
 import { DataSet } from 'choerodon-ui/pro';
 import omit from 'lodash/omit';
 import { Base64 } from 'js-base64';
@@ -16,6 +16,8 @@ import {
 } from '@/api';
 import { hostApiConfig } from '@/api/Host';
 import { setData } from '../content';
+
+const hasMarketService = !window._env_.NON_INSTALL_MARKET;
 
 const updateModalProps = (record: any, modal: any) => {
   if (record.get(mapping.jarSource.name) === productSourceData[5].value) {
@@ -266,36 +268,38 @@ const hostAppConfigDataSet = (modal: any, detail: any): DataSetProps => ({
         break;
       }
       case 'marketAppVersion': {
-        item.options = new DataSet({
-          autoQuery: true,
-          fields: [{ name: 'groupName', type: 'string' as FieldType, group: 0 }],
-          transport: {
-            read: ({ data: paramsData }) => ({
-              ...deployApiConfig.deployApplication(paramsData?.type || 'common'),
-              transformResponse: (res) => {
-                function init(data: any) {
-                  const result: any[] = [];
-                  data?.forEach((j: any) => {
-                    j.appVersionVOS.forEach((version: any) => {
-                      result.push({
-                        ...version,
-                        groupName: j.name,
+        if (hasMarketService) {
+          item.options = new DataSet({
+            autoQuery: true,
+            fields: [{ name: 'groupName', type: 'string' as FieldType, group: 0 }],
+            transport: {
+              read: ({ data: paramsData }) => ({
+                ...deployApiConfig.deployApplication(paramsData?.type || 'common'),
+                transformResponse: (res) => {
+                  function init(data: any) {
+                    const result: any[] = [];
+                    data?.forEach((j: any) => {
+                      j.appVersionVOS.forEach((version: any) => {
+                        result.push({
+                          ...version,
+                          groupName: j.name,
+                        });
                       });
                     });
-                  });
-                  return result;
-                }
-                let newRes = res;
-                try {
-                  newRes = JSON.parse(newRes);
-                  return init(newRes);
-                } catch (e) {
-                  return init(newRes);
-                }
-              },
-            }),
-          },
-        });
+                    return result;
+                  }
+                  let newRes = res;
+                  try {
+                    newRes = JSON.parse(newRes);
+                    return init(newRes);
+                  } catch (e) {
+                    return init(newRes);
+                  }
+                },
+              }),
+            },
+          });
+        }
       }
       case 'nexus': {
         item.lookupAxiosConfig = () => nexusApiConfig.getServerList();

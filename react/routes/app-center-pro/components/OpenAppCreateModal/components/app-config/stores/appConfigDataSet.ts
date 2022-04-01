@@ -18,6 +18,8 @@ import market from '../images/market.png';
 import project from '../images/project.png';
 import share from '../images/share.png';
 
+const hasMarketService = !window._env_.NON_INSTALL_MARKET;
+
 const chartSourceData: {
   value: string,
   name: string,
@@ -462,7 +464,9 @@ const appConfigDataSet = (envId?: string, detail?: any) => ({
       }
       case 'marketVersion': {
         item.disabled = Boolean(detail);
-        item.options = new DataSet(marketVersionOptionsDs);
+        if (hasMarketService) {
+          item.options = new DataSet(marketVersionOptionsDs);
+        }
         break;
       }
       case 'marketServiceVersion': {

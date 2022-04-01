@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {
   ReactDOM, ReactElement, useEffect, useImperativeHandle, useMemo, useState,
 } from 'react';
@@ -15,6 +16,8 @@ import { appServiceInstanceApi } from '@/api';
 
 import './index.less';
 import { LabelAlignType, LabelLayoutType } from '@/interface';
+
+const hasMarketService = !window._env_.NON_INSTALL_MARKET;
 
 const Index = observer(() => {
   const {
@@ -224,7 +227,7 @@ const Index = observer(() => {
                 value.value,
               )}
               selectedKeys={AppConfigDataSet.current.get(mapping.chartSource.name)}
-              data={chartSourceData.slice(0, 4)}
+              data={hasMarketService ? chartSourceData.slice(0, 4) : chartSourceData.slice(0, 2)}
               identity="value"
               mode="single"
               customChildren={(item): any => (

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {
   createContext, useContext, useMemo,
 } from 'react';
@@ -22,6 +23,8 @@ const Store = createContext();
 export function useImportAppServiceStore() {
   return useContext(Store);
 }
+
+const hasMarketService = !window._env_.NON_INSTALL_MARKET;
 
 export const StoreProvider = injectIntl(inject('AppState')(
   (props) => {
@@ -72,7 +75,14 @@ export const StoreProvider = injectIntl(inject('AppState')(
       marketSelectedDs,
       gitlabSelectedDs,
     })), [projectId]);
-    const IMPORT_METHOD_LIST = isSaaS ? [{ type: 'share', img: shareImage }, { type: 'github', img: gitlabImage }, { type: 'gitlab', img: gitlabImage }] : [{ type: 'github', img: githubImage }, { type: 'gitlab', img: gitlabImage }, { type: 'gerneralGit', img: gerneralGitImage }, { type: 'share', img: shareImage }, { type: 'market', img: marketImage }];
+    const IMPORT_METHOD_LIST = isSaaS ? [{ type: 'share', img: shareImage }, { type: 'github', img: gitlabImage }, { type: 'gitlab', img: gitlabImage }] : [{ type: 'github', img: githubImage }, { type: 'gitlab', img: gitlabImage }, { type: 'gerneralGit', img: gerneralGitImage }, { type: 'share', img: shareImage }];
+
+    if (!isSaaS) {
+      if (hasMarketService) {
+        IMPORT_METHOD_LIST.push({ type: 'market', img: marketImage });
+      }
+    }
+
     const value = {
       ...props,
       IMPORT_METHOD: IMPORT_METHOD_LIST,

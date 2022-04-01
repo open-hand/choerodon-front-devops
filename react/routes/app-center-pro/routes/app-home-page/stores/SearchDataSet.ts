@@ -1,8 +1,20 @@
-/* eslint-disable import/no-anonymous-default-export */
+/* eslint-disable */
+// @ts-nocheck
 import map from 'lodash/map';
 import { DataSet } from 'choerodon-ui/pro';
 import { DataSet as DataSetInterface, Record } from '@/interface';
-import { ENV_TAB, HOST_TAB, APP_OPERATION } from '@/routes/app-center-pro/stores/CONST';
+import {
+  ENV_TAB, HOST_TAB, APP_OPERATION,
+} from '@/routes/app-center-pro/stores/CONST';
+
+const hasMarketService = !window._env_.NON_INSTALL_MARKET;
+
+const CURRENT_APP_OPERATION = hasMarketService ? APP_OPERATION : (function () {
+  const data = APP_OPERATION;
+  delete data.HZERO;
+  delete data.BASE_COMPONENT;
+  return data;
+}());
 
 interface SearchProps {
   envDs: DataSetInterface,
@@ -65,7 +77,7 @@ export default ({
       textField: 'name',
       valueField: 'value',
       options: new DataSet({
-        data: map(APP_OPERATION, (value:keyof typeof APP_OPERATION) => ({
+        data: map(CURRENT_APP_OPERATION, (value:keyof typeof APP_OPERATION) => ({
           name: format({ id: value }),
           value,
         })),

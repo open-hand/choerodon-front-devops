@@ -4,6 +4,7 @@ import { Table } from 'choerodon-ui/pro';
 import { useFormatMessage } from '@choerodon/master';
 import { Tooltip } from 'choerodon-ui';
 import { NewTips, TimePopover } from '@choerodon/components';
+import moment from 'moment';
 import SyncSituation from './SyncSituation';
 import { useResourceStore } from '../../../../../../../stores';
 
@@ -60,7 +61,13 @@ export default function Situation() {
   }
 
   function renderTime({ value }:any) {
-    return <TimePopover content={value} />;
+    let v;
+    try {
+      v = moment(value).format('YYYY-MM-DD HH:mm:ss');
+    } catch (err) {
+      v = value;
+    }
+    return <TimePopover content={v} />;
   }
 
   return (
