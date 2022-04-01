@@ -240,7 +240,7 @@ const Index = observer(() => {
       </Form>
       <p className={`${cssPrefix}-config ${cssPrefix}-title`}>
         执行变量配置
-        <NewTips helpText="" />
+        <NewTips helpText="此处配置的变量仅用于该定时计划的执行，且生效的优先级为：执行变量>流水线变量配置>全局变量配置" />
       </p>
       {renderVariable()}
       <p className={`${cssPrefix}-title`}>
