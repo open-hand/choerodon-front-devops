@@ -63,7 +63,8 @@ const Index = observer(() => {
     if (flag && variableFlag) {
       const transData = {
         appServiceId,
-        variableVOList: JSON.stringify(VariableDataSet?.toData()) === '[{}]' ? [] : VariableDataSet?.toData(),
+        variableVOList: VariableDataSet
+          ?.toData()?.filter((i: any) => Boolean(i?.[variableMapping.name.name])) || [],
         ...transformSubmitData(CreateTriggerDataSet),
       };
       try {

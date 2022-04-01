@@ -131,7 +131,14 @@ const Index = observer(() => {
         dataSet={TimeTriggerDataSet}
         className={`${cssPrefix}-table`}
       >
-        <Column name={mapping.planName.name} />
+        <Column
+          name={mapping.planName.name}
+          renderer={({ value: v }: any) => ((
+            <Tooltip title={v}>
+              {v}
+            </Tooltip>
+          ))}
+        />
         <Column
           width={55}
           renderer={renderAction}
