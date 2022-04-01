@@ -438,9 +438,10 @@ const DetailItem = (props) => {
         search,
         state: {
           selectedMenu: {
-            id: parseMeta?.apiTestSuiteId,
+            id: apiTestTaskRecordVO?.suiteId,
           },
           recordId: apiTestTaskRecordVO?.id,
+          viewId: apiTestTaskRecordVO?.viewId,
         },
       });
     }
