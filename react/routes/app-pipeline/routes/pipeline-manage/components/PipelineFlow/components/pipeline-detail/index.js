@@ -7,6 +7,7 @@ import get from 'lodash/get';
 import forEach from 'lodash/forEach';
 import { Tooltip, Icon } from 'choerodon-ui/pro';
 import { Loading } from '@choerodon/components';
+import clock from './images/clock.png';
 import { relativeObjData } from '../../../PipelineCreate/components/AddCDTask/stores/addCDTaskDataSetMap';
 import jobTypesMappings from '../../../../stores/jobsTypeMappings';
 import { usePipelineManageStore } from '../../../../stores';
@@ -20,7 +21,6 @@ export default observer((props) => {
     mainStore: { getSelectedMenu },
     projectId,
     editBlockStore,
-    getMainData,
   } = usePipelineManageStore();
 
   const { id, name, appServiceName } = getSelectedMenu;
@@ -32,6 +32,7 @@ export default observer((props) => {
     loadData,
     getLoading,
     getViewData,
+    getMainData,
   } = editBlockStore || {};
 
   useEffect(() => {
@@ -228,7 +229,14 @@ export default observer((props) => {
           <span>
             {getMainData?.enableSchedule && (
               <Tooltip title="定时执行已开启">
-                <Icon type="timer" />
+                <img
+                  src={clock}
+                  alt=""
+                  style={{
+                    width: 20,
+                    height: 20,
+                  }}
+                />
               </Tooltip>
             )}
           </span>
