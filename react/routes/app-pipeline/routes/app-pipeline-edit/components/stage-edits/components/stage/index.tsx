@@ -195,15 +195,25 @@ const Stage:FC<StageProps> = (props) => {
               )
             }
         >
-          <header className={headerCls} onClick={handleModalOpen} role="none">
-            <div className={stageHeaderCls}>{type}</div>
-            <Tooltip title={name}>
-              <span className={`${prefixCls}-stageName`}>{name}</span>
-            </Tooltip>
-            <div className={`${prefixCls}-btnGroups`}>
-              <Icon onClick={handleDeleteStage} type="delete_black-o" className={`${prefixCls}-btnGroups-delete`} />
-            </div>
-          </header>
+          <div style={{ position: 'relative' }}>
+            <header className={headerCls} onClick={handleModalOpen} role="none">
+              <div className={stageHeaderCls}>{type}</div>
+              <Tooltip title={name}>
+                <span className={`${prefixCls}-stageName`}>{name}</span>
+              </Tooltip>
+              <div className={`${prefixCls}-btnGroups`}>
+                <Icon onClick={handleDeleteStage} type="delete_black-o" className={`${prefixCls}-btnGroups-delete`} />
+              </div>
+
+            </header>
+            {
+            (jobList && jobList?.length > 0) && (
+              <footer>
+                <JobAddBtn jobIndex={0} stageIndex={stageIndex} handleJobAddCallback={() => handleJobAddCallback(undefined, true, 0)} linesType={linesType} type={jobList.length ? 'circle' : 'normal'} />
+              </footer>
+            )
+          }
+          </div>
           <main>
             {renderJobs()}
           </main>
