@@ -44,7 +44,7 @@ export const StoreProvider = inject('AppState')((props: ProviderProps) => {
 
   const [currentKey, setTabKey] = useState<TabkeyTypes>(searchTabKey || defaultTabKey || TAB_FLOW_CONFIG);
 
-  const [tabsData, setTabsDataState] = useSetState<Partial<Record<TabkeyTypes, unknown>>>({});
+  const [tabsData, setTabsDataState] = useSetState<any>({});
 
   const { isFetching: isStagesLoading } = useLoadStageData({ type, id, setTabsDataState });
 
@@ -55,6 +55,15 @@ export const StoreProvider = inject('AppState')((props: ProviderProps) => {
   const { isFetching: isAdvancedLoading } = useLoadAdvancedSetting({
     type, id, setTabsDataState, level, tabsData,
   });
+
+  const setTabsDataFunc = (key: any, obj: any) => {
+    setTabsDataState({
+      [key]: {
+        ...tabsData[key],
+        ...obj,
+      },
+    });
+  };
 
   const loadingMap = {
     [TAB_BASIC]: isBasicLoading,
@@ -84,6 +93,7 @@ export const StoreProvider = inject('AppState')((props: ProviderProps) => {
     tabsData,
     setTabsDataState,
     type,
+    setTabsDataFunc,
   };
   return (
     <Store.Provider value={value}>

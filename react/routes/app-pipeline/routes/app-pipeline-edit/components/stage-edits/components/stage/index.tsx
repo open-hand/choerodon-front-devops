@@ -83,8 +83,8 @@ const Stage:FC<StageProps> = (props) => {
    * @param {number} jobIndex
    * @param {*} jobData
    */
-  const handleJobAddCallback = (addonData:any, addAndEdit:boolean = true) => {
-    const jobIndex = jobList.length;
+  const handleJobAddCallback = (addonData:any, addAndEdit:boolean = true, index?: any) => {
+    const jobIndex = String(index) ? index : jobList.length;
     if (addAndEdit) {
       addJob(stageIndex, jobIndex, addonData);
       return (jobData:any) => editJob(stageIndex, jobIndex, jobData);
@@ -124,7 +124,14 @@ const Stage:FC<StageProps> = (props) => {
         linesType, // job线条的类型
         showLines: !isDragging, // 是否展示线条
       };
-      return <JobItem {...data} {...options} key={item?.id} />;
+      return (
+        <div style={{ position: 'relative' }}>
+          <JobItem {...data} {...options} key={item?.id} />
+          <footer>
+            <JobAddBtn jobIndex={index + 1} stageIndex={stageIndex} handleJobAddCallback={() => handleJobAddCallback(undefined, true, index + 1)} linesType={linesType} type={jobList.length ? 'circle' : 'normal'} />
+          </footer>
+        </div>
+      );
     }),
     [isDragging, jobList],
   );
@@ -200,9 +207,13 @@ const Stage:FC<StageProps> = (props) => {
           <main>
             {renderJobs()}
           </main>
-          <footer>
-            <JobAddBtn jobIndex={jobList.length} stageIndex={stageIndex} handleJobAddCallback={handleJobAddCallback} linesType={linesType} type={jobList.length ? 'circle' : 'normal'} />
-          </footer>
+          {
+            (!jobList || jobList?.length === 0) && (
+              <footer>
+                <JobAddBtn jobIndex={jobList.length} stageIndex={stageIndex} handleJobAddCallback={handleJobAddCallback} linesType={linesType} type={jobList.length ? 'circle' : 'normal'} />
+              </footer>
+            )
+          }
         </div>
       );
     },

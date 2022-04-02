@@ -42,19 +42,16 @@ const mapping: any = {
   },
 };
 
-const setTabData = async (ds: any, setData: any, origin: any) => {
+const setTabData = async (ds: any, setData: any, origin: any, setFunc: any) => {
   const data = ds?.toData().filter((d: any) => JSON.stringify(d) !== '{}');
   const flag = await ds.validate();
-  setData({
-    [TAB_ADVANCE_SETTINGS]: {
-      ...origin,
-      ciDockerAuthConfigDTOList: data,
-      authFlag: flag,
-    },
+  setFunc(TAB_ADVANCE_SETTINGS, {
+    ciDockerAuthConfigDTOList: data,
+    authFlag: flag,
   });
 };
 
-const Index = (data: any, setData: any) => ({
+const Index = (data: any, setData: any, setDataFunc: any) => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((key) => {
     const item = mapping[key];
@@ -67,13 +64,13 @@ const Index = (data: any, setData: any) => ({
           dataSet.loadData(data?.ciDockerAuthConfigDTOList);
         }
       }
-      setTabData(dataSet, setData, data);
+      setTabData(dataSet, setData, data, setDataFunc);
     },
     update: ({ dataSet }: any) => {
-      setTabData(dataSet, setData, data);
+      setTabData(dataSet, setData, data, setDataFunc);
     },
     remove: ({ dataSet }: any) => {
-      setTabData(dataSet, setData, data);
+      setTabData(dataSet, setData, data, setDataFunc);
     },
   },
 });

@@ -34,13 +34,16 @@ export const StoreProvider = observer((props: any) => {
       [TAB_ADVANCE_SETTINGS]: data,
     },
     setTabsDataState,
+    setTabsDataFunc,
   } = useAppPipelineEditStore();
 
   const PipelineAdvancedConfigDataSet = useMemo(
     () => new DataSet(pipelineAdvancedConfigDataSet(data, setTabsDataState)), [],
   );
 
-  const CertDataSet = useMemo(() => new DataSet(certDataSet(data, setTabsDataState)), []);
+  const CertDataSet = useMemo(() => new DataSet(
+    certDataSet(data, setTabsDataState, setTabsDataFunc),
+  ), []);
 
   const value = {
     ...props,
