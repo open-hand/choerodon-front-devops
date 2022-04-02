@@ -1383,6 +1383,8 @@ export default observer(() => {
           </SelectBox> */}
           <Select
             colSpan={3}
+            searchable
+            searchMatcher="search_param"
             name={addCDTaskDataSetMap.host}
             optionRenderer={renderEnvOption}
             onOption={renderOptionProperty}
