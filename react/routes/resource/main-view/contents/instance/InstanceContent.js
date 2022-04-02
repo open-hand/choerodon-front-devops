@@ -6,6 +6,9 @@ import { runInAction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { useFormatMessage } from '@choerodon/master';
 import {
+  Tooltip,
+} from 'choerodon-ui/pro';
+import {
   Tabs, Spin,
 } from 'choerodon-ui';
 import isEqual from 'lodash/isEqual';
@@ -79,11 +82,13 @@ const InstanceTitle = ({
         />
       )}
       <span className="c7ncd-page-title-text">{name}</span>
-      <span className="c7ncd-page-title-version">
-        (
-        {versionName || getVersionName()}
-        )
-      </span>
+      <Tooltip title={versionName || getVersionName()}>
+        <span className="c7ncd-page-title-version">
+          (
+          {versionName || getVersionName()}
+          )
+        </span>
+      </Tooltip>
     </>
   );
 };
