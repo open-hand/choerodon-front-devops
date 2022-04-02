@@ -50,9 +50,9 @@ function BranchCreate(props) {
   const [searchValue, setSearchValue] = useState("");
 
   const issueOptionsDs =  formDs?.getField('issue')?.options
-
+  const categorieArray=[ "N_AGILE","N_WATERFALL"];
   useEffect(() => {
-    setIsOPERATIONS(!some(categories || [], ["code", "N_AGILE"]));
+    setIsOPERATIONS(!some(categories||[], function(item){ return categorieArray.includes(item.code) }));
   }, [categories]);
 
   useEffect(() => {
@@ -291,6 +291,18 @@ function BranchCreate(props) {
         icon = "agile_subtask";
         color = "#4d90fe";
         break;
+      case "activity":
+        icon = "agile_activity";
+        color = "#4D90FE";
+        break;
+      case "milestone":
+        icon = "agile_milestone";
+        color = "#6ED9C3";
+        break;
+        case "stage":
+          icon = "agile_view_timeline";
+          color = "#FBBC57";
+          break;
       default:
         mes = formatMessage({ id: "branch.issue.task" });
         icon = "agile_task";
@@ -531,7 +543,7 @@ function BranchCreate(props) {
     <div className="sidebar-content c7n-createBranch">
       <div style={{ width: "75%" }}>
         <Form dataSet={formDs} columns={5} ref={changeRef}>
-          {!isOPERATIONS && [
+          { !isOPERATIONS &&[
             <Select
               name="project"
               colSpan={5}

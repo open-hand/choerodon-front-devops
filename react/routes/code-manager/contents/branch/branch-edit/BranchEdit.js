@@ -127,6 +127,18 @@ function BranchEdit() {
         icon = 'agile_subtask';
         color = '#4d90fe';
         break;
+      case 'activity':
+        icon = 'agile_activity';
+        color = '#4D90FE';
+        break;
+      case 'milestone':
+        icon = 'agile_milestone';
+        color = '#6ED9C3';
+        break;
+      case 'stage':
+        icon = 'agile_view_timeline';
+        color = '#FBBC57';
+        break;
       default:
         mes = formatMessage({ id: 'branch.issue.task' });
         icon = 'agile_task';
