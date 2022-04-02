@@ -8,6 +8,7 @@ import {
   Icon,
   Button,
   message,
+  Tag,
 } from 'choerodon-ui';
 import {
   Action,
@@ -133,11 +134,24 @@ const Index = observer(() => {
       >
         <Column
           name={mapping.planName.name}
-          renderer={({ value: v }: any) => ((
+          renderer={({ value: v, record }: any) => ((
             <Tooltip title={v}>
               {v}
             </Tooltip>
           ))}
+        />
+        <Column
+          width={55}
+          renderer={({ record }) => (
+            <Tag
+              style={{
+                transform: 'scale(0.8)',
+              }}
+              color={record?.get('active') ? 'lime-inverse' : 'volcano-inverse'}
+            >
+              { record?.get('active') ? '启用' : '停用' }
+            </Tag>
+          )}
         />
         <Column
           width={55}
