@@ -43,7 +43,7 @@ export const StoreProvider = observer((props: any) => {
 
   const CertDataSet = useMemo(() => new DataSet(
     certDataSet(data, setTabsDataState, setTabsDataFunc),
-  ), []);
+  ), [data]);
 
   const value = {
     ...props,

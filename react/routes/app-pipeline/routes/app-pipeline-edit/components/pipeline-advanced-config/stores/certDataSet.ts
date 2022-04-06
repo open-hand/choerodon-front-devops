@@ -64,7 +64,7 @@ const Index = (data: any, setData: any, setDataFunc: any) => ({
           dataSet.loadData(data?.ciDockerAuthConfigDTOList);
         }
       }
-      setTabData(dataSet, setData, data, setDataFunc);
+      // setTabData(dataSet, setData, data, setDataFunc);
     },
     update: ({ dataSet }: any) => {
       setTabData(dataSet, setData, data, setDataFunc);
