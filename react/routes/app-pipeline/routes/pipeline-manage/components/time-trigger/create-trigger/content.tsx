@@ -164,6 +164,7 @@ const Index = observer(() => {
             style={{
               position: 'relative',
               top: '15px',
+              textAlign: 'center',
             }}
           >
             =
@@ -263,7 +264,11 @@ const Index = observer(() => {
         />
       </div>
       <Form columns={2} dataSet={CreateTriggerDataSet}>
-        <SelectBox colSpan={2} name={mapping.datePick.name} />
+        <SelectBox
+          colSpan={2}
+          name={mapping.datePick.name}
+          className={`${cssPrefix}-datePick`}
+        />
         {
           CreateTriggerDataSet?.current?.get(mapping.triggerWay.name)
           === triggerWayData[0].value ? (
