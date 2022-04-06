@@ -417,8 +417,8 @@ const DetailItem = (props) => {
     } = parseMeta;
 
     if (taskType === relativeObjData[0].value) {
-      const id = apiTestTaskRecordVO.get('id'); // 记录id
-      const taskId = apiTestTaskRecordVO.get('taskId'); // 任务id
+      const id = apiTestTaskRecordVO?.id; // 记录id
+      const taskId = apiTestTaskRecordVO?.taskId; // 任务id
       if (id && taskId) {
         history.push({
           pathname: '/testManager/test-task',
