@@ -59,8 +59,6 @@ const PipelineManage = observer(() => {
     getMainData, loadData,
   } = editBlockStore;
 
-  console.log(getMainData);
-
   const {
     loadDetailData, getDetailData,
   } = detailStore;
