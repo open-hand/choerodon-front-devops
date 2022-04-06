@@ -142,20 +142,17 @@ const Index = observer(() => {
         />
         <Column
           width={55}
+          renderer={renderAction}
+        />
+        <Column
+          title="状态"
           renderer={({ record }) => (
             <Tag
-              style={{
-                transform: 'scale(0.8)',
-              }}
-              color={record?.get('active') ? 'lime-inverse' : 'volcano-inverse'}
+              color={record?.get('active') ? 'green-inverse' : 'gray-inverse'}
             >
               { record?.get('active') ? '启用' : '停用' }
             </Tag>
           )}
-        />
-        <Column
-          width={55}
-          renderer={renderAction}
         />
         <Column name={mapping.branch.name} />
         <Column name={mapping.triggerWay.name} />
