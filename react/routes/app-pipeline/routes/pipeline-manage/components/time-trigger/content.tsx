@@ -3,6 +3,7 @@ import {
   TextField,
   Table,
   Tooltip,
+  Modal,
 } from 'choerodon-ui/pro';
 import {
   Icon,
@@ -97,13 +98,22 @@ const Index = observer(() => {
     }, {
       service: ['choerodon.code.project.develop.ci-pipeline.ps.deleteTimeTrigger'],
       text: '删除',
-      action: async () => {
-        try {
-          await ciPipelineSchedulesApi.deletePlan({ id: record?.get('id') });
-          refresh();
-        } catch (e) {
-          console.log(e);
-        }
+      action: () => {
+        Modal.open({
+          title: '删除定时计划',
+          key: Modal.key(),
+          children: (
+            <p>{`确认要删除定时计划"${record?.get(mapping.planName.name)}吗"`}</p>
+          ),
+          onOk: async () => {
+            try {
+              await ciPipelineSchedulesApi.deletePlan({ id: record?.get('id') });
+              refresh();
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        });
       },
     }]}
     />
