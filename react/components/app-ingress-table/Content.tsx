@@ -288,7 +288,12 @@ const AppIngress = observer(() => {
       queryBar={'bar' as TableQueryBarType}
       className="c7ncd-tab-table"
     >
-      <Column header={formatMessage({ id: 'c7ncd.environment.Name' })} name="name" renderer={renderName} />
+      <Column
+        header={formatMessage({ id: 'c7ncd.environment.Name' })}
+        name="name"
+        renderer={renderName}
+        className="c7ncd-tab-table-columnName"
+      />
       <Column renderer={renderAction} width={55} />
       <Column header={formatMessage({ id: 'c7ncd.environment.ApplicationCode' })} name="code" width={90} />
       <Column
