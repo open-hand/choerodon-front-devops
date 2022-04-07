@@ -17,6 +17,7 @@ import IssueType from "../../../components/issue-type";
 import "../../../../main.less";
 import "./index.less";
 import "../index.less";
+import {getTypeCode} from '@/utils/getTypeCode';
 
 const { Option, OptGroup } = Select;
 
@@ -267,47 +268,7 @@ function BranchCreate(props) {
 
   // 用于问题名称的渲染函数
   const renderIssueName = ({ typeCode, issueNum, summary, issueTypeVO }) => {
-    let mes = "";
-    let icon = "";
-    let color = "";
-    switch (typeCode) {
-      case "story":
-        mes = formatMessage({ id: "branch.issue.story" });
-        icon = "agile_story";
-        color = "#00bfa5";
-        break;
-      case "bug":
-        mes = formatMessage({ id: "branch.issue.bug" });
-        icon = "agile_fault";
-        color = "#f44336";
-        break;
-      case "issue_epic":
-        mes = formatMessage({ id: "branch.issue.epic" });
-        icon = "agile_epic";
-        color = "#743be7";
-        break;
-      case "sub_task":
-        mes = formatMessage({ id: "branch.issue.subtask" });
-        icon = "agile_subtask";
-        color = "#4d90fe";
-        break;
-      case "activity":
-        icon = "agile_activity";
-        color = "#4D90FE";
-        break;
-      case "milestone":
-        icon = "agile_milestone";
-        color = "#6ED9C3";
-        break;
-        case "stage":
-          icon = "agile_view_timeline";
-          color = "#FBBC57";
-          break;
-      default:
-        mes = formatMessage({ id: "branch.issue.task" });
-        icon = "agile_task";
-        color = "#4d90fe";
-    }
+    const{icon,color}=getTypeCode(typeCode);
     return (
       <>
         {issueTypeVO ? (

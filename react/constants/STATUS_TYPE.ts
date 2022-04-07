@@ -13,4 +13,6 @@ const STATUS_TYPE: {
   created: { icon: 'remove_circle', color: 'rgba(15, 19, 88, 0.25)', name: '未执行' },
   canceled: { icon: 'cancle_b', color: 'rgba(15, 19, 88, 0.25)', name: '已停止' },
 };
+// 瀑布项目全部问题类型
+export const ALL_TYPE_CODES = ['milestone', 'activity', 'stage'];
 export default STATUS_TYPE;
