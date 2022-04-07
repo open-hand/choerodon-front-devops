@@ -227,14 +227,15 @@ const AppIngress = observer(() => {
           </span>
         </Tooltip>
         {operateStatus && !(operateStatus === 'success') && (
-          <StatusTag
+          <Tag
             style={{
               marginLeft: '5px',
             }}
             ellipsisTitle={error}
-            colorCode={operateStatus}
-            name={operateStatus === 'operating' ? '执行中' : '失败'}
-          />
+            color={operateStatus === 'operating' ? 'blue-inverse' : 'gray-inverse'}
+          >
+            {operateStatus === 'operating' ? '执行中' : '失败'}
+          </Tag>
         )}
       </>
     );
