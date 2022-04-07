@@ -263,7 +263,7 @@ const Index = observer(() => {
           )}
         />
       </div>
-      <Form columns={2} dataSet={CreateTriggerDataSet}>
+      <Form style={{ marginTop: 10 }} columns={2} dataSet={CreateTriggerDataSet}>
         <SelectBox
           colSpan={2}
           name={mapping.datePick.name}
