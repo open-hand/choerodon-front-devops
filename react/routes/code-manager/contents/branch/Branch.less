@@ -7,6 +7,11 @@
   .c7n-pro-table-cell {
     border-bottom: 1px solid #d9e6f2 !important;
   }
+  .c7n-pro-select-wrapper label,
+  .c7n-pro-pagination.c7n-pro-pagination-wrapper .c7n-pro-btn.c7n-pro-btn-flat.c7n-pro-btn-wrapper.c7n-pro-pagination-pager.c7n-pro-pagination-pager-page.c7n-pro-btn-raised, .c7n-pro-pagination.c7n-pro-pagination-wrapper .c7n-pro-btn.c7n-pro-btn-flat.c7n-pro-btn-wrapper.c7n-pro-pagination-pager:active.c7n-pro-pagination-pager-page.c7n-pro-btn-raised, .c7n-pro-pagination.c7n-pro-pagination-wrapper .c7n-pro-btn.c7n-pro-btn-raised.c7n-pro-btn-wrapper.c7n-pro-pagination-pager.c7n-pro-pagination-pager-page.c7n-pro-btn-raised, .c7n-pro-pagination.c7n-pro-pagination-wrapper .c7n-pro-btn.c7n-pro-btn-raised.c7n-pro-btn-wrapper.c7n-pro-pagination-pager:active.c7n-pro-pagination-pager-page.c7n-pro-btn-raised,
+  .c7n-pro-input-number-wrapper label {
+    z-index: 0;
+  }
   &-table {
     &-dashBoard {
       color: rgb(247, 103, 118);
@@ -212,17 +217,17 @@
 .c7ncd-branch-issue {
   display: flex;
   color: var(--text-color3);
-  padding-right: .06rem;
-  margin-left: .32rem;
+  padding-right: 0.06rem;
+  margin-left: 0.32rem;
   overflow: hidden;
 
   &-label {
-    line-height: .25rem;
+    line-height: 0.25rem;
   }
 
   &-item {
     color: var(--table-click-color);
-    line-height: .20rem;
+    line-height: 0.2rem;
     overflow: hidden;
 
     &-title {
@@ -237,28 +242,28 @@
     }
 
     &-project {
-      padding-top: .08rem;
+      padding-top: 0.08rem;
       color: var(--text-color3);
 
       &-icon {
         margin-right: 6px;
         font-size: 0.2rem;
-        width: .24rem;
+        width: 0.24rem;
         text-align: center;
       }
     }
 
     & + & {
       border-top: 1px solid var(--divider);
-      margin-top: .12rem;
-      padding-top: .12rem;
+      margin-top: 0.12rem;
+      padding-top: 0.12rem;
     }
   }
 
   &-expand {
     cursor: pointer;
-    margin-left: .04rem;
-    font-size: .2rem;
+    margin-left: 0.04rem;
+    font-size: 0.2rem;
     color: var(--primary-color);
     height: 0.25rem;
     line-height: 0.25rem;
@@ -273,7 +278,6 @@
 }
 
 .c7ncd-branch-item {
-
   &-action {
     flex-shrink: 0;
     position: relative;
