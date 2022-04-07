@@ -277,6 +277,7 @@ const Index = observer(() => {
                 mode={'time' as any}
                 colSpan={1}
                 name={mapping.timePeriod.name}
+                renderer={({ value, text }) => (String(text) ? `${text}:00` : text)}
               />
               <Select colSpan={1} name={mapping.timeInterval.name} />
             </>
