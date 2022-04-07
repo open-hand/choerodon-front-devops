@@ -2,7 +2,7 @@ import React, {
   FC, useState,
 } from 'react';
 import { useQuery } from 'react-query';
-import { Loading } from '@choerodon/components';
+import { Loading, OverflowWrap } from '@choerodon/components';
 import { useFormatCommon } from '@choerodon/master';
 import { Menu } from 'choerodon-ui';
 import { useUnmount, useDebounceFn } from 'ahooks';
@@ -142,7 +142,14 @@ const JobTypesPanel:FC<JobTypesPanelProps> = (props) => {
       }
       return (
         <Item onMouseHover={() => console.log(name)} key={JSON.stringify(concatItem)}>
-          {name}
+          <OverflowWrap
+            width={128}
+            tooltipsConfig={{
+              title: name,
+            }}
+          >
+            {name}
+          </OverflowWrap>
         </Item>
       );
     });
