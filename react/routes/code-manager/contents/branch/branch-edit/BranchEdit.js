@@ -9,6 +9,7 @@ import debounce from 'lodash/debounce';
 import get from 'lodash/get';
 import IssueType from '../../../components/issue-type';
 import { useSelectStore } from './stores';
+import { getTypeCode } from '@/utils/getTypeCode';
 
 function BranchEdit() {
   const {
@@ -103,35 +104,7 @@ function BranchEdit() {
   const renderIssueName = ({
     typeCode, issueNum, summary, issueTypeVO,
   }) => {
-    let mes = '';
-    let icon = '';
-    let color = '';
-    switch (typeCode) {
-      case 'story':
-        mes = formatMessage({ id: 'branch.issue.story' });
-        icon = 'agile_story';
-        color = '#00bfa5';
-        break;
-      case 'bug':
-        mes = formatMessage({ id: 'branch.issue.bug' });
-        icon = 'agile_fault';
-        color = '#f44336';
-        break;
-      case 'issue_epic':
-        mes = formatMessage({ id: 'branch.issue.epic' });
-        icon = 'agile_epic';
-        color = '#743be7';
-        break;
-      case 'sub_task':
-        mes = formatMessage({ id: 'branch.issue.subtask' });
-        icon = 'agile_subtask';
-        color = '#4d90fe';
-        break;
-      default:
-        mes = formatMessage({ id: 'branch.issue.task' });
-        icon = 'agile_task';
-        color = '#4d90fe';
-    }
+    const { icon, color } = getTypeCode(typeCode);
     return (
       <>
         {issueTypeVO ? (
