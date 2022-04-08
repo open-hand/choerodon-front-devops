@@ -1389,6 +1389,8 @@ export default observer(() => {
           </SelectBox> */}
           <Select
             colSpan={3}
+            searchable
+            searchMatcher="search_param"
             name={addCDTaskDataSetMap.host}
             optionRenderer={renderEnvOption}
             onOption={renderOptionProperty}
@@ -1497,7 +1499,7 @@ export default observer(() => {
                   style={{
                     position: 'absolute',
                     top: '5px',
-                    right: '150px',
+                    left: '170px',
                     color: 'rgba(0, 0, 0, 0.36)',
                   }}
                   type="help"

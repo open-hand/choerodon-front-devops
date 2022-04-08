@@ -274,30 +274,33 @@ export default (
       dynamicProps: {
         required: ({ record }) => record?.get('type') === 'cdHost',
       },
-      lookupAxiosConfig: () => ({
-        method: 'post',
-        url: `/devops/v1/projects/${projectId}/hosts/page_by_options?random=${random}`,
-        data: {
-          searchParam: {
-            type: 'deploy',
+      lookupAxiosConfig: ({ params }) => {
+        const data = params?.['search_param'];
+        return ({
+          method: 'post',
+          url: `/devops/v1/projects/${projectId}/hosts/page_by_options?random=${random}`,
+          data: {
+            searchParam: {
+              type: 'deploy',
+            },
+            params: [data],
           },
-          params: [],
-        },
-        transformResponse: (res) => {
-          let newRes = res;
-          try {
-            newRes = JSONbig.parse(newRes);
-            newRes.content = newRes.content.map((i) => ({
-              ...i,
-              connect: i.hostStatus === 'connected',
-            }));
-            useStore.setHostList(newRes.content);
-            return newRes;
-          } catch (e) {
-            return newRes;
-          }
-        },
-      }),
+          transformResponse: (res) => {
+            let newRes = res;
+            try {
+              newRes = JSONbig.parse(newRes);
+              newRes.content = newRes.content.map((i) => ({
+                ...i,
+                connect: i.hostStatus === 'connected',
+              }));
+              useStore.setHostList(newRes.content);
+              return newRes;
+            } catch (e) {
+              return newRes;
+            }
+          },
+        });
+      },
     },
     {
       name: 'hostIp',

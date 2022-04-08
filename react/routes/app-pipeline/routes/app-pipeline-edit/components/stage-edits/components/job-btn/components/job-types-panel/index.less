@@ -3,6 +3,12 @@
 .@{prefixCls} {
   &-subMenu {
     cursor: pointer;
+    li {
+      max-width: 160px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
     &-empty {
       text-align: center;
       height: 50px;
