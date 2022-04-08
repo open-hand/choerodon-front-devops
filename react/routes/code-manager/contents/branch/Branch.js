@@ -418,6 +418,15 @@ function Branch(props) {
         update: () => {
           tableDs.query();
         },
+        linkBranch: () => {
+          tableDs.query();
+         },
+        removeBranch: () => {
+          tableDs.query();
+        },
+        createBranch: () => {
+          tableDs.query();
+          },
       },
     });
   } else {
