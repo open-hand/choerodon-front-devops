@@ -37,20 +37,6 @@ export const StoreProvider = injectIntl(inject('AppState')(
 
     const hasMarket = useMemo(() => some(currentServices || [], ['serviceCode', 'market-service']), [currentServices]);
     const isSaaS = isSaasList && isSaasList[organizationId];
-
-    const serviceTypeDs = useMemo(() => new DataSet({
-      data: [
-        {
-          text: formatMessage({ id: `${intlPrefix}.type.normal` }),
-          value: 'normal',
-        },
-        {
-          text: formatMessage({ id: `${intlPrefix}.type.test` }),
-          value: 'test',
-        },
-      ],
-      selection: 'single',
-    }), []);
     const importStore = useStore();
     const importTableDs = useMemo(() => new DataSet(ImportTableDataSet({
       intlPrefix, formatMessage, projectId,
@@ -69,7 +55,6 @@ export const StoreProvider = injectIntl(inject('AppState')(
       intlPrefix,
       formatMessage,
       projectId,
-      serviceTypeDs,
       selectedDs,
       importTableDs,
       marketSelectedDs,
