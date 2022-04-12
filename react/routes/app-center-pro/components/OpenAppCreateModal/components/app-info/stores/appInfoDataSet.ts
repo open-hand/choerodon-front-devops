@@ -45,6 +45,10 @@ const deployProductOptionsData = [{
   value: 'other',
   name: '其他制品',
   description: '支持本地上传或远程拉取各种类型的制品部署至主机',
+}, {
+  value: 'dockercompose',
+  name: 'Docker Compose',
+  description: '部署docker-compose.yml文件至主机，部署前请确保主机已经安装好Docker Compose',
 }];
 
 const mapping: {

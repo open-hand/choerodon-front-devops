@@ -137,7 +137,7 @@ const Index = observer(() => {
         // @ts-ignore
         newLine
       >
-        部署制品类型
+        应用类型
       </p>
       <div
         className="c7ncd-appCenterPro-appInfo__form__selectContainer"
@@ -156,7 +156,9 @@ const Index = observer(() => {
           data={
             AppInfoDataSet.current.get(mapping.deployMode.name) === deployModeOptionsData[0].value
               ? deployProductOptionsData.slice(0, 2)
-              : deployProductOptionsData.slice(2, 5)
+              : [...deployProductOptionsData.slice(2, 4),
+                deployProductOptionsData[5],
+                deployProductOptionsData[4]]
           }
           identity="value"
           mode="single"
