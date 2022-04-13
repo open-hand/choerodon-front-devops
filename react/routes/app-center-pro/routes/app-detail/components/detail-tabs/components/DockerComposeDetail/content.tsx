@@ -22,7 +22,7 @@ const Index = () => {
 
   const getActionData = (status: any, record: any) => {
     const data = [{
-      service: [],
+      service: ['choerodon.code.project.deploy.app-deployment.application-center.stopContainer'],
       text: status === 'running' ? '停用' : '启用',
       action: async () => {
         try {
@@ -36,7 +36,7 @@ const Index = () => {
         DockerComposeDetailDataSet.query();
       },
     }, {
-      service: [],
+      service: ['choerodon.code.project.deploy.app-deployment.application-center.deleteContainer'],
       text: '删除',
       action: () => {
         Modal.open({
@@ -57,9 +57,16 @@ const Index = () => {
 
     if (status === 'running') {
       data.unshift({
-        service: [],
+        service: ['choerodon.code.project.deploy.app-deployment.application-center.restartContainer'],
         text: '重启',
-        action: () => {},
+        action: async () => {
+          try {
+            await devopsDockerComposeApi.restartContainer(id, record?.get('id'));
+          } catch (err) {
+            console.log(err);
+          }
+          DockerComposeDetailDataSet.query();
+        },
       });
     }
     return data;
@@ -96,7 +103,7 @@ const Index = () => {
         />
         <Column
           name={mapping.status.name}
-          renderer={({ value }) => <Tag color={value === 'running' ? 'green-inverse' : 'gray-inverse'}>{value}</Tag>}
+          renderer={({ value }) => (value ? <Tag color={value === 'running' ? 'green-inverse' : 'gray-inverse'}>{value}</Tag> : '')}
         />
       </Table>
     </div>

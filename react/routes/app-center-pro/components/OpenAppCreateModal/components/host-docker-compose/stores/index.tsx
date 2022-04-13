@@ -6,6 +6,8 @@ interface ContextProps {
   HostDockerComposeDataSet: any,
   cRef?: any,
   data?: any,
+  refresh?: any,
+  modal?: any,
 }
 
 const Store = createContext({} as ContextProps);
