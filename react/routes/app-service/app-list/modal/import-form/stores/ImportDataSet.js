@@ -156,6 +156,7 @@ export default ({
           case 'gitlab':
             if (isGitLabTemplate) {
               res = pick(data, ['code', 'name', 'repositoryUrl', 'accessToken', 'repositoryUrl']);
+              res.type = 'normal';
               result = appServiceApiConfig.Import(url, res);
               break;
             }
@@ -164,6 +165,7 @@ export default ({
             break;
           case 'github':
             res = pick(data, ['code', 'name', 'repositoryUrl']);
+            res.type = 'normal';
             url = `${url}${data.isTemplate ? '?is_template=true' : ''}`;
             result = appServiceApiConfig.Import(url, res);
             break;
@@ -179,6 +181,7 @@ export default ({
           case 'gerneralGit':
             url = 'general_git';
             res = pick(data, ['code', 'name', 'repositoryUrl', 'username', 'password']);
+            res.type = 'normal';
             result = appServiceApiConfig.Import(url, res);
             break;
         }
