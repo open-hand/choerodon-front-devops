@@ -1,10 +1,10 @@
-import React, { useImperativeHandle } from 'react';
+import React, { useImperativeHandle, useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { Form, TextField } from 'choerodon-ui/pro';
 import { message } from 'choerodon-ui';
 import { NewTips, YamlEditor } from '@choerodon/components';
 import { useHostDockerCompose } from './stores';
-import { mapping, transformSubmitData } from './stores/hostdockercomposeDataSet';
+import { mapping, transformSubmitData, transformLoadData } from './stores/hostdockercomposeDataSet';
 
 import './index.less';
 
@@ -14,7 +14,14 @@ const Index = observer(() => {
   const {
     HostDockerComposeDataSet,
     cRef,
+    data,
   } = useHostDockerCompose();
+
+  useEffect(() => {
+    if (data) {
+      HostDockerComposeDataSet.loadData([transformLoadData(data)]);
+    }
+  }, []);
 
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
@@ -33,7 +40,11 @@ const Index = observer(() => {
 
   return (
     <div className={cssPrefix}>
-      <Form columns={2} dataSet={HostDockerComposeDataSet}>
+      <Form columns={data ? 3 : 2} dataSet={HostDockerComposeDataSet}>
+        <>
+          <TextField name={mapping.appName.name} />
+          <TextField name={mapping.appCode.name} />
+        </>
         <TextField name={mapping.versionMark.name} />
       </Form>
       <p className={`${cssPrefix}-title`}>

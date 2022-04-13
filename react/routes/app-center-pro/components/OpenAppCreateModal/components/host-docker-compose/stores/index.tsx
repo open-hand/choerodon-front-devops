@@ -4,7 +4,8 @@ import hostDockerCompose from './hostdockercomposeDataSet';
 
 interface ContextProps {
   HostDockerComposeDataSet: any,
-  cRef: any,
+  cRef?: any,
+  data?: any,
 }
 
 const Store = createContext({} as ContextProps);
@@ -16,9 +17,10 @@ export function useHostDockerCompose() {
 export const StoreProvider = (props: any) => {
   const {
     children,
+    data,
   } = props;
 
-  const HostDockerComposeDataSet = useMemo(() => new DataSet(hostDockerCompose()), []);
+  const HostDockerComposeDataSet = useMemo(() => new DataSet(hostDockerCompose(data)), []);
 
   const value = {
     ...props,

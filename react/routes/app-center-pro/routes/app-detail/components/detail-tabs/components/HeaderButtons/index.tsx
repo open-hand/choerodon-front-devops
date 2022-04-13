@@ -3,6 +3,7 @@ import React, { useMemo } from 'react';
 import {
   HeaderButtons,
   devopsHostsApi,
+  CONSTANTS,
 } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 import { Tooltip, Modal } from 'choerodon-ui/pro';
@@ -27,10 +28,12 @@ import {
   MIDDLWARE_CATERGORY,
   OTHER_CATERGORY,
   DOCKER_CATEGORY,
+  DOCKER_COMPOSE_CATEGORY,
 } from '@/routes/app-center-pro/stores/CONST';
 import {
   DOCKER_TYPE,
 } from '@/routes/app-center-pro/routes/app-detail/CONSTANT';
+import HostDockerCompose from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-docker-compose';
 import { getAppCategories, getChartSourceGroup } from '@/routes/app-center-pro/utils';
 import AppCenterProServices from '@/routes/app-center-pro/services';
 import {
@@ -45,6 +48,12 @@ import {
   HOST_CONNECTED,
   HOST_DISCONNECTED,
 } from '@/routes/app-center-pro/routes/app-detail/components/detail-tabs/components/HeaderButtons/CONSTANTS';
+
+const {
+  MODAL_WIDTH: {
+    MAX,
+  },
+} = CONSTANTS;
 
 const DetailsTabsHeaderButtons = () => {
   const {
@@ -187,6 +196,28 @@ const DetailsTabsHeaderButtons = () => {
         };
         break;
       }
+      case DOCKER_COMPOSE_CATEGORY: {
+        obj = {
+          name: '修改应用',
+          handler: () => {
+            Modal.open({
+              title: '修改应用',
+              key: Modal.key(),
+              children: (
+                <HostDockerCompose data={appRecord?.toData()} />
+              ),
+              drawer: true,
+              style: {
+                width: MAX,
+              },
+            });
+            console.log('123');
+          },
+          disabled: false,
+          permissions: [],
+          icon: 'add_comment-o',
+        };
+      }
       default:
         break;
     }
@@ -290,6 +321,12 @@ const DetailsTabsHeaderButtons = () => {
       appCatergoryCode: appCatergory.code,
       hostId,
     }),
+  };
+
+  const reDeploy = {
+    name: '重新部署',
+    permissions: [],
+    handler: () => {},
   };
 
   const restartApp = {
@@ -454,6 +491,9 @@ const DetailsTabsHeaderButtons = () => {
         }] : []];
         if (rdupmType !== 'middleware') {
           data.unshift(modifyAppObj);
+        }
+        if (rdupmType === 'docker_compose') {
+          data.unshift(reDeploy);
         }
         break;
       default:
