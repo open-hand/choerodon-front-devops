@@ -4,6 +4,7 @@ import {
   HeaderButtons,
   devopsHostsApi,
   CONSTANTS,
+  devopsDockerComposeApi,
 } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 import { Tooltip, Modal } from 'choerodon-ui/pro';
@@ -204,17 +205,20 @@ const DetailsTabsHeaderButtons = () => {
               title: '修改应用',
               key: Modal.key(),
               children: (
-                <HostDockerCompose data={appRecord?.toData()} />
+                <HostDockerCompose
+                  data={appRecord?.toData()}
+                  refresh={() => appDs.query()}
+                />
               ),
               drawer: true,
+              okText: '保存',
               style: {
                 width: MAX,
               },
             });
-            console.log('123');
           },
           disabled: false,
-          permissions: [],
+          permissions: ['choerodon.code.project.deploy.app-deployment.application-center.editDockerCompose'],
           icon: 'add_comment-o',
         };
       }
@@ -325,8 +329,22 @@ const DetailsTabsHeaderButtons = () => {
 
   const reDeploy = {
     name: '重新部署',
-    permissions: [],
-    handler: () => {},
+    permissions: ['choerodon.code.project.deploy.app-deployment.application-center.redeployDockerCompose'],
+    handler: async () => {
+      Modal.open({
+        key: Modal.key(),
+        title: '确认',
+        children: '是否重新部署?',
+        onOk: async () => {
+          try {
+            await devopsDockerComposeApi.restartDockerCompose(appRecord?.toData()?.id);
+            appDs?.query();
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      });
+    },
   };
 
   const restartApp = {
@@ -348,6 +366,7 @@ const DetailsTabsHeaderButtons = () => {
     disabled: isEnv && btnDisabledEnv,
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-delete'],
     handler: () => {
+      console.log(deployType);
       deployType === ENV_TAB ? deleteEnvApp({
         appCatergoryCode: getAppCategories(rdupmType, deployType).code,
         envId: hostOrEnvId,
