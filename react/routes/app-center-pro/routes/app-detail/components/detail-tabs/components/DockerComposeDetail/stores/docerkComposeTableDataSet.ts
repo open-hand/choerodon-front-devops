@@ -37,6 +37,9 @@ const Index = (id: any): any => ({
     const item = mapping[key];
     return item;
   }),
+  queryFields: [
+    mapping.containerName,
+  ],
 });
 
 export default Index;

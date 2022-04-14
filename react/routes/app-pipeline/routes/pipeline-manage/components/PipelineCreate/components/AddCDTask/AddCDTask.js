@@ -201,6 +201,8 @@ export default observer(() => {
       [fieldMap.dockerCommand.name]: fieldMap.dockerCommand.defaultValue,
       [fieldMap.healthProb.name]: fieldMap.healthProb.defaultValue,
       [fieldMap.relativeObj.name]: fieldMap.relativeObj.defaultValue,
+      [fieldMap.dockerCompose.name]: fieldMap.dockerCompose.defaultValue,
+      [fieldMap.dockerComposeRunCommand.name]: fieldMap.dockerComposeRunCommand.defaultValue,
     };
     if (taskType === 'cdHost' && relatedJobOpts && relatedJobOpts.length === 1) {
       newData.pipelineTask = relatedJobOpts[0].name;
@@ -251,7 +253,7 @@ export default observer(() => {
           (x?.devopsCiStepVOList?.some(i => [BUILD_MAVEN_PUBLISH, BUILD_UPLOADJAR].includes(i?.type)) &&
           x.type === MAVEN_BUILD
       ));
-    } else if (currentHostDeployType === 'docker') {
+    } else if (['docker', 'docker_compose'].includes(currentHostDeployType)) {
       filterArr = jobArr.filter(
         (x) =>
           (x?.devopsCiStepVOList?.some(i => [BUILD_DOCKER].includes(i?.type)) &&
@@ -452,6 +454,9 @@ export default observer(() => {
         // ds[fieldMap.preCommand.name] = Base64.encode(ds[fieldMap.preCommand.name]);
         // ds[fieldMap.runCommand.name] = Base64.encode(ds[fieldMap.runCommand.name]);
         // ds[fieldMap.postCommand.name] = Base64.encode(ds[fieldMap.postCommand.name]);
+      } else if (ds.hostDeployType === 'docker_compose') {
+        ds.runCommand = Base64.encode(ds.dockerComposeRunCommand);
+        ds.imageJobName = ds.pipelineTask;
       }
     }
     if (ds.type === typeData[0].value) {
@@ -666,6 +671,8 @@ export default observer(() => {
           setCustomValues(Base64.decode(metadata.customize?.values));
         } else if (hostDeployType === 'image') {
           setImageDeployValues(Base64.decode(metadata.imageDeploy.value));
+        } else if (hostDeployType === 'docker_compose') {
+          extra[fieldMap.dockerComposeRunCommand.name] = runCommand;
         }
         //  else if (hostDeployType === "jar") {
         //   extra.appInstanceName = metadata.jarDeploy.name;
@@ -1237,6 +1244,61 @@ export default observer(() => {
           // />,
         ],
       };
+      if (ADDCDTaskDataSet.current.get(fieldMap.productType.name) === productTypeData[3].value) {
+        return [
+          <Select
+            colSpan={3}
+            name="pipelineTask"
+            searchable
+            addonAfter={
+              <Tips helpText="此处的关联构建任务，仅会查询出该条流水线中存在'Docker构建'步骤的“构建类型”任务。若所选任务中存在多个满足条件的步骤，则只会部署所选任务中第一个满足条件的步骤产生的jar包；" />
+            }
+            searchMatcher={searchMatcher}
+          >
+            {relatedJobOpts.map((item) => (
+              <Option value={item.name}>{item.name}</Option>
+            ))}
+          </Select>,
+          <p
+            colSpan={6} 
+            className="c7ncd-operationYaml-dockerCompose-title"
+          >
+            docker-compose.yml文件
+            <NewTips
+              helpText=""
+            />
+          </p>,
+          <YamlEditor
+            colSpan={6}
+            // className="addcdTask-yamleditor"
+            newLine
+            modeChange={false}
+            showError={false}
+            readOnly
+            value={ADDCDTaskDataSet.current.get(fieldMap.dockerCompose.name)}
+            // onValueChange={(data) => ADDCDTaskDataSet.current.set(fieldMap.dockerCompose.name, data)}
+          />,
+          <p
+            colSpan={6} 
+            className="c7ncd-operationYaml-dockerCompose-title"
+          >
+            命令
+            <NewTips
+              helpText=""
+            />
+          </p>,
+          <YamlEditor
+            colSpan={6}
+            // className="addcdTask-yamleditor"
+            newLine
+            modeChange={false}
+            showError={false}
+            readOnly={false}
+            value={ADDCDTaskDataSet.current.get(fieldMap.dockerComposeRunCommand.name)}
+            onValueChange={(data) => ADDCDTaskDataSet.current.set(fieldMap.dockerComposeRunCommand.name, data)}
+          />
+        ]
+      }
       return result['jar'];
     }
     const obj = {
@@ -1293,6 +1355,7 @@ export default observer(() => {
       // TODO: 更新应用- 获取instanceId
       cdHost: [
         <Form columns={2} className="addcdTask-cdHost" dataSet={ADDCDTaskDataSet}>
+          <SelectBox name={fieldMap.productType.name} />
           <SelectBox
             name={fieldMap.deployWay.name}
             onChange={(value) => {
@@ -1307,7 +1370,6 @@ export default observer(() => {
             //   }
             }}
           />
-          <SelectBox name={fieldMap.productType.name} />
         </Form>,
         <div className="addcdTask-divided" />,
         <p className="addcdTask-title">应用信息</p>,
@@ -1848,64 +1910,6 @@ export default observer(() => {
             }}
           />,
         ]}
-        {/*{ADDCDTaskDataSet?.current?.get("type") === "cdDeploy" && [*/}
-        {/*  <Select*/}
-        {/*    colSpan={1}*/}
-        {/*    name="envId"*/}
-        {/*    optionRenderer={optionRenderer}*/}
-        {/*    // renderer={renderer}*/}
-        {/*    onOption={({ record }) => ({*/}
-        {/*      disabled: !record?.get("connected"),*/}
-        {/*    })}*/}
-        {/*  />,*/}
-        {/*  isProjectOwner && (*/}
-        {/*    <div*/}
-        {/*      className="addcdTask-whetherBlock addcdTask-triggersTasks"*/}
-        {/*      style={{*/}
-        {/*        position: "relative",*/}
-        {/*      }}*/}
-        {/*      colSpan={2}*/}
-        {/*    >*/}
-        {/*      <SelectBox name={addCDTaskDataSetMap.triggersTasks.name}>*/}
-        {/*        <Option value={addCDTaskDataSetMap.triggersTasks.values[0]}>*/}
-        {/*          是*/}
-        {/*        </Option>*/}
-        {/*        <Option value={addCDTaskDataSetMap.triggersTasks.values[1]}>*/}
-        {/*          否*/}
-        {/*        </Option>*/}
-        {/*      </SelectBox>*/}
-        {/*      <NewTips*/}
-        {/*        helpText="此处仅项目所有者可以设置；默认为是，即触发用户在没有该部署任务的环境权限时，将会直接使用管理员账户触发部署；若选择为否，触发成员在没有环境权限时，将会直接跳过此部署任务。"*/}
-        {/*        style={{*/}
-        {/*          position: "absolute",*/}
-        {/*          top: "7px",*/}
-        {/*          left: "195px",*/}
-        {/*        }}*/}
-        {/*      />*/}
-        {/*    </div>*/}
-        {/*  ),*/}
-        {/*  <SelectBox*/}
-        {/*    className="addcdTask-mode"*/}
-        {/*    newLine*/}
-        {/*    colSpan={1}*/}
-        {/*    name="deployType"*/}
-        {/*  >*/}
-        {/*    <Option value="create">新建实例</Option>*/}
-        {/*    <Option value="update">替换实例</Option>*/}
-        {/*  </SelectBox>,*/}
-        {/*  <p className="addcdTask-text" colSpan={2}>*/}
-        {/*    <Icon*/}
-        {/*      style={{ color: "#F44336", position: "relative", bottom: "2px" }}*/}
-        {/*      type="error"*/}
-        {/*    />*/}
-        {/*    替换实例会更新该实例的镜像及配置信息，请确认要替换的实例选择无误。*/}
-        {/*  </p>,*/}
-        {/*  ADDCDTaskDataSet?.current?.get("deployType") === "create" ? (*/}
-        {/*    <TextField newLine colSpan={2} name="instanceName" />*/}
-        {/*  ) : (*/}
-        {/*    <Select newLine colSpan={2} name="instanceId" />*/}
-        {/*  ),*/}
-        {/*]}*/}
         {ADDCDTaskDataSet?.current?.get('type') === 'cdAudit' && (
           <div colSpan={3} style={{ display: 'flex' }}>
             <div style={{ width: '47.5%', marginRight: 8 }} colSpan={2}>

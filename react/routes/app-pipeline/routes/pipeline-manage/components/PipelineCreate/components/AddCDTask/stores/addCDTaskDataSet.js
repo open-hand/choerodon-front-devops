@@ -5,7 +5,11 @@ import forEach from 'lodash/forEach';
 import JSONbig from 'json-bigint';
 import { DataSet } from 'choerodon-ui/pro';
 import addCDTaskDataSetMap, {
-  fieldMap, typeData, deployWayData, relativeObjData,
+  fieldMap,
+  typeData,
+  deployWayData,
+  relativeObjData,
+  productTypeData,
 } from './addCDTaskDataSetMap';
 import { appNameDataSet } from './deployGroupDataSet';
 import { appNameChartDataSet } from './deployChartDataSet';
@@ -62,6 +66,7 @@ export default (
   trueAppServiceId,
   appServiceId,
   jobDetail,
+  HotJarOptionsDataSet,
 ) => ({
   autoCreate: true,
   fields: [
@@ -379,11 +384,13 @@ export default (
       textField: 'pipelineTask',
       valueField: 'pipelineTask',
       dynamicProps: {
-        required: ({ record }) => record?.get('type') === 'cdHost'
+        required: ({ record }) => (record?.get('type') === 'cdHost'
           && ((record?.get('hostDeployType') === 'image'
             && record?.get('deploySource') === 'pipelineDeploy')
             || ['jar', 'docker'].includes(record?.get('hostDeployType'))
-              && record?.get('deploySource') === 'pipelineDeploy'),
+              && record?.get('deploySource') === 'pipelineDeploy')) || (
+          (record?.get('type') === 'cdHost') && (record?.get('hostDeployType') === 'docker_compose')
+        ),
       },
     },
     {
@@ -781,6 +788,12 @@ export default (
         },
       }),
     },
+    {
+      ...fieldMap.dockerCompose,
+    },
+    {
+      ...fieldMap.dockerComposeRunCommand,
+    },
   ],
   events: {
     load: ({ dataSet }) => {
@@ -794,6 +807,7 @@ export default (
     create: ({ dataSet }) => {
       if (!jobDetail) {
         dataSet?.getField('cdAuditUserIds')?.options.query();
+        HotJarOptionsDataSet.query();
       }
     },
     update: ({ name, value, record }) => {
@@ -816,6 +830,20 @@ export default (
             appNameDataSet.setQueryParameter('data', value);
             appNameDataSet.query();
           }
+          break;
+        }
+        case fieldMap.productType.name: {
+          if (record?.get('type') === 'cdHost') {
+            if (value === productTypeData[3].value) {
+              record?.getField(fieldMap.deployWay.name).set('disabled', true);
+              record?.set(fieldMap.deployWay.name, deployWayData[1].value);
+            } else if (record?.getField(fieldMap.deployWay.name).get('disabled')) {
+                record?.getField(fieldMap.deployWay.name).set('disabled', false);
+            }
+            HotJarOptionsDataSet.setQueryParameter('data', value);
+            HotJarOptionsDataSet.query();
+          }
+
           break;
         }
         default: {

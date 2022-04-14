@@ -6,7 +6,8 @@ import { DataSet } from 'choerodon-ui/pro';
 import deployChartDataSet, { deployConfigDataSet } from './deployChartDataSet';
 import addCDTaskDataSet from './addCDTaskDataSet';
 import deployGroupDataSet from './deployGroupDataSet';
-import { hostJarDataSet, hotJarOptionsDataSet } from './hostJarDataSet';
+import hotJarOptionsDataSet from './hostJarOptionsDataSet';
+import { hostJarDataSet } from './hostJarDataSet';
 import useStore from './useStore';
 // import {
 //   ConfigurationCenterDataSet,
@@ -37,6 +38,7 @@ export const StoreProvider = injectIntl(
       jobDetail,
     } = props;
 
+    const HotJarOptionsDataSet = useMemo(() => new DataSet(hotJarOptionsDataSet()), []);
     const ADDCDTaskUseStore = useStore();
     const ADDCDTaskDataSet = useMemo(
       () => new DataSet(
@@ -51,6 +53,7 @@ export const StoreProvider = injectIntl(
           trueAppServiceId,
           appServiceId,
           jobDetail,
+          HotJarOptionsDataSet,
         ),
       ),
       [ADDCDTaskUseStore, random],
@@ -59,7 +62,7 @@ export const StoreProvider = injectIntl(
     const DeployGroupDataSet = useMemo(() => new DataSet(deployGroupDataSet(ADDCDTaskDataSet)), [
       ADDCDTaskDataSet?.current?.get('envId'),
     ]);
-    const HostJarDataSet = useMemo(() => new DataSet(hostJarDataSet(ADDCDTaskDataSet)), []);
+    const HostJarDataSet = useMemo(() => new DataSet(hostJarDataSet(ADDCDTaskDataSet, HotJarOptionsDataSet, jobDetail)), []);
     // const configCompareOptsDS = useMemo(
     //   () => new DataSet(ConfigCompareOptsDS({ projectId, organizationId })),
     //   [],
@@ -82,8 +85,6 @@ export const StoreProvider = injectIntl(
     //   ),
     //   [],
     // );
-
-    const HotJarOptionsDataSet = useMemo(() => new DataSet(hotJarOptionsDataSet()), []);
 
     const value = {
       ...props,

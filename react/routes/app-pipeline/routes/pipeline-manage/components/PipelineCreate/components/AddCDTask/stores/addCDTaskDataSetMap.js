@@ -74,6 +74,9 @@ const productTypeData = [{
 }, {
   value: 'other',
   name: '其他制品',
+}, {
+  value: 'docker_compose',
+  name: 'DockerCompose',
 }];
 
 const fieldMap = {
@@ -94,9 +97,13 @@ const fieldMap = {
     valueField: 'value',
     name: 'hostDeployType',
     type: 'string',
-    label: '制品类型',
+    label: '应用类型',
     options: new DataSet({
-      data: productTypeData,
+      data: [
+        ...productTypeData.slice(0, 2),
+        productTypeData[3],
+        productTypeData[2],
+      ],
     }),
   },
   preCommand: {
@@ -187,6 +194,32 @@ const fieldMap = {
       required: ({ record }) => record?.get('type') === map.apiTest
       && record?.get(fieldMap.relativeObj.name) === relativeObjData[1].value,
     },
+  },
+  dockerCompose: {
+    name: 'value',
+    type: 'string',
+    defaultValue: `
+# docker-compose.yaml文件,比如启动一个postgres程序
+version: "3.3"
+  
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    `,
+  },
+  dockerComposeRunCommand: {
+    name: 'dockerComposeRunCommand',
+    type: 'string',
+    defaultValue: `
+# 后台启动docker-compose应用
+docker-compose up -d
+    `,
   },
 };
 
