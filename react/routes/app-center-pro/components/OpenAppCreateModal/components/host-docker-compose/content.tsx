@@ -1,11 +1,16 @@
 import React, { useImperativeHandle, useEffect } from 'react';
 import { observer } from 'mobx-react';
-import { Form, TextField, Select } from 'choerodon-ui/pro';
+import Moment from 'moment';
+import {
+  Form, TextField, Select, SelectBox,
+} from 'choerodon-ui/pro';
 import { message } from 'choerodon-ui';
 import { devopsDockerComposeApi } from '@choerodon/master';
 import { NewTips, YamlEditor } from '@choerodon/components';
 import { useHostDockerCompose } from './stores';
-import { mapping, transformSubmitData, transformLoadData } from './stores/hostdockercomposeDataSet';
+import {
+  mapping, transformSubmitData, transformLoadData, operationData,
+} from './stores/hostdockercomposeDataSet';
 
 import './index.less';
 
@@ -72,6 +77,17 @@ const Index = observer(() => {
     },
   }));
 
+  const getDockerComposeReadonly = () => {
+    if (data) {
+      const operaion = HostDockerComposeDataSet?.current?.get(mapping.operation.name);
+      if (operaion === operationData[0].value) {
+        return false;
+      }
+      return true;
+    }
+    return true;
+  };
+
   return (
     <div
       className={cssPrefix}
@@ -90,9 +106,30 @@ const Index = observer(() => {
         }
         {
           data ? (
-            <Select
-              name={mapping.versionMark.name}
-            />
+            <>
+              <SelectBox
+                newLine
+                name={mapping.operation.name}
+              />
+              {
+                HostDockerComposeDataSet?.current
+                  ?.get(mapping.operation.name) === operationData[0].value ? (
+                    <TextField
+                      name={mapping.versionMark.name}
+                      newLine
+                    />
+                  ) : (
+                    <Select
+                      newLine
+                      name={mapping.versionMark.name}
+                      optionRenderer={({ record }) => {
+                        const time = Moment(record?.get('creationDate')).format('YYYY.MM.DD-HHmmss');
+                        return `${record?.get('remark')}(${time})`;
+                      }}
+                    />
+                  )
+              }
+            </>
           ) : (
             <TextField name={mapping.versionMark.name} />
           )
@@ -105,7 +142,7 @@ const Index = observer(() => {
       <YamlEditor
         value={HostDockerComposeDataSet?.current?.get(mapping.dockerCompose.name)}
         modeChange={false}
-        readOnly={false}
+        readOnly={getDockerComposeReadonly()}
         showError={false}
         onValueChange={(value: any) => {
           HostDockerComposeDataSet?.current.set(mapping.dockerCompose.name, value);
