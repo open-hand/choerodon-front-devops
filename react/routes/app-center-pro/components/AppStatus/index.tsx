@@ -7,6 +7,12 @@ import './index.less';
 
 const prefixcls = 'c7ncd-app-center-appStatus';
 
+const tagColorMap: any = {
+  running: 'green',
+  other: 'volcano',
+  exited: 'gray',
+};
+
 const AppStatus = ({
   status,
   deloyType,
@@ -58,7 +64,7 @@ const AppStatus = ({
     if (rdupmType === 'docker_compose') {
       tag = (
         <div className={`${prefixcls}-status`}>
-          <Tag style={{ marginRight: 0 }} color="green">{ outsideStatus }</Tag>
+          <Tag style={{ marginRight: 0 }} color={tagColorMap[outsideStatus]}>{ outsideStatus }</Tag>
           {
             status === APP_STATUS.FAILED ? (
               <ErrorIcon />
