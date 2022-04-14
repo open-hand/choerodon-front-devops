@@ -1,6 +1,14 @@
 import { DataSet } from 'choerodon-ui/pro';
 import { devopsDockerComposeApiConfig } from '@choerodon/master';
 
+const operationData = [{
+  title: '基于当前配置修改',
+  value: 'current',
+}, {
+  title: '回滚至历史版本',
+  value: 'history',
+}];
+
 const mapping: any = {
   appName: {
     name: 'name',
@@ -12,6 +20,17 @@ const mapping: any = {
     type: 'string',
     label: '应用编码',
     disabled: true,
+  },
+  operation: {
+    textField: 'title',
+    valueField: 'value',
+    name: 'operation',
+    type: 'string',
+    label: '操作类型',
+    options: new DataSet({
+      data: operationData,
+    }),
+    defaultValue: operationData[0].value,
   },
   versionMark: {
     name: 'remark',
@@ -85,9 +104,10 @@ const transformSubmitData = (ds: any, data?: any) => {
 const transformLoadData = (data: any) => ({
   [mapping.appName.name]: data?.[mapping.appName.name],
   [mapping.appCode.name]: data?.[mapping.appCode.name],
-  [mapping.versionMark.name]: data?.dockerComposeValueDTO?.id,
+  [mapping.versionMark.name]: '',
   [mapping.dockerCompose.name]: data?.dockerComposeValueDTO?.[mapping.dockerCompose.name],
   [mapping.command.name]: data?.[mapping.command.name],
+  [mapping.operation.name]: mapping.operation.defaultValue,
 });
 
 const Index = (data: any) => ({
@@ -134,6 +154,13 @@ const Index = (data: any) => ({
           }
           break;
         }
+        case mapping.operation.name: {
+          if (value === operationData[0].value) {
+            record?.set(mapping.versionMark.name, '');
+          } else {
+            record?.set(mapping.versionMark.name, data?.dockerComposeValueDTO?.id);
+          }
+        }
       }
     },
   },
@@ -145,4 +172,5 @@ export {
   mapping,
   transformSubmitData,
   transformLoadData,
+  operationData,
 };
