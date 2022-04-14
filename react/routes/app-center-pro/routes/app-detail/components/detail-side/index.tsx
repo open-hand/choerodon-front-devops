@@ -277,7 +277,7 @@ const DetailAside = () => {
         <Tooltip title={name}>
           <span className={`${subfixCls}-aside-name`}>{`${name}` || '-'}</span>
         </Tooltip>
-        <AppStatus error={error || devopsHostCommandDTO?.error} status={isEnv ? objectStatus : devopsHostCommandDTO?.status} deloyType={deployType} />
+        <AppStatus outsideStatus={hostStatus} rdupmType={rdupmType} error={error || devopsHostCommandDTO?.error} status={isEnv ? objectStatus : devopsHostCommandDTO?.status} deloyType={deployType} />
       </header>
       <main>
         <h3>详情</h3>

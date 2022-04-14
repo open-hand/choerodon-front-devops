@@ -85,7 +85,7 @@ const Index = observer(() => {
       }
       return true;
     }
-    return true;
+    return false;
   };
 
   return (

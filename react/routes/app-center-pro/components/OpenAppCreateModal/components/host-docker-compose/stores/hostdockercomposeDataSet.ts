@@ -80,7 +80,7 @@ const transformSubmitData = (ds: any, data?: any) => {
     } : {},
   };
 
-  if (!data || record?.get(mapping.versionMark.name) === data?.dockerComposeValueDTO?.id) {
+  if (!data || record?.get(mapping.operation.name) === operationData[0].value) {
     result = {
       ...result,
       dockerComposeValueDTO: {
@@ -89,9 +89,7 @@ const transformSubmitData = (ds: any, data?: any) => {
         [mapping.dockerCompose.name]: record?.get(mapping.dockerCompose.name),
       },
     };
-  }
-
-  if (data && record?.get(mapping.versionMark.name) !== data?.dockerComposeValueDTO?.id) {
+  } else {
     result = {
       ...result,
       valueId: record?.get(mapping.versionMark.name),
