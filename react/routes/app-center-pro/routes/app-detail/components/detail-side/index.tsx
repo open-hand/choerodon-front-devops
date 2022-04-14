@@ -58,6 +58,7 @@ const DetailAside = () => {
 
     creationDate,
     updatedDate,
+    lastUpdateDate,
     rdupmType,
     objectStatus,
     creator = {},
@@ -309,7 +310,7 @@ const DetailAside = () => {
           </div>
           <div>
             <span>最近更新时间</span>
-            <TimePopover content={updatedDate} />
+            <TimePopover content={lastUpdateDate} />
           </div>
           <div>
             <span>最近更新者</span>

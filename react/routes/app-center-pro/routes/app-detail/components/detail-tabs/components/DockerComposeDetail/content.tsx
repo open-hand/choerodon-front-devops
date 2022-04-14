@@ -28,6 +28,8 @@ const Index = () => {
         try {
           if (status === 'running') {
             await devopsDockerComposeApi.stopContainer(id, record?.get('id'));
+          } else {
+            await devopsDockerComposeApi.startContainer(id, record?.get('id'));
           }
         } catch (err) {
           console.log(err);
@@ -75,7 +77,9 @@ const Index = () => {
   return (
     <div className={cssPrefix}>
       <p className={`${cssPrefix}-title`}>容器实例</p>
-      <Table dataSet={DockerComposeDetailDataSet}>
+      <Table
+        dataSet={DockerComposeDetailDataSet}
+      >
         <Column name={mapping.containerName.name} />
         <Column
           width={55}

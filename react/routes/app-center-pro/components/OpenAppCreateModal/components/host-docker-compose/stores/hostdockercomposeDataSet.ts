@@ -25,11 +25,29 @@ const mapping: any = {
     name: 'value',
     type: 'string',
     required: true,
+    defaultValue: `
+# docker-compose.yaml文件,比如启动一个postgres程序
+version: "3.3"
+  
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    `,
   },
   command: {
     name: 'runCommand',
     type: 'string',
     required: true,
+    defaultValue: `
+# 后台启动docker-compose应用
+docker-compose up -d
+    `,
   },
 };
 
