@@ -215,6 +215,7 @@ const DetailItem = (props) => {
       jar: 'jar包',
       image: 'docker镜像',
       docker: 'docker镜像',
+      docker_compose: 'Docker Compose',
     };
     return data[rdupmType];
   };
