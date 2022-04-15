@@ -23,7 +23,7 @@ const AppStatus = ({
   const statusCls = `${prefixcls}-status ${prefixcls}-status-${status}`;
 
   const ErrorIcon = () => {
-    const titleDom = error?.split('\n')?.map((e) => (
+    const titleDom = error?.split('\n')?.map((e: any) => (
       <p style={{ margin: 0 }}>{e}</p>
     ));
     return (
