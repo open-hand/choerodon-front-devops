@@ -803,6 +803,9 @@ export default (
           ids: record?.get('cdAuditUserIds'),
         });
       }
+      if (record?.get('type') === 'cdHost' && record?.get(fieldMap.productType.name) === productTypeData[3].value) {
+        record?.getField(fieldMap.deployWay.name).set('disabled', true);
+      }
     },
     create: ({ dataSet }) => {
       if (!jobDetail) {
