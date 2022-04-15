@@ -59,17 +59,22 @@ const AppStatus = ({
     return tag;
   };
 
+  const getDockerComposeTag = () => {
+    if (status === APP_STATUS.FAILED) {
+      return <ErrorIcon />;
+    } if (status === APP_STATUS.OPERATING) {
+      return (<Spin style={{ position: 'relative', bottom: '3px', right: '15px' }} size={'small' as any} />);
+    }
+    return '';
+  };
+
   const getTagHost = () => {
     let tag:any = '';
     if (rdupmType === 'docker_compose') {
       tag = (
         <div className={`${prefixcls}-status`}>
           <Tag style={{ marginRight: 0 }} color={tagColorMap[outsideStatus]}>{ outsideStatus }</Tag>
-          {
-            status === APP_STATUS.FAILED ? (
-              <ErrorIcon />
-            ) : ''
-          }
+          {getDockerComposeTag()}
         </div>
       );
     } else {
