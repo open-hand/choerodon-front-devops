@@ -36,7 +36,6 @@ const mapping: any = {
     name: 'remark',
     type: 'string',
     label: '版本备注',
-    required: true,
     textField: 'remark',
     valueField: 'id',
   },
@@ -84,8 +83,7 @@ const transformSubmitData = (ds: any, data?: any) => {
     result = {
       ...result,
       dockerComposeValueDTO: {
-        [mapping.versionMark.name]: data
-          ? data?.dockerComposeValueDTO?.remark : record?.get(mapping.versionMark.name),
+        [mapping.versionMark.name]: record?.get(mapping.versionMark.name),
         [mapping.dockerCompose.name]: record?.get(mapping.dockerCompose.name),
       },
     };
@@ -130,6 +128,21 @@ const Index = (data: any) => ({
             },
           });
         }
+        item.dynamicProps = {
+          required: ({ record }: any) => {
+            let result;
+            if (data) {
+              if (record?.get(mapping.operation.name) === operationData[0].value) {
+                result = false;
+              } else {
+                result = true;
+              }
+            } else {
+              result = true;
+            }
+            return result;
+          },
+        };
         break;
       }
     }
@@ -146,8 +159,6 @@ const Index = (data: any) => ({
               if (item) {
                 record?.set(mapping.dockerCompose.name, item.value);
               }
-            } else {
-              record?.set(mapping.dockerCompose.name, '');
             }
           }
           break;

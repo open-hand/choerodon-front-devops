@@ -1,10 +1,12 @@
 import React from 'react';
 import { Table, Tooltip, Modal } from 'choerodon-ui/pro';
 import { Tag } from 'choerodon-ui';
+import { observer } from 'mobx-react-lite';
 import {
   Action,
   devopsDockerComposeApi,
 } from '@choerodon/master';
+import AppStatus from '@/routes/app-center-pro/components/AppStatus';
 import { useStore } from './stores';
 import { mapping } from './stores/docerkComposeTableDataSet';
 
@@ -14,7 +16,7 @@ const cssPrefix = 'c7ncd-dockerComposeDetail';
 
 const { Column } = Table;
 
-const Index = () => {
+const Index = observer(() => {
   const {
     DockerComposeDetailDataSet,
     id,
@@ -80,7 +82,20 @@ const Index = () => {
       <Table
         dataSet={DockerComposeDetailDataSet}
       >
-        <Column name={mapping.containerName.name} />
+        <Column
+          name={mapping.containerName.name}
+          renderer={({ record, value }) => (
+            <div className={`${cssPrefix}-nameRender`}>
+              <Tooltip title={value}>
+                <p>{value}</p>
+              </Tooltip>
+              <AppStatus
+                error={record?.get('devopsHostCommandDTO')?.error}
+                status={record?.get('devopsHostCommandDTO')?.status}
+              />
+            </div>
+          )}
+        />
         <Column
           width={55}
           renderer={({ record }) => (
@@ -112,6 +127,6 @@ const Index = () => {
       </Table>
     </div>
   );
-};
+});
 
 export default Index;
