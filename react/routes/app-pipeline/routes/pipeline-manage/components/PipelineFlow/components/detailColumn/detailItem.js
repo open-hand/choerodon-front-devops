@@ -240,7 +240,7 @@ const DetailItem = (props) => {
           <span>{hostName || '-'}</span>
         </div>
         <div>
-          <span>制品类型：</span>
+          <span>应用类型：</span>
           <span>{getRdupmType(rdupmType)}</span>
         </div>
         <div>
