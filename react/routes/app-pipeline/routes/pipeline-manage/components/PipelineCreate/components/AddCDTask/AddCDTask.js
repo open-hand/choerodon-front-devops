@@ -457,6 +457,13 @@ export default observer(() => {
       } else if (ds.hostDeployType === 'docker_compose') {
         ds.runCommand = Base64.encode(ds.dockerComposeRunCommand);
         ds.imageJobName = ds.pipelineTask;
+        delete ds.dockerCommand;
+        delete ds.dockerComposeRunCommand;
+        delete ds.healthProb;
+        delete ds.killCommand;
+        delete ds.postCommand;
+        delete ds.preCommand;
+        delete ds.value;
       }
     }
     if (ds.type === typeData[0].value) {
@@ -673,6 +680,10 @@ export default observer(() => {
           setImageDeployValues(Base64.decode(metadata.imageDeploy.value));
         } else if (hostDeployType === 'docker_compose') {
           extra[fieldMap.dockerComposeRunCommand.name] = runCommand;
+        }
+
+        if (metadata?.deployType === deployWayData[1].value) {
+          HostJarDataSet?.current?.getField('appCode').set('disabled', true);
         }
         //  else if (hostDeployType === "jar") {
         //   extra.appInstanceName = metadata.jarDeploy.name;
@@ -1355,7 +1366,7 @@ export default observer(() => {
       // TODO: 更新应用- 获取instanceId
       cdHost: [
         <Form columns={2} className="addcdTask-cdHost" dataSet={ADDCDTaskDataSet}>
-          <SelectBox name={fieldMap.productType.name} />
+          <SelectBox className="addcdTask-cdHost-productType" name={fieldMap.productType.name} />
           <SelectBox
             name={fieldMap.deployWay.name}
             onChange={(value) => {

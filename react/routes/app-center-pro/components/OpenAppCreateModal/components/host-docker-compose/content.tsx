@@ -109,6 +109,20 @@ const Index = observer(() => {
             <>
               <SelectBox
                 newLine
+                label={(
+                  <p>
+                    操作类型
+                    <NewTips
+                      helpText="基于当前配置修改表示您可直接在下方yml文件中进行修改；
+                  回滚至历史版本表示您需要选择一个之前标记的版本备注，并使用当时的yml文件进行部署。"
+                      style={{
+                        fontSize: '16px !important',
+                        position: 'relative',
+                        bottom: '1px',
+                      }}
+                    />
+                  </p>
+                )}
                 name={mapping.operation.name}
               />
               {
@@ -117,27 +131,42 @@ const Index = observer(() => {
                     <TextField
                       name={mapping.versionMark.name}
                       newLine
+                      addonAfter={<NewTips helpText="您可为此次应用修改标记一个版本备注（形如：V1.0.0），标记后，后续便能在「历史版本」中定位此次配置，并支持回滚至该版本。此处若不填写，便不会生成历史版本。" />}
                     />
                   ) : (
                     <Select
                       newLine
                       name={mapping.versionMark.name}
+                      addonAfter={<NewTips helpText="您可从历史版本中选择一个进行回滚，每个版本后面显示的内容（形如：2022.04.12-182712）表示的是该版本被标记时对应的年月日-时分秒。" />}
                       optionRenderer={({ record }) => {
                         const time = Moment(record?.get('creationDate')).format('YYYY.MM.DD-HHmmss');
-                        return `${record?.get('remark')}(${time})`;
+                        return (
+                          <p style={{ marginBottom: 0, display: 'flex' }}>
+                            <span style={{
+                              display: 'inline-block', overflow: 'hidden', textOverflow: 'ellipsis',
+                            }}
+                            >
+                              {record?.get('remark')}
+                            </span>
+                            <span style={{ display: 'inline-block' }}>{`(${time})`}</span>
+                          </p>
+                        );
                       }}
                     />
                   )
               }
             </>
           ) : (
-            <TextField name={mapping.versionMark.name} />
+            <TextField
+              name={mapping.versionMark.name}
+              addonAfter={<NewTips helpText="您可为此次应用修改标记一个版本备注（形如：V1.0.0），标记后，后续便能在「历史版本」中定位此次配置，并支持回滚至该版本。此处若不填写，便不会生成历史版本。" />}
+            />
           )
         }
       </Form>
       <p className={`${cssPrefix}-title`}>
         docker-compose.yml文件
-        <NewTips className={`${cssPrefix}-title-tips`} helpText="" />
+        <NewTips className={`${cssPrefix}-title-tips`} helpText="您需直接在此处粘入docker-compose.yml文件，此处为必填。" />
       </p>
       <YamlEditor
         value={HostDockerComposeDataSet?.current?.get(mapping.dockerCompose.name)}
@@ -155,7 +184,7 @@ const Index = observer(() => {
         }}
       >
         命令
-        <NewTips className={`${cssPrefix}-title-tips`} helpText="" />
+        <NewTips className={`${cssPrefix}-title-tips`} helpText="您需在此处维护操作Docker Compose的命令，此处为必填。" />
       </p>
       <YamlEditor
         value={HostDockerComposeDataSet?.current?.get(mapping.command.name)}
