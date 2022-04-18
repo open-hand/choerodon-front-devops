@@ -1,5 +1,7 @@
+import React from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { devopsDockerComposeApiConfig } from '@choerodon/master';
+import { NewTips } from '@choerodon/components';
 
 const operationData = [{
   title: '基于当前配置修改',
@@ -26,7 +28,12 @@ const mapping: any = {
     valueField: 'value',
     name: 'operation',
     type: 'string',
-    label: '操作类型',
+    // label: (<p>
+    //   操作类型
+    //   <NewTips helpText="基于当前配置修改表示您可直接在下方yml文件中进行修改；
+    // 回滚至历史版本表示您需要选择一个之前标记的版本备注，并使用当时的yml文件进行部署。"
+    //   />
+    // </p>),
     options: new DataSet({
       data: operationData,
     }),
