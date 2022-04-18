@@ -8,7 +8,7 @@ import {
   Password,
 } from 'choerodon-ui/pro';
 import { YamlEditor } from '@choerodon/components';
-import { devopsDeployApi } from '@choerodon/master/lib/apis';
+import { devopsDeployApi } from '@choerodon/master';
 import {
   mapping,
   transformSubmitData,

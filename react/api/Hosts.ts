@@ -23,9 +23,9 @@ class HostApi extends Api<HostApi> {
     });
   }
 
-  loadHostsAppList() {
+  loadHostsAppList(rdupmType?: any) {
     return this.request({
-      url: `${this.prefix}/apps/paging`,
+      url: `${this.prefix}/apps/paging${rdupmType ? `?rdupm_type=${rdupmType}` : ''}`,
       method: 'get',
     });
   }

@@ -84,7 +84,7 @@ const Stage:FC<StageProps> = (props) => {
    * @param {*} jobData
    */
   const handleJobAddCallback = (addonData:any, addAndEdit:boolean = true, index?: any) => {
-    const jobIndex = String(index) ? index : jobList.length;
+    const jobIndex = String(index) !== 'undefined' ? index : jobList.length;
     if (addAndEdit) {
       addJob(stageIndex, jobIndex, addonData);
       return (jobData:any) => editJob(stageIndex, jobIndex, jobData);
@@ -109,7 +109,9 @@ const Stage:FC<StageProps> = (props) => {
    * @param {number} jobIndex
    * @param {Record<string, any>} jobData
    */
-  const handleJobEditCallback = (jobIndex:number, jobData:Record<string, any>) => editJob(stageIndex, jobIndex, jobData);
+  const handleJobEditCallback = (jobIndex:number, jobData:Record<string, any>) => {
+    editJob(stageIndex, jobIndex, jobData);
+  };
 
   const renderJobs = useCallback(
     () => map(jobList, (item, index:number) => {

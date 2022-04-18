@@ -17,6 +17,7 @@ const HOST_CATERGORY = 'host_group'; // jar包标识
 const OTHER_CATERGORY = 'other_group'; // 其他制品标识
 const MIDDLWARE_CATERGORY = 'middleware_group';
 const DOCKER_CATEGORY = 'docker_group';
+const DOCKER_COMPOSE_CATEGORY = 'docker_compose_group';
 
 // chartSource
 const CHART_MARKET = 'market'; // 市场
@@ -90,6 +91,7 @@ export {
   CHART_CATERGORY,
   DEPLOY_CATERGORY,
   MIDDLWARE_CATERGORY,
+  DOCKER_COMPOSE_CATEGORY,
   HOST_CATERGORY,
   OTHER_CATERGORY,
   CHART_MARKET,

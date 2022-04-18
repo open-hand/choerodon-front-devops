@@ -58,6 +58,7 @@ const DetailAside = () => {
 
     creationDate,
     updatedDate,
+    lastUpdateDate,
     rdupmType,
     objectStatus,
     creator = {},
@@ -276,7 +277,7 @@ const DetailAside = () => {
         <Tooltip title={name}>
           <span className={`${subfixCls}-aside-name`}>{`${name}` || '-'}</span>
         </Tooltip>
-        <AppStatus error={error || devopsHostCommandDTO?.error} status={isEnv ? objectStatus : devopsHostCommandDTO?.status} deloyType={deployType} />
+        <AppStatus outsideStatus={hostStatus} rdupmType={rdupmType} error={error || devopsHostCommandDTO?.error} status={isEnv ? objectStatus : devopsHostCommandDTO?.status} deloyType={deployType} />
       </header>
       <main>
         <h3>详情</h3>
@@ -309,7 +310,7 @@ const DetailAside = () => {
           </div>
           <div>
             <span>最近更新时间</span>
-            <TimePopover content={updatedDate} />
+            <TimePopover content={lastUpdateDate} />
           </div>
           <div>
             <span>最近更新者</span>

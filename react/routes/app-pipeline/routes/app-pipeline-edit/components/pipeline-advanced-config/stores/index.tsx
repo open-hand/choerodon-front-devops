@@ -1,8 +1,10 @@
-import React, { createContext, useContext, useMemo } from 'react';
+import React, {
+  createContext, useContext, useMemo, useEffect,
+} from 'react';
 import { cicdPipelineApi } from '@choerodon/master';
 import { DataSet } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
-import pipelineAdvancedConfigDataSet from './pipelineAdvancedConfigDataSet';
+import pipelineAdvancedConfigDataSet, { transformLoadData } from './pipelineAdvancedConfigDataSet';
 import certDataSet from './certDataSet';
 import { useAppPipelineEditStore } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores';
 import { TAB_ADVANCE_SETTINGS } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
@@ -38,7 +40,7 @@ export const StoreProvider = observer((props: any) => {
   } = useAppPipelineEditStore();
 
   const PipelineAdvancedConfigDataSet = useMemo(
-    () => new DataSet(pipelineAdvancedConfigDataSet(data, setTabsDataState)), [],
+    () => new DataSet(pipelineAdvancedConfigDataSet(data, setTabsDataState)), [data],
   );
 
   const CertDataSet = useMemo(() => new DataSet(
