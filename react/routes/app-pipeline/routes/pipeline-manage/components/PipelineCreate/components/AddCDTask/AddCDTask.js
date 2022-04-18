@@ -473,6 +473,7 @@ export default observer(() => {
         ...deployChartData,
         ...ds,
         valueId: deployChartData.valueId || ds.valueId,
+        appId: deployChartData?.appId,
         appName: deployChartData.appName,
         appCode: deployChartData.appCode,
       };
