@@ -221,27 +221,18 @@ const PipelineManage = observer(() => {
       status: detailStatus,
       devopsCdPipelineDeatilVO: detailDevopsCdPipelineDeatilVO,
     } = getDetailData;
-    const buttons = [{
+    let buttons = [{
       permissions: ['choerodon.code.project.develop.ci-pipeline.ps.createPro'],
       name: format({ id: 'CreatePipeline' }),
       icon: 'playlist_add',
       handler: handleModalOpen,
-    }, {
-      permissions: ['choerodon.code.project.develop.ci-pipeline.ps.variable.project'],
-      name: format({ id: 'GlobalCI' }),
-      icon: 'settings-o',
-      handler: () => openSettingsModal('global'),
-      display: true,
-    }, {
-      name: format({ id: 'MoreActions' }),
-      groupBtnItems: [
-        {
-          name: format({ id: 'GitLabRunner' }),
-          service: ['choerodon.code.project.develop.ci-pipeline.ps.runner'],
-          handler: openRunnerModal,
-        },
-      ],
-    },
+    }];
+    let groupBtnItems = [
+      {
+        name: format({ id: 'GitLabRunner' }),
+        service: ['choerodon.code.project.develop.ci-pipeline.ps.runner'],
+        handler: openRunnerModal,
+      },
     ];
     if (treeDs.length && treeDs.status === 'ready') {
       if (!parentId) {
@@ -250,7 +241,8 @@ const PipelineManage = observer(() => {
           name: format({ id: 'Modify' }),
           icon: 'edit-o',
           handler: handleModify,
-        }, {
+        });
+        groupBtnItems.push({
           permissions: ['choerodon.code.project.develop.ci-pipeline.ps.variable.app'],
           name: format({ id: 'CIVariable' }),
           icon: 'settings-o',
@@ -259,29 +251,32 @@ const PipelineManage = observer(() => {
       } else {
         const newStatus = status || detailStatus;
         const newDevopsCdPipelineDeatilVO = devopsCdPipelineDeatilVO || detailDevopsCdPipelineDeatilVO;
-        buttons.push({
-          name: format({ id: 'RecordDetails' }),
-          icon: 'find_in_page-o',
-          handler: openRecordDetail,
-        }, {
-          permissions: ['choerodon.code.project.develop.ci-pipeline.ps.cancel'],
-          name: format({ id: 'CancelExecution' }),
-          icon: 'power_settings_new',
-          handler: () => changeRecordExecute('cancel'),
-          display: newStatus === 'pending' || newStatus === 'running',
-        }, {
-          permissions: ['choerodon.code.project.develop.ci-pipeline.ps.retry'],
-          name: format({ id: 'Retry' }),
-          icon: 'refresh',
-          handler: () => changeRecordExecute('retry'),
-          display: newStatus === 'failed' || newStatus === 'canceled',
-        }, {
-          permissions: ['choerodon.code.project.develop.ci-pipeline.ps.audit'],
-          name: formatMessage({ id: `${intlPrefix}.execute.audit` }),
-          icon: 'authorize',
-          handler: openAuditModal,
-          display: newStatus === 'not_audit' && newDevopsCdPipelineDeatilVO && newDevopsCdPipelineDeatilVO.execute,
-        });
+        groupBtnItems = [
+          ...groupBtnItems,
+          {
+            name: format({ id: 'RecordDetails' }),
+            icon: 'find_in_page-o',
+            handler: openRecordDetail,
+          }, {
+            permissions: ['choerodon.code.project.develop.ci-pipeline.ps.cancel'],
+            name: format({ id: 'CancelExecution' }),
+            icon: 'power_settings_new',
+            handler: () => changeRecordExecute('cancel'),
+            display: newStatus === 'pending' || newStatus === 'running',
+          }, {
+            permissions: ['choerodon.code.project.develop.ci-pipeline.ps.retry'],
+            name: format({ id: 'Retry' }),
+            icon: 'refresh',
+            handler: () => changeRecordExecute('retry'),
+            display: newStatus === 'failed' || newStatus === 'canceled',
+          }, {
+            permissions: ['choerodon.code.project.develop.ci-pipeline.ps.audit'],
+            name: formatMessage({ id: `${intlPrefix}.execute.audit` }),
+            icon: 'authorize',
+            handler: openAuditModal,
+            display: newStatus === 'not_audit' && newDevopsCdPipelineDeatilVO && newDevopsCdPipelineDeatilVO.execute,
+          },
+        ];
       }
     }
     buttons.push({
@@ -293,11 +288,27 @@ const PipelineManage = observer(() => {
         handleModal(appServiceId);
       },
     });
-    buttons.push({
-      icon: 'refresh',
-      handler: handleRefresh,
-      display: true,
-    });
+    buttons = [
+      ...buttons,
+      {
+        permissions: ['choerodon.code.project.develop.ci-pipeline.ps.variable.project'],
+        name: format({ id: 'GlobalCI' }),
+        icon: 'settings-o',
+        handler: () => openSettingsModal('global'),
+        display: true,
+      },
+      {
+        name: format({ id: 'MoreActions' }),
+        groupBtnItems,
+      },
+      {
+        icon: 'refresh',
+        handler: handleRefresh,
+        display: true,
+      },
+    ];
+    buttons.push();
+
     return buttons;
   }
 
