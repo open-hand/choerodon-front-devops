@@ -172,7 +172,7 @@ const Index = observer(() => {
         value={HostDockerComposeDataSet?.current?.get(mapping.dockerCompose.name)}
         modeChange={false}
         readOnly={getDockerComposeReadonly()}
-        showError={false}
+        showError
         onValueChange={(value: any) => {
           HostDockerComposeDataSet?.current.set(mapping.dockerCompose.name, value);
         }}
