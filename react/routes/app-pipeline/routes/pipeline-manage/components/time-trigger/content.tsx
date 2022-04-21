@@ -164,7 +164,15 @@ const Index = observer(() => {
             </Tag>
           )}
         />
-        <Column name={mapping.branch.name} />
+        <Column
+          name={mapping.branch.name}
+          // @ts-ignore
+          title={(
+            <Tooltip title="执行分支/标记">
+              执行分支/标记
+            </Tooltip>
+          )}
+        />
         <Column name={mapping.triggerWay.name} />
         <Column
           name={mapping.nextTime.name}
