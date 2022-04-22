@@ -49,6 +49,9 @@ import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/base16-dark.css';
 import './index.less';
 
+// eslint-disable-next-line no-underscore-dangle
+const hasMarketEnv = !window._env_.NON_INSTALL_MARKET;
+
 const { Column } = Table;
 const modalKey4 = Modal.key();
 const commandModalKey = Modal.key();
@@ -645,7 +648,7 @@ const Deployment = withRouter(
           name: format({ id: 'CreateHZEROApplication' }),
         });
       }
-      if (has('base-business:getBaseComponentDeployConfig')) {
+      if (has('base-business:getBaseComponentDeployConfig') && hasMarketEnv) {
         res.splice(2, 0, {
           ...get('base-business:getBaseComponentDeployConfig')(refresh, format, false),
         });
