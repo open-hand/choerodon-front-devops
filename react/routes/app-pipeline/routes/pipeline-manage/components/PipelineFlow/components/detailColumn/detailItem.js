@@ -427,7 +427,7 @@ const DetailItem = (props) => {
           state: {
             taskId,
             recordId: id,
-            type: 'task',
+            type: 'execute',
           },
         });
       } else {
