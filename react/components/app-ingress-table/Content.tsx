@@ -218,7 +218,7 @@ const AppIngress = observer(() => {
     const error = devopsHostCommandDTO?.error;
     const commandType = devopsHostCommandDTO?.commandType;
     return (
-      <>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
         <Tooltip
           title={error ? `[${commandType}]:${error}` : ''}
         >
@@ -237,7 +237,7 @@ const AppIngress = observer(() => {
             {operateStatus === 'operating' ? '执行中' : '失败'}
           </Tag>
         )}
-      </>
+      </div>
     );
   };
 
@@ -296,8 +296,9 @@ const AppIngress = observer(() => {
         className="c7ncd-tab-table-columnName"
       />
       <Column renderer={renderAction} width={55} />
-      <Column header={formatMessage({ id: 'c7ncd.environment.ApplicationCode' })} name="code" width={90} />
+      <Column tooltip="overflow" header={formatMessage({ id: 'c7ncd.environment.ApplicationCode' })} name="code" width={90} />
       <Column
+        tooltip="overflow"
         header={formatMessage({ id: 'c7ncd.environment.rdupm' })}
         name="rdupmType"
         width={90}

@@ -351,13 +351,13 @@ function Branch(props) {
   // 问题名称渲染函数
   function issueNameRender({ record, text }) {
     const issueContent = map(record.get('issueInfoList') || [], (issueItem, index) => {
-      const { typeCode, issueId, issueCode, projectName, issueName } = issueItem || {};
+      const { typeCode, issueId,issueProjectId, issueCode, projectName, issueName } = issueItem || {};
       return (
         <div className={`${prefixCls}-issue-item`}>
           <div className={`${prefixCls}-issue-item-title`}>
             {typeCode ? getOptionContent(typeCode) : null}
             <a
-              onClick={() => openIssueDetail(issueId, typeCode)}
+              onClick={() => openIssueDetail(issueId, typeCode,issueProjectId)}
               role="none"
               className={`${prefixCls}-issue-item-title-name`}
             >
@@ -406,12 +406,13 @@ function Branch(props) {
       </Tooltip>
     );
   };
-  function openIssueDetail(id, typeCode) {
+  function openIssueDetail(id, typeCode,issueProjectId) {
   if (id) {
     open({
       path: 'issue',
       props: {
         issueId: id,
+        projectId:issueProjectId,
         applyType:ALL_TYPE_CODES.includes(typeCode)?'waterfall':'agile',
       },
       events: {

@@ -159,7 +159,7 @@ const Index = observer(() => {
           ) : (
             <TextField
               name={mapping.versionMark.name}
-              addonAfter={<NewTips helpText="您可为此次应用修改标记一个版本备注（形如：V1.0.0），标记后，后续便能在「历史版本」中定位此次配置，并支持回滚至该版本。此处若不填写，便不会生成历史版本。" />}
+              addonAfter={<NewTips helpText="您可为此次应用创建标记一个版本备注（形如：V1.0.0），标记后，后续便能在「历史版本」中定位此次配置，并支持回滚至该版本。" />}
             />
           )
         }
@@ -172,7 +172,7 @@ const Index = observer(() => {
         value={HostDockerComposeDataSet?.current?.get(mapping.dockerCompose.name)}
         modeChange={false}
         readOnly={getDockerComposeReadonly()}
-        showError={false}
+        showError
         onValueChange={(value: any) => {
           HostDockerComposeDataSet?.current.set(mapping.dockerCompose.name, value);
         }}

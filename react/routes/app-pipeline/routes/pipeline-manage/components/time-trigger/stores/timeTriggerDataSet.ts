@@ -15,7 +15,6 @@ const mapping: any = {
   branch: {
     name: 'ref',
     type: 'string',
-    label: '执行分支/标记',
   },
   triggerWay: {
     name: 'triggerTypeName',

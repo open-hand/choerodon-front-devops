@@ -246,6 +246,20 @@ const Index = observer(() => {
       {renderVariable()}
       <p className={`${cssPrefix}-title`}>
         定时触发方式
+        <NewTips
+          style={{
+            position: 'relative',
+            bottom: '1px',
+          }}
+          helpText={(
+            <div>
+              <p>周期触发: 需要选择日期，确定一个时间段，并给出触发的时间间隔；之后每周的这个时间段就会按照时间间隔执行定时计划。</p>
+              <p style={{ marginBottom: 0 }}>
+                单次触发: 需要选择日期，同时需要指定一个特定的时间，之后每周的这个时间都会定时执行此计划。
+              </p>
+            </div>
+          )}
+        />
       </p>
       <div className={`${cssPrefix}-customSelect`}>
         <CustomSelect

@@ -49,6 +49,9 @@ import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/base16-dark.css';
 import './index.less';
 
+// eslint-disable-next-line no-underscore-dangle
+const hasMarketEnv = !window._env_.NON_INSTALL_MARKET;
+
 const { Column } = Table;
 const modalKey4 = Modal.key();
 const commandModalKey = Modal.key();
@@ -371,6 +374,7 @@ const Deployment = withRouter(
           </Tooltip>
           <span className="c7ncd-deploy-content-deployObjectName">{deployObjectName}</span>
         </p>,
+        deployObjectType !== 'docker_compose' && (
         <p className="c7ncd-deploy-content-deployObjectP">
           <Tooltip title={deployObjectVersion}>
             <span className="c7ncd-deploy-content-deployObjectVersion">
@@ -379,7 +383,8 @@ const Deployment = withRouter(
               {deployObjectVersion}
             </span>
           </Tooltip>
-        </p>,
+        </p>
+        ),
       ];
     };
 
@@ -403,18 +408,25 @@ const Deployment = withRouter(
         custom: '自定义来源',
         middleware: '中间件',
         deployment: '部署组',
+        docker_compose: '-',
       };
 
       const hasMarketInfo = type === 'market' && marketServiceName;
       return (
         <>
           <div className={`${prefixCls}-content-source-wrap`}>
-            <span className={`${prefixCls}-content-source`}>
-              {
+            {type === 'docker_compose' ? (
+              <span>
+                -
+              </span>
+            ) : (
+              <span className={`${prefixCls}-content-source`}>
+                {
                 sourceMap[type]
               }
-              {/* {formatMessage({ id: `${intlPrefix}.source.deploy.${type}` })} */}
-            </span>
+                {/* {formatMessage({ id: `${intlPrefix}.source.deploy.${type}` })} */}
+              </span>
+            )}
             {type === 'share' && (
               <Tooltip title={projectName} placement="top">
                 <span className={`${prefixCls}-content-source-text`}>{projectName}</span>
@@ -636,7 +648,7 @@ const Deployment = withRouter(
           name: format({ id: 'CreateHZEROApplication' }),
         });
       }
-      if (has('base-business:getBaseComponentDeployConfig')) {
+      if (has('base-business:getBaseComponentDeployConfig') && hasMarketEnv) {
         res.splice(2, 0, {
           ...get('base-business:getBaseComponentDeployConfig')(refresh, format, false),
         });

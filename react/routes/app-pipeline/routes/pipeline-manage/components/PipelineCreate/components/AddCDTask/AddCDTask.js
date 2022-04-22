@@ -1123,7 +1123,7 @@ export default observer(() => {
               name="pipelineTask"
               searchable
               addonAfter={
-                <Tips helpText="此处的关联构建任务，仅会查询出该条流水线中存在'Docker构建'步骤的“构建类型”任务。若所选任务中存在多个“Docker构建”步骤，则只会部署第一个“Docker构建”步骤产生的镜像" />
+                <Tips helpText="此处的关联构建任务，仅会查询出该条流水线中存在【Docker构建】步骤的任务。" />
               }
               searchMatcher={searchMatcher}
             >
@@ -1175,7 +1175,7 @@ export default observer(() => {
                     searchable
                     addonAfter={
                       <Tips helpText={ADDCDTaskDataSet?.current?.get(fieldMap.productType.name) === productTypeData[1].value
-                      ? "此处的关联构建任务，仅会查询出该条流水线中存在'Docker构建'步骤的“构建类型”任务。若所选任务中存在多个满足条件的步骤，则只会部署所选任务中第一个满足条件的步骤产生的jar包；"
+                      ? "此处的关联构建任务，仅会查询出该条流水线中存在【Docker构建】步骤的任务。"
                       : "此处的关联构建任务，仅会查询出该条流水线中存在'上传jar包至制品库'或“Maven发布”步骤的“构建类型”任务。若所选任务中存在多个满足条件的步骤，则只会部署所选任务中第一个满足条件的步骤产生的jar包；"} />
                     }
                     searchMatcher={searchMatcher}
@@ -1263,7 +1263,7 @@ export default observer(() => {
             name="pipelineTask"
             searchable
             addonAfter={
-              <Tips helpText="此处的关联构建任务，仅会查询出该条流水线中存在'Docker构建'步骤的“构建类型”任务。若所选任务中存在多个满足条件的步骤，则只会部署所选任务中第一个满足条件的步骤产生的jar包；" />
+              <Tips helpText="此处的关联构建任务，仅会查询出该条流水线中存在【Docker构建】步骤的任务。" />
             }
             searchMatcher={searchMatcher}
           >
@@ -1277,7 +1277,7 @@ export default observer(() => {
           >
             docker-compose.yml文件
             <NewTips
-              helpText=""
+              helpText="此处的docker-compose.yml文件默认展示为所选应用中的yaml文件内容，且暂不支持修改。"
             />
           </p>,
           <YamlEditor
@@ -1296,7 +1296,7 @@ export default observer(() => {
           >
             命令
             <NewTips
-              helpText=""
+              helpText="您需在此处维护操作Docker Compose的命令，此处维护的命令不会影响到主机应用中的命令；仅生效于此处的流水线主机部署任务。"
             />
           </p>,
           <YamlEditor
