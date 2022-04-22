@@ -1,5 +1,13 @@
 import { DataSet } from 'choerodon-ui/pro';
 
+const relativeObjData = [{
+  name: 'API测试任务',
+  value: 'task',
+}, {
+  name: 'API测试套件',
+  value: 'suite',
+}];
+
 const map = {
   // 主机来源name
   hostSource: 'hostSource',
@@ -66,6 +74,9 @@ const productTypeData = [{
 }, {
   value: 'other',
   name: '其他制品',
+}, {
+  value: 'docker_compose',
+  name: 'DockerCompose',
 }];
 
 const fieldMap = {
@@ -86,9 +97,13 @@ const fieldMap = {
     valueField: 'value',
     name: 'hostDeployType',
     type: 'string',
-    label: '制品类型',
+    label: '应用类型',
     options: new DataSet({
-      data: productTypeData,
+      data: [
+        ...productTypeData.slice(0, 2),
+        productTypeData[3],
+        productTypeData[2],
+      ],
     }),
   },
   preCommand: {
@@ -158,10 +173,62 @@ const fieldMap = {
 #例如 nc -z localhost 8070 && curl -s --fail localhost:8071/actuator/health
     `,
   },
+  relativeObj: {
+    name: 'taskType',
+    type: 'string',
+    label: '关联对象',
+    defaultValue: relativeObjData[0].value,
+    textField: 'name',
+    valueField: 'value',
+    options: new DataSet({
+      data: relativeObjData,
+    }),
+  },
+  kits: {
+    name: 'apiTestSuiteId',
+    type: 'string',
+    label: 'API测试套件',
+    textField: 'name',
+    valueField: 'id',
+    dynamicProps: {
+      required: ({ record }) => record?.get('type') === map.apiTest
+      && record?.get(fieldMap.relativeObj.name) === relativeObjData[1].value,
+    },
+  },
+  dockerCompose: {
+    name: 'value',
+    type: 'string',
+    defaultValue: `
+# docker-compose.yaml文件,比如启动一个postgres程序
+version: "3.3"
+  
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    `,
+  },
+  dockerComposeRunCommand: {
+    name: 'dockerComposeRunCommand',
+    type: 'string',
+    defaultValue: `
+# 后台启动docker-compose应用
+docker-compose up -d
+    `,
+  },
 };
 
 export default map;
 
 export {
-  typeData, fieldMap, deployWayData, productTypeData,
+  typeData,
+  fieldMap,
+  deployWayData,
+  productTypeData,
+  relativeObjData,
 };

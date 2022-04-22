@@ -4,6 +4,7 @@ import React, {
 import {
   CONSTANTS,
   devopsDeployApi,
+  devopsDockerComposeApi,
 } from '@choerodon/master';
 import { Modal, Button, DataSet } from 'choerodon-ui/pro';
 import { Steps } from 'choerodon-ui';
@@ -14,6 +15,7 @@ import DeployGroupConfig from '@/routes/app-center-pro/components/OpenAppCreateM
 import ContainerConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config';
 import HostAppConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-app-config';
 import HostDockerConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-docker-config';
+import HostDockerCompose from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-docker-compose';
 import { mapping, chartSourceData } from './components/app-config/stores/appConfigDataSet';
 import { mapping as infoMapping, deployProductOptionsData, deployModeOptionsData } from './components/app-info/stores/appInfoDataSet';
 import { appServiceInstanceApi, deployApi } from '@/api';
@@ -314,6 +316,14 @@ const AppCreateForm = (props: any) => {
               );
               break;
             }
+            case deployProductOptionsData[5].value: {
+              return (
+                <HostDockerCompose
+                  cRef={appConfigRef}
+                />
+              );
+              break;
+            }
             default: {
               return '';
               break;
@@ -412,7 +422,7 @@ const AppCreateForm = (props: any) => {
     let key;
     let submitData = {};
     const appInfoData = stepData.current[0].data;
-    const appConfigData = stepData.current[1].data;
+    const appConfigData: any = stepData.current[1].data;
     const resourceConfigData = stepData.current[2].data;
     let request;
     if (appInfoData) {
@@ -510,6 +520,15 @@ const AppCreateForm = (props: any) => {
               request = 'deploy_other';
               break;
             }
+            case (deployProductOptionsData[5].value): {
+              key = HOST_TAB;
+              submitData = {
+                ...submitData,
+                ...appConfigData,
+              };
+              request = 'deploy_compose';
+              break;
+            }
             default: {
               break;
             }
@@ -551,6 +570,10 @@ const AppCreateForm = (props: any) => {
       }
       case 'deploy_other': {
         result = await deployApi.deployCustom(submitData);
+        break;
+      }
+      case 'deploy_compose': {
+        result = await devopsDockerComposeApi.createDockerCompose(submitData);
         break;
       }
       default: {

@@ -33,6 +33,8 @@ async function openDeleteHostAppModal(
   } else if (data?.rdupmType === 'jar') {
     params.host_deploy_type = 'jar';
     checkKillCommandExist();
+  } else if (data?.rdupmType === 'docker_compose') {
+    params.host_deploy_type = '';
   } else {
     params.host_deploy_type = 'customize';
     if (data?.rdupmType !== 'middleware') {

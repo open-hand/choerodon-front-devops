@@ -5,6 +5,7 @@
  * i made my own lucky
  */
 const environment = {
+  'c7ncd.environment.envName': 'Environment Name',
   'c7ncd.environment.CreateGroup': 'Create Group',
   'c7ncd.environment.CreateEnvironment': 'Create Environment',
   'c7ncd.environment.ConnecttoCluster': 'Connect to Cluster',

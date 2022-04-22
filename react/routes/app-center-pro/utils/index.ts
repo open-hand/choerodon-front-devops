@@ -19,6 +19,7 @@ import {
   IS_MARKET,
   IS_SERVICE,
   DOCKER_CATEGORY,
+  DOCKER_COMPOSE_CATEGORY,
 } from '../stores/CONST';
 
 // Chart包，部署组，还是jar包
@@ -42,6 +43,9 @@ const getAppCategories = (rdupmType:string, deployType = 'env') => {
   } else if (rdupmType === 'middleware') {
     name = '中间件';
     code = MIDDLWARE_CATERGORY;
+  } else if (rdupmType === 'docker_compose') {
+    name = 'Docker Compose';
+    code = DOCKER_COMPOSE_CATEGORY;
   } else {
     name = '其它制品';
     code = OTHER_CATERGORY;

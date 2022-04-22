@@ -4,7 +4,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import map from 'lodash/map';
 import pick from 'lodash/pick';
-import { DataSet } from 'choerodon-ui/pro';
 import {
   appServiceApiConfig, marketApiConfig, appServiceApi, groupsApiConfig,
 } from '@/api';
@@ -50,7 +49,7 @@ function isGit({ record }) {
 }
 
 export default ({
-  intlPrefix, formatMessage, projectId, serviceTypeDs, selectedDs, importTableDs, marketSelectedDs, gitlabSelectedDs,
+  intlPrefix, formatMessage, projectId, selectedDs, importTableDs, marketSelectedDs, gitlabSelectedDs,
 }) => {
   async function checkCode(value) {
     const pa = /^[a-z]([-a-z0-9]*[a-z0-9])?$/;
@@ -156,7 +155,8 @@ export default ({
         switch (platformType) {
           case 'gitlab':
             if (isGitLabTemplate) {
-              res = pick(data, ['code', 'name', 'type', 'repositoryUrl', 'accessToken', 'repositoryUrl']);
+              res = pick(data, ['code', 'name', 'repositoryUrl', 'accessToken', 'repositoryUrl']);
+              res.type = 'normal';
               result = appServiceApiConfig.Import(url, res);
               break;
             }
@@ -164,7 +164,8 @@ export default ({
             result = appServiceApiConfig.batchTransfer(res);
             break;
           case 'github':
-            res = pick(data, ['code', 'name', 'type', 'repositoryUrl']);
+            res = pick(data, ['code', 'name', 'repositoryUrl']);
+            res.type = 'normal';
             url = `${url}${data.isTemplate ? '?is_template=true' : ''}`;
             result = appServiceApiConfig.Import(url, res);
             break;
@@ -179,7 +180,8 @@ export default ({
             break;
           case 'gerneralGit':
             url = 'general_git';
-            res = pick(data, ['code', 'name', 'type', 'repositoryUrl', 'username', 'password']);
+            res = pick(data, ['code', 'name', 'repositoryUrl', 'username', 'password']);
+            res.type = 'normal';
             result = appServiceApiConfig.Import(url, res);
             break;
         }
@@ -226,21 +228,9 @@ export default ({
         label: formatMessage({ id: `${intlPrefix}.code` }),
       },
       {
-        name: 'type',
-        type: 'string',
-        defaultValue: 'normal',
-        textField: 'text',
-        valueField: 'value',
-        options: serviceTypeDs,
-        dynamicProps: {
-          required: isGit,
-        },
-        label: formatMessage({ id: `${intlPrefix}.type` }),
-      },
-      {
         name: 'platformType',
         type: 'string',
-        defaultValue: 'share',
+        defaultValue: 'github',
         label: formatMessage({ id: `${intlPrefix}.import.type` }),
       },
       {

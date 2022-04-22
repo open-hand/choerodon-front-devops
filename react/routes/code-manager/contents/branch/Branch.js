@@ -31,11 +31,15 @@ import '../../../main.less';
 import './Branch.less';
 import './index.less';
 import './theme4.less';
+import { get as getInject, mount as injectMount} from '@choerodon/inject';
+import {ALL_TYPE_CODES} from '@/constants/STATUS_TYPE';
+import {getTypeCode} from '@/utils/getTypeCode';
 
 const { Column } = Table;
 const branchCreateModalKey = ProModal.key();
 const branchEditModalKey = ProModal.key();
 const issueDetailModalKey = ProModal.key();
+
 const branchCreateModalStyle = {
   width: 740,
 };
@@ -53,15 +57,17 @@ function Branch(props) {
     branchStore,
     prefixCls,
   } = useTableStore();
-
+  const useDetail=getInject('agile:useDetail');
+  const [detailProps] = useDetail();
+   const { open, close } = detailProps;
   const { styles, columnsRender } = props;
 
   const format = useFormatMessage('c7ncd.codeManger');
 
   const [isOPERATIONS, setIsOPERATIONS] = useState(false);
-
+  const categorieArray=[ "N_AGILE","N_WATERFALL"];
   useEffect(() => {
-    setIsOPERATIONS(!some(categories || [], ['code', 'N_AGILE']));
+    setIsOPERATIONS(!some(categories||[], function(item){ return categorieArray.includes(item.code) }));
   }, [categories]);
 
   useEffect(() => {
@@ -345,13 +351,13 @@ function Branch(props) {
   // 问题名称渲染函数
   function issueNameRender({ record, text }) {
     const issueContent = map(record.get('issueInfoList') || [], (issueItem, index) => {
-      const { typeCode, issueId, issueProjectId, issueCode, projectName, issueName } = issueItem || {};
+      const { typeCode, issueId,issueProjectId, issueCode, projectName, issueName } = issueItem || {};
       return (
         <div className={`${prefixCls}-issue-item`}>
           <div className={`${prefixCls}-issue-item-title`}>
             {typeCode ? getOptionContent(typeCode) : null}
             <a
-              onClick={() => openIssueDetail(issueId, record.get('branchName'), issueProjectId)}
+              onClick={() => openIssueDetail(issueId, typeCode,issueProjectId)}
               role="none"
               className={`${prefixCls}-issue-item-title-name`}
             >
@@ -360,6 +366,7 @@ function Branch(props) {
               >
                 {`${issueCode} ${issueName}`}
               </Tooltip>
+              
             </a>
           </div>
           <div className={`${prefixCls}-issue-item-project`}>
@@ -392,58 +399,40 @@ function Branch(props) {
    * @returns {*}
    */
   const getOptionContent = (typeCode) => {
-    let mes = '';
-    let icon = '';
-    let color = '';
-    switch (typeCode) {
-      case 'story':
-        mes = formatMessage({ id: 'branch.issue.story' });
-        icon = 'agile_story';
-        color = '#00bfa5';
-        break;
-      case 'bug':
-        mes = formatMessage({ id: 'branch.issue.bug' });
-        icon = 'agile_fault';
-        color = '#f44336';
-        break;
-      case 'issue_epic':
-        mes = formatMessage({ id: 'branch.issue.epic' });
-        icon = 'agile_epic';
-        color = '#743be7';
-        break;
-      case 'sub_task':
-        mes = formatMessage({ id: 'branch.issue.subtask' });
-        icon = 'agile_subtask';
-        color = '#4d90fe';
-        break;
-      default:
-        mes = formatMessage({ id: 'branch.issue.task' });
-        icon = 'agile_task';
-        color = '#4d90fe';
-    }
+    const {mes,icon,color}=getTypeCode(typeCode)
     return (
       <Tooltip title={mes}>
         <div style={{ color }} className="branch-issue"><i className={`icon icon-${icon}`} /></div>
       </Tooltip>
     );
   };
-
-  function openIssueDetail(id, name, issueProjectId) {
-    const newProjectId = issueProjectId || projectId;
-    ProModal.open({
-      key: issueDetailModalKey,
-      title: <FormattedMessage
-        id="branch.detailHead"
-        values={{
-          name,
-        }}
-      />,
-      drawer: true,
-      children: <IssueDetail intl={intl} projectId={newProjectId} issueId={id} orgId={organizationId} />,
-      style: issueDetailModalStyle,
-      okCancel: false,
-      okText: <FormattedMessage id="envPl.close" />,
+  function openIssueDetail(id, typeCode,issueProjectId) {
+  if (id) {
+    open({
+      path: 'issue',
+      props: {
+        issueId: id,
+        projectId:issueProjectId,
+        applyType:ALL_TYPE_CODES.includes(typeCode)?'waterfall':'agile',
+      },
+      events: {
+        update: () => {
+          tableDs.query();
+        },
+        linkBranch: () => {
+          tableDs.query();
+         },
+        removeBranch: () => {
+          tableDs.query();
+        },
+        createBranch: () => {
+          tableDs.query();
+          },
+      },
     });
+  } else {
+    close();
+  }
   }
 
   /**
@@ -535,6 +524,7 @@ function Branch(props) {
             theme4RenderColumn,
           })}
         </Table>
+       
       </div>
     );
   }
@@ -545,7 +535,8 @@ function Branch(props) {
       service={['choerodon.code.project.develop.code-management.ps.branch.create']}
     >
       {appServiceDs.status !== 'ready' ? <Loading display type="c7n" /> : tableBranch()}
-          </Page>
+      {injectMount('agile:DetailContainer',detailProps)}
+    </Page>
   );
 }
 export default injectIntl(observer(Branch));

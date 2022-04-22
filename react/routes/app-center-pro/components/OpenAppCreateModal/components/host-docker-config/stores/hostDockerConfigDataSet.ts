@@ -122,7 +122,7 @@ const mapping: {
         text: '私有',
       }, {
         value: false,
-        text: '共有',
+        text: '公有',
       }],
     }),
   },
@@ -153,7 +153,7 @@ const mapping: {
 const hostDockerConfigDataSet = (isDetail: any): DataSetProps => ({
   autoCreate: true,
   fields: Object.keys(mapping).map((i) => {
-    const item = mapping[i];
+    const item: any = mapping[i];
     switch (i) {
       case 'appCode': {
         item.dynamicProps = {
@@ -174,15 +174,17 @@ const hostDockerConfigDataSet = (isDetail: any): DataSetProps => ({
       case 'username':
       case 'password':
       case 'deployType': {
-        item.dynamicProps = {
-          disabled: () => isDetail,
-        };
+        if (item.dynamicProps) {
+          item.dynamicProps.disabled = () => isDetail;
+        } else {
+          item.dynamicProps = {
+            disabled: () => isDetail,
+          };
+        }
         break;
       }
       case 'repoName': {
-        item.dynamicProps = {
-          disabled: () => isDetail,
-        };
+        item.dynamicProps.disabled = () => isDetail;
         item.options = new DataSet({
           autoQuery: true,
           transport: {
@@ -194,9 +196,7 @@ const hostDockerConfigDataSet = (isDetail: any): DataSetProps => ({
         break;
       }
       case 'imageName': {
-        item.dynamicProps = {
-          disabled: () => isDetail,
-        };
+        item.dynamicProps.disabled = () => isDetail;
         item.options = new DataSet({
           autoQuery: false,
           transport: {

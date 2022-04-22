@@ -3,6 +3,8 @@ import React, { useMemo } from 'react';
 import {
   HeaderButtons,
   devopsHostsApi,
+  CONSTANTS,
+  devopsDockerComposeApi,
 } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 import { Tooltip, Modal } from 'choerodon-ui/pro';
@@ -27,10 +29,12 @@ import {
   MIDDLWARE_CATERGORY,
   OTHER_CATERGORY,
   DOCKER_CATEGORY,
+  DOCKER_COMPOSE_CATEGORY,
 } from '@/routes/app-center-pro/stores/CONST';
 import {
   DOCKER_TYPE,
 } from '@/routes/app-center-pro/routes/app-detail/CONSTANT';
+import HostDockerCompose from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-docker-compose';
 import { getAppCategories, getChartSourceGroup } from '@/routes/app-center-pro/utils';
 import AppCenterProServices from '@/routes/app-center-pro/services';
 import {
@@ -45,6 +49,12 @@ import {
   HOST_CONNECTED,
   HOST_DISCONNECTED,
 } from '@/routes/app-center-pro/routes/app-detail/components/detail-tabs/components/HeaderButtons/CONSTANTS';
+
+const {
+  MODAL_WIDTH: {
+    MAX,
+  },
+} = CONSTANTS;
 
 const DetailsTabsHeaderButtons = () => {
   const {
@@ -187,6 +197,31 @@ const DetailsTabsHeaderButtons = () => {
         };
         break;
       }
+      case DOCKER_COMPOSE_CATEGORY: {
+        obj = {
+          name: '修改应用',
+          handler: () => {
+            Modal.open({
+              title: '修改应用',
+              key: Modal.key(),
+              children: (
+                <HostDockerCompose
+                  data={appRecord?.toData()}
+                  refresh={() => appDs.query()}
+                />
+              ),
+              drawer: true,
+              okText: '保存',
+              style: {
+                width: MAX,
+              },
+            });
+          },
+          disabled: false,
+          permissions: ['choerodon.code.project.deploy.app-deployment.application-center.editDockerCompose'],
+          icon: 'add_comment-o',
+        };
+      }
       default:
         break;
     }
@@ -292,6 +327,26 @@ const DetailsTabsHeaderButtons = () => {
     }),
   };
 
+  const reDeploy = {
+    name: '重新部署',
+    permissions: ['choerodon.code.project.deploy.app-deployment.application-center.redeployDockerCompose'],
+    handler: async () => {
+      Modal.open({
+        key: Modal.key(),
+        title: '确认',
+        children: '是否重新部署?',
+        onOk: async () => {
+          try {
+            await devopsDockerComposeApi.restartDockerCompose(appRecord?.toData()?.id);
+            appDs?.query();
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      });
+    },
+  };
+
   const restartApp = {
     name: '重启应用',
     permissions: [],
@@ -311,6 +366,7 @@ const DetailsTabsHeaderButtons = () => {
     disabled: isEnv && btnDisabledEnv,
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-delete'],
     handler: () => {
+      console.log(deployType);
       deployType === ENV_TAB ? deleteEnvApp({
         appCatergoryCode: getAppCategories(rdupmType, deployType).code,
         envId: hostOrEnvId,
@@ -454,6 +510,9 @@ const DetailsTabsHeaderButtons = () => {
         }] : []];
         if (rdupmType !== 'middleware') {
           data.unshift(modifyAppObj);
+        }
+        if (rdupmType === 'docker_compose') {
+          data.unshift(reDeploy);
         }
         break;
       default:

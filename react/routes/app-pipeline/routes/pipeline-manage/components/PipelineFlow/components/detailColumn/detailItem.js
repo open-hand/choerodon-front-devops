@@ -6,6 +6,7 @@ import { Modal, message, Icon } from 'choerodon-ui/pro';
 import {
   WritableStream,
 } from 'web-streams-polyfill/ponyfill';
+import JSONbig from 'json-bigint';
 import {
   Choerodon, Action, useFormatMessage,
 } from '@choerodon/master';
@@ -21,6 +22,7 @@ import { MIDDLE } from '@/utils/getModalWidth';
 import StatusTag from '../StatusTag';
 import StatusDot from '../statusDot';
 import CodeQuality from '../codeQuality';
+import { relativeObjData } from '../../../PipelineCreate/components/AddCDTask/stores/addCDTaskDataSetMap';
 import CodeLog from '../codeLog';
 import { usePipelineManageStore } from '../../../../stores';
 import MirrorScanning from '../MirrorScanningLog';
@@ -75,6 +77,7 @@ const DetailItem = (props) => {
     gitlabPipelineId,
     imageScan, // 是否显示镜像的扫描报告btn
     devopsCiUnitTestReportInfoList,
+    metadata,
   } = props;
 
   const { gitlabProjectId, appServiceId } = getDetailData && getDetailData.ciCdPipelineVO;
@@ -212,6 +215,7 @@ const DetailItem = (props) => {
       jar: 'jar包',
       image: 'docker镜像',
       docker: 'docker镜像',
+      docker_compose: 'Docker Compose',
     };
     return data[rdupmType];
   };
@@ -236,7 +240,7 @@ const DetailItem = (props) => {
           <span>{hostName || '-'}</span>
         </div>
         <div>
-          <span>制品类型：</span>
+          <span>应用类型：</span>
           <span>{getRdupmType(rdupmType)}</span>
         </div>
         <div>
@@ -363,8 +367,18 @@ const DetailItem = (props) => {
       performThreshold,
     } = apiTestTaskRecordVO || {};
 
+    const parseMeta = JSON.parse(metadata.replace(/'/g, '"'));
+
+    const {
+      taskType,
+    } = parseMeta;
+
     return (
       <main>
+        <div>
+          <span>对象类型:</span>
+          <span>{relativeObjData?.find((i) => i?.value === taskType)?.name}</span>
+        </div>
         <div>
           <span>阈值:</span>
           <span>{performThreshold ? `${performThreshold}%` : '未设置'}</span>
@@ -398,20 +412,39 @@ const DetailItem = (props) => {
   }
 
   function goToApiTest() {
-    const id = apiTestTaskRecordVO.get('id'); // 记录id
-    const taskId = apiTestTaskRecordVO.get('taskId'); // 任务id
-    if (id && taskId) {
+    const parseMeta = JSONbig.parse(metadata.replace(/'/g, '"'));
+    const {
+      taskType,
+    } = parseMeta;
+
+    if (taskType === relativeObjData[0].value) {
+      const id = apiTestTaskRecordVO?.id; // 记录id
+      const taskId = apiTestTaskRecordVO?.taskId; // 任务id
+      if (id && taskId) {
+        history.push({
+          pathname: '/testManager/test-task',
+          search,
+          state: {
+            taskId,
+            recordId: id,
+            type: 'task',
+          },
+        });
+      } else {
+        history.push(`/testManager/test-task${search}`);
+      }
+    } else {
       history.push({
-        pathname: '/testManager/test-task',
+        pathname: '/testManager/api-kits',
         search,
         state: {
-          taskId,
-          recordId: id,
-          type: 'task',
+          selectedMenu: {
+            id: apiTestTaskRecordVO?.suiteId,
+          },
+          recordId: apiTestTaskRecordVO?.id,
+          viewId: apiTestTaskRecordVO?.viewId,
         },
       });
-    } else {
-      history.push(`/testManager/test-task${search}`);
     }
   }
 
