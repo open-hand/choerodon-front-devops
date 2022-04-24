@@ -1,6 +1,6 @@
 import React, { ReactElement, useImperativeHandle } from 'react';
 import {
-  Form, SelectBox, TextField, Select,
+  Form, SelectBox, TextField, Select, Tooltip,
 } from 'choerodon-ui/pro';
 import { CustomSelect } from '@choerodon/components';
 import { observer } from 'mobx-react-lite';
@@ -166,7 +166,9 @@ const Index = observer(() => {
             <div className="c7ncd-appCenterPro-appInfo__form__customItem">
               <div className="c7ncd-appCenterPro-appInfo__form__customItem--right">
                 <p className="c7ncd-appCenterPro-appInfo__form__customItem--right__name">{item.name}</p>
-                <p className="c7ncd-appCenterPro-appInfo__form__customItem--right__des">{item.description}</p>
+                <Tooltip title={item.description}>
+                  <p className="c7ncd-appCenterPro-appInfo__form__customItem--right__des">{item.description}</p>
+                </Tooltip>
               </div>
             </div>
           )}
