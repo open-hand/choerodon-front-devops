@@ -186,15 +186,21 @@ const Index = observer(() => {
         命令
         <NewTips className={`${cssPrefix}-title-tips`} helpText="您需在此处维护操作Docker Compose的命令，此处为必填。" />
       </p>
-      <YamlEditor
-        value={HostDockerComposeDataSet?.current?.get(mapping.command.name)}
-        modeChange={false}
-        readOnly={false}
-        showError={false}
-        onValueChange={(value: any) => {
-          HostDockerComposeDataSet?.current.set(mapping.command.name, value);
+      <div
+        style={{
+          marginBottom: 20,
         }}
-      />
+      >
+        <YamlEditor
+          value={HostDockerComposeDataSet?.current?.get(mapping.command.name)}
+          modeChange={false}
+          readOnly={false}
+          showError={false}
+          onValueChange={(value: any) => {
+            HostDockerComposeDataSet?.current.set(mapping.command.name, value);
+          }}
+        />
+      </div>
     </div>
   );
 });

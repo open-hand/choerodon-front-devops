@@ -1384,7 +1384,12 @@ export default observer(() => {
           />
         </Form>,
         <div className="addcdTask-divided" />,
-        <p className="addcdTask-title">应用信息</p>,
+        <p
+         className="addcdTask-title"
+         style={{
+           marginBottom: 20,
+         }}
+         >应用信息</p>,
         <Form columns={2} dataSet={HostJarDataSet}>
           {ADDCDTaskDataSet.current.get(fieldMap.deployWay.name) === deployWayData[0].value ? (
             <TextField name="appName" />
