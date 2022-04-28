@@ -48,7 +48,7 @@ export const StoreProvider = (props: any) => {
     )), [isPipeline, envId, detail],
   );
   const OptionDataSet = useMemo(() => new DataSet(optionDataSet()), []);
-  const AnnotationsDataSet = useMemo(() => new DataSet(optionDataSet(/^([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$/)), []);
+  const AnnotationsDataSet = useMemo(() => new DataSet(optionDataSet(/^([A-Za-z0-9][-A-Za-z0-9_./]*)?[A-Za-z0-9]$/)), []);
   const LabelsDataSet = useMemo(() => new DataSet(optionDataSet(/^([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$/)), []);
   const NodeLabelsDataSet = useMemo(() => new DataSet(optionDataSet()), []);
   const HostAliasesDataSet = useMemo(() => new DataSet(optionDataSet()), []);
