@@ -283,7 +283,7 @@ const PipelineManage = observer(() => {
       icon: 'settings-o',
       permissions: ['choerodon.code.project.develop.ci-pipeline.ps.timeTrigger'],
       name: format({ id: 'timeTrigger' }),
-      display: true,
+      display: mainStore.getSelectedMenu && JSON.stringify(mainStore.getSelectedMenu) !== '{}',
       handler: () => {
         handleModal(appServiceId);
       },

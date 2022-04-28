@@ -188,18 +188,30 @@ const Deployment = withRouter(
         location: { search },
       } = props;
       if (record) {
-        const instanceId = record.get('instanceId');
-        const appServiceId = record.get('appServiceId');
-        const envId = record.get('envId');
-        history.push({
-          pathname: '/devops/resource',
-          search: `${search}`,
-          state: {
-            instanceId,
-            appServiceId,
-            envId,
-          },
-        });
+        if (record?.get('deployMode') && record?.get('deployMode') === 'host') {
+          const {
+            appId,
+            deployPayloadId,
+            deployObjectType,
+          } = record?.toData();
+          history.push({
+            pathname: `/devops/application-center/detail/${appId}/all/host/${deployPayloadId}/${deployObjectType}`,
+            search: `${search}`,
+          });
+        } else {
+          const instanceId = record.get('instanceId');
+          const appServiceId = record.get('appServiceId');
+          const envId = record.get('envId');
+          history.push({
+            pathname: '/devops/resource',
+            search: `${search}`,
+            state: {
+              instanceId,
+              appServiceId,
+              envId,
+            },
+          });
+        }
       } else {
         history.push(`/devops/resource${search}`);
       }
@@ -301,7 +313,7 @@ const Deployment = withRouter(
 
     function renderInstance({ value, record }) {
       return (
-        <Tooltip title={value || ''}>
+        <Tooltip placement="topLeft" title={value || ''}>
           <span
             className={`${prefixCls}-content-table-instance`}
             onClick={() => linkToInstance(record)}
