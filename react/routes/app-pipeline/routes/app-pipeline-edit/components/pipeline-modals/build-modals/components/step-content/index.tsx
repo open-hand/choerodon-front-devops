@@ -113,7 +113,15 @@ const DockerDom = observer(({
     <Form disabled={disabled} record={record} columns={2}>
       <TextField name={StepMapping.stepName.name} />
       <SelectBox newLine name={StepMapping.whetherUploadDefault.name} />
-      <TextField name={StepMapping.targetImageRepo.name} />
+      <Select
+        name={StepMapping.targetImageRepo.name}
+        renderer={({ text }) => {
+          if (record?.get(StepMapping.whetherUploadDefault.name)) {
+            return `${text}(默认仓库)`;
+          }
+          return text;
+        }}
+      />
       <TextField
         newLine
         name={StepMapping.dockerFilePath.name}
