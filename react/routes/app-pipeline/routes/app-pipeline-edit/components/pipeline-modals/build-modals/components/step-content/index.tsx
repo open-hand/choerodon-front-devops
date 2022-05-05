@@ -112,6 +112,8 @@ const DockerDom = observer(({
   <>
     <Form disabled={disabled} record={record} columns={2}>
       <TextField name={StepMapping.stepName.name} />
+      <SelectBox newLine name={StepMapping.whetherUploadDefault.name} />
+      <TextField name={StepMapping.targetImageRepo.name} />
       <TextField
         newLine
         name={StepMapping.dockerFilePath.name}

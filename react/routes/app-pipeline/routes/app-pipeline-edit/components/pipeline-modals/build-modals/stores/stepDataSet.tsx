@@ -117,6 +117,28 @@ const mapping: {
     textField: 'name',
     valueField: 'repositoryId',
   },
+  whetherUploadDefault: {
+    name: 'whetherUploadDefault',
+    type: 'boolean',
+    label: '是否上传镜像至默认仓库',
+    textField: 'text',
+    valueField: 'value',
+    defaultValue: true,
+    options: new DataSet({
+      data: [{
+        text: '是',
+        value: true,
+      }, {
+        text: '否',
+        value: false,
+      }],
+    }),
+  },
+  targetImageRepo: {
+    name: 'targetImageRepo',
+    type: 'string',
+    label: '目标镜像仓库',
+  },
   dockerFilePath: {
     name: 'dockerFilePath',
     type: 'string',
