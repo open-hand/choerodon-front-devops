@@ -132,6 +132,7 @@ const DetailsTabsHeaderButtons = () => {
         obj = {
           name: '修改应用',
           icon: 'add_comment-o',
+          tooltipsConfig: getUnconnectTooltipsConfig(btnDisabledEnv),
           disabled: btnDisabledEnv,
           handler: () => {
             openAppConfigModal(appRecord?.toData() || {}, refresh);
@@ -145,6 +146,7 @@ const DetailsTabsHeaderButtons = () => {
           groupBtnItems: [
             {
               name: '修改应用配置',
+              tooltipsConfig: getUnconnectTooltipsConfig(btnDisabledEnv),
               disabled: btnDisabledEnv,
               handler: () => openDeployGroupConfigModal(appRecord?.toData(), refresh),
               permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateDeployGroupApp'],
@@ -180,6 +182,7 @@ const DetailsTabsHeaderButtons = () => {
           //   }
           // }
           },
+          tooltipsConfig: getUnconnectTooltipsConfig(btnDisabledHost),
           disabled: btnDisabledHost,
           permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateHost'],
           icon: 'add_comment-o',
@@ -191,6 +194,7 @@ const DetailsTabsHeaderButtons = () => {
           handler: () => {
             openHostDockerConfigModal(appRecord?.toData() || {}, () => appDs.query());
           },
+          tooltipsConfig: getUnconnectTooltipsConfig(btnDisabledHost),
           disabled: btnDisabledHost,
           permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateHost'],
           icon: 'add_comment-o',
@@ -258,10 +262,17 @@ const DetailsTabsHeaderButtons = () => {
     }
   ), [appServiceId, hostOrEnvId, refresh]);
 
+  function getUnconnectTooltipsConfig(enabled: boolean) {
+    return (enabled ? ({
+      title: '环境处于未连接状态，无法操作',
+    }) : undefined);
+  }
+
   // 修改values
   const modifyValues = {
     name: '修改Values',
     icon: 'rate_review1',
+    tooltipsConfig: getUnconnectTooltipsConfig(isMarketAppDisabled || btnDisabledEnv),
     disabled: isMarketAppDisabled || btnDisabledEnv,
     disabledMessage: !btnDisabledEnv ? formatMessage({ id: 'c7ncd.deployment.instance.disable.message' }) : null,
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-values-modify'],
@@ -276,14 +287,22 @@ const DetailsTabsHeaderButtons = () => {
     }),
   };
 
+  const getRedeployTitle = (envDisabled: boolean, marketDisabled: boolean) => {
+    if (envDisabled) {
+      return '环境处于未连接状态，无法操作';
+    } if (marketDisabled) {
+      return formatMessage({ id: 'c7ncd.deployment.instance.disable.message' });
+    }
+    return '';
+  };
+
   // 重新部署
   const redeploy = {
     name: '重新部署',
     icon: 'redeploy_line',
     disabled: btnDisabledEnv || isMarketAppDisabled,
     tooltipsConfig: {
-      title: !btnDisabledEnv && isMarketAppDisabled ? formatMessage({ id: 'c7ncd.deployment.instance.disable.message' }) : '',
-      placement: 'bottom',
+      title: getRedeployTitle(btnDisabledEnv, isMarketAppDisabled),
     },
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-redeploy'],
     handler: () => openRedeploy({
