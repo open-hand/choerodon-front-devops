@@ -591,18 +591,25 @@ const updateWhetherUploadDefault = ({
   value,
   record,
   isLoad = false,
+  level,
 }: any) => {
   if (value) {
     const defaultRepo = record?.getField(mapping.targetImageRepo.name).options.toData();
     if (!defaultRepo.length || defaultRepo.length === 0) {
       setTimeout(() => {
-        updateWhetherUploadDefault({ value, record });
+        updateWhetherUploadDefault({
+          value, record, isLoad, level,
+        });
       }, 1000);
     } else {
       record?.set(mapping.targetImageRepo.name, defaultRepo?.[0].repoId || undefined);
+      record?.getField(mapping.targetImageRepo.name).set('required', (record.get(mapping.type.name) === BUILD_DOCKER) && level === 'project');
     }
   } else if (!isLoad) {
     record?.set(mapping.targetImageRepo.name, undefined);
+    record?.getField(mapping.targetImageRepo.name).set('required', (record.get(mapping.type.name) === BUILD_DOCKER) && level === 'project');
+  } else {
+    record?.getField(mapping.targetImageRepo.name).set('required', (record.get(mapping.type.name) === BUILD_DOCKER) && level === 'project');
   }
 };
 
@@ -695,7 +702,6 @@ const Index = (
         }
         case 'targetImageRepo': {
           item.dynamicProps = {
-            required: ({ record }: any) => (record.get(mapping.type.name) === BUILD_DOCKER) && level === 'project',
             disabled: ({ record }: any) => record?.get(mapping.whetherUploadDefault.name),
             options: ({ record }: any) => (record?.get(mapping.whetherUploadDefault.name)
               ? defaultDataSet : customDataSet),
@@ -720,6 +726,7 @@ const Index = (
           value: record?.get(mapping.whetherUploadDefault.name),
           record,
           isLoad: true,
+          level,
         });
       },
       update: ({
@@ -777,6 +784,7 @@ const Index = (
             updateWhetherUploadDefault({
               value,
               record,
+              level,
             });
             break;
           }
