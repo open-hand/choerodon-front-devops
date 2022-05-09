@@ -357,7 +357,7 @@ const Index = inject('AppState')(observer(({
                     <Form columns={4} record={record}>
                       <Select className="c7ncd-appCenterPro-conDetail__portConfig__form__select" name={portMapping.agreement.name} />
                       <TextField className="c7ncd-appCenterPro-conDetail__portConfig__form__select" name={portMapping.name.name} />
-                      <NumberField className="c7ncd-appCenterPro-conDetail__portConfig__form__select" name={portMapping.port.name} />
+                      <NumberField numberGrouping={false} className="c7ncd-appCenterPro-conDetail__portConfig__form__select" name={portMapping.port.name} />
                       {
                         (dataSource
                           ?.getField(mapping.portConfig.name)
