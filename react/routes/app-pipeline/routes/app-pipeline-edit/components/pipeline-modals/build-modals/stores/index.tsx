@@ -3,6 +3,10 @@ import React, {
 } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
+import {
+  defaultTargetImageRepoDataSet,
+  customTargetImageRepoDataSet,
+} from './targetImageRepoDataSets';
 import buildDataSet, { mapping, transformLoadData as buildTransformLoadData }
   from '@/routes/app-pipeline/routes/app-pipeline-edit/components/pipeline-modals/build-modals/stores/buildDataSet';
 import stepDataSet, { transformLoadData }
@@ -42,6 +46,14 @@ export const StoreProvider = observer((props: any) => {
   const appServiceId = data?.appService?.appServiceId;
   const appServiceName = data?.appService?.appServiceName;
 
+  const DefaultTargetImageRepoDataSet = useMemo(
+    () => new DataSet(defaultTargetImageRepoDataSet(appServiceId)), [],
+  );
+
+  const CustomTargetImageRepoDataSet = useMemo(
+    () => new DataSet(customTargetImageRepoDataSet()), [],
+  );
+
   const BuildDataSet = useMemo(() => new DataSet(
     buildDataSet(
       appServiceId,
@@ -56,6 +68,9 @@ export const StoreProvider = observer((props: any) => {
     data,
     handleJobAddCallback,
     advancedRef,
+    appServiceId,
+    DefaultTargetImageRepoDataSet,
+    CustomTargetImageRepoDataSet,
   )), []);
 
   const locationValidate = async (buildDs: any, stepDs: any) => {

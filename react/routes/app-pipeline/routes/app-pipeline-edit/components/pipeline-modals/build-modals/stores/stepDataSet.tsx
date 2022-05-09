@@ -1,7 +1,13 @@
 import React from 'react';
 import { DataSet, Modal } from 'choerodon-ui/pro';
-import { RdupmAlienApiConfig } from '@choerodon/master';
+import {
+  RdupmAlienApiConfig,
+  appServiceApiConfig,
+} from '@choerodon/master';
 import _ from 'lodash';
+import {
+  NewTips,
+} from '@choerodon/components';
 import {
   STEPVO, BUILD_DOCKER, BUILD_UPLOADJAR, BUILD_MAVEN, BUILD_MAVEN_PUBLISH, BUILD_SONARQUBE,
 } from '@/routes/app-pipeline/CONSTANTS';
@@ -116,6 +122,38 @@ const mapping: {
     multiple: true,
     textField: 'name',
     valueField: 'repositoryId',
+  },
+  whetherUploadDefault: {
+    name: 'whetherUploadDefault',
+    type: 'boolean',
+    label: (
+      <>
+        <p style={{ marginBottom: 0 }}>是否上传镜像至默认仓库</p>
+        <NewTips
+          helpText="若选择为是，此处的镜像仓库默认为应用服务中设置的默认仓库；
+          若选择为否，您可从「制品库」中选择其他任一Docker仓库作为目标镜像仓库。"
+        />
+      </>
+    ),
+    textField: 'text',
+    valueField: 'value',
+    defaultValue: true,
+    options: new DataSet({
+      data: [{
+        text: '是',
+        value: true,
+      }, {
+        text: '否',
+        value: false,
+      }],
+    }),
+  },
+  targetImageRepo: {
+    name: 'targetImageRepo',
+    type: 'string',
+    textField: 'repoName',
+    valueField: 'repoId',
+    label: '目标镜像仓库',
   },
   dockerFilePath: {
     name: 'dockerFilePath',
@@ -386,6 +424,16 @@ const transformLoadDataItemByType = (data: any) => {
       });
       break;
     }
+    case BUILD_DOCKER: {
+      const dockerBuildConfig = data?.dockerBuildConfig;
+      return ({
+        [mapping.whetherUploadDefault.name]: !dockerBuildConfig?.repoId,
+        ...(!dockerBuildConfig?.repoId ? {} : {
+          [mapping.targetImageRepo.name]: dockerBuildConfig?.repoId,
+        }),
+      });
+      break;
+    }
     default: {
       return {};
       break;
@@ -449,6 +497,14 @@ const getInsideDtoData = (record: any) => {
         [mapping.bugLevel.name]: record.get(mapping.bugLevel.name),
         [mapping.symbol.name]: record.get(mapping.symbol.name),
         [mapping.condition.name]: record.get(mapping.condition.name),
+        ...(record?.get(mapping.whetherUploadDefault.name) ? {} : {
+          repoId: record?.get(mapping.targetImageRepo.name),
+          repoType: record
+            ?.getField(mapping.targetImageRepo.name)
+            .options
+            .find((i: any) => String(i.get('repoId')) === String(record.get(mapping.targetImageRepo.name)))
+            ?.get('type'),
+        }),
       });
       break;
     }
@@ -531,11 +587,40 @@ const transformSubmitData = (ds: any) => ds.records.filter((i: any) => i.status 
   } : {},
 }));
 
+const updateWhetherUploadDefault = ({
+  value,
+  record,
+  isLoad = false,
+  level,
+}: any) => {
+  if (value) {
+    const defaultRepo = record?.getField(mapping.targetImageRepo.name).options.toData();
+    if (!defaultRepo.length || defaultRepo.length === 0) {
+      setTimeout(() => {
+        updateWhetherUploadDefault({
+          value, record, isLoad, level,
+        });
+      }, 1000);
+    } else {
+      record?.set(mapping.targetImageRepo.name, defaultRepo?.[0].repoId || undefined);
+      record?.getField(mapping.targetImageRepo.name).set('required', (record.get(mapping.type.name) === BUILD_DOCKER) && level === 'project');
+    }
+  } else if (!isLoad) {
+    record?.set(mapping.targetImageRepo.name, undefined);
+    record?.getField(mapping.targetImageRepo.name).set('required', (record.get(mapping.type.name) === BUILD_DOCKER) && level === 'project');
+  } else {
+    record?.getField(mapping.targetImageRepo.name).set('required', (record.get(mapping.type.name) === BUILD_DOCKER) && level === 'project');
+  }
+};
+
 const Index = (
   level: any,
   data: any,
   handleJobAddCallback: any,
   advancedRef: any,
+  appServiceId: any,
+  defaultDataSet: any,
+  customDataSet: any,
 ) => {
   const {
     template,
@@ -615,6 +700,14 @@ const Index = (
           };
           break;
         }
+        case 'targetImageRepo': {
+          item.dynamicProps = {
+            disabled: ({ record }: any) => record?.get(mapping.whetherUploadDefault.name),
+            options: ({ record }: any) => (record?.get(mapping.whetherUploadDefault.name)
+              ? defaultDataSet : customDataSet),
+          };
+          break;
+        }
         default: {
           break;
         }
@@ -628,6 +721,13 @@ const Index = (
         const record = dataSet?.current;
         const repos = record?.get('repos');
         record?.getField(mapping.customRepoConfig.name)?.options?.loadData(getLoadReposData(repos));
+
+        updateWhetherUploadDefault({
+          value: record?.get(mapping.whetherUploadDefault.name),
+          record,
+          isLoad: true,
+          level,
+        });
       },
       update: ({
         name, value, record, dataSet,
@@ -678,6 +778,14 @@ const Index = (
               res = '.';
             }
             record.set(mapping.imageContext.name, res);
+            break;
+          }
+          case mapping.whetherUploadDefault.name: {
+            updateWhetherUploadDefault({
+              value,
+              record,
+              level,
+            });
             break;
           }
           default: {
