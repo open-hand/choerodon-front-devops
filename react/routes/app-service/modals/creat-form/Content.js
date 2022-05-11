@@ -284,7 +284,7 @@ const CreateForm = injectIntl(observer((props) => {
                     name="devopsAppTemplateId"
                     searchable
                     searchMatcher="param"
-                    addonAfter={<Tips helpText={formatMessage({ id: 'c7ncd.org-template.tips' })} />}
+                    addonAfter={<Tips helpText={formatMessage({ id: 'c7ncd.appService.template.tips' })} />}
                     optionRenderer={renderTemplateOption}
                   />
                 )
