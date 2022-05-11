@@ -148,7 +148,7 @@ const ListView = withRouter(observer((props) => {
           history,
           location,
         } = props;
-        history.push(`/rducm/code-lib-management/assign${location.search}`);
+        history.push(`/rducm/code-lib-management/assign${location.search}&appServiceIds=${selectedAppService?.id}`);
       }
     }, {
       icon: 'refresh',
