@@ -42,7 +42,7 @@ export default observer(() => {
       return '';
     }
     const createWayValue = record.get(mapping.createWay.name);
-    const urlTips = <Tips helpText={formatClient({ id: 'url.tips' })} />;
+    const urlTips = <Tips helpText="此处支持填写HTTP或HTTPS地址" />;
     switch (createWayValue) {
       case 'template':
         return [
@@ -51,7 +51,7 @@ export default observer(() => {
             name={mapping.appTemplate.name}
             searchable
             searchMatcher="param"
-            addonAfter={<Tips helpText={formatClient({ id: 'tips' })} />}
+            addonAfter={<Tips helpText="此处仅默认查出20个应用模板，您可通过模糊搜索查询到其他的模板" />}
           />,
         ];
         break;
