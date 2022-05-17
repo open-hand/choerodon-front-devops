@@ -677,28 +677,32 @@ export default (
             return {
               method: 'post',
               url: `/devops/v1/projects/${projectId}/users/app_services/${appServiceId}`,
+              params: {
+                ...params,
+                page: params?.page + 1,
+              },
               data: {
                 userName: realName || '',
                 ids: [...new Set(cdAuditIds)] || [],
               },
-              transformResponse: (res) => {
-                let newRes;
-                try {
-                  newRes = JSON.parse(res);
-                  if (
-                    newRes.totalElements % 20 === 0
-                    && newRes.content.length !== 0
-                  ) {
-                    newRes.content.push({
-                      id: 'more',
-                      realName: '加载更多',
-                    });
-                  }
-                  return newRes;
-                } catch (e) {
-                  return res;
-                }
-              },
+              // transformResponse: (res) => {
+              //   let newRes;
+              //   try {
+              //     newRes = JSON.parse(res);
+              //     if (
+              //       newRes.totalElements % 20 === 0
+              //       && newRes.content.length !== 0
+              //     ) {
+              //       newRes.content.push({
+              //         id: 'more',
+              //         realName: '加载更多',
+              //       });
+              //     }
+              //     return newRes;
+              //   } catch (e) {
+              //     return res;
+              //   }
+              // },
             };
           },
         },
