@@ -23,7 +23,7 @@ import { usePipelineManageStore } from './stores';
 import VariableSettings from './components/variable-settings';
 import AuditModal from './components/audit-modal';
 import GitlabRunner from './components/gitlab-runner';
-import { usePipelineCreateModal } from './components/pipeline-create-modal';
+import { usePipelineCreateModal, handleModalOpen } from './components/pipeline-create-modal';
 import { PIPELINE_CREATE_LOCALSTORAGE_IDENTIFY } from '@/routes/app-pipeline/stores/CONSTANTS';
 
 import './index.less';
@@ -69,7 +69,7 @@ const PipelineManage = observer(() => {
     search,
   } = useLocation();
 
-  const handleModalOpen = usePipelineCreateModal();
+  // const handleModalOpen = usePipelineCreateModal();
 
   const rootRef = useRef(null);
 

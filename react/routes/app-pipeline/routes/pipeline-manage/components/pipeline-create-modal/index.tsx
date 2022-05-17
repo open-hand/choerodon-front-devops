@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { useFormatCommon, useFormatMessage, CONSTANTS } from '@choerodon/master';
 import {
-  useModal, TextField, Form, Select,
+  useModal, TextField, Form, Select, Modal,
 } from 'choerodon-ui/pro';
 import { modalChildrenProps } from 'choerodon-ui/pro/lib/modal/interface';
 import { observer } from 'mobx-react-lite';
@@ -152,27 +152,27 @@ const PipelineCreateModal:FC<PipelineCreateModalProps> = observer((props) => {
   );
 });
 
-const usePipelineCreateModal = () => {
-  const Modal = useModal();
-
-  const handleModalOpen = () => {
-    Modal.open({
-      title: '创建流水线',
-      children: <PipelineCreateModal />,
-      className: `${prefixCls}-container`,
-      style: {
-        width: CONSTANTS.MODAL_WIDTH.MIDDLE,
-      },
-      okText: '下一步',
-      drawer: true,
-    });
-  };
-
-  return handleModalOpen;
+const handleModalOpen = () => {
+  Modal.open({
+    title: '创建流水线',
+    children: <PipelineCreateModal />,
+    className: `${prefixCls}-container`,
+    style: {
+      width: CONSTANTS.MODAL_WIDTH.MIDDLE,
+    },
+    okText: '下一步',
+    drawer: true,
+  });
 };
 
+// const usePipelineCreateModal = () => {
+//   const Modal = useModal();
+
+//   return handleModalOpen;
+// };
+
 export {
-  usePipelineCreateModal,
+  handleModalOpen,
 };
 
 export default PipelineCreateModal;
