@@ -1896,6 +1896,7 @@ export default observer(() => {
               disabled: !record?.get('connected'),
             })}
           />,
+          isProjectOwner && (
           <div
             className="addcdTask-whetherBlock addcdTask-triggersTasks"
             style={{
@@ -1915,7 +1916,8 @@ export default observer(() => {
                 left: '195px',
               }}
             />
-          </div>,
+          </div>
+          ),
           <SelectBox
             colSpan={3}
             name={fieldMap.deployWay.name}
