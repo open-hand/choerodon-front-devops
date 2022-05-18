@@ -4,7 +4,7 @@ import {
 } from '@choerodon/master';
 
 const defaultTargetImageRepoDataSet = (appServiceId: any) => ({
-  autoQuery: true,
+  autoQuery: !!appServiceId,
   transport: {
     read: () => ({
       ...appServiceApiConfig.getDockerRepoConfig(appServiceId),
