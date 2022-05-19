@@ -52,11 +52,11 @@ const Index = (appServiceId: any): any => ({
           return d(newRes);
         }
         function d(result: any) {
-          return result.map((item: any) => ({
+          return result?.map ? result?.map((item: any) => ({
             ...item,
             realName: item?.userDTO?.realName,
             triggerTypeName: triggerWayData?.find((i: any) => i.value === item?.triggerType)?.name,
-          }));
+          })) : [];
         }
       },
     }),
