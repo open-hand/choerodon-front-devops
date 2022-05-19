@@ -4,7 +4,7 @@ import {
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import { OverflowWrap } from '@choerodon/components';
-import { LARGE } from '@/utils/getModalWidth';
+import { LARGE, MIDDLE } from '@/utils/getModalWidth';
 import { usePipelineStageEditStore } from '../../stores';
 import AddTask from '../../../AddTask';
 import AddCDTask from '../../../AddCDTask';
@@ -60,7 +60,7 @@ const EditItem = (props) => {
         </div>
       ),
       style: {
-        width: LARGE,
+        width: MIDDLE,
       },
       children:
         stageType === 'CI' ? (

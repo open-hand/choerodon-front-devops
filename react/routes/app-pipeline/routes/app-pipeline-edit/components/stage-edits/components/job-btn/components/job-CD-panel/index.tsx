@@ -5,7 +5,7 @@ import useTabData from '@/routes/app-pipeline/routes/app-pipeline-edit/hooks/use
 import { TAB_BASIC, TAB_FLOW_CONFIG } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
 import jobTypes from '@/routes/app-pipeline/routes/pipeline-manage/stores/jobsTypeMappings';
 import './index.less';
-import { LARGE } from '@/utils/getModalWidth';
+import { LARGE, MIDDLE } from '@/utils/getModalWidth';
 import AddCDTask
   from '@/routes/app-pipeline/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask';
 
@@ -54,7 +54,7 @@ const JobCdPanel:FC<JobTypesPanelProps> = (props) => {
         </p>
       ),
       style: {
-        width: LARGE,
+        width: MIDDLE,
       },
       maskClosable: false,
       children: (

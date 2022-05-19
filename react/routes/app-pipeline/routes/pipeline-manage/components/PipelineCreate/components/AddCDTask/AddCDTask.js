@@ -1277,6 +1277,10 @@ export default observer(() => {
           >
             docker-compose.yml文件
             <NewTips
+              style={{
+                position: 'relative',
+                bottom: 1,
+              }}
               helpText="此处的docker-compose.yml文件默认展示为所选应用中的yaml文件内容，且暂不支持修改。"
             />
           </p>,
@@ -1296,6 +1300,10 @@ export default observer(() => {
           >
             命令
             <NewTips
+              style={{
+                position: 'relative',
+                bottom: 1,
+              }}
               helpText="您需在此处维护操作Docker Compose的命令，此处维护的命令不会影响到主机应用中的命令；仅生效于此处的流水线主机部署任务。"
             />
           </p>,
@@ -1366,9 +1374,10 @@ export default observer(() => {
       ],
       // TODO: 更新应用- 获取instanceId
       cdHost: [
-        <Form columns={2} className="addcdTask-cdHost" dataSet={ADDCDTaskDataSet}>
-          <SelectBox className="addcdTask-cdHost-productType" name={fieldMap.productType.name} />
+        <Form columns={4} className="addcdTask-cdHost" dataSet={ADDCDTaskDataSet}>
+          <SelectBox colSpan={3} className="addcdTask-cdHost-productType" name={fieldMap.productType.name} />
           <SelectBox
+            colSpan={1}
             name={fieldMap.deployWay.name}
             onChange={(value) => {
               HostJarDataSet.deleteAll(false);

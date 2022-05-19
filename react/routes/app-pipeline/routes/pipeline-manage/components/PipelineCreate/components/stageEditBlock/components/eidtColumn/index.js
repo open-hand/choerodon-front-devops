@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { Button, Dropdown, Menu } from 'choerodon-ui';
 import { Modal, Icon } from 'choerodon-ui/pro';
 import { Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd';
-import { LARGE } from '@/utils/getModalWidth';
+import { LARGE, MIDDLE } from '@/utils/getModalWidth';
 import jobTypes from '../../../../../../stores/jobsTypeMappings';
 import { usePipelineStageEditStore } from '../../stores';
 import AddTask from '../../../AddTask';
@@ -308,7 +308,7 @@ export default observer((props) => {
       ),
       children: renderNewTaskModalChildren(taskType),
       style: {
-        width: LARGE,
+        width: MIDDLE,
       },
       drawer: true,
       okText: '添加',

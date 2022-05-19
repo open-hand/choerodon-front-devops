@@ -18,7 +18,7 @@ import SerialLines from '../serial-lines';
 import useTabData from '../../../../hooks/useTabData';
 import usePipelineContext from '@/routes/app-pipeline/hooks/usePipelineContext';
 import jobTypes from '@/routes/app-pipeline/routes/pipeline-manage/stores/jobsTypeMappings';
-import { LARGE } from '@/utils/getModalWidth';
+import { LARGE, MIDDLE } from '@/utils/getModalWidth';
 import AddCDTask from '@/routes/app-pipeline/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask';
 
 export type JobProps = {
@@ -96,7 +96,7 @@ const JobItem:FC<JobProps> = (props) => {
           </p>
         ),
         style: {
-          width: LARGE,
+          width: MIDDLE,
         },
         maskClosable: false,
         children: (
