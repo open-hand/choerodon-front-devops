@@ -31,8 +31,8 @@ function GroupItem({
     const groupId = record.get('id');
     const name = record.get('name');
     const { current } = groupFormDs;
-    current.set('name', name);
     current.set('id', groupId);
+    current.set('name', name);
     Modal.open({
       key: modalKey,
       title: formatMessage({ id: `${intlPrefix}.group.edit` }),
