@@ -1374,10 +1374,10 @@ export default observer(() => {
       ],
       // TODO: 更新应用- 获取instanceId
       cdHost: [
-        <Form columns={4} className="addcdTask-cdHost" dataSet={ADDCDTaskDataSet}>
-          <SelectBox colSpan={3} className="addcdTask-cdHost-productType" name={fieldMap.productType.name} />
+        <Form className="addcdTask-cdHost" dataSet={ADDCDTaskDataSet}>
+          <SelectBox className="addcdTask-cdHost-productType" name={fieldMap.productType.name} />
           <SelectBox
-            colSpan={1}
+            newLine
             name={fieldMap.deployWay.name}
             onChange={(value) => {
               HostJarDataSet.deleteAll(false);
