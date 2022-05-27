@@ -75,10 +75,11 @@ const DetailsTabsHeaderButtons = () => {
     appCatergory,
     rdupmType,
     appId,
+    enableAppMonitor,
+    disableAppMonitor,
   } = useAppDetailsStore();
 
   const appRecord = appDs.current;
-
   const {
     appServiceVersionId,
     appServiceName,
@@ -95,7 +96,7 @@ const DetailsTabsHeaderButtons = () => {
     sourceType,
     instanceName,
     objectName,
-
+    metricDeployStatus,
     upgradeAvailable,
     currentVersionAvailable,
 
@@ -156,7 +157,6 @@ const DetailsTabsHeaderButtons = () => {
               name: '修改容器配置',
               handler: () => openContainerConfigModal(appRecord?.toData(), refresh),
               permissions: ['choerodon.code.project.deploy.app-deployment.application-center.updateDeployGroupContainer'],
-
             },
           ],
         };
@@ -168,19 +168,19 @@ const DetailsTabsHeaderButtons = () => {
           name: '修改应用',
           handler: () => {
             openHostAppConfigModal(appRecord?.toData() || {}, () => appDs.query());
-          // const data = appRecord?.toData();
-          // if (['jar', 'other'].includes(data?.rdupmType)) {
-          //   const killCommandExist = data?.killCommandExist;
-          //   if (!killCommandExist) {
-          //     Modal.confirm({
-          //       title: '未维护删除操作',
-          //       children: '此应用当前暂未维护【删除操作】，无法执行修改操作。',
-          //       okText: '我知道了',
-          //       okCancel: false,
-          //     });
-          //   } else {
-          //   }
-          // }
+            // const data = appRecord?.toData();
+            // if (['jar', 'other'].includes(data?.rdupmType)) {
+            //   const killCommandExist = data?.killCommandExist;
+            //   if (!killCommandExist) {
+            //     Modal.confirm({
+            //       title: '未维护删除操作',
+            //       children: '此应用当前暂未维护【删除操作】，无法执行修改操作。',
+            //       okText: '我知道了',
+            //       okCancel: false,
+            //     });
+            //   } else {
+            //   }
+            // }
           },
           tooltipsConfig: getUnconnectTooltipsConfig(btnDisabledHost),
           disabled: btnDisabledHost,
@@ -378,6 +378,54 @@ const DetailsTabsHeaderButtons = () => {
       }
     },
   };
+  const disableMonitor = {
+    name: '停用应用监控',
+    permissions: [],
+    disabled: !envConnected,
+    tooltipsConfig: {
+      placement: 'bottom',
+      title: !envConnected ? '环境状态未连接，无法执行此操作。' : '',
+    },
+    handler: async () => {
+      try {
+        Modal.open({
+          title: '停用应用监控',
+          key: Modal.key(),
+          children:
+  <div>
+    确定要停用应用
+    {name}
+    的监控吗？
+    <br />
+    停用后，应用的异常与停机数据将不再收集；
+    <br />
+    已经收集的，近6个月内的监控数据不会清除，后续开启后可继续查看
+  </div>,
+          okText: '停用',
+          onOk: disableAppMonitor,
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+  };
+
+  const enableMonitor = {
+    name: '开启应用监控',
+    permissions: [],
+    disabled: !envConnected,
+    tooltipsConfig: {
+      placement: 'bottom',
+      title: !envConnected ? '环境状态未连接，无法执行此操作。' : '',
+    },
+    handler: async () => {
+      try {
+        enableAppMonitor();
+      } catch (e) {
+        console.log(e);
+      }
+    },
+  };
 
   // 删除应用
   const deleteApp = {
@@ -385,7 +433,6 @@ const DetailsTabsHeaderButtons = () => {
     disabled: isEnv && btnDisabledEnv,
     permissions: ['choerodon.code.project.deploy.app-deployment.application-center.app-delete'],
     handler: () => {
-      console.log(deployType);
       deployType === ENV_TAB ? deleteEnvApp({
         appCatergoryCode: getAppCategories(rdupmType, deployType).code,
         envId: hostOrEnvId,
@@ -425,7 +472,8 @@ const DetailsTabsHeaderButtons = () => {
 
   // 更多操作
   const moreOpts = (() => {
-    let btnsGroup:any[] = [];
+    let btnsGroup: any[] = [];
+
     const currentStatus = deployType === ENV_TAB ? appStatus : devopsHostCommandDTO?.status;
     switch (currentStatus) {
       case APP_STATUS.RUNNING:
@@ -441,6 +489,11 @@ const DetailsTabsHeaderButtons = () => {
         break;
       default:
         break;
+    }
+    if (!metricDeployStatus) {
+      btnsGroup.push(enableMonitor);
+    } else {
+      btnsGroup.push(disableMonitor);
     }
     return btnsGroup.length ? [{
       name: '更多操作',
@@ -470,7 +523,7 @@ const DetailsTabsHeaderButtons = () => {
 
   // 项目分组
   const getIsServicesActionData = () => {
-    let data:any = [];
+    let data: any = [];
     switch (appStatus) {
       case APP_STATUS.RUNNING:
       case APP_STATUS.ACTIVE:
@@ -488,7 +541,7 @@ const DetailsTabsHeaderButtons = () => {
 
   // 应用市场分组
   const getIsMarketActionData = () => {
-    let data:any = [];
+    let data: any = [];
     switch (appStatus) {
       case APP_STATUS.RUNNING:
       case APP_STATUS.ACTIVE:
@@ -506,7 +559,7 @@ const DetailsTabsHeaderButtons = () => {
 
   // 主机分组
   const getIsHostActionData = () => {
-    let data:any = [];
+    let data: any = [];
     let extra: any = [];
     const hostStatus = appRecord?.toData()?.hostStatus;
     const rdupm = appRecord?.toData()?.rdupm;

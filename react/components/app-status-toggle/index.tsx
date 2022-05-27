@@ -154,8 +154,9 @@ export async function openChangeActive({
         movable: false,
         closable: false,
         key: stopKey,
-        title: <FormattedMessage id={`c7ncd.deployment.instance.action.${active}.title`} values={{ name }} />,
-        children: <FormattedMessage id={`c7ncd.deployment.instance.action.${active}.tips`} />,
+        title: '停用应用',
+        children: `确定要停用Chart应用${name}吗？若您开启了该应用的监控，停用后将自动关闭`,
+        okText: '停用',
         onOk: () => handleChangeActive({
           active,
           instanceId,

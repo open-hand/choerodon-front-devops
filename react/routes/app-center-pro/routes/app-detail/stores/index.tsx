@@ -9,6 +9,7 @@ import { DataSet } from '@/interface';
 import AppDataSet from './AppDataSet';
 import { getAppCategories, getChartSourceGroup } from '@/routes/app-center-pro/utils';
 import { ENV_TAB, HOST_TAB } from '@/routes/app-center-pro/stores/CONST';
+import { deployAppCenterApi } from '@/api';
 
 interface ContextProps {
   subfixCls: string,
@@ -24,7 +25,9 @@ interface ContextProps {
     name:string,
     code:string,
   }
-  appChartSourceGroup: string
+  appChartSourceGroup: string,
+  enableAppMonitor:()=>void,
+  disableAppMonitor:()=>void,
 }
 
 const Store = createContext({} as ContextProps);
@@ -52,7 +55,14 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   } = useAppCenterProStore();
 
   const appDs = useMemo(() => new DataSet(AppDataSet({ appId, projectId, deployType })), [appId, deployType, projectId]);
-
+  const enableAppMonitor = async () => {
+    await deployAppCenterApi.enableAppMonitor(appId);
+    appDs.query();
+  };
+  const disableAppMonitor = async () => {
+    await deployAppCenterApi.disableAppMonitor(appId);
+    appDs.query();
+  };
   // 部署对象
   const appCatergory = getAppCategories(rdupmType, deployType);
 
@@ -73,6 +83,8 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
     appCatergory,
     appChartSourceGroup,
     rdupmType,
+    enableAppMonitor,
+    disableAppMonitor,
   };
   return (
     <Store.Provider value={value}>

@@ -32,6 +32,22 @@ class DeployAppCenterApi extends Api<DeployAppCenterApi> {
     });
   }
 
+  // 开启应用监控
+  enableAppMonitor(appId:string) {
+    return this.request({
+      url: `${this.prefix}/${appId}/metric/enable?app_id=${appId}`,
+      method: 'put',
+    });
+  }
+
+  // 停用应用监控
+  disableAppMonitor(appId:string) {
+    return this.request({
+      url: `${this.prefix}/${appId}/metric/disable?app_id=${appId}`,
+      method: 'put',
+    });
+  }
+
   // env pods page
   loadPodsPage(appCenterId:string) {
     return this.request({

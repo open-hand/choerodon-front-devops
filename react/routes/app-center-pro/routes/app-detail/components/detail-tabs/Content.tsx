@@ -14,6 +14,7 @@ import {
   POD_DETAILS,
   RESOURCE,
   RUNNING_DETAILS,
+  APPMONITOR,
 //   PROFILE_DETAILS,
 } from './stores/CONST';
 import DetailsTabsHeaderButtons from './components/HeaderButtons';
@@ -26,6 +27,7 @@ const PodDetail = React.lazy(() => import('./components/PodsDetails'));
 const RunDetails = React.lazy(() => import('./components/RunDetails'));
 const ResourceConfig = React.lazy(() => import('./components/ResourceConfig'));
 const RunDetailsOfHost = React.lazy(() => import('./components/RunDetailsOfHost'));
+const AppMonitor = React.lazy(() => import('./components/AppMonitor'));
 
 const DetailsTabs = () => {
   const {
@@ -52,6 +54,7 @@ const DetailsTabs = () => {
       [RUNNING_DETAILS]: <RunDetails />,
       [RESOURCE]: <ResourceConfig />,
       [HOST_RUNNING_DETAILS]: <RunDetailsOfHost />,
+      [APPMONITOR]: <AppMonitor />, // 应用监控
     //   [PROFILE_DETAILS]: (
     //     <ConfigurationModal
     //       // @ts-ignore

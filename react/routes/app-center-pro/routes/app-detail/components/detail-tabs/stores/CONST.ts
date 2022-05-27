@@ -9,6 +9,7 @@ const RESOURCE = 'resource';
 const HOST_RUNNING_DETAILS = 'host_running_details';
 
 const PROFILE_DETAILS = 'profile_details';
+const APPMONITOR = 'app_monitoring';
 
 const deployGroupKeys = [
   {
@@ -30,6 +31,10 @@ const chartKeys = [
   {
     key: RESOURCE,
     name: '网络配置',
+  },
+  {
+    key: APPMONITOR,
+    name: '应用监控',
   },
 ];
 
@@ -54,4 +59,5 @@ export {
   RESOURCE,
   HOST_RUNNING_DETAILS,
   PROFILE_DETAILS,
+  APPMONITOR,
 };
