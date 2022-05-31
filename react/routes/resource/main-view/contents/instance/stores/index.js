@@ -14,6 +14,7 @@ import DetailsStore from './DetailsStore';
 import useStore from './useStore';
 import openWarnModal from '@/utils/openWarnModal';
 import getTablePostData from '@/utils/getTablePostData';
+import { deployAppCenterApi } from '@/api';
 
 const Store = createContext();
 
@@ -44,7 +45,9 @@ export const StoreProvider = injectIntl(inject('AppState')(
       CASES_TAB: 'cases',
       DETAILS_TAB: 'details',
       PODS_TAB: 'pods',
+      APP_MONITOR: 'minitor',
     }), []);
+
     const detailsStore = useMemo(() => new DetailsStore(), []);
     const baseDs = useMemo(() => new DataSet(BaseInfoDataSet()), []);
     const casesDs = useMemo(() => new DataSet(CasesDataSet()), []);
@@ -53,7 +56,14 @@ export const StoreProvider = injectIntl(inject('AppState')(
       intlPrefix,
       format,
     })), []);
-
+    const enableAppMonitor = async () => {
+      await deployAppCenterApi.enableAppMonitor(baseDs.current?.get('devopsDeployAppCenterEnvDTO').id);
+      baseDs.query();
+    };
+    const disableAppMonitor = async () => {
+      await deployAppCenterApi.disableAppMonitor(baseDs.current?.get('devopsDeployAppCenterEnvDTO').id);
+      baseDs.query();
+    };
     function freshTree() {
       treeDs.query();
     }
@@ -140,6 +150,8 @@ export const StoreProvider = injectIntl(inject('AppState')(
       instanceId: id,
       envId: parentId.split('**')[0],
       treeDs,
+      enableAppMonitor,
+      disableAppMonitor,
     };
     return (
       <Store.Provider value={value}>

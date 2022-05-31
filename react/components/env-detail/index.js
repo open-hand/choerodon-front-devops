@@ -10,14 +10,16 @@ function EnvDetail({ record, intl: { formatMessage }, isRecord }) {
   if (isRecord) {
     data = record ? record.toData() : null;
   }
-  const { name,
+  const {
+    name,
     connect,
     synchronize,
     synchro,
     active,
     code,
     description,
-    clusterName } = data || {};
+    clusterName,
+  } = data || {};
   const status = data ? getEnvStatus({ connect, synchronize: synchronize || synchro, active }) : '';
 
   return (

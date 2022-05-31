@@ -119,6 +119,22 @@ class DeployAppCenterApi extends Api<DeployAppCenterApi> {
       url: `${this.prefix}/${appId}/pipeline_reference`,
     });
   }
+
+  getNumber(data:any) { // 获取应用异常与停机次数表数据
+    return this.request({
+      url: `${this.prefix}/${data.appId}/metric/exception_times_chart_info?app_id=${data.appId}`,
+      method: 'post',
+      data: data.date,
+    });
+  }
+
+  getDuration(data:any) { // 获取应用异常与停机次数表数据
+    return this.request({
+      url: `${this.prefix}/${data.appId}/metric/exception_duration_chart_info?app_id=${data.appId}`,
+      method: 'post',
+      data: data.date,
+    });
+  }
 }
 
 const deployAppCenterApi = new DeployAppCenterApi();

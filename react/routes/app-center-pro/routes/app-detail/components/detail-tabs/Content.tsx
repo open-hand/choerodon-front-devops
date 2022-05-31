@@ -5,6 +5,7 @@ import { observer } from 'mobx-react-lite';
 import { Tabs, Spin } from 'choerodon-ui/pro';
 import { useParams } from 'react-router';
 import { useAppDetailTabsStore } from './stores';
+import { useAppDetailsStore } from '../../stores';
 // import ConfigurationModal from '@/components/configuration-center/ConfigurationModal';
 
 import './index.less';
@@ -27,7 +28,7 @@ const PodDetail = React.lazy(() => import('./components/PodsDetails'));
 const RunDetails = React.lazy(() => import('./components/RunDetails'));
 const ResourceConfig = React.lazy(() => import('./components/ResourceConfig'));
 const RunDetailsOfHost = React.lazy(() => import('./components/RunDetailsOfHost'));
-const AppMonitor = React.lazy(() => import('./components/AppMonitor'));
+const AppMonitor = React.lazy(() => import('@/components/AppMonitor'));
 
 const DetailsTabs = () => {
   const {
@@ -37,12 +38,18 @@ const DetailsTabs = () => {
     // configurationDetailDataSet,
     instanceId,
   } = useAppDetailTabsStore();
+  const {
+    appDs,
+    enableAppMonitor,
+  } = useAppDetailsStore();
 
   const {
     rdupmType,
     appId,
   } = useParams<any>();
-
+  const monitorData = {
+    enableAppMonitor, appDs, appId,
+  };
   const handleTabChange = (tabKey: string) => {
     appDetailTabStore.setCurrentTabKey(tabKey);
   };
@@ -54,7 +61,7 @@ const DetailsTabs = () => {
       [RUNNING_DETAILS]: <RunDetails />,
       [RESOURCE]: <ResourceConfig />,
       [HOST_RUNNING_DETAILS]: <RunDetailsOfHost />,
-      [APPMONITOR]: <AppMonitor />, // 应用监控
+      [APPMONITOR]: <AppMonitor {...monitorData} />, // 应用监控
     //   [PROFILE_DETAILS]: (
     //     <ConfigurationModal
     //       // @ts-ignore

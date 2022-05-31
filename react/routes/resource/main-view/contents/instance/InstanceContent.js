@@ -27,6 +27,7 @@ const { TabPane } = Tabs;
 const Cases = lazy(() => import('./cases'));
 const Details = lazy(() => import('./details'));
 const PodsDetails = lazy(() => import('./pods-details'));
+const AppMonitor = React.lazy(() => import('@/components/AppMonitor'));
 
 const InstanceTitle = ({
   podRunningCount,
@@ -106,9 +107,11 @@ const InstanceContent = observer(() => {
       CASES_TAB,
       DETAILS_TAB,
       PODS_TAB,
+      APP_MONITOR,
     },
     istStore,
     baseDs,
+    enableAppMonitor,
   } = useInstanceStore();
   const viewType = resourceStore.getViewType;
 
@@ -239,6 +242,10 @@ const InstanceContent = observer(() => {
     }
     return [detailsTab, casesTab];
   }
+  const record = baseDs.current;
+  const monitorData = {
+    enableAppMonitor, appDs: baseDs, appId: record?.get('devopsDeployAppCenterEnvDTO').id,
+  };
   return (
     <div className={`${prefixCls}-instance`}>
       <PageTitle content={getTitle()} fallback={getFallBack()} />
@@ -255,6 +262,14 @@ const InstanceContent = observer(() => {
         >
           <Suspense fallback={<Spin />}>
             <PodsDetails />
+          </Suspense>
+        </TabPane>
+        <TabPane
+          key={APP_MONITOR}
+          tab="应用监控"
+        >
+          <Suspense fallback={<Spin />}>
+            <AppMonitor {...monitorData} />
           </Suspense>
         </TabPane>
       </Tabs>

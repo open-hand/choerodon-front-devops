@@ -48,6 +48,8 @@ const IstModals = injectIntl(observer(() => {
     },
     checkIstExist,
     AppState: { currentMenuType: { id: projectId } },
+    disableAppMonitor,
+    enableAppMonitor,
   } = useInstanceStore();
   const modalStyle = useMemo(() => ({
     width: 'calc(100vw - 3.52rem)',
@@ -208,7 +210,28 @@ const IstModals = injectIntl(observer(() => {
     detailsStore.setTargetCount({});
     refresh();
   }
-
+  const disablieMonitor = async () => {
+    try {
+      Modal.open({
+        title: '停用应用监控',
+        key: Modal.key(),
+        children:
+  <div>
+    确定要停用应用
+    {baseDs.current.get('code')}
+    的监控吗？
+    <br />
+    停用后，应用的异常与停机数据将不再收集；
+    <br />
+    已经收集的，近6个月内的监控数据不会清除，后续开启后可继续查看
+  </div>,
+        okText: '停用',
+        onOk: disableAppMonitor,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
   function getHeader() {
     const [envId] = parentId.split('**');
     const envRecord = treeDs.find((record) => record.get('key') === envId);
@@ -222,6 +245,7 @@ const IstModals = injectIntl(observer(() => {
     const btnDisabled = !connect || !status || (status !== 'failed' && status !== 'running');
     const marketDisable = isMarket && !appAvailable;
     const isOperating = status === 'operating';
+    const metricDeployStatus = record?.get('devopsDeployAppCenterEnvDTO').metricDeployStatus;
 
     const buttons = [!isMiddleware && {
       name: format({ id: 'ModifyValues' }),
@@ -273,6 +297,15 @@ const IstModals = injectIntl(observer(() => {
       icon: 'refresh',
       handler: refresh,
       display: true,
+    }, {
+      name: metricDeployStatus ? '停用应用监控' : '开启应用监控',
+      icon: 'power_settings_new',
+      handler: metricDeployStatus ? disablieMonitor : enableAppMonitor,
+      disabled: !connect,
+      tooltipsConfig: {
+        title: !connect ? '环境状态未连接，无法执行此操作' : '',
+        placement: 'bottom',
+      },
     }].filter(Boolean);
 
     return <HeaderButtons items={buttons} showClassName />;

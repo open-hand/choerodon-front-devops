@@ -1,0 +1,32 @@
+@prefixCls: c7ncd-app-center-appMonitor-chartHeader;
+
+.@{prefixCls} {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    &-select{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        &-day{
+            margin-left:21px;
+            font-size: 13px;
+        }
+        &-datePiker{
+            width:210px;
+            height:32px;
+        }
+    }
+    &-select-nothing{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        &-day{
+            margin-left:21px;
+            font-size: 13px;
+            .c7ncd-customTabs-item {
+                background:#f5f6fa ;
+            }
+        }
+    }
+}
