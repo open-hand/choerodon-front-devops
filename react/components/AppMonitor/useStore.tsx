@@ -1,6 +1,7 @@
 import { useLocalStore } from 'mobx-react-lite';
 import moment from 'moment';
 import { deployAppCenterApi } from '@/api';
+import { formateTime } from '@/utils/formateTime';
 
 export default function useStore() {
   return useLocalStore(() => ({
@@ -33,12 +34,12 @@ export default function useStore() {
         renderXDate(item.date),
         item.duration, '异常',
         moment(item.startTime).format('YYYY-MM-DD HH:mm:ss'), moment(item.endTime).format('YYYY-MM-DD HH:mm:ss'),
-        moment(item.startTime).format('mm分ss秒')]);
+        formateTime(item.duration)]);
       result.downTimeDurationList = result.downTimeDurationList?.map((item:any) => [
         renderXDate(item.date),
         item.duration, '停机', moment(item.startTime).format('YYYY-MM-DD HH:mm:ss'),
         moment(item.endTime).format('YYYY-MM-DD HH:mm:ss'),
-        moment(item.endTime).format('mm分ss秒')]);
+        formateTime(item.duration)]);
       this.setDurationData(result);
     },
   }));

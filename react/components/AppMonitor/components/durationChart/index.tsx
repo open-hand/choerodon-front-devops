@@ -6,6 +6,7 @@ import moment from 'moment';
 import ChartHeader from '../chartHeader';
 import './index.less';
 import useStore from '../../useStore';
+import { formateTime } from '@/utils/formateTime';
 
 const DurationChart = (props: any) => {
   const colors = ['rgba(250, 173, 20, 0.4)', 'rgba(247, 103, 118, 0.4) '];
@@ -127,11 +128,11 @@ const DurationChart = (props: any) => {
         <div className={`${prefixCls}-description-title`}>
           <div className={`${prefixCls}-description-title-abnormal`}>
             异常总时长：
-            <span className={`${prefixCls}-description-title-content`}>{store.getDurationData.exceptionTotalDuration}</span>
+            <span className={`${prefixCls}-description-title-content`}>{formateTime(store.getDurationData.exceptionTotalDuration)}</span>
           </div>
           <div className={`${prefixCls}-description-title-stop`}>
             停机总时长：
-            <span className={`${prefixCls}-description-title-content`}>{store.getDurationData.downTimeTotalDuration}</span>
+            <span className={`${prefixCls}-description-title-content`}>{formateTime(store.getDurationData.downTimeTotalDuration)}</span>
           </div>
         </div>
         <div className={`${prefixCls}-description-image`}>
