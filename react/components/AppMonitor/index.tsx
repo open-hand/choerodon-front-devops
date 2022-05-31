@@ -19,8 +19,8 @@ const AppMonitor = (props:DataProps) => {
   const {
     envConnected, connect,
   } = appDs.current?.toData() || {};
-  const metricDeployStatus = appDs.current?.toData().metricDeployStatus
-  || appDs.current?.toData().devopsDeployAppCenterEnvDTO.metricDeployStatus;
+  const metricDeployStatus = appDs.current?.toData()?.metricDeployStatus
+  || appDs.current?.toData().devopsDeployAppCenterEnvDTO?.metricDeployStatus;
 
   const renderChart = () => (
     <div>

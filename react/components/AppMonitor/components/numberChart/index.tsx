@@ -135,11 +135,11 @@ const NumberChart = (props: any) => {
         <div className={`${prefixCls}-description-title`}>
           <div className={`${prefixCls}-description-title-abnormal`}>
             异常总次数：
-            {store.getNumberData.exceptionTotalTimes}
+            <span className={`${prefixCls}-description-title-content`}>{store.getNumberData.exceptionTotalTimes}</span>
           </div>
           <div className={`${prefixCls}-description-title-stop`}>
             停机总次数：
-            {store.getNumberData.downTimeTotalTimes}
+            <span className={`${prefixCls}-description-title-content`}>{store.getNumberData.downTimeTotalTimes}</span>
           </div>
         </div>
         <div className={`${prefixCls}-description-image`}>

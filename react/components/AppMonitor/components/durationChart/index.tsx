@@ -127,11 +127,11 @@ const DurationChart = (props: any) => {
         <div className={`${prefixCls}-description-title`}>
           <div className={`${prefixCls}-description-title-abnormal`}>
             异常总时长：
-            {store.getDurationData.exceptionTotalDuration}
+            <span className={`${prefixCls}-description-title-content`}>{store.getDurationData.exceptionTotalDuration}</span>
           </div>
           <div className={`${prefixCls}-description-title-stop`}>
             停机总时长：
-            {store.getDurationData.downTimeTotalDuration}
+            <span className={`${prefixCls}-description-title-content`}>{store.getDurationData.downTimeTotalDuration}</span>
           </div>
         </div>
         <div className={`${prefixCls}-description-image`}>
