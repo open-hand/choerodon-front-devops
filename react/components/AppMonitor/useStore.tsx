@@ -25,18 +25,13 @@ export default function useStore() {
     },
     async getDurationResult(data:any) {
       const result = await deployAppCenterApi.getDuration(data);
-      const renderXDate = (item:any) => {
-        const newArray = item.split('-');
-        newArray.splice(0, 1);
-        return newArray.join('/');
-      };
       result.exceptionDurationList = result.exceptionDurationList?.map((item:any) => [
-        renderXDate(item.date),
+        item.date,
         item.duration, '异常',
         moment(item.startTime).format('YYYY-MM-DD HH:mm:ss'), moment(item.endTime).format('YYYY-MM-DD HH:mm:ss'),
         formateTime(item.duration)]);
       result.downTimeDurationList = result.downTimeDurationList?.map((item:any) => [
-        renderXDate(item.date),
+        item.date,
         item.duration, '停机', moment(item.startTime).format('YYYY-MM-DD HH:mm:ss'),
         moment(item.endTime).format('YYYY-MM-DD HH:mm:ss'),
         formateTime(item.duration)]);

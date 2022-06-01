@@ -15,14 +15,6 @@ const DurationChart = (props: any) => {
   const [selectValue, setSelectValue] = useState(getNearlyDays(-6));
   const [selectDateValue, setSelectDateValue] = useState(getNearlyDays(-6));
   const store = useStore();
-  const renderXDate = () => {
-    const res = store.getDurationData.dateList?.map((item:any) => {
-      const newArray = item.split('-');
-      newArray.splice(0, 1);
-      return newArray.join('/');
-    });
-    return res;
-  };
   const getDurationOption = () => ({
     color: colors,
     tooltip: {
@@ -36,11 +28,10 @@ const DurationChart = (props: any) => {
         return `问题类型：${param.data[2]}<br/>发生时间：${
           param.data[3]}<br/>解决时间：${param.data[4]}<br/>持续时长：${param.data[5]}`;
       },
-      comfine: true,
     },
     xAxis: {
-      type: 'category',
-      data: renderXDate(),
+      type: 'time',
+      scale: true,
       axisLine: {
         lineStyle: {
           color: 'rgba(0, 0, 0, 0.45)',
@@ -57,6 +48,7 @@ const DurationChart = (props: any) => {
     },
     yAxis: {
       type: 'value',
+      scale: true,
       axisLine: {
         lineStyle: {
           color: 'rgba(0, 0, 0, 0.45)',
