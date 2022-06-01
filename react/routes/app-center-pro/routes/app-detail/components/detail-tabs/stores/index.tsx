@@ -17,8 +17,8 @@ import {
   POD_DETAILS,
   RESOURCE,
   RUNNING_DETAILS,
+  APPMONITOR,
 } from './CONST';
-import useStore, { StoreProps } from './useStore';
 import runningDetailsStore, { StoreProps as DetailsStoreProps } from './RunningDetailsStore';
 import AppEventsDataSet from './AppEventsDataSet';
 import PodsDetailsDataSet from './PodsDetailsDataSet';
@@ -41,7 +41,6 @@ interface ContextProps {
   intlPrefix: string,
   formatMessage(arg0: object, arg1?: object): string,
   tabKeys: {name: string, key: string}[],
-  appDetailTabStore: StoreProps,
   refresh: (refreshDetails?:boolean, callback?:CallableFunction) => void,
   loadData: (...args:any[])=>any
   appEventsDs: DataSet,
@@ -51,7 +50,7 @@ interface ContextProps {
 //   configurationDetailDataSet:DataSet,
   podDetialsQuery:(...args:any[]) => any;
   projectId: string,
-  instanceId?:any,
+  instanceId?:any
 }
 
 const Store = createContext({} as ContextProps);
@@ -74,6 +73,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
     deployType,
     rdupmType,
     appDs,
+    appDetailTabStore,
   } = useAppDetailsStore();
 
   const intlPrefix = 'c7ncd.deployment';
@@ -128,8 +128,6 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props: any)
   //     ),
   //     [],
   //   );
-
-  const appDetailTabStore = useStore({ defaultKey: tabKeys[0] });
 
   const loadData = useCallback(() => {
     switch (appDetailTabStore.currentTabKey) {

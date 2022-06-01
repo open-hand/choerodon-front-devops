@@ -96,7 +96,7 @@ const DurationChart = (props: any) => {
         endTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
       },
     });
-  }, []);
+  }, [appId]);
   const handleTabChange = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     name: string | number,
@@ -120,6 +120,7 @@ const DurationChart = (props: any) => {
       <ChartHeader
         handleTabChange={handleTabChange}
         title="异常与停机持续时长图"
+        tooltipText="该图表展示了当前应用在一段时间内出现的每一次异常与停机的持续时长。"
         selectedValue={selectValue}
         handleDateChange={handleDateChange}
         selectDateValue={selectDateValue}
@@ -128,11 +129,11 @@ const DurationChart = (props: any) => {
         <div className={`${prefixCls}-description-title`}>
           <div className={`${prefixCls}-description-title-abnormal`}>
             异常总时长：
-            <span className={`${prefixCls}-description-title-content`}>{formateTime(store.getDurationData.exceptionTotalDuration)}</span>
+            <span className={`${prefixCls}-description-title-content`}>{formateTime(store.getDurationData.exceptionTotalDuration) || '-'}</span>
           </div>
           <div className={`${prefixCls}-description-title-stop`}>
             停机总时长：
-            <span className={`${prefixCls}-description-title-content`}>{formateTime(store.getDurationData.downTimeTotalDuration)}</span>
+            <span className={`${prefixCls}-description-title-content`}>{formateTime(store.getDurationData.downTimeTotalDuration) || '-'}</span>
           </div>
         </div>
         <div className={`${prefixCls}-description-image`}>

@@ -104,7 +104,7 @@ const NumberChart = (props: any) => {
         endTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
       },
     });
-  }, []);
+  }, [appId]);
   const handleTabChange = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     name: string | number,
@@ -130,38 +130,31 @@ const NumberChart = (props: any) => {
         title="异常与停机次数图"
         selectedValue={selectValue}
         selectDateValue={selectDateValue}
+        tooltipText={(
+          <div>
+            <div>该图表展示了当前应用在一段时间内出现异常与停机情况的次数。</div>
+            <div>异常状态表示：Chart应用内，Deployment或StatefulSet中存在不是running状态的Pod；</div>
+            <div>停机状态表示：Chart应用内，Deployment或StatefulSet中所有Pod都不是running状态。</div>
+          </div>
+)}
       />
       <div className={`${prefixCls}-description`}>
         <div className={`${prefixCls}-description-title`}>
           <div className={`${prefixCls}-description-title-abnormal`}>
             异常总次数：
-            <span className={`${prefixCls}-description-title-content`}>{store.getNumberData.exceptionTotalTimes}</span>
+            <span className={`${prefixCls}-description-title-content`}>{store.getNumberData.exceptionTotalTimes || '-'}</span>
           </div>
           <div className={`${prefixCls}-description-title-stop`}>
             停机总次数：
-            <span className={`${prefixCls}-description-title-content`}>{store.getNumberData.downTimeTotalTimes}</span>
+            <span className={`${prefixCls}-description-title-content`}>{store.getNumberData.downTimeTotalTimes || '-'}</span>
           </div>
         </div>
         <div className={`${prefixCls}-description-image`}>
-          {/* <div className={`${prefixCls}-description-image-abnormal`}>
-              <div className={`${prefixCls}-description-image-abnormal-top`} style={{ borderRadius: '50% / 100% 100% 0 0' }} />
-              <div className={`${prefixCls}-description-image-abnormal-top-inner`} style={{ borderRadius: '50% / 100% 100% 0 0' }} />
-              <div className={`${prefixCls}-description-image-abnormal-bottom`} style={{ borderRadius: '0 0 100% 50% / 100%' }} />
-              <div className={`${prefixCls}-description-image-abnormal-bottom-inner`} style={{ borderRadius: '0 0 100% 50% / 100%' }} />
-            </div> */}
           <img src={abnormalSvg} alt="" />
           <div className={`${prefixCls}-description-abnormal`}>异常</div>
-
-          {/* <div className={`${prefixCls}-description-image-stop`} style={{ borderRadius: '50% / 100% 100% 0 0' }}>
-              <div className={`${prefixCls}-description-image-stop-top`} style={{ borderRadius: '50% / 100% 100% 0 0' }} />
-              <div className={`${prefixCls}-description-image-stop-top-inner`} style={{ borderRadius: '0 0 100% 50% / 100%' }} />
-              <div className={`${prefixCls}-description-image-stop-bottom`} style={{ borderRadius: '0 0 100% 50% / 100%' }} />
-              <div className={`${prefixCls}-description-image-stop-bottom-inner`} style={{ borderRadius: '0 0 100% 50% / 100%' }} />
-            </div> */}
           <img src={stopSvg} alt="" />
           <div className={`${prefixCls}-description-stop`}>停机</div>
         </div>
-
       </div>
       <ReactEcharts
         option={getNumberOption()}

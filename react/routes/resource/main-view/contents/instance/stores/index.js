@@ -81,6 +81,9 @@ export const StoreProvider = injectIntl(inject('AppState')(
         case tabs.PODS_TAB:
           podsDs.query();
           break;
+        case tabs.APP_MONITOR:
+          baseDs.query();
+          break;
         default:
       }
     }

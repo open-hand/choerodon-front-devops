@@ -34,13 +34,13 @@ const DetailsTabs = () => {
   const {
     subfixCls,
     tabKeys,
-    appDetailTabStore,
     // configurationDetailDataSet,
     instanceId,
   } = useAppDetailTabsStore();
   const {
     appDs,
     enableAppMonitor,
+    appDetailTabStore,
   } = useAppDetailsStore();
 
   const {
