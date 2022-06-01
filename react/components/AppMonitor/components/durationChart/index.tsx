@@ -69,7 +69,7 @@ const DurationChart = (props: any) => {
         name: 'abnormal',
         symbolSize: 10,
         itemStyle: {
-          borderColor: 'rgba(247, 103, 118, 1)',
+          borderColor: 'rgba(250, 173, 20, 1)',
           borderWidth: 1,
         },
         data: store.getDurationData.exceptionDurationList,
@@ -81,7 +81,7 @@ const DurationChart = (props: any) => {
         data: store.getDurationData.downTimeDurationList,
         type: 'scatter',
         itemStyle: {
-          borderColor: 'rgba(250, 173, 20, 1)',
+          borderColor: 'rgba(247, 103, 118, 1)',
           borderWidth: 1,
         },
       },

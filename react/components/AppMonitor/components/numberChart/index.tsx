@@ -34,7 +34,7 @@ const NumberChart = (props: any) => {
           newArray.splice(0, 1);
           return newArray.join('/') === param[0].name;
         });
-        return `日期：${res[0]?.split('-').join('/')}<br/>异常次数：${param[0].value}<br/>停机次数:${param[1].value}`;
+        return `日期：${res[0]?.split('-').join('/')}<br/>异常次数：${param[0].value}<br/>停机次数：${param[1].value}`;
       },
       backgroundColor: 'rgba(15, 19, 88, 0.85)',
       textStyle: {

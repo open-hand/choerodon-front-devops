@@ -27,12 +27,12 @@ export default function useStore() {
       const result = await deployAppCenterApi.getDuration(data);
       result.exceptionDurationList = result.exceptionDurationList?.map((item:any) => [
         item.date,
-        item.duration, '异常',
+        item.durationMinute, '异常',
         moment(item.startTime).format('YYYY-MM-DD HH:mm:ss'), moment(item.endTime).format('YYYY-MM-DD HH:mm:ss'),
         formateTime(item.duration)]);
       result.downTimeDurationList = result.downTimeDurationList?.map((item:any) => [
         item.date,
-        item.duration, '停机', moment(item.startTime).format('YYYY-MM-DD HH:mm:ss'),
+        item.durationMinute, '停机', moment(item.startTime).format('YYYY-MM-DD HH:mm:ss'),
         moment(item.endTime).format('YYYY-MM-DD HH:mm:ss'),
         formateTime(item.duration)]);
       this.setDurationData(result);

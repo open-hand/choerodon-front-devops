@@ -27,5 +27,5 @@ export const formateTime = (time:any) => {
     return '';
   };
 
-  return `${hours > 0 ? `${hours}分` : ''}${renderMinute(minute)}${renderSecond(formatSecond)}`;
+  return `${hours > 0 ? `${hours}时` : ''}${renderMinute(minute)}${renderSecond(formatSecond)}`;
 };
