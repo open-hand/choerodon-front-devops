@@ -64,6 +64,18 @@ const DurationChart = (props: any) => {
         padding: [0, 0, 0, -40],
       },
     },
+    toolbox: {
+      feature: {
+        dataZoom: {},
+        brush: {
+          type: [''],
+        },
+      },
+      left: '80%',
+      top: '8%',
+    },
+    brush: {
+    },
     series: [
       {
         name: 'abnormal',
