@@ -67,15 +67,23 @@ const DurationChart = (props: any) => {
     series: [
       {
         name: 'abnormal',
-        symbolSize: 8,
+        symbolSize: 10,
+        itemStyle: {
+          borderColor: 'rgba(247, 103, 118, 1)',
+          borderWidth: 1,
+        },
         data: store.getDurationData.exceptionDurationList,
         type: 'scatter',
       },
       {
-        symbolSize: 8,
+        symbolSize: 10,
         name: 'stop',
         data: store.getDurationData.downTimeDurationList,
         type: 'scatter',
+        itemStyle: {
+          borderColor: 'rgba(250, 173, 20, 1)',
+          borderWidth: 1,
+        },
       },
     ],
   });

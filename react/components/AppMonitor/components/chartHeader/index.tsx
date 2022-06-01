@@ -26,12 +26,13 @@ const ChartHeader = (props:any) => {
       value: getNearlyDays(-29),
     },
   ];
+
   return (
     <div className={prefixCls}>
       <div className={`${prefixCls}-title`}>{title}</div>
       <div className={`${prefixCls}-select`}>
-        <DatePicker className={`${prefixCls}-select-datePiker`} value={selectDateValue} onChange={handleDateChange} range={['startTime', 'endTime']} placeholder={['开始日期', '结束日期']} />
         <CustomTabs className={selectedValue === 'nothing' ? `${prefixCls}-select-nothing-day` : `${prefixCls}-select-day`} data={tabData} selectedTabValue={selectedValue} onChange={handleTabChange} />
+        <DatePicker className={`${prefixCls}-select-datePiker`} value={selectDateValue} onChange={handleDateChange} range={['startTime', 'endTime']} placeholder={['开始日期', '结束日期']} />
       </div>
     </div>
   );
