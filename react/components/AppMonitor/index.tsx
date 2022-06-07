@@ -1,12 +1,11 @@
 import React from 'react';
 import './index.less';
 import { observer } from 'mobx-react-lite';
-import { Button, Tooltip } from 'choerodon-ui/pro';
+import { Button, Tooltip, Spin } from 'choerodon-ui/pro';
 import monitorSvg from '@/routes/app-center-pro/assets/monitor_empty.svg';
 import { DataProps } from './type';
 import NumberChart from './components/numberChart';
 import DurationChart from './components/durationChart';
-import { useAddCDTaskStore } from '@/routes/app-pipeline/routes/pipeline-manage/components/PipelineCreate/components/AddCDTask/stores';
 
 const prefixCls = 'c7ncd-app-center-appMonitor';
 
@@ -14,7 +13,10 @@ const AppMonitor = (props:DataProps) => {
   const {
     enableAppMonitor,
     appDs,
-    appId,
+    getCurrentNumberResult,
+    getCurrentDurationResult,
+    numberData,
+    durationData,
   } = props;
   const {
     envConnected, connect,
@@ -23,11 +25,24 @@ const AppMonitor = (props:DataProps) => {
   || appDs.current?.toData().devopsDeployAppCenterEnvDTO?.metricDeployStatus;
 
   const renderChart = () => (
-    <div>
-      <NumberChart appId={appId} />
-      <DurationChart appId={appId} />
-    </div>
-
+    (numberData && durationData)
+      ? (
+        <div>
+          <NumberChart
+            getCurrentNumberResult={getCurrentNumberResult}
+            numberData={numberData}
+          />
+          <DurationChart
+            getCurrentDurationResult={getCurrentDurationResult}
+            durationData={durationData}
+          />
+        </div>
+      )
+      : (
+        <div className={`${prefixCls}-spin`}>
+          <Spin />
+        </div>
+      )
   );
 
   return (

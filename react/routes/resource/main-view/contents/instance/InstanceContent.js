@@ -243,8 +243,20 @@ const InstanceContent = observer(() => {
     return [detailsTab, casesTab];
   }
   const record = baseDs.current;
+
+  const getCurrentNumberResult = (val) => {
+    istStore.getNumberResult({ appId: record?.get('devopsDeployAppCenterEnvDTO').id, ...val });
+  };
+  const getCurrentDurationResult = (val) => {
+    istStore.getDurationResult({ appId: record?.get('devopsDeployAppCenterEnvDTO').id, ...val });
+  };
   const monitorData = {
-    enableAppMonitor, appDs: baseDs, appId: record?.get('devopsDeployAppCenterEnvDTO').id,
+    enableAppMonitor,
+    appDs: baseDs,
+    numberData: istStore.getNumberData,
+    durationData: istStore.getDurationData,
+    getCurrentNumberResult,
+    getCurrentDurationResult,
   };
   return (
     <div className={`${prefixCls}-instance`}>

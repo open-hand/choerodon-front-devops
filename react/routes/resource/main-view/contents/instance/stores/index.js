@@ -1,11 +1,12 @@
 import React, {
   createContext, useMemo, useContext, useEffect,
 } from 'react';
-import { useFormatMessage } from '@choerodon/master';
+import { useFormatMessage, getNearlyDays } from '@choerodon/master';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
+import moment from 'moment';
 import { useResourceStore } from '../../../../stores';
 import BaseInfoDataSet from './BaseInfoDataSet';
 import CasesDataSet from './CasesDataSet';
@@ -140,6 +141,30 @@ export const StoreProvider = injectIntl(inject('AppState')(
       }
     }, [getUpTarget]);
 
+    const monitorRefresh = () => {
+      istStore.setNumberData(null);
+      istStore.setDurationData(null);
+      istStore.getNumberResult({
+        appId: baseDs.current?.get('devopsDeployAppCenterEnvDTO').id,
+        date: {
+          startTime: moment(getNearlyDays(-6)).format('YYYY-MM-DD HH:mm:ss'),
+          endTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+        },
+      });
+      istStore.getDurationResult({
+        appId: baseDs.current?.get('devopsDeployAppCenterEnvDTO').id,
+        date: {
+          startTime: moment(getNearlyDays(-6)).format('YYYY-MM-DD HH:mm:ss'),
+          endTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+        },
+      });
+    };
+    useEffect(() => {
+      if (baseDs.current?.get('devopsDeployAppCenterEnvDTO').id) {
+        monitorRefresh();
+      }
+    }, [baseDs.current?.get('devopsDeployAppCenterEnvDTO').id]);
+
     const value = {
       ...props,
       tabs,
@@ -155,6 +180,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       treeDs,
       enableAppMonitor,
       disableAppMonitor,
+      monitorRefresh,
     };
     return (
       <Store.Provider value={value}>

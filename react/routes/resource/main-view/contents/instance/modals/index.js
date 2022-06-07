@@ -50,6 +50,7 @@ const IstModals = injectIntl(observer(() => {
     AppState: { currentMenuType: { id: projectId } },
     disableAppMonitor,
     enableAppMonitor,
+    monitorRefresh,
   } = useInstanceStore();
   const modalStyle = useMemo(() => ({
     width: 'calc(100vw - 3.52rem)',
@@ -166,6 +167,7 @@ const IstModals = injectIntl(observer(() => {
   }
 
   function refresh() {
+    monitorRefresh();
     checkIstExist().then((query) => {
       if (query) {
         treeDs.query();

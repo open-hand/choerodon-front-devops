@@ -1,23 +1,21 @@
 import ReactEcharts from 'echarts-for-react';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { getNearlyDays } from '@choerodon/master';
 import moment from 'moment';
 import ChartHeader from '../chartHeader';
 import './index.less';
 import abnormalSvg from '@/images/abnormal.svg';
 import stopSvg from '@/images/stop.svg';
-import useStore from '../../useStore';
 
 const NumberChart = (props: any) => {
   const colors = ['#FAAD14 ', '#F76776 '];
-  const { appId } = props;
+  const { numberData, getCurrentNumberResult } = props;
   const prefixCls = 'c7ncd-app-center-appMonitor-numberChart';
-  const store = useStore();
   const [selectValue, setSelectValue] = useState(getNearlyDays(-6));
   const [selectDateValue, setSelectDateValue] = useState(getNearlyDays(-6));
   const renderXDate = () => {
-    const res = store.getNumberData.dateList?.map((item:any) => {
+    const res = numberData.dateList?.map((item:any) => {
       const newArray = item.split('-');
       newArray.splice(0, 1);
       return newArray.join('/');
@@ -29,7 +27,7 @@ const NumberChart = (props: any) => {
     tooltip: {
       trigger: 'axis',
       formatter(param: any) {
-        const res = store.getNumberData.dateList?.filter((item:any) => {
+        const res = numberData.dateList?.filter((item:any) => {
           const newArray = item.split('-');
           newArray.splice(0, 1);
           return newArray.join('/') === param[0].name;
@@ -81,14 +79,14 @@ const NumberChart = (props: any) => {
     series: [
       {
         name: 'abnormal',
-        data: store.getNumberData.exceptionTimesList,
+        data: numberData.exceptionTimesList,
         type: 'line',
         symbol: 'circle',
         smooth: true,
       },
       {
         name: 'stop',
-        data: store.getNumberData.downTimeList,
+        data: numberData.downTimeList,
         type: 'line',
         symbol: 'circle',
         smooth: true,
@@ -96,15 +94,6 @@ const NumberChart = (props: any) => {
     ],
   });
 
-  useEffect(() => {
-    store.getNumberResult({
-      appId,
-      date: {
-        startTime: moment(getNearlyDays(-6)).format('YYYY-MM-DD HH:mm:ss'),
-        endTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-      },
-    });
-  }, [appId]);
   const handleTabChange = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     name: string | number,
@@ -113,14 +102,14 @@ const NumberChart = (props: any) => {
   ) => {
     setSelectValue(value);
     setSelectDateValue('');
-    const paramData = { appId, date: { startTime: moment(value).format('YYYY-MM-DD HH:mm:ss'), endTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss') } };
-    store.getNumberResult(paramData);
+    const paramData = { date: { startTime: moment(value).format('YYYY-MM-DD HH:mm:ss'), endTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss') } };
+    getCurrentNumberResult(paramData);
   };
   const handleDateChange = (value:any, oldValue:any) => {
     setSelectValue('nothing');
     setSelectDateValue(value);
-    const paramData = { appId, date: { startTime: moment(value.startTime).format('YYYY-MM-DD HH:mm:ss'), endTime: moment(value.endTime).format('YYYY-MM-DD HH:mm:ss') } };
-    store.getNumberResult(paramData);
+    const paramData = { date: { startTime: moment(value.startTime).format('YYYY-MM-DD HH:mm:ss'), endTime: moment(value.endTime).format('YYYY-MM-DD HH:mm:ss') } };
+    getCurrentNumberResult(paramData);
   };
   return (
     <div className={`${prefixCls}-numberChart`}>
@@ -142,11 +131,11 @@ const NumberChart = (props: any) => {
         <div className={`${prefixCls}-description-title`}>
           <div className={`${prefixCls}-description-title-abnormal`}>
             异常总次数：
-            <span className={`${prefixCls}-description-title-content`}>{store.getNumberData.exceptionTotalTimes || '-'}</span>
+            <span className={`${prefixCls}-description-title-content`}>{numberData.exceptionTotalTimes || '-'}</span>
           </div>
           <div className={`${prefixCls}-description-title-stop`}>
             停机总次数：
-            <span className={`${prefixCls}-description-title-content`}>{store.getNumberData.downTimeTotalTimes || '-'}</span>
+            <span className={`${prefixCls}-description-title-content`}>{numberData.downTimeTotalTimes || '-'}</span>
           </div>
         </div>
         <div className={`${prefixCls}-description-image`}>

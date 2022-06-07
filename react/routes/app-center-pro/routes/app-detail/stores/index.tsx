@@ -1,9 +1,11 @@
 /* eslint-disable max-len */
 import React, {
-  createContext, useContext, useMemo,
+  createContext, useContext, useMemo, useEffect,
 } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
+import { getNearlyDays } from '@choerodon/master';
+import moment from 'moment';
 import { useAppCenterProStore } from '@/routes/app-center-pro/stores';
 import { DataSet } from '@/interface';
 import AppDataSet from './AppDataSet';
@@ -70,7 +72,27 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
 
   // 制品来源分组，3大组
   const appChartSourceGroup = getChartSourceGroup(appSource, deployType);
-
+  const monitorRefresh = () => {
+    appDetailTabStore.setNumberData(null);
+    appDetailTabStore.setDurationData(null);
+    appDetailTabStore.getNumberResult({
+      appId,
+      date: {
+        startTime: moment(getNearlyDays(-6)).format('YYYY-MM-DD HH:mm:ss'),
+        endTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+      },
+    });
+    appDetailTabStore.getDurationResult({
+      appId,
+      date: {
+        startTime: moment(getNearlyDays(-6)).format('YYYY-MM-DD HH:mm:ss'),
+        endTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+      },
+    });
+  };
+  useEffect(() => {
+    monitorRefresh();
+  }, [appId]);
   const value = {
     ...props,
     subfixCls: `${prefixCls}-appDetail`,

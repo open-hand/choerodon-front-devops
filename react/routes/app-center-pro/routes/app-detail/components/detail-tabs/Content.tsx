@@ -47,13 +47,23 @@ const DetailsTabs = () => {
     rdupmType,
     appId,
   } = useParams<any>();
-  const monitorData = {
-    enableAppMonitor, appDs, appId,
-  };
   const handleTabChange = (tabKey: string) => {
     appDetailTabStore.setCurrentTabKey(tabKey);
   };
-
+  const getCurrentNumberResult = (val:any) => {
+    appDetailTabStore.getNumberResult({ appId, ...val });
+  };
+  const getCurrentDurationResult = (val:any) => {
+    appDetailTabStore.getDurationResult({ appId, ...val });
+  };
+  const monitorData = {
+    enableAppMonitor,
+    appDs,
+    numberData: appDetailTabStore.getNumberData,
+    durationData: appDetailTabStore.getDurationData,
+    getCurrentNumberResult,
+    getCurrentDurationResult,
+  };
   const tabContent = useMemo(
     () => ({
       [APP_EVENT]: <AppEvent />,
@@ -71,7 +81,7 @@ const DetailsTabs = () => {
     //     />
     //   ),
     }),
-    [instanceId],
+    [instanceId, monitorData],
   );
 
   return (

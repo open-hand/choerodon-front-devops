@@ -1,20 +1,18 @@
 import ReactEcharts from 'echarts-for-react';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { getNearlyDays } from '@choerodon/master';
 import moment from 'moment';
 import ChartHeader from '../chartHeader';
 import './index.less';
-import useStore from '../../useStore';
 import { formateTime } from '@/utils/formateTime';
 
 const DurationChart = (props: any) => {
   const colors = ['rgba(250, 173, 20, 0.4)', 'rgba(247, 103, 118, 0.4) '];
-  const { appId } = props;
+  const { durationData, getCurrentDurationResult } = props;
   const prefixCls = 'c7ncd-app-center-appMonitor-durationChart';
   const [selectValue, setSelectValue] = useState(getNearlyDays(-6));
   const [selectDateValue, setSelectDateValue] = useState(getNearlyDays(-6));
-  const store = useStore();
   const getDurationOption = () => ({
     color: colors,
     tooltip: {
@@ -84,13 +82,13 @@ const DurationChart = (props: any) => {
           borderColor: 'rgba(250, 173, 20, 1)',
           borderWidth: 1,
         },
-        data: store.getDurationData.exceptionDurationList,
+        data: durationData.exceptionDurationList,
         type: 'scatter',
       },
       {
         symbolSize: 10,
         name: 'stop',
-        data: store.getDurationData.downTimeDurationList,
+        data: durationData.downTimeDurationList,
         type: 'scatter',
         itemStyle: {
           borderColor: 'rgba(247, 103, 118, 1)',
@@ -99,16 +97,6 @@ const DurationChart = (props: any) => {
       },
     ],
   });
-
-  useEffect(() => {
-    store.getDurationResult({
-      appId,
-      date: {
-        startTime: moment(getNearlyDays(-6)).format('YYYY-MM-DD HH:mm:ss'),
-        endTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-      },
-    });
-  }, [appId]);
   const handleTabChange = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     name: string | number,
@@ -117,15 +105,15 @@ const DurationChart = (props: any) => {
   ) => {
     setSelectValue(value);
     setSelectDateValue('');
-    const paramData = { appId, date: { startTime: moment(value).format('YYYY-MM-DD HH:mm:ss'), endTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss') } };
-    store.getDurationResult(paramData);
+    const paramData = { date: { startTime: moment(value).format('YYYY-MM-DD HH:mm:ss'), endTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss') } };
+    getCurrentDurationResult(paramData);
   };
 
   const handleDateChange = (value:any, oldValue:any) => {
     setSelectValue('nothing');
     setSelectDateValue(value);
-    const paramData = { appId, date: { startTime: moment(value.startTime).format('YYYY-MM-DD HH:mm:ss'), endTime: moment(value.endTime).format('YYYY-MM-DD HH:mm:ss') } };
-    store.getDurationResult(paramData);
+    const paramData = { date: { startTime: moment(value.startTime).format('YYYY-MM-DD HH:mm:ss'), endTime: moment(value.endTime).format('YYYY-MM-DD HH:mm:ss') } };
+    getCurrentDurationResult(paramData);
   };
   return (
     <div className={`${prefixCls}-numberChart`}>
@@ -141,11 +129,11 @@ const DurationChart = (props: any) => {
         <div className={`${prefixCls}-description-title`}>
           <div className={`${prefixCls}-description-title-abnormal`}>
             异常总时长：
-            <span className={`${prefixCls}-description-title-content`}>{formateTime(store.getDurationData.exceptionTotalDuration) || '-'}</span>
+            <span className={`${prefixCls}-description-title-content`}>{formateTime(durationData.exceptionTotalDuration) || '-'}</span>
           </div>
           <div className={`${prefixCls}-description-title-stop`}>
             停机总时长：
-            <span className={`${prefixCls}-description-title-content`}>{formateTime(store.getDurationData.downTimeTotalDuration) || '-'}</span>
+            <span className={`${prefixCls}-description-title-content`}>{formateTime(durationData.downTimeTotalDuration) || '-'}</span>
           </div>
         </div>
         <div className={`${prefixCls}-description-image`}>
