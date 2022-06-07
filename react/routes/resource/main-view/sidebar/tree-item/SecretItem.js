@@ -1,10 +1,11 @@
+/* eslint-disable */
 import React, { Fragment, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
 import { Action } from '@choerodon/master';
 import { Icon } from 'choerodon-ui';
-import { Modal } from 'choerodon-ui/pro';
+import { Modal, Tooltip } from 'choerodon-ui/pro';
 import KeyValueModal from '@/components/key-value';
 import { useResourceStore } from '../../../stores';
 import { useMainStore } from '../../stores';
@@ -120,8 +121,12 @@ function ConfigItem({
 
   return (
     <>
-      <Icon type="vpn_key" />
-      {name}
+      <Tooltip title={name}>
+        <div className="c7ncd-resource-sidebar-tooltip-div">
+          <Icon type="vpn_key" />
+          {name}
+        </div>
+      </Tooltip>
       {getSuffix()}
     </>
   );

@@ -6,7 +6,7 @@ import { injectIntl } from 'react-intl';
 import {
   Action, Choerodon, axios, useFormatMessage,
 } from '@choerodon/master';
-import { Modal } from 'choerodon-ui/pro';
+import { Modal, Tooltip } from 'choerodon-ui/pro';
 import isEmpty from 'lodash/isEmpty';
 import eventStopProp from '@/utils/eventStopProp';
 import PodCircle from '@/components/pod-circle';
@@ -207,11 +207,15 @@ function InstanceItem({
 
   return (
     <>
-      <PodCircle
-        size="small"
-        dataSource={podData}
-      />
-      {name}
+      <Tooltip title={name}>
+        <div className="c7ncd-resource-sidebar-tooltip-div">
+          <PodCircle
+            size="small"
+            dataSource={podData}
+          />
+          {name}
+        </div>
+      </Tooltip>
       {getSuffix()}
     </>
   );

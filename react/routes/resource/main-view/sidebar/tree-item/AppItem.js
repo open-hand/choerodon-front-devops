@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
@@ -75,8 +76,12 @@ function AppItem({
   }
   return (
     <>
-      {renderIcon()}
-      {name}
+      <Tooltip title={name}>
+        <div className="c7ncd-resource-sidebar-tooltip-div">
+          {renderIcon()}
+          {name}
+        </div>
+      </Tooltip>
       {getSuffix()}
     </>
   );
