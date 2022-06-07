@@ -1,9 +1,10 @@
+/* eslint-disable */
 import React, { Fragment, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
 import { Action } from '@choerodon/master';
-import { Icon } from 'choerodon-ui';
+import { Icon, Tooltip } from 'choerodon-ui';
 import { Modal } from 'choerodon-ui/pro';
 import { StatusTag } from '@choerodon/components';
 import { useResourceStore } from '../../../stores';
@@ -120,18 +121,22 @@ function IngressItem({
 
   return (
     <>
-      <Icon type="language" />
-      {name}
-      {record.get('instanceId') && (
-      <StatusTag
-        style={{
-          marginLeft: '5px',
-        }}
-        type="border"
-        colorCode="operating"
-        name="Chart资源"
-      />
-      )}
+      <Tooltip title={name}>
+        <div className="c7ncd-resource-sidebar-tooltip-div">
+          <Icon type="language" />
+          {name}
+          {record.get('instanceId') && (
+          <StatusTag
+            style={{
+              marginLeft: '5px',
+            }}
+            type="border"
+            colorCode="operating"
+            name="Chart资源"
+          />
+          )}
+        </div>
+      </Tooltip>
       {!record.get('instanceId') && getSuffix()}
     </>
   );

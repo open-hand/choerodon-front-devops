@@ -1,9 +1,11 @@
+/* eslint-disable */
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
 import { injectIntl } from 'react-intl';
 import { Action } from '@choerodon/master';
 import { Icon } from 'choerodon-ui';
+import { Modal, Tooltip } from 'choerodon-ui/pro';
 import { useResourceStore } from '../../../stores';
 import eventStopProp from '../../../../../utils/eventStopProp';
 import { useMainStore } from '../../stores';
@@ -62,8 +64,12 @@ function CertItem({
 
   return (
     <>
-      <Icon type="class" />
-      {name}
+      <Tooltip title={name}>
+        <div className="c7ncd-resource-sidebar-tooltip-div">
+          <Icon type="class" />
+          {name}
+        </div>
+      </Tooltip>
       {getSuffix()}
     </>
   );
