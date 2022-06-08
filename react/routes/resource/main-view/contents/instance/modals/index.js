@@ -296,10 +296,6 @@ const IstModals = injectIntl(observer(() => {
         placement: 'bottom',
       },
     }, {
-      icon: 'refresh',
-      handler: refresh,
-      display: true,
-    }, {
       name: metricDeployStatus ? '停用应用监控' : '开启应用监控',
       icon: 'power_settings_new',
       handler: metricDeployStatus ? disablieMonitor : enableAppMonitor,
@@ -308,6 +304,10 @@ const IstModals = injectIntl(observer(() => {
         title: !connect ? '环境状态未连接，无法执行此操作' : '',
         placement: 'bottom',
       },
+    }, {
+      icon: 'refresh',
+      handler: refresh,
+      display: true,
     }].filter(Boolean);
 
     return <HeaderButtons items={buttons} showClassName />;
