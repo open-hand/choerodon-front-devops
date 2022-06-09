@@ -220,7 +220,7 @@ const ListView = withRouter(observer((props) => {
       colorCode = 'operating'
     }
     return (
-      <Tooltip title={formatMessage({ id: colorCode })}>
+      <Tooltip title={format({ id: colorCode })}>
         <div style={{ display: 'inline-block' }}>
           <StatusTag
             colorCode={colorCode}
