@@ -59,7 +59,7 @@ function Branch(props) {
   } = useTableStore();
   const useDetail=getInject('agile:useDetail');
   const [detailProps] = useDetail();
-   const { open, close } = detailProps;
+  const { open, close } = detailProps;
   const { styles, columnsRender } = props;
 
   const format = useFormatMessage('c7ncd.codeManger');

@@ -141,7 +141,11 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
   );
 
   function rendererAppServiceId({ value, text }) {
-    const record = appServiceDs.find((appServiceRecord) => appServiceRecord.get('id') === value);
+    let newValue = value;
+    if (newValue.includes('recent')) {
+      newValue = newValue.replace('-recent', '');
+    }
+    const record = appServiceDs.find((appServiceRecord) => appServiceRecord.get('id') === newValue);
     try {
       return `${text}(${record.get('code')})`;
     } catch (e) {
@@ -149,7 +153,11 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
     }
   }
   const renderAppServiceOption = ({ value, text }) => {
-    const record = appServiceDs.find((appServiceRecord) => appServiceRecord.get('id') === value);
+    let newValue = value;
+    if (newValue.includes('recent')) {
+      newValue = newValue.replace('-recent', '');
+    }
+    const record = appServiceDs.find((appServiceRecord) => appServiceRecord.get('id') === newValue);
     if (record) {
       return (
         <Tooltip title={record.get('externalConfigId') ? '外置GitLab代码仓库的应用服务不支持代码管理功能' : record.get('code')}>
@@ -201,8 +209,8 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
                   id, code, externalConfigId, name: opName,
                 }, index) => (
                   <Option
-                    value={id}
-                    key={index}
+                    value={`${id}-recent`}
+                    key={`${index}-recent`}
                     disabled={Boolean(externalConfigId)}
                   >
                     {opName}
@@ -219,8 +227,8 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
               id, code, externalConfigId, name: opName,
             }, index) => (
               <Option
-                value={id}
-                key={index}
+                value={`${id}`}
+                key={`${index}-app`}
                 disabled={Boolean(externalConfigId)}
               >
                 {opName}
