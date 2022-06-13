@@ -17,7 +17,7 @@ export default ({ formatMessage, projectId }) => ({
     {
       name: 'status',
       type: 'string',
-      label: formatMessage({ id: 'app.active' }),
+      label: '部署结果',
     },
     {
       name: 'creationDate',
