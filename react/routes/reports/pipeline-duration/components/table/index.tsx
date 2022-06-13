@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo } from 'react';
-import TimePopover from '@/components/timePopover';
-import UserInfo from '@/components/userInfo';
 import { Table } from 'choerodon-ui/pro';
 import { injectIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { get, map } from 'lodash';
+import TimePopover from '@/components/timePopover';
+import UserInfo from '@/components/userInfo';
 import getDuration from '@/utils/getDuration';
 import {
   UserDTOProps, Record, DataSet, TableColumnTooltip,

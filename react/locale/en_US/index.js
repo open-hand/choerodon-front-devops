@@ -18,6 +18,7 @@ const enUS = {
   Application: 'Application',
   JavaLib: 'Java Lib',
   create: 'Create',
+  not_audit: 'approval pending',
   running: 'Running',
   operating: 'Operating',
   stopping: 'Stopping',
