@@ -490,11 +490,11 @@ const DetailsTabsHeaderButtons = () => {
       default:
         break;
     }
-    if (!metricDeployStatus) {
-      btnsGroup.push(enableMonitor);
-    } else {
-      btnsGroup.push(disableMonitor);
-    }
+    // if (!metricDeployStatus) {
+    //   btnsGroup.push(enableMonitor);
+    // } else {
+    //   btnsGroup.push(disableMonitor);
+    // }
     return btnsGroup.length ? [{
       name: '更多操作',
       groupBtnItems: btnsGroup,
