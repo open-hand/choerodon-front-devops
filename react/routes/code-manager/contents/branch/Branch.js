@@ -31,7 +31,7 @@ import '../../../main.less';
 import './Branch.less';
 import './index.less';
 import './theme4.less';
-import { get as getInject, mount as injectMount} from '@choerodon/inject';
+import { get as getInject, mount as injectMount, has as hasInject} from '@choerodon/inject';
 import {ALL_TYPE_CODES} from '@/constants/STATUS_TYPE';
 import {getTypeCode} from '@/utils/getTypeCode';
 
@@ -57,9 +57,18 @@ function Branch(props) {
     branchStore,
     prefixCls,
   } = useTableStore();
-  const useDetail=getInject('agile:useDetail');
-  const [detailProps] = useDetail();
-  const { open, close } = detailProps;
+  const [open, setOpen] = useState(null);
+  const [close, setClose] = useState(null);
+  const [detailProps, setDetailProps] = useState(null);
+  if (hasInject('agile:useDetail')) {
+    const useDetail=getInject('agile:useDetail');
+    const [detailProps] = useDetail();
+    const { open, close } = detailProps;
+    setOpen(open);
+    setClose(close);
+    setDetailProps(detailProps);
+  }
+ 
   const { styles, columnsRender } = props;
 
   const format = useFormatMessage('c7ncd.codeManger');
