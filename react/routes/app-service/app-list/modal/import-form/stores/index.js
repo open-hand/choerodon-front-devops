@@ -67,7 +67,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
         IMPORT_METHOD_LIST.push({ type: 'market', img: marketImage });
       }
     }
-
+    const hasBusiness = C7NHasModule('@choerodon/base-business');
     const value = {
       ...props,
       IMPORT_METHOD: IMPORT_METHOD_LIST,
@@ -78,6 +78,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       marketSelectedDs,
       gitlabSelectedDs,
       hasMarket,
+      hasBusiness,
     };
     return (
       <Store.Provider value={value}>
