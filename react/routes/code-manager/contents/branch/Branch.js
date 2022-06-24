@@ -57,16 +57,16 @@ function Branch(props) {
     branchStore,
     prefixCls,
   } = useTableStore();
-  let open=null;
-  let close=null;
-  let detailProps=null;
+  let openCurrent=null;
+  let closeCurrent=null;
+  let detailPropsCurrent=null;
   if (hasInject('agile:useDetail')) {
     const useDetail=getInject('agile:useDetail');
     const [detailProps] = useDetail();
     const { open, close } = detailProps;
-    open=open;
-    close=close;
-    detailProps=detailProps;
+    openCurrent=open;
+    closeCurrent=close;
+    detailPropsCurrent=detailProps;
   }
  
   const { styles, columnsRender } = props;
@@ -417,7 +417,7 @@ function Branch(props) {
   };
   function openIssueDetail(id, typeCode,issueProjectId) {
   if (id) {
-    open({
+    openCurrent({
       path: 'issue',
       props: {
         issueId: id,
@@ -440,7 +440,7 @@ function Branch(props) {
       },
     });
   } else {
-    close();
+    closeCurrent();
   }
   }
 
@@ -544,7 +544,7 @@ function Branch(props) {
       service={['choerodon.code.project.develop.code-management.ps.branch.create']}
     >
       {appServiceDs.status !== 'ready' ? <Loading display type="c7n" /> : tableBranch()}
-      {injectMount('agile:DetailContainer',detailProps)}
+      {injectMount('agile:DetailContainer',detailPropsCurrent)}
     </Page>
   );
 }
