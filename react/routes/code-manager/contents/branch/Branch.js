@@ -57,16 +57,16 @@ function Branch(props) {
     branchStore,
     prefixCls,
   } = useTableStore();
-  const [open, setOpen] = useState(null);
-  const [close, setClose] = useState(null);
-  const [detailProps, setDetailProps] = useState(null);
+  let open=null;
+  let close=null;
+  let detailProps=null;
   if (hasInject('agile:useDetail')) {
     const useDetail=getInject('agile:useDetail');
     const [detailProps] = useDetail();
     const { open, close } = detailProps;
-    setOpen(open);
-    setClose(close);
-    setDetailProps(detailProps);
+    open=open;
+    close=close;
+    detailProps=detailProps;
   }
  
   const { styles, columnsRender } = props;
