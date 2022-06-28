@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import _ from 'lodash';
 import { observer, inject } from 'mobx-react';
 import { injectIntl, FormattedMessage } from 'react-intl';
@@ -56,6 +56,12 @@ export default class LogSidebar extends Component {
     this.setState({ containerName: name, logId });
     console.log('didmount loadlog');
     setTimeout(() => this.loadLog(false, that), 500);
+    document.onfullscreenchange = function (event) {
+      const isFullScreen = document.fullscreenElement;
+      that.setState({
+        fullScreen: Boolean(isFullScreen),
+      });
+    };
   }
 
   componentWillUnmount() {
@@ -141,6 +147,8 @@ export default class LogSidebar extends Component {
     // document.documentElement.style.overflow = 'hidden';
     // cm.refresh();
     // window.addEventListener('keydown', (e) => {
+    //   debugger;
+    //   console.log(e);
     //   this.setNormal(e.which);
     // });
   };
@@ -149,21 +157,21 @@ export default class LogSidebar extends Component {
    * 任意键退出全屏查看
    */
   setNormal = () => {
-    if (!this.editorLog) return;
-
-    const cm = this.editorLog.getCodeMirror();
-    const wrap = cm.getWrapperElement();
-    wrap.className = wrap.className.replace(/\s*CodeMirror-fullScreen\b/, '');
+    if (this.editorLog) {
+      const cm = this.editorLog.getCodeMirror();
+      const wrap = cm.getWrapperElement();
+      wrap.className = wrap.className.replace(/\s*CodeMirror-fullScreen\b/, '');
+      document.documentElement.style.overflow = '';
+      const info = cm.state.fullScreenRestore;
+      wrap.style.width = info.width;
+      wrap.style.height = info.height;
+      window.scrollTo(info.scrollLeft, info.scrollTop);
+      cm.refresh();
+    }
     this.setState({ fullScreen: false });
-    document.documentElement.style.overflow = '';
-    const info = cm.state.fullScreenRestore;
-    wrap.style.width = info.width;
-    wrap.style.height = info.height;
-    window.scrollTo(info.scrollLeft, info.scrollTop);
-    cm.refresh();
-    window.removeEventListener('keydown', (e) => {
-      this.setNormal(e.which);
-    });
+    // window.removeEventListener('keydown', (e) => {
+    //   this.setNormal(e.which);
+    // });
   };
 
   /**

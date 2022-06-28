@@ -31,7 +31,7 @@ import '../../../main.less';
 import './Branch.less';
 import './index.less';
 import './theme4.less';
-import { get as getInject, mount as injectMount} from '@choerodon/inject';
+import { get as getInject, mount as injectMount, has as hasInject} from '@choerodon/inject';
 import {ALL_TYPE_CODES} from '@/constants/STATUS_TYPE';
 import {getTypeCode} from '@/utils/getTypeCode';
 
@@ -57,9 +57,18 @@ function Branch(props) {
     branchStore,
     prefixCls,
   } = useTableStore();
-  const useDetail=getInject('agile:useDetail');
-  const [detailProps] = useDetail();
-   const { open, close } = detailProps;
+  let openCurrent=null;
+  let closeCurrent=null;
+  let detailPropsCurrent=null;
+  if (hasInject('agile:useDetail')) {
+    const useDetail=getInject('agile:useDetail');
+    const [detailProps] = useDetail();
+    const { open, close } = detailProps;
+    openCurrent=open;
+    closeCurrent=close;
+    detailPropsCurrent=detailProps;
+  }
+ 
   const { styles, columnsRender } = props;
 
   const format = useFormatMessage('c7ncd.codeManger');
@@ -408,7 +417,7 @@ function Branch(props) {
   };
   function openIssueDetail(id, typeCode,issueProjectId) {
   if (id) {
-    open({
+    openCurrent({
       path: 'issue',
       props: {
         issueId: id,
@@ -431,7 +440,7 @@ function Branch(props) {
       },
     });
   } else {
-    close();
+    closeCurrent();
   }
   }
 
@@ -535,7 +544,7 @@ function Branch(props) {
       service={['choerodon.code.project.develop.code-management.ps.branch.create']}
     >
       {appServiceDs.status !== 'ready' ? <Loading display type="c7n" /> : tableBranch()}
-      {injectMount('agile:DetailContainer',detailProps)}
+      {injectMount('agile:DetailContainer',detailPropsCurrent)}
     </Page>
   );
 }

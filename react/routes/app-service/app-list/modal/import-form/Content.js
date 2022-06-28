@@ -34,6 +34,7 @@ const ImportForm = injectIntl(observer((props) => {
     gitlabSelectedDs,
     importStore,
     hasMarket,
+    hasBusiness,
   } = useImportAppServiceStore();
   const record = useMemo(() => importDs.current || importDs.records[0], [importDs.current]);
   const [hasFailed, setHasFailed] = useState(false);
@@ -194,12 +195,14 @@ const ImportForm = injectIntl(observer((props) => {
                         <div className={`${prefixCls}-newtips`}><NewTips showHelp helpText="选择后，将对目标仓库执行克隆操作，以此来生成新的应用服务" /></div>
                       </div>
                     </Option>
+                    {!hasBusiness && (
                     <Option value={false}>
                       <div className={`${prefixCls}-option-child`}>
                         {formatMessage({ id: `${intlPrefix}.gitlab.move` })}
                         <div className={`${prefixCls}-newtips`}><NewTips showHelp helpText="此操作将用于从【未与Choerodon猪齿鱼项目关联】的GitLab Group中批量迁移代码仓库至当前项目。注意：成功迁移后，原代码仓库将从原来的Group中消失" /></div>
                       </div>
                     </Option>
+                    )}
                   </SelectBox>
                   {!isGitLabTemplate
                 && (

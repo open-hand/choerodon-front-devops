@@ -4,6 +4,7 @@ import {
   Form, Select, Button, Tooltip, CheckBox,
 } from 'choerodon-ui/pro';
 import { injectIntl } from 'react-intl';
+import { useDebounceFn } from 'ahooks';
 import { observer } from 'mobx-react-lite';
 import debounce from 'lodash/debounce';
 import get from 'lodash/get';
@@ -26,6 +27,17 @@ function BranchEdit() {
   const issueOptionsDs = selectDs?.current?.getField('issue')?.options;
 
   const [searchValue, setSearchValue] = useState('');
+
+  const handleIssueSearch = (value, event) => {
+    event?.persist();
+    issueQuery(value);
+  };
+
+  const { run } = useDebounceFn((value, event) => {
+    handleIssueSearch(value, event);
+  }, {
+    wait: 500,
+  });
 
   /**
    * 创建
@@ -68,18 +80,10 @@ function BranchEdit() {
     }
   }, [searchValue]);
 
-  const issueQuery = useCallback(
-    debounce((value) => {
-      issueOptionsDs?.setQueryParameter('content', value);
-      issueOptionsDs?.query();
-    }, 500),
-    [],
-  );
-
-  const handleIssueSearch = useCallback((e) => {
-    e.persist();
-    issueQuery(e.target.value);
-  }, []);
+  const issueQuery = (value) => {
+    issueOptionsDs?.setQueryParameter('content', value);
+    issueOptionsDs?.query();
+  };
 
   const handleIssueBlur = () => {
     issueOptionsDs?.setQueryParameter('content', '');
@@ -225,7 +229,9 @@ function BranchEdit() {
           />
           <Select
             name="issue"
-            onInput={handleIssueSearch}
+            onInput={(event) => {
+              run(event.target.value, event);
+            }}
             onBlur={handleIssueBlur}
             optionRenderer={issueNameOptionRender}
             renderer={issueNameRender}

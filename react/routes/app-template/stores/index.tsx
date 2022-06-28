@@ -41,7 +41,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props: any) => {
   } = props;
   const intlPrefix = 'c7ncd.template';
   const format = useFormatMessage(intlPrefix);
-  const formatCommon = useFormatCommon(intlPrefix);
+  const formatCommon = useFormatCommon();
   const organizationId = useMemo(() => (pageType === 'organization' ? orgId : null), [pageType, orgId]);
   const permissionCodes = useMemo(() => (organizationId ? {
     create: ['choerodon.code.organization.manager.application-template.ps.create'],

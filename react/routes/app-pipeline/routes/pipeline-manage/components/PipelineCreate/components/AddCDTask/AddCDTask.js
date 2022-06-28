@@ -307,17 +307,20 @@ export default observer(() => {
       relatedJobOpts &&
       relatedJobOpts.length > 0
     ) {
-      const { triggerType, triggerValue } = relatedJobOpts.find((i) => i.name === pipelineTask);
-      ADDCDTaskDataSet.current.set('triggerType', triggerType);
-      ADDCDTaskDataSet.getField('triggerType').set('disabled', true);
-      ADDCDTaskDataSet.current.set('triggerValue', triggerValue?.split(','));
-      if (triggerValue) {
-        setBranchsList(
-            triggerValue?.split(',').map((i) => ({
-              value: i,
-              name: i,
-            })),
-        );
+      const flag = relatedJobOpts.find((i) => i.name === pipelineTask);
+      if (flag) {
+        const { triggerType, triggerValue } = flag;
+        ADDCDTaskDataSet.current.set('triggerType', triggerType);
+        ADDCDTaskDataSet.getField('triggerType').set('disabled', true);
+        ADDCDTaskDataSet.current.set('triggerValue', triggerValue?.split(','));
+        if (triggerValue) {
+          setBranchsList(
+              triggerValue?.split(',').map((i) => ({
+                value: i,
+                name: i,
+              })),
+          );
+        }
       }
     } else {
       ADDCDTaskDataSet.getField('triggerType').set('disabled', false);

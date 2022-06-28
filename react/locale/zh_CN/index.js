@@ -129,6 +129,7 @@ const commonField = {
   timeFrom: '自',
   timeUntil: '至',
   success: '成功',
+  not_audit: '待审批',
   minutes: '分',
   seconds: '秒',
   minTime: '时长（分）',

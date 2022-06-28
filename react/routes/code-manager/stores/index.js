@@ -99,14 +99,19 @@ export const StoreProvider = injectIntl(inject('AppState')(
           value: record.get('id'),
         },
       };
-      setLocalStorage(value);
-      localSet('selectAppId', value);
+      let newValue = value;
+      if (newValue.includes('recent')) {
+        newValue = newValue.replace('-recent', '');
+        record?.set('appServiceId', newValue);
+      }
+      setLocalStorage(newValue);
+      localSet('selectAppId', newValue);
       Object.keys(handleMapStore)
         .forEach((key) => {
           if (key.indexOf('Code') !== -1) {
             handleMapStore[key]
               && handleMapStore[key].select
-              && handleMapStore[key].select(value, option);
+              && handleMapStore[key].select(newValue, option);
           }
         });
     };
