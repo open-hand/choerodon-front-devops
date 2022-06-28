@@ -32,10 +32,10 @@ const chartKeys = [
     key: RESOURCE,
     name: '网络配置',
   },
-  {
-    key: APPMONITOR,
-    name: '应用监控',
-  },
+  // {
+  //   key: APPMONITOR,
+  //   name: '应用监控',
+  // },
 ];
 
 const hostKeys = [
