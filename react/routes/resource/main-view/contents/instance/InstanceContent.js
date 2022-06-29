@@ -276,14 +276,14 @@ const InstanceContent = observer(() => {
             <PodsDetails />
           </Suspense>
         </TabPane>
-        <TabPane
+        {/* <TabPane
           key={APP_MONITOR}
           tab="应用监控"
         >
           <Suspense fallback={<Spin />}>
             <AppMonitor {...monitorData} />
           </Suspense>
-        </TabPane>
+        </TabPane> */}
       </Tabs>
       <Modals />
     </div>
