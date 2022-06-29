@@ -170,7 +170,7 @@ export const SelectApp = injectIntl(inject('AppState')(observer((props) => {
 
   const renderSearchMatcher = ({ record, text }) => {
     const tempRecord = appServiceDs.find((appServiceRecord) => appServiceRecord.get('id') === record.get('value'));
-    return tempRecord.get('code').indexOf(text) !== -1 || tempRecord.get('name').indexOf(text) !== -1;
+    return tempRecord?.get('code')?.indexOf(text) !== -1 || tempRecord?.get('name')?.indexOf(text) !== -1;
   };
 
   return (
