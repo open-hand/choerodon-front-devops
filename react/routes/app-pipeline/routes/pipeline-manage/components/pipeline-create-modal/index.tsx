@@ -91,6 +91,7 @@ const PipelineCreateModal:FC<PipelineCreateModalProps> = observer((props) => {
       />
       <Select
         multiple
+        optionTooltip={'overflow' as any}
         name="branch"
         addonAfter={getBranchTips}
         searchable
