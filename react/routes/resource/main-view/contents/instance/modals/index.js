@@ -295,16 +295,18 @@ const IstModals = injectIntl(observer(() => {
         title: !btnDisabled && marketDisable ? formatMessage({ id: `${intlPrefix}.instance.disable.message` }) : '',
         placement: 'bottom',
       },
-    }, {
-      name: metricDeployStatus ? '停用应用监控' : '开启应用监控',
-      icon: 'power_settings_new',
-      handler: metricDeployStatus ? disablieMonitor : enableAppMonitor,
-      disabled: !connect,
-      tooltipsConfig: {
-        title: !connect ? '环境状态未连接，无法执行此操作' : '',
-        placement: 'bottom',
-      },
-    }, {
+    },
+    // {
+    //   name: metricDeployStatus ? '停用应用监控' : '开启应用监控',
+    //   icon: 'power_settings_new',
+    //   handler: metricDeployStatus ? disablieMonitor : enableAppMonitor,
+    //   disabled: !connect,
+    //   tooltipsConfig: {
+    //     title: !connect ? '环境状态未连接，无法执行此操作' : '',
+    //     placement: 'bottom',
+    //   },
+    // },
+    {
       icon: 'refresh',
       handler: refresh,
       display: true,
