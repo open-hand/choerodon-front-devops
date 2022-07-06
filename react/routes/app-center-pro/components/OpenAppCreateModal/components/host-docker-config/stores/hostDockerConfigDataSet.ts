@@ -289,6 +289,8 @@ const transformLoadData = (data: any) => ({
     imageName: data
       ?.devopsDockerInstanceVO?.[mapping.imageName.name as string],
   },
+  [mapping.imageUrl.name as string]: data?.devopsDockerInstanceVO?.image,
+  [mapping.privateRepository.name as string]: data?.devopsDockerInstanceVO?.privateRepository,
   [mapping.tag.name as string]: data
     ?.devopsDockerInstanceVO?.[mapping.tag.name as string],
   [mapping.name.name as string]: data
