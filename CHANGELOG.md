@@ -1,3 +1,12 @@
+## [2.0.7](https://code.choerodon.com.cn/hand-yanqianyun-yq-devops/choerodon-front-devops/compare/2.0.6...2.0.7) (2022-07-08)
+
+
+### Bug Fixes
+
+* **应用中心:** 修改主机应用修改时没有代入镜像地址问题 ([ebfcfcb](https://code.choerodon.com.cn/hand-yanqianyun-yq-devops/choerodon-front-devops/commits/ebfcfcb295ba5d819c89473b75fff422b7bc50bb)), closes [#2942](https://code.choerodon.com.cn/hand-yanqianyun-yq-devops/choerodon-front-devops/issues/2942)
+
+
+
 ## [2.0.6](https://code.choerodon.com.cn/hand-yanqianyun-yq-devops/choerodon-front-devops/compare/2.0.5...2.0.6) (2022-07-04)
 
 
