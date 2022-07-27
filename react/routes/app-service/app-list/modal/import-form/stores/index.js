@@ -33,7 +33,6 @@ export const StoreProvider = injectIntl(inject('AppState')(
 
     const hasMarket = useMemo(() => some(currentServices || [], ['serviceCode', 'market-service']), [currentServices]);
     const isSaaS = isSaasList && isSaasList[organizationId];
-
     const serviceTypeDs = useMemo(() => new DataSet({
       data: [
         {
@@ -71,7 +70,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       marketSelectedDs,
       gitlabSelectedDs,
     })), [projectId]);
-    const IMPORT_METHOD_LIST = isSaaS ? [{ type: 'share', img: shareImage }, { type: 'github', img: gitlabImage }, { type: 'gitlab', img: gitlabImage }] : [{ type: 'share', img: shareImage }, { type: 'market', img: marketImage }, { type: 'github', img: githubImage }, { type: 'gitlab', img: gitlabImage }];
+    const IMPORT_METHOD_LIST = window._env_.OPEN_SOURCE ? [{ type: 'share', img: shareImage }, { type: 'github', img: gitlabImage }, { type: 'gitlab', img: gitlabImage }] : [{ type: 'share', img: shareImage }, { type: 'market', img: marketImage }, { type: 'github', img: githubImage }, { type: 'gitlab', img: gitlabImage }];
     const value = {
       ...props,
       IMPORT_METHOD: IMPORT_METHOD_LIST,
