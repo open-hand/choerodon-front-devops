@@ -17,6 +17,10 @@ import NewEmptyPage from '../../../components/empty-page';
 
 import './index.less';
 
+const {
+  OPEN_SOURCE
+} = window._env_;
+
 export default withRouter(observer((props) => {
   const codeQualityStore = useCodeQualityStore();
   const { formatMessage, handleMapStore, projectId, codeQuality } = codeQualityStore;
@@ -91,7 +95,7 @@ export default withRouter(observer((props) => {
                       {rate && key !== 'duplicated_lines_density' && <Rating rating={rate} />}
                       {key === 'coverage' && <Percentage data={Number(innerValue)} />}
                       {key === 'duplicated_lines_density' && <Rating rating={rate} size="18px" type="pie" />}
-                      {hasReport && (
+                      {hasReport && OPEN_SOURCE && OPEN_SOURCE !== 'true' && (
                         <Link
                           to={{
                             pathname: '/rdqam/report/code-quality-workplace',
