@@ -11,10 +11,11 @@ import EditNetwork from '../../contents/network/modals/network-operation';
 import { useMainStore } from '../../stores';
 import eventStopProp from '../../../../../utils/eventStopProp';
 import openWarnModal from '../../../../../utils/openWarnModal';
+import { SMALL } from '@/utils/getModalWidth';
 
 const modalKey = Modal.key();
 const modalStyle = {
-  width: 740,
+  width: SMALL,
 };
 
 function NetworkItem({
