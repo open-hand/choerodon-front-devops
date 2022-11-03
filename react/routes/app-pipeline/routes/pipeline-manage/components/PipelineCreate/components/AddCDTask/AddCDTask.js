@@ -754,7 +754,6 @@ export default observer(() => {
       'glyyfw',
         appServiceName,
     );
-    handleClickMore();
   }, [ADDCDTaskDataSet,appServiceId, jobDetail]);
 
   useEffect(() => {
@@ -1625,59 +1624,12 @@ export default observer(() => {
     return obj[ADDCDTaskDataSet?.current?.get('type')];
   };
 
-  async function handleClickMore(e, realName) {
-    if (!ADDCDTaskDataSet.current.get('pageSize')) {
-      ADDCDTaskDataSet.current.set('pageSize', 20);
-    }
-    e && e.stopPropagation();
-    const pageSize = !e
-      ? ADDCDTaskDataSet.current.get('pageSize')
-      : ADDCDTaskDataSet.current.get('pageSize') + 20;
-    const url = `/devops/v1/projects/${projectId}/users/app_services/${appServiceId}?page=0&size=${pageSize}`;
-    const cdAuditsUserIds = [];
-    jobDetail?.cdAuditUserIds &&
-      jobDetail.cdAuditUserIds.forEach((obj) => {
-        if (typeof obj === 'string') {
-          cdAuditsUserIds.push(obj);
-        } else if (typeof obj === 'object') {
-          cdAuditsUserIds.push(obj?.id);
-        }
-      });
-    const res = await axios.post(url, {
-      userName: realName || '',
-      ids: cdAuditsUserIds || [],
-    });
-    if (res.content.length % 20 === 0 && res.content.length !== 0) {
-      res.content.push({
-        realName: '加载更多',
-        id: 'more',
-      });
-    }
-    ADDCDTaskDataSet.current.set('pageSize', pageSize);
-    if (realName) {
-      ADDCDTaskDataSet.getField('cdAuditUserIds').props.lookup = [
-        ...res.content,
-        ...ADDCDTaskDataSet.getField('cdAuditUserIds').props.lookup,
-      ];
-    } else {
-      ADDCDTaskDataSet.getField('cdAuditUserIds').props.lookup = res.content;
-    }
-  }
-
   const renderderAuditUsersList = ({ text, record }) => {
     const ldap = record?.get('ldap');
-    if (text === '加载更多') {
-      return (
-        <a
-          style={{ display: 'block', width: '100%', height: '100%' }}
-          onClick={handleClickMore}
-          role="none"
-        >
-          {text}
-        </a>
-      );
-    }
-    return ldap ? `${text}(${record?.get('loginName')})` : `${text}(${record?.get('email')})`;
+    const str = ldap ? `${text}(${record?.get('loginName')})` : `${text}(${record?.get('email')})`
+    return <Tooltip title={str}>
+      {str}
+    </Tooltip>
   };
 
   /**
@@ -1783,6 +1735,12 @@ export default observer(() => {
       .filter((l) => l.type === 'cdDeploy')
       .map((i) => <Option value={i.name}>{i.name}</Option>);
   };
+
+  const getauditUsersSearchMatcher = ({record, text , textField})=>{ // 后端加了分页， 这里改成 user object 
+    return record.get(textField) && (record.get(textField).indexOf(text) !== -1 || 
+    record.get('loginName').indexOf(text) !== -1
+    )
+  }
 
   return (
     <div className="addcdTask">
@@ -1950,13 +1908,13 @@ export default observer(() => {
                 style={{ width: '100%' }}
                 name="cdAuditUserIds"
                 maxTagCount={3}
-                searchMatcher="realName"
+                searchMatcher= {getauditUsersSearchMatcher}
                 onOption={({ record }) => ({
                   disabled: record?.get('id') === 'more',
                 })}
-                onChange={() => {
-                  handleClickMore(null);
-                }}
+                // onChange={() => {
+                //   handleClickMore(null);
+                // }}
                 maxTagPlaceholder={(omittedValues) => {
                   const tempArr = omittedValues.map((item) => {
                     const tempId = typeof item === 'string' ? item : item?.id;

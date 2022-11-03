@@ -653,61 +653,26 @@ export default (
       multiple: true,
       valueField: 'id',
       options: new DataSet({
-        autoQuery: false,
-        paging: true,
-        pageSize: 10,
+        autoQuery: true,
+        paging: false,
+        pageSize: 1000,
+        strictPageSize: false,
         transport: {
           read: ({ dataSet, data, params }) => {
             const realName = data?.realName;
-            const cdAuditIdsArrayObj = jobDetail?.cdAuditUserIds || [];
-            let cdAuditIds = [];
-            forEach(cdAuditIdsArrayObj, (obj) => {
-              if (typeof obj === 'string') {
-                cdAuditIds.push(obj);
-              } else if (typeof obj === 'object') {
-                cdAuditIds.push(obj?.id);
-              }
-            });
-            if (realName && data.id) {
-              cdAuditIds = [...cdAuditIds, data.id];
-            }
-            if (data?.ids) {
-              cdAuditIds = [...cdAuditIds || [], ...data?.ids];
-            }
             return {
               method: 'post',
               url: `/devops/v1/projects/${projectId}/users/app_services/${appServiceId}`,
-              params: {
-                ...params,
-                page: params?.page + 1,
-              },
               data: {
                 userName: realName || '',
-                ids: [...new Set(cdAuditIds)] || [],
+                ids: [],
               },
-              // transformResponse: (res) => {
-              //   let newRes;
-              //   try {
-              //     newRes = JSON.parse(res);
-              //     if (
-              //       newRes.totalElements % 20 === 0
-              //       && newRes.content.length !== 0
-              //     ) {
-              //       newRes.content.push({
-              //         id: 'more',
-              //         realName: '加载更多',
-              //       });
-              //     }
-              //     return newRes;
-              //   } catch (e) {
-              //     return res;
-              //   }
-              // },
             };
           },
         },
       }),
     },
+
     {
       name: 'countersigned',
       type: 'number',
