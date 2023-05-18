@@ -145,6 +145,14 @@ const AppPipelineEdit = () => {
   };
 
   const handleSubmit = () => {
+    // 这里是提交的时候 如果高级设置的认证管理表单都清空了 就把数据里的ciDockerAuthConfigDTOList全部清空 避免只把表单上的数据清了 本身数据带有的id等字段还在
+    if (tabsData[TAB_ADVANCE_SETTINGS]?.ciDockerAuthConfigDTOList
+      && tabsData[TAB_ADVANCE_SETTINGS]?.ciDockerAuthConfigDTOList.length > 0) {
+      tabsData[TAB_ADVANCE_SETTINGS].ciDockerAuthConfigDTOList = tabsData[TAB_ADVANCE_SETTINGS]
+        ?.ciDockerAuthConfigDTOList.filter((i: any) => i.domain) || [];
+    } else {
+      tabsData[TAB_ADVANCE_SETTINGS].ciDockerAuthConfigDTOList = [];
+    }
     if (['create', 'copy'].includes(type)) {
       return level && submitMapWhileCreate[level]?.(tabsData, setTabKey);
     }
