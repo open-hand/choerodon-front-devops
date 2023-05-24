@@ -5,7 +5,7 @@ import { DataSet } from 'choerodon-ui/pro';
 
 export default ({
   projectId, appServiceId, formatMessage, contentStore, projectOptionsDs,
-  currentProjectData, getUserId,
+  currentProjectData, getUserId, hasAgile,
 }) => {
   async function checkBranchName(value) {
     const endWith = /(\/|\.|\.lock)$/;
@@ -51,7 +51,7 @@ export default ({
           selection: 'single',
           paging: true,
           pageSize: 10,
-          autoQuery: true,
+          autoQuery: !!hasAgile,
           transport: {
             read({
               dataSet, record, params: { page },

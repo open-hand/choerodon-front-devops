@@ -21,12 +21,14 @@ export const StoreProvider = injectIntl(inject('AppState')(
       AppState: {
         currentMenuType: { id: projectId, organizationId, name: projectName },
         getUserId,
+        currentServices,
       },
       intl: { formatMessage },
       children,
       appServiceId,
       intlPrefix,
     } = props;
+    const hasAgile = useMemo(() => currentServices?.some((s) => s.serviceCode === 'agile-service') || false, [currentServices]);
     const currentProjectData = useMemo(() => ({
       id: projectId,
       name: projectName,
@@ -44,6 +46,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       projectOptionsDs,
       currentProjectData,
       getUserId,
+      hasAgile,
     })), [projectId, appServiceId]);
 
     const value = {
