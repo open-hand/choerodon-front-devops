@@ -59,7 +59,8 @@
     "timeago-react": "^3.0.0",
     "uuid": "^3.3.3",
     "web-streams-polyfill": "^3.0.2",
-    "xterm": "^3.12.0"
+    "xterm": "^3.12.0",
+    "file-saver": "^2.0.5"
   },
   "config": {
     "commitizen": {
