@@ -140,7 +140,7 @@ export function transFormData(data: { portDs: any; targetLabelsDs: any; target: 
      * 单个实例直接与AppInstnace关联所以此处赋值给targetInstanceCode
      */
     if (appInstance === formatMessage({ id: 'all_instance' })) {
-      targetAppServiceId = appId;
+      // targetAppServiceId = appId;
     } else {
       targetInstanceCode = appInstance;
     }

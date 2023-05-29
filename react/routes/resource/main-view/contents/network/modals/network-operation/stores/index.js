@@ -190,7 +190,7 @@ function initTargetLabel({
   if (type === 'instance') {
     if (targetAppServiceId) {
       // 如果存在targetAppServiceId那么 实例的值为所有实例
-      return formatMessage({ id: 'all_instance' });
+      return formatMessage({ id: 'all_application' });
     } if (instances && instances.length) {
       // 如果存在instances 且 有值 那么将appInstance设置为instances数组的第一项（暂且这么处理，后期要对旧数据做兼容处理）
       if (instances.length > 1) {

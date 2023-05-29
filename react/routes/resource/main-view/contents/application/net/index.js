@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Fragment, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
@@ -73,7 +74,7 @@ const Networking = observer(() => {
 
     let type = 'EndPoints';
     if (targetAppServiceId) {
-      type = formatMessage({ id: 'all_instance' });
+      type = formatMessage({ id: 'all_application' });
     } else if (instances && instances.length) {
       type = formatMessage({ id: 'instance' });
     } else if (selectors) {

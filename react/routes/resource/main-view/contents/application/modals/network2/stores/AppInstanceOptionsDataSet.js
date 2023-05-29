@@ -9,9 +9,9 @@ export default (projectId, envId, appId, formatMessage) => ({
   events: {
     load: ({ dataSet }) => {
       // NOTE: 手动加入所有实例的option选项
-      dataSet.create({
-        code: formatMessage({ id: 'all_instance' }),
-      }, 0);
+      // dataSet.create({
+      //   code: formatMessage({ id: 'all_instance' }),
+      // }, 0);
     },
   },
 });

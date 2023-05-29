@@ -11,7 +11,7 @@ export default (projectId:string, envId:string, appId:string, formatMessage:any)
     load: ({ dataSet }:any) => {
       // NOTE: 手动加入所有实例的option选项
       dataSet.create({
-        code: formatMessage({ id: 'all_instance' }),
+        code: formatMessage({ id: 'all_application' }),
       }, 0);
     },
   },
