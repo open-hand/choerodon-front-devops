@@ -3,7 +3,7 @@ import {
   DataSet, Form, TextField, Select,
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
-import { mapping } from '../../stores/deployGroupDataSet';
+import { mapping, appNameDataSet } from '../../stores/deployGroupDataSet';
 import DeployGroupConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/deploy-group-config';
 import ContainerConfig from '@/routes/app-center-pro/components/OpenAppCreateModal/components/container-config';
 import { deployAppCenterApi } from '@/api';
@@ -20,19 +20,8 @@ const Index = observer(({
   deployWay,
   preJobList,
   changeDetail,
-}: {
-  deployWay?: string,
-  dataSet: DataSet,
-  cRef?: any,
-  detail?: {
-    appConfig: any,
-    name: string,
-    code: string,
-    containerConfig: any,
-  },
-  changeDetail?(data: any): void,
-  preJobList?: object[],
-}) => {
+  envId,
+}: any) => {
   const deployGroupRef = useRef();
   const containerConfigRef = useRef();
 
@@ -41,6 +30,11 @@ const Index = observer(({
       dataSet.loadData([detail]);
     }
   }, []);
+
+  useEffect(() => {
+    appNameDataSet.setQueryParameter('envId', envId);
+    appNameDataSet.query();
+  }, [detail?.envId]);
 
   useImperativeHandle(cRef, () => ({
     handleOk: async () => {
@@ -77,8 +71,8 @@ const Index = observer(({
               onChange={async (value: string) => {
                 if (value) {
                   const id = (dataSet.current?.getField(mapping().appName.name)
-                  ?.options?.toData() as any)
-                  ?.find((options: any) => options.name === value)?.id;
+                    ?.options?.toData() as any)
+                    ?.find((options: any) => options.name === value)?.id;
                   const res = await deployAppCenterApi.loadEnvAppDetail(id);
                   if (changeDetail) {
                     changeDetail(res);

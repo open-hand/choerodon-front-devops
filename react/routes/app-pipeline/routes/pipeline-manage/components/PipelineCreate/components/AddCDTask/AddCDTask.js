@@ -41,7 +41,7 @@ import YamlEditor from '@/components/yamlEditor';
 import Tips from '@/components/new-tips';
 import './index.less';
 import { mapping as deployChartMapping } from './stores/deployChartDataSet';
-import { mapping as deployGroupMapping } from './stores/deployGroupDataSet';
+import { mapping as deployGroupMapping, appNameDataSet } from './stores/deployGroupDataSet';
 import { productTypeData } from './stores/addCDTaskDataSetMap';
 import OperationYaml from '@/routes/app-center-pro/components/OpenAppCreateModal/components/operation-yaml';
 import { valueCheckValidate } from '@/routes/app-center-pro/components/OpenAppCreateModal/components/host-app-config/content';
@@ -565,6 +565,9 @@ export default observer(() => {
             appConfigData: data.appConfig,
             submitData,
           });
+          if (ADDCDTaskDataSet?.current?.get('deployType') === 'update') {
+            returnData.appId = appNameDataSet?.toData().find(i => i?.code === returnData?.appCode)?.id;
+          }
           const result = handleSetSubmitDataByContainerConfig({
             resourceConfigData: data.containerConfig,
             submitData: returnData,
