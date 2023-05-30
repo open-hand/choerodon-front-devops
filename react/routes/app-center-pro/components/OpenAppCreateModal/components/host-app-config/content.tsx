@@ -136,9 +136,9 @@ const Index = observer(() => {
       optionsDs.setQueryParameter('type', 'hzero');
       optionsDs.query();
     } else {
-      const optionsDs = ds.current?.getField(mapping.marketAppVersion.name).options;
-      optionsDs.setQueryParameter('type', 'common');
-      optionsDs.query();
+      // const optionsDs = ds.current?.getField(mapping.marketAppVersion.name).options;
+      // optionsDs.setQueryParameter('type', 'common');
+      // optionsDs.query();
     }
   }
 

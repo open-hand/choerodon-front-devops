@@ -95,7 +95,7 @@ const appServiceOptionsDs = {
 };
 
 const marketVersionOptionsDs = {
-  autoQuery: true,
+  autoQuery: false,
   fields: [{
     name: 'name',
     type: 'string',

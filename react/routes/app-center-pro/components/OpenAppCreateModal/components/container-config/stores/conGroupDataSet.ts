@@ -487,7 +487,7 @@ const conGroupDataSet = (
         case 'marketAppVersion': {
           if (hasMarketService) {
             item.options = new DataSet({
-              autoQuery: true,
+              autoQuery: false,
               fields: [{ name: 'groupName', type: 'string' as FieldType, group: 0 }],
               transport: {
                 read: ({ data: paramsData }) => ({
