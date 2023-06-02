@@ -1,6 +1,8 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { Menu } from 'choerodon-ui';
 import { Modal } from 'choerodon-ui/pro';
+import { inject } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import useTabData from '@/routes/app-pipeline/routes/app-pipeline-edit/hooks/useTabData';
 import { TAB_BASIC, TAB_FLOW_CONFIG } from '@/routes/app-pipeline/routes/app-pipeline-edit/stores/CONSTANTS';
 import jobTypes from '@/routes/app-pipeline/routes/pipeline-manage/stores/jobsTypeMappings';
@@ -24,13 +26,18 @@ const {
 
 const prefixCls = 'c7ncd-job-cd-panel';
 
-const JobCdPanel:FC<JobTypesPanelProps> = (props) => {
+const JobCdPanel: any = inject('AppState')(observer((props: any) => {
   const {
     handleJobAddCallback,
     handlePanelClickCallback,
     stageIndex,
     jobIndex,
+    AppState: {
+      currentServices,
+    },
   } = props;
+
+  const hasTestService = useMemo(() => currentServices?.some((i: any) => i.serviceCode === 'test-manager-service'), [currentServices]);
 
   const [_data, _setdata, getTabData] = useTabData();
 
@@ -85,10 +92,14 @@ const JobCdPanel:FC<JobTypesPanelProps> = (props) => {
       </SubMenu>
       <Item key="cdHost">主机部署</Item>
       <Item key="cdAudit">人工卡点</Item>
-      <Item key="cdApiTest">API测试</Item>
+      {
+        hasTestService && (
+          <Item key="cdApiTest">API测试</Item>
+        )
+      }
       <Item key="cdExternalApproval">外部卡点</Item>
     </Menu>
   );
-};
+}));
 
 export default JobCdPanel;

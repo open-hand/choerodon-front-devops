@@ -31,12 +31,15 @@ export const StoreProvider = injectIntl(
       //   PipelineCreateFormDataSet,
       AppState: {
         menuType: { projectId, organizationId },
+        currentServices,
       },
       appServiceId,
       appServiceCode,
       trueAppServiceId,
       jobDetail,
     } = props;
+
+    const hasTestService = useMemo(() => currentServices?.some((i) => i.serviceCode === 'test-manager-service'), [currentServices]);
 
     const HotJarOptionsDataSet = useMemo(() => new DataSet(hotJarOptionsDataSet()), []);
     const ADDCDTaskUseStore = useStore();
@@ -54,9 +57,10 @@ export const StoreProvider = injectIntl(
           appServiceId,
           jobDetail,
           HotJarOptionsDataSet,
+          hasTestService,
         ),
       ),
-      [ADDCDTaskUseStore, random],
+      [ADDCDTaskUseStore, random, hasTestService],
     );
     const DeployChartDataSet = useMemo(() => new DataSet(deployChartDataSet(ADDCDTaskDataSet)), []);
     const DeployGroupDataSet = useMemo(() => new DataSet(deployGroupDataSet(ADDCDTaskDataSet)), [

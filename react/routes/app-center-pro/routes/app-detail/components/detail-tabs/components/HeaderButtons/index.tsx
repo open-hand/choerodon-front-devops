@@ -99,7 +99,7 @@ const DetailsTabsHeaderButtons = () => {
     metricDeployStatus,
     upgradeAvailable,
     currentVersionAvailable,
-
+    rdupmType: appRdupmType,
     // 环境相关
     envConnected,
   } = appRecord?.toData() || {};
@@ -490,10 +490,12 @@ const DetailsTabsHeaderButtons = () => {
       default:
         break;
     }
-    if (!metricDeployStatus) {
-      btnsGroup.push(enableMonitor);
-    } else {
-      btnsGroup.push(disableMonitor);
+    if (appRdupmType === 'chart') {
+      if (!metricDeployStatus) {
+        btnsGroup.push(enableMonitor);
+      } else {
+        btnsGroup.push(disableMonitor);
+      }
     }
     return btnsGroup.length ? [{
       name: '更多操作',

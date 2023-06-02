@@ -67,6 +67,7 @@ export default (
   appServiceId,
   jobDetail,
   HotJarOptionsDataSet,
+  hasTestService,
 ) => ({
   autoCreate: true,
   fields: [
@@ -102,7 +103,7 @@ export default (
         && record?.get(fieldMap.relativeObj.name) === relativeObjData[0].value,
       },
       options: new DataSet({
-        autoQuery: true,
+        autoQuery: hasTestService,
         paging: true,
         transport: {
           read: ({ data }) => {
@@ -132,7 +133,7 @@ export default (
       textField: 'name',
       valueField: 'id',
       options: new DataSet({
-        autoQuery: true,
+        autoQuery: hasTestService,
         transport: {
           read: () => ({
             ...apiTestApiConfig.getConfigList(),
@@ -749,7 +750,7 @@ export default (
     {
       ...fieldMap.kits,
       options: new DataSet({
-        autoQuery: true,
+        autoQuery: hasTestService,
         transport: {
           read: () => ({
             ...apiTestApiConfig.getSuitesList(),
