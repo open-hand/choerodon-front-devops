@@ -56,6 +56,9 @@ const Index = observer(() => {
   const [hasMoreBranch, setHasMoreBranch] = useState<any>(false);
   const [tagData, setTagData] = useState<any>([]);
   const [hasMoreTag, setHasMoreTag] = useState<any>(false);
+  const [branchPage, setBranchPage] = useState<any>(0);
+  const [tagPage, setTagPage] = useState<any>(0);
+  const [branchTagInput, setBranchTagInput] = useState<any>('');
 
   const handleOk = async () => {
     const flag = await CreateTriggerDataSet?.current?.validate();
@@ -108,6 +111,7 @@ const Index = observer(() => {
           setBranchData(concat(branchData.slice(), res.list));
         }
         setHasMoreBranch(res.hasNextPage);
+        setBranchPage(res.pageNum);
         return res;
       }
       return false;
@@ -131,6 +135,7 @@ const Index = observer(() => {
           setTagData(concat(branchData.slice(), res.list));
         }
         setHasMoreTag(res.hasNextPage);
+        setTagPage(res.pageNum);
         return res;
       }
       return false;
@@ -206,23 +211,99 @@ const Index = observer(() => {
     </>
   );
 
+  function renderOption(text: any) {
+    if (!text) return null;
+    return text;
+  }
+
+  function renderBranchOptionOrigin(args: any) {
+    // eslint-disable-next-line no-shadow
+    const { record, text } = args;
+    // meaning是默认的textfiled 此处用于判断 是否是加载更多的按钮
+    if (!record.get('meaning')) {
+      // 根据value来判断是哪一个加载更多的按钮
+      // if (record.get('value') === 'tag') {
+      //   progress = moreTagLoading ? <Progress type="loading" size="small" /> : null;
+      // } else {
+      //   progress = moreBranchLoading ? <Progress type="loading" size="small" /> : null;
+      // }
+      return (
+        <div
+          role="none"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (record?.get('value') === 'branch') {
+              initBranchData({
+                searchValue: branchTagInput,
+                id: appServiceId,
+                page: branchPage + 1,
+              });
+            } else {
+              initTagData({
+                searchValue: branchTagInput,
+                id: appServiceId,
+                page: tagPage + 1,
+              });
+            }
+          }}
+          // className={`${prefixCls}-popover`}
+        >
+          <span>加载更多</span>
+        </div>
+      );
+    }
+
+    return renderOption(record.get('value'));
+  }
+
+  function searchMatcher() {
+    return true;
+  }
+
   return (
     <>
       <Form dataSet={CreateTriggerDataSet}>
         <TextField name={mapping.planName.name} />
-        <Select name={mapping.branch.name}>
+        <Select
+          name={mapping.branch.name}
+          searchable
+          // eslint-disable-next-line react/jsx-no-bind
+          searchMatcher={searchMatcher}
+          // eslint-disable-next-line react/jsx-no-bind
+          optionRenderer={renderBranchOptionOrigin}
+          onInput={(e: any) => {
+            setBranchTagInput(e.target.value);
+            initBranchData({
+              searchValue: e.target.value,
+              id: appServiceId,
+            });
+            initTagData({
+              searchValue: e.target.value,
+              id: appServiceId,
+            });
+          }}
+        >
           <OptGroup
             label="分支"
             key="proGroup"
           >
-            {map(branchData, ({ branchName }: any) => (
-              <Option value={`${branchName}`} key={branchName} title={branchName}>
-                {branchName}
-              </Option>
-            ))}
-            {hasMoreBranch ? (
-              <Option value="branch" />
-            ) : null}
+            {
+              (function () {
+                const result = map(branchData, ({ branchName }: any) => (
+                  <Option value={`${branchName}`} key={branchName} title={branchName}>
+                    {branchName}
+                  </Option>
+                ));
+                return (
+                  <>
+                    {result}
+                    {hasMoreBranch ? (
+                      <Option value="branch" />
+                    ) : null}
+                  </>
+                );
+              }())
+            }
           </OptGroup>
           <OptGroup
             label="Tag"
